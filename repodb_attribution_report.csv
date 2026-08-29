@@ -1,0 +1,351 @@
+file,status,creator,creator_email,year,type,authors,n_authors
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Caches/BaseRepositoryCachesTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Caches/DbRepositoryCachesTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Caches/SqlConnectionCachesTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/DbTransactionTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/DifferentPrimaryTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/EnumPropertyTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Enumerations/BooleanValue.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Enumerations/Continent.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Enumerations/Direction.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/ExecuteArrayParameterTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/ExecuteParameterTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/ExecuteQueryRawTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Helper.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Models/EnumClasses.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Models/IdentityTable.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Models/IdentityTableWithDifferentPrimary.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Models/LiteIdentityTable.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Models/NonIdentityTable.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Models/TypeClasses.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Models/TypeMappableClasses.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Models/UnorganizedTable.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Models/WithExtraFieldsIdentityTable.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/ObjectMappingTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/ObjectNameCasingTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/ObjectQuotationTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Properties/AssemblyInfo.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Setup/Database.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/SpecialOperationTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/TypeConversionsTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Types/Bytes/BaseRepositoryBytesTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Types/Bytes/DbRepositoryBytesTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Types/Bytes/SqlConnectionBytesTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Types/Dates/BaseRepositoryDatesTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Types/Dates/DbRepositoryDatesTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Types/Dates/SqlConnectionDatesTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Types/Numbers/BaseRepositoryNumbersTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Types/Numbers/DbRepositoryNumbersTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Types/Numbers/SqlConnectionNumbersTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Types/Others/BaseRepositoryOthersTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Types/Others/DbRepositoryOthersTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Types/Others/SqlConnectionOthersTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Types/Spatials/BaseRepositorySpatialsTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Types/Spatials/DbRepositorySpatialsTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Types/Spatials/SqlConnectionSpatialsTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Types/Strings/BaseRepositoryStringsTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Types/Strings/DbRepositoryStringsTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/Types/Strings/SqlConnectionStringsTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/_SqlServer/Operations/BaseRepositoryOperationsTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/_SqlServer/Operations/DbRepositoryOperationsTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.IntegrationTests/_SqlServer/Operations/SqlConnectionOperationsTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/Attributes/MapAttributeTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/Caches/IdentityCacheTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/Caches/MemoryCacheTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/Caches/PrimaryCacheTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/CustomObjects/CustomDbCommand.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/CustomObjects/CustomDbConnection.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/CustomObjects/CustomDbDataReader.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/CustomObjects/CustomDbHelper.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/CustomObjects/CustomDbParameter.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/CustomObjects/CustomDbParameterCollection.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/CustomObjects/CustomDbSetting.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/CustomObjects/CustomDbTransaction.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/CustomObjects/CustomStatementBuilder.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/DbHelpers/DbHelperTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/Enumerations/ConjunctionTextTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Michael Camara Pendon;mertkokusen,2
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/Enumerations/OperationTextTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Michael Camara Pendon;mertkokusen,2
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/Enumerations/OrderTextTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Michael Camara Pendon;mertkokusen,2
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/Equalities/FieldEqualityTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/Equalities/OrderFieldEqualityTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/Equalities/ParameterEqualityTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/Equalities/QueryFieldEqualityTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/Equalities/QueryGroupEqualityTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/Interfaces/ICacheForBaseRepositoryTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/Interfaces/ICacheForDbConnectionTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/Interfaces/ICacheForDbRepositoryTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/Interfaces/IStatementBuilderForBaseRepositoryTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/Interfaces/IStatementBuilderForDbConnectionTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/Interfaces/IStatementBuilderForDbRepositoryTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/Interfaces/ITraceForBaseRepositoryTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/Interfaces/ITraceForDbConnectionTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/Interfaces/ITraceForDbRepositoryTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/Others/FieldTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/Others/InherittanceTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/Others/OrderFieldTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/Others/ParseTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/Others/QuotationTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/Properties/AssemblyInfo.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/QueryGroups/QueryGroupCommonTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/QueryGroups/QueryGroupOperationBetweenAndNotBetween.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/QueryGroups/QueryGroupOperationInAndNotIn.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/QueryGroups/QueryGroupOperationLikeAndNotLike.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/QueryGroups/QueryGroupParseDynamicCommonTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/QueryGroups/QueryGroupParseDynamicValuesTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/QueryGroups/QueryGroupParseExpressionClassesTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/QueryGroups/QueryGroupParseExpressionCommonTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/QueryGroups/QueryGroupParseExpressionForAllMethodTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/QueryGroups/QueryGroupParseExpressionForAnyMethodTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/QueryGroups/QueryGroupParseExpressionForBooleanTypeTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/QueryGroups/QueryGroupParseExpressionForByteTypeTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/QueryGroups/QueryGroupParseExpressionForContainsMethodTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/QueryGroups/QueryGroupParseExpressionForDateTimeTypeTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/QueryGroups/QueryGroupParseExpressionForDoubleTypeTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/QueryGroups/QueryGroupParseExpressionForEndsWithMethodTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/QueryGroups/QueryGroupParseExpressionForGuidTypeTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/QueryGroups/QueryGroupParseExpressionForIntTypeTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/QueryGroups/QueryGroupParseExpressionForSingleTypeTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/QueryGroups/QueryGroupParseExpressionForStartsWithMethodTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/QueryGroups/QueryGroupParseExpressionForStringTypeTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/QueryGroups/QueryGroupParseExpressionOperationsTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/QueryGroups/QueryGroupParseExpressionValuesTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/Resolvers/ClientTypeToDbTypeResolverTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/Resolvers/DbTypeToSqlServerStringNameResolverTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,B,Michael Camara Pendon;mertkokusen,2
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/Resolvers/SqlServerTypeNameToClientTypeResolverTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/StatementBuilders/CreateAverageAllTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/StatementBuilders/CreateAverageTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/StatementBuilders/CreateCountAllTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/StatementBuilders/CreateCountTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/StatementBuilders/CreateDeleteAllTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/StatementBuilders/CreateDeleteTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/StatementBuilders/CreateExistsTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/StatementBuilders/CreateInsertAllTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/StatementBuilders/CreateInsertTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/StatementBuilders/CreateMaxAllTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/StatementBuilders/CreateMaxTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/StatementBuilders/CreateMinAllTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/StatementBuilders/CreateMinTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/StatementBuilders/CreateQueryAllTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/StatementBuilders/CreateQueryTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/StatementBuilders/CreateSumAllTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/StatementBuilders/CreateSumTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/StatementBuilders/CreateTruncateTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/StatementBuilders/CreateUpdateAllTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb.Tests/RepoDb.UnitTests/StatementBuilders/CreateUpdateTest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Attributes/IdentityAttribute.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Attributes/MapAttribute.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Attributes/PrimaryAttribute.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Attributes/TextAttribute.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Attributes/TypeMapAttribute.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Michael Camara Pendon;Rodel Dagumampan,2
+RepoDb/RepoDb/BaseRepository.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/BulkInsertMapItem.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/CacheItem.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/CancellableTraceLog.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/ClassMappedNameCache.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/ClassProperty.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Calum Chisholm;Michael Camara Pendon,2
+RepoDb/RepoDb/CommandArrayParameter.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/CommandParameter.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/CommandTextCache.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Constant.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Contexts/Execution/InsertAllExecutionContext.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Contexts/Execution/InsertAllExecutionContextCache.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Contexts/Execution/InsertExecutionContext.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Contexts/Execution/InsertExecutionContextCache.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Contexts/Execution/MergeAllExecutionContext.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Contexts/Execution/MergeAllExecutionContextCache.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Contexts/Execution/MergeExecutionContext.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Contexts/Execution/MergeExecutionContextCache.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Contexts/Execution/UpdateAllExecutionContext.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Contexts/Execution/UpdateAllExecutionContextCache.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Contexts/Execution/UpdateExecutionContext.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Contexts/Execution/UpdateExecutionContextCache.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/DataEntityDataReader.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Michael Camara Pendon;SergerGood,2
+RepoDb/RepoDb/DataReaderField.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/DbField.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/DbFieldCache.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/DbHelperMapper.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/DbRepository.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/DbSettingMapper.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Enumerations/Conjunction.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Calum Chisholm;Michael Camara Pendon,2
+RepoDb/RepoDb/Enumerations/ConnectionPersistency.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Enumerations/ConversionType.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Enumerations/Operation.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Calum Chisholm;Michael Camara Pendon,2
+RepoDb/RepoDb/Enumerations/Order.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Calum Chisholm;Michael Camara Pendon,2
+RepoDb/RepoDb/Exceptions/CancelledExecutionException.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Exceptions/EmptyException.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Exceptions/InvalidExpressionException.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Exceptions/InvalidParameterException.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Exceptions/InvalidQualifiersException.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Exceptions/InvalidTypeException.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Exceptions/ItemNotFoundException.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Exceptions/MappingExistsException.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Exceptions/MissingFieldsException.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Exceptions/MissingMappingException.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Exceptions/ParameterNotFoundException.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Exceptions/PrimaryFieldNotFoundException.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Expressions/ClassExpression.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Extensions/ArrayExtension.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Extensions/ClassPropertyExtension.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Extensions/DataEntityExtension.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Michael Camara Pendon;Rodel Dagumampan,2
+RepoDb/RepoDb/Extensions/DataReaderExtension.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Extensions/DbCommandExtension.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Michael Camara Pendon;SergerGood,2
+RepoDb/RepoDb/Extensions/DbConnectionExtension.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Michael Camara Pendon;Rodel Dagumampan,2
+RepoDb/RepoDb/Extensions/DbFieldExtension.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Extensions/EnumerableExtension.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Extensions/ExpressionExtension.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Michael Camara Pendon;SergerGood;herocod3r,3
+RepoDb/RepoDb/Extensions/FieldExtension.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Extensions/MemberBindingExtension.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Extensions/MemberInfoExtension.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Extensions/ObjectExtension.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Extensions/OrderFieldExtension.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Extensions/PropertyInfoExtension.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Extensions/QueryFieldExtension.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Michael Camara Pendon;Rodel Dagumampan,2
+RepoDb/RepoDb/Extensions/QueryGroupExtension.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Michael Camara Pendon;Rodel Dagumampan,2
+RepoDb/RepoDb/Extensions/StringExtension.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Michael Camara Pendon;Nick Dodd,2
+RepoDb/RepoDb/Extensions/TypeExtension.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Field.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Calum Chisholm;Michael Camara Pendon;SergerGood,3
+RepoDb/RepoDb/FieldCache.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/IdentityCache.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Interfaces/ICache.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Interfaces/IDbHelper.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Interfaces/IDbSetting.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Interfaces/IResolver.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Interfaces/IStatementBuilder.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Interfaces/ITrace.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/MemoryCache.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/ObjectConverter.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/BaseRepository/Average.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/BaseRepository/AverageAll.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/BaseRepository/BatchQuery.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/BaseRepository/Count.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/BaseRepository/CountAll.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/BaseRepository/Delete.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/BaseRepository/DeleteAll.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/BaseRepository/Exists.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/BaseRepository/Insert.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/BaseRepository/InsertAll.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/BaseRepository/Max.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/BaseRepository/MaxAll.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/BaseRepository/Merge.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/BaseRepository/MergeAll.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/BaseRepository/Min.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/BaseRepository/MinAll.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/BaseRepository/Query.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/BaseRepository/QueryAll.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/BaseRepository/Sum.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/BaseRepository/SumAll.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/BaseRepository/Truncate.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/BaseRepository/Update.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/BaseRepository/UpdateAll.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbConnection/Average.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbConnection/AverageAll.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbConnection/BatchQuery.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbConnection/Count.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbConnection/CountAll.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbConnection/Delete.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbConnection/DeleteAll.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbConnection/Exists.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbConnection/Insert.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbConnection/InsertAll.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbConnection/Max.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbConnection/MaxAll.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbConnection/Merge.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbConnection/MergeAll.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbConnection/Min.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbConnection/MinAll.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbConnection/Query.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbConnection/QueryAll.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbConnection/QueryMultiple.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbConnection/Sum.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbConnection/SumAll.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbConnection/Truncate.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbConnection/Update.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbConnection/UpdateAll.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbRepository/Average.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbRepository/AverageAll.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbRepository/BatchQuery.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbRepository/Count.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbRepository/CountAll.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbRepository/Delete.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbRepository/DeleteAll.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbRepository/Exists.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbRepository/Insert.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbRepository/InsertAll.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbRepository/Max.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbRepository/MaxAll.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbRepository/Merge.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbRepository/MergeAll.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbRepository/Min.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbRepository/MinAll.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbRepository/Query.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbRepository/QueryAll.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbRepository/QueryMultiple.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbRepository/Sum.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbRepository/SumAll.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbRepository/Truncate.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbRepository/Update.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Operations/DbRepository/UpdateAll.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/OrderField.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Calum Chisholm;Michael Camara Pendon;mertkokusen,3
+RepoDb/RepoDb/Parameter.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Calum Chisholm;Michael Camara Pendon,2
+RepoDb/RepoDb/PerformanceMonitor.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/PrimaryCache.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Properties/AssemblyInfo.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/PropertyCache.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/PropertyMappedNameCache.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/PropertyValue.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/QueryBuilder.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Calum Chisholm;Michael Camara Pendon,2
+RepoDb/RepoDb/QueryField.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Calum Chisholm;Michael Camara Pendon;herocod3r,3
+RepoDb/RepoDb/QueryGroup.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Calum Chisholm;Michael Camara Pendon;SergerGood,3
+RepoDb/RepoDb/QueryGroupTypeMap.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/QueryMultipleExtractor.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Reflection/DataCommand.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Reflection/DataReader.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Reflection/DelegateCache.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Reflection/DelegateFactory.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Michael Camara Pendon;mertkokusen,2
+RepoDb/RepoDb/Reflection/Delegates.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Reflection/FunctionCache.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Reflection/FunctionFactory.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Michael Camara Pendon;SergerGood;mertkokusen,3
+RepoDb/RepoDb/Reflection/Functions.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Requests/AverageAllRequest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Requests/AverageRequest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Calum Chisholm;Michael Camara Pendon,2
+RepoDb/RepoDb/Requests/BaseRequest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Requests/BatchQueryRequest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Calum Chisholm;Michael Camara Pendon,2
+RepoDb/RepoDb/Requests/CountAllRequest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Calum Chisholm;Michael Camara Pendon,2
+RepoDb/RepoDb/Requests/CountRequest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Calum Chisholm;Michael Camara Pendon,2
+RepoDb/RepoDb/Requests/DeleteAllRequest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Calum Chisholm;Michael Camara Pendon,2
+RepoDb/RepoDb/Requests/DeleteRequest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Calum Chisholm;Michael Camara Pendon,2
+RepoDb/RepoDb/Requests/ExistsRequest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Calum Chisholm;Michael Camara Pendon,2
+RepoDb/RepoDb/Requests/InsertAllRequest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Calum Chisholm;Michael Camara Pendon,2
+RepoDb/RepoDb/Requests/InsertRequest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Calum Chisholm;Michael Camara Pendon,2
+RepoDb/RepoDb/Requests/MaxAllRequest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Requests/MaxRequest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Calum Chisholm;Michael Camara Pendon,2
+RepoDb/RepoDb/Requests/MergeAllRequest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Calum Chisholm;Michael Camara Pendon,2
+RepoDb/RepoDb/Requests/MergeRequest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Calum Chisholm;Michael Camara Pendon,2
+RepoDb/RepoDb/Requests/MinAllRequest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Requests/MinRequest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Calum Chisholm;Michael Camara Pendon,2
+RepoDb/RepoDb/Requests/QueryAllRequest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Calum Chisholm;Michael Camara Pendon,2
+RepoDb/RepoDb/Requests/QueryMultipleRequest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Calum Chisholm;Michael Camara Pendon,2
+RepoDb/RepoDb/Requests/QueryRequest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Calum Chisholm;Michael Camara Pendon,2
+RepoDb/RepoDb/Requests/SumAllRequest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Requests/SumRequest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Calum Chisholm;Michael Camara Pendon,2
+RepoDb/RepoDb/Requests/TruncateRequest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Calum Chisholm;Michael Camara Pendon,2
+RepoDb/RepoDb/Requests/UpdateAllRequest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Calum Chisholm;Michael Camara Pendon,2
+RepoDb/RepoDb/Requests/UpdateRequest.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Calum Chisholm;Michael Camara Pendon,2
+RepoDb/RepoDb/Resolvers/ClientTypeToAverageableClientTypeResolver.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Resolvers/ClientTypeToDbTypeResolver.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Resolvers/DbTypeToClientTypeResolver.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/StatementBuilderMapper.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/StatementBuilders/BaseStatementBuilder.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,B,Michael Camara Pendon;SergerGood,2
+RepoDb/RepoDb/TraceLog.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/TypeMapper.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,A,Michael Camara Pendon,1
+RepoDb/RepoDb/Types/SqlVariant.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/_SqlServer/DbHelpers/SqlServerDbHelper.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,B,Michael Camara Pendon;Simon Cropp,2
+RepoDb/RepoDb/_SqlServer/DbSettings/SqlServerDbSetting.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/_SqlServer/Operations/BaseRepository/BulkInsert.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/_SqlServer/Operations/DbRepository/BulkInsert.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/_SqlServer/Operations/SqlConnection/BulkInsert.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,B,Michael Camara Pendon;Simon Cropp,2
+RepoDb/RepoDb/_SqlServer/Resolvers/DbTypeToSqlServerStringNameResolver.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/_SqlServer/Resolvers/SqlServerConvertFieldResolver.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/_SqlServer/Resolvers/SqlServerDbTypeNameToClientTypeResolver.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,B,Michael Camara Pendon;mertkokusen,2
+RepoDb/RepoDb/_SqlServer/SqlServerTableHints.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2019,A,Michael Camara Pendon,1
+RepoDb/RepoDb/_SqlServer/StatementBuilders/SqlServerStatementBuilder.cs,OK,Michael Camara Pendon,michael.c.pendon@outlook.com,2018,B,Michael Camara Pendon;SergerGood,2

@@ -1,4 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿// Copyright (c) 2019 Michael Camara Pendon.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
 
 namespace RepoDb.UnitTests.Caches

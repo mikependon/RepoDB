@@ -1,4 +1,8 @@
-﻿namespace RepoDb
+﻿// Copyright (c) 2018 Michael Camara Pendon.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+namespace RepoDb
 {
     /// <summary>
     /// A cancellable tracing log object used in the tracing operations. This class holds the cancellable operations for all tracing logs.

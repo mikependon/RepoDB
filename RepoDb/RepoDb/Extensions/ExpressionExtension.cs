@@ -1,4 +1,9 @@
-﻿using RepoDb.Interfaces;
+﻿// Copyright (c) 2018 Michael Camara Pendon.
+// Portions copyright their respective RepoDB contributors.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+using RepoDb.Interfaces;
 using System;
 using System.Linq;
 using System.Linq.Expressions;

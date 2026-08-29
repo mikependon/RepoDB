@@ -1,4 +1,8 @@
-﻿namespace RepoDb.Interfaces
+﻿// Copyright (c) 2018 Michael Camara Pendon.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+namespace RepoDb.Interfaces
 {
     /// <summary>
     /// An interface used to mark a class to be usable for tracing operations. A trace object is being used by the repositories on every operations

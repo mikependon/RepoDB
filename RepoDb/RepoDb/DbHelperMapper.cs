@@ -1,4 +1,8 @@
-﻿using RepoDb.DbHelpers;
+﻿// Copyright (c) 2019 Michael Camara Pendon.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+using RepoDb.DbHelpers;
 using RepoDb.Exceptions;
 using RepoDb.Interfaces;
 using System;

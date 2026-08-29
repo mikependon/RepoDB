@@ -1,4 +1,8 @@
-﻿namespace RepoDb.Interfaces
+﻿// Copyright (c) 2019 Michael Camara Pendon.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+namespace RepoDb.Interfaces
 {
     /// <summary>
     /// An interfaced used to mark a class to become a conversion resolver.
