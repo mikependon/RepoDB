@@ -1,4 +1,12 @@
-﻿namespace RepoDb.Benchmarks.SqlServer.Configurations
+﻿#region Copyright Attributions
+
+// Copyright (c) 2021 SergerGood and Michael Camara Pendon.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+namespace RepoDb.Benchmarks.SqlServer.Configurations
 {
     public static class OrmNameConstants
     {

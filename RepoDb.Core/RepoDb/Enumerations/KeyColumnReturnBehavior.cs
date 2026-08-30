@@ -1,4 +1,12 @@
-﻿namespace RepoDb.Enumerations
+﻿#region Copyright Attributions
+
+// Copyright (c) 2022 Michael Camara Pendon.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+namespace RepoDb.Enumerations
 {
     /// <summary>
     /// An enumeration that is used to define how the push operations (i.e.: Insert, InsertAll, Merge and MergeAll) behaves when returning the value from the column columns (i.e.: Primary and Identity).

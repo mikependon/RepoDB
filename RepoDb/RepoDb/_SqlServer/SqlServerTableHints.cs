@@ -1,4 +1,12 @@
-﻿namespace RepoDb
+﻿#region Copyright Attributions
+
+// Copyright (c) 2019 Michael Camara Pendon.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+namespace RepoDb
 {
     /// <summary>
     /// A class that contains the SQL Server table hints (query optimizers) when querying a record. See Microsoft documentation <see href="https://docs.microsoft.com/en-us/sql/t-sql/queries/hints-transact-sql-table?view=sql-server-2017">here</see>.

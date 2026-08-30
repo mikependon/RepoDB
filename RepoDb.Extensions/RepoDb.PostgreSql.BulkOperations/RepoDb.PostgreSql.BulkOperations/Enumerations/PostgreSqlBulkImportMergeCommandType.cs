@@ -1,4 +1,12 @@
-﻿namespace RepoDb.Enumerations.PostgreSql
+﻿#region Copyright Attributions
+
+// Copyright (c) 2021 Michael Camara Pendon.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+namespace RepoDb.Enumerations.PostgreSql
 {
     /// <summary>
     /// An enumeration that is being used to define which command text to use when executing the 'BinaryBulkMerge' operation.

@@ -1,4 +1,13 @@
-﻿using RepoDb.Attributes.Parameter;
+﻿#region Copyright Attributions
+
+// Copyright (c) 2020 Michael Camara Pendon.
+// Portions copyright their respective RepoDB contributors.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+using RepoDb.Attributes.Parameter;
 using RepoDb.Interfaces;
 using System;
 using System.Collections.Generic;

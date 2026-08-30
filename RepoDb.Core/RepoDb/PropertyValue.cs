@@ -1,4 +1,12 @@
-﻿namespace RepoDb
+﻿#region Copyright Attributions
+
+// Copyright (c) 2018 Michael Camara Pendon.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+namespace RepoDb
 {
     /// <summary>
     /// A class that is being used to handle the extracted value of the class property. It is referencing the instance of the <see cref="ClassProperty"/> object.
