@@ -19,6 +19,37 @@ You don't need to be a core maintainer or a database expert to make an impact. P
 - **Help others.** Answer questions on [StackOverflow](https://stackoverflow.com/search?tab=newest&q=RepoDB) or in the [Microsoft Teams community](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ). Community support is a force multiplier — it scales far beyond what any small maintainer team can do alone.
 - **Spread the word.** Blog about RepoDB, share it with your team, or simply give the repo a :star:. Visibility brings in the next wave of contributors and keeps the project healthy long-term.
 
+## ✅ Copyright Attribution
+
+**Copyright attribution is important in every file.** Every source file in RepoDB must carry a copyright header, applied according to who created and/or modified it:
+
+If you created the file yourself, add the below attribution in the head:
+
+```
+#region Copyright Attributions
+
+// Copyright (c) 2026 John Smith.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+```
+
+If the file was created by the author (or is already present), no need to modify the existing attributions.
+
+```
+#region Copyright Attributions
+
+// Copyright (c) 2026 John Smith.
+// Portions copyright their respective RepoDB contributors.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+```
+
+> **Note:** The "Portions copyright" header above is only for the one-time application of copyright attributions across the codebase. It is **not** used to update or amend an existing attribution — once a file carries a header, subsequent contributions to it are already audited and tracked by GitHub, so the header itself is left as-is.
+
 ## ✅ Before You Start
 
 - Check [existing issues](https://github.com/mikependon/RepoDb/issues) and open pull requests to avoid duplicating work.
