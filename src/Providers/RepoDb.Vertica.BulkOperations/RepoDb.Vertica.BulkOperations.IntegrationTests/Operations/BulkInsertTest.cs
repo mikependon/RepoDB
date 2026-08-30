@@ -249,7 +249,7 @@ namespace RepoDb.Vertica.BulkOperations.IntegrationTests.Operations
             using (var connection = new VerticaConnection(Database.ConnectionString))
             {
                 // Act
-                Assert.Throws<FormatException>(() => connection.BulkInsert(tables, mappings));
+                Assert.Throws<VerticaException>(() => connection.BulkInsert(tables, mappings));
             }
         }
 
@@ -440,7 +440,7 @@ namespace RepoDb.Vertica.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new VerticaConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<FormatException>(() => destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, mappings: mappings));
+                            Assert.Throws<VerticaException>(() => destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, mappings: mappings));
                         }
                     }
                 }
@@ -881,7 +881,7 @@ namespace RepoDb.Vertica.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new VerticaConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<FormatException>(() => destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, mappings: mappings));
+                            Assert.Throws<VerticaException>(() => destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, mappings: mappings));
                         }
                     }
                 }
@@ -1137,7 +1137,7 @@ namespace RepoDb.Vertica.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new VerticaConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<FormatException>(() => destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, mappings: mappings));
+                            Assert.Throws<VerticaException>(() => destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, mappings: mappings));
                         }
                     }
                 }
@@ -2602,7 +2602,7 @@ namespace RepoDb.Vertica.BulkOperations.IntegrationTests.Operations
             using (var connection = new VerticaConnection(Database.ConnectionString))
             {
                 // Act
-                Assert.Throws<FormatException>(() => connection.BulkInsert(tables, mappings));
+                Assert.Throws<VerticaException>(() => connection.BulkInsert(tables, mappings));
             }
         }
 
@@ -2805,7 +2805,7 @@ namespace RepoDb.Vertica.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new VerticaConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<FormatException>(() => destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings));
+                            Assert.Throws<VerticaException>(() => destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings));
                         }
                     }
                 }
@@ -3226,7 +3226,7 @@ namespace RepoDb.Vertica.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new VerticaConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<FormatException>(() => destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings));
+                            Assert.Throws<VerticaException>(() => destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings));
                         }
                     }
                 }
@@ -3498,7 +3498,7 @@ namespace RepoDb.Vertica.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new VerticaConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<FormatException>(() => destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings));
+                            Assert.Throws<VerticaException>(() => destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings));
                         }
                     }
                 }
