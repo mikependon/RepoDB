@@ -34,9 +34,11 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
 
         /*
          * ClickHouse has no identity/auto-increment mechanism and no way to report a value back from a
-         * single INSERT command (no chained SELECT, no RETURNING). Insert/InsertAsync therefore always
-         * return null here - the primary key is whatever the caller already supplied on the entity, so
-         * every case below is effectively a "non-identity" insert; the method names are kept ("ForIdentity"/
+         * single INSERT command (no chained SELECT, no RETURNING). Since there is never an identity key,
+         * RepoDb.Core's Insert/InsertAsync fall back to returning the primary key value the caller already
+         * supplied on the entity (consistent with every other non-identity provider, e.g. Vertica's
+         * "ForNonIdentity" tests), rather than null; every case below is effectively a "non-identity" insert,
+         * so the returned value always equals the entity's own Id. The method names are kept ("ForIdentity"/
          * "ForNonIdentity") for structural parity with the CompleteTable/NonIdentityCompleteTable split.
          */
 
@@ -57,7 +59,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-                Assert.IsNull(result);
+                Assert.AreEqual(table.Id, result);
                 Assert.IsTrue(table.Id > 0);
 
                 // Act
@@ -82,7 +84,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityCompleteTable>());
-                Assert.IsNull(result);
+                Assert.AreEqual(table.Id, result);
 
                 // Act
                 var queryResult = connection.Query<NonIdentityCompleteTable>(table.Id);
@@ -110,7 +112,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-                Assert.IsNull(result);
+                Assert.AreEqual(table.Id, result);
                 Assert.IsTrue(table.Id > 0);
 
                 // Act
@@ -135,7 +137,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityCompleteTable>());
-                Assert.IsNull(result);
+                Assert.AreEqual(table.Id, result);
 
                 // Act
                 var queryResult = connection.Query<NonIdentityCompleteTable>(table.Id);
@@ -168,7 +170,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-                Assert.IsNull(result);
+                Assert.AreEqual(table.Id, result);
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>(table.Id);
@@ -193,7 +195,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-                Assert.IsNull(result);
+                Assert.AreEqual(table.Id, result);
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>((long)table.Id);
@@ -218,7 +220,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-                Assert.IsNull(result);
+                Assert.AreEqual(((dynamic)table).Id, result);
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>((long)((dynamic)table).Id);
@@ -243,7 +245,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityCompleteTable>());
-                Assert.IsNull(result);
+                Assert.AreEqual(table.Id, result);
 
                 // Act
                 var queryResult = connection.Query<NonIdentityCompleteTable>(table.Id);
@@ -268,7 +270,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityCompleteTable>());
-                Assert.IsNull(result);
+                Assert.AreEqual(table.Id, result);
 
                 // Act
                 var queryResult = connection.Query<NonIdentityCompleteTable>((long)table.Id);
@@ -293,7 +295,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityCompleteTable>());
-                Assert.IsNull(result);
+                Assert.AreEqual(((dynamic)table).Id, result);
 
                 // Act
                 var queryResult = connection.Query<NonIdentityCompleteTable>((long)((dynamic)table).Id);
@@ -322,7 +324,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-                Assert.IsNull(result);
+                Assert.AreEqual(table.Id, result);
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>(table.Id);
@@ -347,7 +349,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-                Assert.IsNull(result);
+                Assert.AreEqual(table.Id, result);
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>((long)table.Id);
@@ -372,7 +374,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-                Assert.IsNull(result);
+                Assert.AreEqual(((dynamic)table).Id, result);
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>((long)((dynamic)table).Id);
@@ -397,7 +399,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityCompleteTable>());
-                Assert.IsNull(result);
+                Assert.AreEqual(table.Id, result);
 
                 // Act
                 var queryResult = connection.Query<NonIdentityCompleteTable>(table.Id);
@@ -422,7 +424,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityCompleteTable>());
-                Assert.IsNull(result);
+                Assert.AreEqual(table.Id, result);
 
                 // Act
                 var queryResult = connection.Query<NonIdentityCompleteTable>((long)table.Id);
@@ -447,7 +449,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityCompleteTable>());
-                Assert.IsNull(result);
+                Assert.AreEqual(((dynamic)table).Id, result);
 
                 // Act
                 var queryResult = connection.Query<NonIdentityCompleteTable>((long)((dynamic)table).Id);
