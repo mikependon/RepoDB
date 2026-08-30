@@ -187,9 +187,9 @@ namespace RepoDb.Contexts.Providers
             var dbHelper = connection.GetDbHelper();
             var inputFields = new List<DbField>();
 
-            // Filter the actual properties for input fields
+            // Filter the actual properties for input fields - mirrors the SET-clause exclusions in
             inputFields = dbFields?.GetItems()
-                .Where(dbField => dbField.IsIdentity == false)
+                .Where(dbField => dbField.IsIdentity == false && dbField.IsPrimary == false)
                 .Where(dbField =>
                     fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                 .AsList();

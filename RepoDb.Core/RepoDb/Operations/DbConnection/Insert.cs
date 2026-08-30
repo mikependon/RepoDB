@@ -13,6 +13,7 @@ using RepoDb.Interfaces;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -705,6 +706,10 @@ namespace RepoDb
                 {
                     result = Converter.ToType<TResult>(connection.GetDbHelper().GetScopeIdentity<object>(connection, transaction));
                 }
+                else if (result == null && context.HasIdentityKey == false && context.KeyFieldName != null)
+                {
+                    result = Converter.ToType<TResult>(GetEntityFieldValue(entity, context.KeyFieldName));
+                }
                 if (result != null)
                 {
                     context.KeyPropertySetterFunc?.Invoke(entity, result);
@@ -792,6 +797,10 @@ namespace RepoDb
                 if (result == null && context.HasIdentityKey && dbSetting.IsMultiStatementExecutable == false)
                 {
                     result = Converter.ToType<TResult>(await connection.GetDbHelper().GetScopeIdentityAsync<object>(connection, transaction, cancellationToken));
+                }
+                else if (result == null && context.HasIdentityKey == false && context.KeyFieldName != null)
+                {
+                    result = Converter.ToType<TResult>(GetEntityFieldValue(entity, context.KeyFieldName));
                 }
                 if (result != null)
                 {
