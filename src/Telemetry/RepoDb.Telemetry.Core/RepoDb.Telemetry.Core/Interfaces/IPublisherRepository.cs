@@ -8,6 +8,7 @@
 
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace RepoDb.Telemetry.Core
 {
@@ -28,7 +29,7 @@ namespace RepoDb.Telemetry.Core
         /// </summary>
         /// <param name="telemetryItem">The telemetry data to publish.</param>
         /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
-        public void PublishAsync(TelemetryItem telemetryItem,
+        public Task PublishAsync(TelemetryItem telemetryItem,
             CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -43,7 +44,7 @@ namespace RepoDb.Telemetry.Core
         /// </summary>
         /// <param name="telemetryItems">The telemetry items to publish.</param>
         /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
-        public void PublishManyAsync(
+        public Task PublishManyAsync(
             IEnumerable<TelemetryItem> telemetryItems,
             CancellationToken cancellationToken = default);
     }
