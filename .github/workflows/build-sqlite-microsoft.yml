@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'RepoDb.Core/**'
-      - 'RepoDb.Sqlite.Microsoft/**'
+      - 'src/Providers/RepoDb.Core/**'
+      - 'src/Providers/RepoDb.Sqlite.Microsoft/**'
       - '.github/workflows/build-base.yml'
       - '.github/workflows/build-sqlite-microsoft.yml'
 
@@ -13,7 +13,7 @@ jobs:
   build:
     uses: ./.github/workflows/build-base.yml
     with:
-      solution-dir: RepoDb.Sqlite.Microsoft
+      solution-dir: src/Providers/RepoDb.Sqlite.Microsoft
       solution-file: RepoDb.Sqlite.Microsoft.sln
       artifact-name: release-sqlite-microsoft
       db-engine: none

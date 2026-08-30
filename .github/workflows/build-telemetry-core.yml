@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'RepoDb.Core/**'
-      - 'RepoDb.Telemetry.Core/**'
+      - 'src/Providers/RepoDb.Core/**'
+      - 'src/Telemetry/RepoDb.Telemetry.Core/**'
       - '.github/workflows/build-base.yml'
       - '.github/workflows/build-telemetry-core.yml'
 
@@ -13,7 +13,7 @@ jobs:
   build:
     uses: ./.github/workflows/build-base.yml
     with:
-      solution-dir: RepoDb.Telemetry.Core
+      solution-dir: src/Telemetry/RepoDb.Telemetry.Core
       solution-file: RepoDb.Telemetry.Core.sln
       artifact-name: release-telemetry-core
       db-engine: none

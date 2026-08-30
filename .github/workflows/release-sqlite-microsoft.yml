@@ -22,4 +22,4 @@ jobs:
       version: ${{ inputs.version }}
       dependency-overrides: ${{ inputs.dependency-overrides }}
       project-name: RepoDb.Sqlite.Microsoft
-      project-path: RepoDb.Sqlite.Microsoft/RepoDb.Sqlite.Microsoft/RepoDb.Sqlite.Microsoft.csproj
+      project-path: src/Providers/RepoDb.Sqlite.Microsoft/RepoDb.Sqlite.Microsoft/RepoDb.Sqlite.Microsoft.csproj

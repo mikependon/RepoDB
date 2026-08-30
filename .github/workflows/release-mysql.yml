@@ -22,4 +22,4 @@ jobs:
       version: ${{ inputs.version }}
       dependency-overrides: ${{ inputs.dependency-overrides }}
       project-name: RepoDb.MySql
-      project-path: RepoDb.MySql/RepoDb.MySql/RepoDb.MySql.csproj
+      project-path: src/Providers/RepoDb.MySql/RepoDb.MySql/RepoDb.MySql.csproj

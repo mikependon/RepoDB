@@ -22,4 +22,4 @@ jobs:
       version: ${{ inputs.version }}
       dependency-overrides: ${{ inputs.dependency-overrides }}
       project-name: RepoDb.EnterpriseDb
-      project-path: RepoDb.EnterpriseDb/RepoDb.EnterpriseDb/RepoDb.EnterpriseDb.csproj
+      project-path: src/Providers/RepoDb.EnterpriseDb/RepoDb.EnterpriseDb/RepoDb.EnterpriseDb.csproj

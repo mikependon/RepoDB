@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'RepoDb.Core/**'
-      - 'RepoDb.ClickHouse/**'
-      - 'RepoDb.Extensions/RepoDb.ClickHouse.BulkOperations/**'
+      - 'src/Providers/RepoDb.Core/**'
+      - 'src/Providers/RepoDb.ClickHouse/**'
+      - 'src/Providers/RepoDb.ClickHouse.BulkOperations/**'
       - '.github/workflows/build-base.yml'
       - '.github/workflows/build-clickhouse-bulk.yml'
 
@@ -14,7 +14,7 @@ jobs:
   build:
     uses: ./.github/workflows/build-base.yml
     with:
-      solution-dir: RepoDb.Extensions/RepoDb.ClickHouse.BulkOperations
+      solution-dir: src/Providers/RepoDb.ClickHouse.BulkOperations
       solution-file: RepoDb.ClickHouse.BulkOperations.sln
       artifact-name: release-clickhouse-bulk
       db-engine: clickhouse

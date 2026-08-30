@@ -22,4 +22,4 @@ jobs:
       version: ${{ inputs.version }}
       dependency-overrides: ${{ inputs.dependency-overrides }}
       project-name: RepoDb.PostgreSql
-      project-path: RepoDb.PostgreSql/RepoDb.PostgreSql/RepoDb.PostgreSql.csproj
+      project-path: src/Providers/RepoDb.PostgreSql/RepoDb.PostgreSql/RepoDb.PostgreSql.csproj

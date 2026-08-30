@@ -22,4 +22,4 @@ jobs:
       version: ${{ inputs.version }}
       dependency-overrides: ${{ inputs.dependency-overrides }}
       project-name: RepoDb.MySqlConnector
-      project-path: RepoDb.MySqlConnector/RepoDb.MySqlConnector/RepoDb.MySqlConnector.csproj
+      project-path: src/Providers/RepoDb.MySqlConnector/RepoDb.MySqlConnector/RepoDb.MySqlConnector.csproj

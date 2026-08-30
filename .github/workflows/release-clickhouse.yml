@@ -22,4 +22,4 @@ jobs:
       version: ${{ inputs.version }}
       dependency-overrides: ${{ inputs.dependency-overrides }}
       project-name: RepoDb.ClickHouse
-      project-path: RepoDb.ClickHouse/RepoDb.ClickHouse/RepoDb.ClickHouse.csproj
+      project-path: src/Providers/RepoDb.ClickHouse/RepoDb.ClickHouse/RepoDb.ClickHouse.csproj

@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'RepoDb.Core/**'
-      - 'RepoDb.MySqlConnector/**'
+      - 'src/Providers/RepoDb.Core/**'
+      - 'src/Providers/RepoDb.MySqlConnector/**'
       - '.github/workflows/build-base.yml'
       - '.github/workflows/build-mysqlconnector.yml'
 
@@ -13,7 +13,7 @@ jobs:
   build:
     uses: ./.github/workflows/build-base.yml
     with:
-      solution-dir: RepoDb.MySqlConnector
+      solution-dir: src/Providers/RepoDb.MySqlConnector
       solution-file: RepoDb.MySqlConnector.sln
       artifact-name: release-mysqlconnector
       db-engine: mysql

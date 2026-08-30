@@ -16,4 +16,4 @@ jobs:
     with:
       version: ${{ inputs.version }}
       project-name: RepoDb
-      project-path: RepoDb.Core/RepoDb/RepoDb.csproj
+      project-path: src/Providers/RepoDb.Core/RepoDb/RepoDb.csproj

@@ -22,4 +22,4 @@ jobs:
       version: ${{ inputs.version }}
       dependency-overrides: ${{ inputs.dependency-overrides }}
       project-name: RepoDb.SqlServer
-      project-path: RepoDb.SqlServer/RepoDb.SqlServer/RepoDb.SqlServer.csproj
+      project-path: src/Providers/RepoDb.SqlServer/RepoDb.SqlServer/RepoDb.SqlServer.csproj

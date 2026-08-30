@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
-      - 'RepoDb.Core/**'
-      - 'RepoDb.Firebird/**'
+      - 'src/Providers/RepoDb.Core/**'
+      - 'src/Providers/RepoDb.Firebird/**'
       - '.github/workflows/build-base.yml'
       - '.github/workflows/build-pr-firebird.yml'
 
@@ -13,7 +13,7 @@ jobs:
   build:
     uses: ./.github/workflows/build-base.yml
     with:
-      solution-dir: RepoDb.Firebird
+      solution-dir: src/Providers/RepoDb.Firebird
       solution-file: RepoDb.Firebird.sln
       artifact-name: release-pr
       db-engine: firebird

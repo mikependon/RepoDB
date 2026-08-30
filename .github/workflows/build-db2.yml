@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'RepoDb.Core/**'
-      - 'RepoDb.Db2/**'
+      - 'src/Providers/RepoDb.Core/**'
+      - 'src/Providers/RepoDb.Db2/**'
       - '.github/workflows/build-base.yml'
       - '.github/workflows/build-db2.yml'
 
@@ -13,7 +13,7 @@ jobs:
   build:
     uses: ./.github/workflows/build-base.yml
     with:
-      solution-dir: RepoDb.Db2
+      solution-dir: src/Providers/RepoDb.Db2
       solution-file: RepoDb.Db2.sln
       artifact-name: release-db2
       db-engine: db2

@@ -90,17 +90,17 @@ Every supported database has a dedicated bulk-operations add-on (`BulkInsert`, `
 
 | DB Provider | Sync | Async | Class |
 |---|---|---|---|
-| [ClickHouse](https://www.nuget.org/packages/RepoDb.ClickHouse.BulkOperations) | ✅ | ✅ | [ClickHouseBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.ClickHouse.BulkOperations/RepoDb.ClickHouse.BulkOperations/ClickHouseBulkCopy.cs) |
-| [Db2](https://www.nuget.org/packages/RepoDb.Db2.BulkOperations) | ✅ | ✅ | [DB2BulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.Db2.BulkOperations/RepoDb.Db2.BulkOperations/Base/WriteToServer.cs) Native (Sync) / [Db2BulkArrayBinder](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.Db2.BulkOperations/RepoDb.Db2.BulkOperations/Db2BulkArrayBinder.cs) (Async) |
-| [Firebird](https://www.nuget.org/packages/RepoDb.Firebird.BulkOperations) | ✅ | ✅ | [FirebirdCommandBatcher](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.Firebird.BulkOperations/RepoDb.Firebird.BulkOperations/FirebirdCommandBatcher.cs) (via **`FbBatchCommand`**) |
-| [MariaDB](https://www.nuget.org/packages/RepoDb.MariaDb.BulkOperations) | ✅ | ✅ | [MariaDbBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.MariaDb.BulkOperations/RepoDb.MariaDb.BulkOperations/MariaDbBulkCopy.cs) (via **[RepoDb.Connector.MariaDb](https://www.nuget.org/packages/RepoDb.Connector.MariaDb)**) |
+| [ClickHouse](https://www.nuget.org/packages/RepoDb.ClickHouse.BulkOperations) | ✅ | ✅ | [ClickHouseBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.ClickHouse.BulkOperations/RepoDb.ClickHouse.BulkOperations/ClickHouseBulkCopy.cs) |
+| [Db2](https://www.nuget.org/packages/RepoDb.Db2.BulkOperations) | ✅ | ✅ | [DB2BulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.Db2.BulkOperations/RepoDb.Db2.BulkOperations/Base/WriteToServer.cs) Native (Sync) / [Db2BulkArrayBinder](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.Db2.BulkOperations/RepoDb.Db2.BulkOperations/Db2BulkArrayBinder.cs) (Async) |
+| [Firebird](https://www.nuget.org/packages/RepoDb.Firebird.BulkOperations) | ✅ | ✅ | [FirebirdCommandBatcher](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.Firebird.BulkOperations/RepoDb.Firebird.BulkOperations/FirebirdCommandBatcher.cs) (via **`FbBatchCommand`**) |
+| [MariaDB](https://www.nuget.org/packages/RepoDb.MariaDb.BulkOperations) | ✅ | ✅ | [MariaDbBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.MariaDb.BulkOperations/RepoDb.MariaDb.BulkOperations/MariaDbBulkCopy.cs) (via **[RepoDb.Connector.MariaDb](https://www.nuget.org/packages/RepoDb.Connector.MariaDb)**) |
 | [MariaDB Connector](https://www.nuget.org/packages/RepoDb.MariaDbConnector.BulkOperations) | ✅ | ✅ | [MariaDbBulkCopy](https://github.com/mikependon/RepoDB.Connectors/blob/main/src/RepoDb.Connector.MariaDbConnector/RepoDb.Connector.MariaDbConnector/Bulk/MariaDbBulkCopy.cs) (via **[RepoDb.Connector.MariaDbConnector](https://www.nuget.org/packages/RepoDb.Connector.MariaDbConnector)**) |
-| [MySQL](https://www.nuget.org/packages/RepoDb.MySql.BulkOperations) | ✅ | ✅ | [MySqlBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.MySql.BulkOperations/RepoDb.MySql.BulkOperations/MySqlBulkCopy.cs) (via [MySqlBulkLoader](https://www.nuget.org/packages/MySql.Data)) |
-| [MySQL Connector](https://www.nuget.org/packages/RepoDb.MySqlConnector.BulkOperations) | ✅ | ✅ | [MySqlConnectorBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.MySqlConnector.BulkOperations/RepoDb.MySqlConnector.BulkOperations/Base/WriteToServer.cs) Native |
-| [Oracle](https://www.nuget.org/packages/RepoDb.Oracle.BulkOperations) | ✅ | ✅ | [OracleBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.Oracle.BulkOperations/RepoDb.Oracle.BulkOperations/Base/WriteToServer.cs) Native |
-| [PostgreSQL](https://www.nuget.org/packages/RepoDb.PostgreSql.BulkOperations) | ✅ | ✅ | [NpgsqlBinaryImporter](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.PostgreSql.BulkOperations/RepoDb.PostgreSql.BulkOperations/Base/BinaryImport.cs) Native |
-| [SQL Server](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations) | ✅ | ✅ | [SqlBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations/RepoDb.SqlServer.BulkOperations/Base/WriteToServer.cs) Native |
-| [Vertica](https://www.nuget.org/packages/RepoDb.Vertica.BulkOperations) | ✅ | ✅ | [VerticaBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.Vertica.BulkOperations/RepoDb.Vertica.BulkOperations/VerticaBulkCopy.cs) (via **`VerticaCopyStream`**) |
+| [MySQL](https://www.nuget.org/packages/RepoDb.MySql.BulkOperations) | ✅ | ✅ | [MySqlBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.MySql.BulkOperations/RepoDb.MySql.BulkOperations/MySqlBulkCopy.cs) (via [MySqlBulkLoader](https://www.nuget.org/packages/MySql.Data)) |
+| [MySQL Connector](https://www.nuget.org/packages/RepoDb.MySqlConnector.BulkOperations) | ✅ | ✅ | [MySqlConnectorBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.MySqlConnector.BulkOperations/RepoDb.MySqlConnector.BulkOperations/Base/WriteToServer.cs) Native |
+| [Oracle](https://www.nuget.org/packages/RepoDb.Oracle.BulkOperations) | ✅ | ✅ | [OracleBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.Oracle.BulkOperations/RepoDb.Oracle.BulkOperations/Base/WriteToServer.cs) Native |
+| [PostgreSQL](https://www.nuget.org/packages/RepoDb.PostgreSql.BulkOperations) | ✅ | ✅ | [NpgsqlBinaryImporter](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.PostgreSql.BulkOperations/RepoDb.PostgreSql.BulkOperations/Base/BinaryImport.cs) Native |
+| [SQL Server](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations) | ✅ | ✅ | [SqlBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.SqlServer.BulkOperations/RepoDb.SqlServer.BulkOperations/Base/WriteToServer.cs) Native |
+| [Vertica](https://www.nuget.org/packages/RepoDb.Vertica.BulkOperations) | ✅ | ✅ | [VerticaBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.Vertica.BulkOperations/RepoDb.Vertica.BulkOperations/VerticaBulkCopy.cs) (via **`VerticaCopyStream`**) |
 
 MariaDB and MariaDB Connector route through RepoDB's own low-level connector packages (`RepoDb.Connector.MariaDb` / `RepoDb.Connector.MariaDbConnector`) rather than a database-vendor driver. Firebird has no `SqlBulkCopy`-equivalent in its ADO.NET driver, so `FirebirdCommandBatcher` batches rows through the driver's native `FbBatchCommand` instead. Vertica's `VerticaBulkCopy` wraps its native `COPY`-based streaming primitive, `VerticaCopyStream`.
 
@@ -129,7 +129,7 @@ RepoDB sits between a micro-ORM and a full ORM. Each tool below makes different 
 | **Change tracking** | ❌ None | ❌ None | ✅ Yes |
 | **Migrations** | ❌ None built-in | ❌ None built-in | ✅ Yes (EF Migrations) |
 | **Native Bulk** | ✅ Built-in, cross-provider | ❌ Via extensions | ❌ Via extensions/third-party |
-| **Insights / telemetry** | ✅ Built-in ([RepoDb.Telemetry.Default](RepoDb.Telemetry.Default/README.md)) | ❌ None built-in — manual or third-party (e.g. MiniProfiler) | ✅ Built-in logging/interceptors; OTel via community packages |
+| **Insights / telemetry** | ✅ Built-in ([RepoDb.Telemetry.Default](src/Telemetry/RepoDb.Telemetry.Default/README.md)) | ❌ None built-in — manual or third-party (e.g. MiniProfiler) | ✅ Built-in logging/interceptors; OTel via community packages |
 | **Performance** | ✅ Close to raw ADO.NET | ✅ Close to raw ADO.NET | ❌ Overhead from tracking/materialization |
 | **Best fit** | ✅ EF-like productivity without losing SQL control | ✅ Thinnest possible SQL-to-object mapper | ✅ Rich object graphs, LINQ, migrations |
 
@@ -137,13 +137,13 @@ Dapper and Entity Framework are both excellent, mature tools — this reflects d
 
 ## Telemetry
 
-RepoDB includes opt-in, drop-in telemetry via [RepoDb.Telemetry.Default](RepoDb.Telemetry.Default/README.md). Enable it once at startup and every operation (Insert, Query, Update, Delete, etc.) is captured and published to your insights collector automatically — no custom `ITrace` required.
+RepoDB includes opt-in, drop-in telemetry via [RepoDb.Telemetry.Default](src/Telemetry/RepoDb.Telemetry.Default/README.md). Enable it once at startup and every operation (Insert, Query, Update, Delete, etc.) is captured and published to your insights collector automatically — no custom `ITrace` required.
 
 <img src="https://raw.githubusercontent.com/mikependon/RepoDB.Blogs.Resources/refs/heads/main/images/repodb-insights-default-telemetry-banner.png" style="max-width:768px;" />
 
 It comes with great and simple dashboards visualization.
 
-Simply `docker compose up -d` the [docker-compose.yml](https://raw.githubusercontent.com/mikependon/RepoDB/refs/heads/master/RepoDb.Telemetry.Default/docker-compose.yml) and [.env](https://raw.githubusercontent.com/mikependon/RepoDB/refs/heads/master/RepoDb.Telemetry.Default/.env) files and integrate your code.
+Simply `docker compose up -d` the [docker-compose.yml](https://raw.githubusercontent.com/mikependon/RepoDB/refs/heads/master/src/Telemetry/RepoDb.Telemetry.Default/docker-compose.yml) and [.env](https://raw.githubusercontent.com/mikependon/RepoDB/refs/heads/master/src/Telemetry/RepoDb.Telemetry.Default/.env) files and integrate your code.
 
 ```csharp
 GlobalConfiguration
@@ -157,7 +157,7 @@ GlobalConfiguration
     });
 ```
 
-It's intentionally lightweight rather than OTel-based, keeping RepoDB's thin, fast footprint intact. See the [package README](RepoDb.Telemetry.Default/README.md) for configuration options, the full OTel rationale, and the roadmap.
+It's intentionally lightweight rather than OTel-based, keeping RepoDB's thin, fast footprint intact. See the [package README](src/Telemetry/RepoDb.Telemetry.Default/README.md) for configuration options, the full OTel rationale, and the roadmap.
 
 ## Contributions
 
@@ -179,12 +179,12 @@ Read our [contributing](CONTRIBUTING.md) page for more.
 
 ### Resources
 
-- [Building the Solutions](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/building-the-solutions.md)
-- [Coding Standards](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/coding-standards.md)
-- [Issuing a Pull Request](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/issuing-a-pull-request.md)
-- [Reporting an Issue](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/reporting-an-issue.md)
-- [Support Policy](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/support-policy.md)
-- [Limitations](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/limitations.md)
+- [Building the Solutions](https://github.com/mikependon/RepoDb/tree/master/src/Shared/RepoDb.Docs/building-the-solutions.md)
+- [Coding Standards](https://github.com/mikependon/RepoDb/tree/master/src/Shared/RepoDb.Docs/coding-standards.md)
+- [Issuing a Pull Request](https://github.com/mikependon/RepoDb/tree/master/src/Shared/RepoDb.Docs/issuing-a-pull-request.md)
+- [Reporting an Issue](https://github.com/mikependon/RepoDb/tree/master/src/Shared/RepoDb.Docs/reporting-an-issue.md)
+- [Support Policy](https://github.com/mikependon/RepoDb/tree/master/src/Shared/RepoDb.Docs/support-policy.md)
+- [Limitations](https://github.com/mikependon/RepoDb/tree/master/src/Shared/RepoDb.Docs/limitations.md)
 
 ### Contributors
 

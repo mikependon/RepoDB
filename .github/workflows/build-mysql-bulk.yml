@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'RepoDb.Core/**'
-      - 'RepoDb.MySql/**'
-      - 'RepoDb.Extensions/RepoDb.MySql.BulkOperations/**'
+      - 'src/Providers/RepoDb.Core/**'
+      - 'src/Providers/RepoDb.MySql/**'
+      - 'src/Providers/RepoDb.MySql.BulkOperations/**'
       - '.github/workflows/build-base.yml'
       - '.github/workflows/build-mysql-bulk.yml'
 
@@ -14,7 +14,7 @@ jobs:
   build:
     uses: ./.github/workflows/build-base.yml
     with:
-      solution-dir: RepoDb.Extensions/RepoDb.MySql.BulkOperations
+      solution-dir: src/Providers/RepoDb.MySql.BulkOperations
       solution-file: RepoDb.MySql.BulkOperations.sln
       artifact-name: release-mysql-bulk
       db-engine: mysql

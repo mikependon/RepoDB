@@ -22,4 +22,4 @@ jobs:
       version: ${{ inputs.version }}
       dependency-overrides: ${{ inputs.dependency-overrides }}
       project-name: RepoDb.Firebird
-      project-path: RepoDb.Firebird/RepoDb.Firebird/RepoDb.Firebird.csproj
+      project-path: src/Providers/RepoDb.Firebird/RepoDb.Firebird/RepoDb.Firebird.csproj

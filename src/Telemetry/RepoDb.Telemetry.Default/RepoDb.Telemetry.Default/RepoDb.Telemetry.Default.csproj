@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Title>RepoDb.Telemetry.Default</Title>
+    <AssemblyName>RepoDb.Telemetry.Default</AssemblyName>
+    <TargetFrameworks>netstandard2.0;net8.0;net9.0;net10.0</TargetFrameworks>
+    <Description>The default telemetry package for RepoDB library.</Description>
+    <LangVersion>preview</LangVersion>
+    <Nullable>annotations</Nullable>
+    <PackageTags>orm hybrid-orm micro-orm telemetry</PackageTags>
+    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Telemetry.Default</RepositoryUrl>
+    <PackageReleaseNotes>http://repodb.net/release/telemetrydefault</PackageReleaseNotes>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Providers\RepoDb.Core\RepoDb\RepoDb.csproj" />
+    <ProjectReference Include="..\..\RepoDb.Telemetry.Core\RepoDb.Telemetry.Core\RepoDb.Telemetry.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />
+    <None Include="..\README.md" Pack="True" PackagePath="\" />
+    <None Include="..\..\..\..\icon.png" Pack="True" PackagePath="\" />
+  </ItemGroup>
+
+</Project>
