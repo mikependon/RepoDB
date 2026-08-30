@@ -197,7 +197,8 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
                 CreatePseudoJoinTable(connection, pseudoTableName, qualifierList, transaction, trace, traceKey);
                 try
                 {
-                    connection.ExecuteNonQuery(ClickHouseText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fieldList, qualifierList, keyFields, connection.Database, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey); if (IsWaitForMutationsEnabled(connection))
+                    connection.ExecuteNonQuery(ClickHouseText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fieldList, qualifierList, keyFields, connection.Database, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey);
+                    if (IsWaitForMutationsEnabled(connection))
                     {
                         connection.WaitForMutations(tableName, transaction);
                     }
@@ -247,7 +248,10 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
                 try
                 {
                     await connection.ExecuteNonQueryAsync(ClickHouseText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fieldList, qualifierList, keyFields, connection.Database, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
-                    await connection.WaitForMutationsAsync(tableName, transaction, cancellationToken: cancellationToken);
+                    if (IsWaitForMutationsEnabled(connection))
+                    {
+                        await connection.WaitForMutationsAsync(tableName, transaction, cancellationToken: cancellationToken);
+                    }
                 }
                 finally
                 {
@@ -255,7 +259,10 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
                 }
             }
             await connection.ExecuteNonQueryAsync(ClickHouseText.GetInsertUnmatchedFromPseudoTableSql(tableName, pseudoTableName, fieldList, qualifierList, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
-            await connection.WaitForMutationsAsync(tableName, transaction, cancellationToken: cancellationToken);
+            if (IsWaitForMutationsEnabled(connection))
+            {
+                await connection.WaitForMutationsAsync(tableName, transaction, cancellationToken: cancellationToken);
+            }
         }
 
         #endregion
@@ -376,7 +383,8 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
             var countText = ClickHouseText.GetCountMatchedByPseudoTableSql(tableName, pseudoTableName, qualifierList, dbSetting);
             var result = connection.ExecuteScalar<int>(countText, transaction: transaction, trace: trace, traceKey: traceKey);
             var commandText = ClickHouseText.GetDeleteFromPseudoTableSql(tableName, pseudoTableName, qualifierList, dbSetting);
-            connection.ExecuteNonQuery(commandText, transaction: transaction, trace: trace, traceKey: traceKey); if (IsWaitForMutationsEnabled(connection))
+            connection.ExecuteNonQuery(commandText, transaction: transaction, trace: trace, traceKey: traceKey);
+            if (IsWaitForMutationsEnabled(connection))
             {
                 connection.WaitForMutations(tableName, transaction);
             }
@@ -410,7 +418,10 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
             var result = await connection.ExecuteScalarAsync<int>(countText, transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
             var commandText = ClickHouseText.GetDeleteFromPseudoTableSql(tableName, pseudoTableName, qualifierList, dbSetting);
             await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
-            await connection.WaitForMutationsAsync(tableName, transaction: transaction, cancellationToken: cancellationToken);
+            if (IsWaitForMutationsEnabled(connection))
+            {
+                await connection.WaitForMutationsAsync(tableName, transaction: transaction, cancellationToken: cancellationToken);
+            }
             return result;
         }
 
