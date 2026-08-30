@@ -22,4 +22,4 @@ jobs:
       version: ${{ inputs.version }}
       dependency-overrides: ${{ inputs.dependency-overrides }}
       project-name: RepoDb.Firebird.BulkOperations
-      project-path: RepoDb.Extensions/RepoDb.Firebird.BulkOperations/RepoDb.Firebird.BulkOperations/RepoDb.Firebird.BulkOperations.csproj
+      project-path: src/Providers/RepoDb.Firebird.BulkOperations/RepoDb.Firebird.BulkOperations/RepoDb.Firebird.BulkOperations.csproj

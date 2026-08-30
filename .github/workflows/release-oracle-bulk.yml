@@ -22,4 +22,4 @@ jobs:
       version: ${{ inputs.version }}
       dependency-overrides: ${{ inputs.dependency-overrides }}
       project-name: RepoDb.Oracle.BulkOperations
-      project-path: RepoDb.Extensions/RepoDb.Oracle.BulkOperations/RepoDb.Oracle.BulkOperations/RepoDb.Oracle.BulkOperations.csproj
+      project-path: src/Providers/RepoDb.Oracle.BulkOperations/RepoDb.Oracle.BulkOperations/RepoDb.Oracle.BulkOperations.csproj

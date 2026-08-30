@@ -22,4 +22,4 @@ jobs:
       version: ${{ inputs.version }}
       dependency-overrides: ${{ inputs.dependency-overrides }}
       project-name: RepoDb.MariaDbConnector.BulkOperations
-      project-path: RepoDb.Extensions/RepoDb.MariaDbConnector.BulkOperations/RepoDb.MariaDbConnector.BulkOperations/RepoDb.MariaDbConnector.BulkOperations.csproj
+      project-path: src/Providers/RepoDb.MariaDbConnector.BulkOperations/RepoDb.MariaDbConnector.BulkOperations/RepoDb.MariaDbConnector.BulkOperations.csproj

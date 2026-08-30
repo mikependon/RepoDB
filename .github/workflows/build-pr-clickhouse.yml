@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
-      - 'RepoDb.Core/**'
-      - 'RepoDb.ClickHouse/**'
+      - 'src/Providers/RepoDb.Core/**'
+      - 'src/Providers/RepoDb.ClickHouse/**'
       - '.github/workflows/build-base.yml'
       - '.github/workflows/build-pr-clickhouse.yml'
 
@@ -13,7 +13,7 @@ jobs:
   build:
     uses: ./.github/workflows/build-base.yml
     with:
-      solution-dir: RepoDb.ClickHouse
+      solution-dir: src/Providers/RepoDb.ClickHouse
       solution-file: RepoDb.ClickHouse.sln
       artifact-name: release-pr
       db-engine: clickhouse

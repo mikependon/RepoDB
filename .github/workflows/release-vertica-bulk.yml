@@ -22,4 +22,4 @@ jobs:
       version: ${{ inputs.version }}
       dependency-overrides: ${{ inputs.dependency-overrides }}
       project-name: RepoDb.Vertica.BulkOperations
-      project-path: RepoDb.Extensions/RepoDb.Vertica.BulkOperations/RepoDb.Vertica.BulkOperations/RepoDb.Vertica.BulkOperations.csproj
+      project-path: src/Providers/RepoDb.Vertica.BulkOperations/RepoDb.Vertica.BulkOperations/RepoDb.Vertica.BulkOperations.csproj

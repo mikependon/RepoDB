@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
-      - 'RepoDb.Core/**'
-      - 'RepoDb.MariaDbConnector/**'
+      - 'src/Providers/RepoDb.Core/**'
+      - 'src/Providers/RepoDb.MariaDbConnector/**'
       - '.github/workflows/build-base.yml'
       - '.github/workflows/build-pr-mariadbconnector.yml'
 
@@ -13,7 +13,7 @@ jobs:
   build:
     uses: ./.github/workflows/build-base.yml
     with:
-      solution-dir: RepoDb.MariaDbConnector
+      solution-dir: src/Providers/RepoDb.MariaDbConnector
       solution-file: RepoDb.MariaDbConnector.sln
       artifact-name: release-pr
       db-engine: mariadb

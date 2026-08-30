@@ -22,4 +22,4 @@ jobs:
       version: ${{ inputs.version }}
       dependency-overrides: ${{ inputs.dependency-overrides }}
       project-name: RepoDb.MySql.BulkOperations
-      project-path: RepoDb.Extensions/RepoDb.MySql.BulkOperations/RepoDb.MySql.BulkOperations/RepoDb.MySql.BulkOperations.csproj
+      project-path: src/Providers/RepoDb.MySql.BulkOperations/RepoDb.MySql.BulkOperations/RepoDb.MySql.BulkOperations.csproj

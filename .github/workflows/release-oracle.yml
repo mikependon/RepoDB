@@ -22,4 +22,4 @@ jobs:
       version: ${{ inputs.version }}
       dependency-overrides: ${{ inputs.dependency-overrides }}
       project-name: RepoDb.Oracle
-      project-path: RepoDb.Oracle/RepoDb.Oracle/RepoDb.Oracle.csproj
+      project-path: src/Providers/RepoDb.Oracle/RepoDb.Oracle/RepoDb.Oracle.csproj

@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
-      - 'RepoDb.Core/**'
-      - 'RepoDb.EnterpriseDb/**'
+      - 'src/Providers/RepoDb.Core/**'
+      - 'src/Providers/RepoDb.EnterpriseDb/**'
       - '.github/workflows/build-base.yml'
       - '.github/workflows/build-pr-enterprisedb.yml'
 
@@ -13,7 +13,7 @@ jobs:
   build:
     uses: ./.github/workflows/build-base.yml
     with:
-      solution-dir: RepoDb.EnterpriseDb
+      solution-dir: src/Providers/RepoDb.EnterpriseDb
       solution-file: RepoDb.EnterpriseDb.sln
       artifact-name: release-pr
       db-engine: enterprisedb

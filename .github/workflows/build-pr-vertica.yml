@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
-      - 'RepoDb.Core/**'
-      - 'RepoDb.Vertica/**'
+      - 'src/Providers/RepoDb.Core/**'
+      - 'src/Providers/RepoDb.Vertica/**'
       - '.github/workflows/build-base.yml'
       - '.github/workflows/build-pr-vertica.yml'
 
@@ -13,7 +13,7 @@ jobs:
   build:
     uses: ./.github/workflows/build-base.yml
     with:
-      solution-dir: RepoDb.Vertica
+      solution-dir: src/Providers/RepoDb.Vertica
       solution-file: RepoDb.Vertica.sln
       artifact-name: release-pr
       db-engine: vertica

@@ -22,4 +22,4 @@ jobs:
       version: ${{ inputs.version }}
       dependency-overrides: ${{ inputs.dependency-overrides }}
       project-name: RepoDb.MariaDb
-      project-path: RepoDb.MariaDb/RepoDb.MariaDb/RepoDb.MariaDb.csproj
+      project-path: src/Providers/RepoDb.MariaDb/RepoDb.MariaDb/RepoDb.MariaDb.csproj

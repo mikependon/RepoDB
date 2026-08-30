@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'RepoDb.Core/**'
+      - 'src/Providers/RepoDb.Core/**'
       - '.github/workflows/build-base.yml'
       - '.github/workflows/build-core.yml'
 
@@ -12,7 +12,7 @@ jobs:
   build:
     uses: ./.github/workflows/build-base.yml
     with:
-      solution-dir: RepoDb.Core
+      solution-dir: src/Providers/RepoDb.Core
       solution-file: RepoDb.sln
       artifact-name: release-core
       db-engine: sqlserver
