@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySqlConnector.BulkOperations", "RepoDb.MySqlConnector.BulkOperations\RepoDb.MySqlConnector.BulkOperations.csproj", "{A1B2C3D4-1111-4A2B-9C3D-4E5F6A7B8C01}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "..\..\RepoDb.Core\RepoDb\RepoDb.csproj", "{A1B2C3D4-1111-4A2B-9C3D-4E5F6A7B8C02}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "..\RepoDb.Core\RepoDb\RepoDb.csproj", "{A1B2C3D4-1111-4A2B-9C3D-4E5F6A7B8C02}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySqlConnector", "..\..\RepoDb.MySqlConnector\RepoDb.MySqlConnector\RepoDb.MySqlConnector.csproj", "{A1B2C3D4-1111-4A2B-9C3D-4E5F6A7B8C03}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySqlConnector", "..\RepoDb.MySqlConnector\RepoDb.MySqlConnector\RepoDb.MySqlConnector.csproj", "{A1B2C3D4-1111-4A2B-9C3D-4E5F6A7B8C03}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySqlConnector.BulkOperations.IntegrationTests", "RepoDb.MySqlConnector.BulkOperations.IntegrationTests\RepoDb.MySqlConnector.BulkOperations.IntegrationTests.csproj", "{A1B2C3D4-1111-4A2B-9C3D-4E5F6A7B8C05}"
 EndProject

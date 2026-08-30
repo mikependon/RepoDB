@@ -4,9 +4,9 @@ VisualStudioVersion = 18.7.11911.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MariaDbConnector.BulkOperations", "RepoDb.MariaDbConnector.BulkOperations\RepoDb.MariaDbConnector.BulkOperations.csproj", "{C4728613-DE20-4A54-AAA7-D43D90729B92}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "..\..\RepoDb.Core\RepoDb\RepoDb.csproj", "{25DD8B5D-7F89-4997-B37B-B9C3FE42B4CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "..\RepoDb.Core\RepoDb\RepoDb.csproj", "{25DD8B5D-7F89-4997-B37B-B9C3FE42B4CD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MariaDbConnector", "..\..\RepoDb.MariaDbConnector\RepoDb.MariaDbConnector\RepoDb.MariaDbConnector.csproj", "{1D26995B-6767-4BA9-9356-3038A9971EE3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MariaDbConnector", "..\RepoDb.MariaDbConnector\RepoDb.MariaDbConnector\RepoDb.MariaDbConnector.csproj", "{1D26995B-6767-4BA9-9356-3038A9971EE3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.MariaDbConnector.BulkOperations.Base", "RepoDb.MariaDbConnector.BulkOperations.Base", "{DBB16DA5-1483-4634-AB9E-3CD360BBD57A}"
 	ProjectSection(SolutionItems) = preProject

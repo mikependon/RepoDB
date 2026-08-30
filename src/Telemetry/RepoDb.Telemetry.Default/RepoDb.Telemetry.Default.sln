@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.Telemetry.Default", "RepoDb.Telemetry.Default\RepoDb.Telemetry.Default.csproj", "{A87239A1-1979-4493-AF75-6748A4ED39FC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "..\RepoDb.Core\RepoDb\RepoDb.csproj", "{C88CAD35-352D-4932-80B0-02F3CB34EDA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "..\..\Providers\RepoDb.Core\RepoDb\RepoDb.csproj", "{C88CAD35-352D-4932-80B0-02F3CB34EDA2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.Telemetry.Core", "..\RepoDb.Telemetry.Core\RepoDb.Telemetry.Core\RepoDb.Telemetry.Core.csproj", "{AF85E42D-8EFF-48CF-A304-D20F071900AD}"
 EndProject

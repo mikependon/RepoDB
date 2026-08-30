@@ -4,9 +4,9 @@ VisualStudioVersion = 18.7.11911.148 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySql.BulkOperations", "RepoDb.MySql.BulkOperations\RepoDb.MySql.BulkOperations.csproj", "{A1B2C3D4-1111-4A2B-9C3D-4E5F6A7B8C01}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "..\..\RepoDb.Core\RepoDb\RepoDb.csproj", "{A1B2C3D4-1111-4A2B-9C3D-4E5F6A7B8C02}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "..\RepoDb.Core\RepoDb\RepoDb.csproj", "{A1B2C3D4-1111-4A2B-9C3D-4E5F6A7B8C02}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySql", "..\..\RepoDb.MySql\RepoDb.MySql\RepoDb.MySql.csproj", "{A1B2C3D4-1111-4A2B-9C3D-4E5F6A7B8C03}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySql", "..\RepoDb.MySql\RepoDb.MySql\RepoDb.MySql.csproj", "{A1B2C3D4-1111-4A2B-9C3D-4E5F6A7B8C03}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.MySql.BulkOperations.Base", "RepoDb.MySql.BulkOperations.Base", "{A1B2C3D4-1111-4A2B-9C3D-4E5F6A7B8C04}"
 	ProjectSection(SolutionItems) = preProject

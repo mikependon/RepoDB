@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.Firebird.BulkOperations", "RepoDb.Firebird.BulkOperations\RepoDb.Firebird.BulkOperations.csproj", "{B2C3D4E5-2222-4A2B-9C3D-4E5F6A7B8C01}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "..\..\RepoDb.Core\RepoDb\RepoDb.csproj", "{B2C3D4E5-2222-4A2B-9C3D-4E5F6A7B8C02}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "..\RepoDb.Core\RepoDb\RepoDb.csproj", "{B2C3D4E5-2222-4A2B-9C3D-4E5F6A7B8C02}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.Firebird", "..\..\RepoDb.Firebird\RepoDb.Firebird\RepoDb.Firebird.csproj", "{B2C3D4E5-2222-4A2B-9C3D-4E5F6A7B8C03}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.Firebird", "..\RepoDb.Firebird\RepoDb.Firebird\RepoDb.Firebird.csproj", "{B2C3D4E5-2222-4A2B-9C3D-4E5F6A7B8C03}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.Firebird.BulkOperations.IntegrationTests", "RepoDb.Firebird.BulkOperations.IntegrationTests\RepoDb.Firebird.BulkOperations.IntegrationTests.csproj", "{B2C3D4E5-2222-4A2B-9C3D-4E5F6A7B8C05}"
 EndProject
