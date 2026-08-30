@@ -49,6 +49,19 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
         }
 
         [TestMethod]
+        public void TestDbTypeNameToColumnNameResolverForInt()
+        {
+            // Setup
+            var resolver = new DbTypeNameToColumnNameResolver();
+
+            // Act
+            var result = resolver.Resolve("int");
+
+            // Assert
+            Assert.AreEqual("INTEGER", result);
+        }
+
+        [TestMethod]
         public void TestDbTypeNameToColumnNameResolverForBigInt()
         {
             // Setup

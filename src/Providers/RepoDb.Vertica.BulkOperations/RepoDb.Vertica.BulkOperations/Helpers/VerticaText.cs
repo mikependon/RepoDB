@@ -9,7 +9,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using RepoDb.Enumerations.Vertica;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -118,14 +117,6 @@ namespace RepoDb
         private static string ColumnList(IEnumerable<Field> fields, IDbSetting dbSetting) =>
             fields.Select(f => f.Name.AsQuoted(true, dbSetting)).Join(", ");
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="count"></param>
-        /// <returns></returns>
-        private static string VariableList(int count) =>
-            string.Join(", ", Enumerable.Range(0, count).Select(i => ":V" + i));
-
         #endregion
 
         #region Insert
@@ -156,201 +147,108 @@ namespace RepoDb
         #region Merge
 
         /// <summary>
-        /// 
+        /// Builds the UPDATE half of a merge. Vertica flatly refuses to run a MERGE statement at all against a
+        /// table that has an IDENTITY/AUTO_INCREMENT column - "Sequence or IDENTITY/AUTO_INCREMENT column in
+        /// merge query is not supported" - regardless of whether that column appears in the SET/INSERT lists,
+        /// and it has no equivalent of Firebird's EXECUTE BLOCK/PSQL for a procedural row-by-row alternative
+        /// either. A merge is instead always expressed as this UPDATE ... FROM, followed by
+        /// <see cref="GetMergeInsertFromPseudoTableSql"/> and, when identities need to be returned,
+        /// <see cref="GetSelectIdentityAfterMergeSql"/>.
         /// </summary>
         /// <param name="tableName"></param>
         /// <param name="pseudoTableName"></param>
         /// <param name="fields"></param>
         /// <param name="qualifiers"></param>
         /// <param name="identityField"></param>
-        /// <param name="returnIdentity"></param>
         /// <param name="dbSetting"></param>
-        /// <returns></returns>
-        public static string GetMergeFromPseudoTableSql(string tableName,
+        /// <returns>The UPDATE statement, or <c>null</c> when there are no non-qualifier, non-identity fields to update.</returns>
+        public static string GetMergeUpdateFromPseudoTableSql(string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
             Field identityField,
-            bool returnIdentity,
-            IDbSetting dbSetting)
-        {
-            var fieldList = fields.AsList();
-            var qualifierList = qualifiers.AsList();
-            var identityIsQualifier = identityField != null &&
-                qualifierList.Any(q => string.Equals(q.Name, identityField.Name, StringComparison.OrdinalIgnoreCase));
-
-            if (identityIsQualifier)
-            {
-                return GetMergeExecuteBlockSql(tableName, pseudoTableName, fieldList, qualifierList, identityField, returnIdentity, dbSetting);
-            }
-
-            var insertableFields = identityField == null
-                ? fieldList
-                : fieldList.Where(f => !string.Equals(f.Name, identityField.Name, StringComparison.OrdinalIgnoreCase)).AsList();
-
-            if (returnIdentity)
-            {
-                return GetUpsertLoopExecuteBlockSql(tableName, pseudoTableName, insertableFields, fieldList, qualifierList, identityField, dbSetting);
-            }
-
-            var quotedTable = tableName.AsQuoted(true, dbSetting);
-            var quotedPseudoTable = pseudoTableName.AsQuoted(true, dbSetting);
-            var onClause = qualifierList.Select(f => $"T.{f.Name.AsQuoted(true, dbSetting)} = S.{f.Name.AsQuoted(true, dbSetting)}").Join(" AND ");
-            var updateableFields = fieldList.Where(f => !qualifierList.Any(q => string.Equals(q.Name, f.Name, StringComparison.OrdinalIgnoreCase))).AsList();
-            var updateSetClause = updateableFields.Select(f => $"{f.Name.AsQuoted(true, dbSetting)} = S.{f.Name.AsQuoted(true, dbSetting)}").Join(", ");
-            var matchedClause = updateableFields.Count > 0 ? $"WHEN MATCHED THEN UPDATE SET {updateSetClause} " : string.Empty;
-            var insertColumns = ColumnList(insertableFields, dbSetting);
-            var insertValues = insertableFields.Select(f => $"S.{f.Name.AsQuoted(true, dbSetting)}").Join(", ");
-
-            return string.Concat(
-                "MERGE INTO ", quotedTable, " T USING ", quotedPseudoTable, " S ON (", onClause, ") ",
-                matchedClause,
-                "WHEN NOT MATCHED THEN INSERT (", insertColumns, ") VALUES (", insertValues, ")");
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="tableName"></param>
-        /// <param name="pseudoTableName"></param>
-        /// <param name="insertableFields"></param>
-        /// <param name="allFields"></param>
-        /// <param name="qualifiers"></param>
-        /// <param name="identityField"></param>
-        /// <param name="dbSetting"></param>
-        /// <returns></returns>
-        private static string GetUpsertLoopExecuteBlockSql(string tableName,
-            string pseudoTableName,
-            IList<Field> insertableFields,
-            IList<Field> allFields,
-            IList<Field> qualifiers,
-            Field identityField,
-            IDbSetting dbSetting)
-        {
-            var quotedTable = tableName.AsQuoted(true, dbSetting);
-            var quotedPseudoTable = pseudoTableName.AsQuoted(true, dbSetting);
-            var quotedRowOrderColumn = RowOrderColumnName.AsQuoted(true, dbSetting);
-            var quotedIdentityColumn = identityField.Name.AsQuoted(true, dbSetting);
-
-            var sb = new StringBuilder("EXECUTE BLOCK RETURNS (R0 TYPE OF COLUMN ")
-                .Append(quotedTable).Append('.').Append(quotedIdentityColumn).Append(") AS ");
-
-            for (var i = 0; i < insertableFields.Count; i++)
-            {
-                sb.Append("DECLARE VARIABLE V").Append(i).Append(" TYPE OF COLUMN ")
-                    .Append(quotedPseudoTable).Append('.').Append(insertableFields[i].Name.AsQuoted(true, dbSetting)).Append("; ");
-            }
-
-            sb.Append("BEGIN FOR SELECT ").Append(ColumnList(insertableFields, dbSetting))
-                .Append(" FROM ").Append(quotedPseudoTable)
-                .Append(" ORDER BY ").Append(quotedRowOrderColumn)
-                .Append(" INTO ").Append(VariableList(insertableFields.Count))
-                .Append(" DO BEGIN UPDATE OR INSERT INTO ").Append(quotedTable)
-                .Append(" (").Append(ColumnList(insertableFields, dbSetting)).Append(") VALUES (")
-                .Append(VariableList(insertableFields.Count)).Append(") MATCHING (")
-                .Append(ColumnList(qualifiers, dbSetting)).Append(") RETURNING ")
-                .Append(quotedIdentityColumn).Append(" INTO :R0; SUSPEND; END END");
-
-            return sb.ToString();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="tableName"></param>
-        /// <param name="pseudoTableName"></param>
-        /// <param name="fields"></param>
-        /// <param name="qualifiers"></param>
-        /// <param name="identityField"></param>
-        /// <param name="returnIdentity"></param>
-        /// <param name="dbSetting"></param>
-        /// <returns></returns>
-        private static string GetMergeExecuteBlockSql(string tableName,
-            string pseudoTableName,
-            IList<Field> fields,
-            IList<Field> qualifiers,
-            Field identityField,
-            bool returnIdentity,
-            IDbSetting dbSetting)
-        {
-            var quotedTable = tableName.AsQuoted(true, dbSetting);
-            var quotedPseudoTable = pseudoTableName.AsQuoted(true, dbSetting);
-            var quotedRowOrderColumn = RowOrderColumnName.AsQuoted(true, dbSetting);
-            var quotedIdentityColumn = identityField.Name.AsQuoted(true, dbSetting);
-            var identityIndex = fields.ToList().FindIndex(f => string.Equals(f.Name, identityField.Name, StringComparison.OrdinalIgnoreCase));
-
-            var sb = new StringBuilder("EXECUTE BLOCK ");
-            if (returnIdentity)
-            {
-                sb.Append("RETURNS (R0 TYPE OF COLUMN ").Append(quotedTable).Append('.').Append(quotedIdentityColumn).Append(") ");
-            }
-            sb.Append("AS ");
-
-            for (var i = 0; i < fields.Count; i++)
-            {
-                sb.Append("DECLARE VARIABLE V").Append(i).Append(" TYPE OF COLUMN ")
-                    .Append(quotedPseudoTable).Append('.').Append(fields[i].Name.AsQuoted(true, dbSetting)).Append("; ");
-            }
-
-            var insertableFields = fields.Where(f => !string.Equals(f.Name, identityField.Name, StringComparison.OrdinalIgnoreCase)).AsList();
-            var insertableVariables = string.Join(", ", fields
-                .Select((f, i) => (f, i))
-                .Where(x => !string.Equals(x.f.Name, identityField.Name, StringComparison.OrdinalIgnoreCase))
-                .Select(x => ":V" + x.i));
-            var returningClause = returnIdentity ? $" RETURNING {quotedIdentityColumn} INTO :R0" : string.Empty;
-            // Row order only matters when correlating yielded identities back to source rows below -
-            // a non-return-identity merge doesn't care what order its per-row upserts run in.
-            var orderByClause = returnIdentity ? $" ORDER BY {quotedRowOrderColumn}" : string.Empty;
-
-            sb.Append("BEGIN FOR SELECT ").Append(ColumnList(fields, dbSetting))
-                .Append(" FROM ").Append(quotedPseudoTable).Append(orderByClause)
-                .Append(" INTO ").Append(VariableList(fields.Count))
-                .Append(" DO BEGIN IF (:V").Append(identityIndex).Append(" IS NULL OR :V").Append(identityIndex).Append(" = 0) THEN BEGIN ")
-                .Append("INSERT INTO ").Append(quotedTable)
-                .Append(" (").Append(ColumnList(insertableFields, dbSetting)).Append(") VALUES (")
-                .Append(insertableVariables).Append(')').Append(returningClause).Append("; END ")
-                .Append("ELSE BEGIN ")
-                .Append("UPDATE OR INSERT INTO ").Append(quotedTable)
-                .Append(" (").Append(ColumnList(fields, dbSetting)).Append(") VALUES (")
-                .Append(VariableList(fields.Count)).Append(") MATCHING (")
-                .Append(ColumnList(qualifiers, dbSetting)).Append(')').Append(returningClause).Append("; END ");
-
-            if (returnIdentity)
-            {
-                sb.Append("SUSPEND; ");
-            }
-            sb.Append("END END");
-
-            return sb.ToString();
-        }
-
-        #endregion
-
-        #region Update
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="tableName"></param>
-        /// <param name="pseudoTableName"></param>
-        /// <param name="fields"></param>
-        /// <param name="qualifiers"></param>
-        /// <param name="dbSetting"></param>
-        /// <returns></returns>
-        public static string GetUpdateFromPseudoTableSql(string tableName,
-            string pseudoTableName,
-            IEnumerable<Field> fields,
-            IEnumerable<Field> qualifiers,
             IDbSetting dbSetting)
         {
             var qualifierList = qualifiers.AsList();
-            var onClause = qualifierList.Select(f => $"T.{f.Name.AsQuoted(true, dbSetting)} = S.{f.Name.AsQuoted(true, dbSetting)}").Join(" AND ");
-            var updateClause = fields.AsList()
+            var updateableFields = fields.AsList()
                 .Where(f => !qualifierList.Any(q => string.Equals(q.Name, f.Name, StringComparison.OrdinalIgnoreCase)))
-                .Select(f => $"{f.Name.AsQuoted(true, dbSetting)} = S.{f.Name.AsQuoted(true, dbSetting)}")
-                .Join(", ");
+                .Where(f => identityField == null || !string.Equals(f.Name, identityField.Name, StringComparison.OrdinalIgnoreCase))
+                .AsList();
 
-            return $"MERGE INTO {tableName.AsQuoted(true, dbSetting)} T USING {pseudoTableName.AsQuoted(true, dbSetting)} S ON ({onClause}) WHEN MATCHED THEN UPDATE SET {updateClause}";
+            if (updateableFields.Count == 0)
+            {
+                return null;
+            }
+
+            var quotedTable = tableName.AsQuoted(true, dbSetting);
+            var quotedPseudoTable = pseudoTableName.AsQuoted(true, dbSetting);
+            var setClause = updateableFields.Select(f => $"{f.Name.AsQuoted(true, dbSetting)} = S.{f.Name.AsQuoted(true, dbSetting)}").Join(", ");
+            var onClause = qualifierList.Select(f => $"{quotedTable}.{f.Name.AsQuoted(true, dbSetting)} = S.{f.Name.AsQuoted(true, dbSetting)}").Join(" AND ");
+
+            return $"UPDATE {quotedTable} SET {setClause} FROM {quotedPseudoTable} S WHERE {onClause}";
+        }
+
+        /// <summary>
+        /// Builds the INSERT half of a merge - see <see cref="GetMergeUpdateFromPseudoTableSql"/>. Only
+        /// pseudo-table rows with no matching row in the target (by <paramref name="qualifiers"/>) are inserted,
+        /// and the identity column (if any) is always excluded, since Vertica rejects an explicit value for it.
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="identityField"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        public static string GetMergeInsertFromPseudoTableSql(string tableName,
+            string pseudoTableName,
+            IEnumerable<Field> fields,
+            IEnumerable<Field> qualifiers,
+            Field identityField,
+            IDbSetting dbSetting)
+        {
+            var quotedTable = tableName.AsQuoted(true, dbSetting);
+            var quotedPseudoTable = pseudoTableName.AsQuoted(true, dbSetting);
+            var quotedRowOrderColumn = RowOrderColumnName.AsQuoted(true, dbSetting);
+            var qualifierList = qualifiers.AsList();
+            var insertableFields = identityField == null
+                ? fields.AsList()
+                : fields.AsList().Where(f => !string.Equals(f.Name, identityField.Name, StringComparison.OrdinalIgnoreCase)).AsList();
+            var insertColumns = ColumnList(insertableFields, dbSetting);
+            var insertSelect = insertableFields.Select(f => $"S.{f.Name.AsQuoted(true, dbSetting)}").Join(", ");
+            var existsClause = qualifierList.Select(f => $"{quotedTable}.{f.Name.AsQuoted(true, dbSetting)} = S.{f.Name.AsQuoted(true, dbSetting)}").Join(" AND ");
+
+            // Without an explicit ORDER BY, Vertica is free to insert the unmatched rows in whatever order its
+            // projections happen to yield them, which can silently scramble row order relative to the source -
+            // ordering by the pseudo table's row-order column keeps newly-inserted rows in source order.
+            return $"INSERT INTO {quotedTable} ({insertColumns}) SELECT {insertSelect} FROM {quotedPseudoTable} S WHERE NOT EXISTS (SELECT 1 FROM {quotedTable} WHERE {existsClause}) ORDER BY S.{quotedRowOrderColumn}";
+        }
+
+        /// <summary>
+        /// Reads back, per pseudo-table row and in source row order, the identity value of whichever target row
+        /// the merge's UPDATE/INSERT left in place for it - the pre-existing value for an updated row, or the
+        /// newly-generated one for an inserted row. Run this only after both <see cref="GetMergeUpdateFromPseudoTableSql"/>
+        /// and <see cref="GetMergeInsertFromPseudoTableSql"/> have executed, so every pseudo-table row has a match.
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="identityField"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        public static string GetSelectIdentityAfterMergeSql(string tableName,
+            string pseudoTableName,
+            IEnumerable<Field> qualifiers,
+            Field identityField,
+            IDbSetting dbSetting)
+        {
+            var quotedTable = tableName.AsQuoted(true, dbSetting);
+            var quotedPseudoTable = pseudoTableName.AsQuoted(true, dbSetting);
+            var quotedIdentityColumn = identityField.Name.AsQuoted(true, dbSetting);
+            var quotedRowOrderColumn = RowOrderColumnName.AsQuoted(true, dbSetting);
+            var onClause = qualifiers.Select(f => $"T.{f.Name.AsQuoted(true, dbSetting)} = S.{f.Name.AsQuoted(true, dbSetting)}").Join(" AND ");
+
+            return $"SELECT T.{quotedIdentityColumn} FROM {quotedPseudoTable} S JOIN {quotedTable} T ON ({onClause}) ORDER BY S.{quotedRowOrderColumn}";
         }
 
         #endregion

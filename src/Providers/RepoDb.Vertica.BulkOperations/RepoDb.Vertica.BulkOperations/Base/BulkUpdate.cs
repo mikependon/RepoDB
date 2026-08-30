@@ -60,6 +60,7 @@ namespace RepoDb
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
             var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields).AsList();
+            var identityField = dbFields.GetIdentity()?.AsField();
 
             if (!HasUpdateableFields(stagingFields, qualifierFields))
             {
@@ -80,8 +81,7 @@ namespace RepoDb
                 var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : stagingFields;
                 using var entityTable = BuildEntityDataTable(entityList, entityFields);
                 WriteToServerInternal(connection, pseudoTableName, entityTable, mappings: mappings, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction);
-
-                result = VerticaExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, trace, traceKey, transaction);
+                result = VerticaExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction);
             }
             finally
             {
@@ -128,6 +128,7 @@ namespace RepoDb
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
             var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields).AsList();
+            var identityField = dbFields.GetIdentity()?.AsField();
 
             if (!HasUpdateableFields(stagingFields, qualifierFields))
             {
@@ -145,8 +146,7 @@ namespace RepoDb
             {
                 VerticaExecution.CreatePseudoTable(connection, pseudoTableName, stagingFields, dbFields, pseudoTableType, trace, traceKey, transaction);
                 WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, transaction);
-
-                result = VerticaExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, trace, traceKey, transaction);
+                result = VerticaExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction);
             }
             finally
             {
@@ -191,6 +191,7 @@ namespace RepoDb
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
             var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields).AsList();
+            var identityField = dbFields.GetIdentity()?.AsField();
 
             if (!HasUpdateableFields(stagingFields, qualifierFields))
             {
@@ -208,8 +209,7 @@ namespace RepoDb
             {
                 VerticaExecution.CreatePseudoTable(connection, pseudoTableName, stagingFields, dbFields, pseudoTableType, trace, traceKey, transaction);
                 WriteToServerInternal(connection, pseudoTableName, reader, mappings ?? GetDefaultMappingsForDataReader(connection, tableName, reader, transaction).AsList(), bulkCopyTimeout, batchSize, transaction);
-
-                result = VerticaExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, trace, traceKey, transaction);
+                result = VerticaExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction);
             }
             finally
             {
@@ -263,6 +263,7 @@ namespace RepoDb
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
             var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields).AsList();
+            var identityField = dbFields.GetIdentity()?.AsField();
 
             if (!HasUpdateableFields(stagingFields, qualifierFields))
             {
@@ -283,8 +284,7 @@ namespace RepoDb
                 var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : stagingFields;
                 using var entityTable = BuildEntityDataTable(entityList, entityFields);
                 await WriteToServerAsyncInternal(connection, pseudoTableName, entityTable, mappings: mappings, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction, cancellationToken: cancellationToken);
-
-                result = await VerticaExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, trace, traceKey, transaction, cancellationToken);
+                result = await VerticaExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken);
             }
             finally
             {
@@ -333,6 +333,7 @@ namespace RepoDb
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
             var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields).AsList();
+            var identityField = dbFields.GetIdentity()?.AsField();
 
             if (!HasUpdateableFields(stagingFields, qualifierFields))
             {
@@ -350,8 +351,7 @@ namespace RepoDb
             {
                 await VerticaExecution.CreatePseudoTableAsync(connection, pseudoTableName, stagingFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken);
                 await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, transaction, cancellationToken);
-
-                result = await VerticaExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, trace, traceKey, transaction, cancellationToken);
+                result = await VerticaExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken);
             }
             finally
             {
@@ -398,6 +398,7 @@ namespace RepoDb
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
             var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields).AsList();
+            var identityField = dbFields.GetIdentity()?.AsField();
 
             if (!HasUpdateableFields(stagingFields, qualifierFields))
             {
@@ -415,8 +416,7 @@ namespace RepoDb
             {
                 await VerticaExecution.CreatePseudoTableAsync(connection, pseudoTableName, stagingFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken);
                 await WriteToServerAsyncInternal(connection, pseudoTableName, reader, mappings ?? GetDefaultMappingsForDataReader(connection, tableName, reader, transaction).AsList(), bulkCopyTimeout, batchSize, transaction, cancellationToken);
-
-                result = await VerticaExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, trace, traceKey, transaction, cancellationToken);
+                result = await VerticaExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken);
             }
             finally
             {

@@ -28,7 +28,7 @@ namespace RepoDb.Resolvers
             return dbTypeName?.ToLowerInvariant() switch
             {
                 "smallint" => "SMALLINT",
-                "integer" => "INTEGER",
+                "int" or "integer" => "INTEGER",
                 "bigint" => "BIGINT",
                 "boolean" => "BOOLEAN",
                 "float" => "FLOAT",
