@@ -20,6 +20,7 @@ using System.Data.Common;
 using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -3690,6 +3691,29 @@ namespace RepoDb
         internal static Type GetEntityType<TEntity>(TEntity entity)
             where TEntity : class =>
             entity?.GetType() ?? typeof(TEntity);
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="fieldName"></param>
+        /// <returns></returns>
+        private static object GetEntityFieldValue(object entity,
+            string fieldName)
+        {
+            if (entity == null || fieldName == null)
+            {
+                return null;
+            }
+            if (entity is IDictionary<string, object> dictionary)
+            {
+                return dictionary.TryGetValue(fieldName, out var value) ? value : null;
+            }
+            return entity.GetType()
+                .GetProperty(fieldName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase)
+                ?.GetValue(entity);
+        }
 
         #endregion
     }

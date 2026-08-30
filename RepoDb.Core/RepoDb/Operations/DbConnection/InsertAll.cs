@@ -604,7 +604,7 @@ namespace RepoDb
                                         var lastIdentityValue = Convert.ToInt64(lastIdentity);
                                         for (var i = 0; i < batchItems.Count; i++)
                                         {
-                                            context.KeyPropertySetterFunc.Invoke(batchItems[i], lastIdentityValue - (batchItems.Count - 1 - i));
+                                            context.KeyPropertySetterFunc?.Invoke(batchItems[i], lastIdentityValue - (batchItems.Count - 1 - i));
                                         }
                                     }
                                 }
@@ -885,7 +885,7 @@ namespace RepoDb
                                         var lastIdentityValue = Convert.ToInt64(lastIdentity);
                                         for (var i = 0; i < batchItems.Count; i++)
                                         {
-                                            context.KeyPropertySetterFunc.Invoke(batchItems[i], lastIdentityValue - (batchItems.Count - 1 - i));
+                                            context.KeyPropertySetterFunc?.Invoke(batchItems[i], lastIdentityValue - (batchItems.Count - 1 - i));
                                         }
                                     }
                                 }

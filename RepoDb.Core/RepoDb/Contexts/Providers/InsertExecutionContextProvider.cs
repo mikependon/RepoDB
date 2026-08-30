@@ -208,6 +208,7 @@ namespace RepoDb.Contexts.Providers
                         dbSetting,
                         dbHelper),
                 KeyPropertySetterFunc = keyPropertySetterFunc,
+                KeyFieldName = keyField?.Name,
                 HasIdentityKey = keyField != null &&
                     string.Equals(keyField.Name.AsUnquoted(true, dbSetting), dbFields?.GetIdentity()?.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)
             };

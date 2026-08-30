@@ -38,7 +38,12 @@ namespace RepoDb.Contexts.Execution
         public Action<object, object> KeyPropertySetterFunc { get; set; }
 
         /// <summary>
-        /// 
+        /// The name of the key field targeted by <see cref="KeyPropertySetterFunc"/>, if any.
+        /// </summary>
+        public string KeyFieldName { get; set; }
+
+        /// <summary>
+        ///
         /// </summary>
         public bool HasIdentityKey { get; set; }
     }
