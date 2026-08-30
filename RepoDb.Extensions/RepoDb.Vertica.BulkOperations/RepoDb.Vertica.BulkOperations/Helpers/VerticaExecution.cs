@@ -78,50 +78,7 @@ namespace RepoDb.Vertica.BulkOperations.Extensions
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="pseudoTableName"></param>
-        /// <param name="qualifiers"></param>
-        /// <param name="trace"></param>
-        /// <param name="traceKey"></param>
-        /// <param name="transaction"></param>
-        public static void CreatePseudoTableIndex(VerticaConnection connection,
-            string pseudoTableName,
-            IEnumerable<Field> qualifiers,
-            ITrace trace = null,
-            string traceKey = null,
-            VerticaTransaction transaction = null)
-        {
-            var commandText = VerticaText.GetCreatePseudoTableIndexSql(pseudoTableName, qualifiers, connection.GetDbSetting());
-            connection.ExecuteNonQuery(commandText, trace: trace, traceKey: traceKey, transaction: transaction);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="pseudoTableName"></param>
-        /// <param name="qualifiers"></param>
-        /// <param name="trace"></param>
-        /// <param name="traceKey"></param>
-        /// <param name="transaction"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public static async Task CreatePseudoTableIndexAsync(VerticaConnection connection,
-            string pseudoTableName,
-            IEnumerable<Field> qualifiers,
-            ITrace trace = null,
-            string traceKey = null,
-            VerticaTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            var commandText = VerticaText.GetCreatePseudoTableIndexSql(pseudoTableName, qualifiers, connection.GetDbSetting());
-            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="pseudoTableName"></param>
@@ -176,7 +133,7 @@ namespace RepoDb.Vertica.BulkOperations.Extensions
         #region Insert
 
         /// <summary>
-        /// 
+        /// Inserts the data from the pseudo table into the target table and returns the identity value of the last inserted row.
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -200,24 +157,27 @@ namespace RepoDb.Vertica.BulkOperations.Extensions
             VerticaTransaction transaction = null)
             where TEntity : class
         {
-            var commandText = VerticaText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, connection.GetDbSetting());
-            var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
+            var commandText = VerticaText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, connection.GetDbSetting());
+            connection.ExecuteNonQuery(commandText, trace: trace, traceKey: traceKey, transaction: transaction);
 
-            using var command = CreateReaderCommand(connection, commandText, transaction);
-            using var reader = command.ExecuteReader();
-            var result = 0;
-
-            while (reader.Read())
+            if (entities.Count == 0)
             {
-                setter?.Invoke(entities[result], Converter.DbNullToNull(reader.GetValue(0)));
-                result++;
+                return 0;
             }
 
-            return result;
+            var lastIdentity = Convert.ToInt64(connection.GetDbHelper().GetScopeIdentity<object>(connection, transaction));
+            var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
+
+            for (var i = 0; i < entities.Count; i++)
+            {
+                setter?.Invoke(entities[i], lastIdentity - (entities.Count - 1 - i));
+            }
+
+            return entities.Count;
         }
 
         /// <summary>
-        ///
+        /// Asynchronous counterpart of <see cref="InsertFromPseudoTableForReturnIdentity{TEntity}"/>.
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -243,24 +203,27 @@ namespace RepoDb.Vertica.BulkOperations.Extensions
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            var commandText = VerticaText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, connection.GetDbSetting());
-            var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
+            var commandText = VerticaText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, connection.GetDbSetting());
+            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
 
-            using var command = CreateReaderCommand(connection, commandText, transaction);
-            using var reader = await command.ExecuteReaderAsync(cancellationToken);
-            var result = 0;
-
-            while (await reader.ReadAsync(cancellationToken))
+            if (entities.Count == 0)
             {
-                setter?.Invoke(entities[result], Converter.DbNullToNull(reader.GetValue(0)));
-                result++;
+                return 0;
             }
 
-            return result;
+            var lastIdentity = Convert.ToInt64(await connection.GetDbHelper().GetScopeIdentityAsync<object>(connection, transaction, cancellationToken));
+            var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
+
+            for (var i = 0; i < entities.Count; i++)
+            {
+                setter?.Invoke(entities[i], lastIdentity - (entities.Count - 1 - i));
+            }
+
+            return entities.Count;
         }
 
         /// <summary>
-        /// 
+        /// The <see cref="DataRow"/> counterpart of <see cref="InsertFromPseudoTableForReturnIdentity{TEntity}"/>.
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -282,23 +245,26 @@ namespace RepoDb.Vertica.BulkOperations.Extensions
             string traceKey = null,
             VerticaTransaction transaction = null)
         {
-            var commandText = VerticaText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, connection.GetDbSetting());
+            var commandText = VerticaText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, connection.GetDbSetting());
+            connection.ExecuteNonQuery(commandText, trace: trace, traceKey: traceKey, transaction: transaction);
 
-            using var command = CreateReaderCommand(connection, commandText, transaction);
-            using var reader = command.ExecuteReader();
-            var result = 0;
-
-            while (reader.Read())
+            if (rows.Count == 0)
             {
-                rows[result][identityField.Name] = Converter.DbNullToNull(reader.GetValue(0));
-                result++;
+                return 0;
             }
 
-            return result;
+            var lastIdentity = Convert.ToInt64(connection.GetDbHelper().GetScopeIdentity<object>(connection, transaction));
+
+            for (var i = 0; i < rows.Count; i++)
+            {
+                rows[i][identityField.Name] = lastIdentity - (rows.Count - 1 - i);
+            }
+
+            return rows.Count;
         }
 
         /// <summary>
-        /// 
+        /// Asynchronous counterpart of <see cref="InsertFromPseudoTableForReturnIdentityForDataTable"/>.
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -322,19 +288,22 @@ namespace RepoDb.Vertica.BulkOperations.Extensions
             VerticaTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            var commandText = VerticaText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, connection.GetDbSetting());
+            var commandText = VerticaText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, connection.GetDbSetting());
+            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
 
-            using var command = CreateReaderCommand(connection, commandText, transaction);
-            using var reader = await command.ExecuteReaderAsync(cancellationToken);
-            var result = 0;
-
-            while (await reader.ReadAsync(cancellationToken))
+            if (rows.Count == 0)
             {
-                rows[result][identityField.Name] = Converter.DbNullToNull(reader.GetValue(0));
-                result++;
+                return 0;
             }
 
-            return result;
+            var lastIdentity = Convert.ToInt64(await connection.GetDbHelper().GetScopeIdentityAsync<object>(connection, transaction, cancellationToken));
+
+            for (var i = 0; i < rows.Count; i++)
+            {
+                rows[i][identityField.Name] = lastIdentity - (rows.Count - 1 - i);
+            }
+
+            return rows.Count;
         }
 
         #endregion

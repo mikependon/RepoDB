@@ -42,9 +42,7 @@ namespace RepoDb
         private static readonly DbTypeNameToColumnNameResolver ColumnTypeResolver = new();
 
         /// <summary>
-        /// Builds the full column type declaration for <paramref name="field"/>, appending
-        /// <c>(precision,scale)</c>/<c>(size)</c> (and, for binary types, <c>CHARACTER SET OCTETS</c>) onto the
-        /// base keyword resolved by <see cref="DbTypeNameToColumnNameResolver"/>.
+        /// 
         /// </summary>
         /// <param name="field"></param>
         /// <returns></returns>
@@ -58,8 +56,7 @@ namespace RepoDb
             return field.DatabaseType?.ToLowerInvariant() switch
             {
                 "numeric" or "decimal" => $"{baseType}({precision},{scale})",
-                "char" or "varchar" => $"{baseType}({size})",
-                "binary" or "varbinary" => $"{baseType}({size}) CHARACTER SET OCTETS",
+                "char" or "varchar" or "binary" or "varbinary" => $"{baseType}({size})",
                 _ => baseType,
             };
         }
@@ -93,25 +90,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="pseudoTableName"></param>
-        /// <param name="qualifiers"></param>
-        /// <param name="dbSetting"></param>
-        /// <returns></returns>
-        public static string GetCreatePseudoTableIndexSql(string pseudoTableName,
-            IEnumerable<Field> qualifiers,
-            IDbSetting dbSetting)
-        {
-            var quotedIndexName = ("IX" + pseudoTableName).AsQuoted(true, dbSetting);
-            var quotedPseudoTableName = pseudoTableName.AsQuoted(true, dbSetting);
-            var columnList = qualifiers.Select(f => f.Name.AsQuoted(true, dbSetting)).Join(", ");
-
-            return $"CREATE INDEX {quotedIndexName} ON {quotedPseudoTableName} ({columnList})";
-        }
-
-        /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="pseudoTableName"></param>
         /// <param name="dbSetting"></param>
@@ -121,11 +100,11 @@ namespace RepoDb
             $"DROP TABLE {pseudoTableName.AsQuoted(true, dbSetting)}";
 
         /// <summary>
-        /// Vertica's engine does not report a records-affected count for an <c>EXECUTE BLOCK</c> or a
-        /// native <c>MERGE</c> statement (<c>ExecuteNonQuery</c> always answers -1 for either), so the
-        /// pseudo table's own row count - every staged row is guaranteed to be either inserted or
-        /// updated - is used as the affected-row count instead.
+        /// 
         /// </summary>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         public static string GetPseudoTableRowCountSql(string pseudoTableName,
             IDbSetting dbSetting) =>
             $"SELECT COUNT(*) FROM {pseudoTableName.AsQuoted(true, dbSetting)}";
@@ -157,40 +136,19 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="pseudoTableName"></param>
         /// <param name="fields"></param>
-        /// <param name="identityField"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         public static string GetInsertFromPseudoTableForReturnIdentitySql(string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
-            Field identityField,
             IDbSetting dbSetting)
         {
             var quotedTable = tableName.AsQuoted(true, dbSetting);
             var quotedPseudoTable = pseudoTableName.AsQuoted(true, dbSetting);
             var quotedRowOrderColumn = RowOrderColumnName.AsQuoted(true, dbSetting);
-            var quotedIdentityColumn = identityField.Name.AsQuoted(true, dbSetting);
-            var fieldList = fields.AsList();
+            var columnList = ColumnList(fields, dbSetting);
 
-            var sb = new StringBuilder("EXECUTE BLOCK RETURNS (R0 TYPE OF COLUMN ")
-                .Append(quotedTable).Append('.').Append(quotedIdentityColumn).Append(") AS ");
-
-            for (var i = 0; i < fieldList.Count; i++)
-            {
-                sb.Append("DECLARE VARIABLE V").Append(i).Append(" TYPE OF COLUMN ")
-                    .Append(quotedPseudoTable).Append('.').Append(fieldList[i].Name.AsQuoted(true, dbSetting)).Append("; ");
-            }
-
-            sb.Append("BEGIN FOR SELECT ").Append(ColumnList(fieldList, dbSetting))
-                .Append(" FROM ").Append(quotedPseudoTable)
-                .Append(" ORDER BY ").Append(quotedRowOrderColumn)
-                .Append(" INTO ").Append(VariableList(fieldList.Count))
-                .Append(" DO BEGIN INSERT INTO ").Append(quotedTable)
-                .Append(" (").Append(ColumnList(fieldList, dbSetting)).Append(") VALUES (")
-                .Append(VariableList(fieldList.Count)).Append(") RETURNING ")
-                .Append(quotedIdentityColumn).Append(" INTO :R0; SUSPEND; END END");
-
-            return sb.ToString();
+            return $"INSERT INTO {quotedTable} ({columnList}) SELECT {columnList} FROM {quotedPseudoTable} ORDER BY {quotedRowOrderColumn}";
         }
 
         #endregion
@@ -198,21 +156,16 @@ namespace RepoDb
         #region Merge
 
         /// <summary>
-        /// Builds the statement(s) used to apply a pseudo table's staged rows onto <paramref name="tableName"/>
-        /// as an upsert. Three shapes, depending on whether the identity column is itself a merge qualifier
-        /// (see the remarks on <c>VerticaStatementBuilder.CreateMerge</c> for why that case needs special
-        /// handling - a plain <c>MATCHING</c>/<c>ON</c> clause can't tell "match this literal 0/null" apart
-        /// from "auto-generate me"):
-        /// <list type="bullet">
-        /// <item><description>Identity is not a qualifier, no return-identity: a single ANSI <c>MERGE INTO ...
-        /// USING ... WHEN MATCHED ... WHEN NOT MATCHED ...</c> statement - one round trip for every row.</description></item>
-        /// <item><description>Identity is not a qualifier, with return-identity: an <c>EXECUTE BLOCK</c> loop
-        /// of plain <c>UPDATE OR INSERT ... MATCHING ... RETURNING</c> calls, one per row.</description></item>
-        /// <item><description>Identity is a qualifier (with or without return-identity): an <c>EXECUTE BLOCK</c>
-        /// loop that branches per row between a plain <c>INSERT</c> (identity null/0 - auto-generate) and
-        /// <c>UPDATE OR INSERT ... MATCHING</c> (a real identity value - match-or-insert-with-that-id).</description></item>
-        /// </list>
+        /// 
         /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="identityField"></param>
+        /// <param name="returnIdentity"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         public static string GetMergeFromPseudoTableSql(string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -256,9 +209,16 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// The simple (identity-not-a-qualifier) return-identity case: one <c>UPDATE OR INSERT ...
-        /// MATCHING ... RETURNING</c> per pseudo-table row, looped via <c>EXECUTE BLOCK</c>.
+        /// 
         /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="insertableFields"></param>
+        /// <param name="allFields"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="identityField"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         private static string GetUpsertLoopExecuteBlockSql(string tableName,
             string pseudoTableName,
             IList<Field> insertableFields,
@@ -295,13 +255,16 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// The identity-as-qualifier case: per pseudo-table row, branch between a plain <c>INSERT</c>
-        /// (identity null/0) and <c>UPDATE OR INSERT ... MATCHING</c> (a real identity value), mirroring
-        /// <c>VerticaStatementBuilder.BuildMergeExecuteBlock</c>'s single-row version of the same logic.
-        /// <c>RETURNS</c>/<c>SUSPEND</c> are only emitted when <paramref name="returnIdentity"/> is set - a
-        /// bulk merge that doesn't need identities back skips them, since a plain procedural <c>EXECUTE
-        /// BLOCK</c> (no result set) is a valid, slightly cheaper Vertica construct.
+        /// 
         /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="identityField"></param>
+        /// <param name="returnIdentity"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         private static string GetMergeExecuteBlockSql(string tableName,
             string pseudoTableName,
             IList<Field> fields,
@@ -366,10 +329,14 @@ namespace RepoDb
         #region Update
 
         /// <summary>
-        /// A plain ANSI <c>MERGE ... WHEN MATCHED THEN UPDATE</c> against the pseudo table - there is no
-        /// <c>WHEN NOT MATCHED</c> branch, so the identity-as-qualifier ambiguity that <see cref="GetMergeFromPseudoTableSql"/>
-        /// has to work around never applies here (nothing is ever inserted).
+        /// 
         /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         public static string GetUpdateFromPseudoTableSql(string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -391,16 +358,23 @@ namespace RepoDb
         #region Delete
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         public static string GetDeleteFromPseudoTableSql(string tableName,
             string pseudoTableName,
             IEnumerable<Field> qualifiers,
             IDbSetting dbSetting)
         {
-            var onClause = qualifiers.Select(f => $"T.{f.Name.AsQuoted(true, dbSetting)} = S.{f.Name.AsQuoted(true, dbSetting)}").Join(" AND ");
+            var quotedTable = tableName.AsQuoted(true, dbSetting);
+            var quotedPseudoTable = pseudoTableName.AsQuoted(true, dbSetting);
+            var onClause = qualifiers.Select(f => $"{quotedTable}.{f.Name.AsQuoted(true, dbSetting)} = S.{f.Name.AsQuoted(true, dbSetting)}").Join(" AND ");
 
-            return $"DELETE FROM {tableName.AsQuoted(true, dbSetting)} T WHERE EXISTS (SELECT 1 FROM {pseudoTableName.AsQuoted(true, dbSetting)} S WHERE {onClause})";
+            return $"DELETE FROM {quotedTable} WHERE EXISTS (SELECT 1 FROM {quotedPseudoTable} S WHERE {onClause})";
         }
 
         #endregion

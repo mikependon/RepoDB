@@ -23,6 +23,20 @@ namespace RepoDb
     {
         #region Sync
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TPrimaryKey"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="primaryKeys"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         private static int BulkDeleteByKeyBase<TPrimaryKey>(this VerticaConnection connection,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
@@ -46,7 +60,6 @@ namespace RepoDb
             try
             {
                 VerticaExecution.CreatePseudoTable(connection, pseudoTableName, new[] { qualifierField }, dbFields, pseudoTableType, trace, traceKey, transaction);
-                VerticaExecution.CreatePseudoTableIndex(connection, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction);
 
                 using var dataTable = CreateKeyValuesDataTable(qualifierField, keyValueList);
                 var mappings = new[] { new VerticaBulkInsertMapItem(qualifierField.Name, qualifierField.Name) };
@@ -67,6 +80,21 @@ namespace RepoDb
 
         #region Async
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TPrimaryKey"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="primaryKeys"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private static async Task<int> BulkDeleteByKeyBaseAsync<TPrimaryKey>(this VerticaConnection connection,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
@@ -91,7 +119,6 @@ namespace RepoDb
             try
             {
                 await VerticaExecution.CreatePseudoTableAsync(connection, pseudoTableName, new[] { qualifierField }, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken);
-                await VerticaExecution.CreatePseudoTableIndexAsync(connection, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction, cancellationToken);
 
                 using var dataTable = CreateKeyValuesDataTable(qualifierField, keyValueList);
                 var mappings = new[] { new VerticaBulkInsertMapItem(qualifierField.Name, qualifierField.Name) };

@@ -45,10 +45,10 @@ namespace RepoDb.Resolvers
                 "int128" => "INT128",
                 "char" => "CHAR",
                 "varchar" => "VARCHAR",
-                "binary" => "CHAR",
-                "varbinary" => "VARCHAR",
-                "blob_binary" => "BLOB SUB_TYPE 0",
-                _ => "BLOB SUB_TYPE TEXT", // blob_text, and a safe catch-all for anything unrecognized.
+                "binary" => "BINARY",
+                "varbinary" => "VARBINARY",
+                "uuid" => "UUID",
+                _ => "LONG VARCHAR", // A safe catch-all for anything unrecognized - Vertica's large-text type.
             };
         }
     }

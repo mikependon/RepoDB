@@ -27,6 +27,23 @@ namespace RepoDb
 
         #region BulkMergeBase<TEntity>
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         private static int BulkMergeBase<TEntity>(this VerticaConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -58,7 +75,6 @@ namespace RepoDb
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields).AsList();
 
                 VerticaExecution.CreatePseudoTable(connection, pseudoTableName, mergeFields, dbFields, pseudoTableType, trace, traceKey, transaction);
-                VerticaExecution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction);
 
                 var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : mergeFields;
                 using var entityTable = BuildEntityDataTable(entityList, entityFields, includeRowOrder: true);
@@ -81,6 +97,23 @@ namespace RepoDb
 
         #region BulkMergeBase<DataTable>
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="rowState"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         private static int BulkMergeBase(this VerticaConnection connection,
             string tableName,
             DataTable table,
@@ -112,7 +145,6 @@ namespace RepoDb
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields).AsList();
 
                 VerticaExecution.CreatePseudoTable(connection, pseudoTableName, mergeFields, dbFields, pseudoTableType, trace, traceKey, transaction);
-                VerticaExecution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction);
 
                 using var orderedTable = AddRowOrderColumn(table, rows);
                 WriteToServerInternal(connection, pseudoTableName, orderedTable, mappings: WithRowOrderMapping(mappings), bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction);
@@ -134,6 +166,21 @@ namespace RepoDb
 
         #region BulkMergeBase<DbDataReader>
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="reader"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         private static int BulkMergeBase(this VerticaConnection connection,
             string tableName,
             IDataReader reader,
@@ -161,7 +208,6 @@ namespace RepoDb
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields).AsList();
 
                 VerticaExecution.CreatePseudoTable(connection, pseudoTableName, mergeFields, dbFields, pseudoTableType, trace, traceKey, transaction);
-                VerticaExecution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction);
                 WriteToServerInternal(connection, pseudoTableName, reader, mappings ?? GetDefaultMappingsForDataReader(connection, tableName, reader, transaction).AsList(), bulkCopyTimeout, batchSize, transaction);
 
                 result = VerticaExecution.MergeFromPseudoTable(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField?.AsField(), trace, traceKey, transaction);
@@ -183,6 +229,24 @@ namespace RepoDb
 
         #region BulkMergeBaseAsync<TEntity>
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private static async Task<int> BulkMergeBaseAsync<TEntity>(this VerticaConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -215,7 +279,6 @@ namespace RepoDb
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields).AsList();
 
                 await VerticaExecution.CreatePseudoTableAsync(connection, pseudoTableName, mergeFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken);
-                await VerticaExecution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken);
 
                 var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : mergeFields;
                 using var entityTable = BuildEntityDataTable(entityList, entityFields, includeRowOrder: true);
@@ -238,6 +301,24 @@ namespace RepoDb
 
         #region BulkMergeBaseAsync<DataTable>
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="rowState"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private static async Task<int> BulkMergeBaseAsync(this VerticaConnection connection,
             string tableName,
             DataTable table,
@@ -270,7 +351,6 @@ namespace RepoDb
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields).AsList();
 
                 await VerticaExecution.CreatePseudoTableAsync(connection, pseudoTableName, mergeFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken);
-                await VerticaExecution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken);
 
                 using var orderedTable = AddRowOrderColumn(table, rows);
                 await WriteToServerAsyncInternal(connection, pseudoTableName, orderedTable, mappings: WithRowOrderMapping(mappings), bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction, cancellationToken: cancellationToken);
@@ -292,6 +372,22 @@ namespace RepoDb
 
         #region BulkMergeBaseAsync<DbDataReader>
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="reader"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private static async Task<int> BulkMergeBaseAsync(this VerticaConnection connection,
             string tableName,
             IDataReader reader,
@@ -320,7 +416,6 @@ namespace RepoDb
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields).AsList();
 
                 await VerticaExecution.CreatePseudoTableAsync(connection, pseudoTableName, mergeFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken);
-                await VerticaExecution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken);
                 await WriteToServerAsyncInternal(connection, pseudoTableName, reader, mappings ?? GetDefaultMappingsForDataReader(connection, tableName, reader, transaction).AsList(), bulkCopyTimeout, batchSize, transaction, cancellationToken);
 
                 result = await VerticaExecution.MergeFromPseudoTableAsync(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField?.AsField(), trace, traceKey, transaction, cancellationToken);

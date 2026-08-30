@@ -27,6 +27,21 @@ namespace RepoDb
 
         #region BulkDeleteBase<TEntity>
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         private static int BulkDeleteBase<TEntity>(this VerticaConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -52,7 +67,6 @@ namespace RepoDb
             try
             {
                 VerticaExecution.CreatePseudoTable(connection, pseudoTableName, qualifierFields, dbFields, pseudoTableType, trace, traceKey, transaction);
-                VerticaExecution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction);
 
                 using var entityTable = BuildEntityDataTable(entityList, qualifierFields);
                 WriteToServerInternal(connection, pseudoTableName, entityTable, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction);
@@ -72,6 +86,21 @@ namespace RepoDb
 
         #region BulkDeleteBase<DataTable>
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="rowState"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         private static int BulkDeleteBase(this VerticaConnection connection,
             string tableName,
             DataTable table,
@@ -96,7 +125,6 @@ namespace RepoDb
             try
             {
                 VerticaExecution.CreatePseudoTable(connection, pseudoTableName, qualifierFields, dbFields, pseudoTableType, trace, traceKey, transaction);
-                VerticaExecution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction);
 
                 var mappings = qualifierFields.Select(f => new VerticaBulkInsertMapItem(f.Name, f.Name)).AsList();
                 WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, transaction);
@@ -116,6 +144,20 @@ namespace RepoDb
 
         #region BulkDeleteBase<DbDataReader>
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="reader"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         private static int BulkDeleteBase(this VerticaConnection connection,
             string tableName,
             IDataReader reader,
@@ -139,7 +181,6 @@ namespace RepoDb
             try
             {
                 VerticaExecution.CreatePseudoTable(connection, pseudoTableName, qualifierFields, dbFields, pseudoTableType, trace, traceKey, transaction);
-                VerticaExecution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction);
 
                 var mappings = qualifierFields.Select(f => new VerticaBulkInsertMapItem(f.Name, f.Name)).AsList();
                 WriteToServerInternal(connection, pseudoTableName, reader, mappings, bulkCopyTimeout, batchSize, transaction);
@@ -163,6 +204,22 @@ namespace RepoDb
 
         #region BulkDeleteBaseAsync<TEntity>
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private static async Task<int> BulkDeleteBaseAsync<TEntity>(this VerticaConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -189,7 +246,6 @@ namespace RepoDb
             try
             {
                 await VerticaExecution.CreatePseudoTableAsync(connection, pseudoTableName, qualifierFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken);
-                await VerticaExecution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken);
 
                 using var entityTable = BuildEntityDataTable(entityList, qualifierFields);
                 await WriteToServerAsyncInternal(connection, pseudoTableName, entityTable, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction, cancellationToken: cancellationToken);
@@ -209,6 +265,22 @@ namespace RepoDb
 
         #region BulkDeleteBaseAsync<DataTable>
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="rowState"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private static async Task<int> BulkDeleteBaseAsync(this VerticaConnection connection,
             string tableName,
             DataTable table,
@@ -234,7 +306,6 @@ namespace RepoDb
             try
             {
                 await VerticaExecution.CreatePseudoTableAsync(connection, pseudoTableName, qualifierFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken);
-                await VerticaExecution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken);
 
                 var mappings = qualifierFields.Select(f => new VerticaBulkInsertMapItem(f.Name, f.Name)).AsList();
                 await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, transaction, cancellationToken);
@@ -254,6 +325,21 @@ namespace RepoDb
 
         #region BulkDeleteBaseAsync<DbDataReader>
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="reader"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private static async Task<int> BulkDeleteBaseAsync(this VerticaConnection connection,
             string tableName,
             IDataReader reader,
@@ -278,7 +364,6 @@ namespace RepoDb
             try
             {
                 await VerticaExecution.CreatePseudoTableAsync(connection, pseudoTableName, qualifierFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken);
-                await VerticaExecution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken);
 
                 var mappings = qualifierFields.Select(f => new VerticaBulkInsertMapItem(f.Name, f.Name)).AsList();
                 await WriteToServerAsyncInternal(connection, pseudoTableName, reader, mappings, bulkCopyTimeout, batchSize, transaction, cancellationToken);

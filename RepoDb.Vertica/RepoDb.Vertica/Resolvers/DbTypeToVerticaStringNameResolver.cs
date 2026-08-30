@@ -26,7 +26,7 @@ namespace RepoDb.Resolvers
             return dbType switch
             {
                 DbType.Int64 => "BIGINT",
-                DbType.Binary => "BLOB SUB_TYPE 0",
+                DbType.Binary => "VARBINARY(65000)",
                 DbType.Boolean => "BOOLEAN",
                 DbType.String => "VARCHAR(8191)",
                 DbType.Date => "DATE",
@@ -40,12 +40,12 @@ namespace RepoDb.Resolvers
                 DbType.Int16 => "SMALLINT",
                 DbType.Time => "TIME",
                 DbType.Byte => "SMALLINT",
-                DbType.Guid => "CHAR(16) CHARACTER SET OCTETS",
+                DbType.Guid => "UUID",
                 DbType.AnsiString => "VARCHAR(8191)",
                 DbType.AnsiStringFixedLength => "CHAR(8191)",
-                DbType.StringFixedLength => "NCHAR(8191)",
-                DbType.Object => "BLOB SUB_TYPE 0",
-                DbType.Xml => "BLOB SUB_TYPE TEXT",
+                DbType.StringFixedLength => "CHAR(8191)",
+                DbType.Object => "VARBINARY(65000)",
+                DbType.Xml => "LONG VARCHAR(1000000)",
                 _ => "VARCHAR(8191)",
             };
         }
