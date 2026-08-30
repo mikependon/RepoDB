@@ -262,12 +262,11 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             // Setup
             var resolver = new DbTypeNameToColumnNameResolver();
 
-            // Act - binary maps onto the same base keyword as char; callers append the size and
-            // "CHARACTER SET OCTETS" themselves.
+            // Act
             var result = resolver.Resolve("binary");
 
             // Assert
-            Assert.AreEqual("CHAR", result);
+            Assert.AreEqual("BINARY", result);
         }
 
         [TestMethod]
@@ -276,38 +275,24 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             // Setup
             var resolver = new DbTypeNameToColumnNameResolver();
 
-            // Act - varbinary maps onto the same base keyword as varchar; callers append the size and
-            // "CHARACTER SET OCTETS" themselves.
+            // Act
             var result = resolver.Resolve("varbinary");
 
             // Assert
-            Assert.AreEqual("VARCHAR", result);
+            Assert.AreEqual("VARBINARY", result);
         }
 
         [TestMethod]
-        public void TestDbTypeNameToColumnNameResolverForBlobBinary()
+        public void TestDbTypeNameToColumnNameResolverForUuid()
         {
             // Setup
             var resolver = new DbTypeNameToColumnNameResolver();
 
             // Act
-            var result = resolver.Resolve("blob_binary");
+            var result = resolver.Resolve("uuid");
 
             // Assert
-            Assert.AreEqual("BLOB SUB_TYPE 0", result);
-        }
-
-        [TestMethod]
-        public void TestDbTypeNameToColumnNameResolverForBlobText()
-        {
-            // Setup
-            var resolver = new DbTypeNameToColumnNameResolver();
-
-            // Act
-            var result = resolver.Resolve("blob_text");
-
-            // Assert
-            Assert.AreEqual("BLOB SUB_TYPE TEXT", result);
+            Assert.AreEqual("UUID", result);
         }
 
         [TestMethod]
@@ -316,11 +301,11 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             // Setup
             var resolver = new DbTypeNameToColumnNameResolver();
 
-            // Act - unrecognized type names fall back to the same safe catch-all as "blob_text".
+            // Act
             var result = resolver.Resolve("some_unknown_type");
 
             // Assert
-            Assert.AreEqual("BLOB SUB_TYPE TEXT", result);
+            Assert.AreEqual("LONG VARCHAR", result);
         }
 
         [TestMethod]
@@ -333,7 +318,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve(null);
 
             // Assert
-            Assert.AreEqual("BLOB SUB_TYPE TEXT", result);
+            Assert.AreEqual("LONG VARCHAR", result);
         }
 
         [TestMethod]

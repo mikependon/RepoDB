@@ -189,7 +189,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve(DbType.Guid);
 
             // Assert
-            Assert.AreEqual("CHAR(16) CHARACTER SET OCTETS", result);
+            Assert.AreEqual("UUID", result);
         }
 
         [TestMethod]
@@ -202,7 +202,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve(DbType.Binary);
 
             // Assert
-            Assert.AreEqual("BLOB SUB_TYPE 0", result);
+            Assert.AreEqual("VARBINARY(65000)", result);
         }
 
         [TestMethod]
@@ -241,7 +241,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve(DbType.Xml);
 
             // Assert
-            Assert.AreEqual("BLOB SUB_TYPE TEXT", result);
+            Assert.AreEqual("LONG VARCHAR(1000000)", result);
         }
     }
 }

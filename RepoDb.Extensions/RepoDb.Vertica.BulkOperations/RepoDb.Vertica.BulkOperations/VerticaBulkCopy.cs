@@ -198,30 +198,46 @@ namespace RepoDb.Vertica.BulkOperations
             return builder?.ToString() ?? value;
         }
 
+        /// <summary>
+        /// Creates a <see cref="StreamWriter"/> for the specified <see cref="Stream"/>.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
         private static StreamWriter CreateStreamWriter(Stream stream) =>
             new(stream, new UTF8Encoding(false), 1024, leaveOpen: true);
 
         /// <summary>
         /// Runs the configured <see cref="VerticaCopyStream"/> against the in-memory stream built by
-        /// <see cref="WriteRow"/>. <see cref="VerticaCopyStream"/> exposes no async API of its own, so the
-        /// synchronous Start/AddStream/Execute/Finish sequence is offloaded to a background thread.
+        /// <see cref="WriteRow"/>, on the calling thread. <see cref="connection"/> is not thread-safe for
+        /// concurrent use (the pseudo table this bulk-loads into is created, indexed, read from, and dropped
+        /// via other statements against the very same connection immediately before/after this call), so this
+        /// must run on whatever thread is already driving that sequence rather than a separate one.
+        /// </summary>
+        private int Execute(IReadOnlyList<VerticaBulkInsertMapItem> mappings,
+            MemoryStream stream)
+        {
+            stream.Position = 0;
+
+            var copyStatement = BuildCopyStatement(mappings);
+            var copyStream = new VerticaCopyStream(connection, copyStatement);
+            copyStream.Start();
+            copyStream.AddStream(stream, false);
+            copyStream.Execute();
+            return checked((int)copyStream.Finish());
+        }
+
+        /// <summary>
+        /// <see cref="VerticaCopyStream"/> exposes no async API of its own, so <see cref="Execute"/>'s
+        /// synchronous Start/AddStream/Execute/Finish sequence is offloaded to a background thread here -
+        /// safe only because, unlike the sync path, nothing else touches <see cref="connection"/> concurrently
+        /// while this awaits.
         /// </summary>
         private Task<int> ExecuteAsync(IReadOnlyList<VerticaBulkInsertMapItem> mappings,
             MemoryStream stream,
             CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            stream.Position = 0;
-
-            return Task.Run(() =>
-            {
-                var copyStatement = BuildCopyStatement(mappings);
-                var copyStream = new VerticaCopyStream(connection, copyStatement);
-                copyStream.Start();
-                copyStream.AddStream(stream, false);
-                copyStream.Execute();
-                return checked((int)copyStream.Finish());
-            }, cancellationToken);
+            return Task.Run(() => Execute(mappings, stream), cancellationToken);
         }
 
         #endregion
@@ -229,12 +245,32 @@ namespace RepoDb.Vertica.BulkOperations
         #region WriteToServer
 
         /// <summary>
-        /// Streams every remaining row of <paramref name="reader"/> to <see cref="DestinationTableName"/>.
+        /// Streams every remaining row of <paramref name="reader"/> to <see cref="DestinationTableName"/>,
+        /// on the calling thread - see the remarks on <see cref="Execute"/>.
         /// </summary>
         /// <param name="reader">The source rows to insert.</param>
         /// <returns>The number of rows <see cref="VerticaCopyStream"/> reports having loaded.</returns>
-        public int WriteToServer(IDataReader reader) =>
-            WriteToServerAsync(reader, CancellationToken.None).GetAwaiter().GetResult();
+        public int WriteToServer(IDataReader reader)
+        {
+            if (reader.FieldCount == 0)
+            {
+                return 0;
+            }
+
+            var mappings = ResolveMappings(reader);
+            var sourceOrdinals = mappings.Select(m => reader.GetOrdinal(m.SourceColumn)).ToArray();
+
+            using var stream = new MemoryStream();
+            using (var writer = CreateStreamWriter(stream))
+            {
+                while (reader.Read())
+                {
+                    WriteRow(writer, sourceOrdinals, ordinal => reader.IsDBNull(ordinal) ? null : reader.GetValue(ordinal));
+                }
+            }
+
+            return Execute(mappings, stream);
+        }
 
         /// <summary>
         /// Asynchronous counterpart of <see cref="WriteToServer(IDataReader)"/>.
@@ -264,13 +300,40 @@ namespace RepoDb.Vertica.BulkOperations
         }
 
         /// <summary>
-        /// Streams the rows of <paramref name="dataTable"/> to <see cref="DestinationTableName"/>.
+        /// Streams the rows of <paramref name="dataTable"/> to <see cref="DestinationTableName"/>,
+        /// on the calling thread - see the remarks on <see cref="Execute"/>.
         /// </summary>
         /// <param name="dataTable">The source rows to insert.</param>
         /// <param name="rowState">When specified, only rows in this state are inserted.</param>
         /// <returns>The number of rows <see cref="VerticaCopyStream"/> reports having loaded.</returns>
-        public int WriteToServer(DataTable dataTable, DataRowState? rowState = null) =>
-            WriteToServerAsync(dataTable, rowState, CancellationToken.None).GetAwaiter().GetResult();
+        public int WriteToServer(DataTable dataTable, DataRowState? rowState = null)
+        {
+            var mappings = ResolveMappings(dataTable);
+            var rowsQuery = dataTable.Rows.OfType<DataRow>();
+            if (rowState.HasValue)
+            {
+                rowsQuery = rowsQuery.Where(row => row.RowState == rowState);
+            }
+            var rows = rowsQuery.ToArray();
+
+            if (dataTable.Columns.Count == 0 || rows.Length == 0 || mappings.Count == 0)
+            {
+                return 0;
+            }
+
+            var sourceOrdinals = mappings.Select(m => dataTable.Columns.IndexOf(m.SourceColumn)).ToArray();
+
+            using var stream = new MemoryStream();
+            using (var writer = CreateStreamWriter(stream))
+            {
+                foreach (var row in rows)
+                {
+                    WriteRow(writer, sourceOrdinals, ordinal => row.IsNull(ordinal) ? null : row[ordinal]);
+                }
+            }
+
+            return Execute(mappings, stream);
+        }
 
         /// <summary>
         /// Asynchronous counterpart of <see cref="WriteToServer(DataTable, DataRowState?)"/>.
