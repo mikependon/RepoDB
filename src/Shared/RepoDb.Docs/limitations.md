@@ -67,6 +67,16 @@ We want the .NET community to understand this library's limitations before using
   - [Enum Mapped via TypeMap to a Text Column](#enum-mapped-via-typemap-to-a-text-column)
   - [RepoDb.Firebird.BulkOperations Does Not Exist Yet](#repodbfirebirdbulkoperations-does-not-exist-yet)
   - [Verification Status](#verification-status-4)
+- Vertica
+  - [QueryMultiple / MergeAll / UpdateAll Batching](#querymultiple--mergeall--updateall-batching)
+  - [No TRUNCATE TABLE Statement](#no-truncate-table-statement)
+  - [MERGE Statement Rejected on Tables With an Identity Column](#merge-statement-rejected-on-tables-with-an-identity-column)
+  - [Uniform-Width Integer and Floating-Point Types](#uniform-width-integer-and-floating-point-types)
+  - [Ambient Thread Culture Corrupts Date/Time Parameters](#ambient-thread-culture-corrupts-datetime-parameters)
+  - [Bulk Insert and Merge Identity Correlation](#bulk-insert-and-merge-identity-correlation)
+  - [Bulk Operations: BatchSize Parameter Has No Effect](#bulk-operations-batchsize-parameter-has-no-effect)
+  - [Bulk Operations Staging Table](#bulk-operations-staging-table-5)
+  - [Verification Status](#verification-status-5)
 
 ## Core
 
@@ -1081,3 +1091,141 @@ Use `InsertAll`/`MergeAll`/`UpdateAll`/`DeleteAll` from the core `RepoDb.Firebir
 ### Verification Status
 
 `RepoDb.Firebird` has full unit test coverage (settings, quoting, mapping, statement builder — including a hand-verified SQL text assertion for the `EXECUTE BLOCK` merge path — and attribute/resolver coverage) plus a full integration test suite exercised against a live `jacobalberty/firebird` container via the root `docker-compose.yml` and the `build-firebird` CI job. The `EXECUTE BLOCK`-based merge path described under [Merge Semantics for Identity-as-Qualifier](#merge-semantics-for-identity-as-qualifier) is a genuinely new code path relative to every other provider's `Merge` implementation — it has been exercised against a live instance during development, but deserves extra scrutiny before relying on it in production. `RepoDb.Firebird.BulkOperations` does not exist yet (see above).
+
+## Vertica
+
+These limitations are specific to the [RepoDb.Vertica](https://www.nuget.org/packages/RepoDb.Vertica) and `RepoDb.Vertica.BulkOperations` packages, on top of the [Core](#core) limitations above. Vertica is a distributed, MPP columnar analytical database built on the `Vertica.Data` (`VerticaClient`) ADO.NET provider, and several of the caveats below come directly from behavior that provider exposes (or fails to expose) differently from the single-node RDBMS providers RepoDB otherwise targets.
+
+### QueryMultiple / MergeAll / UpdateAll Batching
+
+`IsMultiStatementExecutable` is `false` for `VerticaDbSetting`, so [QueryMultiple](http://repodb.net/operation/executequerymultiple) falls back to one round trip per requested type, the same as Oracle/Db2/Firebird/ClickHouse. `CreateMergeAll` and `CreateUpdateAll` in `VerticaStatementBuilder` call `ValidateMultipleStatementExecution(batchSize)` internally and throw once `batchSize > 1`, so `MergeAll`/`UpdateAll` execute one row per round trip rather than a single combined statement.
+
+`InsertAll` is the exception — `IsInsertAllBatchable` is `true`, and `CreateInsertAll` still builds a single multi-row `INSERT INTO ... VALUES (row0), (row1), ...` statement (the multi-statement restriction is about chaining *separate* statements together in one request, not about a multi-row `VALUES` list), so `InsertAll` does not pay a per-row round-trip cost.
+
+`IDbSetting.MaxParameterCount` is also set to `1500` for this provider, so `DeleteAll(keys)` automatically splits a large key list into batches at that threshold rather than sending one very large parameter list in a single call.
+
+**Alternative Solution**
+
+No workaround needed for `InsertAll`. For `MergeAll`/`UpdateAll` with more than one row, either issue calls one row at a time or use the `RepoDb.Vertica.BulkOperations` package instead.
+
+### No TRUNCATE TABLE Statement
+
+Vertica (as of 5.0, per `VerticaStatementBuilder`'s own remarks) has no `TRUNCATE TABLE` statement. `CreateTruncate` falls back to a plain `DELETE FROM` with no `WHERE` clause:
+
+```csharp
+// Vertica has no TRUNCATE TABLE statement (as of 5.0). DELETE FROM without a WHERE
+// clause is the closest equivalent; unlike TRUNCATE elsewhere, it does not reset a
+// GENERATED AS IDENTITY column's next value.
+builder.Clear()
+    .WriteText("DELETE FROM")
+    .TableNameFrom(tableName, DbSetting);
+```
+
+Unlike a real `TRUNCATE`, this does not reset an `IDENTITY`/`AUTO_INCREMENT` column's next value — a subsequent `Insert` continues the sequence where it left off rather than restarting at its seed value.
+
+**Alternative Solution**
+
+If restarting the identity sequence matters, look up its name via `v_catalog.sequences` and reset it explicitly (`ALTER SEQUENCE ... RESTART WITH ...`) after calling `Truncate`. RepoDB does not do this for you.
+
+### MERGE Statement Rejected on Tables With an Identity Column
+
+Vertica flatly refuses to run a native `MERGE` statement at all against a table that has an `IDENTITY`/`AUTO_INCREMENT` column — *"Sequence or IDENTITY/AUTO_INCREMENT column in merge query is not supported"* — regardless of whether that column even appears in the `SET`/`INSERT` lists. Unlike Firebird (which has `EXECUTE BLOCK`/PSQL as a procedural fallback), Vertica has no equivalent construct to work around this with a single statement.
+
+`VerticaStatementBuilder.CreateMerge`/`CreateMergeAll` instead always compile to an `UPDATE ... WHERE ...` followed by an `INSERT ... WHERE NOT EXISTS (...)`, and — when the identity value needs to be returned — a trailing `SELECT` that reads back `LAST_INSERT_ID()`, all joined by literal `;` characters into a single command text sent as one `VerticaCommand.CommandText`:
+
+```csharp
+sb.Append("UPDATE ").Append(quotedTable).Append(" SET ")....Append(" WHERE ").Append(WhereQualifiers()).Append("; ");
+sb.Append("INSERT INTO ").Append(quotedTable)...Append(" WHERE NOT EXISTS (SELECT 1 FROM ").Append(quotedTable)...Append(')');
+// ...optionally followed by: "; SELECT LAST_INSERT_ID() AS ..."
+```
+
+This sits oddly next to `VerticaDbSetting.IsMultiStatementExecutable = false` and the provider's own `TrimTrailingSemicolon` helper, whose remarks state that *"Vertica's DSQL layer treats the semicolon purely as an isql/script statement separator, not as part of the grammar for a single statement submitted through the API"* — the exact reason every other `Create*` method strips its trailing `;`. Whether `Vertica.Data.VerticaClient` actually executes a semicolon-delimited batch of 2–3 statements submitted this way as one `CommandText` (as opposed to erroring, or silently running only the first statement) is not something the unit tests can confirm — `StatementBuilderTest.cs` only asserts the generated SQL *text*, never executes it.
+
+**Alternative Solution**
+
+Verify `Merge`/`MergeAll` against your own Vertica instance — particularly the multi-statement `CommandText` behavior described above — before relying on it in production, especially against a table with an identity column.
+
+### Uniform-Width Integer and Floating-Point Types
+
+Verified directly against `VerticaDataReader.GetSchemaTable()`: Vertica has no distinct storage widths for its integer or floating-point types. `SMALLINT`/`INTEGER`/`BIGINT`/`INT8`/`TINYINT` are all synonyms for one 8-byte integer, and `FLOAT`/`DOUBLE PRECISION`/`REAL` are all synonyms for one 8-byte float. `VerticaDbTypeNameToClientTypeResolver` resolves every one of them to `System.Int64`/`System.Double` — never `Int32`/`Single` — regardless of the column's declared keyword. A property typed `int` or `float` for a Vertica-backed entity is still read back through a `long`/`double` conversion.
+
+**Alternative Solution**
+
+Declare mapped properties as `long`/`double` (or accept the implicit narrowing conversion RepoDB performs) rather than assuming a `SMALLINT` column round-trips as `Int32`.
+
+### Ambient Thread Culture Corrupts Date/Time Parameters
+
+Confirmed against `Vertica.Data` v24.1.0 and v24.3.0: the driver formats and re-parses date-like parameter values using the *ambient thread culture* instead of `CultureInfo.InvariantCulture`. On any machine whose culture uses a non-colon time separator (for example `en-DK`, which renders `13:45:30` as `13.45.30`), this corrupts the value the driver actually sends — a native `DateTime` bound to a `TIMESTAMP`/`TIME` column fails `INSERT` with *"Row 1 was rejected by the server"*, and even a plain `VarChar` parameter carrying an already-correct `"HH:mm:ss"` string comes back re-formatted with dots and fails server-side parsing on `UPDATE`/`SELECT`.
+
+Because RepoDb.Core calls `VerticaCommand.ExecuteScalar()`/`ExecuteNonQuery()`/`ExecuteReader()` directly, there is no per-call interception point available to a provider. `VerticaBootstrap.InitializeInternal()` works around this the only way it can — by force-setting Invariant culture for the whole process, not just Vertica-related calls:
+
+```csharp
+CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+```
+
+This is a genuinely global side effect: any code elsewhere in your process that depends on the ambient culture for its own formatting/parsing (dates, numbers, currency in UI or reports) is silently switched to Invariant the first time `RepoDb.Vertica` initializes, for the lifetime of the process — not scoped to the thread issuing a Vertica call, and not reversible by the caller.
+
+**Alternative Solution**
+
+Be aware that referencing `RepoDb.Vertica` changes `CultureInfo.CurrentCulture`/`CultureInfo.DefaultThreadCurrentCulture` process-wide as a side effect of its bootstrap. If other parts of your application rely on a specific ambient culture, apply that culture explicitly at the point of use (e.g. pass an explicit `IFormatProvider` to `ToString`/`Parse` calls) rather than relying on the thread/process default after `RepoDb.Vertica` has loaded.
+
+### Bulk Insert and Merge Identity Correlation
+
+`RepoDb.Vertica.BulkOperations`' `ReturnIdentity` path for `BulkInsert` and `BulkMerge` (when the identity column is itself a qualifier) does not read back each row's generated identity individually. Instead, after the pseudo-table-to-target `INSERT` runs, it calls `GetScopeIdentity` once (`SELECT LAST_INSERT_ID()`) and reconstructs every inserted row's value by subtracting a descending offset from that single last value, relying on the assumption that Vertica assigned the values contiguously in the same order the rows were inserted:
+
+```csharp
+// Vertica assigns IDENTITY/AUTO_INCREMENT values contiguously in the order rows are
+// inserted (the INSERT is itself ordered by the pseudo table's row-order column), so the
+// last value of the underlying sequence minus a descending offset reconstructs every
+// inserted row's value.
+var lastIdentity = Convert.ToInt64(connection.GetDbHelper().GetScopeIdentity<object>(connection, transaction));
+for (var i = 0; i < insertedCount; i++)
+{
+    identities[i] = lastIdentity - (insertedCount - 1 - i);
+}
+```
+
+This technique is not verified against a live, concurrently-loaded Vertica instance. Vertica's `IDENTITY`/`AUTO_INCREMENT` columns are backed by a sequence that pre-allocates and caches blocks of values per session/node for performance — a well-documented source of gaps under concurrent load on sequence-based identity mechanisms generally. If another session inserts into the same table between the bulk load's `INSERT ... SELECT` and the `GetScopeIdentity` call that follows it, or if Vertica's own query optimizer executes that `INSERT ... SELECT` across multiple nodes in parallel rather than strictly in the pseudo table's row order, the "last value minus offset" correlation can silently attribute the wrong identity to the wrong entity — with no exception or other signal that it happened.
+
+**Alternative Solution**
+
+Avoid concurrent writers against the same target table while relying on `VerticaBulkImportIdentityBehavior.ReturnIdentity`, and spot-check the returned identities against the actual row data after a bulk load against your own Vertica deployment before depending on this in production. Using `KeepIdentity` with a client-generated key sidesteps the issue entirely.
+
+### Bulk Operations: BatchSize Parameter Has No Effect
+
+Every `Bulk*` method in `RepoDb.Vertica.BulkOperations` accepts a `batchSize` parameter, which is assigned to `VerticaBulkCopy.BatchSize`:
+
+```csharp
+if (batchSize.HasValue)
+{
+    batcher.BatchSize = batchSize.Value;
+}
+```
+
+`VerticaBulkCopy.BatchSize` is declared as *"the number of rows submitted per round trip"* — but nothing in `VerticaBulkCopy` ever reads that property. Every `WriteToServer`/`WriteToServerAsync` overload buffers the *entire* source (every row of the `DataTable`/`IDataReader`) into one in-memory `MemoryStream`, then hands that whole stream to a single `VerticaCopyStream` `Start`/`AddStream`/`Execute`/`Finish` sequence in one round trip. The `batchSize` argument is silently accepted and has no effect on chunking, round-trip count, or memory usage.
+
+**Alternative Solution**
+
+Do not rely on `batchSize` to bound memory usage or round-trip count for `RepoDb.Vertica.BulkOperations` — the entire row set is always materialized in memory as one COPY payload regardless of the value passed. For very large loads, chunk the source data yourself (e.g. call `BulkInsert` repeatedly against slices of your source) if memory footprint is a concern.
+
+### Bulk Operations Staging Table
+
+`BulkInsert` (with `ReturnIdentity`), `BulkMerge`, `BulkUpdate`, `BulkDelete`, and `BulkDeleteByKey` all stage rows into a pseudo table via `VerticaCopyStream` before running the real `INSERT`/`UPDATE`/`DELETE` against the target table. `VerticaBulkImportPseudoTableType` offers the same three values seen in the other bulk-operations packages:
+
+- **`Memory`** — a Vertica `GLOBAL TEMPORARY TABLE ... ON COMMIT PRESERVE ROWS`, whose rows are private to the connection that wrote them.
+- **`Physical`** — an ordinary heap table, faster to create for very large row counts, at the cost of the rows briefly existing as a real (if uniquely-named) table.
+- **`Auto`** *(default)* — resolves to `Physical` at 5,000+ rows, otherwise `Memory`; unlike the `Auto`-always-resolves-to-`Physical` bug documented for `RepoDb.Db2.BulkOperations`/`RepoDb.MariaDb.BulkOperations`/`RepoDb.ClickHouse.BulkOperations`, this provider's `ResolvePseudoTableType` correctly branches both ways.
+
+Every pseudo table is named uniquely per call (`"RDBLK" + operationTag + Guid.NewGuid()`), so — unlike the sibling packages just mentioned, which use a deterministic, non-unique staging-table name and can race when two callers target the same table concurrently — `Physical` and `Memory` are both safe for concurrent callers here; there is no shared staging-table name to collide on.
+
+**Alternative Solution**
+
+No workaround needed for the staging-table naming itself. If you explicitly need a `Physical` staging table to never be visible to other sessions even momentarily, request `Memory` explicitly rather than relying on `Auto`'s row-count threshold.
+
+### Verification Status
+
+`RepoDb.Vertica` has unit test coverage (`DbSettingTest.cs`, `StatementBuilderTest.cs` — including SQL-text assertions for the `Merge`/`MergeAll` statements described above — plus resolver/attribute coverage) and a full integration test suite (`RepoDb.Vertica.IntegrationTests`, including `MergeTest.cs`/`MergeAllTest.cs`) exercised against a live `molo17/vertica-ce:24.1.0-0` container via the root `docker-compose.yml` and the `build-vertica`/`build-pr-vertica` CI jobs. `RepoDb.Vertica.BulkOperations` similarly has its own integration test project and `build-vertica-bulk`/`build-pr-vertica-bulk` CI jobs against the same container.
+
+None of this exercises the two behaviors flagged above as needing the most scrutiny: the integration test suite runs single-connection, so it does not validate the [Merge](#merge-statement-rejected-on-tables-with-an-identity-column) multi-statement `CommandText` under concurrent access, nor the [bulk insert/merge identity correlation](#bulk-insert-and-merge-identity-correlation) technique under a concurrently-loaded table or a multi-node cluster. Verify both against your own Vertica deployment — under realistic concurrency — before relying on them in production.
