@@ -11,11 +11,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
+using System.Threading.Tasks;
 using Serilog;
 
 namespace RepoDb.Telemetry.Core
@@ -91,10 +91,10 @@ namespace RepoDb.Telemetry.Core
         /// </summary>
         /// <param name="telemetryItem">The telemetry data to publish.</param>
         /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
-        public async void PublishAsync(
+        public async Task PublishAsync(
             TelemetryItem telemetryItem,
             CancellationToken cancellationToken = default) =>
-                PublishManyAsync(new[] { telemetryItem }, cancellationToken);
+                await PublishManyAsync(new[] { telemetryItem }, cancellationToken);
 
         /// <summary>
         /// A method that is used to publish multiple telemetry items to the insights solution.
@@ -131,7 +131,7 @@ namespace RepoDb.Telemetry.Core
         /// </summary>
         /// <param name="telemetryItems">The telemetry items to publish.</param>
         /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
-        public async void PublishManyAsync(
+        public async Task PublishManyAsync(
             IEnumerable<TelemetryItem> telemetryItems,
             CancellationToken cancellationToken = default)
         {
@@ -229,7 +229,7 @@ namespace RepoDb.Telemetry.Core
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="bytes"></param>
         /// <returns></returns>
