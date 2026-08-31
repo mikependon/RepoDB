@@ -60,7 +60,7 @@ Choose your database and follow the quick-start guide:
 - [MySQL](http://repodb.net/tutorial/get-started-mysql)
 - [Oracle](http://repodb.net/tutorial/get-started-oracle)
 - [PostgreSQL](http://repodb.net/tutorial/get-started-postgresql)
-- [SAP HANA](http://repodb.net/tutorial/get-started-saphana)
+- [SAP Hana](http://repodb.net/tutorial/get-started-saphana)
 - [SQL Server](http://repodb.net/tutorial/get-started-sqlserver)
 - [SQLite](http://repodb.net/tutorial/get-started-sqlite)
 - [Vertica](http://repodb.net/tutorial/get-started-vertica)
