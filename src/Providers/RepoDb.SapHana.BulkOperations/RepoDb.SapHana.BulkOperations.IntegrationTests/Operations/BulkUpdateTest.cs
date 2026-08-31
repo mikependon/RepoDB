@@ -365,7 +365,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -413,7 +413,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -462,7 +462,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -782,7 +782,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -830,7 +830,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -880,7 +880,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -915,7 +915,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -949,7 +949,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -983,7 +983,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1031,7 +1031,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1081,7 +1081,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1116,7 +1116,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1149,7 +1149,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1500,7 +1500,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1548,7 +1548,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1597,7 +1597,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1918,7 +1918,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1966,7 +1966,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -2016,7 +2016,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -2051,7 +2051,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -2084,7 +2084,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -2118,7 +2118,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -2166,7 +2166,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -2216,7 +2216,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -2251,7 +2251,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -2285,7 +2285,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -2632,7 +2632,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationNonIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -2680,7 +2680,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationNonIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -2729,7 +2729,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationNonIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -3020,7 +3020,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationNonIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -3068,7 +3068,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationNonIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -3118,7 +3118,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationNonIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -3153,7 +3153,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationNonIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -3187,7 +3187,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationNonIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -3221,7 +3221,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationNonIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -3269,7 +3269,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationNonIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -3319,7 +3319,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationNonIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -3354,7 +3354,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationNonIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -3387,7 +3387,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationNonIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -3728,7 +3728,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationNonIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -3776,7 +3776,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationNonIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -3825,7 +3825,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationNonIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -4117,7 +4117,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationNonIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -4165,7 +4165,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationNonIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -4215,7 +4215,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationNonIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -4250,7 +4250,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationNonIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -4283,7 +4283,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationNonIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -4317,7 +4317,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationNonIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -4365,7 +4365,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationNonIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -4415,7 +4415,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationNonIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -4450,7 +4450,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationNonIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -4484,7 +4484,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new HanaConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationNonIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -4516,7 +4516,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             {
                 sourceConnection.InsertAll(tables);
 
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationNonIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 using (var destinationConnection = new HanaConnection(Database.ConnectionString))
                 {
                     // Act
@@ -4538,7 +4538,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.Operations
             {
                 sourceConnection.InsertAll(tables);
 
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationNonIdentityTable""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 using (var destinationConnection = new HanaConnection(Database.ConnectionString))
                 {
                     // Act

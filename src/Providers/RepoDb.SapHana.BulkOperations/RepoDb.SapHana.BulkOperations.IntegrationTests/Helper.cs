@@ -19,7 +19,7 @@ using System.Linq;
 namespace RepoDb.SapHana.BulkOperations.IntegrationTests
 {
     /// <summary>
-    /// A helper class for the integration testing.
+    /// 
     /// </summary>
     public static class Helper
     {
@@ -32,12 +32,12 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests
         #region Properties
 
         /// <summary>
-        /// Gets the instance of <see cref="IStatementBuilder"/> object.
+        /// 
         /// </summary>
         public static IStatementBuilder StatementBuilder { get; }
 
         /// <summary>
-        /// Gets the value of the Epoc date.
+        /// 
         /// </summary>
         public static DateTime EpocDate { get; }
 
@@ -46,23 +46,19 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests
         #region Methods
 
         /// <summary>
-        /// Returns the current UTC time truncated to microsecond precision - the maximum fractional-seconds
-        /// precision a MySQL <c>DATETIME(6)</c> column (used for <c>ColumnDateTime2</c>/
-        /// <c>ColumnDateTime2Mapped</c>) can store. <see cref="DateTime.UtcNow"/> carries tick (100ns)
-        /// precision; without truncating here, the sub-microsecond remainder would be silently dropped by
-        /// MySQL on write, and a direct <see cref="DateTime"/> equality assertion between the in-memory
-        /// value and the value read back from the database would fail.
+        /// 
         /// </summary>
+        /// <returns></returns>
         private static DateTime UtcNowMicroseconds() =>
             new DateTime(DateTime.UtcNow.Ticks / 10 * 10, DateTimeKind.Utc);
 
         /// <summary>
-        /// Asserts the properties equality of 2 types.
+        /// 
         /// </summary>
-        /// <typeparam name="T1">The type of first object.</typeparam>
-        /// <typeparam name="T2">The type of second object.</typeparam>
-        /// <param name="t1">The instance of first object.</param>
-        /// <param name="t2">The instance of second object.</param>
+        /// <typeparam name="T1"></typeparam>
+        /// <typeparam name="T2"></typeparam>
+        /// <param name="t1"></param>
+        /// <param name="t2"></param>
         public static void AssertPropertiesEquality<T1, T2>(T1 t1, T2 t2)
         {
             var propertiesOfType1 = typeof(T1).GetProperties();
@@ -101,11 +97,10 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests
         }
 
         /// <summary>
-        /// Asserts the members equality of 2 object and <see cref="ExpandoObject"/>.
+        /// 
         /// </summary>
-        /// <typeparam name="T">The type of first object.</typeparam>
-        /// <param name="obj">The instance of first object.</param>
-        /// <param name="expandoObj">The instance of second object.</param>
+        /// <param name="obj"></param>
+        /// <param name="expandoObj"></param>
         public static void AssertMembersEquality(object obj, object expandoObj)
         {
             var dictionary = new ExpandoObject() as IDictionary<string, object>;
@@ -117,11 +112,10 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests
         }
 
         /// <summary>
-        /// Asserts the members equality of 2 object and <see cref="ExpandoObject"/>.
+        /// 
         /// </summary>
-        /// <typeparam name="T">The type of first object.</typeparam>
-        /// <param name="obj">The instance of first object.</param>
-        /// <param name="expandoObj">The instance of second object.</param>
+        /// <param name="obj"></param>
+        /// <param name="expandoObj"></param>
         public static void AssertMembersEquality(object obj, ExpandoObject expandoObj)
         {
             var dictionary = expandoObj as IDictionary<string, object>;
@@ -129,11 +123,10 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests
         }
 
         /// <summary>
-        /// Asserts the members equality of 2 objects.
+        /// 
         /// </summary>
-        /// <typeparam name="T">The type of first object.</typeparam>
-        /// <param name="obj">The instance of first object.</param>
-        /// <param name="dictionary">The instance of second object.</param>
+        /// <param name="obj"></param>
+        /// <param name="dictionary"></param>
         public static void AssertMembersEquality(object obj, IDictionary<string, object> dictionary)
         {
             var properties = obj.GetType().GetProperties();
@@ -275,12 +268,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests
         #region BulkOperationNonIdentityTable
 
         /// <summary>
-        /// Creates test rows for <see cref="BulkOperationNonIdentityTable"/> - a non-identity counterpart
-        /// of <see cref="BulkOperationIdentityTable"/> whose <c>Id</c> is a plain primary key. Unlike
-        /// <see cref="CreateBulkOperationIdentityTables"/> (whose <c>hasId</c> value is ignored by an
-        /// IDENTITY column on insert), the <c>Id</c> assigned here is guaranteed to be the value actually
-        /// stored - useful for tests that need to build a separate object (anonymous, expando, etc.) that
-        /// must match an already-inserted row by primary key.
+        /// 
         /// </summary>
         /// <param name="count"></param>
         /// <param name="hasId"></param>

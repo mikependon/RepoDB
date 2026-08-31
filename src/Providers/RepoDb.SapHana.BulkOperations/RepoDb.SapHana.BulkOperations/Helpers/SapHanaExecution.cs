@@ -15,7 +15,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Sap.Data.Hana;
 using RepoDb.Enumerations.SapHana;
-using RepoDb.Extensions;
 using RepoDb.Interfaces;
 
 namespace RepoDb.SapHana.BulkOperations.Extensions
@@ -25,6 +24,8 @@ namespace RepoDb.SapHana.BulkOperations.Extensions
     /// </summary>
     internal static class SapHanaExecution
     {
+        private const int TableOrViewNotFoundNativeError = 259;
+
         #region Shared
 
         /// <summary>
@@ -48,8 +49,11 @@ namespace RepoDb.SapHana.BulkOperations.Extensions
             HanaTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
-            var commandText = SapHanaText.GetCreatePseudoTableSql(tableName, pseudoTableName, pseudoTableType, dbSetting, qualifierField);
-            connection.ExecuteNonQuery(commandText, transaction: transaction);
+            DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+            var createSql = SapHanaText.GetCreatePseudoTableSql(tableName, pseudoTableName, pseudoTableType, dbSetting, qualifierField);
+            connection.ExecuteNonQuery(createSql, transaction: transaction, trace: trace, traceKey: traceKey);
+            var alterSql = SapHanaText.GetAddPseudoTableRowOrderColumnSql(pseudoTableName, dbSetting);
+            connection.ExecuteNonQuery(alterSql, transaction: transaction, trace: trace, traceKey: traceKey);
         }
 
         /// <summary>
@@ -76,16 +80,15 @@ namespace RepoDb.SapHana.BulkOperations.Extensions
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
-            var commandText = SapHanaText.GetCreatePseudoTableSql(tableName, pseudoTableName, pseudoTableType, dbSetting, qualifierField);
-            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            await DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
+            var createSql = SapHanaText.GetCreatePseudoTableSql(tableName, pseudoTableName, pseudoTableType, dbSetting, qualifierField);
+            await connection.ExecuteNonQueryAsync(createSql, transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
+            var alterSql = SapHanaText.GetAddPseudoTableRowOrderColumnSql(pseudoTableName, dbSetting);
+            await connection.ExecuteNonQueryAsync(alterSql, transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
         }
 
         /// <summary>
-        /// Creates an index on a pseudo table's qualifier columns. Must run right after
-        /// <see cref="CreatePseudoTable"/> and before the client bulk-loads data into the pseudo table - see
-        /// <see cref="SapHanaText.GetCreatePseudoTableIndexSql"/> for why. No-ops when
-        /// <paramref name="qualifiers"/> is null or empty (e.g. a plain <c>BulkInsert</c>, which has no
-        /// qualifiers to index).
+        /// 
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="pseudoTableName"></param>
@@ -107,15 +110,11 @@ namespace RepoDb.SapHana.BulkOperations.Extensions
 
             var dbSetting = connection.GetDbSetting();
             var commandText = SapHanaText.GetCreatePseudoTableIndexSql(pseudoTableName, qualifiers, dbSetting);
-            connection.ExecuteNonQuery(commandText, transaction: transaction);
+            connection.ExecuteNonQuery(commandText, transaction: transaction, trace: trace, traceKey: traceKey);
         }
 
         /// <summary>
-        /// Creates an index on a pseudo table's qualifier columns. Must run right after
-        /// <see cref="CreatePseudoTableAsync"/> and before the client bulk-loads data into the pseudo table -
-        /// see <see cref="SapHanaText.GetCreatePseudoTableIndexSql"/> for why. No-ops when
-        /// <paramref name="qualifiers"/> is null or empty (e.g. a plain <c>BulkInsert</c>, which has no
-        /// qualifiers to index).
+        /// 
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="pseudoTableName"></param>
@@ -140,7 +139,7 @@ namespace RepoDb.SapHana.BulkOperations.Extensions
 
             var dbSetting = connection.GetDbSetting();
             var commandText = SapHanaText.GetCreatePseudoTableIndexSql(pseudoTableName, qualifiers, dbSetting);
-            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -159,7 +158,7 @@ namespace RepoDb.SapHana.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = SapHanaText.GetTruncatePseudoTableSql(pseudoTableName, dbSetting);
-            connection.ExecuteNonQuery(commandText, transaction: transaction);
+            connection.ExecuteNonQuery(commandText, transaction: transaction, trace: trace, traceKey: traceKey);
         }
 
         /// <summary>
@@ -181,7 +180,7 @@ namespace RepoDb.SapHana.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = SapHanaText.GetTruncatePseudoTableSql(pseudoTableName, dbSetting);
-            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -200,7 +199,14 @@ namespace RepoDb.SapHana.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = SapHanaText.GetDropPseudoTableSql(pseudoTableName, dbSetting);
-            connection.ExecuteNonQuery(commandText, transaction: transaction);
+            try
+            {
+                connection.ExecuteNonQuery(commandText, transaction: transaction, trace: trace, traceKey: traceKey);
+            }
+            catch (HanaException ex) when (ex.NativeError == TableOrViewNotFoundNativeError)
+            {
+                // Do nothing - the pseudo table doesn't exist, so nothing to drop.
+            }
         }
 
         /// <summary>
@@ -222,7 +228,14 @@ namespace RepoDb.SapHana.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = SapHanaText.GetDropPseudoTableSql(pseudoTableName, dbSetting);
-            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            try
+            {
+                await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
+            }
+            catch (HanaException ex) when (ex.NativeError == TableOrViewNotFoundNativeError)
+            {
+                // Do nothing - the pseudo table doesn't exist, so nothing to drop.
+            }
         }
 
         #endregion
@@ -246,8 +259,65 @@ namespace RepoDb.SapHana.BulkOperations.Extensions
             HanaTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
-            var commandText = SapHanaText.GetAllowNullForColumnSql(pseudoTableName, columnName, dbSetting);
-            connection.ExecuteNonQuery(commandText, transaction: transaction);
+            var (dataTypeName, length, scale) = GetColumnMetadata(connection, pseudoTableName, columnName, trace, traceKey, transaction);
+            var commandText = SapHanaText.GetAllowNullForColumnSql(pseudoTableName, columnName, dataTypeName, length, scale, dbSetting);
+            connection.ExecuteNonQuery(commandText, transaction: transaction, trace: trace, traceKey: traceKey);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="columnName"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        private static (string DataTypeName, int? Length, int? Scale) GetColumnMetadata(HanaConnection connection,
+            string tableName,
+            string columnName,
+            ITrace trace,
+            string traceKey,
+            HanaTransaction transaction)
+        {
+            var dbSetting = connection.GetDbSetting();
+            var commandText = SapHanaText.GetColumnMetadataSql(tableName, columnName, dbSetting);
+
+            using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction, trace: trace, traceKey: traceKey);
+            reader.Read();
+            return (reader.GetString(0),
+                reader.IsDBNull(1) ? null : reader.GetInt32(1),
+                reader.IsDBNull(2) ? null : reader.GetInt32(2));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="columnName"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private static async Task<(string DataTypeName, int? Length, int? Scale)> GetColumnMetadataAsync(HanaConnection connection,
+            string tableName,
+            string columnName,
+            ITrace trace,
+            string traceKey,
+            HanaTransaction transaction,
+            CancellationToken cancellationToken)
+        {
+            var dbSetting = connection.GetDbSetting();
+            var commandText = SapHanaText.GetColumnMetadataSql(tableName, columnName, dbSetting);
+
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
+            await reader.ReadAsync(cancellationToken);
+            return (reader.GetString(0),
+                reader.IsDBNull(1) ? null : reader.GetInt32(1),
+                reader.IsDBNull(2) ? null : reader.GetInt32(2));
         }
 
         /// <summary>
@@ -270,8 +340,9 @@ namespace RepoDb.SapHana.BulkOperations.Extensions
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
-            var commandText = SapHanaText.GetAllowNullForColumnSql(pseudoTableName, columnName, dbSetting);
-            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            var (dataTypeName, length, scale) = await GetColumnMetadataAsync(connection, pseudoTableName, columnName, trace, traceKey, transaction, cancellationToken);
+            var commandText = SapHanaText.GetAllowNullForColumnSql(pseudoTableName, columnName, dataTypeName, length, scale, dbSetting);
+            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -294,7 +365,7 @@ namespace RepoDb.SapHana.BulkOperations.Extensions
             var dbSetting = connection.GetDbSetting();
             var commandText = SapHanaText.GetIdentitySequenceMetadataSql(tableName, identityField, dbSetting);
 
-            using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction);
+            using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction, trace: trace, traceKey: traceKey);
             reader.Read();
             return (reader.GetString(0), string.Equals(reader.GetString(1), "ALWAYS", StringComparison.OrdinalIgnoreCase));
         }
@@ -321,7 +392,7 @@ namespace RepoDb.SapHana.BulkOperations.Extensions
             var dbSetting = connection.GetDbSetting();
             var commandText = SapHanaText.GetIdentitySequenceMetadataSql(tableName, identityField, dbSetting);
 
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
             await reader.ReadAsync(cancellationToken);
             return (reader.GetString(0), string.Equals(reader.GetString(1), "ALWAYS", StringComparison.OrdinalIgnoreCase));
         }
@@ -353,10 +424,12 @@ namespace RepoDb.SapHana.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var (sequenceName, isAlwaysGenerated) = GetIdentitySequenceMetadata(connection, tableName, identityField, trace, traceKey, transaction);
-            var commandText = SapHanaText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, sequenceName, isAlwaysGenerated, dbSetting);
+            connection.ExecuteNonQuery(SapHanaText.GetPreAssignPseudoTableIdentitySql(pseudoTableName, identityField, sequenceName, isAlwaysGenerated, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey);
+            connection.ExecuteNonQuery(SapHanaText.GetInsertIntoTableFromPseudoTableSql(tableName, pseudoTableName, fields, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey);
+            var commandText = SapHanaText.GetSelectPseudoTableIdentityValuesSql(pseudoTableName, identityField, dbSetting);
             var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
 
-            using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction);
+            using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction, trace: trace, traceKey: traceKey);
             var result = 0;
 
             while (reader.Read())
@@ -397,10 +470,12 @@ namespace RepoDb.SapHana.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, trace, traceKey, transaction, cancellationToken);
-            var commandText = SapHanaText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, sequenceName, isAlwaysGenerated, dbSetting);
+            await connection.ExecuteNonQueryAsync(SapHanaText.GetPreAssignPseudoTableIdentitySql(pseudoTableName, identityField, sequenceName, isAlwaysGenerated, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(SapHanaText.GetInsertIntoTableFromPseudoTableSql(tableName, pseudoTableName, fields, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
+            var commandText = SapHanaText.GetSelectPseudoTableIdentityValuesSql(pseudoTableName, identityField, dbSetting);
             var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
 
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
             var result = 0;
 
             while (await reader.ReadAsync(cancellationToken))
@@ -437,9 +512,11 @@ namespace RepoDb.SapHana.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var (sequenceName, isAlwaysGenerated) = GetIdentitySequenceMetadata(connection, tableName, identityField, trace, traceKey, transaction);
-            var commandText = SapHanaText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, sequenceName, isAlwaysGenerated, dbSetting);
+            connection.ExecuteNonQuery(SapHanaText.GetPreAssignPseudoTableIdentitySql(pseudoTableName, identityField, sequenceName, isAlwaysGenerated, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey);
+            connection.ExecuteNonQuery(SapHanaText.GetInsertIntoTableFromPseudoTableSql(tableName, pseudoTableName, fields, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey);
+            var commandText = SapHanaText.GetSelectPseudoTableIdentityValuesSql(pseudoTableName, identityField, dbSetting);
 
-            using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction);
+            using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction, trace: trace, traceKey: traceKey);
             var result = 0;
 
             while (reader.Read())
@@ -452,7 +529,7 @@ namespace RepoDb.SapHana.BulkOperations.Extensions
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -478,9 +555,11 @@ namespace RepoDb.SapHana.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, trace, traceKey, transaction, cancellationToken);
-            var commandText = SapHanaText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, sequenceName, isAlwaysGenerated, dbSetting);
+            await connection.ExecuteNonQueryAsync(SapHanaText.GetPreAssignPseudoTableIdentitySql(pseudoTableName, identityField, sequenceName, isAlwaysGenerated, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(SapHanaText.GetInsertIntoTableFromPseudoTableSql(tableName, pseudoTableName, fields, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
+            var commandText = SapHanaText.GetSelectPseudoTableIdentityValuesSql(pseudoTableName, identityField, dbSetting);
 
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
             var result = 0;
 
             while (await reader.ReadAsync(cancellationToken))
@@ -521,7 +600,7 @@ namespace RepoDb.SapHana.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = SapHanaText.GetMergeFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, identityField, dbSetting);
-            return connection.ExecuteNonQuery(commandText, transaction: transaction);
+            return connection.ExecuteNonQuery(commandText, transaction: transaction, trace: trace, traceKey: traceKey);
         }
 
         /// <summary>
@@ -551,7 +630,7 @@ namespace RepoDb.SapHana.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = SapHanaText.GetMergeFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, identityField, dbSetting);
-            return await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            return await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -582,11 +661,14 @@ namespace RepoDb.SapHana.BulkOperations.Extensions
             where TEntity : class
         {
             var dbSetting = connection.GetDbSetting();
-            var (sequenceName, isAlwaysGenerated) = GetIdentitySequenceMetadata(connection, tableName, identityField, trace, traceKey, transaction);
-            var commandText = SapHanaText.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, sequenceName, isAlwaysGenerated, dbSetting);
+            var (sequenceName, _) = GetIdentitySequenceMetadata(connection, tableName, identityField, trace, traceKey, transaction);
+            connection.ExecuteNonQuery(SapHanaText.GetAssignMatchedIdentityToPseudoTableRowsSql(tableName, pseudoTableName, identityField, qualifiers, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey);
+            connection.ExecuteNonQuery(SapHanaText.GetAssignFreshIdentityToUnmatchedPseudoTableRowsSql(tableName, pseudoTableName, identityField, qualifiers, sequenceName, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey);
+            connection.ExecuteNonQuery(SapHanaText.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey);
+            var commandText = SapHanaText.GetSelectPseudoTableIdentityValuesSql(pseudoTableName, identityField, dbSetting);
             var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
 
-            using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction);
+            using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction, trace: trace, traceKey: traceKey);
             var result = 0;
 
             while (reader.Read())
@@ -629,10 +711,13 @@ namespace RepoDb.SapHana.BulkOperations.Extensions
         {
             var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
             var dbSetting = connection.GetDbSetting();
-            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, trace, traceKey, transaction, cancellationToken);
-            var commandText = SapHanaText.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, sequenceName, isAlwaysGenerated, dbSetting);
+            var (sequenceName, _) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, trace, traceKey, transaction, cancellationToken);
+            await connection.ExecuteNonQueryAsync(SapHanaText.GetAssignMatchedIdentityToPseudoTableRowsSql(tableName, pseudoTableName, identityField, qualifiers, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(SapHanaText.GetAssignFreshIdentityToUnmatchedPseudoTableRowsSql(tableName, pseudoTableName, identityField, qualifiers, sequenceName, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(SapHanaText.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
+            var commandText = SapHanaText.GetSelectPseudoTableIdentityValuesSql(pseudoTableName, identityField, dbSetting);
 
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
             var result = 0;
 
             while (await reader.ReadAsync(cancellationToken))
@@ -670,10 +755,13 @@ namespace RepoDb.SapHana.BulkOperations.Extensions
             HanaTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
-            var (sequenceName, isAlwaysGenerated) = GetIdentitySequenceMetadata(connection, tableName, identityField, trace, traceKey, transaction);
-            var commandText = SapHanaText.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, sequenceName, isAlwaysGenerated, dbSetting);
+            var (sequenceName, _) = GetIdentitySequenceMetadata(connection, tableName, identityField, trace, traceKey, transaction);
+            connection.ExecuteNonQuery(SapHanaText.GetAssignMatchedIdentityToPseudoTableRowsSql(tableName, pseudoTableName, identityField, qualifiers, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey);
+            connection.ExecuteNonQuery(SapHanaText.GetAssignFreshIdentityToUnmatchedPseudoTableRowsSql(tableName, pseudoTableName, identityField, qualifiers, sequenceName, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey);
+            connection.ExecuteNonQuery(SapHanaText.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey);
+            var commandText = SapHanaText.GetSelectPseudoTableIdentityValuesSql(pseudoTableName, identityField, dbSetting);
 
-            using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction);
+            using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction, trace: trace, traceKey: traceKey);
             var result = 0;
 
             while (reader.Read())
@@ -713,10 +801,13 @@ namespace RepoDb.SapHana.BulkOperations.Extensions
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
-            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, trace, traceKey, transaction, cancellationToken);
-            var commandText = SapHanaText.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, sequenceName, isAlwaysGenerated, dbSetting);
+            var (sequenceName, _) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, trace, traceKey, transaction, cancellationToken);
+            await connection.ExecuteNonQueryAsync(SapHanaText.GetAssignMatchedIdentityToPseudoTableRowsSql(tableName, pseudoTableName, identityField, qualifiers, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(SapHanaText.GetAssignFreshIdentityToUnmatchedPseudoTableRowsSql(tableName, pseudoTableName, identityField, qualifiers, sequenceName, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(SapHanaText.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
+            var commandText = SapHanaText.GetSelectPseudoTableIdentityValuesSql(pseudoTableName, identityField, dbSetting);
 
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
             var result = 0;
 
             while (await reader.ReadAsync(cancellationToken))
@@ -755,7 +846,7 @@ namespace RepoDb.SapHana.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = SapHanaText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, dbSetting);
-            return connection.ExecuteNonQuery(commandText, transaction: transaction);
+            return connection.ExecuteNonQuery(commandText, transaction: transaction, trace: trace, traceKey: traceKey);
         }
 
         /// <summary>
@@ -783,7 +874,7 @@ namespace RepoDb.SapHana.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = SapHanaText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, dbSetting);
-            return await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            return await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
         }
 
         #endregion
@@ -811,7 +902,7 @@ namespace RepoDb.SapHana.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = SapHanaText.GetDeleteFromPseudoTableSql(tableName, pseudoTableName, qualifiers, dbSetting);
-            return connection.ExecuteNonQuery(commandText, transaction: transaction);
+            return connection.ExecuteNonQuery(commandText, transaction: transaction, trace: trace, traceKey: traceKey);
         }
 
         /// <summary>
@@ -837,7 +928,7 @@ namespace RepoDb.SapHana.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = SapHanaText.GetDeleteFromPseudoTableSql(tableName, pseudoTableName, qualifiers, dbSetting);
-            return await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            return await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
         }
 
         #endregion
