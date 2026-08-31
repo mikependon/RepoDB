@@ -16,7 +16,7 @@ on:
         required: true
         type: string
       db-engine:
-        description: 'Database service required for this build: none, sqlserver, postgresql, mysql, mariadb, oracle, db2, clickhouse, firebird, vertica, enterprisedb'
+        description: 'Database service required for this build: none, sqlserver, postgresql, mysql, mariadb, oracle, db2, clickhouse, firebird, vertica, enterprisedb, saphana'
         required: true
         type: string
 
@@ -51,6 +51,8 @@ env:
   # EnterpriseDB (EDB Postgres Advanced Server)
   REPODB_EDB_CONSTR_SYSTEM: "Server=127.0.0.1;Port=5444;Database=edb;User Id=enterprisedb;Password=RepoDB2026;"
   REPODB_EDB_CONSTR: "Server=127.0.0.1;Port=5444;Database=RepoDb;User Id=enterprisedb;Password=RepoDB2026;"
+  # SAP HANA
+  REPODB_SAPHANA_CONSTR: "Server=127.0.0.1:39015;UserID=SYSTEM;Password=RepoDB2026;CURRENTSCHEMA=REPODB;"
 
 jobs:
 
@@ -642,6 +644,84 @@ jobs:
         with:
           name: ${{ inputs.artifact-name }}
           path: release/*nupkg
+
+  # SAP HANA only (e.g. RepoDb.SapHana, RepoDb.SapHana.BulkOperations)
+  build-saphana:
+    if: inputs.db-engine == 'saphana'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v5
+
+      - name: Setup .NET Versions
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: |
+            10.0.x
+
+      - name: Dotnet Build
+        run: dotnet build -c release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
+
+      # SAP HANA Express requires --agree-to-sap-license/--master-password as container command
+      # args, which the `services:` block used by every other engine above cannot express (it only
+      # supports image/env/ports/volumes/options, not a command override) - so it's started by hand
+      # instead. Mirrors the equivalent local service in docker-compose.yml.
+      - name: Start SAP HANA service
+        run: |
+          docker run -d --name saphana --privileged \
+            -p 127.0.0.1:39013:39013 \
+            -p 127.0.0.1:39015:39015 \
+            -p 127.0.0.1:39017:39017 \
+            -p 127.0.0.1:39041-39045:39041-39045 \
+            -p 127.0.0.1:1128-1129:1128-1129 \
+            -p 127.0.0.1:59013-59014:59013-59014 \
+            --ulimit nofile=1048576:1048576 \
+            --sysctl kernel.shmmax=1073741824 \
+            --sysctl net.ipv4.ip_local_port_range="40000 60999" \
+            --sysctl kernel.shmmni=524288 \
+            --sysctl kernel.shmall=8388608 \
+            saplabs/hanaexpress:2.00.061.00.20220519.1 \
+            --agree-to-sap-license --master-password RepoDB2026
+
+      - name: Wait for SAP HANA service to be ready
+        run: |
+          for i in $(seq 1 90); do
+            if docker logs saphana 2>&1 | grep -q "Startup finished!"; then
+              echo "SAP HANA is ready (after $((i * 10))s)."
+              exit 0
+            fi
+            echo "Waiting for SAP HANA to become ready... attempt $i/90"
+            sleep 10
+          done
+          echo "SAP HANA did not become ready within the timeout. Recent container logs:"
+          docker logs saphana --tail 200
+          exit 1
+
+      - name: Test for .NET 8.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net8.0 --no-build ${{ inputs.solution-file }}
+
+      - name: Test for .NET 9.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net9.0 --no-build ${{ inputs.solution-file }}
+
+      - name: Test for .NET 10.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net10.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
+
+      - name: Run Dotnet Pack
+        run: dotnet pack -c release -p Version="1.14.0-dev-${{ github.run_number }}" -o release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
+
+      - name: Package Nuget
+        uses: actions/upload-artifact@v5
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: release/*nupkg
+
+      - name: Stop SAP HANA service
+        if: always()
+        run: docker rm -f saphana || true
 
   # Vertica only (e.g. RepoDb.Vertica, RepoDb.Vertica.BulkOperations)
   build-vertica:

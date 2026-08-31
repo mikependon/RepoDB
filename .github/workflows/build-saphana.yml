@@ -1,0 +1,19 @@
+name: Build & Run Tests - RepoDb.SapHana (Push)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'src/Providers/RepoDb.Core/**'
+      - 'src/Providers/RepoDb.SapHana/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-saphana.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: src/Providers/RepoDb.SapHana
+      solution-file: RepoDb.SapHana.sln
+      artifact-name: release-saphana
+      db-engine: saphana
