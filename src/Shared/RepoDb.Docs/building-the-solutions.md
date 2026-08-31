@@ -77,10 +77,16 @@ This exposes the `sa` user (password `RepoDB2026`) on port `1433`, matching the 
 
 #### Building and executing the [RepoDb.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.Core/RepoDb.Tests/RepoDb.IntegrationTests)
 
+Start the `mssql` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running).
+
+```
+> docker compose up -d mssql
+```
+
 Add the environment variables under `System`.
 
-- REPODB_SQLSVR_CONSTR_MASTER = `master_connection_string`
-- REPODB_SQLSVR_CONSTR = `repodb_connection_string`
+- REPODB_SQLSVR_CONSTR_MASTER = `Server=tcp:127.0.0.1,1433;Database=master;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;`
+- REPODB_SQLSVR_CONSTR = `Server=tcp:127.0.0.1,1433;Database=RepoDb;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;`
 
 Build the integration tests.
 
@@ -127,10 +133,16 @@ This exposes the `default` user (password `RepoDB2026`) over HTTP on port `8123`
 
 #### Building and executing the [RepoDb.ClickHouse.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.ClickHouse/RepoDb.ClickHouse.IntegrationTests)
 
+Start the `clickhouse` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running).
+
+```
+> docker compose up -d clickhouse
+```
+
 Add the environment variables under `System`.
 
-- REPODB_CLICKHOUSE_CONSTR_SYSTEM = `system_connection_string`
-- REPODB_CLICKHOUSE_CONSTR = `repodb_connection_string`
+- REPODB_CLICKHOUSE_CONSTR_SYSTEM = `Host=127.0.0.1;Port=8123;Username=default;Password=RepoDB2026;Database=default;Protocol=http;UseCustomDecimals=false;`
+- REPODB_CLICKHOUSE_CONSTR = `Host=127.0.0.1;Port=8123;Username=default;Password=RepoDB2026;Database=RepoDb;Protocol=http;UseCustomDecimals=false;`
 
 Build the integration tests.
 
@@ -168,10 +180,16 @@ Start the `clickhouse` service as described in the prior section.
 
 #### Building and executing the [RepoDb.ClickHouse.BulkOperations.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.ClickHouse.BulkOperations/RepoDb.ClickHouse.BulkOperations.IntegrationTests)
 
+Start the `clickhouse` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running).
+
+```
+> docker compose up -d clickhouse
+```
+
 Add the environment variables under `System`.
 
-- REPODB_CLICKHOUSE_CONSTR_SYSTEM = `system_connection_string`
-- REPODB_CLICKHOUSE_CONSTR = `repodb_connection_string`
+- REPODB_CLICKHOUSE_CONSTR_SYSTEM = `Host=127.0.0.1;Port=8123;Username=default;Password=RepoDB2026;Database=default;Protocol=http;UseCustomDecimals=false;`
+- REPODB_CLICKHOUSE_CONSTR = `Host=127.0.0.1;Port=8123;Username=default;Password=RepoDB2026;Database=RepoDb;Protocol=http;UseCustomDecimals=false;`
 
 Build the integration tests.
 
@@ -203,9 +221,15 @@ This exposes the `db2inst1` user (password `RepoDB2026`) against the `REPODB` da
 
 #### Building and executing the [RepoDb.Db2.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.Db2/RepoDb.Db2.IntegrationTests)
 
+Start the `db2` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running).
+
+```
+> docker compose up -d db2
+```
+
 Add the environment variable under `System`.
 
-- REPODB_Db2_CONSTR = `db2_connection_string`
+- REPODB_Db2_CONSTR = `Server=localhost:50000;Database=REPODB;UID=db2inst1;PWD=RepoDB2026;HostVarParameters=True;`
 
 Build the integration tests.
 
@@ -243,9 +267,15 @@ Start the `db2` service as described in the prior section.
 
 #### Building and executing the [RepoDb.Db2.BulkOperations.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.Db2.BulkOperations/RepoDb.Db2.BulkOperations.IntegrationTests)
 
+Start the `db2` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running).
+
+```
+> docker compose up -d db2
+```
+
 Add the environment variable under `System`.
 
-- REPODB_Db2_CONSTR = `db2_connection_string`
+- REPODB_Db2_CONSTR = `Server=localhost:50000;Database=REPODB;UID=db2inst1;PWD=RepoDB2026;HostVarParameters=True;`
 
 Build the integration tests.
 
@@ -280,10 +310,17 @@ This exposes the `enterprisedb` user (password `RepoDB2026`) against the `edb` d
 
 #### Building and executing the [RepoDb.EnterpriseDb.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.EnterpriseDb/RepoDb.EnterpriseDb.IntegrationTests)
 
+Start the `enterprisedb` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running).
+
+```
+> docker login docker.enterprisedb.com --username k8s --password <EDB_SUBSCRIPTION_TOKEN>
+> docker compose up -d enterprisedb
+```
+
 Add the environment variables under `System`.
 
-- REPODB_EDB_CONSTR_SYSTEM = `system_connection_string`
-- REPODB_EDB_CONSTR = `repodb_connection_string`
+- REPODB_EDB_CONSTR_SYSTEM = `Server=127.0.0.1;Port=5444;Database=edb;User Id=enterprisedb;Password=RepoDB2026;`
+- REPODB_EDB_CONSTR = `Server=127.0.0.1;Port=5444;Database=RepoDb;User Id=enterprisedb;Password=RepoDB2026;`
 
 Build the integration tests.
 
@@ -325,9 +362,15 @@ This exposes the `SYSDBA` user (password `RepoDB2026`) against `repodb.fdb` on p
 
 #### Building and executing the [RepoDb.Firebird.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.Firebird/RepoDb.Firebird.IntegrationTests)
 
+Start the `firebird` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running).
+
+```
+> docker compose up -d firebird
+```
+
 Add the environment variable under `System`.
 
-- REPODB_FIREBIRD_CONSTR = `firebird_connection_string`
+- REPODB_FIREBIRD_CONSTR = `DataSource=127.0.0.1;Port=3050;Database=/firebird/data/repodb.fdb;User=SYSDBA;Password=RepoDB2026;Charset=UTF8;Pooling=false;`
 
 Build the integration tests.
 
@@ -365,9 +408,15 @@ Start the `firebird` service as described in the prior section.
 
 #### Building and executing the [RepoDb.Firebird.BulkOperations.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.Firebird.BulkOperations/RepoDb.Firebird.BulkOperations.IntegrationTests)
 
+Start the `firebird` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running).
+
+```
+> docker compose up -d firebird
+```
+
 Add the environment variable under `System`.
 
-- REPODB_FIREBIRD_CONSTR = `firebird_connection_string`
+- REPODB_FIREBIRD_CONSTR = `DataSource=127.0.0.1;Port=3050;Database=/firebird/data/repodb.fdb;User=SYSDBA;Password=RepoDB2026;Charset=UTF8;Pooling=false;`
 
 Build the integration tests.
 
@@ -399,10 +448,16 @@ This exposes the `root` user (password `RepoDB2026`) on host port `3307` (mapped
 
 #### Building and executing the [RepoDb.MariaDb.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.MariaDb/RepoDb.MariaDb.IntegrationTests)
 
+Start the `mariadb` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running).
+
+```
+> docker compose up -d mariadb
+```
+
 Add the environment variables under `System`.
 
-- REPODB_MARIADB_CONSTR_SYSTEM = `system_connection_string`
-- REPODB_MARIADB_CONSTR = `repodb_connection_string`
+- REPODB_MARIADB_CONSTR_SYSTEM = `Server=127.0.0.1;Port=3307;Database=sys;User ID=root;Password=RepoDB2026;`
+- REPODB_MARIADB_CONSTR = `Server=127.0.0.1;Port=3307;Database=RepoDb;User ID=root;Password=RepoDB2026;`
 
 Build the integration tests.
 
@@ -440,10 +495,16 @@ Start the `mariadb` service as described in the prior section.
 
 #### Building and executing the [RepoDb.MariaDb.BulkOperations.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.MariaDb.BulkOperations/RepoDb.MariaDb.BulkOperations.IntegrationTests)
 
+Start the `mariadb` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running).
+
+```
+> docker compose up -d mariadb
+```
+
 Add the environment variables under `System`.
 
-- REPODB_MARIADB_CONSTR_SYSTEM = `system_connection_string`
-- REPODB_MARIADB_CONSTR = `repodb_connection_string`
+- REPODB_MARIADB_CONSTR_SYSTEM = `Server=127.0.0.1;Port=3307;Database=sys;User ID=root;Password=RepoDB2026;`
+- REPODB_MARIADB_CONSTR = `Server=127.0.0.1;Port=3307;Database=RepoDb;User ID=root;Password=RepoDB2026;AllowLoadLocalInfile=True;AllowUserVariables=True;`
 
 Build the integration tests.
 
@@ -473,10 +534,16 @@ Execute the integration tests.
 
 #### Building and executing the [RepoDb.MariaDbConnector.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.MariaDbConnector/RepoDb.MariaDbConnector.IntegrationTests)
 
+Start the `mariadb` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running).
+
+```
+> docker compose up -d mariadb
+```
+
 Add the environment variables under `System`.
 
-- REPODB_MARIADB_CONSTR_SYSTEM = `system_connection_string`
-- REPODB_MARIADB_CONSTR = `repodb_connection_string`
+- REPODB_MARIADB_CONSTR_SYSTEM = `Server=127.0.0.1;Port=3307;Database=sys;User ID=root;Password=RepoDB2026;`
+- REPODB_MARIADB_CONSTR = `Server=127.0.0.1;Port=3307;Database=RepoDb;User ID=root;Password=RepoDB2026;`
 
 Build the integration tests.
 
@@ -514,10 +581,16 @@ Start the `mariadb` service as described in a prior section.
 
 #### Building and executing the [RepoDb.MariaDbConnector.BulkOperations.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.MariaDbConnector.BulkOperations/RepoDb.MariaDbConnector.BulkOperations.IntegrationTests)
 
+Start the `mariadb` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running).
+
+```
+> docker compose up -d mariadb
+```
+
 Add the environment variables under `System`.
 
-- REPODB_MARIADB_CONSTR_SYSTEM = `system_connection_string`
-- REPODB_MARIADB_CONSTR = `repodb_connection_string`
+- REPODB_MARIADB_CONSTR_SYSTEM = `Server=127.0.0.1;Port=3307;Database=sys;User ID=root;Password=RepoDB2026;`
+- REPODB_MARIADB_CONSTR = `Server=127.0.0.1;Port=3307;Database=RepoDb;User ID=root;Password=RepoDB2026;AllowLoadLocalInfile=True;AllowUserVariables=True;`
 
 Build the integration tests.
 
@@ -549,10 +622,16 @@ This exposes the `root` user (password `RepoDB2026`) on port `3306`, matching th
 
 #### Building and executing the [RepoDb.MySql.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.MySql/RepoDb.MySql.IntegrationTests)
 
+Start the `mysql` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running).
+
+```
+> docker compose up -d mysql
+```
+
 Add the environment variables under `System`.
 
-- REPODB_MYSQL_CONSTR_SYSTEM = `system_connection_string`
-- REPODB_MYSQL_CONSTR = `repodb_connection_string`
+- REPODB_MYSQL_CONSTR_SYSTEM = `Server=127.0.0.1;Port=3306;Database=sys;User ID=root;Password=RepoDB2026;`
+- REPODB_MYSQL_CONSTR = `Server=127.0.0.1;Port=3306;Database=RepoDb;User ID=root;Password=RepoDB2026;`
 
 Build the integration tests.
 
@@ -590,10 +669,16 @@ Start the `mysql` service as described in the prior section.
 
 #### Building and executing the [RepoDb.MySql.BulkOperations.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.MySql.BulkOperations/RepoDb.MySql.BulkOperations.IntegrationTests)
 
+Start the `mysql` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running).
+
+```
+> docker compose up -d mysql
+```
+
 Add the environment variables under `System`.
 
-- REPODB_MYSQL_CONSTR_SYSTEM = `system_connection_string`
-- REPODB_MYSQL_CONSTR = `repodb_connection_string`
+- REPODB_MYSQL_CONSTR_SYSTEM = `Server=127.0.0.1;Port=3306;Database=sys;User ID=root;Password=RepoDB2026;`
+- REPODB_MYSQL_CONSTR = `Server=127.0.0.1;Port=3306;Database=RepoDb;User ID=root;Password=RepoDB2026;AllowLoadLocalInfile=True;AllowUserVariables=True;`
 
 Build the integration tests.
 
@@ -623,10 +708,16 @@ Execute the integration tests.
 
 #### Building and executing the [RepoDb.MySqlConnector.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.MySqlConnector/RepoDb.MySqlConnector.IntegrationTests)
 
+Start the `mysql` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running).
+
+```
+> docker compose up -d mysql
+```
+
 Add the environment variables under `System`.
 
-- REPODB_MYSQL_CONSTR_SYSTEM = `system_connection_string`
-- REPODB_MYSQL_CONSTR = `repodb_connection_string`
+- REPODB_MYSQL_CONSTR_SYSTEM = `Server=127.0.0.1;Port=3306;Database=sys;User ID=root;Password=RepoDB2026;`
+- REPODB_MYSQL_CONSTR = `Server=127.0.0.1;Port=3306;Database=RepoDb;User ID=root;Password=RepoDB2026;`
 
 Build the integration tests.
 
@@ -664,10 +755,16 @@ Start the `mysql` service as described in a prior section.
 
 #### Building and executing the [RepoDb.MySqlConnector.BulkOperations.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.MySqlConnector.BulkOperations/RepoDb.MySqlConnector.BulkOperations.IntegrationTests)
 
+Start the `mysql` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running).
+
+```
+> docker compose up -d mysql
+```
+
 Add the environment variables under `System`.
 
-- REPODB_MYSQL_CONSTR_SYSTEM = `system_connection_string`
-- REPODB_MYSQL_CONSTR = `repodb_connection_string`
+- REPODB_MYSQL_CONSTR_SYSTEM = `Server=127.0.0.1;Port=3306;Database=sys;User ID=root;Password=RepoDB2026;`
+- REPODB_MYSQL_CONSTR = `Server=127.0.0.1;Port=3306;Database=RepoDb;User ID=root;Password=RepoDB2026;AllowLoadLocalInfile=True;AllowUserVariables=True;`
 
 Build the integration tests.
 
@@ -699,9 +796,15 @@ This exposes the `system` user (password `RepoDB2026`) against the `FREEPDB1` pl
 
 #### Building and executing the [RepoDb.Oracle.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.Oracle/RepoDb.Oracle.IntegrationTests)
 
+Start the `oracle` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running).
+
+```
+> docker compose up -d oracle
+```
+
 Add the environment variable under `System`.
 
-- REPODB_ORACLE_CONSTR = `oracle_connection_string`
+- REPODB_ORACLE_CONSTR = `User Id=system;Password=RepoDB2026;Data Source=localhost:1521/FREEPDB1;`
 
 Build the integration tests.
 
@@ -739,10 +842,16 @@ Start the `oracle` service as described in the prior section.
 
 #### Building and executing the [RepoDb.Oracle.BulkOperations.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.Oracle.BulkOperations/RepoDb.Oracle.BulkOperations.IntegrationTests)
 
+Start the `oracle` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running).
+
+```
+> docker compose up -d oracle
+```
+
 Add the environment variables under `System`.
 
-- REPODB_ORACLE_CONSTR = `oracle_connection_string`
-- REPODB_ORACLE_CONSTR_BULK = `oracle_bulk_connection_string`
+- REPODB_ORACLE_CONSTR = `User Id=system;Password=RepoDB2026;Data Source=localhost:1521/FREEPDB1;`
+- REPODB_ORACLE_CONSTR_BULK = `User Id=system;Password=RepoDB2026;Data Source=localhost:1521/FREEPDB1;`
 
 Build the integration tests.
 
@@ -774,10 +883,16 @@ This exposes the `postgres` user (password `RepoDB2026`) on port `5432`, matchin
 
 #### Building and executing the [RepoDb.PostgreSql.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.PostgreSql/RepoDb.PostgreSql.IntegrationTests)
 
+Start the `postgresql` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running).
+
+```
+> docker compose up -d postgresql
+```
+
 Add the environment variables under `System`.
 
-- REPODB_PGSQL_CONSTR_POSTGRES = `postgres_connection_string`
-- REPODB_PGSQL_CONSTR = `repodb_connection_string`
+- REPODB_PGSQL_CONSTR_POSTGRES = `Server=127.0.0.1;Port=5432;Database=postgres;User Id=postgres;Password=RepoDB2026;`
+- REPODB_PGSQL_CONSTR = `Server=127.0.0.1;Port=5432;Database=RepoDb;User Id=postgres;Password=RepoDB2026;`
 
 Build the integration tests.
 
@@ -815,10 +930,16 @@ Start the `postgresql` service as described in the prior section.
 
 #### Building and executing the [RepoDb.PostgreSql.BulkOperations.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.PostgreSql.BulkOperations/RepoDb.PostgreSql.BulkOperations.IntegrationTests)
 
+Start the `postgresql` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running).
+
+```
+> docker compose up -d postgresql
+```
+
 Add the environment variables under `System`.
 
-- REPODB_PGSQL_CONSTR_POSTGRES = `postgres_connection_string`
-- REPODB_PGSQL_CONSTR_BULK = `repodb_bulk_connection_string`
+- REPODB_PGSQL_CONSTR_POSTGRES = `Server=127.0.0.1;Port=5432;Database=postgres;User Id=postgres;Password=RepoDB2026;`
+- REPODB_PGSQL_CONSTR_BULK = `Server=127.0.0.1;Port=5432;Database=RepoDbBulk;User Id=postgres;Password=RepoDB2026;`
 
 Build the integration tests.
 
@@ -850,9 +971,15 @@ Connect to port `39041` - the HANA Express tenant ("HXE") database's own SQL por
 
 #### Building and executing the [RepoDb.SapHana.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.SapHana/RepoDb.SapHana.IntegrationTests)
 
+Start the `saphana` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running).
+
+```
+> docker compose up -d saphana
+```
+
 Add the environment variable under `System`.
 
-- REPODB_SAPHANA_CONSTR = `saphana_connection_string`
+- REPODB_SAPHANA_CONSTR = `Server=localhost:39041;UserID=SYSTEM;Password=RepoDB2026;Current Schema=REPODB;`
 
 Build the integration tests.
 
@@ -890,10 +1017,16 @@ Start the `saphana` service as described in the prior section.
 
 #### Building and executing the [RepoDb.SapHana.BulkOperations.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.SapHana.BulkOperations/RepoDb.SapHana.BulkOperations.IntegrationTests)
 
+Start the `saphana` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running).
+
+```
+> docker compose up -d saphana
+```
+
 Add the environment variables under `System`.
 
-- REPODB_SAPHANA_CONSTR_BULK = `saphana_bulk_connection_string`
-- REPODB_SAPHANA_CONSTR = `saphana_connection_string`
+- REPODB_SAPHANA_CONSTR_BULK = `Server=localhost:39041;UserID=SYSTEM;Password=RepoDB2026;Current Schema=REPODB;`
+- REPODB_SAPHANA_CONSTR = `Server=localhost:39041;UserID=SYSTEM;Password=RepoDB2026;Current Schema=REPODB;`
 
 Build the integration tests.
 
@@ -925,10 +1058,16 @@ This exposes the `sa` user (password `RepoDB2026`) on port `1433`, matching the 
 
 #### Building and executing the [RepoDb.SqlServer.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.SqlServer/RepoDb.SqlServer.IntegrationTests)
 
+Start the `mssql` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running).
+
+```
+> docker compose up -d mssql
+```
+
 Add the environment variables under `System`.
 
-- REPODB_SQLSVR_CONSTR_MASTER = `master_connection_string`
-- REPODB_SQLSVR_CONSTR = `repodb_connection_string`
+- REPODB_SQLSVR_CONSTR_MASTER = `Server=tcp:127.0.0.1,1433;Database=master;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;`
+- REPODB_SQLSVR_CONSTR = `Server=tcp:127.0.0.1,1433;Database=RepoDb;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;`
 
 Build the integration tests.
 
@@ -966,10 +1105,16 @@ Start the `mssql` service as described in the prior section.
 
 #### Building and executing the [RepoDb.SqlServer.BulkOperations.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.SqlServer.BulkOperations/RepoDb.SqlServer.BulkOperations.IntegrationTests)
 
+Start the `mssql` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running).
+
+```
+> docker compose up -d mssql
+```
+
 Add the environment variables under `System`.
 
-- REPODB_SQLSVR_CONSTR_MASTER = `master_connection_string`
-- REPODB_SQLSVR_CONSTR_BULK = `repodb_bulk_connection_string`
+- REPODB_SQLSVR_CONSTR_MASTER = `Server=tcp:127.0.0.1,1433;Database=master;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;`
+- REPODB_SQLSVR_CONSTR_BULK = `Server=tcp:127.0.0.1,1433;Database=RepoDbBulk;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;`
 
 Build the integration tests.
 
@@ -1041,9 +1186,15 @@ This exposes the `dbadmin` user (password `RepoDB2026`) against the `RepoDb` dat
 
 #### Building and executing the [RepoDb.Vertica.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.Vertica/RepoDb.Vertica.IntegrationTests)
 
+Start the `vertica` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running).
+
+```
+> docker compose up -d vertica
+```
+
 Add the environment variable under `System`.
 
-- REPODB_VERTICA_CONSTR = `vertica_connection_string`
+- REPODB_VERTICA_CONSTR = `Host=127.0.0.1;Port=5433;Database=RepoDb;User=dbadmin;Password=RepoDB2026;`
 
 Build the integration tests.
 
@@ -1081,9 +1232,15 @@ Start the `vertica` service as described in the prior section.
 
 #### Building and executing the [RepoDb.Vertica.BulkOperations.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.Vertica.BulkOperations/RepoDb.Vertica.BulkOperations.IntegrationTests)
 
+Start the `vertica` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running).
+
+```
+> docker compose up -d vertica
+```
+
 Add the environment variable under `System`.
 
-- REPODB_VERTICA_CONSTR = `vertica_connection_string`
+- REPODB_VERTICA_CONSTR = `Host=127.0.0.1;Port=5433;Database=RepoDb;User=dbadmin;Password=RepoDB2026;Pooling=false;`
 
 Build the integration tests.
 
