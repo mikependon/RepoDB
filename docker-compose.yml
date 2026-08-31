@@ -108,7 +108,7 @@ services:
 
   saphana:
     container_name: saphana
-    image: saplabs/hanaexpress:2.00.061.00.20220519.1
+    image: saplabs/hanaexpress:2.00.088.00.20251110.1
     privileged: true
     ports:
       - 127.0.0.1:39013:39013
@@ -124,10 +124,7 @@ services:
         soft: 1048576
         hard: 1048576
     sysctls:
-      - kernel.shmmax=1073741824
       - net.ipv4.ip_local_port_range=40000 60999
-      - kernel.shmmni=524288
-      - kernel.shmall=8388608
     command: --agree-to-sap-license --master-password RepoDB2026
 
   vertica:

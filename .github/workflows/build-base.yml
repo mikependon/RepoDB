@@ -52,7 +52,7 @@ env:
   REPODB_EDB_CONSTR_SYSTEM: "Server=127.0.0.1;Port=5444;Database=edb;User Id=enterprisedb;Password=RepoDB2026;"
   REPODB_EDB_CONSTR: "Server=127.0.0.1;Port=5444;Database=RepoDb;User Id=enterprisedb;Password=RepoDB2026;"
   # SAP HANA
-  REPODB_SAPHANA_CONSTR: "Server=127.0.0.1:39015;UserID=SYSTEM;Password=RepoDB2026;CURRENTSCHEMA=REPODB;"
+  REPODB_SAPHANA_CONSTR: "Server=127.0.0.1:39041;UserID=SYSTEM;Password=RepoDB2026;Current Schema=REPODB;"
 
 jobs:
 
