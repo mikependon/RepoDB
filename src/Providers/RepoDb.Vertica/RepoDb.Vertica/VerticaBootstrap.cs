@@ -33,9 +33,11 @@ namespace RepoDb
         #region Methods
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
-        internal static void InitializeInternal()
+        /// <param name="useInvariantCulture"></param>
+        internal static void InitializeInternal(
+            bool useInvariantCulture = false)
         {
             // Skip if already initialized
             if (IsInitialized == true)
@@ -52,19 +54,13 @@ namespace RepoDb
             // Map the Statement Builder
             StatementBuilderMapper.Add<VerticaConnection>(new VerticaStatementBuilder(), true);
 
-            // Vertica.Data (confirmed against v24.1.0 and v24.3.0) formats/re-parses date-like parameter
-            // values using the ambient thread culture instead of CultureInfo.InvariantCulture. On any
-            // machine whose culture uses a non-colon time separator (e.g. en-DK renders 13:45:30 as
-            // 13.45.30), this corrupts the value the driver actually sends - a native DateTime bound to a
-            // TIMESTAMP/TIME column fails INSERT with "Row 1 was rejected by the server", and even a plain
-            // VarChar parameter carrying an already-correct "HH:mm:ss" string comes back re-formatted with
-            // dots and fails server-side parsing on UPDATE/SELECT. There is no per-call interception point
-            // available to a provider (RepoDb.Core calls VerticaCommand.ExecuteScalar()/ExecuteNonQuery()/
-            // ExecuteReader() directly), so the only reliable fix is to force Invariant culture for the
-            // calling thread now, and for every new thread this process creates from here on.
-            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
-            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-            CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+            // Culture
+            if (useInvariantCulture)
+            {
+                CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+                Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+                CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+            }
 
             // Set the flag
             IsInitialized = true;

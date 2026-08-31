@@ -38,7 +38,7 @@ namespace RepoDb.IntegrationTests.Setup
 
             GlobalConfiguration
                 .Setup()
-                .UseVertica();
+                .UseVertica(useInvariantCulture: true);
 
             CreateTables();
         }

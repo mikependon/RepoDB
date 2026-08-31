@@ -36,11 +36,9 @@ namespace RepoDb.Vertica.IntegrationTests.Setup
             // Initialize Vertica
             GlobalConfiguration
                 .Setup()
-                .UseVertica();
+                .UseVertica(useInvariantCulture: true);
 
-            // Vertica's driver returns a TIME column's value combined with today's date rather than a
-            // fixed placeholder date (see TimeToDateTimePropertyHandler) - normalize it for every
-            // model in this test suite that has a TIME column, so round-tripped values compare equal.
+            // Property Handlers
             PropertyHandlerMapper.Add<CompleteTable, TimeToDateTimePropertyHandler>(
                 e => e.ColumnTime, new TimeToDateTimePropertyHandler(), true);
             PropertyHandlerMapper.Add<NonIdentityCompleteTable, TimeToDateTimePropertyHandler>(

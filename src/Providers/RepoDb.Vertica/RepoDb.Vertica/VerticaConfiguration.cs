@@ -19,10 +19,13 @@ namespace RepoDb
         /// Initializes all the necessary settings for Vertica.
         /// </summary>
         /// <param name="globalConfiguration">The instance of the global configuration in used.</param>
+        /// <param name="useInvariantCulture">The flag that defines whether the invariant culture will be used.</param>
         /// <returns>The used global configuration instance itself.</returns>
-        public static GlobalConfiguration UseVertica(this GlobalConfiguration globalConfiguration)
+        public static GlobalConfiguration UseVertica(
+            this GlobalConfiguration globalConfiguration,
+            bool useInvariantCulture = false)
         {
-            VerticaBootstrap.InitializeInternal();
+            VerticaBootstrap.InitializeInternal(useInvariantCulture);
             return globalConfiguration;
         }
     }
