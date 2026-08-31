@@ -285,15 +285,7 @@ namespace RepoDb.StatementBuilders
         #region CreateInsert
 
         /// <summary>
-        /// Creates a SQL Statement for insert operation. Unlike the SQL-Server-family pattern of appending
-        /// a trailing <c>SELECT ... AS "Result"</c> to hand the generated/primary key back through the same
-        /// round-trip, HANA's ADO.NET client rejects a command text containing more than one statement -
-        /// so this is left as the plain <c>INSERT</c> that <see cref="BaseStatementBuilder"/> already
-        /// produces. RepoDb.Core's insert pipeline already has a fallback for exactly this
-        /// (<c>IDbSetting.IsMultiStatementExecutable == false</c>, set on <see cref="SapHanaDbSetting"/>):
-        /// an identity value is fetched via a separate <see cref="DbHelpers.SapHanaDbHelper.GetScopeIdentity{T}"/>
-        /// round-trip, and a non-identity key is simply read back off the entity the caller already
-        /// supplied it on.
+        /// Creates a SQL Statement for insert operation.
         /// </summary>
         public override string CreateInsert(string tableName,
             IEnumerable<Field> fields = null,
@@ -313,11 +305,7 @@ namespace RepoDb.StatementBuilders
         #region CreateInsertAll
 
         /// <summary>
-        /// Creates a SQL Statement for insert-all operation. <see cref="SapHanaDbSetting"/> has
-        /// <c>IsMultiStatementExecutable = false</c>, so RepoDb.Core always forces <paramref name="batchSize"/>
-        /// down to 1 before calling this method (true multi-row batching into a single round-trip isn't
-        /// supported - see the remark on <see cref="CreateInsert"/>). Guard defensively anyway, then reuse
-        /// the single-row <see cref="CreateInsert"/> statement, which already produces parameters for index 0.
+        /// Creates a SQL Statement for insert-all operation.
         /// </summary>
         public override string CreateInsertAll(string tableName,
             IEnumerable<Field> fields = null,
@@ -375,11 +363,6 @@ namespace RepoDb.StatementBuilders
 
         /// <summary>
         /// Creates a SQL Statement for merge operation, using HANA's native <c>UPSERT ... WITH PRIMARY KEY</c>.
-        /// Unlike <see cref="CreateInsert"/>, RepoDb.Core's merge pipeline has no fallback for reading a key
-        /// back via a separate round-trip, so this can't append a trailing <c>SELECT ... AS "Result"</c>
-        /// either (HANA rejects multi-statement command text - see the remark on <see cref="CreateInsert"/>).
-        /// This is not a functional loss in practice: <c>UPSERT ... WITH PRIMARY KEY</c> requires the
-        /// primary key value up front to match against, so it's already known on the entity being merged.
         /// </summary>
         public override string CreateMerge(string tableName,
             IEnumerable<Field> fields,
@@ -426,12 +409,7 @@ namespace RepoDb.StatementBuilders
         #region CreateMergeAll
 
         /// <summary>
-        /// Creates a SQL Statement for merge-all operation. <see cref="SapHanaDbSetting"/> has
-        /// <c>IsMultiStatementExecutable = false</c>, so RepoDb.Core always forces <paramref name="batchSize"/>
-        /// down to 1 before calling this method (true multi-row batching into a single round-trip isn't
-        /// supported - see the remark on <see cref="CreateInsertAll"/>). Guard defensively anyway, then
-        /// reuse the single-row <see cref="CreateMerge"/> statement, which already produces parameters for
-        /// index 0.
+        /// Creates a SQL Statement for merge-all operation.
         /// </summary>
         public override string CreateMergeAll(string tableName,
             IEnumerable<Field> fields,
