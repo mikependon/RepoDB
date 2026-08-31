@@ -33,6 +33,9 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a new instance of <see cref="SapHanaStatementBuilder"/> class.
         /// </summary>
+        /// <param name="dbSetting">The database settings object currently in used.</param>
+        /// <param name="convertFieldResolver">The resolver used when converting a field in the database layer.</param>
+        /// <param name="averageableClientTypeResolver">The resolver used to identity the type for average.</param>
         public SapHanaStatementBuilder(IDbSetting dbSetting,
             IResolver<Field, IDbSetting, string> convertFieldResolver = null,
             IResolver<Type, Type> averageableClientTypeResolver = null)
@@ -46,6 +49,14 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a SQL Statement for batch query operation.
         /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="page">The page of the batch.</param>
+        /// <param name="rowsPerBatch">The number of rows per batch.</param>
+        /// <param name="orderBy">The list of fields for ordering.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for batch query operation.</returns>
         public override string CreateBatchQuery(string tableName,
             IEnumerable<Field> fields,
             int page,
@@ -113,6 +124,13 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a SQL Statement for query operation.
         /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="orderBy">The list of fields for ordering.</param>
+        /// <param name="top">The number of rows to be returned.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for query operation.</returns>
         public override string CreateQuery(string tableName,
             IEnumerable<Field> fields,
             QueryGroup where = null,
@@ -159,8 +177,16 @@ namespace RepoDb.StatementBuilders
         #region CreateSkipQuery
 
         /// <summary>
-        /// Creates a SQL Statement for 'BatchQuery' operation.
+        /// Creates a SQL Statement for skip query operation.
         /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="skip">The number of rows to skip.</param>
+        /// <param name="take">The number of rows per batch.</param>
+        /// <param name="orderBy">The list of fields for ordering.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for skip query operation.</returns>
         public override string CreateSkipQuery(string tableName,
             IEnumerable<Field> fields,
             int skip,
@@ -224,6 +250,10 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a SQL Statement for count operation.
         /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for count operation.</returns>
         public override string CreateCount(string tableName,
             QueryGroup where = null,
             string hints = null)
@@ -242,6 +272,9 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a SQL Statement for count-all operation.
         /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for count-all operation.</returns>
         public override string CreateCountAll(string tableName,
             string hints = null)
         {
@@ -258,6 +291,10 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a SQL Statement for exists operation.
         /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for exists operation.</returns>
         public override string CreateExists(string tableName,
             QueryGroup where = null,
             string hints = null)
@@ -287,6 +324,12 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a SQL Statement for insert operation.
         /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be inserted.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="identityField">The identity field from the database.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for insert operation.</returns>
         public override string CreateInsert(string tableName,
             IEnumerable<Field> fields = null,
             DbField primaryField = null,
@@ -307,6 +350,13 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a SQL Statement for insert-all operation.
         /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be inserted.</param>
+        /// <param name="batchSize">The batch size of the operation.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="identityField">The identity field from the database.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for insert-all operation.</returns>
         public override string CreateInsertAll(string tableName,
             IEnumerable<Field> fields = null,
             int batchSize = 1,
@@ -326,6 +376,11 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a SQL Statement for maximum operation.
         /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for maximum operation.</returns>
         public override string CreateMax(string tableName,
             Field field,
             QueryGroup where = null,
@@ -346,6 +401,10 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a SQL Statement for maximum-all operation.
         /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for maximum-all operation.</returns>
         public override string CreateMaxAll(string tableName,
             Field field,
             string hints = null)
@@ -364,6 +423,13 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a SQL Statement for merge operation, using HANA's native <c>UPSERT ... WITH PRIMARY KEY</c>.
         /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be merged.</param>
+        /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="identityField">The identity field from the database.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for merge operation.</returns>
         public override string CreateMerge(string tableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers = null,
@@ -411,6 +477,14 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a SQL Statement for merge-all operation.
         /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be updated.</param>
+        /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
+        /// <param name="batchSize">The batch size of the operation.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="identityField">The identity field from the database.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for merge-all operation.</returns>
         public override string CreateMergeAll(string tableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
@@ -431,6 +505,11 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a SQL Statement for minimum operation.
         /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for minimum operation.</returns>
         public override string CreateMin(string tableName,
             Field field,
             QueryGroup where = null,
@@ -451,6 +530,10 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a SQL Statement for minimum-all operation.
         /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for minimum-all operation.</returns>
         public override string CreateMinAll(string tableName,
             Field field,
             string hints = null)
@@ -469,6 +552,11 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a SQL Statement for sum operation.
         /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be summarized.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for sum operation.</returns>
         public override string CreateSum(string tableName,
             Field field,
             QueryGroup where = null,
@@ -489,6 +577,10 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a SQL Statement for sum-all operation.
         /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be summarized.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for sum-all operation.</returns>
         public override string CreateSumAll(string tableName,
             Field field,
             string hints = null)

@@ -72,7 +72,6 @@ We want the .NET community to understand this library's limitations before using
   - [No TRUNCATE TABLE Statement](#no-truncate-table-statement)
   - [MERGE Statement Rejected on Tables With an Identity Column](#merge-statement-rejected-on-tables-with-an-identity-column)
   - [Uniform-Width Integer and Floating-Point Types](#uniform-width-integer-and-floating-point-types)
-  - [Ambient Thread Culture Corrupts Date/Time Parameters](#ambient-thread-culture-corrupts-datetime-parameters)
   - [Bulk Insert and Merge Identity Correlation](#bulk-insert-and-merge-identity-correlation)
   - [Bulk Operations: BatchSize Parameter Has No Effect](#bulk-operations-batchsize-parameter-has-no-effect)
   - [Bulk Operations Staging Table](#bulk-operations-staging-table-5)
@@ -1152,24 +1151,6 @@ Verified directly against `VerticaDataReader.GetSchemaTable()`: Vertica has no d
 **Alternative Solution**
 
 Declare mapped properties as `long`/`double` (or accept the implicit narrowing conversion RepoDB performs) rather than assuming a `SMALLINT` column round-trips as `Int32`.
-
-### Ambient Thread Culture Corrupts Date/Time Parameters
-
-Confirmed against `Vertica.Data` v24.1.0 and v24.3.0: the driver formats and re-parses date-like parameter values using the *ambient thread culture* instead of `CultureInfo.InvariantCulture`. On any machine whose culture uses a non-colon time separator (for example `en-DK`, which renders `13:45:30` as `13.45.30`), this corrupts the value the driver actually sends — a native `DateTime` bound to a `TIMESTAMP`/`TIME` column fails `INSERT` with *"Row 1 was rejected by the server"*, and even a plain `VarChar` parameter carrying an already-correct `"HH:mm:ss"` string comes back re-formatted with dots and fails server-side parsing on `UPDATE`/`SELECT`.
-
-Because RepoDb.Core calls `VerticaCommand.ExecuteScalar()`/`ExecuteNonQuery()`/`ExecuteReader()` directly, there is no per-call interception point available to a provider. `VerticaBootstrap.InitializeInternal()` works around this the only way it can — by force-setting Invariant culture for the whole process, not just Vertica-related calls:
-
-```csharp
-CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
-Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
-```
-
-This is a genuinely global side effect: any code elsewhere in your process that depends on the ambient culture for its own formatting/parsing (dates, numbers, currency in UI or reports) is silently switched to Invariant the first time `RepoDb.Vertica` initializes, for the lifetime of the process — not scoped to the thread issuing a Vertica call, and not reversible by the caller.
-
-**Alternative Solution**
-
-Be aware that referencing `RepoDb.Vertica` changes `CultureInfo.CurrentCulture`/`CultureInfo.DefaultThreadCurrentCulture` process-wide as a side effect of its bootstrap. If other parts of your application rely on a specific ambient culture, apply that culture explicitly at the point of use (e.g. pass an explicit `IFormatProvider` to `ToString`/`Parse` calls) rather than relying on the thread/process default after `RepoDb.Vertica` has loaded.
 
 ### Bulk Insert and Merge Identity Correlation
 
