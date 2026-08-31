@@ -1,0 +1,258 @@
+#region Copyright Attributions
+
+// Copyright (c) 2026 Michael Camara Pendon.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Sap.Data.Hana;
+using RepoDb.SapHana.IntegrationTests.Models;
+using RepoDb.SapHana.IntegrationTests.Setup;
+
+namespace RepoDb.SapHana.IntegrationTests
+{
+    [TestClass]
+    public class DbHelperTests
+    {
+        [TestInitialize]
+        public void Initialize()
+        {
+            Database.Initialize();
+            Cleanup();
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            Database.Cleanup();
+        }
+
+        #region GetFields
+
+        #region Sync
+
+        [TestMethod]
+        public void TestDbHelperGetFields()
+        {
+            using (var connection = new HanaConnection(Database.ConnectionString))
+            {
+                // Setup
+                var helper = connection.GetDbHelper();
+
+                // Act
+                var fields = helper.GetFields(connection, "CompleteTable", null);
+
+                // Assert
+                using (var reader = connection.ExecuteReader(@"SELECT COLUMN_NAME AS ColumnName
+                    FROM SYS.TABLE_COLUMNS
+                    WHERE
+                        TABLE_NAME = :TableName
+                        AND SCHEMA_NAME = :TableSchema
+                    ORDER BY POSITION;", new { TableName = "CompleteTable", TableSchema = connection.ExecuteScalar<string>("SELECT CURRENT_SCHEMA FROM DUMMY;") }))
+                {
+                    var fieldCount = 0;
+
+                    while (reader.Read())
+                    {
+                        var name = reader.GetString(0);
+                        var field = fields.FirstOrDefault(f => string.Equals(f.Name, name, StringComparison.OrdinalIgnoreCase));
+
+                        // Assert
+                        Assert.IsNotNull(field);
+
+                        fieldCount++;
+                    }
+
+                    // Assert
+                    Assert.AreEqual(fieldCount, fields.Count());
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestDbHelperGetFieldsPrimary()
+        {
+            using (var connection = new HanaConnection(Database.ConnectionString))
+            {
+                // Setup
+                var helper = connection.GetDbHelper();
+
+                // Act
+                var fields = helper.GetFields(connection, "CompleteTable", null);
+                var primary = fields.FirstOrDefault(f => f.IsPrimary == true);
+
+                // Assert
+                Assert.IsNotNull(primary);
+                Assert.AreEqual("Id", primary.Name);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbHelperGetFieldsIdentity()
+        {
+            using (var connection = new HanaConnection(Database.ConnectionString))
+            {
+                // Setup
+                var helper = connection.GetDbHelper();
+
+                // Act
+                var fields = helper.GetFields(connection, "CompleteTable", null);
+                var primary = fields.FirstOrDefault(f => f.IsIdentity == true);
+
+                // Assert
+                Assert.IsNotNull(primary);
+                Assert.AreEqual("Id", primary.Name);
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestDbHelperGetFieldsAsync()
+        {
+            using (var connection = new HanaConnection(Database.ConnectionString))
+            {
+                // Setup
+                var helper = connection.GetDbHelper();
+
+                // Act
+                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null);
+
+                // Assert
+                using (var reader = connection.ExecuteReader(@"SELECT COLUMN_NAME AS ColumnName
+                    FROM SYS.TABLE_COLUMNS
+                    WHERE
+                        TABLE_NAME = :TableName
+                        AND SCHEMA_NAME = :TableSchema
+                    ORDER BY POSITION;", new { TableName = "CompleteTable", TableSchema = connection.ExecuteScalar<string>("SELECT CURRENT_SCHEMA FROM DUMMY;") }))
+                {
+                    var fieldCount = 0;
+
+                    while (reader.Read())
+                    {
+                        var name = reader.GetString(0);
+                        var field = fields.FirstOrDefault(f => string.Equals(f.Name, name, StringComparison.OrdinalIgnoreCase));
+
+                        // Assert
+                        Assert.IsNotNull(field);
+
+                        fieldCount++;
+                    }
+
+                    // Assert
+                    Assert.AreEqual(fieldCount, fields.Count());
+                }
+            }
+        }
+
+        [TestMethod]
+        public async Task TestDbHelperGetFieldsAsyncPrimary()
+        {
+            using (var connection = new HanaConnection(Database.ConnectionString))
+            {
+                // Setup
+                var helper = connection.GetDbHelper();
+
+                // Act
+                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null);
+                var primary = fields.FirstOrDefault(f => f.IsPrimary == true);
+
+                // Assert
+                Assert.IsNotNull(primary);
+                Assert.AreEqual("Id", primary.Name);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestDbHelperGetFieldsAsyncIdentity()
+        {
+            using (var connection = new HanaConnection(Database.ConnectionString))
+            {
+                // Setup
+                var helper = connection.GetDbHelper();
+
+                // Act
+                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null);
+                var primary = fields.FirstOrDefault(f => f.IsIdentity == true);
+
+                // Assert
+                Assert.IsNotNull(primary);
+                Assert.AreEqual("Id", primary.Name);
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region GetScopeIdentity
+
+        #region Sync
+
+        [TestMethod]
+        public void TestDbHelperGetScopeIdentity()
+        {
+            using (var connection = new HanaConnection(Database.ConnectionString))
+            {
+                // Setup
+                var helper = connection.GetDbHelper();
+                var table = Helper.CreateCompleteTables(1).First();
+
+                // Act - the HANA insert pipeline returns no scalar of its own (RepoDb's ExecuteScalar
+                // fallback to GetScopeIdentity only kicks in when the initial conversion sees a genuine
+                // null, which requires a nullable TResult here), so the generated identity flows back
+                // through GetScopeIdentity, not the INSERT statement itself.
+                var insertResult = connection.Insert<CompleteTable, long?>(table);
+
+                // Assert
+                Assert.IsTrue(insertResult > 0);
+                Assert.IsTrue(table.Id > 0);
+
+                // Act
+                var result = helper.GetScopeIdentity<long>(connection, null);
+
+                // Assert
+                Assert.AreEqual(insertResult, result);
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestDbHelperGetScopeIdentityAsync()
+        {
+            using (var connection = new HanaConnection(Database.ConnectionString))
+            {
+                // Setup
+                var helper = connection.GetDbHelper();
+                var table = Helper.CreateCompleteTables(1).First();
+
+                // Act - see the remark on TestDbHelperGetScopeIdentity re: the nullable TResult.
+                var insertResult = connection.Insert<CompleteTable, long?>(table);
+
+                // Assert
+                Assert.IsTrue(insertResult > 0);
+                Assert.IsTrue(table.Id > 0);
+
+                // Act
+                var result = await helper.GetScopeIdentityAsync<long>(connection, null);
+
+                // Assert
+                Assert.AreEqual(insertResult, result);
+            }
+        }
+
+        #endregion
+
+        #endregion
+    }
+}

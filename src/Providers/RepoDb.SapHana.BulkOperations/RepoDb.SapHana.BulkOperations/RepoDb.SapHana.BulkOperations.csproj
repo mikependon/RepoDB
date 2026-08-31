@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Title>RepoDb.SapHana.BulkOperations</Title>
+    <AssemblyName>RepoDb.SapHana.BulkOperations</AssemblyName>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <LangVersion>preview</LangVersion>
+    <Nullable>annotations</Nullable>
+    <Description>An extension library that contains the official Bulk Operations of RepoDB for SAP HANA (using Sap.Data.Hana).</Description>
+    <PackageTags>orm hybrid-orm micro-orm saphana hana bulkoperations</PackageTags>
+    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SapHana.BulkOperations</RepositoryUrl>
+    <PackageReleaseNotes>http://repodb.net/release/saphanabulk</PackageReleaseNotes>
+    <PackageProjectUrl>https://repodb.net/tutorial/get-started-saphana</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <!--
+      Pins the version this project is stamped as when it is a ProjectReference dependency of another
+      package, independently of the consuming package's own -p:Version. Pass
+      -p:RepoDbSapHanaBulkOperationsVersion=<version> to set it explicitly. PackageVersion is used (not
+      Version) because it is not overridden by the global Version property.
+    -->
+    <PackageVersion Condition="'$(RepoDbSapHanaBulkOperationsVersion)' != ''">$(RepoDbSapHanaBulkOperationsVersion)</PackageVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- See RepoDb.SapHana.csproj's remark: confirmed to exist, but pin/verify the exact version
+         against what your HANA client install supports before publishing. -->
+    <PackageReference Include="Sap.Data.Hana.Net.v6.0" Version="2.29.25" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />
+    <None Include="..\README.md" Pack="True" PackagePath="\" />
+    <None Include="..\..\..\..\icon.png" Pack="True" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
+    <ProjectReference Include="..\..\RepoDb.SapHana\RepoDb.SapHana\RepoDb.SapHana.csproj" />
+  </ItemGroup>
+</Project>
