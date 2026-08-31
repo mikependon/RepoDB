@@ -53,14 +53,14 @@ RepoDB is evolving from an ORM into a broader data productivity platform, with D
 Choose your database and follow the quick-start guide:
 
 - [ClickHouse](http://repodb.net/tutorial/get-started-clickhouse)
-- [Db2](http://repodb.net/tutorial/get-started-db2)
+- [DB2](http://repodb.net/tutorial/get-started-db2)
 - [EnterpriseDB](http://repodb.net/tutorial/get-started-enterprisedb)
 - [Firebird](http://repodb.net/tutorial/get-started-firebird)
 - [MariaDB](http://repodb.net/tutorial/get-started-mariadb)
 - [MySQL](http://repodb.net/tutorial/get-started-mysql)
 - [Oracle](http://repodb.net/tutorial/get-started-oracle)
 - [PostgreSQL](http://repodb.net/tutorial/get-started-postgresql)
-- [SAP Hana](http://repodb.net/tutorial/get-started-saphana)
+- [SAP HANA](http://repodb.net/tutorial/get-started-saphana)
 - [SQL Server](http://repodb.net/tutorial/get-started-sqlserver)
 - [SQLite](http://repodb.net/tutorial/get-started-sqlite)
 - [Vertica](http://repodb.net/tutorial/get-started-vertica)
@@ -92,7 +92,7 @@ Every supported database has a dedicated bulk-operations add-on (`BulkInsert`, `
 | DB Provider | Sync | Async | Class |
 |---|---|---|---|
 | [ClickHouse](https://www.nuget.org/packages/RepoDb.ClickHouse.BulkOperations) | ✅ | ✅ | [ClickHouseBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.ClickHouse.BulkOperations/RepoDb.ClickHouse.BulkOperations/ClickHouseBulkCopy.cs) |
-| [Db2](https://www.nuget.org/packages/RepoDb.Db2.BulkOperations) | ✅ | ✅ | [DB2BulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.Db2.BulkOperations/RepoDb.Db2.BulkOperations/Base/WriteToServer.cs) Native (Sync) / [Db2BulkArrayBinder](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.Db2.BulkOperations/RepoDb.Db2.BulkOperations/Db2BulkArrayBinder.cs) (Async) |
+| [DB2](https://www.nuget.org/packages/RepoDb.Db2.BulkOperations) | ✅ | ✅ | [DB2BulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.Db2.BulkOperations/RepoDb.Db2.BulkOperations/Base/WriteToServer.cs) Native (Sync) / [Db2BulkArrayBinder](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.Db2.BulkOperations/RepoDb.Db2.BulkOperations/Db2BulkArrayBinder.cs) (Async) |
 | [Firebird](https://www.nuget.org/packages/RepoDb.Firebird.BulkOperations) | ✅ | ✅ | [FirebirdCommandBatcher](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.Firebird.BulkOperations/RepoDb.Firebird.BulkOperations/FirebirdCommandBatcher.cs) (via **`FbBatchCommand`**) |
 | [MariaDB](https://www.nuget.org/packages/RepoDb.MariaDb.BulkOperations) | ✅ | ✅ | [MariaDbBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.MariaDb.BulkOperations/RepoDb.MariaDb.BulkOperations/MariaDbBulkCopy.cs) (via **[RepoDb.Connector.MariaDb](https://www.nuget.org/packages/RepoDb.Connector.MariaDb)**) |
 | [MariaDB Connector](https://www.nuget.org/packages/RepoDb.MariaDbConnector.BulkOperations) | ✅ | ✅ | [MariaDbBulkCopy](https://github.com/mikependon/RepoDB.Connectors/blob/main/src/RepoDb.Connector.MariaDbConnector/RepoDb.Connector.MariaDbConnector/Bulk/MariaDbBulkCopy.cs) (via **[RepoDb.Connector.MariaDbConnector](https://www.nuget.org/packages/RepoDb.Connector.MariaDbConnector)**) |
@@ -100,7 +100,7 @@ Every supported database has a dedicated bulk-operations add-on (`BulkInsert`, `
 | [MySQL Connector](https://www.nuget.org/packages/RepoDb.MySqlConnector.BulkOperations) | ✅ | ✅ | [MySqlConnectorBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.MySqlConnector.BulkOperations/RepoDb.MySqlConnector.BulkOperations/Base/WriteToServer.cs) Native |
 | [Oracle](https://www.nuget.org/packages/RepoDb.Oracle.BulkOperations) | ✅ | ✅ | [OracleBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.Oracle.BulkOperations/RepoDb.Oracle.BulkOperations/Base/WriteToServer.cs) Native |
 | [PostgreSQL](https://www.nuget.org/packages/RepoDb.PostgreSql.BulkOperations) | ✅ | ✅ | [NpgsqlBinaryImporter](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.PostgreSql.BulkOperations/RepoDb.PostgreSql.BulkOperations/Base/BinaryImport.cs) Native |
-| [SAP Hana](https://www.nuget.org/packages/RepoDb.SapHana.BulkOperations) | ✅ | ✅ | [SapHanaConnectionExtension](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.SapHana.BulkOperations/RepoDb.SapHana.BulkOperations/Base/WriteToServer.cs) (chunked parameterized `INSERT`) |
+| [SAP HANA](https://www.nuget.org/packages/RepoDb.SapHana.BulkOperations) | ✅ | ✅ | [SapHanaConnectionExtension](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.SapHana.BulkOperations/RepoDb.SapHana.BulkOperations/Base/WriteToServer.cs) (chunked parameterized `INSERT`) |
 | [SQL Server](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations) | ✅ | ✅ | [SqlBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.SqlServer.BulkOperations/RepoDb.SqlServer.BulkOperations/Base/WriteToServer.cs) Native |
 | [Vertica](https://www.nuget.org/packages/RepoDb.Vertica.BulkOperations) | ✅ | ✅ | [VerticaBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.Vertica.BulkOperations/RepoDb.Vertica.BulkOperations/VerticaBulkCopy.cs) (via **`VerticaCopyStream`**) |
 
