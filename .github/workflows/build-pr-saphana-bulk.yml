@@ -1,0 +1,20 @@
+name: PR - Build & Run Tests - RepoDb.SapHana.BulkOperations
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'src/Providers/RepoDb.Core/**'
+      - 'src/Providers/RepoDb.SapHana/**'
+      - 'src/Providers/RepoDb.SapHana.BulkOperations/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-pr-saphana-bulk.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: src/Providers/RepoDb.SapHana.BulkOperations
+      solution-file: RepoDb.SapHana.BulkOperations.sln
+      artifact-name: release-pr
+      db-engine: saphana
