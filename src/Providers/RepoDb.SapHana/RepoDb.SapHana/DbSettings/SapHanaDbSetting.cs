@@ -26,9 +26,6 @@ namespace RepoDb.DbSettings
             IsAffectedRowsSupported = true;
             IsDirectionSupported = false;
             IsExecuteReaderDisposable = true;
-            // HANA's ADO.NET client rejects a command text containing more than one SQL statement - see
-            // the remark on SapHanaStatementBuilder.CreateInsert - so RepoDb.Core must be told not to
-            // batch multiple statements into one round-trip.
             IsMultiStatementExecutable = false;
             IsPreparable = true;
             IsTransactionSupported = true;
