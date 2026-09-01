@@ -10,7 +10,6 @@ using FirebirdSql.Data.FirebirdClient;
 using RepoDb.DbHelpers;
 using RepoDb.DbSettings;
 using RepoDb.StatementBuilders;
-using System;
 
 namespace RepoDb
 {
@@ -29,12 +28,6 @@ namespace RepoDb
         #endregion
 
         #region Methods
-
-        /// <summary>
-        /// Initializes all necessary settings for Firebird.
-        /// </summary>
-        [Obsolete("This class will soon to be hidden as internal class. Use the 'GlobalConfiguration.Setup().UseFirebird()' method instead.")]
-        public static void Initialize() => InitializeInternal();
 
         /// <summary>
         ///
