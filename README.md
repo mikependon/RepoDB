@@ -48,6 +48,8 @@ RepoDB is evolving from an ORM into a broader data productivity platform, with D
 
 <img src="https://raw.githubusercontent.com/mikependon/RepoDB.Resources/refs/heads/main/blogs/images/posts/2026-08/repodb-new-architecture.png" style="max-width:768px" />
 
+Read more about this through this [article](https://blogs.repodb.net/posts/2026/08/repodb-new-architecture).
+
 ## Get Started
 
 Choose your database and follow the quick-start guide:
@@ -103,8 +105,6 @@ Every supported database has a dedicated bulk-operations add-on (`BulkInsert`, `
 | [SAP HANA](https://www.nuget.org/packages/RepoDb.SapHana.BulkOperations) | ✅ | ✅ | [SapHanaConnectionExtension](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.SapHana.BulkOperations/RepoDb.SapHana.BulkOperations/Base/WriteToServer.cs) (chunked parameterized `INSERT`) |
 | [SQL Server](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations) | ✅ | ✅ | [SqlBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.SqlServer.BulkOperations/RepoDb.SqlServer.BulkOperations/Base/WriteToServer.cs) Native |
 | [Vertica](https://www.nuget.org/packages/RepoDb.Vertica.BulkOperations) | ✅ | ✅ | [VerticaBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.Vertica.BulkOperations/RepoDb.Vertica.BulkOperations/VerticaBulkCopy.cs) (via **`VerticaCopyStream`**) |
-
-MariaDB and MariaDB Connector route through RepoDB's own low-level connector packages (`RepoDb.Connector.MariaDb` / `RepoDb.Connector.MariaDbConnector`) rather than a database-vendor driver. Firebird has no `SqlBulkCopy`-equivalent in its ADO.NET driver, so `FirebirdCommandBatcher` batches rows through the driver's native `FbBatchCommand` instead. SAP HANA's `Sap.Data.Hana` driver has no documented bulk-copy API either, so its bulk operations batch rows through chunked, multi-row parameterized `INSERT` statements instead. Vertica's `VerticaBulkCopy` wraps its native `COPY`-based streaming primitive, `VerticaCopyStream`.
 
 ## Type Coercion
 
