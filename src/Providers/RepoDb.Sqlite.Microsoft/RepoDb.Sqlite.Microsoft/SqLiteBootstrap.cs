@@ -12,7 +12,6 @@ using RepoDb.DbHelpers;
 using RepoDb.DbSettings;
 using RepoDb.Resolvers;
 using RepoDb.StatementBuilders;
-using System;
 
 namespace RepoDb
 {
@@ -33,13 +32,7 @@ namespace RepoDb
         #region Methods
 
         /// <summary>
-        /// Initializes all necessary settings for SqLite.
-        /// </summary>
-        [Obsolete("This class will soon to be hidden as internal class. Use the 'GlobalConfiguration.Setup().UseSqlite()' method instead.")]
-        public static void Initialize() => InitializeInternal();
-
-        /// <summary>
-        /// 
+        ///
         /// </summary>
         internal static void InitializeInternal()
         {

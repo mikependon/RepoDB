@@ -11,7 +11,6 @@ using Npgsql;
 using RepoDb.DbHelpers;
 using RepoDb.DbSettings;
 using RepoDb.StatementBuilders;
-using System;
 
 namespace RepoDb
 {
@@ -32,13 +31,7 @@ namespace RepoDb
         #region Methods
 
         /// <summary>
-        /// Initializes all necessary settings for PostgreSql.
-        /// </summary>
-        [Obsolete("This class will soon to be hidden as internal class. Use the 'GlobalConfiguration.Setup().UsePostgreSql()' method instead.")]
-        public static void Initialize() => InitializeInternal();
-
-        /// <summary>
-        /// 
+        ///
         /// </summary>
         internal static void InitializeInternal()
         {
