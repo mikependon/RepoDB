@@ -85,6 +85,12 @@ We want the .NET community to understand this library's limitations before using
   - [Bulk Insert and Merge Identity Correlation](#bulk-insert-and-merge-identity-correlation-1)
   - [Bulk Operations and Transactions](#bulk-operations-and-transactions-3)
   - [Verification Status](#verification-status-6)
+- EnterpriseDB
+  - [RepoDb.Connector.EnterpriseDb Is Not Published to NuGet](#repodbconnectorenterprisedb-is-not-published-to-nuget)
+  - [Bulk Operations Staging Table](#bulk-operations-staging-table-7)
+  - [Bulk Insert and Merge Identity Correlation Relies on RETURNING Order](#bulk-insert-and-merge-identity-correlation-relies-on-returning-order)
+  - [BulkMerge Without Updateable Columns Undercounts Affected Rows](#bulkmerge-without-updateable-columns-undercounts-affected-rows)
+  - [Verification Status](#verification-status-7)
 
 ## Core
 
@@ -1332,3 +1338,65 @@ If a rollback needs to also undo a bulk operation's target-table changes, pass a
 `RepoDb.SapHana` has unit test coverage (`DbSettingTest.cs`, `StatementBuilderTest.cs`, `MappingTest.cs`, `QuotationTest.cs`, plus resolver/attribute tests) and a full integration test suite (`RepoDb.SapHana.IntegrationTests`, including `TransactionTests.cs`). `RepoDb.SapHana.BulkOperations` has an integration test suite (`BulkInsertTest.cs`/`BulkMergeTest.cs`/`BulkUpdateTest.cs`/`BulkDeleteTest.cs`/`BulkDeleteByKeyTest.cs`) but, unlike every sibling `*.BulkOperations` package covered elsewhere in this document, no unit test project of its own — there is no `StatementBuilderTest`-equivalent asserting the generated SQL text for the pseudo-table pipeline in isolation.
 
 Both packages' CI jobs (`build-saphana`/`build-saphana-bulk`, `build-pr-saphana`/`build-pr-saphana-bulk`) start a real `saplabs/hanaexpress` container and run `dotnet test` against it across .NET 8/9/10 — the same pattern used for every DB-backed provider in this repository. This sits oddly next to each package's own README, which states the provider "has not been verified against a live SAP HANA instance." Which claim is current can't be determined from the source alone — the README text may be stale boilerplate carried over from an earlier, genuinely-unverified provider, or the CI job may not yet have been run to completion since this was written. Check the actual CI run history for the `saphana-support` branch before trusting either claim, and in particular verify the two behaviors flagged above as needing the most scrutiny — the [Bulk Insert and Merge Identity Correlation](#bulk-insert-and-merge-identity-correlation-1) race/`GENERATED ALWAYS` gap, and the [Bulk Operations Staging Table](#bulk-operations-staging-table-6) concurrent-caller collision — neither of which a single-connection test run would surface.
+
+-----
+
+## EnterpriseDB
+
+These limitations are specific to the [RepoDb.EnterpriseDb](https://www.nuget.org/packages/RepoDb.EnterpriseDb) and `RepoDb.EnterpriseDb.BulkOperations` packages, on top of the [Core](#core) limitations above. Both target EDB Postgres Advanced Server; `RepoDb.EnterpriseDb.BulkOperations` specifically is built against [`RepoDb.Connector.EnterpriseDb`](https://github.com/mikependon/RepoDB.Connectors) (a Npgsql-based connector) rather than the official [`EnterpriseDB.EDBClient`](https://www.nuget.org/packages/EnterpriseDB.EDBClient) driver that `RepoDb.EnterpriseDb` itself otherwise depends on.
+
+### Bulk Operations Staging Table
+
+`BulkInsert`, `BulkMerge`, `BulkUpdate`, `BulkDelete`, and `BulkDeleteByKey` all stage rows into a pseudo table named deterministically from `{pseudoTableType}{tableName}{Operation}` (e.g. `PhysicalPersonMerge`) — the same non-unique naming scheme documented for `RepoDb.Db2.BulkOperations`/`RepoDb.MariaDb.BulkOperations`/`RepoDb.SapHana.BulkOperations`/`RepoDb.ClickHouse.BulkOperations` elsewhere in this document. `EDBBulkImportPseudoTableType` has the same three values as those sibling packages — `Auto` (default), `Memory`, `Physical` — with `Physical` an ordinary heap table (not session-isolated) and `Memory` a Postgres `TEMP` table (session-private).
+
+Unlike those sibling packages, `Auto`'s row-count threshold actually works here: `ResolvePseudoTableType` in `WriteToServer.cs` correctly resolves to `Physical` at `EDBConstants.RowCountThresholdForPhysicalTable` (5,000) rows or more, and to `Memory` otherwise, and an explicit `Memory` argument is honored rather than silently overridden. So the collision risk below is avoidable by using `Memory` (or staying under the row threshold with `Auto`) — it is not, unlike the sibling packages, a case of `Memory` being unreachable altogether.
+
+The risk remains for `Physical`: two concurrent callers bulk-writing against the same target table with `pseudoTableType: Physical` (or an `Auto` call that crosses the row threshold) target the exact same staging-table name — created, populated, indexed, and dropped within each call — and can race or corrupt each other's staged rows.
+
+**Alternative Solution**
+
+Prefer `Memory` (or stay under the 5,000-row `Auto` threshold) for tables that may see concurrent bulk writers. Serialize `Physical` bulk operations against the same table otherwise.
+
+### Bulk Insert and Merge Identity Correlation Relies on RETURNING Order
+
+`BulkInsert`/`BulkMerge` with `identityBehavior: ReturnIdentity` read generated/existing identity values back via a single `INSERT ... SELECT ... ORDER BY <row-order column> RETURNING <identity> AS "Result"` statement (for `BulkMerge`, `INSERT ... ON CONFLICT (qualifiers) DO UPDATE ...RETURNING`), then assign each returned value positionally — `entities[result]`/`rows[result][identityField.Name]`, incrementing `result` per row read — assuming `RETURNING` emits rows in the same order the source `SELECT` produced them:
+
+```csharp
+using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction);
+var result = 0;
+while (reader.Read())
+{
+    setter(entities[result], Converter.DbNullToNull(reader.GetValue(0)));
+    result++;
+}
+```
+
+This positional-order assumption is not a documented guarantee of the SQL standard or of PostgreSQL/EDB's `RETURNING` clause. It is expected to hold today because PostgreSQL does not parallelize the write (modifying) node of a query plan — `INSERT`/`UPDATE`/`DELETE`/`MERGE` always execute serially even when their underlying `SELECT` could otherwise use a parallel plan — so a single, non-parallel `INSERT ... SELECT ... ORDER BY ... RETURNING` processes and emits its source rows one at a time, in the scan order of that ordered `SELECT`. This is the same class of assumption RepoDB's SQL Server bulk package makes with `MERGE ... OUTPUT` over an `ORDER BY`-carrying subquery (see [SQL Server's Identity Correlation Differs by Input Shape](#identity-correlation-differs-by-input-shape)) — except SQL Server's own documentation explicitly warns against relying on it, where no equivalent warning (or guarantee) exists for PostgreSQL/EDB's `RETURNING`.
+
+**Alternative Solution**
+
+This has not been verified against a live EDB Postgres Advanced Server instance (see [Verification Status](#verification-status-7)). Confirm row-order correlation holds under real load — larger batches in particular — before relying on `ReturnIdentity` in production. If PostgreSQL/EDB ever parallelizes DML execution in a future version, this assumption would need to be revisited.
+
+### BulkMerge Without Updateable Columns Undercounts Affected Rows
+
+`GetMergeFromPseudoTableSql`'s non-return-identity path falls back to `ON CONFLICT (qualifiers) DO NOTHING` when every merged column is either the identity field or a qualifier (i.e., there is nothing left to update once qualifiers are excluded — a merge keyed on effectively every column):
+
+```csharp
+var conflictAction = updateableFields.Count > 0
+    ? string.Concat("DO UPDATE SET ", ...)
+    : "DO NOTHING";
+```
+
+`MergeFromPseudoTable` reports its result via `connection.ExecuteNonQuery(commandText, ...)`. PostgreSQL/EDB's command-completion tag for `INSERT ... ON CONFLICT DO NOTHING` counts only rows actually inserted — rows that hit the conflict and were skipped are not included. In this narrow edge case, `BulkMerge`'s returned row count therefore reports only the number of newly inserted rows, silently excluding any rows that matched an existing row and were left untouched by `DO NOTHING`, even though those rows were part of the merge operation.
+
+**Alternative Solution**
+
+This edge case only triggers when a merge's qualifier set covers every non-identity column being merged. Include at least one genuinely updateable (non-qualifier) column in the merge if an accurate affected-row count matters for your use case.
+
+### Verification Status
+
+`RepoDb.EnterpriseDb.BulkOperations` has an integration test suite (`BulkInsertTest.cs`/`BulkMergeTest.cs`/`BulkUpdateTest.cs`/`BulkDeleteTest.cs`/`BulkDeleteByKeyTest.cs`, adapted from `RepoDb.MariaDbConnector.BulkOperations`'s own suite) but, like `RepoDb.SapHana.BulkOperations`, no unit test project of its own — there is no `StatementBuilderTest`-equivalent asserting the `EDBText` SQL-generation logic in isolation. Neither the integration suite nor any manual testing has been run against a live EDB Postgres Advanced Server instance.
+
+The dual-registration wiring added to `RepoDb.EnterpriseDb`'s `EnterpriseDbBootstrap` — registering `DbSettingMapper`/`DbHelperMapper`/`StatementBuilderMapper` for `RepoDb.Connector.EnterpriseDb.EDBConnection` alongside the pre-existing official-driver registration, and the `Activator.CreateInstance`-based connection-retry path in `EnterpriseDbDbHelper` — is exercised by neither `RepoDb.EnterpriseDb.UnitTests` nor `RepoDb.EnterpriseDb.IntegrationTests`, both of which predate this change and only ever construct the official `EnterpriseDB.EDBClient.EDBConnection`. Only `RepoDb.EnterpriseDb.BulkOperations.IntegrationTests` references `RepoDb.Connector.EnterpriseDb.EDBConnection` at all, and that suite itself has not been run.
+
+The `build-enterprisedb`/`build-enterprisedb-bulk` CI workflows are configured to start a real `docker.enterprisedb.com/k8s/edb-postgres-advanced:18` container and run `dotnet test` against it, the same pattern used for every DB-backed provider in this repository. Unlike the other providers' container images, this one requires authentication against EDB's own registry — the workflow's own comment notes the `EDB_DOCKER_USERNAME`/`EDB_DOCKER_PASSWORD` repository secrets must be configured before the job can even pull the image. Whether those secrets are configured, and whether the CI job has actually run to completion, could not be determined from the source alone — check the actual CI run history before trusting a passing badge.
