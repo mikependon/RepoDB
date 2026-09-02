@@ -174,9 +174,11 @@ namespace RepoDb
             {
                 return 0;
             }
-            using var table = BuildDataTableFromReader(connection, tableName, reader, resolvedMappings, transaction, dbSetting, cancellationToken);
-            using var bulkCopy = CreateHanaBulkCopy(connection, tableName, resolvedMappings, bulkCopyTimeout, batchSize, transaction, dbSetting);
-            await Task.Run(() => bulkCopy.WriteToServer(table), cancellationToken);
+            // HanaBulkCopy has no native async API - SapHanaCommandBatcher gives genuine async execution
+            // (HanaCommand.ExecuteNonQueryAsync per row) instead of a synchronous HanaBulkCopy call
+            // offloaded onto a thread-pool thread via Task.Run.
+            using var batcher = CreateSapHanaCommandBatcher(connection, tableName, resolvedMappings, bulkCopyTimeout, batchSize, transaction, dbSetting);
+            await batcher.WriteToServerAsync(reader, cancellationToken);
             return entities != null ? entities.Count() : 0;
         }
 
@@ -212,9 +214,8 @@ namespace RepoDb
             {
                 return 0;
             }
-            using var typedTable = BuildDataTableFromRows(connection, tableName, rows, resolvedMappings, dbSetting);
-            using var bulkCopy = CreateHanaBulkCopy(connection, tableName, resolvedMappings, bulkCopyTimeout, batchSize, null, dbSetting);
-            await Task.Run(() => bulkCopy.WriteToServer(typedTable), cancellationToken);
+            using var batcher = CreateSapHanaCommandBatcher(connection, tableName, resolvedMappings, bulkCopyTimeout, batchSize, null, dbSetting);
+            await batcher.WriteToServerAsync(rows, cancellationToken);
             return rows != null ? rows.Length : 0;
         }
 
@@ -248,10 +249,8 @@ namespace RepoDb
             {
                 return 0;
             }
-            using var table = BuildDataTableFromReader(connection, tableName, reader, resolvedMappings, transaction, dbSetting, cancellationToken);
-            using var bulkCopy = CreateHanaBulkCopy(connection, tableName, resolvedMappings, bulkCopyTimeout, batchSize, transaction, dbSetting);
-            await Task.Run(() => bulkCopy.WriteToServer(table), cancellationToken);
-            return table.Rows.Count;
+            using var batcher = CreateSapHanaCommandBatcher(connection, tableName, resolvedMappings, bulkCopyTimeout, batchSize, transaction, dbSetting);
+            return await batcher.WriteToServerAsync(reader, cancellationToken);
         }
 
         #endregion
@@ -341,7 +340,50 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        /// Builds a <see cref="SapHanaCommandBatcher"/> from already-resolved mappings, mirroring
+        /// <see cref="CreateHanaBulkCopy"/>. Used only by the async WriteToServerAsyncInternal overloads -
+        /// see the remarks on <see cref="SapHanaCommandBatcher"/> for why they use this instead of
+        /// <see cref="HanaBulkCopy"/>.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="transaction"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        private static SapHanaCommandBatcher CreateSapHanaCommandBatcher(HanaConnection connection,
+            string tableName,
+            List<SapHanaBulkInsertMapItem> mappings,
+            int? bulkCopyTimeout,
+            int? batchSize,
+            HanaTransaction transaction,
+            IDbSetting dbSetting)
+        {
+            var batcher = new SapHanaCommandBatcher(connection)
+            {
+                DestinationTableName = tableName.AsQuoted(true, dbSetting),
+                TableName = tableName,
+                Transaction = transaction
+            };
+            if (bulkCopyTimeout.HasValue)
+            {
+                batcher.BulkCopyTimeout = bulkCopyTimeout.Value;
+            }
+            if (batchSize.HasValue)
+            {
+                batcher.BatchSize = batchSize.Value;
+            }
+            foreach (var mapping in mappings)
+            {
+                batcher.ColumnMappings.Add(mapping.SourceColumn, mapping.DestinationColumn);
+            }
+            return batcher;
+        }
+
+        /// <summary>
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
