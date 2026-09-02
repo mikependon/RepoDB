@@ -22,8 +22,6 @@
     <PackageVersion Condition="'$(RepoDbSapHanaBulkOperationsVersion)' != ''">$(RepoDbSapHanaBulkOperationsVersion)</PackageVersion>
   </PropertyGroup>
   <ItemGroup>
-    <!-- See RepoDb.SapHana.csproj's remark: confirmed to exist, but pin/verify the exact version
-         against what your HANA client install supports before publishing. -->
     <PackageReference Include="Sap.Data.Hana.Net.v6.0" Version="2.29.25" />
   </ItemGroup>
   <ItemGroup>

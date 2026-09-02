@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Sap.Data.Hana;
@@ -29,12 +28,10 @@ namespace RepoDb
     /// </summary>
     public static partial class SapHanaConnectionExtension
     {
-        private const int DefaultBatchSize = 500;
-
         #region WriteToServerInternal
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -58,11 +55,20 @@ namespace RepoDb
         {
             connection.EnsureOpen();
             using var reader = new DataEntityDataReader<TEntity>(entities);
-            return WriteReaderToServer(connection, tableName, reader, mappings, bulkCopyTimeout, batchSize, transaction, excludeField);
+            var dbSetting = connection.GetDbSetting();
+            var resolvedMappings = ResolveMappings(connection, tableName, reader, mappings, transaction, excludeField, dbSetting);
+            if (resolvedMappings.Count == 0)
+            {
+                return 0;
+            }
+            using var table = BuildDataTableFromReader(connection, tableName, reader, resolvedMappings, transaction, dbSetting);
+            using var bulkCopy = CreateHanaBulkCopy(connection, tableName, resolvedMappings, bulkCopyTimeout, batchSize, transaction, dbSetting);
+            bulkCopy.WriteToServer(table);
+            return entities != null ? entities.Count() : 0;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -83,17 +89,22 @@ namespace RepoDb
             Field excludeField = null)
         {
             connection.EnsureOpen();
-            var filteredTable = table.Clone();
-            foreach (var row in GetDataRows(table, rowState))
+            var rows = GetDataRows(table, rowState)?.ToArray();
+            var dbSetting = connection.GetDbSetting();
+            using var tableReader = new DataTableReader(table);
+            var resolvedMappings = ResolveMappings(connection, tableName, tableReader, mappings, null, excludeField, dbSetting);
+            if (resolvedMappings.Count == 0)
             {
-                filteredTable.ImportRow(row);
+                return 0;
             }
-            using var reader = new DataTableReader(filteredTable);
-            return WriteReaderToServer(connection, tableName, reader, mappings, bulkCopyTimeout, batchSize, null, excludeField);
+            using var typedTable = BuildDataTableFromRows(connection, tableName, rows, resolvedMappings, dbSetting);
+            using var bulkCopy = CreateHanaBulkCopy(connection, tableName, resolvedMappings, bulkCopyTimeout, batchSize, null, dbSetting);
+            bulkCopy.WriteToServer(typedTable);
+            return rows != null ? rows.Length : 0;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -114,7 +125,16 @@ namespace RepoDb
             Field excludeField = null)
         {
             connection.EnsureOpen();
-            return WriteReaderToServer(connection, tableName, reader, mappings, bulkCopyTimeout, batchSize, transaction, excludeField);
+            var dbSetting = connection.GetDbSetting();
+            var resolvedMappings = ResolveMappings(connection, tableName, reader, mappings, transaction, excludeField, dbSetting);
+            if (resolvedMappings.Count == 0)
+            {
+                return 0;
+            }
+            using var table = BuildDataTableFromReader(connection, tableName, reader, resolvedMappings, transaction, dbSetting);
+            using var bulkCopy = CreateHanaBulkCopy(connection, tableName, resolvedMappings, bulkCopyTimeout, batchSize, transaction, dbSetting);
+            bulkCopy.WriteToServer(table);
+            return table.Rows.Count;
         }
 
         #endregion
@@ -122,7 +142,7 @@ namespace RepoDb
         #region WriteToServerAsyncInternal
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -148,11 +168,20 @@ namespace RepoDb
         {
             await connection.EnsureOpenAsync(cancellationToken);
             using var reader = new DataEntityDataReader<TEntity>(entities);
-            return await WriteReaderToServerAsync(connection, tableName, reader, mappings, bulkCopyTimeout, batchSize, transaction, excludeField, cancellationToken);
+            var dbSetting = connection.GetDbSetting();
+            var resolvedMappings = ResolveMappings(connection, tableName, reader, mappings, transaction, excludeField, dbSetting);
+            if (resolvedMappings.Count == 0)
+            {
+                return 0;
+            }
+            using var table = BuildDataTableFromReader(connection, tableName, reader, resolvedMappings, transaction, dbSetting, cancellationToken);
+            using var bulkCopy = CreateHanaBulkCopy(connection, tableName, resolvedMappings, bulkCopyTimeout, batchSize, transaction, dbSetting);
+            await Task.Run(() => bulkCopy.WriteToServer(table), cancellationToken);
+            return entities != null ? entities.Count() : 0;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -175,17 +204,22 @@ namespace RepoDb
             Field excludeField = null)
         {
             await connection.EnsureOpenAsync(cancellationToken);
-            var filteredTable = table.Clone();
-            foreach (var row in GetDataRows(table, rowState))
+            var rows = GetDataRows(table, rowState)?.ToArray();
+            var dbSetting = connection.GetDbSetting();
+            using var tableReader = new DataTableReader(table);
+            var resolvedMappings = ResolveMappings(connection, tableName, tableReader, mappings, null, excludeField, dbSetting);
+            if (resolvedMappings.Count == 0)
             {
-                filteredTable.ImportRow(row);
+                return 0;
             }
-            using var reader = new DataTableReader(filteredTable);
-            return await WriteReaderToServerAsync(connection, tableName, reader, mappings, bulkCopyTimeout, batchSize, null, excludeField, cancellationToken);
+            using var typedTable = BuildDataTableFromRows(connection, tableName, rows, resolvedMappings, dbSetting);
+            using var bulkCopy = CreateHanaBulkCopy(connection, tableName, resolvedMappings, bulkCopyTimeout, batchSize, null, dbSetting);
+            await Task.Run(() => bulkCopy.WriteToServer(typedTable), cancellationToken);
+            return rows != null ? rows.Length : 0;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -208,7 +242,16 @@ namespace RepoDb
             Field excludeField = null)
         {
             await connection.EnsureOpenAsync(cancellationToken);
-            return await WriteReaderToServerAsync(connection, tableName, reader, mappings, bulkCopyTimeout, batchSize, transaction, excludeField, cancellationToken);
+            var dbSetting = connection.GetDbSetting();
+            var resolvedMappings = ResolveMappings(connection, tableName, reader, mappings, transaction, excludeField, dbSetting);
+            if (resolvedMappings.Count == 0)
+            {
+                return 0;
+            }
+            using var table = BuildDataTableFromReader(connection, tableName, reader, resolvedMappings, transaction, dbSetting, cancellationToken);
+            using var bulkCopy = CreateHanaBulkCopy(connection, tableName, resolvedMappings, bulkCopyTimeout, batchSize, transaction, dbSetting);
+            await Task.Run(() => bulkCopy.WriteToServer(table), cancellationToken);
+            return table.Rows.Count;
         }
 
         #endregion
@@ -227,7 +270,7 @@ namespace RepoDb
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         /// <exception cref="InvalidTypeException"></exception>
-        private static (int[] SourceOrdinals, string[] DestinationColumns) ResolveColumnPlan(HanaConnection connection,
+        private static List<SapHanaBulkInsertMapItem> ResolveMappings(HanaConnection connection,
             string tableName,
             IDataReader reader,
             IEnumerable<SapHanaBulkInsertMapItem> mappings,
@@ -238,170 +281,63 @@ namespace RepoDb
             var columnMappings = mappings?.AsList()
                 ?? GetDefaultMappingsForDataReader(connection, tableName, reader, transaction, excludeField).AsList();
 
-            if (columnMappings.Count == 0)
+            if (columnMappings.Count == 0 || mappings == null)
             {
-                return (Array.Empty<int>(), Array.Empty<string>());
+                return columnMappings;
             }
 
-            var dbFields = mappings != null ? DbFieldCache.Get(connection, tableName, transaction) : null;
-            var sourceOrdinals = new int[columnMappings.Count];
-            var destinationColumns = new string[columnMappings.Count];
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
 
-            for (var i = 0; i < columnMappings.Count; i++)
+            foreach (var mapping in columnMappings)
             {
-                var sourceOrdinal = reader.GetOrdinal(columnMappings[i].SourceColumn);
-                if (dbFields != null)
+                var sourceOrdinal = reader.GetOrdinal(mapping.SourceColumn);
+                var destinationField = dbFields.GetByUnquotedName(mapping.DestinationColumn.AsUnquoted(true, dbSetting));
+                var sourceType = reader.GetFieldType(sourceOrdinal);
+                if (destinationField?.Type != null && sourceType != null && !AreMappingTypesCompatible(sourceType, destinationField.Type))
                 {
-                    var destinationField = dbFields.GetByUnquotedName(columnMappings[i].DestinationColumn.AsUnquoted(true, dbSetting));
-                    var sourceType = reader.GetFieldType(sourceOrdinal);
-                    if (destinationField?.Type != null && sourceType != null && !AreMappingTypesCompatible(sourceType, destinationField.Type))
-                    {
-                        throw new InvalidTypeException($"The type of the source column '{columnMappings[i].SourceColumn}' ({sourceType}) does not match the type of the destination column '{columnMappings[i].DestinationColumn}' ({destinationField.Type}).");
-                    }
+                    throw new InvalidTypeException($"The type of the source column '{mapping.SourceColumn}' ({sourceType}) does not match the type of the destination column '{mapping.DestinationColumn}' ({destinationField.Type}).");
                 }
-                sourceOrdinals[i] = sourceOrdinal;
-                destinationColumns[i] = columnMappings[i].DestinationColumn.AsQuoted(true, dbSetting);
             }
 
-            return (sourceOrdinals, destinationColumns);
+            return columnMappings;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="batchSize"></param>
-        /// <returns></returns>
-        private static int GetEffectiveBatchSize(int? batchSize)
-        {
-            return batchSize.GetValueOrDefault() > 0 ? batchSize.Value : DefaultBatchSize;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="quotedTableName"></param>
-        /// <param name="destinationColumns"></param>
-        /// <returns></returns>
-        private static string BuildRowInsertText(string quotedTableName,
-            string[] destinationColumns)
-        {
-            var builder = new StringBuilder();
-            builder.Append("INSERT INTO ").Append(quotedTableName)
-                .Append(" (").Append(string.Join(", ", destinationColumns)).Append(") VALUES (");
-
-            for (var c = 0; c < destinationColumns.Length; c++)
-            {
-                if (c > 0)
-                {
-                    builder.Append(", ");
-                }
-                builder.Append(':').Append('p').Append(c);
-            }
-            builder.Append(')');
-
-            return builder.ToString();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="quotedTableName"></param>
-        /// <param name="destinationColumns"></param>
-        /// <param name="buffer"></param>
-        /// <param name="transaction"></param>
-        /// <param name="commandTimeout"></param>
-        /// <returns></returns>
-        private static int FlushBatch(HanaConnection connection,
-            string quotedTableName,
-            string[] destinationColumns,
-            List<object[]> buffer,
-            HanaTransaction transaction,
-            int? commandTimeout)
-        {
-            if (buffer.Count == 0)
-            {
-                return 0;
-            }
-
-            var commandText = BuildRowInsertText(quotedTableName, destinationColumns);
-            using var command = (HanaCommand)connection.CreateCommand(commandText, CommandType.Text, commandTimeout, transaction);
-
-            var parameters = new HanaParameter[destinationColumns.Length];
-            for (var c = 0; c < destinationColumns.Length; c++)
-            {
-                parameters[c] = new HanaParameter("p" + c, DBNull.Value);
-                command.Parameters.Add(parameters[c]);
-            }
-
-            var affected = 0;
-            foreach (var row in buffer)
-            {
-                for (var c = 0; c < destinationColumns.Length; c++)
-                {
-                    parameters[c].Value = NormalizeParameterValue(row[c]);
-                }
-                affected += command.ExecuteNonQuery();
-            }
-
-            buffer.Clear();
-            return affected;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        private static object NormalizeParameterValue(object value) =>
-            value is HanaDecimal hanaDecimal ? hanaDecimal.ToDecimal() : value ?? DBNull.Value;
 
         /// <summary>
         ///
         /// </summary>
         /// <param name="connection"></param>
-        /// <param name="quotedTableName"></param>
-        /// <param name="destinationColumns"></param>
-        /// <param name="buffer"></param>
+        /// <param name="tableName"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
         /// <param name="transaction"></param>
-        /// <param name="commandTimeout"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static async Task<int> FlushBatchAsync(HanaConnection connection,
-            string quotedTableName,
-            string[] destinationColumns,
-            List<object[]> buffer,
+        private static HanaBulkCopy CreateHanaBulkCopy(HanaConnection connection,
+            string tableName,
+            List<SapHanaBulkInsertMapItem> mappings,
+            int? bulkCopyTimeout,
+            int? batchSize,
             HanaTransaction transaction,
-            int? commandTimeout,
-            CancellationToken cancellationToken)
+            IDbSetting dbSetting)
         {
-            if (buffer.Count == 0)
+            var bulkCopy = new HanaBulkCopy(connection, HanaBulkCopyOptions.Default, transaction)
             {
-                return 0;
-            }
-
-            var commandText = BuildRowInsertText(quotedTableName, destinationColumns);
-            await using var command = (HanaCommand)connection.CreateCommand(commandText, CommandType.Text, commandTimeout, transaction);
-
-            var parameters = new HanaParameter[destinationColumns.Length];
-            for (var c = 0; c < destinationColumns.Length; c++)
+                DestinationTableName = tableName.AsQuoted(true, dbSetting)
+            };
+            if (bulkCopyTimeout.HasValue)
             {
-                parameters[c] = new HanaParameter("p" + c, DBNull.Value);
-                command.Parameters.Add(parameters[c]);
+                bulkCopy.BulkCopyTimeout = bulkCopyTimeout.Value;
             }
-
-            var affected = 0;
-            foreach (var row in buffer)
+            if (batchSize.HasValue)
             {
-                for (var c = 0; c < destinationColumns.Length; c++)
-                {
-                    parameters[c].Value = NormalizeParameterValue(row[c]);
-                }
-                affected += await command.ExecuteNonQueryAsync(cancellationToken);
+                bulkCopy.BatchSize = batchSize.Value;
             }
-
-            buffer.Clear();
-            return affected;
+            foreach (var mapping in mappings)
+            {
+                bulkCopy.ColumnMappings.Add(mapping.SourceColumn, mapping.DestinationColumn);
+            }
+            return bulkCopy;
         }
 
         /// <summary>
@@ -411,98 +347,88 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="reader"></param>
         /// <param name="mappings"></param>
-        /// <param name="bulkCopyTimeout"></param>
-        /// <param name="batchSize"></param>
         /// <param name="transaction"></param>
-        /// <param name="excludeField"></param>
-        /// <returns></returns>
-        private static int WriteReaderToServer(HanaConnection connection,
-            string tableName,
-            IDataReader reader,
-            IEnumerable<SapHanaBulkInsertMapItem> mappings,
-            int? bulkCopyTimeout,
-            int? batchSize,
-            HanaTransaction transaction,
-            Field excludeField)
-        {
-            var dbSetting = connection.GetDbSetting();
-            var (sourceOrdinals, destinationColumns) = ResolveColumnPlan(connection, tableName, reader, mappings, transaction, excludeField, dbSetting);
-            if (destinationColumns.Length == 0)
-            {
-                return 0;
-            }
-
-            using var filteredReader = new ColumnFilteredDataReader(reader, sourceOrdinals);
-            var quotedTableName = tableName.AsQuoted(true, dbSetting);
-            var effectiveBatchSize = GetEffectiveBatchSize(batchSize);
-            var buffer = new List<object[]>(effectiveBatchSize);
-            var affected = 0;
-
-            while (filteredReader.Read())
-            {
-                var values = new object[destinationColumns.Length];
-                filteredReader.GetValues(values);
-                buffer.Add(values);
-                if (buffer.Count >= effectiveBatchSize)
-                {
-                    affected += FlushBatch(connection, quotedTableName, destinationColumns, buffer, transaction, bulkCopyTimeout);
-                }
-            }
-            affected += FlushBatch(connection, quotedTableName, destinationColumns, buffer, transaction, bulkCopyTimeout);
-
-            return affected;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="reader"></param>
-        /// <param name="mappings"></param>
-        /// <param name="bulkCopyTimeout"></param>
-        /// <param name="batchSize"></param>
-        /// <param name="transaction"></param>
-        /// <param name="excludeField"></param>
+        /// <param name="dbSetting"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> WriteReaderToServerAsync(HanaConnection connection,
+        private static DataTable BuildDataTableFromReader(HanaConnection connection,
             string tableName,
             IDataReader reader,
-            IEnumerable<SapHanaBulkInsertMapItem> mappings,
-            int? bulkCopyTimeout,
-            int? batchSize,
+            List<SapHanaBulkInsertMapItem> mappings,
             HanaTransaction transaction,
-            Field excludeField,
-            CancellationToken cancellationToken)
+            IDbSetting dbSetting,
+            CancellationToken cancellationToken = default)
         {
-            var dbSetting = connection.GetDbSetting();
-            var (sourceOrdinals, destinationColumns) = ResolveColumnPlan(connection, tableName, reader, mappings, transaction, excludeField, dbSetting);
-            if (destinationColumns.Length == 0)
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            var table = new DataTable();
+            var ordinals = new int[mappings.Count];
+            var columnTypes = new Type[mappings.Count];
+
+            for (var i = 0; i < mappings.Count; i++)
             {
-                return 0;
+                ordinals[i] = reader.GetOrdinal(mappings[i].SourceColumn);
+                var destinationField = dbFields.GetByUnquotedName(mappings[i].DestinationColumn.AsUnquoted(true, dbSetting));
+                var fieldType = destinationField?.Type ?? reader.GetFieldType(ordinals[i]) ?? typeof(object);
+                columnTypes[i] = Nullable.GetUnderlyingType(fieldType) ?? fieldType;
+                table.Columns.Add(mappings[i].SourceColumn, columnTypes[i]);
             }
 
-            using var filteredReader = new ColumnFilteredDataReader(reader, sourceOrdinals);
-            var quotedTableName = tableName.AsQuoted(true, dbSetting);
-            var effectiveBatchSize = GetEffectiveBatchSize(batchSize);
-            var buffer = new List<object[]>(effectiveBatchSize);
-            var affected = 0;
-
-            while (filteredReader.Read())
+            while (reader.Read())
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                var values = new object[destinationColumns.Length];
-                filteredReader.GetValues(values);
-                buffer.Add(values);
-                if (buffer.Count >= effectiveBatchSize)
+                var row = table.NewRow();
+                for (var i = 0; i < mappings.Count; i++)
                 {
-                    affected += await FlushBatchAsync(connection, quotedTableName, destinationColumns, buffer, transaction, bulkCopyTimeout, cancellationToken);
+                    row[i] = ConvertValueForColumn(reader.GetValue(ordinals[i]), columnTypes[i]);
+                }
+                table.Rows.Add(row);
+            }
+
+            return table;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="rows"></param>
+        /// <param name="mappings"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        private static DataTable BuildDataTableFromRows(HanaConnection connection,
+            string tableName,
+            DataRow[] rows,
+            List<SapHanaBulkInsertMapItem> mappings,
+            IDbSetting dbSetting)
+        {
+            var dbFields = DbFieldCache.Get(connection, tableName, null);
+            var table = new DataTable();
+            var columnTypes = new Type[mappings.Count];
+
+            for (var i = 0; i < mappings.Count; i++)
+            {
+                var destinationField = dbFields.GetByUnquotedName(mappings[i].DestinationColumn.AsUnquoted(true, dbSetting));
+                var sourceColumnType = rows?.Length > 0 ? rows[0].Table.Columns[mappings[i].SourceColumn]?.DataType : null;
+                var fieldType = destinationField?.Type ?? sourceColumnType ?? typeof(object);
+                columnTypes[i] = Nullable.GetUnderlyingType(fieldType) ?? fieldType;
+                table.Columns.Add(mappings[i].SourceColumn, columnTypes[i]);
+            }
+
+            if (rows != null)
+            {
+                foreach (var sourceRow in rows)
+                {
+                    var row = table.NewRow();
+                    for (var i = 0; i < mappings.Count; i++)
+                    {
+                        row[i] = ConvertValueForColumn(sourceRow[mappings[i].SourceColumn], columnTypes[i]);
+                    }
+                    table.Rows.Add(row);
                 }
             }
-            affected += await FlushBatchAsync(connection, quotedTableName, destinationColumns, buffer, transaction, bulkCopyTimeout, cancellationToken);
 
-            return affected;
+            return table;
         }
 
         #endregion
@@ -522,7 +448,7 @@ namespace RepoDb
                     SapHanaBulkImportPseudoTableType.Physical;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="dataTable"></param>
         /// <param name="rowState"></param>
@@ -547,7 +473,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sourceType"></param>
         /// <param name="destinationType"></param>
@@ -568,18 +494,55 @@ namespace RepoDb
                 return true;
             }
 
-            static bool IsIntegral(Type type)
-            {
-                var code = Type.GetTypeCode(type);
-                return code is TypeCode.SByte or TypeCode.Byte or TypeCode.Int16 or TypeCode.UInt16
-                    or TypeCode.Int32 or TypeCode.UInt32 or TypeCode.Int64 or TypeCode.UInt64;
-            }
-
             return IsIntegral(sourceType) && IsIntegral(destinationType);
         }
 
         /// <summary>
+        ///
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        private static bool IsIntegral(Type type)
+        {
+            var code = Type.GetTypeCode(type);
+            return code is TypeCode.SByte or TypeCode.Byte or TypeCode.Int16 or TypeCode.UInt16
+                or TypeCode.Int32 or TypeCode.UInt32 or TypeCode.Int64 or TypeCode.UInt64;
+        }
+
+        /// <summary>
         /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="columnType"></param>
+        /// <returns></returns>
+        private static object ConvertValueForColumn(object value,
+            Type columnType)
+        {
+            if (value == null || value is DBNull)
+            {
+                return DBNull.Value;
+            }
+            if (columnType.IsInstanceOfType(value))
+            {
+                return value;
+            }
+            if (value is Guid guidValue && columnType == typeof(string))
+            {
+                return guidValue.ToString();
+            }
+            if (value is string stringValue && columnType == typeof(Guid))
+            {
+                return Guid.Parse(stringValue);
+            }
+            if (IsIntegral(value.GetType()) && IsIntegral(columnType))
+            {
+                return Convert.ChangeType(value, columnType);
+            }
+            return value;
+        }
+
+        /// <summary>
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -608,7 +571,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="tableName"></param>
         /// <param name="dbFields"></param>
@@ -636,7 +599,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="commandText"></param>
