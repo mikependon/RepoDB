@@ -22,4 +22,4 @@ jobs:
       version: ${{ inputs.version }}
       dependency-overrides: ${{ inputs.dependency-overrides }}
       project-name: RepoDb.SapHana
-      project-path: src/Providers/RepoDb.SapHana/RepoDb.MySqlConnector/RepoDb.SapHana.csproj
+      project-path: src/Providers/RepoDb.SapHana/RepoDb.SapHana/RepoDb.SapHana.csproj
