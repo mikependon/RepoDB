@@ -6,16 +6,17 @@
 
 #endregion
 
-using EnterpriseDB.EDBClient;
 using RepoDb.DbHelpers;
 using RepoDb.DbSettings;
 using RepoDb.StatementBuilders;
 using System;
+using OfficialEDBConnection = EnterpriseDB.EDBClient.EDBConnection;
+using ConnectorEDBConnection = RepoDb.Connector.EnterpriseDb.EDBConnection;
 
 namespace RepoDb
 {
     /// <summary>
-    /// A class used to initialize necessary objects that is connected to <see cref="EDBConnection"/> object.
+    /// A class used to initialize necessary objects for EDB Postgres Advanced Server.
     /// </summary>
     public static class EnterpriseDbBootstrap
     {
@@ -31,7 +32,7 @@ namespace RepoDb
         #region Methods
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         internal static void InitializeInternal()
         {
@@ -42,13 +43,16 @@ namespace RepoDb
             }
 
             // Map the DbSetting
-            DbSettingMapper.Add<EDBConnection>(new EnterpriseDbDbSetting(), true);
+            DbSettingMapper.Add<OfficialEDBConnection>(new EnterpriseDbDbSetting(), true);
+            DbSettingMapper.Add<ConnectorEDBConnection>(new EnterpriseDbDbSetting(), true);
 
             // Map the DbHelper
-            DbHelperMapper.Add<EDBConnection>(new EnterpriseDbDbHelper(), true);
+            DbHelperMapper.Add<OfficialEDBConnection>(new EnterpriseDbDbHelper(), true);
+            DbHelperMapper.Add<ConnectorEDBConnection>(new EnterpriseDbDbHelper(), true);
 
             // Map the Statement Builder
-            StatementBuilderMapper.Add<EDBConnection>(new EnterpriseDbStatementBuilder(), true);
+            StatementBuilderMapper.Add<OfficialEDBConnection>(new EnterpriseDbStatementBuilder(), true);
+            StatementBuilderMapper.Add<ConnectorEDBConnection>(new EnterpriseDbStatementBuilder(), true);
 
             // Set the flag
             IsInitialized = true;

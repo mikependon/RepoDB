@@ -1,0 +1,53 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.7.11911.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.EnterpriseDb.BulkOperations", "RepoDb.EnterpriseDb.BulkOperations\RepoDb.EnterpriseDb.BulkOperations.csproj", "{0E6CC58C-61E0-4EB6-9D65-BA121FE84223}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "..\RepoDb.Core\RepoDb\RepoDb.csproj", "{67D36FDC-29D3-478F-9915-2BA51FCEAB4C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.EnterpriseDb", "..\RepoDb.EnterpriseDb\RepoDb.EnterpriseDb\RepoDb.EnterpriseDb.csproj", "{92AE8D5B-72FB-4736-97FD-DA2334F2A9EE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.Connector.EnterpriseDb", "..\..\..\..\RepoDB.Connectors\src\RepoDb.Connector.EnterpriseDb\RepoDb.Connector.EnterpriseDb\RepoDb.Connector.EnterpriseDb.csproj", "{B6FE0EB2-7E47-4D42-ADE8-10A3D5D3C225}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.EnterpriseDb.BulkOperations.Base", "RepoDb.EnterpriseDb.BulkOperations.Base", "{8699222C-B893-4D41-8EAE-945638CB86AE}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.EnterpriseDb.BulkOperations.IntegrationTests", "RepoDb.EnterpriseDb.BulkOperations.IntegrationTests\RepoDb.EnterpriseDb.BulkOperations.IntegrationTests.csproj", "{94676813-89D3-4D6E-B0A9-27F0F754DD5C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0E6CC58C-61E0-4EB6-9D65-BA121FE84223}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E6CC58C-61E0-4EB6-9D65-BA121FE84223}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E6CC58C-61E0-4EB6-9D65-BA121FE84223}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E6CC58C-61E0-4EB6-9D65-BA121FE84223}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67D36FDC-29D3-478F-9915-2BA51FCEAB4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67D36FDC-29D3-478F-9915-2BA51FCEAB4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67D36FDC-29D3-478F-9915-2BA51FCEAB4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67D36FDC-29D3-478F-9915-2BA51FCEAB4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92AE8D5B-72FB-4736-97FD-DA2334F2A9EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92AE8D5B-72FB-4736-97FD-DA2334F2A9EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92AE8D5B-72FB-4736-97FD-DA2334F2A9EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92AE8D5B-72FB-4736-97FD-DA2334F2A9EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6FE0EB2-7E47-4D42-ADE8-10A3D5D3C225}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6FE0EB2-7E47-4D42-ADE8-10A3D5D3C225}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6FE0EB2-7E47-4D42-ADE8-10A3D5D3C225}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6FE0EB2-7E47-4D42-ADE8-10A3D5D3C225}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94676813-89D3-4D6E-B0A9-27F0F754DD5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94676813-89D3-4D6E-B0A9-27F0F754DD5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94676813-89D3-4D6E-B0A9-27F0F754DD5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94676813-89D3-4D6E-B0A9-27F0F754DD5C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D083C7AD-CECC-485B-81ED-C9E878869217}
+	EndGlobalSection
+EndGlobal
