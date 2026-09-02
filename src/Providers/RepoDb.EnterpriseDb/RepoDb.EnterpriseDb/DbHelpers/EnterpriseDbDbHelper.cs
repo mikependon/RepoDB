@@ -8,6 +8,7 @@
 
 using EnterpriseDB.EDBClient;
 using EDBTypes;
+using RepoDb.DbSettings;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Resolvers;
@@ -23,11 +24,11 @@ using System.Threading.Tasks;
 namespace RepoDb.DbHelpers
 {
     /// <summary>
-    /// A helper class for database specially for the direct access. This class is only meant for EnterpriseDB (EDB Postgres Advanced Server).
+    /// A helper class for database specially for the direct access. This class is only meant for EnterpriseDB Postgres Advanced Server.
     /// </summary>
     public sealed class EnterpriseDbDbHelper : IDbHelper
     {
-        private IDbSetting m_dbSetting = DbSettingMapper.Get<EDBConnection>();
+        private readonly IDbSetting m_dbSetting = new EnterpriseDbDbSetting();
 
         /// <summary>
         /// Creates a new instance of <see cref="EnterpriseDbDbHelper"/> class.
@@ -130,16 +131,28 @@ namespace RepoDb.DbHelpers
 
         #region Methods
 
+        /// <summary>
+        /// Matches an "operation already in progress on this connection" exception from either the official
+        /// <c>EnterpriseDB.EDBClient</c> driver (<c>EDBOperationInProgressException</c>) or the Npgsql-backed
+        /// <c>RepoDb.Connector.EnterpriseDb</c> driver (Npgsql's own <c>NpgsqlOperationInProgressException</c>,
+        /// surfaced as-is since that connector wraps <c>NpgsqlConnection</c> directly rather than translating
+        /// its exceptions) - matched by type name so this helper needs no compile-time reference to either
+        /// driver's exception type beyond the one (<c>EDBOperationInProgressException</c>) it already
+        /// references for other purposes.
+        /// </summary>
+        private static bool IsOperationInProgressException(Exception ex) =>
+            ex.GetType().Name is nameof(EDBOperationInProgressException) or "NpgsqlOperationInProgressException";
+
         private TResult TryExecuteOnExistingConnection<TResult>(IDbConnection connection, Func<IDbConnection, TResult> func)
         {
             try
             {
                 return func(connection);
             }
-            catch (EDBOperationInProgressException)
+            catch (Exception ex) when (IsOperationInProgressException(ex))
             {
-                Debug.WriteLine("EDBOperationInProgressException occurred. Retrying the operation on a new connection.");
-                using var newConnection = new EDBConnection(connection.ConnectionString);
+                Debug.WriteLine($"{ex.GetType().Name} occurred. Retrying the operation on a new connection.");
+                using var newConnection = (IDbConnection)Activator.CreateInstance(connection.GetType(), connection.ConnectionString);
                 newConnection.Open();
                 return func(newConnection);
             }
@@ -151,10 +164,10 @@ namespace RepoDb.DbHelpers
             {
                 return await func(connection);
             }
-            catch (EDBOperationInProgressException)
+            catch (Exception ex) when (IsOperationInProgressException(ex))
             {
-                Debug.WriteLine("EDBOperationInProgressException occurred. Retrying the operation on a new connection.");
-                using var newConnection = new EDBConnection(connection.ConnectionString);
+                Debug.WriteLine($"{ex.GetType().Name} occurred. Retrying the operation on a new connection.");
+                await using var newConnection = (DbConnection)Activator.CreateInstance(connection.GetType(), connection.ConnectionString);
                 await newConnection.OpenAsync();
                 return await func(newConnection);
             }

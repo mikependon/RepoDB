@@ -33,6 +33,12 @@
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <!-- RepoDb.Connector.EnterpriseDb is not yet published to NuGet, so this is a local ProjectReference
+         into the sibling RepoDB.Connectors repository (expected checked out alongside this one) rather than
+         a PackageReference. Switch to a PackageReference once that package ships. -->
+    <ProjectReference Include="..\..\..\..\..\RepoDB.Connectors\src\RepoDb.Connector.EnterpriseDb\RepoDb.Connector.EnterpriseDb\RepoDb.Connector.EnterpriseDb.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="..\..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />
     <None Include="..\README.md" Pack="True" PackagePath="\" />
     <None Include="..\..\..\..\icon.png" Pack="True" PackagePath="\" />

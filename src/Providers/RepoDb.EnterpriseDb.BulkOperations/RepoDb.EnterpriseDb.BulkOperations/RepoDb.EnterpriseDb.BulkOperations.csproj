@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Title>RepoDb.EnterpriseDb.BulkOperations</Title>
+    <AssemblyName>RepoDb.EnterpriseDb.BulkOperations</AssemblyName>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <LangVersion>preview</LangVersion>
+    <Nullable>annotations</Nullable>
+    <Description>An extension library that contains the official Bulk Operations of RepoDB for EnterpriseDB (using RepoDb.Connector.EnterpriseDb).</Description>
+    <PackageTags>orm hybrid-orm micro-orm postgresql enterprisedb edb bulkoperations</PackageTags>
+    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.EnterpriseDb.BulkOperations</RepositoryUrl>
+    <PackageReleaseNotes>http://repodb.net/release/enterprisedbbulk</PackageReleaseNotes>
+    <PackageProjectUrl>https://repodb.net/tutorial/get-started-enterprisedb</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <!--
+      Pins the version this project is stamped as when it is a ProjectReference dependency of another
+      package, independently of the consuming package's own -p:Version. Pass
+      -p:RepoDbEnterpriseDbBulkOperationsVersion=<version> to set it explicitly. PackageVersion is used (not
+      Version) because it is not overridden by the global Version property.
+    -->
+    <PackageVersion Condition="'$(RepoDbEnterpriseDbBulkOperationsVersion)' != ''">$(RepoDbEnterpriseDbBulkOperationsVersion)</PackageVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />
+    <None Include="..\README.md" Pack="True" PackagePath="\" />
+    <None Include="..\..\..\..\icon.png" Pack="True" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <!--
+      RepoDb.Connector.EnterpriseDb is not yet published to NuGet, so this is a local ProjectReference
+      into the sibling RepoDB.Connectors repository (expected checked out alongside this one) rather than
+      a PackageReference. Switch to a PackageReference once that package ships.
+    -->
+    <ProjectReference Include="..\..\..\..\..\RepoDB.Connectors\src\RepoDb.Connector.EnterpriseDb\RepoDb.Connector.EnterpriseDb\RepoDb.Connector.EnterpriseDb.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
+    <ProjectReference Include="..\..\RepoDb.EnterpriseDb\RepoDb.EnterpriseDb\RepoDb.EnterpriseDb.csproj" />
+  </ItemGroup>
+</Project>
