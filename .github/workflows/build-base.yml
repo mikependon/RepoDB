@@ -681,7 +681,7 @@ jobs:
             --sysctl net.ipv4.ip_local_port_range="40000 60999" \
             --sysctl kernel.shmmni=524288 \
             --sysctl kernel.shmall=8388608 \
-            saplabs/hanaexpress:2.00.061.00.20220519.1 \
+            saplabs/hanaexpress:2.00.088.00.20251110.1 \
             --agree-to-sap-license --master-password RepoDB2026
 
       - name: Wait for SAP HANA service to be ready
