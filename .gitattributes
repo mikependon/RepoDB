@@ -4,6 +4,12 @@
 * text=auto
 
 ###############################################################################
+# Shell scripts must keep LF endings - a CRLF shebang line (#!/bin/sh\r) fails
+# to exec inside Linux containers ("no such file or directory").
+###############################################################################
+*.sh text eol=lf
+
+###############################################################################
 # Set default behavior for command prompt diff.
 #
 # This is need for earlier builds of msysgit that does not have it on by

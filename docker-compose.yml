@@ -29,18 +29,15 @@ services:
 
   enterprisedb:
     container_name: enterprisedb
-    # Official EDB Postgres Advanced Server image. Requires an EDB subscription;
-    # authenticate first with:
-    #   docker login docker.enterprisedb.com --username k8s --password <EDB_SUBSCRIPTION_TOKEN>
-    image: docker.enterprisedb.com/k8s/edb-postgres-advanced:18
+    build:
+      context: ./src/Docker/EnterpriseDB
     ports:
-      - 127.0.0.1:5444:5444
+      - 127.0.0.1:5433:5444
     networks:
       - repodb
     environment:
-      ACCEPT_EULA: Y
-      ENTERPRISEDB_PASSWORD: RepoDB2026
-      DATABASE_NAME: repodb
+      EDB_SUPERUSER: enterprisedb
+      EDB_SUPERUSER_PASSWORD: RepoDB2026
 
   firebird:
     container_name: firebird
