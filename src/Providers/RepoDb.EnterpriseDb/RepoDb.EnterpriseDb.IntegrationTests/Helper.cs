@@ -56,6 +56,52 @@ namespace RepoDb.EnterpriseDb.IntegrationTests
             new(value);
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private static object NormalizeDateLikeValue(object value) =>
+            value switch
+            {
+                DateOnly d => d.ToDateTime(TimeOnly.MinValue),
+                TimeOnly t => t.ToTimeSpan(),
+                _ => value
+            };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value1"></param>
+        /// <param name="value2"></param>
+        /// <param name="propertyName"></param>
+        /// <param name="containerValue1"></param>
+        /// <param name="containerValue2"></param>
+        /// <param name="propertyType1"></param>
+        /// <param name="propertyType2"></param>
+        private static void AssertValueEquality(object value1, object value2, string propertyName,
+            object containerValue1, object containerValue2, Type propertyType1, Type propertyType2)
+        {
+            value1 = NormalizeDateLikeValue(value1);
+            value2 = NormalizeDateLikeValue(value2);
+            var message = $"Assert failed for '{propertyName}'. The values are '{containerValue1} ({propertyType1.FullName})' and '{containerValue2} ({propertyType2.FullName})'.";
+            if (value1 is DateTime || value2 is DateTime)
+            {
+                var dtValue1 = value1 is DateTime ? (DateTime)value1 : ((DateTimeOffset)value1).DateTime;
+                var dtValue2 = value2 is DateTime ? (DateTime)value2 : ((DateTimeOffset)value2).DateTime;
+                if (dtValue1.Kind != dtValue2.Kind && ToUtcKind(dtValue1) != ToUtcKind(dtValue2))
+                {
+                    dtValue1 = dtValue1.ToUniversalTime();
+                    dtValue2 = dtValue2.ToUniversalTime();
+                }
+                Assert.AreEqual(dtValue1, dtValue2, message);
+            }
+            else
+            {
+                Assert.AreEqual(value1, value2, message);
+            }
+        }
+
+        /// <summary>
         /// Asserts the properties equality of 2 types.
         /// </summary>
         /// <typeparam name="T1">The type of first object.</typeparam>
@@ -83,28 +129,14 @@ namespace RepoDb.EnterpriseDb.IntegrationTests
                 {
                     for (var i = 0; i < Math.Min(array1.Length, array2.Length); i++)
                     {
-                        var v1 = array1.GetValue(i);
-                        var v2 = array2.GetValue(i);
-                        Assert.AreEqual(v1, v2,
-                            $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1} ({propertyOfType1.PropertyType.FullName})' and '{value2} ({propertyOfType2.PropertyType.FullName})'.");
+                        AssertValueEquality(array1.GetValue(i), array2.GetValue(i), propertyOfType1.Name,
+                            value1, value2, propertyOfType1.PropertyType, propertyOfType2.PropertyType);
                     }
-                }
-                else if (value1 is DateTime dt1 || value2 is DateTime dt2)
-                {
-                    var dtValue1 = value1 is DateTime ? (DateTime)value1 : ((DateTimeOffset)value1).DateTime;
-                    var dtValue2 = value2 is DateTime ? (DateTime)value2 : ((DateTimeOffset)value2).DateTime;
-                    if (dtValue1.Kind != dtValue2.Kind && ToUtcKind(dtValue1) != ToUtcKind(dtValue2))
-                    {
-                        dtValue1 = dtValue1.ToUniversalTime();
-                        dtValue2 = dtValue2.ToUniversalTime();
-                    }
-                    Assert.AreEqual(dtValue1, dtValue2,
-                        $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1} ({propertyOfType1.PropertyType.FullName})' and '{value2} ({propertyOfType2.PropertyType.FullName})'.");
                 }
                 else
                 {
-                    Assert.AreEqual(value1, value2,
-                        $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1} ({propertyOfType1.PropertyType.FullName})' and '{value2} ({propertyOfType2.PropertyType.FullName})'.");
+                    AssertValueEquality(value1, value2, propertyOfType1.Name,
+                        value1, value2, propertyOfType1.PropertyType, propertyOfType2.PropertyType);
                 }
             });
         }
@@ -154,14 +186,14 @@ namespace RepoDb.EnterpriseDb.IntegrationTests
                 }
                 if (dictionary.ContainsKey(property.Name))
                 {
-                    var value1 = property.GetValue(obj);
-                    var value2 = dictionary[property.Name];
+                    var value1 = NormalizeDateLikeValue(property.GetValue(obj));
+                    var value2 = NormalizeDateLikeValue(dictionary[property.Name]);
                     if (value1 is Array array1 && value2 is Array array2)
                     {
                         for (var i = 0; i < Math.Min(array1.Length, array2.Length); i++)
                         {
-                            var v1 = array1.GetValue(i);
-                            var v2 = array2.GetValue(i);
+                            var v1 = NormalizeDateLikeValue(array1.GetValue(i));
+                            var v2 = NormalizeDateLikeValue(array2.GetValue(i));
                             Assert.AreEqual(v1, v2,
                                 $"Assert failed for '{property.Name}'. The values are '{v1}' and '{v2}'.");
                         }

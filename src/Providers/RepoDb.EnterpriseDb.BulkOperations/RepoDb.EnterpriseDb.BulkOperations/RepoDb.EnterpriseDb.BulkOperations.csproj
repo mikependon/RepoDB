@@ -27,12 +27,7 @@
     <None Include="..\..\..\..\icon.png" Pack="True" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
-    <!--
-      RepoDb.Connector.EnterpriseDb is not yet published to NuGet, so this is a local ProjectReference
-      into the sibling RepoDB.Connectors repository (expected checked out alongside this one) rather than
-      a PackageReference. Switch to a PackageReference once that package ships.
-    -->
-    <ProjectReference Include="..\..\..\..\..\RepoDB.Connectors\src\RepoDb.Connector.EnterpriseDb\RepoDb.Connector.EnterpriseDb\RepoDb.Connector.EnterpriseDb.csproj" />
+    <PackageReference Include="RepoDb.Connector.EnterpriseDb" Version="0.0.1-alpha2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />

@@ -43,11 +43,11 @@ namespace RepoDb.IntegrationTests.Setup
         {
             ConnectionStringForSystem =
                 Environment.GetEnvironmentVariable("REPODB_EDB_CONSTR_SYSTEM") ??
-                "Server=127.0.0.1;Port=5444;Database=edb;User Id=enterprisedb;Password=RepoDB2026;";
+                "Server=127.0.0.1;Port=5433;Database=edb;User Id=enterprisedb;Password=RepoDB2026;";
 
             ConnectionString =
                 Environment.GetEnvironmentVariable("REPODB_EDB_CONSTR") ??
-                "Server=127.0.0.1;Port=5444;Database=RepoDb;User Id=enterprisedb;Password=RepoDB2026;";
+                "Server=127.0.0.1;Port=5433;Database=RepoDb;User Id=enterprisedb;Password=RepoDB2026;";
 
             // Initialize EnterpriseDb
             GlobalConfiguration

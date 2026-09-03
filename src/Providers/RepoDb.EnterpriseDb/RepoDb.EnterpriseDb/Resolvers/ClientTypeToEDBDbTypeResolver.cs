@@ -80,10 +80,6 @@ namespace RepoDb.Resolvers
             {
                 return EDBDbType.TsVector;
             }
-            else if (type == typeof(Array))
-            {
-                return EDBDbType.Unknown;
-            }
             else if (type == typeof(Boolean))
             {
                 return EDBDbType.Boolean;
@@ -169,6 +165,14 @@ namespace RepoDb.Resolvers
             else if (type == typeof(ValueTuple<System.Net.IPAddress, Int32>))
             {
                 return EDBDbType.Cidr;
+            }
+            else if (type.IsArray && type.GetElementType() is Type elementType)
+            {
+                var elementDbType = Resolve(elementType);
+                if (elementDbType != null)
+                {
+                    return EDBDbType.Array | elementDbType.Value;
+                }
             }
 
             throw new InvalidOperationException($"The type '{type.FullName}' could not be resolved to '{typeof(EDBDbType).FullName}'.");

@@ -327,11 +327,30 @@ namespace RepoDb.DbHelpers
         #region Handlers
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         /// <param name="parameter"></param>
         private void HandleDbParameterPostCreation(EDBParameter parameter)
         {
+            if (parameter?.Value is not Array sourceArray)
+            {
+                return;
+            }
+            var resolvedDbType = new ClientTypeToEDBDbTypeResolver().Resolve(sourceArray.GetType());
+            if (resolvedDbType == null)
+            {
+                return;
+            }
+            parameter.EDBDbType = resolvedDbType.Value;
+            var elementType = sourceArray.GetType().GetElementType();
+            if (elementType == typeof(DateOnly))
+            {
+                parameter.Value = Array.ConvertAll((DateOnly[])sourceArray, d => d.ToDateTime(TimeOnly.MinValue));
+            }
+            else if (elementType == typeof(TimeOnly))
+            {
+                parameter.Value = Array.ConvertAll((TimeOnly[])sourceArray, t => t.ToTimeSpan());
+            }
         }
 
 #endregion

@@ -52,7 +52,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests
             public long ColumnBigInt { get; set; }
 
             [EnterpriseDbType(EDBDbType.Date)]
-            public DateOnly ColumnDate { get; set; }
+            public DateTime ColumnDate { get; set; }
 
             [EnterpriseDbType(EDBDbType.Text)]
             public string ColumnText { get; set; }
@@ -72,7 +72,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests
                     Id = i,
                     ColumnBigInt = Convert.ToInt64(random.Next(int.MaxValue)),
                     ColumnByteA = Encoding.UTF8.GetBytes(Guid.NewGuid().ToString()),
-                    ColumnDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-random.Next(100))),
+                    ColumnDate = DateTime.UtcNow.AddDays(-random.Next(100)).Date,
                     ColumnText = $"ColumnNVarChar-{i}-{Guid.NewGuid()}"
                 };
             }

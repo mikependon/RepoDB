@@ -53,7 +53,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.Operations
                         // Act
                         var id = reader.GetInt64(0);
                         var columnInt = reader.GetInt32(1);
-                        var columnDate = (DateOnly)reader.GetValue(2);
+                        var columnDate = DateOnly.FromDateTime((DateTime)reader.GetValue(2));
                         var table = tables.FirstOrDefault(e => e.Id == id);
 
                         // Assert
@@ -83,7 +83,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.Operations
                             // Act
                             var id = reader.GetInt64(0);
                             var columnInt = reader.GetInt32(1);
-                            var columnDate = (DateOnly)reader.GetValue(2);
+                            var columnDate = DateOnly.FromDateTime((DateTime)reader.GetValue(2));
                             var table = tables.FirstOrDefault(e => e.Id == id);
 
                             // Assert
@@ -156,7 +156,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.Operations
                         // Act
                         var id = reader.GetInt64(0);
                         var columnInt = reader.GetInt32(1);
-                        var columnDate = (DateOnly)reader.GetValue(2);
+                        var columnDate = DateOnly.FromDateTime((DateTime)reader.GetValue(2));
                         var table = tables.FirstOrDefault(e => e.Id == id);
 
                         // Assert
@@ -186,7 +186,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.Operations
                             // Act
                             var id = reader.GetInt64(0);
                             var columnInt = reader.GetInt32(1);
-                            var columnDate = (DateOnly)reader.GetValue(2);
+                            var columnDate = DateOnly.FromDateTime((DateTime)reader.GetValue(2));
                             var table = tables.FirstOrDefault(e => e.Id == id);
 
                             // Assert

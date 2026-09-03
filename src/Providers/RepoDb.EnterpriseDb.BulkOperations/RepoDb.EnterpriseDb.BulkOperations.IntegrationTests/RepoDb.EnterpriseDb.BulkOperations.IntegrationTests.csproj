@@ -16,8 +16,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <!-- See the remark in RepoDb.EnterpriseDb.BulkOperations.csproj - not yet published to NuGet. -->
-    <ProjectReference Include="..\..\..\..\..\RepoDB.Connectors\src\RepoDb.Connector.EnterpriseDb\RepoDb.Connector.EnterpriseDb\RepoDb.Connector.EnterpriseDb.csproj" />
+    <PackageReference Include="RepoDb.Connector.EnterpriseDb" Version="0.0.1-alpha2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
