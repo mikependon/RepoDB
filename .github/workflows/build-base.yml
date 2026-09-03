@@ -35,7 +35,7 @@ env:
   # MariaDB
   REPODB_MARIADB_CONSTR_SYSTEM: "Server=127.0.0.1;Port=3307;Database=sys;User ID=root;Password=RepoDB2026;"
   REPODB_MARIADB_CONSTR: "Server=127.0.0.1;Port=3307;Database=RepoDb;User ID=root;Password=RepoDB2026;AllowLoadLocalInfile=True;AllowUserVariables=True;"
-  # SQLite — set to in-memory so no file-system setup is required on the runner
+  # SQLite
   REPODB_SQLITE_IS_IN_MEMORY: "true"
   # Oracle
   REPODB_ORACLE_CONSTR: "User Id=system;Password=RepoDB2026;Data Source=127.0.0.1:1521/FREEPDB1;"
@@ -43,8 +43,7 @@ env:
   REPODB_DB2_CONSTR: "Server=127.0.0.1:50000;Database=REPODB;UID=db2inst1;PWD=RepoDB2026;"
   # ClickHouse
   REPODB_CLICKHOUSE_CONSTR: "Host=127.0.0.1;Port=8123;Protocol=http;Database=RepoDb;Username=default;Password=RepoDB2026;UseCustomDecimals=false;"
-  # Firebird — Pooling=false so RECREATE TABLE never collides with a leftover implicit
-  # transaction carried over on a pooled connection from an earlier test (see Database.cs).
+  # Firebird 
   REPODB_FIREBIRD_CONSTR: "DataSource=127.0.0.1;Port=3050;Database=/firebird/data/repodb.fdb;User=SYSDBA;Password=RepoDB2026;Charset=UTF8;Pooling=false;"
   # Vertica
   REPODB_VERTICA_CONSTR: "Host=127.0.0.1;Port=5433;Database=RepoDb;User=dbadmin;Password=RepoDB2026;"
@@ -663,12 +662,12 @@ jobs:
       - name: Dotnet Build
         run: dotnet build -c release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
 
-      # SAP HANA Express requires --agree-to-sap-license/--master-password as container command
-      # args, which the `services:` block used by every other engine above cannot express (it only
-      # supports image/env/ports/volumes/options, not a command override) - so it's started by hand
-      # instead. Mirrors the equivalent local service in docker-compose.yml.
       - name: Start SAP HANA service
         run: |
+          host_shmmni=$(cat /proc/sys/kernel/shmmni)
+          saphana_shmmni=$(( host_shmmni < 524288 ? host_shmmni : 524288 ))
+          echo "Host kernel.shmmni=$host_shmmni -> requesting kernel.shmmni=$saphana_shmmni for the saphana container"
+
           docker run -d --name saphana --privileged \
             -p 127.0.0.1:39013:39013 \
             -p 127.0.0.1:39015:39015 \
@@ -679,7 +678,7 @@ jobs:
             --ulimit nofile=1048576:1048576 \
             --sysctl kernel.shmmax=1073741824 \
             --sysctl net.ipv4.ip_local_port_range="40000 60999" \
-            --sysctl kernel.shmmni=524288 \
+            --sysctl kernel.shmmni="$saphana_shmmni" \
             --sysctl kernel.shmall=8388608 \
             saplabs/hanaexpress:2.00.088.00.20251110.1 \
             --agree-to-sap-license --master-password RepoDB2026
@@ -723,7 +722,6 @@ jobs:
         if: always()
         run: docker rm -f saphana || true
 
-  # Vertica only (e.g. RepoDb.Vertica, RepoDb.Vertica.BulkOperations)
   build-vertica:
     if: inputs.db-engine == 'vertica'
     runs-on: ubuntu-latest
@@ -734,10 +732,6 @@ jobs:
         ports:
           - 127.0.0.1:5433:5433
         env:
-          # This image only sets a password on VERTICA_DB_NAME's superuser (dbadmin) when
-          # APP_DB_USER is ALSO given - the alter-password step it runs is unconditional, so
-          # pointing APP_DB_USER at the existing "dbadmin" account (rather than a new app-only
-          # one) just sets its password. Mirrors the same setup in docker-compose.yml.
           VERTICA_DB_NAME: RepoDb
           APP_DB_USER: dbadmin
           APP_DB_PASSWORD: RepoDB2026
