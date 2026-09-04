@@ -15,6 +15,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Sap.Data.Hana;
 using RepoDb;
+using RepoDb.DbSettings;
 using RepoDb.Enumerations.SapHana;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
@@ -167,16 +168,17 @@ namespace RepoDb
             where TEntity : class
         {
             await connection.EnsureOpenAsync(cancellationToken);
-            using var reader = new DataEntityDataReader<TEntity>(entities);
             var dbSetting = connection.GetDbSetting();
+            if (dbSetting is SapHanaBulkDbSetting bulkDbSetting && bulkDbSetting.WriteToServerExecution == SapHanaWriteToServerExecution.AsyncOverSync)
+            {
+                return WriteToServerInternal(connection, tableName, entities, mappings, bulkCopyTimeout, batchSize, transaction, excludeField);
+            }
+            using var reader = new DataEntityDataReader<TEntity>(entities);
             var resolvedMappings = ResolveMappings(connection, tableName, reader, mappings, transaction, excludeField, dbSetting);
             if (resolvedMappings.Count == 0)
             {
                 return 0;
             }
-            // HanaBulkCopy has no native async API - SapHanaCommandBatcher gives genuine async execution
-            // (HanaCommand.ExecuteNonQueryAsync per row) instead of a synchronous HanaBulkCopy call
-            // offloaded onto a thread-pool thread via Task.Run.
             using var batcher = CreateSapHanaCommandBatcher(connection, tableName, resolvedMappings, bulkCopyTimeout, batchSize, transaction, dbSetting);
             await batcher.WriteToServerAsync(reader, cancellationToken);
             return entities != null ? entities.Count() : 0;
@@ -206,8 +208,12 @@ namespace RepoDb
             Field excludeField = null)
         {
             await connection.EnsureOpenAsync(cancellationToken);
-            var rows = GetDataRows(table, rowState)?.ToArray();
             var dbSetting = connection.GetDbSetting();
+            if (dbSetting is SapHanaBulkDbSetting bulkDbSetting && bulkDbSetting.WriteToServerExecution == SapHanaWriteToServerExecution.AsyncOverSync)
+            {
+                return WriteToServerInternal(connection, tableName, table, rowState, mappings, bulkCopyTimeout, batchSize, excludeField);
+            }
+            var rows = GetDataRows(table, rowState)?.ToArray();
             using var tableReader = new DataTableReader(table);
             var resolvedMappings = ResolveMappings(connection, tableName, tableReader, mappings, null, excludeField, dbSetting);
             if (resolvedMappings.Count == 0)
@@ -244,6 +250,10 @@ namespace RepoDb
         {
             await connection.EnsureOpenAsync(cancellationToken);
             var dbSetting = connection.GetDbSetting();
+            if (dbSetting is SapHanaBulkDbSetting bulkDbSetting && bulkDbSetting.WriteToServerExecution == SapHanaWriteToServerExecution.AsyncOverSync)
+            {
+                return WriteToServerInternal(connection, tableName, reader, mappings, bulkCopyTimeout, batchSize, transaction, excludeField);
+            }
             var resolvedMappings = ResolveMappings(connection, tableName, reader, mappings, transaction, excludeField, dbSetting);
             if (resolvedMappings.Count == 0)
             {

@@ -13,7 +13,7 @@ namespace RepoDb.DbSettings
     /// <summary>
     /// A setting class used for <see cref="HanaConnection"/> data provider.
     /// </summary>
-    public sealed class SapHanaDbSetting : BaseDbSetting
+    public class SapHanaDbSetting : BaseDbSetting
     {
         /// <summary>
         /// Creates a new instance of <see cref="SapHanaDbSetting"/> class.

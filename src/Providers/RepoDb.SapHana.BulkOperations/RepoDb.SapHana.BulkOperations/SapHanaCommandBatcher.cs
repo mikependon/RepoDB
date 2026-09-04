@@ -255,11 +255,11 @@ namespace RepoDb.SapHana.BulkOperations
             var commandText = BuildInsertStatement(mappings);
             var effectiveBatchSize = BatchSize > 0 ? BatchSize : int.MaxValue;
             var affectedRows = 0;
-
             var command = CreateCommand(commandText);
             var parameters = AddParameters(command, mappings);
-            command.Prepare();
             var pendingRows = 0;
+            
+            command.Prepare();
 
             try
             {
@@ -358,11 +358,11 @@ namespace RepoDb.SapHana.BulkOperations
             var effectiveBatchSize = BatchSize > 0 ? BatchSize : int.MaxValue;
             var affectedRows = 0;
             var dbReader = reader as DbDataReader;
-
             var command = CreateCommand(commandText);
             var parameters = AddParameters(command, mappings);
-            await command.PrepareAsync(cancellationToken);
             var pendingRows = 0;
+            
+            await command.PrepareAsync(cancellationToken);
 
             try
             {
