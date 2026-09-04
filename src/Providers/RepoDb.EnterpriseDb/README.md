@@ -4,7 +4,7 @@
 
 # [RepoDb.EnterpriseDb](https://repodb.net/tutorial/get-started-enterprisedb) — RepoDB for EnterpriseDB
 
-The EnterpriseDB provider for RepoDB — a fast, lightweight .NET ORM that lets you use raw SQL and fluent operations side by side on the same connection. Targets [EDB Postgres Advanced Server](https://www.enterprisedb.com/products/edb-postgres-advanced-server) and is built on top of [RepoDb](https://repodb.net) and the [EDB .NET Connector](https://www.nuget.org/packages/EnterpriseDB.EDBClient).
+The EnterpriseDB provider for RepoDB — a fast, lightweight .NET ORM that lets you use raw SQL and fluent operations side by side on the same connection. Targets [EDB Postgres Advanced Server](https://www.enterprisedb.com/products/edb-postgres-advanced-server) and is built on top of [RepoDb](https://repodb.net) and [RepoDb.Connector.EnterpriseDb](https://www.nuget.org/packages/RepoDb.Connector.EnterpriseDb).
 
 ## Important Pages
 
@@ -20,7 +20,7 @@ The EnterpriseDB provider for RepoDB — a fast, lightweight .NET ORM that lets 
 
 ## Dependencies
 
-- [EnterpriseDB.EDBClient](https://www.nuget.org/packages/EnterpriseDB.EDBClient/) — the EDB .NET Connector for EDB Postgres Advanced Server.
+- [RepoDb.Connector.EnterpriseDb](https://www.nuget.org/packages/RepoDb.Connector.EnterpriseDb/) — the Npgsql-backed EDB connector used by RepoDB.
 - [RepoDb](https://www.nuget.org/packages/RepoDb/) — the RepoDB core library.
 
 ## License

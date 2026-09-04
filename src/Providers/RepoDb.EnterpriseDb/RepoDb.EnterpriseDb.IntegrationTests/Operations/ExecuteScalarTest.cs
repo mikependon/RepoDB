@@ -7,7 +7,7 @@
 #endregion
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using EnterpriseDB.EDBClient;
+using RepoDb.Connector.EnterpriseDb;
 using RepoDb.EnterpriseDb.IntegrationTests.Setup;
 using System;
 using System.Linq;

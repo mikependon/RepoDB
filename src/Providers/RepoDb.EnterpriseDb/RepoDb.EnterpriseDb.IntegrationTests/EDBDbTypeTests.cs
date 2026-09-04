@@ -7,8 +7,7 @@
 #endregion
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using EnterpriseDB.EDBClient;
-using EDBTypes;
+using RepoDb.Connector.EnterpriseDb;
 using RepoDb.Attributes;
 using RepoDb.Attributes.Parameter.EnterpriseDb;
 using RepoDb.Enumerations;
@@ -45,7 +44,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests
         private class CompleteTableForJson
         {
             public System.Int64 Id { get; set; }
-            [EnterpriseDbType(EDBDbType.Json)]
+            [EnterpriseDbType(EDBType.Json)]
             public System.String ColumnJson { get; set; }
         }
 
@@ -53,9 +52,9 @@ namespace RepoDb.EnterpriseDb.IntegrationTests
         private class CompleteTableForDateTime
         {
             public System.Int64 Id { get; set; }
-            [EnterpriseDbType(EDBDbType.TimestampTz)]
+            [EnterpriseDbType(EDBType.TimestampTz)]
             public System.DateTimeOffset ColumnTimestampWithTimeZone { get; set; }
-            [EnterpriseDbType(EDBDbType.Timestamp)]
+            [EnterpriseDbType(EDBType.Timestamp)]
             public System.DateTime ColumnTimestampWithoutTimeZone { get; set; }
         }
 

@@ -6,7 +6,6 @@
 
 #endregion
 
-using EnterpriseDB.EDBClient;
 using RepoDb.Interfaces;
 using System;
 
@@ -173,10 +172,8 @@ namespace RepoDb.Resolvers
                 "character" or "character varying" or "json" or "jsonb" or "jsonpath" or "name" or "pg_dependencies" or "pg_lsn" or "pg_mcv_list" or "pg_ndistinct" or "pg_node_tree" or "refcursor" or "regclass" or "regdictionary" or "regnamespace" or "regoper" or "regoperator" or "regproc" or "regprocedure" or "regrole" or "text" or "txid_snapshot" or "xml" => typeof(String),
                 "bit" or "boolean" => typeof(Boolean),
                 "bit varying" => typeof(System.Collections.BitArray),
-                "box" => typeof(EDBTypes.EDBBox),
                 "bytea" => typeof(Byte[]),
                 "cid" or "oid" or "regconfig" or "regtype" or "xid" => typeof(UInt32),
-                "circle" => typeof(EDBTypes.EDBCircle),
                 "date"
 #if NET6_0_OR_GREATER
                     => typeof(DateOnly),
@@ -195,20 +192,16 @@ namespace RepoDb.Resolvers
                     or 
 #endif
                 "interval" => typeof(TimeSpan),
-                "line" => typeof(EDBTypes.EDBLine),
-                "lseg" => typeof(EDBTypes.EDBLSeg),
                 "macaddr" or "macaddr8" => typeof(System.Net.NetworkInformation.PhysicalAddress),
                 "money" or "numeric" => typeof(Decimal),
-                "path" => typeof(EDBTypes.EDBPath),
-                "point" => typeof(EDBTypes.EDBPoint),
-                "polygon" => typeof(EDBTypes.EDBPolygon),
                 "real" => typeof(Single),
                 "smallint" => typeof(Int16),
-                "tid" => typeof(EDBTypes.EDBTid),
                 "timetz" or "time with time zone" => typeof(DateTimeOffset),
-                "tsquery" => typeof(EDBTypes.EDBTsQuery),
-                "tsvector" => typeof(EDBTypes.EDBTsVector),
                 "uuid" => typeof(Guid),
+                // No CLR representation exists on the Npgsql-backed RepoDb.Connector.EnterpriseDb driver for
+                // geometric types (box, circle, line, lseg, path, point, polygon), pg_lsn, tid, or text-search
+                // types (tsquery, tsvector), unlike the official EnterpriseDB.EDBClient driver - fall through
+                // to object.
                 _ => typeof(object),
             };
         }

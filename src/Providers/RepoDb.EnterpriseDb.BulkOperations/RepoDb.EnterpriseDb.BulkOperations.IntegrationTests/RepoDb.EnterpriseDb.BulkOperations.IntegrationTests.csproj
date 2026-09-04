@@ -9,13 +9,11 @@
     <TestTfmsInParallel>false</TestTfmsInParallel>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MSTest" Version="4.2.3" />
     <PackageReference Include="coverlet.collector" Version="10.0.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
+    <PackageReference Include="MSTest" Version="4.2.3" />
     <PackageReference Include="RepoDb.Connector.EnterpriseDb" Version="0.0.1-alpha2" />
   </ItemGroup>
   <ItemGroup>

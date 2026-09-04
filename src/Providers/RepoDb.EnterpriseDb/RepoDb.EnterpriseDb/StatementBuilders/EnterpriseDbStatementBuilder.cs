@@ -6,7 +6,7 @@
 
 #endregion
 
-using EnterpriseDB.EDBClient;
+using RepoDb.Connector.EnterpriseDb;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;

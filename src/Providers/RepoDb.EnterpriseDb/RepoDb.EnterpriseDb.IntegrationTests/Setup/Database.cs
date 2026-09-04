@@ -8,7 +8,7 @@
 
 using System;
 using System.Collections.Generic;
-using EnterpriseDB.EDBClient;
+using RepoDb.Connector.EnterpriseDb;
 using RepoDb.EnterpriseDb.IntegrationTests.Models;
 
 namespace RepoDb.EnterpriseDb.IntegrationTests.Setup
@@ -501,7 +501,6 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.Setup
                         ""Id"" bigint primary key,
                         ""ColumnEnumHand"" hand null
                     );");
-                connection.ReloadTypes();
             }
         }
 

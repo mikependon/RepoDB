@@ -6,7 +6,7 @@
 
 #endregion
 
-using EnterpriseDB.EDBClient;
+using RepoDb.Connector.EnterpriseDb;
 
 namespace RepoDb.DbSettings
 {

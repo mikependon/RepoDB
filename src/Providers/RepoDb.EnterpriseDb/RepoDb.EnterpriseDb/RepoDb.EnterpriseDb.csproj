@@ -20,7 +20,7 @@
     <PackageVersion Condition="'$(RepoDbEnterpriseDbVersion)' != ''">$(RepoDbEnterpriseDbVersion)</PackageVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="EnterpriseDB.EDBClient" Version="10.0.1.1" />
+    <PackageReference Include="RepoDb.Connector.EnterpriseDb" Version="0.0.1-alpha2" />
     <PackageReference Include="System.Text.Json" Version="10.0.9" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
@@ -28,9 +28,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="RepoDb.Connector.EnterpriseDb" Version="0.0.1-alpha2" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />

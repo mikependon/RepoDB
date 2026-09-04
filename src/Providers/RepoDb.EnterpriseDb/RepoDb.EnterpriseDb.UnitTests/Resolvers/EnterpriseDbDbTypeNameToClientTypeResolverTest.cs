@@ -423,7 +423,7 @@ namespace RepoDb.EnterpriseDb.UnitTests.Resolvers
             var result = resolver.Resolve("BOX");
 
             // Assert
-            Assert.AreEqual(typeof(EDBTypes.EDBBox), result);
+            Assert.AreEqual(typeof(object), result);
         }
 
         [TestMethod]
@@ -514,7 +514,7 @@ namespace RepoDb.EnterpriseDb.UnitTests.Resolvers
             var result = resolver.Resolve("CIRCLE");
 
             // Assert
-            Assert.AreEqual(typeof(EDBTypes.EDBCircle), result);
+            Assert.AreEqual(typeof(object), result);
         }
 
         [TestMethod]
@@ -684,7 +684,7 @@ namespace RepoDb.EnterpriseDb.UnitTests.Resolvers
             var result = resolver.Resolve("LINE");
 
             // Assert
-            Assert.AreEqual(typeof(EDBTypes.EDBLine), result);
+            Assert.AreEqual(typeof(object), result);
         }
 
         [TestMethod]
@@ -697,7 +697,7 @@ namespace RepoDb.EnterpriseDb.UnitTests.Resolvers
             var result = resolver.Resolve("LSEG");
 
             // Assert
-            Assert.AreEqual(typeof(EDBTypes.EDBLSeg), result);
+            Assert.AreEqual(typeof(object), result);
         }
 
         [TestMethod]
@@ -762,7 +762,7 @@ namespace RepoDb.EnterpriseDb.UnitTests.Resolvers
             var result = resolver.Resolve("PATH");
 
             // Assert
-            Assert.AreEqual(typeof(EDBTypes.EDBPath), result);
+            Assert.AreEqual(typeof(object), result);
         }
 
         [TestMethod]
@@ -775,7 +775,7 @@ namespace RepoDb.EnterpriseDb.UnitTests.Resolvers
             var result = resolver.Resolve("POINT");
 
             // Assert
-            Assert.AreEqual(typeof(EDBTypes.EDBPoint), result);
+            Assert.AreEqual(typeof(object), result);
         }
 
         [TestMethod]
@@ -788,7 +788,7 @@ namespace RepoDb.EnterpriseDb.UnitTests.Resolvers
             var result = resolver.Resolve("POLYGON");
 
             // Assert
-            Assert.AreEqual(typeof(EDBTypes.EDBPolygon), result);
+            Assert.AreEqual(typeof(object), result);
         }
 
         [TestMethod]
@@ -827,7 +827,7 @@ namespace RepoDb.EnterpriseDb.UnitTests.Resolvers
             var result = resolver.Resolve("TID");
 
             // Assert
-            Assert.AreEqual(typeof(EDBTypes.EDBTid), result);
+            Assert.AreEqual(typeof(object), result);
         }
 
         [TestMethod]
@@ -866,7 +866,7 @@ namespace RepoDb.EnterpriseDb.UnitTests.Resolvers
             var result = resolver.Resolve("TSQUERY");
 
             // Assert
-            Assert.AreEqual(typeof(EDBTypes.EDBTsQuery), result);
+            Assert.AreEqual(typeof(object), result);
         }
 
         [TestMethod]
@@ -879,7 +879,7 @@ namespace RepoDb.EnterpriseDb.UnitTests.Resolvers
             var result = resolver.Resolve("TSVECTOR");
 
             // Assert
-            Assert.AreEqual(typeof(EDBTypes.EDBTsVector), result);
+            Assert.AreEqual(typeof(object), result);
         }
 
         [TestMethod]

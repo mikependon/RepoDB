@@ -7,8 +7,7 @@
 #endregion
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using EnterpriseDB.EDBClient;
-using EDBTypes;
+using RepoDb.Connector.EnterpriseDb;
 using RepoDb.Attributes;
 using RepoDb.Attributes.Parameter.EnterpriseDb;
 using RepoDb.Extensions;
@@ -45,16 +44,16 @@ namespace RepoDb.EnterpriseDb.IntegrationTests
         {
             public int Id { get; set; }
 
-            [EnterpriseDbType(EDBDbType.Bytea)]
+            [EnterpriseDbType(EDBType.Bytea)]
             public byte[] ColumnByteA { get; set; }
 
-            [EnterpriseDbType(EDBDbType.Bigint)]
+            [EnterpriseDbType(EDBType.BigInt)]
             public long ColumnBigInt { get; set; }
 
-            [EnterpriseDbType(EDBDbType.Date)]
+            [EnterpriseDbType(EDBType.Date)]
             public DateTime ColumnDate { get; set; }
 
-            [EnterpriseDbType(EDBDbType.Text)]
+            [EnterpriseDbType(EDBType.Text)]
             public string ColumnText { get; set; }
         }
 

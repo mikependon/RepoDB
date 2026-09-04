@@ -6,8 +6,7 @@
 
 #endregion
 
-using EnterpriseDB.EDBClient;
-using EDBTypes;
+using RepoDb.Connector.EnterpriseDb;
 using RepoDb.DbSettings;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -135,16 +134,12 @@ namespace RepoDb.DbHelpers
         #region Methods
 
         /// <summary>
-        /// Matches an "operation already in progress on this connection" exception from either the official
-        /// <c>EnterpriseDB.EDBClient</c> driver (<c>EDBOperationInProgressException</c>) or the Npgsql-backed
-        /// <c>RepoDb.Connector.EnterpriseDb</c> driver (Npgsql's own <c>NpgsqlOperationInProgressException</c>,
-        /// surfaced as-is since that connector wraps <c>NpgsqlConnection</c> directly rather than translating
-        /// its exceptions) - matched by type name so this helper needs no compile-time reference to either
-        /// driver's exception type beyond the one (<c>EDBOperationInProgressException</c>) it already
-        /// references for other purposes.
+        /// 
         /// </summary>
+        /// <param name="ex"></param>
+        /// <returns></returns>
         private static bool IsOperationInProgressException(Exception ex) =>
-            ex.GetType().Name is nameof(EDBOperationInProgressException) or "NpgsqlOperationInProgressException";
+            ex.GetType().Name == "NpgsqlOperationInProgressException";
 
         private TResult TryExecuteOnExistingConnection<TResult>(IDbConnection connection, Func<IDbConnection, TResult> func)
         {
@@ -330,7 +325,7 @@ namespace RepoDb.DbHelpers
         #region Handlers
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="parameter"></param>
         private void HandleDbParameterPostCreation(IDbDataParameter parameter)
@@ -338,6 +333,20 @@ namespace RepoDb.DbHelpers
             if (parameter?.Value is Array sourceArray)
             {
                 HandleArrayDbParameterPostCreation(parameter as EDBParameter, sourceArray);
+                return;
+            }
+
+            if (parameter?.Value is DateOnly dateOnly)
+            {
+                parameter.Value = dateOnly.ToDateTime(TimeOnly.MinValue);
+                parameter.DbType = DbType.Date;
+                return;
+            }
+
+            if (parameter?.Value is TimeOnly timeOnly)
+            {
+                parameter.Value = timeOnly.ToTimeSpan();
+                parameter.DbType = DbType.Time;
                 return;
             }
 
@@ -358,12 +367,6 @@ namespace RepoDb.DbHelpers
             {
                 return;
             }
-            var resolvedDbType = new ClientTypeToEDBDbTypeResolver().Resolve(sourceArray.GetType());
-            if (resolvedDbType == null)
-            {
-                return;
-            }
-            parameter.EDBDbType = resolvedDbType.Value;
             var elementType = sourceArray.GetType().GetElementType();
             if (elementType == typeof(DateOnly))
             {

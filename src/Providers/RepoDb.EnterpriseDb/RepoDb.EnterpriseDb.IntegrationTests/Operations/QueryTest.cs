@@ -1,4 +1,4 @@
-#region Copyright Attributions
+﻿#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -7,7 +7,7 @@
 #endregion
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using EnterpriseDB.EDBClient;
+using RepoDb.Connector.EnterpriseDb;
 using RepoDb.Extensions;
 using RepoDb.EnterpriseDb.IntegrationTests.Models;
 using RepoDb.EnterpriseDb.IntegrationTests.Setup;

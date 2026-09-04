@@ -6,12 +6,10 @@
 
 #endregion
 
+using RepoDb.Connector.EnterpriseDb;
 using RepoDb.DbHelpers;
 using RepoDb.DbSettings;
 using RepoDb.StatementBuilders;
-using System;
-using OfficialEDBConnection = EnterpriseDB.EDBClient.EDBConnection;
-using ConnectorEDBConnection = RepoDb.Connector.EnterpriseDb.EDBConnection;
 
 namespace RepoDb
 {
@@ -43,16 +41,13 @@ namespace RepoDb
             }
 
             // Map the DbSetting
-            DbSettingMapper.Add<OfficialEDBConnection>(new EnterpriseDbDbSetting(), true);
-            DbSettingMapper.Add<ConnectorEDBConnection>(new EnterpriseDbDbSetting(), true);
+            DbSettingMapper.Add<EDBConnection>(new EnterpriseDbDbSetting(), true);
 
             // Map the DbHelper
-            DbHelperMapper.Add<OfficialEDBConnection>(new EnterpriseDbDbHelper(), true);
-            DbHelperMapper.Add<ConnectorEDBConnection>(new EnterpriseDbDbHelper(), true);
+            DbHelperMapper.Add<EDBConnection>(new EnterpriseDbDbHelper(), true);
 
             // Map the Statement Builder
-            StatementBuilderMapper.Add<OfficialEDBConnection>(new EnterpriseDbStatementBuilder(), true);
-            StatementBuilderMapper.Add<ConnectorEDBConnection>(new EnterpriseDbStatementBuilder(), true);
+            StatementBuilderMapper.Add<EDBConnection>(new EnterpriseDbStatementBuilder(), true);
 
             // Set the flag
             IsInitialized = true;

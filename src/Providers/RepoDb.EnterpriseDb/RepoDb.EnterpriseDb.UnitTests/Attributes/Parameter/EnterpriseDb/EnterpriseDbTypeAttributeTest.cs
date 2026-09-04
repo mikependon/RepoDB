@@ -7,8 +7,7 @@
 #endregion
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using EnterpriseDB.EDBClient;
-using EDBTypes;
+using RepoDb.Connector.EnterpriseDb;
 using RepoDb.Attributes.Parameter.EnterpriseDb;
 using RepoDb.DbSettings;
 using RepoDb.Extensions;
@@ -28,7 +27,7 @@ namespace RepoDb.EnterpriseDb.UnitTests.Attributes.Parameter.EnterpriseDb
 
         private class EnterpriseDbTypeAttributeTestClass
         {
-            [EnterpriseDbType(EDBDbType.Box)]
+            [EnterpriseDbType(EDBType.Box)]
             public object ColumnName { get; set; }
         }
 
@@ -52,8 +51,8 @@ namespace RepoDb.EnterpriseDb.UnitTests.Attributes.Parameter.EnterpriseDb
                     Assert.AreEqual(1, command.Parameters.Count);
 
                     // Assert
-                    var parameter = command.Parameters["@ColumnName"];
-                    Assert.AreEqual(EDBDbType.Box, parameter.EDBDbType);
+                    var parameter = (EDBParameter)command.Parameters["@ColumnName"];
+                    Assert.AreEqual(EDBType.Box, parameter.EDBType);
                 }
             }
         }
@@ -77,8 +76,8 @@ namespace RepoDb.EnterpriseDb.UnitTests.Attributes.Parameter.EnterpriseDb
                     Assert.AreEqual(1, command.Parameters.Count);
 
                     // Assert
-                    var parameter = command.Parameters["@ColumnName"];
-                    Assert.AreEqual(EDBDbType.Box, parameter.EDBDbType);
+                    var parameter = (EDBParameter)command.Parameters["@ColumnName"];
+                    Assert.AreEqual(EDBType.Box, parameter.EDBType);
                 }
             }
         }

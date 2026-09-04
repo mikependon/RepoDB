@@ -10,7 +10,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using EnterpriseDB.EDBClient;
+using RepoDb.Connector.EnterpriseDb;
 using RepoDb.EnterpriseDb.IntegrationTests.Models;
 using RepoDb.EnterpriseDb.IntegrationTests.Setup;
 
