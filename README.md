@@ -81,6 +81,14 @@ Raw SQL execution methods work with **any** ADO.NET-compatible provider:
 
 Fluent operations (Query, Insert, Merge, Delete, Update, and [more](http://repodb.net/operation)) are supported for DB providers mentioned at [get-started](#get-started) section.
 
+## Providers in Roadmap
+
+- [AuroraDB](https://aws.amazon.com/rds/aurora/)
+- [CockroachDB](https://www.cockroachlabs.com/)
+- [DuckDB](https://duckdb.org/)
+- [KingbaseES](https://www.kingbase.com.cn/)
+- [Snowflake](https://www.snowflake.com/)
+
 ## Packages and Build Status
 
 RepoDB ships as a core package plus provider-specific packages for each supported database, with optional bulk-operations add-ons.
