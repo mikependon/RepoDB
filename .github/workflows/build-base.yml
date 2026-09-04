@@ -581,22 +581,6 @@ jobs:
     if: inputs.db-engine == 'enterprisedb'
     runs-on: ubuntu-latest
 
-    services:
-      enterprisedb:
-        image: docker.enterprisedb.com/k8s/edb-postgres-advanced:18
-        # Official EDB image - the registry requires an EDB subscription. Configure the
-        # EDB_DOCKER_USERNAME/EDB_DOCKER_PASSWORD repository secrets (see docker-compose.yml's
-        # comment on the equivalent local service) before this job can pull it.
-        credentials:
-          username: ${{ secrets.EDB_DOCKER_USERNAME }}
-          password: ${{ secrets.EDB_DOCKER_PASSWORD }}
-        ports:
-          - 127.0.0.1:5444:5444
-        env:
-          ACCEPT_EULA: Y
-          ENTERPRISEDB_PASSWORD: RepoDB2026
-          DATABASE_NAME: repodb
-
     steps:
       - name: Check out repository code
         uses: actions/checkout@v5
@@ -610,9 +594,28 @@ jobs:
       - name: Dotnet Build
         run: dotnet build -c release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
 
+      - name: Start EnterpriseDB container
+        env:
+          EDB_DOCKER_USERNAME: ${{ secrets.EDB_DOCKER_USERNAME }}
+          EDB_DOCKER_PASSWORD: ${{ secrets.EDB_DOCKER_PASSWORD }}
+        run: |
+          if [ -n "$EDB_DOCKER_USERNAME" ] && [ -n "$EDB_DOCKER_PASSWORD" ]; then
+            echo "$EDB_DOCKER_PASSWORD" | docker login docker.enterprisedb.com -u "$EDB_DOCKER_USERNAME" --password-stdin
+          else
+            echo "::warning::EDB_DOCKER_USERNAME/EDB_DOCKER_PASSWORD repository secrets are not set - pulling docker.enterprisedb.com/k8s/edb-postgres-advanced:18 will fail unless it is already publicly accessible."
+          fi
+
+          docker run -d \
+            --name enterprisedb \
+            -p 127.0.0.1:5444:5444 \
+            -e ACCEPT_EULA=Y \
+            -e ENTERPRISEDB_PASSWORD=RepoDB2026 \
+            -e DATABASE_NAME=repodb \
+            docker.enterprisedb.com/k8s/edb-postgres-advanced:18
+
       - name: Wait for EnterpriseDB service to be ready
         run: |
-          CID=$(docker ps -q --filter "ancestor=docker.enterprisedb.com/k8s/edb-postgres-advanced:18")
+          CID=$(docker ps -q --filter "name=enterprisedb")
           if [ -z "$CID" ]; then
             echo "Could not find the EnterpriseDB service container."
             exit 1
