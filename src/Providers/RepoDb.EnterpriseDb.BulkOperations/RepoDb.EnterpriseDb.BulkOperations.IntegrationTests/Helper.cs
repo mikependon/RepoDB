@@ -197,7 +197,7 @@ namespace RepoDb.EnterpriseDb.BulkOperations.IntegrationTests
                 var index = i + 1;
                 tables.Add(new BulkOperationIdentityTable
                 {
-                    Id = hasId ? index : 0,
+                    Id = hasId ? (long)index : 0L,
                     RowGuid = Guid.NewGuid(),
                     ColumnBit = 1,
                     ColumnDateTime = EpocDate.AddDays(random.Next(100)),
@@ -221,7 +221,7 @@ namespace RepoDb.EnterpriseDb.BulkOperations.IntegrationTests
             var random = new Random();
             return new BulkOperationIdentityTable
             {
-                Id = hasId ? 1 : 0,
+                Id = hasId ? 1L : 0L,
                 RowGuid = Guid.NewGuid(),
                 ColumnBit = 1,
                 ColumnDateTime = EpocDate,
@@ -295,7 +295,7 @@ namespace RepoDb.EnterpriseDb.BulkOperations.IntegrationTests
                 var index = i + 1;
                 tables.Add(new BulkOperationNonIdentityTable
                 {
-                    Id = hasId ? index : 0,
+                    Id = hasId ? (long)index : 0L,
                     RowGuid = Guid.NewGuid(),
                     ColumnBit = 1,
                     ColumnDateTime = EpocDate.AddDays(random.Next(100)),
@@ -319,7 +319,7 @@ namespace RepoDb.EnterpriseDb.BulkOperations.IntegrationTests
             var random = new Random();
             return new BulkOperationNonIdentityTable
             {
-                Id = hasId ? 1 : 0,
+                Id = hasId ? 1L : 0L,
                 RowGuid = Guid.NewGuid(),
                 ColumnBit = 1,
                 ColumnDateTime = EpocDate,
@@ -392,7 +392,7 @@ namespace RepoDb.EnterpriseDb.BulkOperations.IntegrationTests
                 var index = i + 1;
                 tables.Add(new
                 {
-                    Id = hasId ? index : 0,
+                    Id = hasId ? (long)index : 0L,
                     RowGuid = Guid.NewGuid(),
                     ColumnBit = (byte)1,
                     ColumnDateTime = EpocDate.AddDays(random.Next(100)),
@@ -416,7 +416,7 @@ namespace RepoDb.EnterpriseDb.BulkOperations.IntegrationTests
             var random = new Random();
             return new
             {
-                Id = hasId ? 1 : 0,
+                Id = hasId ? 1L : 0L,
                 RowGuid = Guid.NewGuid(),
                 ColumnBit = (byte)1,
                 ColumnDateTime = EpocDate,
@@ -496,14 +496,14 @@ namespace RepoDb.EnterpriseDb.BulkOperations.IntegrationTests
                 var item = new ExpandoObject() as IDictionary<string, object>;
                 if (hasId)
                 {
-                    item["Id"] = index;
+                    item["Id"] = (long)index;
                 }
                 item["RowGuid"] = Guid.NewGuid();
                 item["ColumnBit"] = (byte)1;
                 item["ColumnDateTime"] = EpocDate.AddDays(random.Next(100));
                 item["ColumnDateTime2"] = UtcNowMicroseconds();
-                item["ColumnDecimal"] = random.Next(100);
-                item["ColumnFloat"] = random.Next(100);
+                item["ColumnDecimal"] = Convert.ToDecimal(random.Next(100));
+                item["ColumnFloat"] = Convert.ToDouble(random.Next(100));
                 item["ColumnInt"] = random.Next(100);
                 item["ColumnNVarChar"] = $"NVARCHAR{index}";
                 tables.Add((ExpandoObject)item);
@@ -526,8 +526,8 @@ namespace RepoDb.EnterpriseDb.BulkOperations.IntegrationTests
                 item["ColumnBit"] = (byte)1;
                 item["ColumnDateTime"] = EpocDate.AddDays(random.Next(100));
                 item["ColumnDateTime2"] = UtcNowMicroseconds();
-                item["ColumnDecimal"] = random.Next(100);
-                item["ColumnFloat"] = random.Next(100);
+                item["ColumnDecimal"] = Convert.ToDecimal(random.Next(100));
+                item["ColumnFloat"] = Convert.ToDouble(random.Next(100));
                 //item["ColumnInt"] = random.Next(100);
                 item["ColumnNVarChar"] = $"{item["ColumnNVarChar"]}-Updated";
                 tables.Add((ExpandoObject)item);
@@ -546,14 +546,14 @@ namespace RepoDb.EnterpriseDb.BulkOperations.IntegrationTests
             var item = new ExpandoObject() as IDictionary<string, object>;
             if (hasId)
             {
-                item["Id"] = 1;
+                item["Id"] = 1L;
             }
             //item["RowGuid"] = Guid.NewGuid();
             item["ColumnBit"] = (byte)1;
             item["ColumnDateTime"] = EpocDate.AddDays(random.Next(100));
             item["ColumnDateTime2"] = UtcNowMicroseconds();
-            item["ColumnDecimal"] = random.Next(100);
-            item["ColumnFloat"] = random.Next(100);
+            item["ColumnDecimal"] = Convert.ToDecimal(random.Next(100));
+            item["ColumnFloat"] = Convert.ToDouble(random.Next(100));
             //item["ColumnInt"] = random.Next(100);
             item["ColumnNVarChar"] = $"NVARCHAR{random.Next(100)}";
             return (ExpandoObject)item;
@@ -571,8 +571,8 @@ namespace RepoDb.EnterpriseDb.BulkOperations.IntegrationTests
             item["ColumnBit"] = (byte)1;
             item["ColumnDateTime"] = EpocDate.AddDays(random.Next(100));
             item["ColumnDateTime2"] = UtcNowMicroseconds();
-            item["ColumnDecimal"] = random.Next(100);
-            item["ColumnFloat"] = random.Next(100);
+            item["ColumnDecimal"] = Convert.ToDecimal(random.Next(100));
+            item["ColumnFloat"] = Convert.ToDouble(random.Next(100));
             //item["ColumnInt"] = random.Next(100);
             item["ColumnNVarChar"] = $"{item["ColumnNVarChar"]}-Updated";
         }
@@ -694,7 +694,7 @@ namespace RepoDb.EnterpriseDb.BulkOperations.IntegrationTests
                 var index = i + 1;
                 tables.Add(new
                 {
-                    Id = hasId ? index : 0,
+                    Id = hasId ? (long)index : 0L,
                     RowGuid = Guid.NewGuid(),
                     UnmatchedColumnBit = (byte)1,
                     UnmatchedColumnDateTime = EpocDate.AddDays(random.Next(100)),
@@ -718,7 +718,7 @@ namespace RepoDb.EnterpriseDb.BulkOperations.IntegrationTests
             var random = new Random();
             return new
             {
-                Id = hasId ? 1 : 0,
+                Id = hasId ? 1L : 0L,
                 RowGuid = Guid.NewGuid(),
                 UnmatchedColumnBit = (byte)1,
                 UnmatchedColumnDateTime = EpocDate,
@@ -798,7 +798,7 @@ namespace RepoDb.EnterpriseDb.BulkOperations.IntegrationTests
                 var item = new ExpandoObject() as IDictionary<string, object>;
                 if (hasId)
                 {
-                    item["Id"] = index;
+                    item["Id"] = (long)index;
                 }
                 item["RowGuid"] = Guid.NewGuid();
                 item["UnmatchedColumnBit"] = (byte)1;
@@ -848,7 +848,7 @@ namespace RepoDb.EnterpriseDb.BulkOperations.IntegrationTests
             var item = new ExpandoObject() as IDictionary<string, object>;
             if (hasId)
             {
-                item["Id"] = 1;
+                item["Id"] = 1L;
             }
             //item["RowGuid"] = Guid.NewGuid();
             item["UnmatchedColumnBit"] = (byte)1;
@@ -981,7 +981,7 @@ namespace RepoDb.EnterpriseDb.BulkOperations.IntegrationTests
                 var index = i + 1;
                 tables.Add(new
                 {
-                    Id = hasId ? index : 0,
+                    Id = hasId ? (long)index : 0L,
                     RowGuid = Guid.NewGuid(),
                     ColumnBit = (byte)1,
                     ColumnDateTime = EpocDate.AddDays(random.Next(100)),
@@ -1005,7 +1005,7 @@ namespace RepoDb.EnterpriseDb.BulkOperations.IntegrationTests
             var random = new Random();
             return new
             {
-                Id = hasId ? 1 : 0,
+                Id = hasId ? 1L : 0L,
                 RowGuid = Guid.NewGuid(),
                 ColumnBit = (byte)1,
                 ColumnDateTime = EpocDate,
@@ -1085,14 +1085,14 @@ namespace RepoDb.EnterpriseDb.BulkOperations.IntegrationTests
                 var item = new ExpandoObject() as IDictionary<string, object>;
                 if (hasId)
                 {
-                    item["Id"] = index;
+                    item["Id"] = (long)index;
                 }
                 item["RowGuid"] = Guid.NewGuid();
                 item["ColumnBit"] = (byte)1;
                 item["ColumnDateTime"] = EpocDate.AddDays(random.Next(100));
                 item["ColumnDateTime2"] = UtcNowMicroseconds();
-                item["ColumnDecimal"] = random.Next(100);
-                item["ColumnFloat"] = random.Next(100);
+                item["ColumnDecimal"] = Convert.ToDecimal(random.Next(100));
+                item["ColumnFloat"] = Convert.ToDouble(random.Next(100));
                 item["ColumnInt"] = random.Next(100);
                 item["ColumnNVarChar"] = $"NVARCHAR{index}";
                 tables.Add((ExpandoObject)item);
@@ -1115,8 +1115,8 @@ namespace RepoDb.EnterpriseDb.BulkOperations.IntegrationTests
                 item["ColumnBit"] = (byte)1;
                 item["ColumnDateTime"] = EpocDate.AddDays(random.Next(100));
                 item["ColumnDateTime2"] = UtcNowMicroseconds();
-                item["ColumnDecimal"] = random.Next(100);
-                item["ColumnFloat"] = random.Next(100);
+                item["ColumnDecimal"] = Convert.ToDecimal(random.Next(100));
+                item["ColumnFloat"] = Convert.ToDouble(random.Next(100));
                 //item["ColumnInt"] = random.Next(100);
                 item["ColumnNVarChar"] = $"{item["ColumnNVarChar"]}-Updated";
                 tables.Add((ExpandoObject)item);
@@ -1135,14 +1135,14 @@ namespace RepoDb.EnterpriseDb.BulkOperations.IntegrationTests
             var item = new ExpandoObject() as IDictionary<string, object>;
             if (hasId)
             {
-                item["Id"] = 1;
+                item["Id"] = 1L;
             }
             //item["RowGuid"] = Guid.NewGuid();
             item["ColumnBit"] = (byte)1;
             item["ColumnDateTime"] = EpocDate.AddDays(random.Next(100));
             item["ColumnDateTime2"] = UtcNowMicroseconds();
-            item["ColumnDecimal"] = random.Next(100);
-            item["ColumnFloat"] = random.Next(100);
+            item["ColumnDecimal"] = Convert.ToDecimal(random.Next(100));
+            item["ColumnFloat"] = Convert.ToDouble(random.Next(100));
             //item["ColumnInt"] = random.Next(100);
             item["ColumnNVarChar"] = $"NVARCHAR{random.Next(100)}";
             return (ExpandoObject)item;
@@ -1160,8 +1160,8 @@ namespace RepoDb.EnterpriseDb.BulkOperations.IntegrationTests
             item["ColumnBit"] = (byte)1;
             item["ColumnDateTime"] = EpocDate.AddDays(random.Next(100));
             item["ColumnDateTime2"] = UtcNowMicroseconds();
-            item["ColumnDecimal"] = random.Next(100);
-            item["ColumnFloat"] = random.Next(100);
+            item["ColumnDecimal"] = Convert.ToDecimal(random.Next(100));
+            item["ColumnFloat"] = Convert.ToDouble(random.Next(100));
             //item["ColumnInt"] = random.Next(100);
             item["ColumnNVarChar"] = $"{item["ColumnNVarChar"]}-Updated";
         }
@@ -1283,7 +1283,7 @@ namespace RepoDb.EnterpriseDb.BulkOperations.IntegrationTests
                 var index = i + 1;
                 tables.Add(new
                 {
-                    Id = hasId ? index : 0,
+                    Id = hasId ? (long)index : 0L,
                     RowGuid = Guid.NewGuid(),
                     UnmatchedColumnBit = (byte)1,
                     UnmatchedColumnDateTime = EpocDate.AddDays(random.Next(100)),
@@ -1307,7 +1307,7 @@ namespace RepoDb.EnterpriseDb.BulkOperations.IntegrationTests
             var random = new Random();
             return new
             {
-                Id = hasId ? 1 : 0,
+                Id = hasId ? 1L : 0L,
                 RowGuid = Guid.NewGuid(),
                 UnmatchedColumnBit = (byte)1,
                 UnmatchedColumnDateTime = EpocDate,
@@ -1387,7 +1387,7 @@ namespace RepoDb.EnterpriseDb.BulkOperations.IntegrationTests
                 var item = new ExpandoObject() as IDictionary<string, object>;
                 if (hasId)
                 {
-                    item["Id"] = index;
+                    item["Id"] = (long)index;
                 }
                 item["RowGuid"] = Guid.NewGuid();
                 item["UnmatchedColumnBit"] = (byte)1;
@@ -1437,7 +1437,7 @@ namespace RepoDb.EnterpriseDb.BulkOperations.IntegrationTests
             var item = new ExpandoObject() as IDictionary<string, object>;
             if (hasId)
             {
-                item["Id"] = 1;
+                item["Id"] = 1L;
             }
             //item["RowGuid"] = Guid.NewGuid();
             item["UnmatchedColumnBit"] = (byte)1;

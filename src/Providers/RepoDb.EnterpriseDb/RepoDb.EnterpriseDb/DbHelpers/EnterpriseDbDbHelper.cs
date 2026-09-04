@@ -81,7 +81,10 @@ namespace RepoDb.DbHelpers
                    LEFT JOIN pg_index I ON I.indrelid = (quote_ident(C.table_schema) || '.' || quote_ident(C.table_name))::regclass
                    AND C.ordinal_position = ANY (I.indkey)
                    WHERE C.table_name = @TableName
-                     AND C.table_schema = @Schema;
+                     AND (
+                         C.table_schema = @Schema
+                         OR C.table_schema = (SELECT nspname FROM pg_namespace WHERE oid = pg_my_temp_schema())
+                     );
                    """;
         }
 
@@ -320,7 +323,7 @@ namespace RepoDb.DbHelpers
         {
             if (key == "RepoDb.Internal.Compiler.Events[AfterCreateDbParameter]")
             {
-                HandleDbParameterPostCreation(instance as EDBParameter);
+                HandleDbParameterPostCreation(instance as IDbDataParameter);
             }
         }
 
@@ -330,9 +333,28 @@ namespace RepoDb.DbHelpers
         /// 
         /// </summary>
         /// <param name="parameter"></param>
-        private void HandleDbParameterPostCreation(EDBParameter parameter)
+        private void HandleDbParameterPostCreation(IDbDataParameter parameter)
         {
-            if (parameter?.Value is not Array sourceArray)
+            if (parameter?.Value is Array sourceArray)
+            {
+                HandleArrayDbParameterPostCreation(parameter as EDBParameter, sourceArray);
+                return;
+            }
+
+            if (parameter?.Value is DateTime dateTime && dateTime.Kind != DateTimeKind.Utc)
+            {
+                parameter.DbType = DbType.DateTime2;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <param name="sourceArray"></param>
+        private void HandleArrayDbParameterPostCreation(EDBParameter parameter, Array sourceArray)
+        {
+            if (parameter == null)
             {
                 return;
             }

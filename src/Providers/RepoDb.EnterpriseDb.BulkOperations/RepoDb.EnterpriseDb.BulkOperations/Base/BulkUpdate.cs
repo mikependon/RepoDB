@@ -65,6 +65,7 @@ namespace RepoDb
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
             var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+            var identityField = dbFields.GetIdentity()?.AsField();
 
             // Skip if there's nothing to update
             if (!HasUpdateableFields(stagingFields, qualifierFields))
@@ -89,9 +90,7 @@ namespace RepoDb
                 EDBExecution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction);
                 EDBExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
                 WriteToServerInternal(connection, pseudoTableName, entityList, mappings, bulkCopyTimeout, batchSize);
-
-                // Execute and return
-                result = EDBExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, trace, traceKey, transaction);
+                result = EDBExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction);
             }
             finally
             {
@@ -144,6 +143,7 @@ namespace RepoDb
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
             var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+            var identityField = dbFields.GetIdentity()?.AsField();
 
             // Skip if there's nothing to update
             if (!HasUpdateableFields(stagingFields, qualifierFields))
@@ -168,9 +168,7 @@ namespace RepoDb
                 EDBExecution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction);
                 EDBExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
                 WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize);
-
-                // Execute and return
-                result = EDBExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, trace, traceKey, transaction);
+                result = EDBExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction);
             }
             finally
             {
@@ -220,6 +218,7 @@ namespace RepoDb
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
             var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+            var identityField = dbFields.GetIdentity()?.AsField();
 
             // Skip if there's nothing to update
             if (!HasUpdateableFields(stagingFields, qualifierFields))
@@ -245,9 +244,7 @@ namespace RepoDb
                 EDBExecution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction);
                 EDBExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
                 WriteToServerInternal(connection, pseudoTableName, reader, mappings, bulkCopyTimeout, batchSize);
-
-                // Execute and return
-                result = EDBExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, trace, traceKey, transaction);
+                result = EDBExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction);
             }
             finally
             {
@@ -307,6 +304,7 @@ namespace RepoDb
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
             var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+            var identityField = dbFields.GetIdentity()?.AsField();
 
             // Skip if there's nothing to update
             if (!HasUpdateableFields(stagingFields, qualifierFields))
@@ -331,9 +329,7 @@ namespace RepoDb
                 await EDBExecution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken);
                 await EDBExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
                 await WriteToServerAsyncInternal(connection, pseudoTableName, entityList, mappings, bulkCopyTimeout, batchSize, cancellationToken);
-
-                // Execute and return
-                result = await EDBExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, trace, traceKey, transaction, cancellationToken);
+                result = await EDBExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken);
             }
             finally
             {
@@ -388,6 +384,7 @@ namespace RepoDb
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
             var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+            var identityField = dbFields.GetIdentity()?.AsField();
 
             // Skip if there's nothing to update
             if (!HasUpdateableFields(stagingFields, qualifierFields))
@@ -412,9 +409,7 @@ namespace RepoDb
                 await EDBExecution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken);
                 await EDBExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
                 await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, cancellationToken);
-
-                // Execute and return
-                result = await EDBExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, trace, traceKey, transaction, cancellationToken);
+                result = await EDBExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken);
             }
             finally
             {
@@ -466,6 +461,7 @@ namespace RepoDb
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
             var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+            var identityField = dbFields.GetIdentity()?.AsField();
 
             // Skip if there's nothing to update
             if (!HasUpdateableFields(stagingFields, qualifierFields))
@@ -491,9 +487,7 @@ namespace RepoDb
                 await EDBExecution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken);
                 await EDBExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
                 await WriteToServerAsyncInternal(connection, pseudoTableName, reader, mappings, bulkCopyTimeout, batchSize, cancellationToken);
-
-                // Execute and return
-                result = await EDBExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, trace, traceKey, transaction, cancellationToken);
+                result = await EDBExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken);
             }
             finally
             {

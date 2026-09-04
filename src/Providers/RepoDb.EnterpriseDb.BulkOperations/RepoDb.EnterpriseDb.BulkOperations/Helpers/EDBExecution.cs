@@ -27,6 +27,29 @@ namespace RepoDb.EnterpriseDb.BulkOperations.Extensions
         #region Shared
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="row"></param>
+        /// <param name="columnName"></param>
+        /// <param name="value"></param>
+        private static void SetIdentityValue(DataRow row,
+            string columnName,
+            object value)
+        {
+            var column = row.Table.Columns[columnName];
+            var wasReadOnly = column.ReadOnly;
+            column.ReadOnly = false;
+            try
+            {
+                row[columnName] = value;
+            }
+            finally
+            {
+                column.ReadOnly = wasReadOnly;
+            }
+        }
+
+        /// <summary>
         ///
         /// </summary>
         /// <param name="connection"></param>
@@ -335,7 +358,7 @@ namespace RepoDb.EnterpriseDb.BulkOperations.Extensions
 
             while (reader.Read())
             {
-                rows[result][identityField.Name] = Converter.DbNullToNull(reader.GetValue(0));
+                SetIdentityValue(rows[result], identityField.Name, Converter.DbNullToNull(reader.GetValue(0)));
                 result++;
             }
 
@@ -375,7 +398,7 @@ namespace RepoDb.EnterpriseDb.BulkOperations.Extensions
 
             while (await reader.ReadAsync(cancellationToken))
             {
-                rows[result][identityField.Name] = Converter.DbNullToNull(reader.GetValue(0));
+                SetIdentityValue(rows[result], identityField.Name, Converter.DbNullToNull(reader.GetValue(0)));
                 result++;
             }
 
@@ -478,11 +501,15 @@ namespace RepoDb.EnterpriseDb.BulkOperations.Extensions
             using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction);
             var result = 0;
 
-            while (reader.Read())
+            do
             {
-                setter?.Invoke(entities[result], Converter.DbNullToNull(reader.GetValue(0)));
-                result++;
+                while (reader.Read())
+                {
+                    setter?.Invoke(entities[result], Converter.DbNullToNull(reader.GetValue(0)));
+                    result++;
+                }
             }
+            while (reader.NextResult());
 
             return result;
         }
@@ -523,11 +550,15 @@ namespace RepoDb.EnterpriseDb.BulkOperations.Extensions
             using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
             var result = 0;
 
-            while (await reader.ReadAsync(cancellationToken))
+            do
             {
-                setter?.Invoke(entities[result], Converter.DbNullToNull(reader.GetValue(0)));
-                result++;
+                while (await reader.ReadAsync(cancellationToken))
+                {
+                    setter?.Invoke(entities[result], Converter.DbNullToNull(reader.GetValue(0)));
+                    result++;
+                }
             }
+            while (await reader.NextResultAsync(cancellationToken));
 
             return result;
         }
@@ -563,11 +594,15 @@ namespace RepoDb.EnterpriseDb.BulkOperations.Extensions
             using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction);
             var result = 0;
 
-            while (reader.Read())
+            do
             {
-                rows[result][identityField.Name] = Converter.DbNullToNull(reader.GetValue(0));
-                result++;
+                while (reader.Read())
+                {
+                    SetIdentityValue(rows[result], identityField.Name, Converter.DbNullToNull(reader.GetValue(0)));
+                    result++;
+                }
             }
+            while (reader.NextResult());
 
             return result;
         }
@@ -605,11 +640,15 @@ namespace RepoDb.EnterpriseDb.BulkOperations.Extensions
             using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
             var result = 0;
 
-            while (await reader.ReadAsync(cancellationToken))
+            do
             {
-                rows[result][identityField.Name] = Converter.DbNullToNull(reader.GetValue(0));
-                result++;
+                while (await reader.ReadAsync(cancellationToken))
+                {
+                    SetIdentityValue(rows[result], identityField.Name, Converter.DbNullToNull(reader.GetValue(0)));
+                    result++;
+                }
             }
+            while (await reader.NextResultAsync(cancellationToken));
 
             return result;
         }
@@ -626,6 +665,7 @@ namespace RepoDb.EnterpriseDb.BulkOperations.Extensions
         /// <param name="pseudoTableName"></param>
         /// <param name="fields"></param>
         /// <param name="qualifiers"></param>
+        /// <param name="identityField"></param>
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
@@ -635,12 +675,13 @@ namespace RepoDb.EnterpriseDb.BulkOperations.Extensions
             string pseudoTableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
+            Field identityField = null,
             ITrace trace = null,
             string traceKey = null,
             EDBTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
-            var commandText = EDBText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, dbSetting);
+            var commandText = EDBText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, identityField, dbSetting);
             return connection.ExecuteNonQuery(commandText, transaction: transaction);
         }
 
@@ -652,6 +693,7 @@ namespace RepoDb.EnterpriseDb.BulkOperations.Extensions
         /// <param name="pseudoTableName"></param>
         /// <param name="fields"></param>
         /// <param name="qualifiers"></param>
+        /// <param name="identityField"></param>
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
@@ -662,13 +704,14 @@ namespace RepoDb.EnterpriseDb.BulkOperations.Extensions
             string pseudoTableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
+            Field identityField = null,
             ITrace trace = null,
             string traceKey = null,
             EDBTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
-            var commandText = EDBText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, dbSetting);
+            var commandText = EDBText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, identityField, dbSetting);
             return await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
         }
 
