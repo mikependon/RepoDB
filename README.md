@@ -81,12 +81,13 @@ Raw SQL execution methods work with **any** ADO.NET-compatible provider:
 
 Fluent operations (Query, Insert, Merge, Delete, Update, and [more](http://repodb.net/operation)) are supported for DB providers mentioned at [get-started](#get-started) section.
 
-## Providers in Roadmap
+## Databases on the Roadmap
 
 - [AuroraDB](https://aws.amazon.com/rds/aurora/)
 - [CockroachDB](https://www.cockroachlabs.com/)
 - [DuckDB](https://duckdb.org/)
 - [KingbaseES](https://www.kingbase.com.cn/)
+- [Redshift](https://aws.amazon.com/redshift/)
 - [Snowflake](https://www.snowflake.com/)
 
 ## Packages and Build Status
