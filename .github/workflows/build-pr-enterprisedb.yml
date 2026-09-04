@@ -6,6 +6,7 @@ on:
     paths:
       - 'src/Providers/RepoDb.Core/**'
       - 'src/Providers/RepoDb.EnterpriseDb/**'
+      - 'src/Docker/EnterpriseDB/**'
       - '.github/workflows/build-base.yml'
       - '.github/workflows/build-pr-enterprisedb.yml'
 

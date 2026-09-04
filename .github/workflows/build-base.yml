@@ -602,16 +602,17 @@ jobs:
           if [ -n "$EDB_DOCKER_USERNAME" ] && [ -n "$EDB_DOCKER_PASSWORD" ]; then
             echo "$EDB_DOCKER_PASSWORD" | docker login docker.enterprisedb.com -u "$EDB_DOCKER_USERNAME" --password-stdin
           else
-            echo "::warning::EDB_DOCKER_USERNAME/EDB_DOCKER_PASSWORD repository secrets are not set - pulling docker.enterprisedb.com/k8s/edb-postgres-advanced:18 will fail unless it is already publicly accessible."
+            echo "::warning::EDB_DOCKER_USERNAME/EDB_DOCKER_PASSWORD repository secrets are not set - pulling docker.enterprisedb.com/k8s/edb-postgres-advanced:17 will fail unless it is already publicly accessible."
           fi
+
+          docker build -t repodb-enterprisedb:local src/Docker/EnterpriseDB
 
           docker run -d \
             --name enterprisedb \
             -p 127.0.0.1:5444:5444 \
-            -e ACCEPT_EULA=Y \
-            -e ENTERPRISEDB_PASSWORD=RepoDB2026 \
-            -e DATABASE_NAME=repodb \
-            docker.enterprisedb.com/k8s/edb-postgres-advanced:18
+            -e EDB_SUPERUSER=enterprisedb \
+            -e EDB_SUPERUSER_PASSWORD=RepoDB2026 \
+            repodb-enterprisedb:local
 
       - name: Wait for EnterpriseDB service to be ready
         run: |
@@ -622,7 +623,7 @@ jobs:
           fi
           echo "EnterpriseDB container id: $CID"
           for i in $(seq 1 60); do
-            if docker exec "$CID" pg_isready -h 127.0.0.1 -p 5444 -U enterprisedb > /dev/null 2>&1; then
+            if docker exec "$CID" /usr/edb/as17/bin/pg_isready -h 127.0.0.1 -p 5444 -U enterprisedb > /dev/null 2>&1; then
               echo "EnterpriseDB is ready (after $((i * 5))s)."
               exit 0
             fi

@@ -7,6 +7,7 @@ on:
       - 'src/Providers/RepoDb.Core/**'
       - 'src/Providers/RepoDb.EnterpriseDb/**'
       - 'src/Providers/RepoDb.EnterpriseDb.BulkOperations/**'
+      - 'src/Docker/EnterpriseDB/**'
       - '.github/workflows/build-base.yml'
       - '.github/workflows/build-pr-enterprisedb-bulk.yml'
 
