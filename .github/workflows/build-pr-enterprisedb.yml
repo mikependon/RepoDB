@@ -12,6 +12,7 @@ on:
 jobs:
   build:
     uses: ./.github/workflows/build-base.yml
+    secrets: inherit
     with:
       solution-dir: src/Providers/RepoDb.EnterpriseDb
       solution-file: RepoDb.EnterpriseDb.sln

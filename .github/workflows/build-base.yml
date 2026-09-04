@@ -19,6 +19,13 @@ on:
         description: 'Database service required for this build: none, sqlserver, postgresql, mysql, mariadb, oracle, db2, clickhouse, firebird, vertica, enterprisedb, saphana'
         required: true
         type: string
+    secrets:
+      EDB_DOCKER_USERNAME:
+        description: 'Username for docker.enterprisedb.com (only needed when db-engine is enterprisedb)'
+        required: false
+      EDB_DOCKER_PASSWORD:
+        description: 'Password for docker.enterprisedb.com (only needed when db-engine is enterprisedb)'
+        required: false
 
 env:
   # SQL Server

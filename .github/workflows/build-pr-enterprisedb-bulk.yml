@@ -13,6 +13,7 @@ on:
 jobs:
   build:
     uses: ./.github/workflows/build-base.yml
+    secrets: inherit
     with:
       solution-dir: src/Providers/RepoDb.EnterpriseDb.BulkOperations
       solution-file: RepoDb.EnterpriseDb.BulkOperations.sln
