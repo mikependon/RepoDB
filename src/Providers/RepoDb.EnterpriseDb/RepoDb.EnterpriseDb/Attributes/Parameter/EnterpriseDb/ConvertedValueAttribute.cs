@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -7,7 +7,7 @@
 #endregion
 
 using System;
-using EnterpriseDB.EDBClient;
+using RepoDb.Connector.EnterpriseDb;
 
 namespace RepoDb.Attributes.Parameter.EnterpriseDb
 {
@@ -15,7 +15,7 @@ namespace RepoDb.Attributes.Parameter.EnterpriseDb
     /// An attribute used to define a value to the <see cref="EDBParameter"/> for ConvertedValue
     /// property via an entity property before the actual execution.
     /// </summary>
-    [Obsolete("Obsoleted by EnterpriseDB.EDBClient.")]
+    [Obsolete("No longer supported by RepoDb.Connector.EnterpriseDb.")]
     public class ConvertedValueAttribute : PropertyValueAttribute
     {
         /// <summary>

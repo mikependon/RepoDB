@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -6,13 +6,12 @@
 
 #endregion
 
-using EnterpriseDB.EDBClient;
-using EDBTypes;
+using RepoDb.Connector.EnterpriseDb;
 
 namespace RepoDb.Attributes.Parameter.EnterpriseDb
 {
     /// <summary>
-    /// An attribute used to define a value to the <see cref="EDBParameter.EDBDbType"/>
+    /// An attribute used to define a value to the <see cref="EDBParameter.EDBType"/>
     /// property via an entity property before the actual execution.
     /// </summary>
     public class EnterpriseDbTypeAttribute : PropertyValueAttribute
@@ -20,14 +19,14 @@ namespace RepoDb.Attributes.Parameter.EnterpriseDb
         /// <summary>
         /// Creates a new instance of <see cref="EnterpriseDbTypeAttribute"/> class.
         /// </summary>
-        /// <param name="edbDbType">The target <see cref="EDBTypes.EDBDbType"/> value.</param>
-        public EnterpriseDbTypeAttribute(EDBDbType edbDbType)
-            : base(typeof(EDBParameter), nameof(EDBParameter.EDBDbType), edbDbType)
+        /// <param name="edbType">The target <see cref="EDBType"/> value.</param>
+        public EnterpriseDbTypeAttribute(EDBType edbType)
+            : base(typeof(EDBParameter), nameof(EDBParameter.EDBType), edbType)
         { }
 
         /// <summary>
-        /// Gets the mapped <see cref="EDBTypes.EDBDbType"/> value of the parameter.
+        /// Gets the mapped <see cref="EDBType"/> value of the parameter.
         /// </summary>
-        public EDBDbType EDBDbType => (EDBDbType)Value;
+        public EDBType EDBType => (EDBType)Value;
     }
 }
