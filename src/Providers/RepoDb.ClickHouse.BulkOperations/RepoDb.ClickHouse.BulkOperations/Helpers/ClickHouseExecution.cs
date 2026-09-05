@@ -534,7 +534,7 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
         /// <returns></returns>
         private static bool IsWaitForMutationsEnabled(ClickHouseConnection connection)
         {
-            var setting = connection.GetDbSetting() as ClickHouseDbSetting;
+            var setting = connection.GetDbSetting() as ClickHouseBulkDbSetting;
             return (setting != null) && setting.IsWaitForMutationsEnabled;
         }
 

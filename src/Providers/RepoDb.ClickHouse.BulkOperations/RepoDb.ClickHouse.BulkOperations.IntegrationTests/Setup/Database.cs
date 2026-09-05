@@ -9,6 +9,7 @@
 using RepoDb.ClickHouse.BulkOperations.IntegrationTests.Models;
 using System;
 using ClickHouse.Driver.ADO;
+using RepoDb.DbSettings;
 
 namespace RepoDb.IntegrationTests.Setup
 {
@@ -50,7 +51,10 @@ namespace RepoDb.IntegrationTests.Setup
             // Initialize ClickHouse
             GlobalConfiguration
                 .Setup()
-                .UseClickHouse(true);
+                .UseClickHouse(new ClickHouseBulkDbSetting()
+                {
+                    IsWaitForMutationsEnabled = true
+                });
 
             // Create the database first
             CreateDatabase();

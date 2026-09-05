@@ -13,7 +13,7 @@ namespace RepoDb.ClickHouse.Interfaces
     /// <summary>
     /// Defines a contract for the ClickHouse database setting.
     /// </summary>
-    public interface IClickHouseDbSetting : IDbSetting
+    public interface IClickHouseBulkDbSetting : IDbSetting
     {
         /// <summary>
         /// Gets or sets a value indicating whether waiting for mutations to complete is enabled for the ClickHouse database.

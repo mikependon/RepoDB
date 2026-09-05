@@ -9,6 +9,7 @@
 using ClickHouse.Driver.ADO;
 using RepoDb.DbHelpers;
 using RepoDb.DbSettings;
+using RepoDb.Interfaces;
 using RepoDb.StatementBuilders;
 using System;
 
@@ -37,8 +38,15 @@ namespace RepoDb
         /// <summary>
         ///
         /// </summary>
-        /// <param name="isWaitForMutationsEnabled">A value indicating whether the internal mutations are enabled for the ClickHouse database.</param>
-        internal static void InitializeInternal(bool isWaitForMutationsEnabled)
+        internal static void InitializeInternal()
+        {
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="db"></param>
+        internal static void InitializeInternal(IDbSetting dbSetting)
         {
             // Skip if already initialized
             if (IsInitialized == true)
@@ -47,10 +55,7 @@ namespace RepoDb
             }
 
             // Map the DbSetting
-            var dbSetting = new ClickHouseDbSetting()
-            {
-                IsWaitForMutationsEnabled = isWaitForMutationsEnabled
-            };
+            dbSetting ??= new ClickHouseDbSetting();
             DbSettingMapper.Add<ClickHouseConnection>(dbSetting, true);
 
             // Map the DbHelper

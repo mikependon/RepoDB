@@ -7,6 +7,8 @@
 #endregion
 
 using ClickHouse.Driver.ADO;
+using RepoDb.DbSettings;
+using RepoDb.Interfaces;
 
 namespace RepoDb
 {
@@ -23,12 +25,23 @@ namespace RepoDb
         /// Initializes all the necessary settings for ClickHouse.
         /// </summary>
         /// <param name="globalConfiguration">The instance of the global configuration in used.</param>
+        /// <returns>The used global configuration instance itself.</returns>
+        public static GlobalConfiguration UseClickHouse(this GlobalConfiguration globalConfiguration)
+        {
+            UseClickHouse(globalConfiguration, new ClickHouseDbSetting());
+            return globalConfiguration;
+        }
+
+        /// <summary>
+        /// Initializes all the necessary settings for ClickHouse.
+        /// </summary>
+        /// <param name="globalConfiguration">The instance of the global configuration in used.</param>
         /// <param name="isWaitForMutationsEnabled">A value indicating whether the internal mutations are enabled for the ClickHouse database.</param>
         /// <returns>The used global configuration instance itself.</returns>
         public static GlobalConfiguration UseClickHouse(this GlobalConfiguration globalConfiguration,
-            bool isWaitForMutationsEnabled = false)
+            IDbSetting dbeStting)
         {
-            ClickHouseBootstrap.InitializeInternal(isWaitForMutationsEnabled);
+            ClickHouseBootstrap.InitializeInternal(dbeStting);
             return globalConfiguration;
         }
     }
