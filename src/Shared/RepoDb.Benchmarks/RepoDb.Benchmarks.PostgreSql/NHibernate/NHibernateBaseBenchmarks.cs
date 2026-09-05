@@ -12,14 +12,13 @@ using NHibernate;
 using NHibernate.Cfg;
 using NHibernate.Dialect;
 using NHibernate.Mapping.ByCode;
-using RepoDb.Benchmarks.PostgreSql.Configurations;
-using RepoDb.Benchmarks.PostgreSql.Models;
+using RepoDb.Benchmarks.PostgreSql.NHibernate.Models;
 using RepoDb.Benchmarks.PostgreSql.Setup;
 
 namespace RepoDb.Benchmarks.PostgreSql.NHibernate
 {
-    [Description(OrmNameConstants.NHibernate)]
-    public class NHibernateBaseBenchmarks : BaseBenchmark
+    [Description("NHibernate")]
+    public class NHibernateBaseBenchmarks : PostgreSqlBenchmark
     {
         protected ISessionFactory SessionFactory;
 

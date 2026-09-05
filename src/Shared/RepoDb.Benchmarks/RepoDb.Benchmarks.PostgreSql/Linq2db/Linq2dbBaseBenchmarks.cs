@@ -11,13 +11,12 @@ using System.Linq;
 using BenchmarkDotNet.Attributes;
 using DataModels;
 using LinqToDB;
-using RepoDb.Benchmarks.PostgreSql.Configurations;
 using RepoDb.Benchmarks.PostgreSql.Setup;
 
 namespace RepoDb.Benchmarks.PostgreSql.Linq2db
 {
-    [Description(OrmNameConstants.Linq2db)]
-    public class Linq2dbBaseBenchmarks : BaseBenchmark
+    [Description("Linq2db")]
+    public class Linq2dbBaseBenchmarks : PostgreSqlBenchmark
     {
         [GlobalSetup]
         public void Setup() => BaseSetup();

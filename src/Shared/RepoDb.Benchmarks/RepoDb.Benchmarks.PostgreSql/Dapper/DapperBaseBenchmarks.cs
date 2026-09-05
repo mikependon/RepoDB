@@ -9,13 +9,12 @@
 using System.ComponentModel;
 using BenchmarkDotNet.Attributes;
 using Dapper;
-using RepoDb.Benchmarks.PostgreSql.Configurations;
 using RepoDb.Benchmarks.PostgreSql.Models;
 
 namespace RepoDb.Benchmarks.PostgreSql.Dapper
 {
-    [Description(OrmNameConstants.Dapper)]
-    public class DapperBaseBenchmarks : BaseBenchmark
+    [Description("Dapper")]
+    public class DapperBaseBenchmarks : PostgreSqlBenchmark
     {
         [GlobalSetup]
         public void Setup() => BaseSetup();

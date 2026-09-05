@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2020 SergerGood and Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -11,6 +11,7 @@ using BenchmarkDotNet.Attributes;
 using NHibernate;
 using NHibernate.Cfg;
 using NHibernate.Dialect;
+using NHibernate.Driver;
 using NHibernate.Mapping.ByCode;
 using RepoDb.Benchmarks.SqlServer.NHibernate.Models;
 using RepoDb.Benchmarks.SqlServer.Setup;
@@ -31,6 +32,7 @@ namespace RepoDb.Benchmarks.SqlServer.NHibernate
             configuration.DataBaseIntegration(properties =>
             {
                 properties.Dialect<MsSql2005Dialect>();
+                properties.Driver<MicrosoftDataSqlClientDriver>(); // Use Microsoft.Data.SqlClient instead of the legacy System.Data.SqlClient
                 properties.ConnectionString = DatabaseHelper.ConnectionString;
             });
 

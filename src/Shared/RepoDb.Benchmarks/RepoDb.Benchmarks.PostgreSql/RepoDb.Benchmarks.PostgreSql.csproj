@@ -6,7 +6,18 @@
     <IsPackable>false</IsPackable>
     <LangVersion>preview</LangVersion>
     <Nullable>annotations</Nullable>
+    <Optimize>true</Optimize>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Configurations\**" />
+    <EmbeddedResource Remove="Configurations\**" />
+    <None Remove="Configurations\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="BaseBenchmark.cs" />
+    <Compile Remove="Models\EFCoreContext.cs" />
+    <Compile Remove="Models\PersonMap.cs" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.15.8" />
     <PackageReference Include="Dapper" Version="2.1.79" />
@@ -20,5 +31,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Providers\RepoDb.PostgreSql\RepoDb.PostgreSql\RepoDb.PostgreSql.csproj" />
+    <ProjectReference Include="..\RepoDb.Benchmarks.Core\RepoDb.Benchmarks.Core.csproj" />
   </ItemGroup>
 </Project>

@@ -6,10 +6,9 @@
 
 #endregion
 
+using System.Reflection;
 using BenchmarkDotNet.Running;
-using RepoDb.Benchmarks.PostgreSql.Configurations;
-using RepoDb.Benchmarks.PostgreSql.Dapper;
-using RepoDb.Benchmarks.PostgreSql.RepoDb;
+using RepoDb.Benchmarks.Core.Configurations;
 
 namespace RepoDb.Benchmarks.PostgreSql
 {
@@ -17,10 +16,7 @@ namespace RepoDb.Benchmarks.PostgreSql
     {
         private static void Main(string[] args)
         {
-            var switcher = new BenchmarkSwitcher(typeof(BenchmarkConfig).Assembly);
-            //switcher.RunAll(new BenchmarkConfigWitRows());
-
-            //For single run.
+            var switcher = new BenchmarkSwitcher(Assembly.GetExecutingAssembly());
             switcher.Run(args, new BenchmarkConfigWitRows());
         }
     }
