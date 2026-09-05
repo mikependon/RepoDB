@@ -14,6 +14,9 @@ namespace RepoDb.Benchmarks.SqlServer.RepoDb
 {
     public class GetFirstRepoDbBenchmarks : RepoDbBaseBenchmarks
     {
+        [Params(1)]
+        public int Rows { get; set; }
+
         [Benchmark]
         public Person QueryLinqFirst()
         {

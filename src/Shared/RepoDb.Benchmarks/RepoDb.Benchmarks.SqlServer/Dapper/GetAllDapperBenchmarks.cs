@@ -18,6 +18,9 @@ namespace RepoDb.Benchmarks.SqlServer.Dapper
     {
         private readonly Consumer consumer = new();
 
+        [Params(ElementsCount)]
+        public int Rows { get; set; }
+
         [Benchmark]
         public void GetAll()
         {

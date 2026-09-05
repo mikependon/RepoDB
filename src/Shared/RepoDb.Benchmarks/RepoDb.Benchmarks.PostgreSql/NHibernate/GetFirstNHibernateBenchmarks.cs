@@ -15,6 +15,9 @@ namespace RepoDb.Benchmarks.PostgreSql.NHibernate
 {
     public class GetFirstNHibernateBenchmarks : NHibernateBaseBenchmarks
     {
+        [Params(1)]
+        public int Rows { get; set; }
+
         [Benchmark]
         public Person QueryFirst()
         {

@@ -17,6 +17,9 @@ namespace RepoDb.Benchmarks.PostgreSql.EFCore
 {
     public class GetFirstEFCoreBenchmarks : EFCoreBaseBenchmarks
     {
+        [Params(1)]
+        public int Rows { get; set; }
+
         [Benchmark]
         public Person First()
         {

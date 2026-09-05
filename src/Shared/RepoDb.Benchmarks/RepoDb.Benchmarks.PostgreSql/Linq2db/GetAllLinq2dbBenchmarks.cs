@@ -16,6 +16,9 @@ namespace RepoDb.Benchmarks.PostgreSql.Linq2db
     {
         private readonly Consumer consumer = new();
 
+        [Params(ElementsCount)]
+        public int Rows { get; set; }
+
         [Benchmark]
         public void SelectAll()
         {
