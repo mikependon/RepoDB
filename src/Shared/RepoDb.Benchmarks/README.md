@@ -38,14 +38,14 @@ Each supported database provider has its own dedicated benchmark project. This l
 
 | Provider | Project | Status |
 |---|---|---|
-| 🟦 SQL Server | [RepoDb.Benchmarks.SqlServer](RepoDb.Benchmarks.SqlServer) | ✅ Available |
-| 🐘 PostgreSQL | [RepoDb.Benchmarks.PostgreSql](RepoDb.Benchmarks.PostgreSql) | ✅ Available |
+| 🐳 IBM Db2 | [RepoDb.Benchmarks.Db2](RepoDb.Benchmarks.Db2) | ✅ Available |
+| 🦭 MariaDB | [RepoDb.Benchmarks.MariaDb](RepoDb.Benchmarks.MariaDb) | ✅ Available |
+| 🦭 MariaDB (MariaDbConnector) | [RepoDb.Benchmarks.MariaDbConnector](RepoDb.Benchmarks.MariaDbConnector) | ✅ Available |
 | 🐬 MySQL | [RepoDb.Benchmarks.MySql](RepoDb.Benchmarks.MySql) | ✅ Available |
 | 🐬 MySQL (MySqlConnector) | [RepoDb.Benchmarks.MySqlConnector](RepoDb.Benchmarks.MySqlConnector) | ✅ Available |
 | 🔺 Oracle | [RepoDb.Benchmarks.Oracle](RepoDb.Benchmarks.Oracle) | ✅ Available |
-| 🦭 MariaDB | [RepoDb.Benchmarks.MariaDb](RepoDb.Benchmarks.MariaDb) | ✅ Available |
-| 🦭 MariaDB (MariaDbConnector) | [RepoDb.Benchmarks.MariaDbConnector](RepoDb.Benchmarks.MariaDbConnector) | ✅ Available |
-| 🐳 IBM Db2 | [RepoDb.Benchmarks.Db2](RepoDb.Benchmarks.Db2) | ✅ Available |
+| 🐘 PostgreSQL | [RepoDb.Benchmarks.PostgreSql](RepoDb.Benchmarks.PostgreSql) | ✅ Available |
+| 🟦 SQL Server | [RepoDb.Benchmarks.SqlServer](RepoDb.Benchmarks.SqlServer) | ✅ Available |
 | ⚙️ Shared infrastructure | [RepoDb.Benchmarks.Core](RepoDb.Benchmarks.Core) | Common models, base classes, and configurations shared across all providers |
 
 > More providers (SQLite, ClickHouse, and others already supported by RepoDB) will be added here over time. Contributions that add a new provider's benchmark project are very welcome.
