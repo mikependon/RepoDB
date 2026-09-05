@@ -9,6 +9,7 @@
 using Sap.Data.Hana;
 using RepoDb.DbHelpers;
 using RepoDb.DbSettings;
+using RepoDb.Interfaces;
 using RepoDb.StatementBuilders;
 using System;
 
@@ -35,6 +36,14 @@ namespace RepoDb
         /// </summary>
         internal static void InitializeInternal()
         {
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="dbSetting"></param>
+        internal static void InitializeInternal(IDbSetting dbSetting)
+        {
             // Skip if already initialized
             if (IsInitialized == true)
             {
@@ -42,7 +51,8 @@ namespace RepoDb
             }
 
             // Map the DbSetting
-            DbSettingMapper.Add<HanaConnection>(new SapHanaDbSetting(), true);
+            dbSetting ??= new SapHanaDbSetting();
+            DbSettingMapper.Add<HanaConnection>(dbSetting, true);
 
             // Map the DbHelper
             DbHelperMapper.Add<HanaConnection>(new SapHanaDbHelper(), true);
