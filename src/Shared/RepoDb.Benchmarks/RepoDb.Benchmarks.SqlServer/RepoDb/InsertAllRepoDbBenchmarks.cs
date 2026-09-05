@@ -48,15 +48,6 @@ namespace RepoDb.Benchmarks.SqlServer.RepoDb
             await connection.BulkInsertAsync(persons);
         }
         
-        [Benchmark]
-        public async Task BulkInsertAllAsyncEnumerable()
-        {
-            await using var connection = await GetConnection().EnsureOpenAsync() as SqlConnection;
-
-            var persons = GetPersons(Rows).ToAsyncEnumerable();
-            await connection.BulkInsertAsync(persons);
-        }
-        
         private static IEnumerable<Person> GetPersons(int count)
         {
             for (var i = 0; i < count; i++)
