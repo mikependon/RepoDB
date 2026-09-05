@@ -26,6 +26,7 @@ namespace RepoDb.Benchmarks.Core.Configurations
 
             AddColumn(new OrmColumn(provider));
             AddColumn(TargetMethodColumn.Method);
+            AddColumn(StatisticColumn.Iterations);
             AddColumn(StatisticColumn.Mean);
             AddColumn(StatisticColumn.StdDev);
             AddColumn(StatisticColumn.Error);
