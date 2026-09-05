@@ -9,7 +9,7 @@
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 using NHibernate.Transform;
-using RepoDb.Benchmarks.SqlServer.Models;
+using RepoDb.Benchmarks.Core.Models;
 
 namespace RepoDb.Benchmarks.SqlServer.NHibernate
 {

@@ -13,7 +13,7 @@ using BenchmarkDotNet.Attributes;
 using Dapper;
 using Dapper.Contrib.Extensions;
 using Microsoft.Data.SqlClient;
-using RepoDb.Benchmarks.SqlServer.Models;
+using RepoDb.Benchmarks.Core.Models;
 using RepoDb.Benchmarks.SqlServer.Setup;
 
 namespace RepoDb.Benchmarks.SqlServer.Dapper

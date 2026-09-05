@@ -1,0 +1,40 @@
+﻿#region Copyright Attributions
+
+// Copyright (c) 2026 SergerGood and Michael Camara Pendon.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+using System.ComponentModel;
+using System.Reflection;
+using BenchmarkDotNet.Columns;
+using BenchmarkDotNet.Reports;
+using BenchmarkDotNet.Running;
+
+namespace RepoDb.Benchmarks.Core.Configurations
+{
+    public sealed class OrmColumn : IColumn
+    {
+        public string Id => nameof(OrmColumn);
+        public string ColumnName { get; } = "ORM";
+        public string Legend => "The object/relational mapper being tested";
+
+        public bool IsDefault(Summary summary, BenchmarkCase benchmarkCase) => false;
+        public string GetValue(Summary summary, BenchmarkCase benchmarkCase)
+        {
+            var type = benchmarkCase.Descriptor.WorkloadMethod.DeclaringType;
+            return type?.GetCustomAttribute<DescriptionAttribute>()?.Description ?? type?.Name.Replace("Benchmarks", string.Empty);
+        }
+
+        public string GetValue(Summary summary, BenchmarkCase benchmarkCase, SummaryStyle style) => GetValue(summary, benchmarkCase);
+
+        public bool IsAvailable(Summary summary) => true;
+        public bool AlwaysShow => true;
+        public ColumnCategory Category => ColumnCategory.Job;
+        public int PriorityInCategory => -10;
+        public bool IsNumeric => false;
+        public UnitType UnitType => UnitType.Dimensionless;
+        public override string ToString() => ColumnName;
+    }
+}

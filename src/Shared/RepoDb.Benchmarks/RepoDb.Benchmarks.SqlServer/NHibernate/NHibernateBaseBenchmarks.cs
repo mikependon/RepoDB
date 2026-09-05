@@ -12,14 +12,13 @@ using NHibernate;
 using NHibernate.Cfg;
 using NHibernate.Dialect;
 using NHibernate.Mapping.ByCode;
-using RepoDb.Benchmarks.SqlServer.Configurations;
-using RepoDb.Benchmarks.SqlServer.Models;
+using RepoDb.Benchmarks.SqlServer.NHibernate.Models;
 using RepoDb.Benchmarks.SqlServer.Setup;
 
 namespace RepoDb.Benchmarks.SqlServer.NHibernate
 {
-    [Description(OrmNameConstants.NHibernate)]
-    public class NHibernateBaseBenchmarks : BaseBenchmark
+    [Description("NHibernate")]
+    public class NHibernateBaseBenchmarks : SqlServerBenchmark
     {
         protected ISessionFactory SessionFactory;
 

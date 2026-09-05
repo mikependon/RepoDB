@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{170EB4D0-4
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DbProviders", "DbProviders", "{DFC5265D-6BEC-4073-9302-4F9FF6319C02}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Benchmarks.Core", "RepoDb.Benchmarks.Core\RepoDb.Benchmarks.Core.csproj", "{57BF6CD9-29F6-0A1A-56FA-C832000B45EF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +52,10 @@ Global
 		{3180EF0C-01C0-4F8E-8AED-C605461CC393}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3180EF0C-01C0-4F8E-8AED-C605461CC393}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3180EF0C-01C0-4F8E-8AED-C605461CC393}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57BF6CD9-29F6-0A1A-56FA-C832000B45EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57BF6CD9-29F6-0A1A-56FA-C832000B45EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57BF6CD9-29F6-0A1A-56FA-C832000B45EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57BF6CD9-29F6-0A1A-56FA-C832000B45EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -61,6 +67,7 @@ Global
 		{6DC2760A-B41C-459A-8ABB-867F03B90AEC} = {DFC5265D-6BEC-4073-9302-4F9FF6319C02}
 		{C387EF36-8ED2-4056-94A0-F3347D681F56} = {11557363-B92A-4C24-8D03-80FE7219704A}
 		{3180EF0C-01C0-4F8E-8AED-C605461CC393} = {11557363-B92A-4C24-8D03-80FE7219704A}
+		{57BF6CD9-29F6-0A1A-56FA-C832000B45EF} = {11557363-B92A-4C24-8D03-80FE7219704A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5229CEA0-E4C0-482B-8BC3-FD9C540F583C}

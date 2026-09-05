@@ -8,7 +8,7 @@
 
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Engines;
-using RepoDb.Benchmarks.SqlServer.Models;
+using RepoDb.Benchmarks.Core.Models;
 
 namespace RepoDb.Benchmarks.SqlServer.RepoDb
 {
