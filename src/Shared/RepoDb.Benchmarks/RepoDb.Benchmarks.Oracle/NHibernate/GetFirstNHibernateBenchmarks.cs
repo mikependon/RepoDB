@@ -1,0 +1,40 @@
+#region Copyright Attributions
+
+// Copyright (c) 2020 SergerGood and Michael Camara Pendon.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+using System.Linq;
+using BenchmarkDotNet.Attributes;
+using NHibernate.Transform;
+using RepoDb.Benchmarks.Oracle.Models;
+
+namespace RepoDb.Benchmarks.Oracle.NHibernate
+{
+    public class GetFirstNHibernateBenchmarks : NHibernateBaseBenchmarks
+    {
+        [Params(1)]
+        public int Rows { get; set; }
+
+        [Benchmark]
+        public Person QueryFirst()
+        {
+            using var session = SessionFactory.OpenStatelessSession();
+
+            return session.Query<Person>().First(x => x.Id == CurrentId);
+        }
+
+        [Benchmark]
+        public Person CreateSQLQueryFirst()
+        {
+            using var session = SessionFactory.OpenStatelessSession();
+
+            return session.CreateSQLQuery("select * from \"Person\" where \"Id\" = :id")
+                .SetInt32("id", CurrentId)
+                .SetResultTransformer(Transformers.AliasToBean<Person>())
+                .List<Person>()[0];
+        }
+    }
+}

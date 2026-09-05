@@ -31,6 +31,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Providers\RepoDb.PostgreSql\RepoDb.PostgreSql\RepoDb.PostgreSql.csproj" />
+    <ProjectReference Include="..\..\..\Providers\RepoDb.PostgreSql.BulkOperations\RepoDb.PostgreSql.BulkOperations\RepoDb.PostgreSql.BulkOperations.csproj" />
     <ProjectReference Include="..\RepoDb.Benchmarks.Core\RepoDb.Benchmarks.Core.csproj" />
   </ItemGroup>
 </Project>

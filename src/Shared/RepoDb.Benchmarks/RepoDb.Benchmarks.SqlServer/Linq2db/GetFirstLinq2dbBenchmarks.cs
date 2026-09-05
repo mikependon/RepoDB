@@ -13,6 +13,9 @@ namespace RepoDb.Benchmarks.SqlServer.Linq2db
 {
     public class GetFirstLinq2dbBenchmarks : Linq2dbBaseBenchmarks
     {
+        [Params(1)]
+        public int Rows { get; set; }
+
         [Benchmark]
         public Person Find()
         {

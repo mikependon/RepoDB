@@ -17,6 +17,9 @@ namespace RepoDb.Benchmarks.SqlServer.NHibernate
     {
         private readonly Consumer consumer = new ();
 
+        [Params(ElementsCount)]
+        public int Rows { get; set; }
+
         [Benchmark]
         public void QueryAll()
         {

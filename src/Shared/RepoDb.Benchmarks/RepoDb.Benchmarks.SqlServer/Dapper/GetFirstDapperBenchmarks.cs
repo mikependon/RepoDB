@@ -15,6 +15,9 @@ namespace RepoDb.Benchmarks.SqlServer.Dapper
 {
     public class GetFirstDapperBenchmarks : DapperBaseBenchmarks
     {
+        [Params(1)]
+        public int Rows { get; set; }
+
         [Benchmark]
         public Person QueryFirst()
         {

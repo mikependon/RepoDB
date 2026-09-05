@@ -49,7 +49,7 @@ namespace DataModels
 	[Table(Schema="public", Name="Person")]
 	public partial class Person
 	{
-		[PrimaryKey, NotNull    ] public long      Id             { get; set; } // bigint
+		[PrimaryKey, Identity   ] public long      Id             { get; set; } // bigint
 		[Column,        Nullable] public string    Name           { get; set; } // character varying(128)
 		[Column,        Nullable] public int?      Age            { get; set; } // integer
 		[Column,        Nullable] public DateTime? CreatedDateUtc { get; set; } // timestamp (5) without time zone

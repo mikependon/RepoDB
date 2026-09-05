@@ -18,6 +18,9 @@ namespace RepoDb.Benchmarks.SqlServer.EFCore
     {
         private readonly Consumer consumer = new ();
 
+        [Params(ElementsCount)]
+        public int Rows { get; set; }
+
         [Benchmark]
         public void NoTrackingGetAll()
         {

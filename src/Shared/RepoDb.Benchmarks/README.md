@@ -38,11 +38,17 @@ Each supported database provider has its own dedicated benchmark project. This l
 
 | Provider | Project | Status |
 |---|---|---|
-| 🟦 SQL Server | [RepoDb.Benchmarks.SqlServer](RepoDb.Benchmarks.SqlServer) | ✅ Available |
+| 🐳 IBM Db2 | [RepoDb.Benchmarks.Db2](RepoDb.Benchmarks.Db2) | ✅ Available |
+| 🦭 MariaDB | [RepoDb.Benchmarks.MariaDb](RepoDb.Benchmarks.MariaDb) | ✅ Available |
+| 🦭 MariaDB (MariaDbConnector) | [RepoDb.Benchmarks.MariaDbConnector](RepoDb.Benchmarks.MariaDbConnector) | ✅ Available |
+| 🐬 MySQL | [RepoDb.Benchmarks.MySql](RepoDb.Benchmarks.MySql) | ✅ Available |
+| 🐬 MySQL (MySqlConnector) | [RepoDb.Benchmarks.MySqlConnector](RepoDb.Benchmarks.MySqlConnector) | ✅ Available |
+| 🔺 Oracle | [RepoDb.Benchmarks.Oracle](RepoDb.Benchmarks.Oracle) | ✅ Available |
 | 🐘 PostgreSQL | [RepoDb.Benchmarks.PostgreSql](RepoDb.Benchmarks.PostgreSql) | ✅ Available |
+| 🟦 SQL Server | [RepoDb.Benchmarks.SqlServer](RepoDb.Benchmarks.SqlServer) | ✅ Available |
 | ⚙️ Shared infrastructure | [RepoDb.Benchmarks.Core](RepoDb.Benchmarks.Core) | Common models, base classes, and configurations shared across all providers |
 
-> More providers (MySQL, SQLite, Oracle, DB2, ClickHouse, and others already supported by RepoDB) will be added here over time. Contributions that add a new provider's benchmark project are very welcome.
+> More providers (SQLite, ClickHouse, and others already supported by RepoDB) will be added here over time. Contributions that add a new provider's benchmark project are very welcome.
 
 ## ⚗️ Benchmarking Process
 
@@ -66,11 +72,41 @@ dotnet run -c Release
 docker compose up -d postgresql
 cd RepoDb.Benchmarks.PostgreSql
 dotnet run -c Release
+
+# 🐬 MySQL
+docker compose up -d mysql
+cd RepoDb.Benchmarks.MySql
+dotnet run -c Release
+
+# ⚡ MySQL (MySqlConnector)
+docker compose up -d mysql
+cd RepoDb.Benchmarks.MySqlConnector
+dotnet run -c Release
+
+# 🔺 Oracle
+docker compose up -d oracle
+cd RepoDb.Benchmarks.Oracle
+dotnet run -c Release
+
+# 🦭 MariaDB
+docker compose up -d mariadb
+cd RepoDb.Benchmarks.MariaDb
+dotnet run -c Release
+
+# 🦭 MariaDB (MariaDbConnector)
+docker compose up -d mariadb
+cd RepoDb.Benchmarks.MariaDbConnector
+dotnet run -c Release
+
+# 🐳 IBM Db2
+docker compose up -d db2
+cd RepoDb.Benchmarks.Db2
+dotnet run -c Release
 ```
 
 > ⚠️ Always run benchmarks in `Release` configuration. Debug builds produce misleading results.
 
-Connection strings default to a local Dockerized instance, but can be overridden via the `REPODB_CONSTR` environment variable (and `REPODB_CONSTR_POSTGRESDB` for the PostgreSQL admin connection) if your container uses different credentials or a different host/port.
+Connection strings default to a local Dockerized instance, but can be overridden via the `REPODB_CONSTR` environment variable (and `REPODB_CONSTR_POSTGRESDB` / `REPODB_CONSTR_MYSQLDB` / `REPODB_CONSTR_MARIADB` for the PostgreSQL/MySQL/MariaDB admin connection) if your container uses different credentials or a different host/port.
 
 ## 🥊 ORMs Benchmarked
 
@@ -84,7 +120,7 @@ Connection strings default to a local Dockerized instance, but can be overridden
 
 Each ORM is exercised through its own idiomatic API (e.g., `DbContext` for EF Core, `Connection.Query` for Dapper, `Connection.QueryAll` for RepoDB) rather than forcing a shared abstraction, so every library is measured doing what it does best.
 
-> 📌 Not every ORM supports every database provider. Only the ORMs that officially support a given provider are included in that provider's benchmark project — so the list above may vary slightly from one provider to another.
+> 📌 Not every ORM supports every database provider. Only the ORMs that officially support a given provider are included in that provider's benchmark project — so the list above may vary slightly from one provider to another. For example, [RepoDb.Benchmarks.MariaDb](RepoDb.Benchmarks.MariaDb) and [RepoDb.Benchmarks.MariaDbConnector](RepoDb.Benchmarks.MariaDbConnector) both exclude NHibernate, which ships no MariaDB-specific dialect or driver.
 
 ## 🛠️ Operations
 
@@ -116,7 +152,7 @@ No ORM is universally "best" — each makes different trade-offs. Here's how the
 
 Found a way to make a comparison fairer, more complete, or want to add a new provider? Contributions are very welcome.
 
-- Add a new provider by following the pattern in [RepoDb.Benchmarks.SqlServer](RepoDb.Benchmarks.SqlServer) or [RepoDb.Benchmarks.PostgreSql](RepoDb.Benchmarks.PostgreSql).
+- Add a new provider by following the pattern in [RepoDb.Benchmarks.SqlServer](RepoDb.Benchmarks.SqlServer), [RepoDb.Benchmarks.PostgreSql](RepoDb.Benchmarks.PostgreSql), [RepoDb.Benchmarks.MySql](RepoDb.Benchmarks.MySql), [RepoDb.Benchmarks.MySqlConnector](RepoDb.Benchmarks.MySqlConnector), [RepoDb.Benchmarks.Oracle](RepoDb.Benchmarks.Oracle), [RepoDb.Benchmarks.MariaDb](RepoDb.Benchmarks.MariaDb), [RepoDb.Benchmarks.MariaDbConnector](RepoDb.Benchmarks.MariaDbConnector), or [RepoDb.Benchmarks.Db2](RepoDb.Benchmarks.Db2).
 - File a [new issue](https://github.com/mikependon/RepoDb/issues/new) if you spot a methodology concern.
 - Read the main [contributing guide](../../../CONTRIBUTING.md) before submitting a PR.
 

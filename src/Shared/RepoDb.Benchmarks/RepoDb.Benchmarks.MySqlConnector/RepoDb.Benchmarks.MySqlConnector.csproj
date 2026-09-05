@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>RepoDb.Benchmarks.MySqlConnector</AssemblyName>
+    <TargetFrameworks>net10.0</TargetFrameworks>
+    <IsPackable>false</IsPackable>
+    <LangVersion>preview</LangVersion>
+    <Nullable>annotations</Nullable>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.15.8" />
+    <PackageReference Include="Dapper" Version="2.1.79" />
+    <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
+    <PackageReference Include="linq2db" Version="6.4.0" />
+    <PackageReference Include="NHibernate" Version="5.7.0" />
+    <PackageReference Include="NHibernate.Driver.MySqlConnector" Version="2.0.5" />
+    <!--
+      Pomelo.EntityFrameworkCore.MySql (the EF Core provider built on MySqlConnector) has not yet
+      released EF Core 10 support, so this project's EF Core benchmarks are pinned to EF Core 9
+      instead of the 10.0.11 used by the other benchmark projects.
+    -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.7" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Providers\RepoDb.MySqlConnector\RepoDb.MySqlConnector\RepoDb.MySqlConnector.csproj" />
+    <ProjectReference Include="..\..\..\Providers\RepoDb.MySqlConnector.BulkOperations\RepoDb.MySqlConnector.BulkOperations\RepoDb.MySqlConnector.BulkOperations.csproj" />
+    <ProjectReference Include="..\RepoDb.Benchmarks.Core\RepoDb.Benchmarks.Core.csproj" />
+  </ItemGroup>
+</Project>
