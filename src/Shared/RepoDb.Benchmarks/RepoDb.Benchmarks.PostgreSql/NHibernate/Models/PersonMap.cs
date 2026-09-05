@@ -6,6 +6,7 @@
 
 #endregion
 
+using NHibernate.Mapping.ByCode;
 using NHibernate.Mapping.ByCode.Conformist;
 using RepoDb.Benchmarks.PostgreSql.Models;
 
@@ -16,7 +17,11 @@ namespace RepoDb.Benchmarks.PostgreSql.NHibernate.Models
         public PersonMap()
         {
             Table("\"Person\"");
-            Id(x => x.Id, mapper => mapper.Column(x => x.Name("\"Id\"")));
+            Id(x => x.Id, mapper =>
+            {
+                mapper.Column("\"Id\"");
+                mapper.Generator(Generators.Identity);
+            });
             Property(x => x.Name, mapper => mapper.Column(x => x.Name("\"Name\"")));
             Property(x => x.Age, mapper => mapper.Column(x => x.Name("\"Age\"")));
             Property(x => x.CreatedDateUtc, mapper => mapper.Column(x => x.Name("\"CreatedDateUtc\"")));
