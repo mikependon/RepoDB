@@ -18,13 +18,13 @@ namespace RepoDb.Benchmarks.Core.Configurations
 {
     public class BenchmarkConfig : ManualConfig
     {
-        public BenchmarkConfig()
+        public BenchmarkConfig(string provider)
         {
             AddLogger(ConsoleLogger.Default);
             AddExporter(MarkdownExporter.GitHub);
             AddDiagnoser(MemoryDiagnoser.Default);
 
-            AddColumn(new OrmColumn());
+            AddColumn(new OrmColumn(provider));
             AddColumn(TargetMethodColumn.Method);
             AddColumn(StatisticColumn.Mean);
             AddColumn(StatisticColumn.StdDev);
