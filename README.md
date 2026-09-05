@@ -52,7 +52,7 @@ Read more about this through this [article](https://blogs.repodb.net/posts/2026/
 
 ## Get Started
 
-Choose your database and follow the quick-start guide:
+Fluent operations (Query, Insert, Merge, Delete, Update, and [more](http://repodb.net/operation)), batches and bulks are supported for DB providers mentioned below. Choose your database and follow the quick-start guide:
 
 - [ClickHouse](http://repodb.net/tutorial/get-started-clickhouse)
 - [DB2](http://repodb.net/tutorial/get-started-db2)
@@ -67,11 +67,7 @@ Choose your database and follow the quick-start guide:
 - [SQLite](http://repodb.net/tutorial/get-started-sqlite)
 - [Vertica](http://repodb.net/tutorial/get-started-vertica)
 
-Explore individual features in the [documentation](http://repodb.net/docs).
-
-## Supported Databases
-
-Raw SQL execution methods work with **any** ADO.NET-compatible provider:
+While raw SQL execution methods work with **any** ADO.NET-compatible provider:
 
 - [ExecuteQuery](http://repodb.net/operation/executequery)
 - [ExecuteNonQuery](http://repodb.net/operation/executenonquery)
@@ -79,9 +75,11 @@ Raw SQL execution methods work with **any** ADO.NET-compatible provider:
 - [ExecuteReader](http://repodb.net/operation/executereader)
 - [ExecuteQueryMultiple](http://repodb.net/operation/executequerymultiple)
 
-Fluent operations (Query, Insert, Merge, Delete, Update, and [more](http://repodb.net/operation)) are supported for DB providers mentioned at [get-started](#get-started) section.
+Explore individual features in the [documentation](http://repodb.net/docs).
 
 ## Databases on the Roadmap
+
+We have envisioned the following databases to be supported to further grow the ecosystem.
 
 - [AuroraDB](https://aws.amazon.com/rds/aurora/)
 - [CockroachDB](https://www.cockroachlabs.com/)
@@ -110,7 +108,7 @@ Every supported database has a dedicated bulk-operations add-on (`BulkInsert`, `
 | [MariaDB Connector](https://www.nuget.org/packages/RepoDb.MariaDbConnector.BulkOperations) | ✅ | ✅ | [MariaDbBulkCopy](https://github.com/mikependon/RepoDB.Connectors/blob/main/src/RepoDb.Connector.MariaDbConnector/RepoDb.Connector.MariaDbConnector/Bulk/MariaDbBulkCopy.cs) (via [RepoDb.Connector.MariaDbConnector](https://www.nuget.org/packages/RepoDb.Connector.MariaDbConnector)) Native |
 | [MySQL](https://www.nuget.org/packages/RepoDb.MySql.BulkOperations) | ✅ | ✅ | [MySqlBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.MySql.BulkOperations/RepoDb.MySql.BulkOperations/MySqlBulkCopy.cs) (via [MySqlBulkLoader](https://www.nuget.org/packages/MySql.Data) Native) |
 | [MySQL Connector](https://www.nuget.org/packages/RepoDb.MySqlConnector.BulkOperations) | ✅ | ✅ | [MySqlConnectorBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.MySqlConnector.BulkOperations/RepoDb.MySqlConnector.BulkOperations/Base/WriteToServer.cs) Native |
-| [Oracle](https://www.nuget.org/packages/RepoDb.Oracle.BulkOperations) | ✅ | ✅ | [OracleBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.Oracle.BulkOperations/RepoDb.Oracle.BulkOperations/Base/WriteToServer.cs) Native |
+| [Oracle](https://www.nuget.org/packages/RepoDb.Oracle.BulkOperations) | ✅ | ✅ | [OracleBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.Oracle.BulkOperations/RepoDb.Oracle.BulkOperations/Base/WriteToServer.cs) Native / [OracleBulkArrayBinder](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.Oracle.BulkOperations/RepoDb.Oracle.BulkOperations/OracleBulkArrayBinder.cs) (Async Native) |
 | [PostgreSQL](https://www.nuget.org/packages/RepoDb.PostgreSql.BulkOperations) | ✅ | ✅ | [NpgsqlBinaryImporter](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.PostgreSql.BulkOperations/RepoDb.PostgreSql.BulkOperations/Base/BinaryImport.cs) Native |
 | [SAP HANA](https://www.nuget.org/packages/RepoDb.SapHana.BulkOperations) | ✅ | ⚠️ | [HanaBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.SapHana.BulkOperations/RepoDb.SapHana.BulkOperations/Base/WriteToServer.cs) Native (Sync) / `AsyncOverAsync` or [SapHanaCommandBatcher](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.SapHana.BulkOperations/RepoDb.SapHana.BulkOperations/SapHanaCommandBatcher.cs) |
 | [SQL Server](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations) | ✅ | ✅ | [SqlBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.SqlServer.BulkOperations/RepoDb.SqlServer.BulkOperations/Base/WriteToServer.cs) Native |
