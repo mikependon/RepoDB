@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 using Microsoft.Data.SqlClient;
-using RepoDb.Benchmarks.SqlServer.Models;
+using RepoDb.Benchmarks.Core.Models;
 
 namespace RepoDb.Benchmarks.SqlServer.RepoDb
 {

@@ -6,19 +6,31 @@
     <IsPackable>false</IsPackable>
     <LangVersion>preview</LangVersion>
     <Nullable>annotations</Nullable>
+    <Optimize>true</Optimize>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.13.10" />
-    <PackageReference Include="Dapper" Version="2.1.21" />
+    <Compile Remove="Configurations\**" />
+    <EmbeddedResource Remove="Configurations\**" />
+    <None Remove="Configurations\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="BaseBenchmark.cs" />
+    <Compile Remove="Models\EFCoreContext.cs" />
+    <Compile Remove="Models\PersonMap.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.15.8" />
+    <PackageReference Include="Dapper" Version="2.1.79" />
     <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
-    <PackageReference Include="linq2db" Version="5.3.2" />
-    <PackageReference Include="linq2db.PostgreSQL" Version="5.3.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0" />
-    <PackageReference Include="NHibernate" Version="5.4.9" />
-    <PackageReference Include="Npgsql" Version="7.0.7" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.0" />
+    <PackageReference Include="linq2db" Version="6.4.0" />
+    <PackageReference Include="linq2db.PostgreSQL" Version="6.4.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.11" />
+    <PackageReference Include="NHibernate" Version="5.7.0" />
+    <PackageReference Include="Npgsql" Version="10.0.3" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Providers\RepoDb.PostgreSql\RepoDb.PostgreSql\RepoDb.PostgreSql.csproj" />
+    <ProjectReference Include="..\RepoDb.Benchmarks.Core\RepoDb.Benchmarks.Core.csproj" />
   </ItemGroup>
 </Project>

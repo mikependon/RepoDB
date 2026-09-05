@@ -9,13 +9,12 @@
 using System.ComponentModel;
 using BenchmarkDotNet.Attributes;
 using Dapper;
-using RepoDb.Benchmarks.SqlServer.Configurations;
-using RepoDb.Benchmarks.SqlServer.Models;
+using RepoDb.Benchmarks.Core.Models;
 
 namespace RepoDb.Benchmarks.SqlServer.Dapper
 {
-    [Description(OrmNameConstants.Dapper)]
-    public class DapperBaseBenchmarks : BaseBenchmark
+    [Description("Dapper")]
+    public class DapperBaseBenchmarks : SqlServerBenchmark
     {
         [GlobalSetup]
         public void Setup() => BaseSetup();

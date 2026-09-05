@@ -10,13 +10,12 @@ using System;
 using System.ComponentModel;
 using System.Data;
 using BenchmarkDotNet.Attributes;
-using RepoDb.Benchmarks.SqlServer.Configurations;
-using RepoDb.Benchmarks.SqlServer.Models;
+using RepoDb.Benchmarks.Core.Models;
 
 namespace RepoDb.Benchmarks.SqlServer.RepoDb
 {
-    [Description(OrmNameConstants.RepoDB)]
-    public class RepoDbBaseBenchmarks : BaseBenchmark
+    [Description("RepoDB")]
+    public class RepoDbBaseBenchmarks : SqlServerBenchmark
     {
         [GlobalSetup]
         public void Setup()

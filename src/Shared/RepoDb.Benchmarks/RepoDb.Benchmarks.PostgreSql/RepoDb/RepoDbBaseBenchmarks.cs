@@ -10,13 +10,12 @@ using System;
 using System.ComponentModel;
 using System.Data;
 using BenchmarkDotNet.Attributes;
-using RepoDb.Benchmarks.PostgreSql.Configurations;
 using RepoDb.Benchmarks.PostgreSql.Models;
 
 namespace RepoDb.Benchmarks.PostgreSql.RepoDb
 {
-    [Description(OrmNameConstants.RepoDB)]
-    public class RepoDbBaseBenchmarks : BaseBenchmark
+    [Description("RepoDB")]
+    public class RepoDbBaseBenchmarks : PostgreSqlBenchmark
     {
         [GlobalSetup]
         public void Setup()

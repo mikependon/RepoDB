@@ -10,14 +10,13 @@ using System.ComponentModel;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 using Microsoft.EntityFrameworkCore;
-using RepoDb.Benchmarks.SqlServer.Configurations;
-using RepoDb.Benchmarks.SqlServer.Models;
+using RepoDb.Benchmarks.SqlServer.EFCore.Models;
 using RepoDb.Benchmarks.SqlServer.Setup;
 
 namespace RepoDb.Benchmarks.SqlServer.EFCore
 {
-    [Description(OrmNameConstants.EFCore)]
-    public class EFCoreBaseBenchmarks : BaseBenchmark
+    [Description("EFCore")]
+    public class EFCoreBaseBenchmarks : SqlServerBenchmark
     {
         [GlobalSetup]
         public void Setup() => BaseSetup();

@@ -12,7 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using Microsoft.Data.SqlClient;
-using RepoDb.Benchmarks.SqlServer.Models;
+using RepoDb.Benchmarks.Core.Models;
 
 namespace RepoDb.Benchmarks.SqlServer.RepoDb
 {
@@ -45,15 +45,6 @@ namespace RepoDb.Benchmarks.SqlServer.RepoDb
             await using var connection = await GetConnection().EnsureOpenAsync() as SqlConnection;
 
             var persons = GetPersons(Rows);
-            await connection.BulkInsertAsync(persons);
-        }
-        
-        [Benchmark]
-        public async Task BulkInsertAllAsyncEnumerable()
-        {
-            await using var connection = await GetConnection().EnsureOpenAsync() as SqlConnection;
-
-            var persons = GetPersons(Rows).ToAsyncEnumerable();
             await connection.BulkInsertAsync(persons);
         }
         

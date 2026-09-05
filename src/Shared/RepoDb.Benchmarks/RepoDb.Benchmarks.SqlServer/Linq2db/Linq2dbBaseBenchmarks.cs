@@ -1,6 +1,6 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
-// Copyright (c) 2021 SergerGood and Michael Camara Pendon.
+// Copyright (c) 2026 SergerGood and Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
 
@@ -11,12 +11,12 @@ using System.Linq;
 using BenchmarkDotNet.Attributes;
 using DataModels;
 using LinqToDB;
-using RepoDb.Benchmarks.PostgreSql.Setup;
+using RepoDb.Benchmarks.SqlServer.Setup;
 
-namespace RepoDb.Benchmarks.PostgreSql.Linq2db
+namespace RepoDb.Benchmarks.SqlServer.Linq2db
 {
     [Description("Linq2db")]
-    public class Linq2dbBaseBenchmarks : PostgreSqlBenchmark
+    public class Linq2dbBaseBenchmarks : SqlServerBenchmark
     {
         [GlobalSetup]
         public void Setup() => BaseSetup();
@@ -27,12 +27,12 @@ namespace RepoDb.Benchmarks.PostgreSql.Linq2db
 
             db.People.Select(x => x.Id == CurrentId).ToList();
         }
-        
+
         protected static RepoDbDB GetDb()
         {
             var options = new DataOptions();
-            options = options.UsePostgreSQL(DatabaseHelper.ConnectionString);
-            
+            options = options.UseSqlServer(DatabaseHelper.ConnectionString);
+
             return new RepoDbDB(options);
         }
     }

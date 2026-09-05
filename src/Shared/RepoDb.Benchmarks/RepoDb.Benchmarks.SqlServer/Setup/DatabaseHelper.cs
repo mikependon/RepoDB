@@ -19,7 +19,7 @@ namespace RepoDb.Benchmarks.SqlServer.Setup
         {
             var connectionString = Environment.GetEnvironmentVariable("REPODB_CONSTR", EnvironmentVariableTarget.Process);
 
-            ConnectionString = connectionString ?? @"Server=(local);Database=RepoDb;Integrated Security=False;User Id=michael;Password=Password123;";
+            ConnectionString = connectionString ?? @"Server=tcp:127.0.0.1,1433;Database=RepoDbBulk;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;";
 
             CreateDatabase();
             CreatePersonTable();

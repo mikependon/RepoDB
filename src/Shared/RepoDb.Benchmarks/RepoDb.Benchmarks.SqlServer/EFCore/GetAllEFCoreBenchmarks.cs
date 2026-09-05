@@ -9,7 +9,7 @@
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Engines;
 using Microsoft.EntityFrameworkCore;
-using RepoDb.Benchmarks.SqlServer.Models;
+using RepoDb.Benchmarks.SqlServer.EFCore.Models;
 using RepoDb.Benchmarks.SqlServer.Setup;
 
 namespace RepoDb.Benchmarks.SqlServer.EFCore

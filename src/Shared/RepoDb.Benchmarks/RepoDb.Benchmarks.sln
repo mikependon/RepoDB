@@ -1,7 +1,6 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30320.27
+# Visual Studio Version 18
+VisualStudioVersion = 18.7.11911.148 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqlServer", "..\..\Providers\RepoDb.SqlServer\RepoDb.SqlServer\RepoDb.SqlServer.csproj", "{6D196ABF-4A38-43C1-8D31-2C5CECC0F2AF}"
 EndProject
@@ -14,6 +13,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Benchmarks.SqlServer", "RepoDb.Benchmarks.SqlServer\RepoDb.Benchmarks.SqlServer.csproj", "{C387EF36-8ED2-4056-94A0-F3347D681F56}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Benchmarks.PostgreSql", "RepoDb.Benchmarks.PostgreSql\RepoDb.Benchmarks.PostgreSql.csproj", "{3180EF0C-01C0-4F8E-8AED-C605461CC393}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Benchmarks", "Benchmarks", "{11557363-B92A-4C24-8D03-80FE7219704A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{170EB4D0-4042-4AAD-9511-2E2DBD1B2E65}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DbProviders", "DbProviders", "{DFC5265D-6BEC-4073-9302-4F9FF6319C02}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Benchmarks.Core", "RepoDb.Benchmarks.Core\RepoDb.Benchmarks.Core.csproj", "{57BF6CD9-29F6-0A1A-56FA-C832000B45EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,9 +52,22 @@ Global
 		{3180EF0C-01C0-4F8E-8AED-C605461CC393}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3180EF0C-01C0-4F8E-8AED-C605461CC393}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3180EF0C-01C0-4F8E-8AED-C605461CC393}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57BF6CD9-29F6-0A1A-56FA-C832000B45EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57BF6CD9-29F6-0A1A-56FA-C832000B45EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57BF6CD9-29F6-0A1A-56FA-C832000B45EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57BF6CD9-29F6-0A1A-56FA-C832000B45EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6D196ABF-4A38-43C1-8D31-2C5CECC0F2AF} = {DFC5265D-6BEC-4073-9302-4F9FF6319C02}
+		{9313409F-467E-40D7-874E-9105BBDDFA53} = {170EB4D0-4042-4AAD-9511-2E2DBD1B2E65}
+		{4B11CD99-AF04-415B-99FF-E52278CFA7FC} = {DFC5265D-6BEC-4073-9302-4F9FF6319C02}
+		{6DC2760A-B41C-459A-8ABB-867F03B90AEC} = {DFC5265D-6BEC-4073-9302-4F9FF6319C02}
+		{C387EF36-8ED2-4056-94A0-F3347D681F56} = {11557363-B92A-4C24-8D03-80FE7219704A}
+		{3180EF0C-01C0-4F8E-8AED-C605461CC393} = {11557363-B92A-4C24-8D03-80FE7219704A}
+		{57BF6CD9-29F6-0A1A-56FA-C832000B45EF} = {11557363-B92A-4C24-8D03-80FE7219704A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5229CEA0-E4C0-482B-8BC3-FD9C540F583C}

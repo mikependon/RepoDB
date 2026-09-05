@@ -10,7 +10,7 @@ using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Engines;
 using Dapper;
 using Dapper.Contrib.Extensions;
-using RepoDb.Benchmarks.SqlServer.Models;
+using RepoDb.Benchmarks.Core.Models;
 
 namespace RepoDb.Benchmarks.SqlServer.Dapper
 {

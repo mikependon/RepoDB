@@ -10,14 +10,13 @@ using System.ComponentModel;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 using Microsoft.EntityFrameworkCore;
-using RepoDb.Benchmarks.PostgreSql.Configurations;
-using RepoDb.Benchmarks.PostgreSql.Models;
+using RepoDb.Benchmarks.PostgreSql.EFCore.Models;
 using RepoDb.Benchmarks.PostgreSql.Setup;
 
 namespace RepoDb.Benchmarks.PostgreSql.EFCore
 {
-    [Description(OrmNameConstants.EFCore)]
-    public class EFCoreBaseBenchmarks : BaseBenchmark
+    [Description("EFCore")]
+    public class EFCoreBaseBenchmarks : PostgreSqlBenchmark
     {
         [GlobalSetup]
         public void Setup() => BaseSetup();

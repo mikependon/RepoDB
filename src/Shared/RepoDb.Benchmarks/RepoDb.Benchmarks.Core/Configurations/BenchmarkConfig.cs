@@ -1,6 +1,6 @@
 ﻿#region Copyright Attributions
 
-// Copyright (c) 2020 SergerGood and Michael Camara Pendon.
+// Copyright (c) 2026 SergerGood and Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
 
@@ -14,7 +14,7 @@ using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Loggers;
 using BenchmarkDotNet.Order;
 
-namespace RepoDb.Benchmarks.PostgreSql.Configurations
+namespace RepoDb.Benchmarks.Core.Configurations
 {
     public class BenchmarkConfig : ManualConfig
     {
@@ -24,7 +24,7 @@ namespace RepoDb.Benchmarks.PostgreSql.Configurations
             AddExporter(MarkdownExporter.GitHub);
             AddDiagnoser(MemoryDiagnoser.Default);
 
-            AddColumn(new ORMColum());
+            AddColumn(new OrmColumn());
             AddColumn(TargetMethodColumn.Method);
             AddColumn(StatisticColumn.Mean);
             AddColumn(StatisticColumn.StdDev);
@@ -36,10 +36,10 @@ namespace RepoDb.Benchmarks.PostgreSql.Configurations
             AddColumnProvider(DefaultColumnProviders.Metrics);
 
             var job = Job.ShortRun
-                .WithLaunchCount(DefaultConstants.DefaultLaunchCount)
-                .WithWarmupCount(DefaultConstants.DefaultWarmupCount)
-                .WithUnrollFactor(DefaultConstants.DefaultUnrollFactor)
-                .WithIterationCount(DefaultConstants.DefaultIterationCount);
+                .WithLaunchCount(DefaultsConstants.DefaultLaunchCount)
+                .WithWarmupCount(DefaultsConstants.DefaultWarmupCount)
+                .WithUnrollFactor(DefaultsConstants.DefaultUnrollFactor)
+                .WithIterationCount(DefaultsConstants.DefaultIterationCount);
 
             AddJob(job);
 

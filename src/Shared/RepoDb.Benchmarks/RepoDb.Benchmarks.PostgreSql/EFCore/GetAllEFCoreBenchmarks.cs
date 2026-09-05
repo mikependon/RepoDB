@@ -9,7 +9,7 @@
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Engines;
 using Microsoft.EntityFrameworkCore;
-using RepoDb.Benchmarks.PostgreSql.Models;
+using RepoDb.Benchmarks.PostgreSql.EFCore.Models;
 using RepoDb.Benchmarks.PostgreSql.Setup;
 
 namespace RepoDb.Benchmarks.PostgreSql.EFCore
