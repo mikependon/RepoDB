@@ -34,6 +34,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Oracle", "..\..\Prov
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Oracle.BulkOperations", "..\..\Providers\RepoDb.Oracle.BulkOperations\RepoDb.Oracle.BulkOperations\RepoDb.Oracle.BulkOperations.csproj", "{100102A1-4134-41FC-82A1-308E0A21769B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.PostgreSql.BulkOperations", "..\..\Providers\RepoDb.PostgreSql.BulkOperations\RepoDb.PostgreSql.BulkOperations\RepoDb.PostgreSql.BulkOperations.csproj", "{E6E7E09B-19B0-A434-6097-AC7943F8DAA2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Benchmarks.MySqlConnector", "RepoDb.Benchmarks.MySqlConnector\RepoDb.Benchmarks.MySqlConnector.csproj", "{4755D6CC-D12A-49D3-8DDD-C3216978F21E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.MySqlConnector", "..\..\Providers\RepoDb.MySqlConnector\RepoDb.MySqlConnector\RepoDb.MySqlConnector.csproj", "{4E6D2570-DCC1-49A4-A5D4-3C1789B89D9F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.MySqlConnector.BulkOperations", "..\..\Providers\RepoDb.MySqlConnector.BulkOperations\RepoDb.MySqlConnector.BulkOperations\RepoDb.MySqlConnector.BulkOperations.csproj", "{E6ED5B90-7332-41E2-BA5D-45906A3CBA00}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -92,6 +100,22 @@ Global
 		{100102A1-4134-41FC-82A1-308E0A21769B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{100102A1-4134-41FC-82A1-308E0A21769B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{100102A1-4134-41FC-82A1-308E0A21769B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6E7E09B-19B0-A434-6097-AC7943F8DAA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6E7E09B-19B0-A434-6097-AC7943F8DAA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6E7E09B-19B0-A434-6097-AC7943F8DAA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6E7E09B-19B0-A434-6097-AC7943F8DAA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4755D6CC-D12A-49D3-8DDD-C3216978F21E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4755D6CC-D12A-49D3-8DDD-C3216978F21E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4755D6CC-D12A-49D3-8DDD-C3216978F21E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4755D6CC-D12A-49D3-8DDD-C3216978F21E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E6D2570-DCC1-49A4-A5D4-3C1789B89D9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E6D2570-DCC1-49A4-A5D4-3C1789B89D9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E6D2570-DCC1-49A4-A5D4-3C1789B89D9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E6D2570-DCC1-49A4-A5D4-3C1789B89D9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6ED5B90-7332-41E2-BA5D-45906A3CBA00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6ED5B90-7332-41E2-BA5D-45906A3CBA00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6ED5B90-7332-41E2-BA5D-45906A3CBA00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6ED5B90-7332-41E2-BA5D-45906A3CBA00}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -110,6 +134,10 @@ Global
 		{394AD70B-357F-4EEA-BC5B-D24CF6B407E0} = {11557363-B92A-4C24-8D03-80FE7219704A}
 		{C94260C2-DA26-4C1B-A619-D9BAFB91F0D9} = {DFC5265D-6BEC-4073-9302-4F9FF6319C02}
 		{100102A1-4134-41FC-82A1-308E0A21769B} = {DFC5265D-6BEC-4073-9302-4F9FF6319C02}
+		{E6E7E09B-19B0-A434-6097-AC7943F8DAA2} = {DFC5265D-6BEC-4073-9302-4F9FF6319C02}
+		{4755D6CC-D12A-49D3-8DDD-C3216978F21E} = {11557363-B92A-4C24-8D03-80FE7219704A}
+		{4E6D2570-DCC1-49A4-A5D4-3C1789B89D9F} = {DFC5265D-6BEC-4073-9302-4F9FF6319C02}
+		{E6ED5B90-7332-41E2-BA5D-45906A3CBA00} = {DFC5265D-6BEC-4073-9302-4F9FF6319C02}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5229CEA0-E4C0-482B-8BC3-FD9C540F583C}

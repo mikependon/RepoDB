@@ -41,6 +41,7 @@ Each supported database provider has its own dedicated benchmark project. This l
 | 🟦 SQL Server | [RepoDb.Benchmarks.SqlServer](RepoDb.Benchmarks.SqlServer) | ✅ Available |
 | 🐘 PostgreSQL | [RepoDb.Benchmarks.PostgreSql](RepoDb.Benchmarks.PostgreSql) | ✅ Available |
 | 🐬 MySQL | [RepoDb.Benchmarks.MySql](RepoDb.Benchmarks.MySql) | ✅ Available |
+| ⚡ MySQL (MySqlConnector) | [RepoDb.Benchmarks.MySqlConnector](RepoDb.Benchmarks.MySqlConnector) | ✅ Available |
 | 🔺 Oracle | [RepoDb.Benchmarks.Oracle](RepoDb.Benchmarks.Oracle) | ✅ Available |
 | ⚙️ Shared infrastructure | [RepoDb.Benchmarks.Core](RepoDb.Benchmarks.Core) | Common models, base classes, and configurations shared across all providers |
 
@@ -72,6 +73,11 @@ dotnet run -c Release
 # 🐬 MySQL
 docker compose up -d mysql
 cd RepoDb.Benchmarks.MySql
+dotnet run -c Release
+
+# ⚡ MySQL (MySqlConnector)
+docker compose up -d mysql
+cd RepoDb.Benchmarks.MySqlConnector
 dotnet run -c Release
 
 # 🔺 Oracle
@@ -128,7 +134,7 @@ No ORM is universally "best" — each makes different trade-offs. Here's how the
 
 Found a way to make a comparison fairer, more complete, or want to add a new provider? Contributions are very welcome.
 
-- Add a new provider by following the pattern in [RepoDb.Benchmarks.SqlServer](RepoDb.Benchmarks.SqlServer), [RepoDb.Benchmarks.PostgreSql](RepoDb.Benchmarks.PostgreSql), [RepoDb.Benchmarks.MySql](RepoDb.Benchmarks.MySql), or [RepoDb.Benchmarks.Oracle](RepoDb.Benchmarks.Oracle).
+- Add a new provider by following the pattern in [RepoDb.Benchmarks.SqlServer](RepoDb.Benchmarks.SqlServer), [RepoDb.Benchmarks.PostgreSql](RepoDb.Benchmarks.PostgreSql), [RepoDb.Benchmarks.MySql](RepoDb.Benchmarks.MySql), [RepoDb.Benchmarks.MySqlConnector](RepoDb.Benchmarks.MySqlConnector), or [RepoDb.Benchmarks.Oracle](RepoDb.Benchmarks.Oracle).
 - File a [new issue](https://github.com/mikependon/RepoDb/issues/new) if you spot a methodology concern.
 - Read the main [contributing guide](../../../CONTRIBUTING.md) before submitting a PR.
 
