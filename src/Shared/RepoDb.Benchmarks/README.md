@@ -40,9 +40,10 @@ Each supported database provider has its own dedicated benchmark project. This l
 |---|---|---|
 | 🟦 SQL Server | [RepoDb.Benchmarks.SqlServer](RepoDb.Benchmarks.SqlServer) | ✅ Available |
 | 🐘 PostgreSQL | [RepoDb.Benchmarks.PostgreSql](RepoDb.Benchmarks.PostgreSql) | ✅ Available |
+| 🐬 MySQL | [RepoDb.Benchmarks.MySql](RepoDb.Benchmarks.MySql) | ✅ Available |
 | ⚙️ Shared infrastructure | [RepoDb.Benchmarks.Core](RepoDb.Benchmarks.Core) | Common models, base classes, and configurations shared across all providers |
 
-> More providers (MySQL, SQLite, Oracle, DB2, ClickHouse, and others already supported by RepoDB) will be added here over time. Contributions that add a new provider's benchmark project are very welcome.
+> More providers (SQLite, Oracle, DB2, ClickHouse, and others already supported by RepoDB) will be added here over time. Contributions that add a new provider's benchmark project are very welcome.
 
 ## ⚗️ Benchmarking Process
 
@@ -66,11 +67,16 @@ dotnet run -c Release
 docker compose up -d postgresql
 cd RepoDb.Benchmarks.PostgreSql
 dotnet run -c Release
+
+# 🐬 MySQL
+docker compose up -d mysql
+cd RepoDb.Benchmarks.MySql
+dotnet run -c Release
 ```
 
 > ⚠️ Always run benchmarks in `Release` configuration. Debug builds produce misleading results.
 
-Connection strings default to a local Dockerized instance, but can be overridden via the `REPODB_CONSTR` environment variable (and `REPODB_CONSTR_POSTGRESDB` for the PostgreSQL admin connection) if your container uses different credentials or a different host/port.
+Connection strings default to a local Dockerized instance, but can be overridden via the `REPODB_CONSTR` environment variable (and `REPODB_CONSTR_POSTGRESDB` / `REPODB_CONSTR_MYSQLDB` for the PostgreSQL/MySQL admin connection) if your container uses different credentials or a different host/port.
 
 ## 🥊 ORMs Benchmarked
 
@@ -116,7 +122,7 @@ No ORM is universally "best" — each makes different trade-offs. Here's how the
 
 Found a way to make a comparison fairer, more complete, or want to add a new provider? Contributions are very welcome.
 
-- Add a new provider by following the pattern in [RepoDb.Benchmarks.SqlServer](RepoDb.Benchmarks.SqlServer) or [RepoDb.Benchmarks.PostgreSql](RepoDb.Benchmarks.PostgreSql).
+- Add a new provider by following the pattern in [RepoDb.Benchmarks.SqlServer](RepoDb.Benchmarks.SqlServer), [RepoDb.Benchmarks.PostgreSql](RepoDb.Benchmarks.PostgreSql), or [RepoDb.Benchmarks.MySql](RepoDb.Benchmarks.MySql).
 - File a [new issue](https://github.com/mikependon/RepoDb/issues/new) if you spot a methodology concern.
 - Read the main [contributing guide](../../../CONTRIBUTING.md) before submitting a PR.
 
