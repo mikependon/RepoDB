@@ -16,9 +16,14 @@ namespace RepoDb.Benchmarks.Core.Configurations
 {
     public sealed class OrmColumn : IColumn
     {
+        public OrmColumn(string provider)
+        {
+            Legend = $"The object/relational mapper being tested for '{provider}'.";
+        }
+
         public string Id => nameof(OrmColumn);
         public string ColumnName { get; } = "ORM";
-        public string Legend => "The object/relational mapper being tested";
+        public string Legend { get; }
 
         public bool IsDefault(Summary summary, BenchmarkCase benchmarkCase) => false;
         public string GetValue(Summary summary, BenchmarkCase benchmarkCase)

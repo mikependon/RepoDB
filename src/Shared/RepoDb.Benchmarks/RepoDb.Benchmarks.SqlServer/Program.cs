@@ -17,7 +17,7 @@ namespace RepoDb.Benchmarks.SqlServer
         private static void Main(string[] args)
         {
             var switcher = new BenchmarkSwitcher(Assembly.GetExecutingAssembly());
-            switcher.Run(args, new BenchmarkConfigWitRows());
+            switcher.Run(args, new BenchmarkConfigWitRows("SQL Server"));
         }
     }
 }

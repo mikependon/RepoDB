@@ -22,8 +22,8 @@ namespace RepoDb.Benchmarks.PostgreSql.Setup
             var connectionStringForPostgres = Environment.GetEnvironmentVariable("REPODB_CONSTR_POSTGRESDB", EnvironmentVariableTarget.Process);
             var connectionString = Environment.GetEnvironmentVariable("REPODB_CONSTR", EnvironmentVariableTarget.Process);
 
-            ConnectionStringForPostgres = connectionStringForPostgres ?? "Server=127.0.0.1;Port=5432;Database=postgres;User Id=postgres;Password=postgres;";
-            ConnectionString = connectionString ?? "Server=127.0.0.1;Port=5432;Database=RepoDb;User Id=postgres;Password=postgres;";
+            ConnectionStringForPostgres = connectionStringForPostgres ?? "Server=127.0.0.1;Port=5432;Database=postgres;User Id=postgres;Password=RepoDB2026;";
+            ConnectionString = connectionString ?? "Server=127.0.0.1;Port=5432;Database=RepoDb;User Id=postgres;Password=RepoDB2026;";
 
             CreateDatabase();
             CreatePersonTable();

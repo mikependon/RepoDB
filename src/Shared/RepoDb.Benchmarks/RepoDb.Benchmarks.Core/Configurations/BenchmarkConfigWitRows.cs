@@ -12,7 +12,8 @@ namespace RepoDb.Benchmarks.Core.Configurations
 {
     public class BenchmarkConfigWitRows : BenchmarkConfig
     {
-        public BenchmarkConfigWitRows()
+        public BenchmarkConfigWitRows(string provider)
+            : base(provider)
         {
             AddColumn(new ParamColumn("Rows"));
         }
