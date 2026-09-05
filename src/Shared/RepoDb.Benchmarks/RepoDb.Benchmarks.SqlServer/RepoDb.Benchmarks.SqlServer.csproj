@@ -23,6 +23,8 @@
     <PackageReference Include="BenchmarkDotNet" Version="0.15.8" />
     <PackageReference Include="Dapper" Version="2.1.79" />
     <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
+    <PackageReference Include="linq2db" Version="6.4.0" />
+    <PackageReference Include="linq2db.SqlServer" Version="6.4.0" />
     <PackageReference Include="NHibernate" Version="5.7.0" />
     <PackageReference Include="System.Linq.Async" Version="7.0.1" />
   </ItemGroup>
