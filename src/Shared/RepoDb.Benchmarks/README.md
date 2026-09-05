@@ -18,6 +18,20 @@ To keep results honest, we hold ourselves to a few principles:
 
 We built RepoDB because we believe developers deserve fast, low-overhead data access without giving up productivity. These benchmarks exist to prove that claim, not just state it.
 
+## 🏢 Enterprise Notice
+
+The numbers published alongside this repository are produced on infrastructure local to the RepoDB project (e.g., local Docker containers, CI runners, contributor machines). They are a useful signal, but they are **not** a substitute for validating performance in your own environment.
+
+Hardware, network topology, database configuration, cloud provider, virtualization/container overhead, and data volume all materially affect ORM performance — and none of these match between our environment and yours.
+
+If your organization is evaluating RepoDB for production use, we strongly recommend that you:
+
+- **🖥️ Run the benchmarks yourself** — Clone this repository and execute the relevant benchmark project(s) against infrastructure that mirrors your production environment.
+- **📐 Use your own data shape** — Adjust row counts, schema, and data types to reflect your actual workload rather than relying solely on the defaults used here.
+- **🚫 Avoid bias from our environment** — Treat any numbers you see in this README, in issues, or in marketing material as a starting point for your own investigation, not as a guarantee of the performance you'll see in your own environment.
+
+This is by design: the benchmarking code is fully open (see [Benchmarking Process](#️-benchmarking-process) below) specifically so it can be independently reproduced, rather than taken on faith.
+
 ## 📁 List of Projects with Benchmark
 
 Each supported database provider has its own dedicated benchmark project. This list grows as RepoDB extends support to more providers.
