@@ -11,6 +11,7 @@ using RepoDb.SapHana.BulkOperations.IntegrationTests.Models;
 using RepoDb.SapHana.PropertyHandlers;
 using System;
 using System.Text.RegularExpressions;
+using RepoDb.DbSettings;
 
 namespace RepoDb.IntegrationTests.Setup
 {
@@ -43,7 +44,7 @@ namespace RepoDb.IntegrationTests.Setup
             // Initialize SAP HANA
             GlobalConfiguration
                 .Setup()
-                .UseSapHana();
+                .UseSapHana(new SapHanaBulkDbSetting());
 
             PropertyHandlerMapper.Add<BulkOperationIdentityTable, SapHanaGuidToStringPropertyHandler>(
                 e => e.RowGuid, new SapHanaGuidToStringPropertyHandler(), true);
