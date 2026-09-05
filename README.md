@@ -42,17 +42,6 @@ It bridges different database systems with a single, unified connectivity layer:
 - **🧩 Consistent API Surface** — The same fluent methods and conventions work identically regardless of the underlying provider.
 - **⚙️ Provider-Native Optimizations** — Each connector is tuned to exploit the bulk and native capabilities of its target database.
 
-## 🏢 Enterprise Notice
-
-If your organization is evaluating or adopting RepoDB for production use, keep the following in mind:
-
-- **🖥️ Run the benchmark on your environment** — Published numbers (e.g., the [benchmark suite](src/Shared/RepoDb.Benchmarks/README.md)) are produced on infrastructure local to the project (local Docker containers, CI runners, contributor machines). Hardware, network topology, database configuration, cloud provider, virtualization/container overhead, and data volume all materially affect performance, so clone the repository and run the relevant benchmark project(s) against infrastructure and data shapes that mirror your own workload before relying on any published figure.
-- **⚠️ Be aware of the limitations** — RepoDB is a micro-ORM built for advanced use cases and has documented, provider-specific [limitations](src/Shared/RepoDb.Docs/limitations.md) (e.g., composite keys, JOINs, cache invalidation, and behaviors specific to SQL Server, Oracle, DB2, and other providers). Review these against your intended usage before committing to production.
-- **🔒 Security is best-effort, not SLA-backed** — There is no dedicated security team or response SLA. Read our [Security Policy](SECURITY.md) before adopting RepoDB in a security-sensitive context — it covers how to report a vulnerability, which versions get fixes, and the RepoDB-specific risk areas (raw SQL execution, reflection-based provider internals, unscanned third-party driver dependencies) along with how each is mitigated.
-- **🤝 Understand our contributions and support policy** — RepoDB is primarily maintained by a single individual, not an organization. Community contributions are welcome and encouraged (see [Contributing](CONTRIBUTING.md)), and all support is free (for now), but it follows a documented [support policy](src/Shared/RepoDb.Docs/support-policy.md) with defined hours and channels rather than an enterprise SLA. Plan your adoption and escalation paths accordingly, and consider [contributing back](#contributions) or arranging consultancy for dedicated needs.
-- **🚌 Factor in the bus factor** — RepoDB has no formal governance structure today; entitlement, succession, and legal/trademark ownership are not yet defined (see [Governance](src/Shared/RepoDb.Docs/support-policy.md#governance)). Account for this single-maintainer risk in your continuity and vendor-risk planning.
-- **🔢 No formal versioning/breaking-change policy** — RepoDB does not publish a documented SemVer or deprecation policy, and (per the [Security Policy](SECURITY.md#-supported-versions)) only the latest release of each package receives fixes — there is no backport process to older majors/minors. Pin exact package versions in production and review release notes before upgrading, rather than assuming strict backward compatibility across releases.
-
 ## Roadmap
 
 RepoDB is evolving from an ORM into a broader data productivity platform, with Data Engineering capabilities — moving data between providers, on-premise or cloud-native — on the roadmap.
@@ -179,6 +168,17 @@ GlobalConfiguration
 ```
 
 It's intentionally lightweight rather than OTel-based, keeping RepoDB's thin, fast footprint intact. See the [package README](src/Telemetry/RepoDb.Telemetry.Default/README.md) for configuration options, the full OTel rationale, and the roadmap.
+
+## 🏢 Enterprise Notice
+
+If your organization is evaluating or adopting RepoDB for production use, keep the following in mind:
+
+- **🖥️ Run the benchmark on your environment** — Published numbers (e.g., the [benchmark suite](src/Shared/RepoDb.Benchmarks/README.md)) are produced on infrastructure local to the project (local Docker containers, CI runners, contributor machines). Hardware, network topology, database configuration, cloud provider, virtualization/container overhead, and data volume all materially affect performance, so clone the repository and run the relevant benchmark project(s) against infrastructure and data shapes that mirror your own workload before relying on any published figure.
+- **⚠️ Be aware of the limitations** — RepoDB is a micro-ORM built for advanced use cases and has documented, provider-specific [limitations](src/Shared/RepoDb.Docs/limitations.md) (e.g., composite keys, JOINs, cache invalidation, and behaviors specific to SQL Server, Oracle, DB2, and other providers). Review these against your intended usage before committing to production.
+- **🔒 Security is best-effort, not SLA-backed** — There is no dedicated security team or response SLA. Read our [Security Policy](SECURITY.md) before adopting RepoDB in a security-sensitive context — it covers how to report a vulnerability, which versions get fixes, and the RepoDB-specific risk areas (raw SQL execution, reflection-based provider internals, unscanned third-party driver dependencies) along with how each is mitigated.
+- **🤝 Understand our contributions and support policy** — RepoDB is primarily maintained by a single individual, not an organization. Community contributions are welcome and encouraged (see [Contributing](CONTRIBUTING.md)), and all support is free (for now), but it follows a documented [support policy](src/Shared/RepoDb.Docs/support-policy.md) with defined hours and channels rather than an enterprise SLA. Plan your adoption and escalation paths accordingly, and consider [contributing back](#contributions) or arranging consultancy for dedicated needs.
+- **🚌 Factor in the bus factor** — RepoDB has no formal governance structure today; entitlement, succession, and legal/trademark ownership are not yet defined (see [Governance](src/Shared/RepoDb.Docs/support-policy.md#governance)). Account for this single-maintainer risk in your continuity and vendor-risk planning.
+- **🔢 No formal versioning/breaking-change policy** — RepoDB does not publish a documented SemVer or deprecation policy, and (per the [Security Policy](SECURITY.md#-supported-versions)) only the latest release of each package receives fixes — there is no backport process to older majors/minors. Pin exact package versions in production and review release notes before upgrading, rather than assuming strict backward compatibility across releases.
 
 ## Contributions
 
