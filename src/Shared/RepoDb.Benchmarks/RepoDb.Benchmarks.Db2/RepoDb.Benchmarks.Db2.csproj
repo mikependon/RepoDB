@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>RepoDb.Benchmarks.Db2</AssemblyName>
+    <TargetFrameworks>net10.0</TargetFrameworks>
+    <IsPackable>false</IsPackable>
+    <LangVersion>preview</LangVersion>
+    <Nullable>annotations</Nullable>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.15.8" />
+    <PackageReference Include="Dapper" Version="2.1.79" />
+    <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
+    <PackageReference Include="linq2db" Version="6.4.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.11" />
+    <PackageReference Include="NHibernate" Version="5.7.0" />
+  </ItemGroup>
+  <!--
+    RepoDb.Db2 references Net.IBM.Data.Db2 with PrivateAssets="all" (on Windows), so it does not
+    flow transitively. It's referenced directly here too, since RepoDb/Dapper/NHibernate in this
+    project all talk to IBM.Data.Db2.DB2Connection directly, and NHibernate's DB2NetDriver locates
+    the IBM.Data.Db2 assembly by name via reflection at runtime.
+  -->
+  <ItemGroup Condition="'$(OS)' == 'Windows_NT'">
+    <PackageReference Include="Net.IBM.Data.Db2" Version="10.0.0.200" />
+    <PackageReference Include="IBM.EntityFrameworkCore" Version="10.0.0.100" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(OS)' != 'Windows_NT'">
+    <PackageReference Include="Net.IBM.Data.Db2-lnx" Version="10.0.0.200" />
+    <PackageReference Include="IBM.EntityFrameworkCore-lnx" Version="10.0.0.100" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Providers\RepoDb.Db2\RepoDb.Db2\RepoDb.Db2.csproj" />
+    <ProjectReference Include="..\..\..\Providers\RepoDb.Db2.BulkOperations\RepoDb.Db2.BulkOperations\RepoDb.Db2.BulkOperations.csproj" />
+    <ProjectReference Include="..\RepoDb.Benchmarks.Core\RepoDb.Benchmarks.Core.csproj" />
+  </ItemGroup>
+</Project>
