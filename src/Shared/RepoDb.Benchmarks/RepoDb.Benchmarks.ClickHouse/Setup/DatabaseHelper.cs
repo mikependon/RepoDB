@@ -22,8 +22,8 @@ namespace RepoDb.Benchmarks.ClickHouse.Setup
             var adminConnectionString = Environment.GetEnvironmentVariable("REPODB_CONSTR_CLICKHOUSEDB", EnvironmentVariableTarget.Process);
             var connectionString = Environment.GetEnvironmentVariable("REPODB_CONSTR", EnvironmentVariableTarget.Process);
 
-            AdminConnectionString = adminConnectionString ?? "Host=127.0.0.1;Port=8123;Username=default;Password=RepoDB2026;Database=default;Protocol=http;";
-            ConnectionString = connectionString ?? "Host=127.0.0.1;Port=8123;Username=default;Password=RepoDB2026;Database=RepoDb;Protocol=http;";
+            AdminConnectionString = adminConnectionString ?? "Host=127.0.0.1;Port=8123;Username=default;Password=RepoDB2026;Database=default;Protocol=http;UseCustomDecimals=false;";
+            ConnectionString = connectionString ?? "Host=127.0.0.1;Port=8123;Username=default;Password=RepoDB2026;Database=RepoDb;Protocol=http;UseCustomDecimals=false;";
 
             CreateDatabase();
             CreatePersonTable();
