@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>RepoDb.Benchmarks.Vertica</AssemblyName>
+    <TargetFrameworks>net10.0</TargetFrameworks>
+    <IsPackable>false</IsPackable>
+    <LangVersion>preview</LangVersion>
+    <Nullable>annotations</Nullable>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.15.8" />
+    <PackageReference Include="Dapper" Version="2.1.79" />
+    <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Providers\RepoDb.Vertica\RepoDb.Vertica\RepoDb.Vertica.csproj" />
+    <ProjectReference Include="..\..\..\Providers\RepoDb.Vertica.BulkOperations\RepoDb.Vertica.BulkOperations\RepoDb.Vertica.BulkOperations.csproj" />
+    <ProjectReference Include="..\RepoDb.Benchmarks.Core\RepoDb.Benchmarks.Core.csproj" />
+  </ItemGroup>
+</Project>
