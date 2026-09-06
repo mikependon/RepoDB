@@ -40,6 +40,7 @@ Each supported database provider has its own dedicated benchmark project. This l
 |---|---|---|
 | 📈 ClickHouse | [RepoDb.Benchmarks.ClickHouse](RepoDb.Benchmarks.ClickHouse) | ✅ Available |
 | 🐳 IBM Db2 | [RepoDb.Benchmarks.Db2](RepoDb.Benchmarks.Db2) | ✅ Available |
+| 🐘 EnterpriseDB | [RepoDb.Benchmarks.EnterpriseDb](RepoDb.Benchmarks.EnterpriseDb) | ✅ Available |
 | 🔥 Firebird | [RepoDb.Benchmarks.Firebird](RepoDb.Benchmarks.Firebird) | ✅ Available |
 | 🦭 MariaDB | [RepoDb.Benchmarks.MariaDb](RepoDb.Benchmarks.MariaDb) | ✅ Available |
 | 🦭 MariaDB (MariaDbConnector) | [RepoDb.Benchmarks.MariaDbConnector](RepoDb.Benchmarks.MariaDbConnector) | ✅ Available |
@@ -111,6 +112,11 @@ docker compose up -d db2
 cd RepoDb.Benchmarks.Db2
 dotnet run -c Release
 
+# 🐘 EnterpriseDB
+docker compose up -d enterprisedb
+cd RepoDb.Benchmarks.EnterpriseDb
+dotnet run -c Release
+
 # 🔥 Firebird
 docker compose up -d firebird
 cd RepoDb.Benchmarks.Firebird
@@ -124,7 +130,7 @@ dotnet run -c Release
 
 > ⚠️ Always run benchmarks in `Release` configuration. Debug builds produce misleading results.
 
-Connection strings default to a local Dockerized instance, but can be overridden via the `REPODB_CONSTR` environment variable (and `REPODB_CONSTR_POSTGRESDB` / `REPODB_CONSTR_MYSQLDB` / `REPODB_CONSTR_MARIADB` / `REPODB_CONSTR_CLICKHOUSEDB` for the PostgreSQL/MySQL/MariaDB/ClickHouse admin connection) if your container uses different credentials or a different host/port.
+Connection strings default to a local Dockerized instance, but can be overridden via the `REPODB_CONSTR` environment variable (and `REPODB_CONSTR_POSTGRESDB` / `REPODB_CONSTR_MYSQLDB` / `REPODB_CONSTR_MARIADB` / `REPODB_CONSTR_CLICKHOUSEDB` / `REPODB_CONSTR_ENTERPRISEDB` for the PostgreSQL/MySQL/MariaDB/ClickHouse/EnterpriseDB admin connection) if your container uses different credentials or a different host/port.
 
 ## 🥊 ORMs Benchmarked
 
@@ -138,7 +144,7 @@ Connection strings default to a local Dockerized instance, but can be overridden
 
 Each ORM is exercised through its own idiomatic API (e.g., `DbContext` for EF Core, `Connection.Query` for Dapper, `Connection.QueryAll` for RepoDB) rather than forcing a shared abstraction, so every library is measured doing what it does best.
 
-> 📌 Not every ORM supports every database provider. Only the ORMs that officially support a given provider are included in that provider's benchmark project — so the list above may vary slightly from one provider to another. For example, [RepoDb.Benchmarks.MariaDb](RepoDb.Benchmarks.MariaDb) and [RepoDb.Benchmarks.MariaDbConnector](RepoDb.Benchmarks.MariaDbConnector) both exclude NHibernate, which ships no MariaDB-specific dialect or driver, [RepoDb.Benchmarks.ClickHouse](RepoDb.Benchmarks.ClickHouse) excludes it too for the same reason, and [RepoDb.Benchmarks.Vertica](RepoDb.Benchmarks.Vertica) goes further still — only RepoDb and Dapper (which is provider-agnostic) have anything to run against Vertica at all.
+> 📌 Not every ORM supports every database provider. Only the ORMs that officially support a given provider are included in that provider's benchmark project — so the list above may vary slightly from one provider to another. For example, [RepoDb.Benchmarks.MariaDb](RepoDb.Benchmarks.MariaDb) and [RepoDb.Benchmarks.MariaDbConnector](RepoDb.Benchmarks.MariaDbConnector) both exclude NHibernate, which ships no MariaDB-specific dialect or driver, [RepoDb.Benchmarks.ClickHouse](RepoDb.Benchmarks.ClickHouse) excludes it too for the same reason, and [RepoDb.Benchmarks.Vertica](RepoDb.Benchmarks.Vertica) goes further still — only RepoDb and Dapper (which is provider-agnostic) have anything to run against Vertica at all. [RepoDb.Benchmarks.EnterpriseDb](RepoDb.Benchmarks.EnterpriseDb) is the exception in the other direction — since EDB Postgres Advanced Server is a wire-protocol-compatible superset of PostgreSQL, all five ORMs work against it through standard Postgres-compatible tooling.
 
 ## 🛠️ Operations
 
@@ -170,7 +176,7 @@ No ORM is universally "best" — each makes different trade-offs. Here's how the
 
 Found a way to make a comparison fairer, more complete, or want to add a new provider? Contributions are very welcome.
 
-- Add a new provider by following the pattern in [RepoDb.Benchmarks.SqlServer](RepoDb.Benchmarks.SqlServer), [RepoDb.Benchmarks.PostgreSql](RepoDb.Benchmarks.PostgreSql), [RepoDb.Benchmarks.MySql](RepoDb.Benchmarks.MySql), [RepoDb.Benchmarks.MySqlConnector](RepoDb.Benchmarks.MySqlConnector), [RepoDb.Benchmarks.Oracle](RepoDb.Benchmarks.Oracle), [RepoDb.Benchmarks.MariaDb](RepoDb.Benchmarks.MariaDb), [RepoDb.Benchmarks.MariaDbConnector](RepoDb.Benchmarks.MariaDbConnector), [RepoDb.Benchmarks.Db2](RepoDb.Benchmarks.Db2), [RepoDb.Benchmarks.ClickHouse](RepoDb.Benchmarks.ClickHouse), [RepoDb.Benchmarks.Firebird](RepoDb.Benchmarks.Firebird), or [RepoDb.Benchmarks.Vertica](RepoDb.Benchmarks.Vertica).
+- Add a new provider by following the pattern in [RepoDb.Benchmarks.SqlServer](RepoDb.Benchmarks.SqlServer), [RepoDb.Benchmarks.PostgreSql](RepoDb.Benchmarks.PostgreSql), [RepoDb.Benchmarks.MySql](RepoDb.Benchmarks.MySql), [RepoDb.Benchmarks.MySqlConnector](RepoDb.Benchmarks.MySqlConnector), [RepoDb.Benchmarks.Oracle](RepoDb.Benchmarks.Oracle), [RepoDb.Benchmarks.MariaDb](RepoDb.Benchmarks.MariaDb), [RepoDb.Benchmarks.MariaDbConnector](RepoDb.Benchmarks.MariaDbConnector), [RepoDb.Benchmarks.Db2](RepoDb.Benchmarks.Db2), [RepoDb.Benchmarks.ClickHouse](RepoDb.Benchmarks.ClickHouse), [RepoDb.Benchmarks.Firebird](RepoDb.Benchmarks.Firebird), [RepoDb.Benchmarks.Vertica](RepoDb.Benchmarks.Vertica), or [RepoDb.Benchmarks.EnterpriseDb](RepoDb.Benchmarks.EnterpriseDb).
 - File a [new issue](https://github.com/mikependon/RepoDb/issues/new) if you spot a methodology concern.
 - Read the main [contributing guide](../../../CONTRIBUTING.md) before submitting a PR.
 
