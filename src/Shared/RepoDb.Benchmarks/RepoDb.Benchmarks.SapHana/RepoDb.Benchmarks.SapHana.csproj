@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>RepoDb.Benchmarks.SapHana</AssemblyName>
+    <TargetFrameworks>net10.0</TargetFrameworks>
+    <IsPackable>false</IsPackable>
+    <LangVersion>preview</LangVersion>
+    <Nullable>annotations</Nullable>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.15.8" />
+    <PackageReference Include="Dapper" Version="2.1.79" />
+    <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
+    <PackageReference Include="linq2db" Version="6.4.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.11" />
+    <!-- Aliased because this package bundles its own private copy of the Sap.Data.Hana ADO.NET driver
+         (as Sap.Data.Hana.Net.v10.0.dll, alongside its own provider DLL in the same lib folder) instead
+         of depending on the standalone driver package - which otherwise collides with the
+         Sap.Data.Hana.Net.v6.0 this project already gets transitively through RepoDb.SapHana. -->
+    <PackageReference Include="Sap.EntityFrameworkCore.Hana.v10.0" Version="2.29.27" Aliases="SapEfCore" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Providers\RepoDb.SapHana\RepoDb.SapHana\RepoDb.SapHana.csproj" />
+    <ProjectReference Include="..\..\..\Providers\RepoDb.SapHana.BulkOperations\RepoDb.SapHana.BulkOperations\RepoDb.SapHana.BulkOperations.csproj" />
+    <ProjectReference Include="..\RepoDb.Benchmarks.Core\RepoDb.Benchmarks.Core.csproj" />
+  </ItemGroup>
+</Project>
