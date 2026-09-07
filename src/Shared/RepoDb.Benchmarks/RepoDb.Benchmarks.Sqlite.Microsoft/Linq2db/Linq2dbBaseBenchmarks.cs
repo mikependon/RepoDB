@@ -11,13 +11,13 @@ using System.Linq;
 using BenchmarkDotNet.Attributes;
 using DataModels;
 using LinqToDB;
-using LinqToDB.DataProvider.SapHana;
-using RepoDb.Benchmarks.SapHana.Setup;
+using LinqToDB.DataProvider.SQLite;
+using RepoDb.Benchmarks.Sqlite.Microsoft.Setup;
 
-namespace RepoDb.Benchmarks.SapHana.Linq2db
+namespace RepoDb.Benchmarks.Sqlite.Microsoft.Linq2db
 {
     [Description("Linq2db")]
-    public class Linq2dbBaseBenchmarks : SapHanaBenchmark
+    public class Linq2dbBaseBenchmarks : SqliteBenchmark
     {
         [GlobalSetup]
         public void Setup() => BaseSetup();
@@ -29,12 +29,10 @@ namespace RepoDb.Benchmarks.SapHana.Linq2db
             db.People.Select(x => x.Id == CurrentId).ToList();
         }
 
-        // SapHanaProvider.Unmanaged is the native Sap.Data.Hana(.Core) client, the same one
-        // RepoDb.SapHana itself is built on (as opposed to the ODBC alternative).
         protected static RepoDbDB GetDb()
         {
             var options = new DataOptions();
-            options = options.UseSapHana(DatabaseHelper.ConnectionString, SapHanaProvider.Unmanaged);
+            options = options.UseSQLite(DatabaseHelper.ConnectionString, SQLiteProvider.Microsoft);
 
             return new RepoDbDB(options);
         }
