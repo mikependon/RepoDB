@@ -48,6 +48,7 @@ Each supported database provider has its own dedicated benchmark project. This l
 | 🐬 MySQL (MySqlConnector) | [RepoDb.Benchmarks.MySqlConnector](RepoDb.Benchmarks.MySqlConnector) | ✅ Available |
 | 🔺 Oracle | [RepoDb.Benchmarks.Oracle](RepoDb.Benchmarks.Oracle) | ✅ Available |
 | 🐘 PostgreSQL | [RepoDb.Benchmarks.PostgreSql](RepoDb.Benchmarks.PostgreSql) | ✅ Available |
+| 🏢 SAP HANA | [RepoDb.Benchmarks.SapHana](RepoDb.Benchmarks.SapHana) | ✅ Available |
 | 🟦 SQL Server | [RepoDb.Benchmarks.SqlServer](RepoDb.Benchmarks.SqlServer) | ✅ Available |
 | 🔻 Vertica | [RepoDb.Benchmarks.Vertica](RepoDb.Benchmarks.Vertica) | ✅ Available |
 | ⚙️ Shared infrastructure | [RepoDb.Benchmarks.Core](RepoDb.Benchmarks.Core) | Common models, base classes, and configurations shared across all providers |
@@ -126,6 +127,11 @@ dotnet run -c Release
 docker compose up -d vertica
 cd RepoDb.Benchmarks.Vertica
 dotnet run -c Release
+
+# 🏢 SAP HANA
+docker compose up -d saphana
+cd RepoDb.Benchmarks.SapHana
+dotnet run -c Release
 ```
 
 > ⚠️ Always run benchmarks in `Release` configuration. Debug builds produce misleading results.
@@ -144,7 +150,7 @@ Connection strings default to a local Dockerized instance, but can be overridden
 
 Each ORM is exercised through its own idiomatic API (e.g., `DbContext` for EF Core, `Connection.Query` for Dapper, `Connection.QueryAll` for RepoDB) rather than forcing a shared abstraction, so every library is measured doing what it does best.
 
-> 📌 Not every ORM supports every database provider. Only the ORMs that officially support a given provider are included in that provider's benchmark project — so the list above may vary slightly from one provider to another. For example, [RepoDb.Benchmarks.MariaDb](RepoDb.Benchmarks.MariaDb) and [RepoDb.Benchmarks.MariaDbConnector](RepoDb.Benchmarks.MariaDbConnector) both exclude NHibernate, which ships no MariaDB-specific dialect or driver, [RepoDb.Benchmarks.ClickHouse](RepoDb.Benchmarks.ClickHouse) excludes it too for the same reason, and [RepoDb.Benchmarks.Vertica](RepoDb.Benchmarks.Vertica) goes further still — only RepoDb and Dapper (which is provider-agnostic) have anything to run against Vertica at all. [RepoDb.Benchmarks.EnterpriseDb](RepoDb.Benchmarks.EnterpriseDb) is the exception in the other direction — since EDB Postgres Advanced Server is a wire-protocol-compatible superset of PostgreSQL, all five ORMs work against it through standard Postgres-compatible tooling.
+> 📌 Not every ORM supports every database provider. Only the ORMs that officially support a given provider are included in that provider's benchmark project — so the list above may vary slightly from one provider to another. For example, [RepoDb.Benchmarks.MariaDb](RepoDb.Benchmarks.MariaDb) and [RepoDb.Benchmarks.MariaDbConnector](RepoDb.Benchmarks.MariaDbConnector) both exclude NHibernate, which ships no MariaDB-specific dialect or driver, [RepoDb.Benchmarks.ClickHouse](RepoDb.Benchmarks.ClickHouse) excludes it too for the same reason, [RepoDb.Benchmarks.SapHana](RepoDb.Benchmarks.SapHana) excludes it because its shipped HANA driver classes are hardcoded to an assembly from the legacy, Windows/.NET-Framework-only HANA client rather than the modern one this repo targets, and [RepoDb.Benchmarks.Vertica](RepoDb.Benchmarks.Vertica) goes further still — only RepoDb and Dapper (which is provider-agnostic) have anything to run against Vertica at all. [RepoDb.Benchmarks.EnterpriseDb](RepoDb.Benchmarks.EnterpriseDb) is the exception in the other direction — since EDB Postgres Advanced Server is a wire-protocol-compatible superset of PostgreSQL, all five ORMs work against it through standard Postgres-compatible tooling.
 
 ## 🛠️ Operations
 
@@ -176,7 +182,7 @@ No ORM is universally "best" — each makes different trade-offs. Here's how the
 
 Found a way to make a comparison fairer, more complete, or want to add a new provider? Contributions are very welcome.
 
-- Add a new provider by following the pattern in [RepoDb.Benchmarks.SqlServer](RepoDb.Benchmarks.SqlServer), [RepoDb.Benchmarks.PostgreSql](RepoDb.Benchmarks.PostgreSql), [RepoDb.Benchmarks.MySql](RepoDb.Benchmarks.MySql), [RepoDb.Benchmarks.MySqlConnector](RepoDb.Benchmarks.MySqlConnector), [RepoDb.Benchmarks.Oracle](RepoDb.Benchmarks.Oracle), [RepoDb.Benchmarks.MariaDb](RepoDb.Benchmarks.MariaDb), [RepoDb.Benchmarks.MariaDbConnector](RepoDb.Benchmarks.MariaDbConnector), [RepoDb.Benchmarks.Db2](RepoDb.Benchmarks.Db2), [RepoDb.Benchmarks.ClickHouse](RepoDb.Benchmarks.ClickHouse), [RepoDb.Benchmarks.Firebird](RepoDb.Benchmarks.Firebird), [RepoDb.Benchmarks.Vertica](RepoDb.Benchmarks.Vertica), or [RepoDb.Benchmarks.EnterpriseDb](RepoDb.Benchmarks.EnterpriseDb).
+- Add a new provider by following the pattern in [RepoDb.Benchmarks.SqlServer](RepoDb.Benchmarks.SqlServer), [RepoDb.Benchmarks.PostgreSql](RepoDb.Benchmarks.PostgreSql), [RepoDb.Benchmarks.MySql](RepoDb.Benchmarks.MySql), [RepoDb.Benchmarks.MySqlConnector](RepoDb.Benchmarks.MySqlConnector), [RepoDb.Benchmarks.Oracle](RepoDb.Benchmarks.Oracle), [RepoDb.Benchmarks.MariaDb](RepoDb.Benchmarks.MariaDb), [RepoDb.Benchmarks.MariaDbConnector](RepoDb.Benchmarks.MariaDbConnector), [RepoDb.Benchmarks.Db2](RepoDb.Benchmarks.Db2), [RepoDb.Benchmarks.ClickHouse](RepoDb.Benchmarks.ClickHouse), [RepoDb.Benchmarks.Firebird](RepoDb.Benchmarks.Firebird), [RepoDb.Benchmarks.Vertica](RepoDb.Benchmarks.Vertica), [RepoDb.Benchmarks.EnterpriseDb](RepoDb.Benchmarks.EnterpriseDb), or [RepoDb.Benchmarks.SapHana](RepoDb.Benchmarks.SapHana).
 - File a [new issue](https://github.com/mikependon/RepoDb/issues/new) if you spot a methodology concern.
 - Read the main [contributing guide](../../../CONTRIBUTING.md) before submitting a PR.
 
