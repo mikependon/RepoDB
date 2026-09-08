@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Title>RepoDb.Benchmarks.Core</Title>
     <AssemblyName>RepoDb.Benchmarks.Core</AssemblyName>
@@ -17,6 +17,6 @@
     <PackageReference Remove="System.Linq.Async" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Providers\RepoDb.Core\RepoDb\RepoDb.csproj" />
+    <ProjectReference Include="..\..\Providers\RepoDb.Core\RepoDb\RepoDb.csproj" />
   </ItemGroup>
 </Project>

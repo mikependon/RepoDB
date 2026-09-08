@@ -22,8 +22,8 @@
     <PackageReference Include="Sap.EntityFrameworkCore.Hana.v10.0" Version="2.29.27" Aliases="SapEfCore" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Providers\RepoDb.SapHana\RepoDb.SapHana\RepoDb.SapHana.csproj" />
-    <ProjectReference Include="..\..\..\Providers\RepoDb.SapHana.BulkOperations\RepoDb.SapHana.BulkOperations\RepoDb.SapHana.BulkOperations.csproj" />
+    <ProjectReference Include="..\..\Providers\RepoDb.SapHana\RepoDb.SapHana\RepoDb.SapHana.csproj" />
+    <ProjectReference Include="..\..\Providers\RepoDb.SapHana.BulkOperations\RepoDb.SapHana.BulkOperations\RepoDb.SapHana.BulkOperations.csproj" />
     <ProjectReference Include="..\RepoDb.Benchmarks.Core\RepoDb.Benchmarks.Core.csproj" />
   </ItemGroup>
 </Project>
