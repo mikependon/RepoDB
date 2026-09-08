@@ -31,8 +31,8 @@
     <PackageReference Include="IBM.EntityFrameworkCore-lnx" Version="10.0.0.100" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Providers\RepoDb.Db2\RepoDb.Db2\RepoDb.Db2.csproj" />
-    <ProjectReference Include="..\..\..\Providers\RepoDb.Db2.BulkOperations\RepoDb.Db2.BulkOperations\RepoDb.Db2.BulkOperations.csproj" />
+    <ProjectReference Include="..\..\Providers\RepoDb.Db2\RepoDb.Db2\RepoDb.Db2.csproj" />
+    <ProjectReference Include="..\..\Providers\RepoDb.Db2.BulkOperations\RepoDb.Db2.BulkOperations\RepoDb.Db2.BulkOperations.csproj" />
     <ProjectReference Include="..\RepoDb.Benchmarks.Core\RepoDb.Benchmarks.Core.csproj" />
   </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <AssemblyName>RepoDb.Benchmarks.MariaDbConnector</AssemblyName>
+    <AssemblyName>RepoDb.Benchmarks.MariaDb</AssemblyName>
     <TargetFrameworks>net10.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <LangVersion>preview</LangVersion>
@@ -23,8 +23,8 @@
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Providers\RepoDb.MariaDbConnector\RepoDb.MariaDbConnector\RepoDb.MariaDbConnector.csproj" />
-    <ProjectReference Include="..\..\..\Providers\RepoDb.MariaDbConnector.BulkOperations\RepoDb.MariaDbConnector.BulkOperations\RepoDb.MariaDbConnector.BulkOperations.csproj" />
+    <ProjectReference Include="..\..\Providers\RepoDb.MariaDb\RepoDb.MariaDb\RepoDb.MariaDb.csproj" />
+    <ProjectReference Include="..\..\Providers\RepoDb.MariaDb.BulkOperations\RepoDb.MariaDb.BulkOperations\RepoDb.MariaDb.BulkOperations.csproj" />
     <ProjectReference Include="..\RepoDb.Benchmarks.Core\RepoDb.Benchmarks.Core.csproj" />
   </ItemGroup>
 </Project>

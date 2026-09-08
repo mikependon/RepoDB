@@ -173,7 +173,7 @@ It's intentionally lightweight rather than OTel-based, keeping RepoDB's thin, fa
 
 If your organization is evaluating or adopting RepoDB for production use, keep the following in mind:
 
-- **🖥️ Run the benchmark on your environment** — Published [benchmarks](src/Shared/RepoDb.Benchmarks/README.md) reflect our infrastructure, not yours. Re-run them on your own setup before trusting the numbers.
+- **🖥️ Run the benchmark on your environment** — Published [benchmarks](src/Benchmarks/README.md) reflect our infrastructure, not yours. Re-run them on your own setup before trusting the numbers.
 - **⚠️ Be aware of the limitations** — RepoDB has documented, provider-specific [limitations](src/Shared/RepoDb.Docs/limitations.md). Review them before production use.
 - **🔒 Security is best-effort, not SLA-backed** — No dedicated security team or response SLA. See our [Security Policy](SECURITY.md) before security-sensitive adoption.
 - **🤝 Understand our contributions and support policy** — Maintained by one individual; support is free but follows a documented [support policy](src/Shared/RepoDb.Docs/support-policy.md), not an enterprise SLA.

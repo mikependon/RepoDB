@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <AssemblyName>RepoDb.Benchmarks.ClickHouse</AssemblyName>
+    <AssemblyName>RepoDb.Benchmarks.Vertica</AssemblyName>
     <TargetFrameworks>net10.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <LangVersion>preview</LangVersion>
@@ -12,13 +12,10 @@
     <PackageReference Include="BenchmarkDotNet" Version="0.15.8" />
     <PackageReference Include="Dapper" Version="2.1.79" />
     <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
-    <PackageReference Include="linq2db" Version="6.4.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.11" />
-    <PackageReference Include="ClickHouse.EntityFrameworkCore" Version="0.3.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Providers\RepoDb.ClickHouse\RepoDb.ClickHouse\RepoDb.ClickHouse.csproj" />
-    <ProjectReference Include="..\..\..\Providers\RepoDb.ClickHouse.BulkOperations\RepoDb.ClickHouse.BulkOperations\RepoDb.ClickHouse.BulkOperations.csproj" />
+    <ProjectReference Include="..\..\Providers\RepoDb.Vertica\RepoDb.Vertica\RepoDb.Vertica.csproj" />
+    <ProjectReference Include="..\..\Providers\RepoDb.Vertica.BulkOperations\RepoDb.Vertica.BulkOperations\RepoDb.Vertica.BulkOperations.csproj" />
     <ProjectReference Include="..\RepoDb.Benchmarks.Core\RepoDb.Benchmarks.Core.csproj" />
   </ItemGroup>
 </Project>
