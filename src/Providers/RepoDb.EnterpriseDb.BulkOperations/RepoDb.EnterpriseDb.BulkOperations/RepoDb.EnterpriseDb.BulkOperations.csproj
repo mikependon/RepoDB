@@ -7,7 +7,7 @@
     <Nullable>annotations</Nullable>
     <Description>An extension library that contains the official Bulk Operations of RepoDB for EnterpriseDB (using RepoDb.Connector.EnterpriseDb).</Description>
     <PackageTags>orm hybrid-orm micro-orm postgresql enterprisedb edb bulkoperations</PackageTags>
-    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.EnterpriseDb.BulkOperations</RepositoryUrl>
+    <RepositoryUrl>https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.EnterpriseDb.BulkOperations</RepositoryUrl>
     <PackageReleaseNotes>http://repodb.net/release/enterprisedbbulk</PackageReleaseNotes>
     <PackageProjectUrl>https://repodb.net/tutorial/get-started-enterprisedb</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>

@@ -7,7 +7,7 @@
     <LangVersion>preview</LangVersion>
     <Nullable>annotations</Nullable>
     <PackageTags>orm hybrid-orm micro-orm saphana hana</PackageTags>
-    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.SapHana</RepositoryUrl>
+    <RepositoryUrl>https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.SapHana</RepositoryUrl>
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>

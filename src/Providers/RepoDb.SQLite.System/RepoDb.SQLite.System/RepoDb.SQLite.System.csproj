@@ -7,7 +7,7 @@
     <Nullable>annotations</Nullable>
     <Description>A hybrid .NET ORM library for SQLite (using System.Data.SQLite.Core).</Description>
     <PackageTags>orm hybrid-orm micro-orm sqlite</PackageTags>
-    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqLite</RepositoryUrl>
+    <RepositoryUrl>https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.SQLite.System</RepositoryUrl>
     <PackageReleaseNotes>http://repodb.net/release/sqlite</PackageReleaseNotes>
     <PackageProjectUrl>https://repodb.net/tutorial/get-started-sqlite</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>

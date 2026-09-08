@@ -6,7 +6,7 @@
     <Nullable>annotations</Nullable>
     <Description>An extension library that contains the official Bulk Operations of RepoDB for PostgreSQL.</Description>
     <PackageTags>orm hybrid-orm micro-orm postgresql bulkoperations</PackageTags>
-    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.PostgreSql.BulkOperations</RepositoryUrl>
+    <RepositoryUrl>https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.PostgreSql.BulkOperations</RepositoryUrl>
     <PackageReleaseNotes>http://repodb.net/release/postgresqlbulk</PackageReleaseNotes>
     <PackageProjectUrl>https://repodb.net/tutorial/get-started-postgresql</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>

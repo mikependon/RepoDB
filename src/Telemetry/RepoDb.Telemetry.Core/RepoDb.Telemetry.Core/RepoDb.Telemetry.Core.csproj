@@ -8,7 +8,7 @@
     <LangVersion>preview</LangVersion>
     <Nullable>annotations</Nullable>
     <PackageTags>orm hybrid-orm micro-orm telemetry</PackageTags>
-    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Telemetry.Core</RepositoryUrl>
+    <RepositoryUrl>https://github.com/mikependon/RepoDB/tree/master/src/Telemetry/RepoDb.Telemetry.Core</RepositoryUrl>
     <PackageReleaseNotes>http://repodb.net/release/telemetrycore</PackageReleaseNotes>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>

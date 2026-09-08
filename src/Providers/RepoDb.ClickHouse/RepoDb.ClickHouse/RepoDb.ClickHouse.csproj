@@ -7,7 +7,7 @@
     <LangVersion>preview</LangVersion>
     <Nullable>annotations</Nullable>
     <PackageTags>orm hybrid-orm micro-orm clickhouse olap</PackageTags>
-    <RepositoryUrl>https://github.com/mikependon/RepoDB/tree/master/RepoDb.ClickHouse</RepositoryUrl>
+    <RepositoryUrl>https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.ClickHouse</RepositoryUrl>
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>

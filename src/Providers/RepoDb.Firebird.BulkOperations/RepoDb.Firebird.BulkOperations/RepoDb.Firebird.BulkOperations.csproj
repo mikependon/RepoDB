@@ -7,7 +7,7 @@
     <Nullable>annotations</Nullable>
     <Description>An extension library that contains the official Bulk Operations of RepoDB for Firebird.</Description>
     <PackageTags>orm hybrid-orm micro-orm firebird bulkoperations</PackageTags>
-    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.Firebird.BulkOperations</RepositoryUrl>
+    <RepositoryUrl>https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.Firebird.BulkOperations</RepositoryUrl>
     <PackageReleaseNotes>http://repodb.net/release/firebirdbulk</PackageReleaseNotes>
     <PackageProjectUrl>https://repodb.net/tutorial/get-started-firebird</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>

@@ -7,7 +7,7 @@
     <Nullable>annotations</Nullable>
     <Description>An extension library that contains the official Bulk Operations of RepoDB for Vertica.</Description>
     <PackageTags>orm hybrid-orm micro-orm vertica bulkoperations</PackageTags>
-    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.Vertica.BulkOperations</RepositoryUrl>
+    <RepositoryUrl>https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.Vertica.BulkOperations</RepositoryUrl>
     <PackageReleaseNotes>http://repodb.net/release/verticabulk</PackageReleaseNotes>
     <PackageProjectUrl>https://repodb.net/tutorial/get-started-vertica</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>

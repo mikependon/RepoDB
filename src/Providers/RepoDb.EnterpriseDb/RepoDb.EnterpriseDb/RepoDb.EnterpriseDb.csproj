@@ -6,7 +6,7 @@
     <Nullable>annotations</Nullable>
     <Description>A hybrid .NET ORM library for EDB Postgres Advanced Server (EnterpriseDB).</Description>
     <PackageTags>orm hybrid-orm micro-orm postgresql enterprisedb edb</PackageTags>
-    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.EnterpriseDb</RepositoryUrl>
+    <RepositoryUrl>https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.EnterpriseDb</RepositoryUrl>
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>http://repodb.net/release/enterprisedb</PackageReleaseNotes>

@@ -12,7 +12,7 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageReleaseNotes>http://repodb.net/release/core</PackageReleaseNotes>
     <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core</RepositoryUrl>
+    <RepositoryUrl>https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.Core</RepositoryUrl>
     <!--
       When a dependent package (e.g. RepoDb.SqlServer) is packed with a global -p:Version, that
       version flows to this ProjectReference and gets stamped as the dependency version too. Pass

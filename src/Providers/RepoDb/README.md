@@ -12,7 +12,7 @@ This is the official repository for **RepoDb** (NetFramework) solution.
 - This code-line is already out-of-support since v1.10.1.
 ```
 
-To contribute, please proceed to [RepoDb.Core](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core) solution instead.
+To contribute, please proceed to [RepoDb.Core](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.Core) solution instead.
 
 ### Community engagements
 

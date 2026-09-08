@@ -7,7 +7,7 @@
     <Nullable>annotations</Nullable>
     <Description>An extension library that contains the official Bulk Operations of RepoDB for MySQL (using MySql.Data).</Description>
     <PackageTags>orm hybrid-orm micro-orm mysql bulkoperations</PackageTags>
-    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.MySql.BulkOperations</RepositoryUrl>
+    <RepositoryUrl>https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.MySql.BulkOperations</RepositoryUrl>
     <PackageReleaseNotes>http://repodb.net/release/mysqlconnectorbulk</PackageReleaseNotes>
     <PackageProjectUrl>https://repodb.net/tutorial/get-started-mysql</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>

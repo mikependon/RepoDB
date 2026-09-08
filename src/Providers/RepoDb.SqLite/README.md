@@ -12,8 +12,8 @@ This code-line is out-of-support soon. The final version is v1.1.4.
 
 To contribute, use one of the current SQLite providers instead:
 
-- [RepoDb.Sqlite.Microsoft](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Sqlite.Microsoft) — backed by `Microsoft.Data.Sqlite`.
-- [RepoDb.SQLite.System](https://github.com/mikependon/RepoDb/tree/master/RepoDb.SQLite.System) — backed by `System.Data.SQLite.Core`.
+- [RepoDb.Sqlite.Microsoft](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.Sqlite.Microsoft) — backed by `Microsoft.Data.Sqlite`.
+- [RepoDb.SQLite.System](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.SQLite.System) — backed by `System.Data.SQLite.Core`.
 
 ## Important Pages
 
