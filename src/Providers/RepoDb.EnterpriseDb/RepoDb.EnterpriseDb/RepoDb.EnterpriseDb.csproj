@@ -20,7 +20,7 @@
     <PackageVersion Condition="'$(RepoDbEnterpriseDbVersion)' != ''">$(RepoDbEnterpriseDbVersion)</PackageVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="RepoDb.Connector.EnterpriseDb" Version="0.0.1" />
+    <PackageReference Include="RepoDb.Connector.EnterpriseDb" Version="1.0.0" />
     <PackageReference Include="System.Text.Json" Version="10.0.9" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">

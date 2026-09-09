@@ -25,7 +25,7 @@
     <Compile Remove="Attributes\MariaDbTypeMapAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="RepoDb.Connector.MariaDb" Version="0.0.1" />
+    <PackageReference Include="RepoDb.Connector.MariaDb" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />
