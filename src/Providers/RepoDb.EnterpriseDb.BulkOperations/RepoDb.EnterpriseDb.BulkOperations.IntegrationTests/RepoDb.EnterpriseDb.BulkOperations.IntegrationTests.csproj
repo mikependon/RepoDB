@@ -14,7 +14,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="MSTest" Version="4.2.3" />
-    <PackageReference Include="RepoDb.Connector.EnterpriseDb" Version="0.0.1-alpha2" />
+    <PackageReference Include="RepoDb.Connector.EnterpriseDb" Version="0.0.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />

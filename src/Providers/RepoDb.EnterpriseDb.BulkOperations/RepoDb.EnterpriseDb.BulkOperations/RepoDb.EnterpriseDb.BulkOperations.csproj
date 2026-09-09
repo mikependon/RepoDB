@@ -22,7 +22,7 @@
     <PackageVersion Condition="'$(RepoDbEnterpriseDbBulkOperationsVersion)' != ''">$(RepoDbEnterpriseDbBulkOperationsVersion)</PackageVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="RepoDb.Connector.EnterpriseDb" Version="0.0.1-alpha2" />
+    <PackageReference Include="RepoDb.Connector.EnterpriseDb" Version="0.0.1" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />
