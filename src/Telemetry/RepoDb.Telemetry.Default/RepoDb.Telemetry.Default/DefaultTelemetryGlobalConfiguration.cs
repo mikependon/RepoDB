@@ -7,7 +7,10 @@
 #endregion
 
 using System;
+using System.Net.Http;
+using System.Net.Security;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using RepoDb.Telemetry.Core;
 using Serilog;
 
@@ -34,6 +37,7 @@ namespace RepoDb.Telemetry.Default
         /// </param>
         /// <param name="errorCallback">An optional callback invoked with any exception that occurs internally (e.g. during telemetry publishing).</param>
         /// <param name="logger">An optional logger instance to log any internal errors.</param>
+        /// <param name="certificateValidationCallback">An optional callback used to validate the server certificate presented by the collector API when publishing over HTTPS. Leave this to null to use the default .NET certificate validation.</param>
         /// <returns>The used global configuration instance itself.</returns>
         public static GlobalConfiguration UseDefaultTelemetry(
             this GlobalConfiguration globalConfiguration,
@@ -42,13 +46,15 @@ namespace RepoDb.Telemetry.Default
             string applicationName,
             string groupName = "Default",
             Action<Exception> errorCallback = null,
-            ILogger logger = null)
+            ILogger logger = null,
+            Func<HttpRequestMessage, X509Certificate2, X509Chain, SslPolicyErrors, bool> certificateValidationCallback = null)
         {
             return globalConfiguration.UseDefaultTelemetry(new DefaultTelemetryOption(applicationName)
             {
                 ApiKey = apiKey,
                 Group = groupName,
-                Host = host
+                Host = host,
+                CertificateValidationCallback = certificateValidationCallback
             },
             errorCallback, logger);
         }

@@ -7,6 +7,9 @@
 #endregion
 
 using System;
+using System.Net.Http;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 
 namespace RepoDb.Telemetry.Core
 {
@@ -49,5 +52,12 @@ namespace RepoDb.Telemetry.Core
         /// Gets or sets the threshold of how often to publish the buffered telemetry.
         /// </summary>
         public TimeSpan Frequency { get; set; } = TimeSpan.FromSeconds(5);
+
+        /// <summary>
+        /// Gets or sets the callback used to validate the server certificate presented by the collector API
+        /// when publishing over HTTPS. Leave this to null to use the default .NET certificate validation.
+        /// This is useful when the collector API is deployed with a self-signed or otherwise untrusted certificate.
+        /// </summary>
+        public Func<HttpRequestMessage, X509Certificate2, X509Chain, SslPolicyErrors, bool> CertificateValidationCallback { get; set; }
     }
 }

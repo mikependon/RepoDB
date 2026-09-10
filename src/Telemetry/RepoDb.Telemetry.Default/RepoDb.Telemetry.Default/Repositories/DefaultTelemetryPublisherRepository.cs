@@ -7,6 +7,9 @@
 #endregion
 
 using System;
+using System.Net.Http;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using RepoDb.Telemetry.Core;
 using Serilog;
 
@@ -24,12 +27,14 @@ namespace RepoDb.Telemetry.Default
         /// <param name="apiKey">The API key to be used for authentication. Leave this to empty if not provided in the collector API.</param>"
         /// <param name="errorCallback">The callback function to call in any exception.</param>
         /// <param name="logger">The logger instance to use when logging messages or events.</param>
+        /// <param name="certificateValidationCallback">An optional callback used to validate the server certificate presented by the collector API when publishing over HTTPS. Leave this to null to use the default .NET certificate validation.</param>
         public DefaultTelemetryPublisherRepository(
             string host = "http://localhost:5000",
             string apiKey = null,
             Action<Exception> errorCallback = null,
-            ILogger logger = null)
-            : base(host, apiKey, errorCallback, logger)
+            ILogger logger = null,
+            Func<HttpRequestMessage, X509Certificate2, X509Chain, SslPolicyErrors, bool> certificateValidationCallback = null)
+            : base(host, apiKey, errorCallback, logger, certificateValidationCallback)
         { }
 
         /// <summary>

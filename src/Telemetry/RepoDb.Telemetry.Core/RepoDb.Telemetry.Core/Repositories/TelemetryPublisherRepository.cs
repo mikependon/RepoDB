@@ -12,6 +12,8 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -27,7 +29,8 @@ namespace RepoDb.Telemetry.Core
     {
         #region Privates
 
-        private static readonly HttpClient _httpClient = new HttpClient();
+        private static readonly HttpClient _defaultHttpClient = new HttpClient();
+        private readonly HttpClient _httpClient;
         private readonly string _apiKey;
         private readonly Action<Exception> _errorCallback;
         private readonly ILogger _logger;
@@ -43,16 +46,24 @@ namespace RepoDb.Telemetry.Core
         /// <param name="apiKey">The API key to be used for authentication. Leave this to empty if not provided in the collector API.</param>"
         /// <param name="errorCallback">The callback function to call in the case of any exception.</param>
         /// <param name="logger">The logger instance to use when logging messages or events.</param>
+        /// <param name="certificateValidationCallback">An optional callback used to validate the server certificate presented by the collector API when publishing over HTTPS. Leave this to null to use the default .NET certificate validation.</param>
         public TelemetryPublisherRepository(
             string host = "http://localhost:5000",
             string apiKey = null,
             Action<Exception> errorCallback = null,
-            ILogger logger = null)
+            ILogger logger = null,
+            Func<HttpRequestMessage, X509Certificate2, X509Chain, SslPolicyErrors, bool> certificateValidationCallback = null)
         {
             Host = host;
             _apiKey = apiKey;
             _errorCallback = errorCallback;
             _logger = logger;
+            _httpClient = certificateValidationCallback == null
+                ? _defaultHttpClient
+                : new HttpClient(new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback = certificateValidationCallback
+                });
         }
 
         #endregion

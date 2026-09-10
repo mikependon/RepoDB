@@ -49,7 +49,7 @@ namespace RepoDb.Telemetry.Default
         /// </summary>
         /// <returns>Returns the instance of <see cref="DefaultTelemetryPublisherRepository"/> class.</returns>
         public override TelemetryPublisherRepository GetPublisherRepository()
-            => new DefaultTelemetryPublisherRepository(Option.Host, Option.ApiKey, ErrorCallback, Logger);
+            => new DefaultTelemetryPublisherRepository(Option.Host, Option.ApiKey, ErrorCallback, Logger, Option.CertificateValidationCallback);
 
         #endregion
 
