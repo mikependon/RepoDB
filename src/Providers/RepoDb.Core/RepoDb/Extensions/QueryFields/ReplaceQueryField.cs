@@ -11,6 +11,9 @@ using RepoDb.Enumerations;
 
 namespace RepoDb.Extensions.QueryFields
 {
+    /// <summary>
+    /// A functional-based <see cref="QueryField"/> object that is using the REPLACE function.
+    /// </summary>
     public class ReplaceQueryField : FunctionalQueryField
     {
         /// <summary>
