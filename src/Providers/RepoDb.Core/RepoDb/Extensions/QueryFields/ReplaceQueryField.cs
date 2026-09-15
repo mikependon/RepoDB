@@ -1,4 +1,12 @@
-﻿using System.Data;
+﻿#region Copyright Attributions
+
+// Copyright (c) 2026 bpaolo71 and Michael Camara Pendon.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+using System.Data;
 using RepoDb.Enumerations;
 
 namespace RepoDb.Extensions.QueryFields
@@ -14,12 +22,12 @@ namespace RepoDb.Extensions.QueryFields
         /// <param name="searchValue">The value to be searched for in the query expression.</param>
         /// <param name="replaceValue">The value to replace the search value with in the query expression.</param>
         public ReplaceQueryField(
-        string fieldName,
-        Operation operation,
-        object value,
-        string searchValue,
-        string replaceValue)
-        : this(fieldName, operation, value, null, searchValue, replaceValue)
+            string fieldName,
+            Operation operation,
+            object value,
+            string searchValue,
+            string replaceValue)
+            : this(fieldName, operation, value, null, searchValue, replaceValue)
         { }
 
         /// <summary>
