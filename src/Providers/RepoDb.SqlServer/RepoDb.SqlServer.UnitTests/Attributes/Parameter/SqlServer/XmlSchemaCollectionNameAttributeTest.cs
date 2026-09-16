@@ -20,7 +20,7 @@ namespace RepoDb.SqlServer.UnitTests.Attributes.Parameter.SqlServer
         [TestInitialize]
         public void Initialize()
         {
-            DbSettingMapper.Add<SqlConnection>(new SqlServerDbSetting(), true);
+            DbSettingMapper.Add<SqlConnection>(new SqlServerDbSetting(), force: true);
         }
 
         #region Classes
@@ -52,7 +52,7 @@ namespace RepoDb.SqlServer.UnitTests.Attributes.Parameter.SqlServer
 
                     // Assert
                     var parameter = command.Parameters["@ColumnName"];
-                    Assert.AreEqual("XmlSchemaCollectionName", parameter.XmlSchemaCollectionName);
+                    Assert.AreEqual("XmlSchemaCollectionName", parameter.XmlSchemaCollectionName, System.StringComparer.Ordinal);
                 }
             }
         }
@@ -77,7 +77,7 @@ namespace RepoDb.SqlServer.UnitTests.Attributes.Parameter.SqlServer
 
                     // Assert
                     var parameter = command.Parameters["@ColumnName"];
-                    Assert.AreEqual("XmlSchemaCollectionName", parameter.XmlSchemaCollectionName);
+                    Assert.AreEqual("XmlSchemaCollectionName", parameter.XmlSchemaCollectionName, System.StringComparer.Ordinal);
                 }
             }
         }

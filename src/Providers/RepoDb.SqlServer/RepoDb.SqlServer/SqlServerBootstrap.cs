@@ -36,22 +36,22 @@ namespace RepoDb
         internal static void InitializeInternal()
         {
             // Skip if already initialized
-            if (IsInitialized == true)
+            if (IsInitialized)
             {
                 return;
             }
 
             // Map the DbSetting
             var dbSetting = new SqlServerDbSetting();
-            DbSettingMapper.Add<SqlConnection>(dbSetting, true);
+            DbSettingMapper.Add<SqlConnection>(dbSetting, force: true);
 
             // Map the DbHelper
             var dbHelper = new SqlServerDbHelper();
-            DbHelperMapper.Add<SqlConnection>(dbHelper, true);
+            DbHelperMapper.Add<SqlConnection>(dbHelper, force: true);
 
             // Map the Statement Builder
             var statementBuilder = new SqlServerStatementBuilder(dbSetting);
-            StatementBuilderMapper.Add<SqlConnection>(statementBuilder, true);
+            StatementBuilderMapper.Add<SqlConnection>(statementBuilder, force: true);
 
             // Set the flag
             IsInitialized = true;

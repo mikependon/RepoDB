@@ -293,7 +293,7 @@ namespace RepoDb
         public virtual TDbConnection CreateConnection(bool force)
         {
             var newConnection = (TDbConnection)null;
-            if (force == false && ConnectionPersistency == ConnectionPersistency.Instance)
+            if (!force && ConnectionPersistency == ConnectionPersistency.Instance)
             {
                 lock (syncLock)
                 {

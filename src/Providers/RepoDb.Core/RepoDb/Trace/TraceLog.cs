@@ -50,7 +50,10 @@ namespace RepoDb
         /// Returns the string that represents the current object.
         /// </summary>
         /// <returns>The string representation of the current object.</returns>
-        public override string ToString() => $"SessiontId: {SessionId}, Key: {Key}";
+        public override string ToString()
+        {
+            return $"SessiontId: {SessionId}, Key: {Key}";
+        }
 
         #endregion
     }

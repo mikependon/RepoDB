@@ -66,7 +66,7 @@ namespace RepoDb.Requests
             int batchSize = Constant.DefaultBatchOperationSize,
             string hints = null,
             IStatementBuilder statementBuilder = null)
-            : this(null,
+            : this(type: null,
                   name,
                   connection,
                   transaction,
@@ -136,31 +136,31 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = HashCode.Combine(base.GetHashCode(), Name, ".InsertAll");
+            var computedHashCode = HashCode.Combine(base.GetHashCode(), Name, ".InsertAll");
 
             // Get the qualifier <see cref="Field"/> objects
             if (Fields != null)
             {
                 foreach (var field in Fields)
                 {
-                    hashCode = HashCode.Combine(hashCode, field);
+                    computedHashCode = HashCode.Combine(computedHashCode, field);
                 }
             }
 
             // Get the batch size
             if (BatchSize > 0)
             {
-                hashCode = HashCode.Combine(hashCode, BatchSize);
+                computedHashCode = HashCode.Combine(computedHashCode, BatchSize);
             }
 
             // Add the hints
             if (!string.IsNullOrWhiteSpace(Hints))
             {
-                hashCode = HashCode.Combine(hashCode, Hints);
+                computedHashCode = HashCode.Combine(computedHashCode, Hints);
             }
 
             // Set and return the hashcode
-            return (this.hashCode = hashCode).Value;
+            return (this.hashCode = computedHashCode).Value;
         }
     }
 

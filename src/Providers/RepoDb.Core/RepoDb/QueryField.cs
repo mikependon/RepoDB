@@ -36,7 +36,7 @@ namespace RepoDb
         /// <param name="value">The value to be used for the query expression.</param>
         public QueryField(string fieldName,
             object value)
-            : this(fieldName, Operation.Equal, value, null, false)
+            : this(fieldName, Operation.Equal, value, dbType: null, prependUnderscore: false)
         { }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace RepoDb
         public QueryField(string fieldName,
             Operation operation,
             object value)
-            : this(fieldName, operation, value, null, false)
+            : this(fieldName, operation, value, dbType: null, prependUnderscore: false)
         { }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace RepoDb
             Operation operation,
             object value,
             DbType? dbType)
-            : this(fieldName, operation, value, dbType, false)
+            : this(fieldName, operation, value, dbType, prependUnderscore: false)
         { }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace RepoDb
             object value,
             DbType? dbType,
             bool prependUnderscore = false)
-            : this(new Field(fieldName), operation, value, dbType, false)
+            : this(new Field(fieldName), operation, value, dbType, prependUnderscore: false)
         { }
 
         /// <summary>
@@ -133,8 +133,10 @@ namespace RepoDb
         /// </summary>
         /// <param name="dbSetting">The database setting currently in used.</param>
         /// <returns>The string representations of the current <see cref="QueryField"/> object.</returns>
-        public virtual string GetString(IDbSetting dbSetting) =>
-            GetString(0, dbSetting);
+        public virtual string GetString(IDbSetting dbSetting)
+        {
+            return GetString(0, dbSetting);
+        }
 
         /// <summary>
         /// Gets the string representations (column-value pairs) of the current <see cref="QueryField"/> object.
@@ -143,8 +145,10 @@ namespace RepoDb
         /// <param name="dbSetting">The database setting currently in used.</param>
         /// <returns>The string representations of the current <see cref="QueryField"/> object.</returns>
         public virtual string GetString(int index,
-            IDbSetting dbSetting) =>
-            GetString(index, null, dbSetting);
+            IDbSetting dbSetting)
+        {
+            return GetString(index, functionFormat: null, dbSetting);
+        }
 
         /// <summary>
         /// Gets the string representations (column-value pairs) of the current <see cref="QueryField"/> object with the formatted-function transformations.
@@ -191,8 +195,10 @@ namespace RepoDb
         /// <summary>
         /// Returns the name of the <see cref="Field"/> object current in used.
         /// </summary>
-        public string GetName() =>
-            Field?.Name;
+        public string GetName()
+        {
+            return Field?.Name;
+        }
 
         /// <summary>
         /// Returns the value of the <see cref="Parameter"/> object currently in used. However, if this instance of object has already been used as a database parameter 
@@ -200,8 +206,10 @@ namespace RepoDb
         /// object, then the value of the in-used <see cref="IDbDataParameter"/> object will be returned.
         /// </summary>
         /// <returns>The value of the <see cref="Parameter"/> object.</returns>
-        public object GetValue() =>
-            GetValue<object>();
+        public object GetValue()
+        {
+            return GetValue<object>();
+        }
 
         /// <summary>
         /// Returns the value of the <see cref="Parameter"/> object currently in used. However, if this instance of object has already been used as a database parameter 
@@ -210,8 +218,10 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns>The value of the converted <see cref="Parameter"/> object.</returns>
-        public T GetValue<T>() =>
-            Converter.ToType<T>(DbParameter?.Value ?? Parameter?.Value);
+        public T GetValue<T>()
+        {
+            return Converter.ToType<T>(DbParameter?.Value ?? Parameter?.Value);
+        }
 
         /// <summary>
         /// Make the current instance of <see cref="QueryField"/> object to become an expression for 'Update' operations.
@@ -256,32 +266,32 @@ namespace RepoDb
             }
 
             // Set in the combination of the properties
-            var hashCode = HashCode.Combine(Field, Operation, Parameter);
+            var computedHashCode = HashCode.Combine(Field, Operation, Parameter);
 
             // The (IS NULL) affects the uniqueness of the object
             if (Operation == Operation.Equal &&
                 Parameter.Value == null)
             {
-                hashCode = HashCode.Combine(hashCode, HASHCODE_ISNULL);
+                computedHashCode = HashCode.Combine(computedHashCode, HASHCODE_ISNULL);
             }
             // The (IS NOT NULL) affects the uniqueness of the object
             else if (Operation == Operation.NotEqual && Parameter.Value == null)
             {
-                hashCode = HashCode.Combine(hashCode, HASHCODE_ISNOTNULL);
+                computedHashCode = HashCode.Combine(computedHashCode, HASHCODE_ISNOTNULL);
             }
             // The parameter's length affects the uniqueness of the object
             else if (Operation is Operation.In or Operation.NotIn &&
                 Parameter.Value is IEnumerable enumerable)
             {
-                hashCode = HashCode.Combine(hashCode, enumerable.WithType<object>().Count());
+                computedHashCode = HashCode.Combine(computedHashCode, enumerable.WithType<object>().Count());
             }
             // The string representation affects the collision
             // var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && c.Value != 1);
             // var objB = QueryGroup.Parse<EntityClass>(c => c.Id != 1 && c.Value == 1);
-            hashCode = HashCode.Combine(hashCode, Field.Name, Operation.GetText());
+            computedHashCode = HashCode.Combine(computedHashCode, Field.Name, Operation.GetText());
 
             // Set and return the hashcode
-            return (this.hashCode = hashCode).Value;
+            return (this.hashCode = computedHashCode).Value;
         }
 
         /// <summary>
@@ -331,8 +341,7 @@ namespace RepoDb
         /// <param name="objB">The second <see cref="QueryField"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
         public static bool operator !=(QueryField objA,
-            QueryField objB) =>
-            (objA == objB) == false;
+            QueryField objB) => !(objA == objB);
 
         #endregion
     }

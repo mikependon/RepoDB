@@ -122,8 +122,10 @@ namespace RepoDb
         /// <summary>
         /// Clears all the existing cached <see cref="IDbSetting"/> objects.
         /// </summary>
-        public static void Clear() =>
+        public static void Clear()
+        {
             maps.Clear();
+        }
 
         #endregion
     }

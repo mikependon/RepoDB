@@ -58,7 +58,7 @@ namespace RepoDb.UnitTests.Cachers
         {
             // Act
             var property = PropertyCache.Get<PropertyMappedNameCacheTestClass>()
-                .First(p => p.PropertyInfo.Name == "PropertyString");
+                .First(p => string.Equals(p.PropertyInfo.Name, "PropertyString", StringComparison.Ordinal));
             var expected = "PropertyName";
 
             // Assert

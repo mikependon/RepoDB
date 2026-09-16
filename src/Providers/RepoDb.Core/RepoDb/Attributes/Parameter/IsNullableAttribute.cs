@@ -15,15 +15,13 @@ namespace RepoDb.Attributes.Parameter
     /// An attribute that is being used to define a value to the <see cref="DbParameter.IsNullable"/>
     /// property via a class property mapping.
     /// </summary>
-    public class IsNullableAttribute : PropertyValueAttribute
+    /// <remarks>
+    /// Creates a new instance of <see cref="IsNullableAttribute"/> class.
+    /// </remarks>
+    /// <param name="isNullable">The value that defines whether the parameter accepts a null value.</param>
+    [System.AttributeUsage(System.AttributeTargets.All)]
+    public class IsNullableAttribute(bool isNullable) : PropertyValueAttribute(typeof(DbParameter), nameof(DbParameter.IsNullable), isNullable)
     {
-        /// <summary>
-        /// Creates a new instance of <see cref="IsNullableAttribute"/> class.
-        /// </summary>
-        /// <param name="isNullable">The value that defines whether the parameter accepts a null value.</param>
-        public IsNullableAttribute(bool isNullable)
-            : base(typeof(DbParameter), nameof(DbParameter.IsNullable), isNullable)
-        { }
 
         /// <summary>
         /// Gets the mapped value that defines whether the parameter accepts a null value.

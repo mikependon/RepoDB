@@ -20,7 +20,17 @@ namespace RepoDb
     /// A widely-used class for defining the groupings when composing the query expression. This object is used by most operations
     /// to define the filters and expressions on the actual execution.
     /// </summary>
-    public partial class QueryGroup : IEquatable<QueryGroup>
+    /// <remarks>
+    /// Creates a new instance of <see cref="QueryGroup"/> object.
+    /// </remarks>
+    /// <param name="queryFields">The list of fields to be grouped for the query expression.</param>
+    /// <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
+    /// <param name="conjunction">The conjunction to be used for every group separation.</param>
+    /// <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
+    public partial class QueryGroup(IEnumerable<QueryField> queryFields,
+        IEnumerable<QueryGroup> queryGroups,
+        Conjunction conjunction,
+        bool isNot) : IEquatable<QueryGroup>
     {
         private bool isFixed = false;
         private int? hashCode = null;
@@ -38,7 +48,7 @@ namespace RepoDb
             this(queryField?.AsEnumerable(),
                 (IEnumerable<QueryGroup>)null,
                 Conjunction.And,
-                false)
+isNot: false)
         { }
 
         /// <summary>
@@ -51,7 +61,7 @@ namespace RepoDb
             this(queryField?.AsEnumerable(),
                 queryGroup?.AsEnumerable(),
                 Conjunction.And,
-                false)
+isNot: false)
         { }
 
         /// <summary>
@@ -64,7 +74,7 @@ namespace RepoDb
             this(queryField?.AsEnumerable(),
                 (IEnumerable<QueryGroup>)null,
                 conjunction,
-                false)
+isNot: false)
         { }
 
         /// <summary>
@@ -105,7 +115,7 @@ namespace RepoDb
             this(queryFields,
                 (IEnumerable<QueryGroup>)null,
                 Conjunction.And,
-                false)
+isNot: false)
         { }
 
         /// <summary>
@@ -118,7 +128,7 @@ namespace RepoDb
             this(queryFields,
                 queryGroup?.AsEnumerable(),
                 Conjunction.And,
-                false)
+isNot: false)
         { }
 
         /// <summary>
@@ -131,7 +141,7 @@ namespace RepoDb
             this(queryFields,
                 (IEnumerable<QueryGroup>)null,
                 conjunction,
-                false)
+isNot: false)
         { }
 
         /// <summary>
@@ -172,7 +182,7 @@ namespace RepoDb
             this((IEnumerable<QueryField>)null,
                 queryGroup?.AsEnumerable(),
                 Conjunction.And,
-                false)
+isNot: false)
         { }
 
         /// <summary>
@@ -185,7 +195,7 @@ namespace RepoDb
             this((IEnumerable<QueryField>)null,
                 queryGroup?.AsEnumerable(),
                 conjunction,
-                false)
+isNot: false)
         { }
 
         /// <summary>
@@ -226,7 +236,7 @@ namespace RepoDb
             this((IEnumerable<QueryField>)null,
                 queryGroups,
                 Conjunction.And,
-                false)
+isNot: false)
         { }
 
         /// <summary>
@@ -239,7 +249,7 @@ namespace RepoDb
             this((IEnumerable<QueryField>)null,
                 queryGroups,
                 conjunction,
-                false)
+isNot: false)
         { }
 
         /// <summary>
@@ -284,7 +294,7 @@ namespace RepoDb
             this(queryField?.AsEnumerable(),
                 queryGroup?.AsEnumerable(),
                 conjunction,
-                false)
+isNot: false)
         { }
 
         /// <summary>
@@ -331,7 +341,7 @@ namespace RepoDb
             this(queryField?.AsEnumerable(),
                 queryGroups,
                 Conjunction.And,
-                false)
+isNot: false)
         { }
 
         /// <summary>
@@ -346,7 +356,7 @@ namespace RepoDb
             this(queryField?.AsEnumerable(),
                 queryGroups,
                 conjunction,
-                false)
+isNot: false)
         { }
 
         /// <summary>
@@ -395,7 +405,7 @@ namespace RepoDb
             this(queryFields,
                 queryGroup?.AsEnumerable(),
                 conjunction,
-                false)
+isNot: false)
         { }
 
         /// <summary>
@@ -442,7 +452,7 @@ namespace RepoDb
             this(queryFields,
                 queryGroups,
                 Conjunction.And,
-                false)
+isNot: false)
         { }
 
         /// <summary>
@@ -457,7 +467,7 @@ namespace RepoDb
             this(queryFields,
                 queryGroups,
                 conjunction,
-                false)
+isNot: false)
         { }
 
         /// <summary>
@@ -475,24 +485,6 @@ namespace RepoDb
                 isNot)
         { }
 
-        /// <summary>
-        /// Creates a new instance of <see cref="QueryGroup"/> object.
-        /// </summary>
-        /// <param name="queryFields">The list of fields to be grouped for the query expression.</param>
-        /// <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
-        /// <param name="conjunction">The conjunction to be used for every group separation.</param>
-        /// <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
-        public QueryGroup(IEnumerable<QueryField> queryFields,
-            IEnumerable<QueryGroup> queryGroups,
-            Conjunction conjunction,
-            bool isNot)
-        {
-            Conjunction = conjunction;
-            QueryFields = queryFields?.AsList();
-            QueryGroups = queryGroups.AsList();
-            IsNot = isNot;
-        }
-
         #endregion
 
         #region Properties
@@ -500,22 +492,22 @@ namespace RepoDb
         /// <summary>
         /// Gets the conjunction used by this object.
         /// </summary>
-        public Conjunction Conjunction { get; }
+        public Conjunction Conjunction { get; } = conjunction;
 
         /// <summary>
         /// Gets the list of child <see cref="QueryField"/> objects.
         /// </summary>
-        public IReadOnlyList<QueryField> QueryFields { get; }
+        public IReadOnlyList<QueryField> QueryFields { get; } = queryFields?.AsList();
 
         /// <summary>
         /// Gets the list of child <see cref="QueryGroup"/> objects.
         /// </summary>
-        public IReadOnlyList<QueryGroup> QueryGroups { get; }
+        public IReadOnlyList<QueryGroup> QueryGroups { get; } = queryGroups.AsList();
 
         /// <summary>
         /// Gets the value whether the grouping is in opposite field-value state.
         /// </summary>
-        public bool IsNot { get; private set; }
+        public bool IsNot { get; private set; } = isNot;
 
         #endregion
 
@@ -527,12 +519,12 @@ namespace RepoDb
         /// <param name="prefix"></param>
         internal void PrependTextToAllParameters(string prefix)
         {
-            var queryFields = GetFields(true);
-            if (queryFields?.Any() != true)
+            var traversedFields = GetFields(traverse: true);
+            if (traversedFields?.Any() != true)
             {
                 return;
             }
-            foreach (var queryField in queryFields)
+            foreach (var queryField in traversedFields)
             {
                 queryField.PrependTextToParameter(prefix);
             }
@@ -542,25 +534,26 @@ namespace RepoDb
         /// Sets the value of the <see cref="IsNot"/> property.
         /// </summary>
         /// <param name="value">The <see cref="bool"/> value the defines the <see cref="IsNot"/> property.</param>
-        internal void SetIsNot(bool value) =>
+        internal void SetIsNot(bool value)
+        {
             IsNot = value;
+        }
 
         /// <summary>
         /// Fix the names of the parameters in every <see cref="QueryField"/> object of the target list of <see cref="QueryGroup"/>s.
         /// </summary>
         /// <param name="queryGroups">The list of query groups.</param>
-        /// <returns>An instance of <see cref="QueryGroup"/> object containing all the fields.</returns>
         internal static void FixForQueryMultiple(QueryGroup[] queryGroups)
         {
             for (var i = 0; i < queryGroups.Length; i++)
             {
-                var fields = queryGroups[i]?.GetFields(true);
+                var fields = queryGroups[i]?.GetFields(traverse: true);
 
                 if (fields?.Any() == true)
                 {
                     foreach (var field in fields)
                     {
-                        field.Parameter.SetName(string.Format("T{0}_{1}", i, field.Parameter.Name));
+                        field.Parameter.SetName(string.Format(System.Globalization.CultureInfo.InvariantCulture, "T{0}_{1}", i, field.Parameter.Name));
                     }
                 }
             }
@@ -615,7 +608,7 @@ namespace RepoDb
         /// Fix the query fields names.
         /// </summary>
         /// <param name="fields"></param>
-        private void FixQueryFields(IEnumerable<QueryField> fields)
+        private static void FixQueryFields(IEnumerable<QueryField> fields)
         {
             var firstList = fields
                 .OrderBy(queryField => queryField.Parameter.Name, StringComparer.OrdinalIgnoreCase)
@@ -634,7 +627,7 @@ namespace RepoDb
                     if (firstQueryField.Field.Equals(secondQueryField.Field))
                     {
                         var fieldValue = secondQueryField.Parameter;
-                        fieldValue.SetName(string.Concat(secondQueryField.Parameter.Name, "_", fieldIndex.ToString()));
+                        fieldValue.SetName(string.Concat(secondQueryField.Parameter.Name, "_", fieldIndex.ToString(System.Globalization.CultureInfo.InvariantCulture)));
                     }
                 }
                 secondList.RemoveAll(qf => qf.Field.Equals(firstQueryField.Field));
@@ -668,7 +661,7 @@ namespace RepoDb
             }
 
             // Check the presence
-            var fields = GetFields(true);
+            var fields = GetFields(traverse: true);
 
             // Check any item
             if (fields?.Any() != true)
@@ -689,8 +682,10 @@ namespace RepoDb
         /// <summary>
         /// Make the current instance of <see cref="QueryGroup"/> object to become an expression for 'Update' operations.
         /// </summary>
-        public void IsForUpdate() =>
+        public void IsForUpdate()
+        {
             PrependTextToAllParameters(StringConstant.UpdateParameterPrefix);
+        }
 
 
         /// <summary>
@@ -699,8 +694,10 @@ namespace RepoDb
         /// </summary>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>A stringified formatted-text of the current instance.</returns>
-        public virtual string GetString(IDbSetting dbSetting) =>
-            GetString(0, dbSetting);
+        public virtual string GetString(IDbSetting dbSetting)
+        {
+            return GetString(0, dbSetting);
+        }
 
         /// <summary>
         /// Gets the stringified query expression format of the current instance. A formatted string for field-operation-parameter will be
@@ -717,8 +714,8 @@ namespace RepoDb
 
             // Variables
             var groupList = new List<string>();
-            var conjunction = Conjunction.GetText();
-            var separator = string.Concat(" ", conjunction, " ");
+            var conjunctionText = Conjunction.GetText();
+            var separator = string.Concat(" ", conjunctionText, " ");
 
             // Check the instance fields
             if (QueryFields?.Count > 0)
@@ -739,7 +736,7 @@ namespace RepoDb
             }
 
             // Return the value
-            return IsNot ? string.Concat("NOT (", groupList.Join(conjunction), ")") : string.Concat("(", groupList.Join(separator), ")");
+            return IsNot ? string.Concat("NOT (", groupList.Join(conjunctionText), ")") : string.Concat("(", groupList.Join(separator), ")");
         }
 
         /// <summary>
@@ -761,7 +758,7 @@ namespace RepoDb
 
             // Variables
             var explore = (Action<QueryGroup>)null;
-            var queryFields = new List<QueryField>();
+            var items = new List<QueryField>();
 
             // Logic for traverse
             explore = queryGroup =>
@@ -769,7 +766,7 @@ namespace RepoDb
                 // Check child fields
                 if (queryGroup.QueryFields?.Count > 0)
                 {
-                    queryFields.AddRange(queryGroup.QueryFields);
+                    items.AddRange(queryGroup.QueryFields);
                 }
 
                 // Check child groups
@@ -786,7 +783,7 @@ namespace RepoDb
             explore(this);
 
             // Return the value
-            return traversedQueryFields = queryFields;
+            return traversedQueryFields = items;
         }
 
         #endregion
@@ -805,14 +802,14 @@ namespace RepoDb
                 return this.hashCode.Value;
             }
 
-            var hashCode = 0;
+            var computedHashCode = 0;
 
             // Iterates the child query field
             if (QueryFields != null)
             {
                 foreach (var queryField in QueryFields)
                 {
-                    hashCode = HashCode.Combine(hashCode, queryField);
+                    computedHashCode = HashCode.Combine(computedHashCode, queryField);
                 }
             }
 
@@ -821,18 +818,18 @@ namespace RepoDb
             {
                 foreach (var queryGroup in QueryGroups)
                 {
-                    hashCode = HashCode.Combine(hashCode, queryGroup);
+                    computedHashCode = HashCode.Combine(computedHashCode, queryGroup);
                 }
             }
 
             // Set with conjunction
-            hashCode = HashCode.Combine(hashCode, Conjunction);
+            computedHashCode = HashCode.Combine(computedHashCode, Conjunction);
 
             // Set the IsNot
-            hashCode = HashCode.Combine(hashCode, IsNot);
+            computedHashCode = HashCode.Combine(computedHashCode, IsNot);
 
             // Set and return the hashcode
-            return (this.hashCode = hashCode).Value;
+            return (this.hashCode = computedHashCode).Value;
         }
 
         /// <summary>
@@ -882,8 +879,7 @@ namespace RepoDb
         /// <param name="objB">The second <see cref="QueryGroup"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
         public static bool operator !=(QueryGroup objA,
-            QueryGroup objB) =>
-            (objA == objB) == false;
+            QueryGroup objB) => !(objA == objB);
 
         #endregion
     }

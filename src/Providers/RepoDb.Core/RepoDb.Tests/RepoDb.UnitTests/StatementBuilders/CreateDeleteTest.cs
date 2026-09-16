@@ -118,7 +118,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = (string)null;
 
             // Act
-            Assert.Throws<NullReferenceException>(() => statementBuilder.CreateDelete(tableName: tableName));
+            Assert.Throws<ArgumentNullException>(() => statementBuilder.CreateDelete(tableName: tableName));
         }
 
         [TestMethod]
@@ -129,7 +129,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "";
 
             // Act
-            Assert.Throws<NullReferenceException>(() => statementBuilder.CreateDelete(tableName: tableName));
+            Assert.Throws<ArgumentNullException>(() => statementBuilder.CreateDelete(tableName: tableName));
         }
 
         [TestMethod]
@@ -140,7 +140,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = " ";
 
             // Act
-            Assert.Throws<NullReferenceException>(() => statementBuilder.CreateDelete(tableName: tableName));
+            Assert.Throws<ArgumentNullException>(() => statementBuilder.CreateDelete(tableName: tableName));
         }
     }
 }

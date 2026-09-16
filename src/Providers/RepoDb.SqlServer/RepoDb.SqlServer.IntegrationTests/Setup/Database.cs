@@ -51,7 +51,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
                 .UseSqlServer();
 
             // Set the DateTime type
-            TypeMapper.Add(typeof(DateTime), DbType.DateTime2, true);
+            TypeMapper.Add(typeof(DateTime), DbType.DateTime2, force: true);
 
             // Create databases
             CreateDatabase();
@@ -81,7 +81,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
         {
             var commandText = @"IF (NOT EXISTS(SELECT * FROM sys.databases WHERE name = 'RepoDb'))
                 BEGIN
-	                CREATE DATABASE [RepoDb];
+                    CREATE DATABASE [RepoDb];
                 END";
             using (var connection = new SqlConnection(ConnectionStringForMaster).EnsureOpen())
             {
@@ -103,48 +103,48 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
         {
             var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'IdentityCompleteTable'))
                 BEGIN
-	                CREATE TABLE [dbo].[IdentityCompleteTable]
-	                (
+                    CREATE TABLE [dbo].[IdentityCompleteTable]
+                    (
                         [Id] INT IDENTITY(1, 1),
-		                [SessionId] UNIQUEIDENTIFIER NOT NULL,
-		                [ColumnBigInt] BIGINT NULL,
-		                [ColumnBinary] BINARY(4000) NULL,
-		                [ColumnBit] BIT NULL,
-		                [ColumnChar] CHAR(1) NULL,
-		                [ColumnDate] DATE NULL,
-		                [ColumnDateTime] DATETIME NULL,
-		                [ColumnDateTime2] DATETIME2(7) NULL,
-		                [ColumnDateTimeOffset] DATETIMEOFFSET(7) NULL,
-		                [ColumnDecimal] DECIMAL(18, 2) NULL,
-		                [ColumnFloat] FLOAT NULL,
-		                [ColumnGeography] GEOGRAPHY NULL,
-		                [ColumnGeometry] GEOMETRY NULL,
-		                [ColumnHierarchyId] HIERARCHYID NULL,
-		                [ColumnImage] IMAGE NULL,
-		                [ColumnInt] INT NULL,
-		                [ColumnMoney] MONEY NULL,
-		                [ColumnNChar] NCHAR(1) NULL,
-		                [ColumnNText] NTEXT NULL,
-		                [ColumnNumeric] NUMERIC(18, 2) NULL,
-		                [ColumnNVarChar] NVARCHAR(MAX) NULL,
-		                [ColumnReal] REAL NULL,
-		                [ColumnSmallDateTime] SMALLDATETIME NULL,
-		                [ColumnSmallInt] SMALLINT NULL,
-		                [ColumnSmallMoney] SMALLMONEY NULL,
-		                [ColumnSqlVariant] SQL_VARIANT NULL,
-		                [ColumnText] TEXT NULL,
-		                [ColumnTime] TIME(7) NULL,
-		                [ColumnTimestamp] TIMESTAMP NULL,
-		                [ColumnTinyInt] TINYINT NULL,
-		                [ColumnUniqueIdentifier] UNIQUEIDENTIFIER NULL,
-		                [ColumnVarBinary] VARBINARY(MAX) NULL,
-		                [ColumnVarChar] VARCHAR(MAX) NULL,
-		                [ColumnXml] XML NULL,
-		                CONSTRAINT [CompleteTable_Id] PRIMARY KEY 
-		                (
-			                [Id] ASC
-		                )
-	                ) ON [PRIMARY];
+                        [SessionId] UNIQUEIDENTIFIER NOT NULL,
+                        [ColumnBigInt] BIGINT NULL,
+                        [ColumnBinary] BINARY(4000) NULL,
+                        [ColumnBit] BIT NULL,
+                        [ColumnChar] CHAR(1) NULL,
+                        [ColumnDate] DATE NULL,
+                        [ColumnDateTime] DATETIME NULL,
+                        [ColumnDateTime2] DATETIME2(7) NULL,
+                        [ColumnDateTimeOffset] DATETIMEOFFSET(7) NULL,
+                        [ColumnDecimal] DECIMAL(18, 2) NULL,
+                        [ColumnFloat] FLOAT NULL,
+                        [ColumnGeography] GEOGRAPHY NULL,
+                        [ColumnGeometry] GEOMETRY NULL,
+                        [ColumnHierarchyId] HIERARCHYID NULL,
+                        [ColumnImage] IMAGE NULL,
+                        [ColumnInt] INT NULL,
+                        [ColumnMoney] MONEY NULL,
+                        [ColumnNChar] NCHAR(1) NULL,
+                        [ColumnNText] NTEXT NULL,
+                        [ColumnNumeric] NUMERIC(18, 2) NULL,
+                        [ColumnNVarChar] NVARCHAR(MAX) NULL,
+                        [ColumnReal] REAL NULL,
+                        [ColumnSmallDateTime] SMALLDATETIME NULL,
+                        [ColumnSmallInt] SMALLINT NULL,
+                        [ColumnSmallMoney] SMALLMONEY NULL,
+                        [ColumnSqlVariant] SQL_VARIANT NULL,
+                        [ColumnText] TEXT NULL,
+                        [ColumnTime] TIME(7) NULL,
+                        [ColumnTimestamp] TIMESTAMP NULL,
+                        [ColumnTinyInt] TINYINT NULL,
+                        [ColumnUniqueIdentifier] UNIQUEIDENTIFIER NULL,
+                        [ColumnVarBinary] VARBINARY(MAX) NULL,
+                        [ColumnVarChar] VARCHAR(MAX) NULL,
+                        [ColumnXml] XML NULL,
+                        CONSTRAINT [CompleteTable_Id] PRIMARY KEY 
+                        (
+                            [Id] ASC
+                        )
+                    ) ON [PRIMARY];
                 END";
             using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
             {
@@ -156,48 +156,48 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
         {
             var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'NonIdentityCompleteTable'))
                 BEGIN
-	                CREATE TABLE [dbo].[NonIdentityCompleteTable]
-	                (
+                    CREATE TABLE [dbo].[NonIdentityCompleteTable]
+                    (
                         [Id] INT NOT NULL,
-		                [SessionId] UNIQUEIDENTIFIER NOT NULL,
-		                [ColumnBigInt] BIGINT NULL,
-		                [ColumnBinary] BINARY(4000) NULL,
-		                [ColumnBit] BIT NULL,
-		                [ColumnChar] CHAR(1) NULL,
-		                [ColumnDate] DATE NULL,
-		                [ColumnDateTime] DATETIME NULL,
-		                [ColumnDateTime2] DATETIME2(7) NULL,
-		                [ColumnDateTimeOffset] DATETIMEOFFSET(7) NULL,
-		                [ColumnDecimal] DECIMAL(18, 2) NULL,
-		                [ColumnFloat] FLOAT NULL,
-		                [ColumnGeography] GEOGRAPHY NULL,
-		                [ColumnGeometry] GEOMETRY NULL,
-		                [ColumnHierarchyId] HIERARCHYID NULL,
-		                [ColumnImage] IMAGE NULL,
-		                [ColumnInt] INT NULL,
-		                [ColumnMoney] MONEY NULL,
-		                [ColumnNChar] NCHAR(1) NULL,
-		                [ColumnNText] NTEXT NULL,
-		                [ColumnNumeric] NUMERIC(18, 2) NULL,
-		                [ColumnNVarChar] NVARCHAR(MAX) NULL,
-		                [ColumnReal] REAL NULL,
-		                [ColumnSmallDateTime] SMALLDATETIME NULL,
-		                [ColumnSmallInt] SMALLINT NULL,
-		                [ColumnSmallMoney] SMALLMONEY NULL,
-		                [ColumnSqlVariant] SQL_VARIANT NULL,
-		                [ColumnText] TEXT NULL,
-		                [ColumnTime] TIME(7) NULL,
-		                [ColumnTimestamp] TIMESTAMP NULL,
-		                [ColumnTinyInt] TINYINT NULL,
-		                [ColumnUniqueIdentifier] UNIQUEIDENTIFIER NULL,
-		                [ColumnVarBinary] VARBINARY(MAX) NULL,
-		                [ColumnVarChar] VARCHAR(MAX) NULL,
-		                [ColumnXml] XML NULL,
-		                CONSTRAINT [NonIdentityCompleteTable_Id] PRIMARY KEY 
-		                (
-			                [Id] ASC
-		                )
-	                ) ON [PRIMARY];
+                        [SessionId] UNIQUEIDENTIFIER NOT NULL,
+                        [ColumnBigInt] BIGINT NULL,
+                        [ColumnBinary] BINARY(4000) NULL,
+                        [ColumnBit] BIT NULL,
+                        [ColumnChar] CHAR(1) NULL,
+                        [ColumnDate] DATE NULL,
+                        [ColumnDateTime] DATETIME NULL,
+                        [ColumnDateTime2] DATETIME2(7) NULL,
+                        [ColumnDateTimeOffset] DATETIMEOFFSET(7) NULL,
+                        [ColumnDecimal] DECIMAL(18, 2) NULL,
+                        [ColumnFloat] FLOAT NULL,
+                        [ColumnGeography] GEOGRAPHY NULL,
+                        [ColumnGeometry] GEOMETRY NULL,
+                        [ColumnHierarchyId] HIERARCHYID NULL,
+                        [ColumnImage] IMAGE NULL,
+                        [ColumnInt] INT NULL,
+                        [ColumnMoney] MONEY NULL,
+                        [ColumnNChar] NCHAR(1) NULL,
+                        [ColumnNText] NTEXT NULL,
+                        [ColumnNumeric] NUMERIC(18, 2) NULL,
+                        [ColumnNVarChar] NVARCHAR(MAX) NULL,
+                        [ColumnReal] REAL NULL,
+                        [ColumnSmallDateTime] SMALLDATETIME NULL,
+                        [ColumnSmallInt] SMALLINT NULL,
+                        [ColumnSmallMoney] SMALLMONEY NULL,
+                        [ColumnSqlVariant] SQL_VARIANT NULL,
+                        [ColumnText] TEXT NULL,
+                        [ColumnTime] TIME(7) NULL,
+                        [ColumnTimestamp] TIMESTAMP NULL,
+                        [ColumnTinyInt] TINYINT NULL,
+                        [ColumnUniqueIdentifier] UNIQUEIDENTIFIER NULL,
+                        [ColumnVarBinary] VARBINARY(MAX) NULL,
+                        [ColumnVarChar] VARCHAR(MAX) NULL,
+                        [ColumnXml] XML NULL,
+                        CONSTRAINT [NonIdentityCompleteTable_Id] PRIMARY KEY 
+                        (
+                            [Id] ASC
+                        )
+                    ) ON [PRIMARY];
                 END";
             using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
             {
@@ -218,19 +218,19 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
         {
             var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'TriggerCompatibilityTable'))
                 BEGIN
-	                CREATE TABLE [dbo].[TriggerCompatibilityTable]
-	                (
+                    CREATE TABLE [dbo].[TriggerCompatibilityTable]
+                    (
                         [Id] INT IDENTITY(1, 1) NOT NULL,
-		                [Name] NVARCHAR(128) NULL,
-		                CONSTRAINT [TriggerCompatibilityTable_Id] PRIMARY KEY
-		                (
-			                [Id] ASC
-		                )
-	                ) ON [PRIMARY];
+                        [Name] NVARCHAR(128) NULL,
+                        CONSTRAINT [TriggerCompatibilityTable_Id] PRIMARY KEY
+                        (
+                            [Id] ASC
+                        )
+                    ) ON [PRIMARY];
                 END";
             var triggerCommandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[triggers] WHERE name = 'trg_TriggerCompatibilityTable_AfterInsert'))
                 BEGIN
-	                EXEC('CREATE TRIGGER [dbo].[trg_TriggerCompatibilityTable_AfterInsert] ON [dbo].[TriggerCompatibilityTable] AFTER INSERT AS BEGIN SET NOCOUNT ON; END');
+                    EXEC('CREATE TRIGGER [dbo].[trg_TriggerCompatibilityTable_AfterInsert] ON [dbo].[TriggerCompatibilityTable] AFTER INSERT AS BEGIN SET NOCOUNT ON; END');
                 END";
             using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
             {

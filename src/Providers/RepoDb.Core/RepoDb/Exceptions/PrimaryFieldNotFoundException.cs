@@ -13,13 +13,11 @@ namespace RepoDb.Exceptions
     /// <summary>
     /// An exception that is being thrown if the primary key is not found from the data entity.
     /// </summary>
-    public class PrimaryFieldNotFoundException : Exception
+    /// <remarks>
+    /// Creates a new instance of <see cref="PrimaryFieldNotFoundException"/> class.
+    /// </remarks>
+    /// <param name="message">The exception message.</param>
+    public class PrimaryFieldNotFoundException(string message) : Exception(message)
     {
-        /// <summary>
-        /// Creates a new instance of <see cref="PrimaryFieldNotFoundException"/> class.
-        /// </summary>
-        /// <param name="message">The exception message.</param>
-        public PrimaryFieldNotFoundException(string message)
-            : base(message) { }
     }
 }

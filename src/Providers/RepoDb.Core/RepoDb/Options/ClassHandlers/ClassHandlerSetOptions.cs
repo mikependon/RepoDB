@@ -45,8 +45,10 @@ namespace RepoDb.Options
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
-        internal static ClassHandlerSetOptions Create(DbCommand command) =>
-            new ClassHandlerSetOptions(command);
+        internal static ClassHandlerSetOptions Create(DbCommand command)
+        {
+            return new ClassHandlerSetOptions(command);
+        }
 
         #endregion
     }

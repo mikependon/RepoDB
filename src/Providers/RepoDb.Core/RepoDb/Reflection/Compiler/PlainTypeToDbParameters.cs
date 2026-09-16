@@ -136,7 +136,7 @@ namespace RepoDb.Reflection
                     parameterCallExpressions.AddIfNotNull(setValueExpression);
 
                     // Size
-                    var size = GetSize(null, dbField);
+                    var size = GetSize(size: null, dbField);
                     if (size > 0)
                     {
                         var setSizeExpression = GetDbParameterSizeAssignmentExpression(dbParameterExpression, size);

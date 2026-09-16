@@ -44,8 +44,10 @@ namespace RepoDb
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         public static void Add<TType, TPropertyHandler>(bool force = false)
-            where TPropertyHandler : new() =>
+            where TPropertyHandler : new()
+        {
             Add(typeof(TType), new TPropertyHandler(), force);
+        }
 
         /// <summary>
         /// Type Level: Adds a mapping between a .NET CLR type and a <see cref="IPropertyHandler{TInput, TResult}"/> object.
@@ -55,8 +57,10 @@ namespace RepoDb
         /// <param name="propertyHandler">The instance of the property handler. The type must implement the <see cref="IPropertyHandler{TInput, TResult}"/> interface.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         public static void Add<TType, TPropertyHandler>(TPropertyHandler propertyHandler,
-            bool force = false) =>
+            bool force = false)
+        {
             Add(typeof(TType), propertyHandler, force);
+        }
 
         /// <summary>
         /// Type Level: Adds a mapping between a .NET CLR type and a <see cref="IPropertyHandler{TInput, TResult}"/> object.
@@ -106,8 +110,10 @@ namespace RepoDb
         /// <typeparam name="TType">The target .NET CLR type.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
         /// <returns>An instance of mapped property handler for .NET CLR type.</returns>
-        public static TPropertyHandler Get<TType, TPropertyHandler>() =>
-            Get<TPropertyHandler>(typeof(TType));
+        public static TPropertyHandler Get<TType, TPropertyHandler>()
+        {
+            return Get<TPropertyHandler>(typeof(TType));
+        }
 
         /// <summary>
         /// Type Level: Gets the mapped property handler of the .NET CLR type.
@@ -141,8 +147,10 @@ namespace RepoDb
         /// Type Level: Removes the existing mapped property handler of the .NET CLR type.
         /// </summary>
         /// <typeparam name="T">The target .NET CLR type.</typeparam>
-        public static void Remove<T>() =>
+        public static void Remove<T>()
+        {
             Remove(typeof(T));
+        }
 
         /// <summary>
         /// Type Level: Removes the existing mapped property handler of the .NET CLR type.
@@ -177,8 +185,10 @@ namespace RepoDb
         /// <param name="expression">The expression to be parsed.</param>
         public static void Add<TEntity, TPropertyHandler>(Expression<Func<TEntity, object>> expression)
             where TEntity : class
-            where TPropertyHandler : new() =>
-            Add(expression, new TPropertyHandler(), false);
+            where TPropertyHandler : new()
+        {
+            Add(expression, new TPropertyHandler(), force: false);
+        }
 
         /// <summary>
         /// Property Level: Adds a property handler mapping into a data entity type property (via expression).
@@ -189,8 +199,10 @@ namespace RepoDb
         /// <param name="propertyHandler">The instance of the property handler.</param>
         public static void Add<TEntity, TPropertyHandler>(Expression<Func<TEntity, object>> expression,
             TPropertyHandler propertyHandler)
-            where TEntity : class =>
-            Add<TEntity, TPropertyHandler>(expression, propertyHandler, false);
+            where TEntity : class
+        {
+            Add<TEntity, TPropertyHandler>(expression, propertyHandler, force: false);
+        }
 
         /// <summary>
         /// Property Level: Adds a property handler mapping into a data entity type property (via expression). It uses the <see cref="Activator.CreateInstance(Type)"/> method to create the instance of target property handler.
@@ -203,8 +215,10 @@ namespace RepoDb
         public static void Add<TEntity, TPropertyHandler>(Expression<Func<TEntity, object>> expression,
             bool force)
             where TEntity : class
-            where TPropertyHandler : new() =>
+            where TPropertyHandler : new()
+        {
             Add(expression, new TPropertyHandler(), force);
+        }
 
         /// <summary>
         /// Property Level: Adds a property handler mapping into a data entity type property (via expression).
@@ -217,8 +231,10 @@ namespace RepoDb
         public static void Add<TEntity, TPropertyHandler>(Expression<Func<TEntity, object>> expression,
             TPropertyHandler propertyHandler,
             bool force)
-            where TEntity : class =>
+            where TEntity : class
+        {
             Add<TEntity, TPropertyHandler>(ExpressionExtension.GetProperty<TEntity>(expression), propertyHandler, force);
+        }
 
         /// <summary>
         /// Property Level: Adds a property handler mapping into a data entity type property (via property name). It uses the <see cref="Activator.CreateInstance(Type)"/> method to create the instance of target property handler.
@@ -229,8 +245,10 @@ namespace RepoDb
         /// <param name="propertyName">The instance of property handler.</param>
         public static void Add<TEntity, TPropertyHandler>(string propertyName)
             where TEntity : class
-            where TPropertyHandler : new() =>
-            Add<TEntity, TPropertyHandler>(propertyName, new TPropertyHandler(), false);
+            where TPropertyHandler : new()
+        {
+            Add<TEntity, TPropertyHandler>(propertyName, new TPropertyHandler(), force: false);
+        }
 
         /// <summary>
         /// Property Level: Adds a property handler mapping into a data entity type property (via property name).
@@ -241,8 +259,10 @@ namespace RepoDb
         /// <param name="propertyHandler">The instance of the property handler.</param>
         public static void Add<TEntity, TPropertyHandler>(string propertyName,
             TPropertyHandler propertyHandler)
-            where TEntity : class =>
-            Add<TEntity, TPropertyHandler>(propertyName, propertyHandler, false);
+            where TEntity : class
+        {
+            Add<TEntity, TPropertyHandler>(propertyName, propertyHandler, force: false);
+        }
 
         /// <summary>
         /// Property Level: Adds a property handler mapping into a data entity type property (via property name). It uses the <see cref="Activator.CreateInstance(Type)"/> method to create the instance of target property handler.
@@ -255,8 +275,10 @@ namespace RepoDb
         public static void Add<TEntity, TPropertyHandler>(string propertyName,
             bool force)
             where TEntity : class
-            where TPropertyHandler : new() =>
-            Add<TEntity, TPropertyHandler>(propertyName, new TPropertyHandler(), false);
+            where TPropertyHandler : new()
+        {
+            Add<TEntity, TPropertyHandler>(propertyName, new TPropertyHandler(), force: false);
+        }
 
         /// <summary>
         /// Property Level: Adds a property handler mapping into a data entity type property (via property name).
@@ -294,8 +316,10 @@ namespace RepoDb
         /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         public static void Add<TEntity, TPropertyHandler>(Field field)
             where TEntity : class
-            where TPropertyHandler : new() =>
-            Add<TEntity, TPropertyHandler>(field, new TPropertyHandler(), false);
+            where TPropertyHandler : new()
+        {
+            Add<TEntity, TPropertyHandler>(field, new TPropertyHandler(), force: false);
+        }
 
         /// <summary>
         /// Property Level: Adds a property handler mapping into a data entity type property (via <see cref="Field"/> object).
@@ -306,8 +330,10 @@ namespace RepoDb
         /// <param name="propertyHandler">The instance of the property handler.</param>
         public static void Add<TEntity, TPropertyHandler>(Field field,
             TPropertyHandler propertyHandler)
-            where TEntity : class =>
-            Add<TEntity, TPropertyHandler>(field, propertyHandler, false);
+            where TEntity : class
+        {
+            Add<TEntity, TPropertyHandler>(field, propertyHandler, force: false);
+        }
 
         /// <summary>
         /// Property Level: Adds a property handler mapping into a data entity type property (via <see cref="Field"/> object). It uses the <see cref="Activator.CreateInstance(Type)"/> method to create the instance of target property handler.
@@ -320,8 +346,10 @@ namespace RepoDb
         public static void Add<TEntity, TPropertyHandler>(Field field,
             bool force)
             where TEntity : class
-            where TPropertyHandler : new() =>
-            Add<TEntity, TPropertyHandler>(field, new TPropertyHandler(), false);
+            where TPropertyHandler : new()
+        {
+            Add<TEntity, TPropertyHandler>(field, new TPropertyHandler(), force: false);
+        }
 
         /// <summary>
         /// Property Level: Adds a property handler mapping into a data entity type property (via <see cref="Field"/> object).
@@ -359,8 +387,10 @@ namespace RepoDb
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/> to be mapped.</param>
         internal static void Add<TEntity, TPropertyHandler>(PropertyInfo propertyInfo)
             where TEntity : class
-            where TPropertyHandler : new() =>
-            Add<TEntity, TPropertyHandler>(propertyInfo, new TPropertyHandler(), false);
+            where TPropertyHandler : new()
+        {
+            Add<TEntity, TPropertyHandler>(propertyInfo, new TPropertyHandler(), force: false);
+        }
 
         /// <summary>
         /// Property Level: Adds a property handler mapping into a <see cref="PropertyInfo"/> object.
@@ -371,8 +401,10 @@ namespace RepoDb
         /// <param name="propertyHandler">The instance of the property handler.</param>
         internal static void Add<TEntity, TPropertyHandler>(PropertyInfo propertyInfo,
             TPropertyHandler propertyHandler)
-            where TEntity : class =>
-            Add<TEntity, TPropertyHandler>(propertyInfo, propertyHandler, false);
+            where TEntity : class
+        {
+            Add<TEntity, TPropertyHandler>(propertyInfo, propertyHandler, force: false);
+        }
 
         /// <summary>
         /// Property Level: Adds a property handler mapping into a <see cref="PropertyInfo"/> object.
@@ -385,8 +417,10 @@ namespace RepoDb
         internal static void Add<TEntity, TPropertyHandler>(PropertyInfo propertyInfo,
             TPropertyHandler propertyHandler,
             bool force)
-            where TEntity : class =>
+            where TEntity : class
+        {
             Add<TPropertyHandler>(typeof(TEntity), propertyInfo, propertyHandler, force);
+        }
 
 
         /// <summary>
@@ -415,7 +449,7 @@ namespace RepoDb
             // Extract
             if (propertyInfo != null)
             {
-                propertyInfo = PropertyCache.Get(entityType, propertyInfo, true)?.PropertyInfo ?? propertyInfo;
+                propertyInfo = PropertyCache.Get(entityType, propertyInfo, includeMappings: true)?.PropertyInfo ?? propertyInfo;
             }
 
             // Variables
@@ -454,8 +488,10 @@ namespace RepoDb
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>The mapped property handler object of the property.</returns>
         public static TPropertyHandler Get<TEntity, TPropertyHandler>(Expression<Func<TEntity, object>> expression)
-            where TEntity : class =>
-            Get<TEntity, TPropertyHandler>(ExpressionExtension.GetProperty<TEntity>(expression));
+            where TEntity : class
+        {
+            return Get<TEntity, TPropertyHandler>(ExpressionExtension.GetProperty<TEntity>(expression));
+        }
 
         /// <summary>
         /// Property Level: Gets the mapped property handler object of the data entity type property (via property name).
@@ -465,8 +501,10 @@ namespace RepoDb
         /// <param name="propertyName">The name of the property.</param>
         /// <returns>The mapped property handler object of the property.</returns>
         public static TPropertyHandler Get<TEntity, TPropertyHandler>(string propertyName)
-            where TEntity : class =>
-            Get<TEntity, TPropertyHandler>(TypeExtension.GetProperty<TEntity>(propertyName));
+            where TEntity : class
+        {
+            return Get<TEntity, TPropertyHandler>(TypeExtension.GetProperty<TEntity>(propertyName));
+        }
 
         /// <summary>
         /// Property Level: Gets the mapped property handler object of the data entity type property (via <see cref="Field"/> object).
@@ -476,8 +514,10 @@ namespace RepoDb
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
         /// <returns>The mapped property handler object of the property.</returns>
         public static TPropertyHandler Get<TEntity, TPropertyHandler>(Field field)
-            where TEntity : class =>
-            Get<TEntity, TPropertyHandler>(TypeExtension.GetProperty<TEntity>(field.Name));
+            where TEntity : class
+        {
+            return Get<TEntity, TPropertyHandler>(TypeExtension.GetProperty<TEntity>(field.Name));
+        }
 
         /// <summary>
         /// Property Level: Gets the mapped property handler on a specific <see cref="PropertyInfo"/> object.
@@ -487,8 +527,10 @@ namespace RepoDb
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
         /// <returns>The mapped property handler object of the property.</returns>
         internal static TPropertyHandler Get<TEntity, TPropertyHandler>(PropertyInfo propertyInfo)
-            where TEntity : class =>
-            Get<TPropertyHandler>(typeof(TEntity), propertyInfo);
+            where TEntity : class
+        {
+            return Get<TPropertyHandler>(typeof(TEntity), propertyInfo);
+        }
 
         /// <summary>
         /// Property Level: Gets the mapped property handler on a specific <see cref="PropertyInfo"/> object.
@@ -508,7 +550,7 @@ namespace RepoDb
             var result = default(TPropertyHandler);
 
             // Try get the value
-            if (maps.TryGetValue(key, out var value) == true)
+            if (maps.TryGetValue(key, out var value))
             {
                 result = Converter.ToType<TPropertyHandler>(value);
             }
@@ -527,8 +569,10 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         public static void Remove<TEntity>(Expression<Func<TEntity, object>> expression)
-            where TEntity : class =>
+            where TEntity : class
+        {
             Remove<TEntity>(ExpressionExtension.GetProperty<TEntity>(expression));
+        }
 
         /// <summary>
         /// Property Level: Removes the existing mapped property handler from a data entity type property (via property name).
@@ -579,8 +623,10 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/> to be mapped.</param>
-        internal static void Remove<TEntity>(PropertyInfo propertyInfo) =>
+        internal static void Remove<TEntity>(PropertyInfo propertyInfo)
+        {
             Remove(typeof(TEntity), propertyInfo);
+        }
 
         /// <summary>
         /// Property Level: Removes a mapped property handler from a <see cref="PropertyInfo"/> object.
@@ -609,8 +655,10 @@ namespace RepoDb
         /// <summary>
         /// Clears all the existing cached <see cref="IPropertyHandler{TInput, TResult}"/> objects.
         /// </summary>
-        public static void Clear() =>
+        public static void Clear()
+        {
             maps.Clear();
+        }
 
         #region Helpers
 
@@ -619,8 +667,10 @@ namespace RepoDb
         /// </summary>
         /// <param name="type">The type of the data entity.</param>
         /// <returns>The generated hashcode.</returns>
-        private static int GenerateHashCode(Type type) =>
-            TypeExtension.GenerateHashCode(type);
+        private static int GenerateHashCode(Type type)
+        {
+            return TypeExtension.GenerateHashCode(type);
+        }
 
         /// <summary>
         /// Generates a hashcode for caching.
@@ -629,8 +679,10 @@ namespace RepoDb
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
         /// <returns>The generated hashcode.</returns>
         private static int GenerateHashCode(Type entityType,
-            PropertyInfo propertyInfo) =>
-            TypeExtension.GenerateHashCode(entityType, propertyInfo);
+            PropertyInfo propertyInfo)
+        {
+            return TypeExtension.GenerateHashCode(entityType, propertyInfo);
+        }
 
         /// <summary>
         /// Throws an exception if null.
@@ -639,7 +691,7 @@ namespace RepoDb
         {
             if (type == null)
             {
-                throw new NullReferenceException("Property handler type.");
+                throw new ArgumentNullException(nameof(type), "Property handler type.");
             }
         }
 
@@ -649,7 +701,7 @@ namespace RepoDb
         private static void Guard(Type type)
         {
             GuardPresence(type);
-            if (type.IsInterfacedTo(StaticType.IPropertyHandler) == false)
+            if (!type.IsInterfacedTo(StaticType.IPropertyHandler))
             {
                 throw new InvalidTypeException($"Type '{type.FullName}' must implement the '{StaticType.IPropertyHandler.FullName}' interface.");
             }
@@ -666,7 +718,7 @@ namespace RepoDb
         {
             if (obj == null)
             {
-                throw new NullReferenceException($"The argument '{argument}' cannot be null.");
+                throw new ArgumentNullException(argument);
             }
         }
 

@@ -166,7 +166,7 @@ namespace RepoDb.UnitTests.Others
             var fields = (string)null;
 
             // Act/Assert
-            Assert.Throws<NullReferenceException>(() => Field.From(fields).AsList());
+            Assert.Throws<ArgumentNullException>(() => Field.From(fields).AsList());
         }
 
         [TestMethod]
@@ -176,7 +176,7 @@ namespace RepoDb.UnitTests.Others
             var fields = new[] { "" };
 
             // Act/Assert
-            Assert.Throws<NullReferenceException>(() => Field.From(fields).AsList());
+            Assert.Throws<ArgumentException>(() => Field.From(fields).AsList());
         }
 
         [TestMethod]
@@ -186,7 +186,7 @@ namespace RepoDb.UnitTests.Others
             var fields = new[] { " " };
 
             // Act/Assert
-            Assert.Throws<NullReferenceException>(() => Field.From(fields).AsList());
+            Assert.Throws<ArgumentException>(() => Field.From(fields).AsList());
         }
 
         [TestMethod]
@@ -196,7 +196,7 @@ namespace RepoDb.UnitTests.Others
             var fields = new[] { "Field1", null, "Field3" };
 
             // Act/Assert
-            Assert.Throws<NullReferenceException>(() => Field.From(fields).AsList());
+            Assert.Throws<ArgumentException>(() => Field.From(fields).AsList());
         }
 
         [TestMethod]
@@ -206,7 +206,7 @@ namespace RepoDb.UnitTests.Others
             var fields = new[] { "Field1", "", "Field3" };
 
             // Act/Assert
-            Assert.Throws<NullReferenceException>(() => Field.From(fields).AsList());
+            Assert.Throws<ArgumentException>(() => Field.From(fields).AsList());
         }
 
         [TestMethod]
@@ -216,7 +216,7 @@ namespace RepoDb.UnitTests.Others
             var fields = new[] { "Field1", " ", "Field3" };
 
             // Act/Assert
-            Assert.Throws<NullReferenceException>(() => Field.From(fields).AsList());
+            Assert.Throws<ArgumentException>(() => Field.From(fields).AsList());
         }
     }
 }

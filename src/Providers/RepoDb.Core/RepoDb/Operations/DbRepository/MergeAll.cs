@@ -31,7 +31,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public int MergeAll<TEntity>(string tableName,
@@ -39,31 +39,31 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.MergeAll,
+            string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.MergeAll<TEntity>(tableName: tableName,
+                return dbConnection.MergeAll<TEntity>(tableName: tableName,
                     entities: entities,
                     batchSize: batchSize,
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -77,8 +77,8 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public int MergeAll<TEntity>(string tableName,
             IEnumerable<TEntity> entities,
@@ -86,17 +86,17 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.MergeAll,
+            string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.MergeAll<TEntity>(tableName: tableName,
+                return dbConnection.MergeAll<TEntity>(tableName: tableName,
                     entities: entities,
                     qualifiers: qualifiers,
                     batchSize: batchSize,
@@ -104,14 +104,14 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -125,7 +125,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public int MergeAll<TEntity>(string tableName,
@@ -134,17 +134,17 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.MergeAll,
+            string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.MergeAll<TEntity>(tableName: tableName,
+                return dbConnection.MergeAll<TEntity>(tableName: tableName,
                     entities: entities,
                     qualifiers: qualifiers,
                     batchSize: batchSize,
@@ -152,14 +152,14 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -171,37 +171,37 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public int MergeAll<TEntity>(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.MergeAll,
+            string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.MergeAll<TEntity>(entities: entities,
+                return dbConnection.MergeAll<TEntity>(entities: entities,
                     batchSize: batchSize,
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -214,39 +214,39 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public int MergeAll<TEntity>(IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.MergeAll,
+            string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.MergeAll<TEntity>(entities: entities,
+                return dbConnection.MergeAll<TEntity>(entities: entities,
                     qualifiers: qualifiers,
                     batchSize: batchSize,
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -259,7 +259,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public int MergeAll<TEntity>(IEnumerable<TEntity> entities,
@@ -267,31 +267,31 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.MergeAll,
+            string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.MergeAll<TEntity>(entities: entities,
+                return dbConnection.MergeAll<TEntity>(entities: entities,
                     qualifiers: qualifiers,
                     batchSize: batchSize,
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -308,7 +308,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
@@ -317,33 +317,33 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.MergeAll,
+            string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.MergeAllAsync<TEntity>(tableName: tableName,
+                return await dbConnection.MergeAllAsync(tableName: tableName,
                     entities: entities,
                     batchSize: batchSize,
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -357,8 +357,8 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public async Task<int> MergeAllAsync<TEntity>(string tableName,
@@ -367,18 +367,18 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.MergeAll,
+            string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.MergeAllAsync<TEntity>(tableName: tableName,
+                return await dbConnection.MergeAllAsync(tableName: tableName,
                     entities: entities,
                     qualifiers: qualifiers,
                     batchSize: batchSize,
@@ -386,15 +386,15 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -408,7 +408,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
@@ -418,18 +418,18 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.MergeAll,
+            string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.MergeAllAsync<TEntity>(tableName: tableName,
+                return await dbConnection.MergeAllAsync(tableName: tableName,
                     entities: entities,
                     qualifiers: qualifiers,
                     batchSize: batchSize,
@@ -437,15 +437,15 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -457,40 +457,40 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public async Task<int> MergeAllAsync<TEntity>(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.MergeAll,
+            string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.MergeAllAsync<TEntity>(entities: entities,
+                return await dbConnection.MergeAllAsync(entities: entities,
                     batchSize: batchSize,
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -503,8 +503,8 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public async Task<int> MergeAllAsync<TEntity>(IEnumerable<TEntity> entities,
@@ -512,33 +512,33 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.MergeAll,
+            string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.MergeAllAsync<TEntity>(entities: entities,
+                return await dbConnection.MergeAllAsync(entities: entities,
                     qualifiers: qualifiers,
                     batchSize: batchSize,
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -551,7 +551,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
@@ -560,33 +560,33 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.MergeAll,
+            string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.MergeAllAsync<TEntity>(entities: entities,
+                return await dbConnection.MergeAllAsync(entities: entities,
                     qualifiers: qualifiers,
                     batchSize: batchSize,
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -602,7 +602,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public int MergeAll(string tableName,
@@ -610,30 +610,30 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.MergeAll,
+            string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.MergeAll(tableName: tableName,
+                return dbConnection.MergeAll(tableName: tableName,
                     entities: entities,
                     batchSize: batchSize,
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -646,7 +646,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public int MergeAll(string tableName,
@@ -655,16 +655,16 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.MergeAll,
+            string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.MergeAll(tableName: tableName,
+                return dbConnection.MergeAll(tableName: tableName,
                     entities: entities,
                     qualifiers: qualifiers,
                     batchSize: batchSize,
@@ -672,14 +672,14 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -695,7 +695,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
@@ -704,32 +704,32 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.MergeAll,
+            string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.MergeAllAsync(tableName: tableName,
+                return await dbConnection.MergeAllAsync(tableName: tableName,
                     entities: entities,
                     batchSize: batchSize,
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -742,7 +742,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
@@ -752,17 +752,17 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.MergeAll,
+            string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.MergeAllAsync(tableName: tableName,
+                return await dbConnection.MergeAllAsync(tableName: tableName,
                     entities: entities,
                     qualifiers: qualifiers,
                     batchSize: batchSize,
@@ -770,15 +770,15 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 

@@ -26,68 +26,84 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="type">The target type.</param>
         /// <returns>The instance of the <see cref="DbType"/> object.</returns>
-        public static IEnumerable<PropertyValueAttribute> GetPropertyValueAttributes(this Type type) =>
-            type != null ? PropertyValueAttributeMapper.Get(TypeCache.Get(type).GetUnderlyingType()) : null;
+        public static IEnumerable<PropertyValueAttribute> GetPropertyValueAttributes(this Type type)
+        {
+            return type != null ? PropertyValueAttributeMapper.Get(TypeCache.Get(type).GetUnderlyingType()) : null;
+        }
 
         /// <summary>
         /// Gets the corresponding <see cref="DbType"/> object.
         /// </summary>
         /// <param name="type">The target type.</param>
         /// <returns>The instance of the <see cref="DbType"/> object.</returns>
-        public static DbType? GetDbType(this Type type) =>
-            type != null ? TypeMapCache.Get(TypeCache.Get(type).GetUnderlyingType()) : null;
+        public static DbType? GetDbType(this Type type)
+        {
+            return type != null ? TypeMapCache.Get(TypeCache.Get(type).GetUnderlyingType()) : null;
+        }
 
         /// <summary>
         /// Returns the instance of <see cref="ConstructorInfo"/> with the most argument.
         /// </summary>
         /// <param name="type">The current type.</param>
         /// <returns>The instance of <see cref="ConstructorInfo"/> with the most arguments.</returns>
-        public static ConstructorInfo GetConstructorWithMostArguments(this Type type) =>
-            type.GetConstructors().Where(item => item.GetParameters().Length > 0)
+        public static ConstructorInfo GetConstructorWithMostArguments(this Type type)
+        {
+            return type.GetConstructors().Where(item => item.GetParameters().Length > 0)
                 .OrderByDescending(item => item.GetParameters().Length).FirstOrDefault();
+        }
 
         /// <summary>
         /// Checks whether the current type is of type <see cref="object"/>.
         /// </summary>
         /// <param name="type">The current type.</param>
         /// <returns>Returns true if the current type is a <see cref="object"/>.</returns>
-        public static bool IsObjectType(this Type type) =>
-            type == StaticType.Object;
+        public static bool IsObjectType(this Type type)
+        {
+            return type == StaticType.Object;
+        }
 
         /// <summary>
         /// Checks whether the current type is a class.
         /// </summary>
         /// <param name="type">The current type.</param>
         /// <returns>Returns true if the current type is a class.</returns>
-        public static bool IsClassType(this Type type) =>
-            type.IsClass &&
-            type.IsObjectType() != true &&
-            StaticType.IEnumerable.IsAssignableFrom(type) != true;
+        public static bool IsClassType(this Type type)
+        {
+            return type.IsClass &&
+!type.IsObjectType() &&
+!StaticType.IEnumerable.IsAssignableFrom(type);
+        }
 
         /// <summary>
         /// Checks whether the current type is an anonymous type.
         /// </summary>
         /// <param name="type">The current type.</param>
         /// <returns>Returns true if the current type is an anonymous class.</returns>
-        public static bool IsAnonymousType(this Type type) =>
-            type.FullName.StartsWith("<>f__AnonymousType", StringComparison.OrdinalIgnoreCase);
+        public static bool IsAnonymousType(this Type type)
+        {
+            return type.FullName.StartsWith("<>f__AnonymousType", StringComparison.OrdinalIgnoreCase);
+        }
 
         /// <summary>
         /// Checks whether the current type is of type <see cref="IDictionary{TKey, TValue}"/> (with string/object key-value-pair).
         /// </summary>
         /// <param name="type">The current type.</param>
         /// <returns>Returns true if the current type is of type <see cref="IDictionary{TKey, TValue}"/> (with string/object key-value-pair).</returns>
-        public static bool IsDictionaryStringObject(this Type type) =>
-            type == StaticType.IDictionaryStringObject ||
+        public static bool IsDictionaryStringObject(this Type type)
+        {
+            return type == StaticType.IDictionaryStringObject ||
             type == StaticType.DictionaryStringObject || type == StaticType.ExpandoObject;
+        }
 
         /// <summary>
         /// Checks whether the current type is wrapped within a <see cref="Nullable{T}"/> object.
         /// </summary>
         /// <param name="type">The current type.</param>
         /// <returns>Returns true if the current type is wrapped within a <see cref="Nullable{T}"/> object.</returns>
-        public static bool IsNullable(this Type type) =>
-            Nullable.GetUnderlyingType(type) != null;
+        public static bool IsNullable(this Type type)
+        {
+            return Nullable.GetUnderlyingType(type) != null;
+        }
 
         /// <summary>
         /// Checks whether the current type is a plain class type.
@@ -99,9 +115,9 @@ namespace RepoDb.Extensions
             var cachedType = TypeCache.Get(type);
             
             return (cachedType.IsClassType() || cachedType.IsAnonymousType()) &&
-                   IsQueryObjectType(type) != true &&
-                   cachedType.IsDictionaryStringObject() != true &&
-                   GetEnumerableClassProperties(type).Any() != true;
+!IsQueryObjectType(type) &&
+!cachedType.IsDictionaryStringObject() &&
+!GetEnumerableClassProperties(type).Any();
         }
 
         /// <summary>
@@ -109,24 +125,29 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="type">The current type.</param>
         /// <returns>Returns true if the current type is of type <see cref="QueryField"/> or <see cref="QueryGroup"/>.</returns>
-        internal static bool IsQueryObjectType(this Type type) =>
-            type == StaticType.QueryField || type == StaticType.QueryGroup;
+        internal static bool IsQueryObjectType(this Type type)
+        {
+            return type == StaticType.QueryField || type == StaticType.QueryGroup;
+        }
 
         /// <summary>
         /// Converts all properties of the type into an array of <see cref="Field"/> objects.
         /// </summary>
         /// <param name="type">The current type.</param>
         /// <returns>A list of <see cref="Field"/> objects.</returns>
-        internal static IEnumerable<Field> AsFields(this Type type) =>
-            PropertyCache.Get(type).AsFields();
+        internal static IEnumerable<Field> AsFields(this Type type)
+        {
+            return PropertyCache.Get(type).AsFields();
+        }
 
         /// <summary>
         /// Gets the list of enumerable <see cref="ClassProperty"/> objects of the type.
         /// </summary>
         /// <param name="type">The current type.</param>
         /// <returns>The list of the enumerable <see cref="ClassProperty"/> objects.</returns>
-        internal static IEnumerable<ClassProperty> GetEnumerableClassProperties(this Type type) =>
-            PropertyCache.Get(type).Where(classProperty =>
+        internal static IEnumerable<ClassProperty> GetEnumerableClassProperties(this Type type)
+        {
+            return PropertyCache.Get(type).Where(classProperty =>
             {
                 var propType = classProperty.PropertyInfo.PropertyType;
                 return
@@ -135,6 +156,7 @@ namespace RepoDb.Extensions
                     propType != StaticType.ByteArray &&
                     StaticType.IEnumerable.IsAssignableFrom(propType);
             });
+        }
 
         /// <summary>
         /// Converts all properties of the type into an array of <see cref="ClassProperty"/> objects.
@@ -154,8 +176,10 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="type">The current type to check.</param>
         /// <returns>The underlying type or the current type.</returns>
-        public static Type GetUnderlyingType(this Type type) =>
-            type != null ? (Nullable.GetUnderlyingType(type) ?? type) : null;
+        public static Type GetUnderlyingType(this Type type)
+        {
+            return type != null ? (Nullable.GetUnderlyingType(type) ?? type) : null;
+        }
 
         /// <summary>
         /// Returns the property of the type based on the mappings equality.
@@ -164,8 +188,10 @@ namespace RepoDb.Extensions
         /// <param name="mappedName">The name of the property mapping.</param>
         /// <returns>The instance of <see cref="ClassProperty"/>.</returns>
         internal static ClassProperty GetMappedProperty(this Type type,
-            string mappedName) =>
-            PropertyCache.Get(type)?.FirstOrDefault(p => string.Equals(p.GetMappedName(), mappedName, StringComparison.OrdinalIgnoreCase));
+            string mappedName)
+        {
+            return PropertyCache.Get(type)?.FirstOrDefault(p => string.Equals(p.GetMappedName(), mappedName, StringComparison.OrdinalIgnoreCase));
+        }
 
         /// <summary>
         /// Returns the list of the interface types being implemented by the current type.
@@ -173,9 +199,10 @@ namespace RepoDb.Extensions
         /// <param name="type">The current type.</param>
         /// <returns>The list of the interface types.</returns>
         [Obsolete("Please use the Type.GetInterfaces() method instead.")]
-        public static Type[] GetImplementedInterfaces(this Type type) =>
-            type?.GetInterfaces() ??
-            type?.GetType().GetProperty("ImplementedInterfaces")?.GetValue(type) as Type[];
+        public static Type[] GetImplementedInterfaces(this Type type)
+        {
+            return type?.GetInterfaces();
+        }
 
         /// <summary>
         /// Creates a generic type of the current type based on the generic type available from the source type.
@@ -206,8 +233,7 @@ namespace RepoDb.Extensions
             var targetInterface = currentType.IsInterface ? currentType :
                 currentType?
                     .GetInterfaces()?
-                    .FirstOrDefault(item =>
-                        item.Name == interfaceType.Name && item.Namespace == interfaceType.Namespace);
+                    .FirstOrDefault(item => string.Equals(item.Name, interfaceType.Name, StringComparison.Ordinal) && string.Equals(item.Namespace, interfaceType.Namespace, StringComparison.Ordinal));
             interfaceType = interfaceType?.MakeGenericTypeFrom(targetInterface);
             return interfaceType?.IsAssignableFrom(currentType) == true;
         }
@@ -223,8 +249,7 @@ namespace RepoDb.Extensions
         {
             var targetInterface = classHandlerType?
                 .GetInterfaces()?
-                .FirstOrDefault(item =>
-                    item.Name == StaticType.IClassHandler.Name && item.Namespace == StaticType.IClassHandler.Namespace);
+                .FirstOrDefault(item => string.Equals(item.Name, StaticType.IClassHandler.Name, StringComparison.Ordinal) && string.Equals(item.Namespace, StaticType.IClassHandler.Namespace, StringComparison.Ordinal));
             if (targetInterface != null)
             {
                 return targetInterface.GetGenericArguments().FirstOrDefault() == targetModelType;
@@ -239,8 +264,10 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="type">The type of the data entity.</param>
         /// <returns>The generated hashcode.</returns>
-        public static int GenerateHashCode(Type type) =>
-            type.GetHashCode();
+        public static int GenerateHashCode(Type type)
+        {
+            return type.GetHashCode();
+        }
 
         /// <summary>
         /// Generates a hashcode for caching.
@@ -249,8 +276,10 @@ namespace RepoDb.Extensions
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
         /// <returns>The generated hashcode.</returns>
         public static int GenerateHashCode(Type entityType,
-            PropertyInfo propertyInfo) =>
-            HashCode.Combine(entityType.GetHashCode(), propertyInfo.GenerateCustomizedHashCode(entityType));
+            PropertyInfo propertyInfo)
+        {
+            return HashCode.Combine(entityType.GetHashCode(), propertyInfo.GenerateCustomizedHashCode(entityType));
+        }
 
         /// <summary>
         /// A helper method to return the instance of <see cref="PropertyInfo"/> object based on name.
@@ -259,8 +288,10 @@ namespace RepoDb.Extensions
         /// <param name="propertyName">The name of the class property to be mapped.</param>
         /// <returns>An instance of <see cref="PropertyInfo"/> object.</returns>
         public static PropertyInfo GetProperty<T>(string propertyName)
-            where T : class =>
-            GetProperty(typeof(T), propertyName);
+            where T : class
+        {
+            return GetProperty(typeof(T), propertyName);
+        }
 
         /// <summary>
         /// A helper method to return the instance of <see cref="PropertyInfo"/> object based on name.
@@ -269,12 +300,14 @@ namespace RepoDb.Extensions
         /// <param name="propertyName">The name of the target class property.</param>
         /// <returns>An instance of <see cref="PropertyInfo"/> object.</returns>
         public static PropertyInfo GetProperty(Type type,
-            string propertyName) =>
-            TypeCache.Get(type)
+            string propertyName)
+        {
+            return TypeCache.Get(type)
                 .GetProperties()
                 .FirstOrDefault(p =>
                     string.Equals(p.Name, propertyName, StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(p.GetMappedName(), propertyName, StringComparison.OrdinalIgnoreCase));
+        }
 
         #endregion
     }

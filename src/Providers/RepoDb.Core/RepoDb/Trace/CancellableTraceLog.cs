@@ -82,12 +82,14 @@ namespace RepoDb
         /// The value is the representation of the current object.
         /// </summary>
         /// <returns>The string representation of the current object.</returns>
-        public override string ToString() =>
-            $"SessionId: {SessionId}\n" +
+        public override string ToString()
+        {
+            return $"SessionId: {SessionId}\n" +
             $"Key: {Key}\n" +
             $"Statement: {Statement}\n" +
             $"StartTime (Ticks): {StartTime.Ticks}\n" +
             $"Parameters: {(Parameters?.Any() == true ? string.Join(", ", Parameters.ToArray().Select(param => $"({param.ParameterName}={(param.Value is DBNull ? "DBNull" : param.Value)})")) : "No Parameters")}";
+        }
 
         #endregion
     }

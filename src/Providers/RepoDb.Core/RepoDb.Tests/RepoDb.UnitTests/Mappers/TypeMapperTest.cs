@@ -278,14 +278,14 @@ namespace RepoDb.UnitTests.Mappers
         public void ThrowExceptionOnTypeMapperViaPropertyNameThatIsNull()
         {
             // Setup
-            Assert.Throws<NullReferenceException>(() => TypeMapper.Add<TypeMapperTestClass>((string)null, DbType.AnsiStringFixedLength));
+            Assert.Throws<ArgumentNullException>(() => TypeMapper.Add<TypeMapperTestClass>((string)null, DbType.AnsiStringFixedLength));
         }
 
         [TestMethod]
         public void ThrowExceptionOnTypeMapperViaFieldThatIsNull()
         {
             // Setup
-            Assert.Throws<NullReferenceException>(() => TypeMapper.Add<TypeMapperTestClass>((Field)null, DbType.AnsiStringFixedLength));
+            Assert.Throws<ArgumentNullException>(() => TypeMapper.Add<TypeMapperTestClass>((Field)null, DbType.AnsiStringFixedLength));
         }
 
         [TestMethod]
@@ -321,21 +321,21 @@ namespace RepoDb.UnitTests.Mappers
         public void ThrowExceptionOnTypeMapperViaPropertyNameWithNullTargetColumnName()
         {
             // Setup
-            Assert.Throws<NullReferenceException>(() => TypeMapper.Add<TypeMapperTestClass>("ColumnString", null));
+            Assert.Throws<ArgumentNullException>(() => TypeMapper.Add<TypeMapperTestClass>("ColumnString", null));
         }
 
         [TestMethod]
         public void ThrowExceptionOnTypeMapperViaFieldWithNullTargetColumnName()
         {
             // Setup
-            Assert.Throws<NullReferenceException>(() => TypeMapper.Add<TypeMapperTestClass>(new Field("ColumnString"), null));
+            Assert.Throws<ArgumentNullException>(() => TypeMapper.Add<TypeMapperTestClass>(new Field("ColumnString"), null));
         }
 
         [TestMethod]
         public void ThrowExceptionOnTypeMapperViaExpressionWithNullTargetColumnName()
         {
             // Setup
-            Assert.Throws<NullReferenceException>(() => TypeMapper.Add<TypeMapperTestClass>(e => e.ColumnString, null));
+            Assert.Throws<ArgumentNullException>(() => TypeMapper.Add<TypeMapperTestClass>(e => e.ColumnString, null));
         }
 
         #endregion

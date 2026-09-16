@@ -32,16 +32,20 @@ namespace RepoDb.Extensions
         /// <param name="property">The property of where the custom attribute is defined.</param>
         /// <returns>The custom attribute.</returns>
         public static T GetCustomAttribute<T>(this PropertyInfo property)
-            where T : Attribute =>
-            property.GetCustomAttribute<T>(false);
+            where T : Attribute
+        {
+            return property.GetCustomAttribute<T>(inherit: false);
+        }
 
         /// <summary>
         /// Gets the mapped name of the property.
         /// </summary>
         /// <param name="property">The property where the mapped name will be retrieved.</param>
         /// <returns>A string containing the mapped name.</returns>
-        public static string GetMappedName(this PropertyInfo property) =>
-            GetMappedName(property, property.DeclaringType);
+        public static string GetMappedName(this PropertyInfo property)
+        {
+            return GetMappedName(property, property.DeclaringType);
+        }
 
         /// <summary>
         /// Gets the mapped name of the property.
@@ -69,8 +73,10 @@ namespace RepoDb.Extensions
         /// <param name="entity">The entity object where the value of the property will be retrieved.</param>
         /// <returns>An instance of query field object that holds the converted name and values of the property.</returns>
         public static QueryField AsQueryField(this PropertyInfo property,
-            object entity) =>
-            AsQueryField(property, entity, false);
+            object entity)
+        {
+            return AsQueryField(property, entity, prependUnderscore: false);
+        }
 
         /// <summary>
         /// Converts a <see cref="PropertyInfo"/> into a query field object.
@@ -81,8 +87,10 @@ namespace RepoDb.Extensions
         /// <param name="prependUnderscore">The value to identify whether the underscore prefix will be appended to the parameter name.</param>
         internal static QueryField AsQueryField(this PropertyInfo property,
             object entity,
-            bool prependUnderscore) =>
-            new(property.AsField(), Operation.Equal, property.GetHandledValue(entity), null, prependUnderscore);
+            bool prependUnderscore)
+        {
+            return new(property.AsField(), Operation.Equal, property.GetHandledValue(entity), dbType: null, prependUnderscore);
+        }
 
         /// <summary>
         /// Converts a <see cref="PropertyInfo"/> into a mapped name.
@@ -91,8 +99,10 @@ namespace RepoDb.Extensions
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>A instance of string containing the value of a mapped name.</returns>
         internal static string AsFieldAsString(this PropertyInfo property,
-            IDbSetting dbSetting) =>
-            PropertyMappedNameCache.Get(property).AsQuoted(true, dbSetting);
+            IDbSetting dbSetting)
+        {
+            return PropertyMappedNameCache.Get(property).AsQuoted(trim: true, dbSetting);
+        }
 
         /// <summary>
         /// Converts a <see cref="PropertyInfo"/> into a parameterized name.
@@ -101,8 +111,10 @@ namespace RepoDb.Extensions
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>A instance of string containing the value of a parameterized name.</returns>
         internal static string AsParameterAsString(this PropertyInfo property,
-            IDbSetting dbSetting) =>
-            string.Concat(dbSetting.ParameterPrefix, PropertyMappedNameCache.Get(property));
+            IDbSetting dbSetting)
+        {
+            return string.Concat(dbSetting.ParameterPrefix, PropertyMappedNameCache.Get(property));
+        }
 
         /// <summary>
         /// Converts a <see cref="PropertyInfo"/> into a parameterized (as field) name.
@@ -111,8 +123,10 @@ namespace RepoDb.Extensions
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>A instance of string containing the value of a parameterized (as field) name.</returns>
         internal static string AsParameterAsFieldAsString(this PropertyInfo property,
-            IDbSetting dbSetting) =>
-            string.Concat(AsParameterAsString(property, dbSetting), " AS ", AsFieldAsString(property, dbSetting));
+            IDbSetting dbSetting)
+        {
+            return string.Concat(AsParameterAsString(property, dbSetting), " AS ", AsFieldAsString(property, dbSetting));
+        }
 
         /// <summary>
         /// Converts a <see cref="PropertyInfo"/> into a field and parameter name.
@@ -121,8 +135,10 @@ namespace RepoDb.Extensions
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>A instance of string containing the value of a field and parameter name.</returns>
         internal static string AsFieldAndParameterAsString(this PropertyInfo property,
-            IDbSetting dbSetting) =>
-            string.Concat(AsFieldAsString(property, dbSetting), " = ", AsParameterAsString(property, dbSetting));
+            IDbSetting dbSetting)
+        {
+            return string.Concat(AsFieldAsString(property, dbSetting), " = ", AsParameterAsString(property, dbSetting));
+        }
 
         /// <summary>
         /// Converts a <see cref="PropertyInfo"/> into a field (and its alias) name.
@@ -133,8 +149,10 @@ namespace RepoDb.Extensions
         /// <returns>A instance of string containing the value of a field (and its alias) name.</returns>
         internal static string AsFieldAndAliasField(this PropertyInfo property,
             string alias,
-            IDbSetting dbSetting) =>
-            string.Concat(AsFieldAsString(property, dbSetting), " = ", alias, CharConstant.Period, AsFieldAsString(property, dbSetting));
+            IDbSetting dbSetting)
+        {
+            return string.Concat(AsFieldAsString(property, dbSetting), " = ", alias, CharConstant.Period, AsFieldAsString(property, dbSetting));
+        }
 
         /// <summary>
         /// Generates a hashcode of the <see cref="PropertyInfo"/> object based on the parent class name and its own name.
@@ -143,16 +161,20 @@ namespace RepoDb.Extensions
         /// <param name="declaringType">The declaring type of the <see cref="PropertyInfo"/> object. This refers to the derived class if present.</param>
         /// <returns>The generated hashcode.</returns>
         internal static int GenerateCustomizedHashCode(this PropertyInfo property,
-            Type declaringType) =>
-            HashCode.Combine((declaringType ?? property.DeclaringType), property.Name, property.PropertyType);
+            Type declaringType)
+        {
+            return HashCode.Combine((declaringType ?? property.DeclaringType), property.Name, property.PropertyType);
+        }
 
         /// <summary>
         /// Converts an instance of <see cref="PropertyInfo"/> object into <see cref="Field"/> object.
         /// </summary>
         /// <param name="property">The instance of <see cref="PropertyInfo"/> object to be converted.</param>
         /// <returns>The converted instance of <see cref="Field"/> object.</returns>
-        public static Field AsField(this PropertyInfo property) =>
-            new(PropertyMappedNameCache.Get(property), TypeCache.Get(property.PropertyType).GetUnderlyingType());
+        public static Field AsField(this PropertyInfo property)
+        {
+            return new(PropertyMappedNameCache.Get(property), TypeCache.Get(property.PropertyType).GetUnderlyingType());
+        }
 
         /// <summary>
         /// Converts an enumerable of <see cref="PropertyInfo"/> objects into an enumerable array of <see cref="Field"/>.
@@ -172,16 +194,20 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="properties">The enumerable array of properties to be converted.</param>
         /// <returns>An enumerable array of <see cref="Field"/>.</returns>
-        public static IEnumerable<Field> AsFields(this PropertyInfo[] properties) =>
-            AsFields(properties.AsEnumerable<PropertyInfo>());
+        public static IEnumerable<Field> AsFields(this PropertyInfo[] properties)
+        {
+            return AsFields(properties.AsEnumerable<PropertyInfo>());
+        }
 
         /// <summary>
         /// Gets the mapped <see cref="DbType"/> for the current <see cref="PropertyInfo"/>.
         /// </summary>
         /// <param name="propertyInfo">The target property.</param>
         /// <returns>The mapped <see cref="DbType"/> object.</returns>
-        public static DbType? GetDbType(this PropertyInfo propertyInfo) =>
-            GetDbType(propertyInfo, propertyInfo.DeclaringType);
+        public static DbType? GetDbType(this PropertyInfo propertyInfo)
+        {
+            return GetDbType(propertyInfo, propertyInfo.DeclaringType);
+        }
 
         /// <summary>
         /// Gets the mapped <see cref="DbType"/> for the current <see cref="PropertyInfo"/>.
@@ -190,11 +216,13 @@ namespace RepoDb.Extensions
         /// <param name="declaringType">The declaring type.</param>
         /// <returns>The mapped <see cref="DbType"/> object.</returns>
         public static DbType? GetDbType(this PropertyInfo propertyInfo,
-            Type declaringType) =>
-            TypeMapCache.Get(declaringType, propertyInfo) ??
+            Type declaringType)
+        {
+            return TypeMapCache.Get(declaringType, propertyInfo) ??
                 GetPropertyValueAttribute<DbTypeAttribute>(propertyInfo, declaringType)?.DbType ??
                 (DbType?)GetDbTypePropertyValueAttribute(propertyInfo, declaringType)?.Value ??
                 TypeMapCache.Get(propertyInfo.PropertyType);
+        }
 
         /// <summary>
         /// Returns the list of <see cref="PropertyValueAttribute"/> object that is currently mapped
@@ -202,8 +230,10 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="propertyInfo">The target property.</param>
         /// <returns>The list of mapped <see cref="PropertyHandlerAttribute"/> objects.</returns>
-        public static IEnumerable<PropertyValueAttribute> GetPropertyValueAttributes(this PropertyInfo propertyInfo) =>
-            GetPropertyValueAttributes(propertyInfo, propertyInfo.DeclaringType);
+        public static IEnumerable<PropertyValueAttribute> GetPropertyValueAttributes(this PropertyInfo propertyInfo)
+        {
+            return GetPropertyValueAttributes(propertyInfo, propertyInfo.DeclaringType);
+        }
 
         /// <summary>
         /// Returns the list of <see cref="PropertyValueAttribute"/> object that is currently mapped
@@ -235,8 +265,10 @@ namespace RepoDb.Extensions
         /// <param name="property">The property where to extract the instance of <see cref="PropertyValueAttribute"/> object.</param>
         /// <returns>The instance of target <see cref="PropertyValueAttribute"/> object.</returns>
         public static TPropertyValueAttribute GetPropertyValueAttribute<TPropertyValueAttribute>(this PropertyInfo property)
-            where TPropertyValueAttribute : PropertyValueAttribute =>
-            GetPropertyValueAttribute<TPropertyValueAttribute>(property, property.DeclaringType);
+            where TPropertyValueAttribute : PropertyValueAttribute
+        {
+            return GetPropertyValueAttribute<TPropertyValueAttribute>(property, property.DeclaringType);
+        }
 
         /// <summary>
         /// Gets the instance of <see cref="PropertyValueAttribute"/> object from the existing mapped
@@ -248,9 +280,11 @@ namespace RepoDb.Extensions
         /// <returns>The instance of target <see cref="PropertyValueAttribute"/> object.</returns>
         public static TPropertyValueAttribute GetPropertyValueAttribute<TPropertyValueAttribute>(this PropertyInfo property,
             Type declaringType)
-            where TPropertyValueAttribute : PropertyValueAttribute =>
-            (TPropertyValueAttribute)GetPropertyValueAttributes(property, declaringType)?
+            where TPropertyValueAttribute : PropertyValueAttribute
+        {
+            return (TPropertyValueAttribute)GetPropertyValueAttributes(property, declaringType)?
                 .LastOrDefault(e => typeof(TPropertyValueAttribute) == e.GetType());
+        }
 
         /// <summary>
         /// 
@@ -259,8 +293,10 @@ namespace RepoDb.Extensions
         /// <param name="declaringType"></param>
         /// <returns></returns>
         internal static PropertyValueAttribute GetNamePropertyValueAttribute(this PropertyInfo property,
-            Type declaringType) =>
-            GetPropertyValueAttributeByParameterName(property, declaringType, nameof(IDbDataParameter.ParameterName));
+            Type declaringType)
+        {
+            return GetPropertyValueAttributeByParameterName(property, declaringType, nameof(IDbDataParameter.ParameterName));
+        }
 
         /// <summary>
         /// 
@@ -269,8 +305,10 @@ namespace RepoDb.Extensions
         /// <param name="declaringType"></param>
         /// <returns></returns>
         internal static PropertyValueAttribute GetDbTypePropertyValueAttribute(this PropertyInfo property,
-            Type declaringType) =>
-            GetPropertyValueAttributeByParameterName(property, declaringType, nameof(IDbDataParameter.DbType));
+            Type declaringType)
+        {
+            return GetPropertyValueAttributeByParameterName(property, declaringType, nameof(IDbDataParameter.DbType));
+        }
 
         /// <summary>
         /// 
@@ -281,11 +319,13 @@ namespace RepoDb.Extensions
         /// <returns></returns>
         internal static PropertyValueAttribute GetPropertyValueAttributeByParameterName(this PropertyInfo property,
             Type declaringType,
-            string parameterName) =>
-            PropertyValueAttributeMapper
+            string parameterName)
+        {
+            return PropertyValueAttributeMapper
                 .Get((declaringType ?? property.DeclaringType), property)?
                 .Where(e => string.Equals(parameterName, e.PropertyName, StringComparison.OrdinalIgnoreCase))
                 .LastOrDefault();
+        }
 
         /// <summary>
         /// Returns the value of the data entity property. If the property handler is defined in the property, then the
@@ -295,8 +335,10 @@ namespace RepoDb.Extensions
         /// <param name="entity">The instance of the data entity object.</param>
         /// <returns>The handled value of the data entity property.</returns>
         public static object GetHandledValue(this PropertyInfo property,
-            object entity) =>
-            GetHandledValue(property, entity, property.DeclaringType);
+            object entity)
+        {
+            return GetHandledValue(property, entity, property.DeclaringType);
+        }
 
         /// <summary>
         /// Returns the value of the data entity property. If the property handler is defined in the property, then the
@@ -310,7 +352,7 @@ namespace RepoDb.Extensions
             object entity,
             Type declaringType)
         {
-            var classProperty = PropertyCache.Get((declaringType ?? property?.DeclaringType), property, true);
+            var classProperty = PropertyCache.Get((declaringType ?? property?.DeclaringType), property, includeMappings: true);
             var propertyHandler = classProperty?.GetPropertyHandler();
             var value = property?.GetValue(entity);
             if (propertyHandler != null)

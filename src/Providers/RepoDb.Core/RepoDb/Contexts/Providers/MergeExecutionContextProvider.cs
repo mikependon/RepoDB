@@ -141,7 +141,7 @@ namespace RepoDb.Contexts.Providers
             }
 
             // Create
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
             var request = new MergeRequest(tableName,
                 connection,
                 transaction,
@@ -149,7 +149,7 @@ namespace RepoDb.Contexts.Providers
                 qualifiers,
                 hints,
                 statementBuilder);
-            var commandText = await CommandTextCache.GetMergeTextAsync(request, cancellationToken);
+            var commandText = await CommandTextCache.GetMergeTextAsync(request, cancellationToken).ConfigureAwait(false);
 
             // Call
             context = CreateInternal(entityType,
@@ -188,7 +188,7 @@ namespace RepoDb.Contexts.Providers
             var inputFields = dbFields?.GetItems()
                 .Where(dbField =>
                     fields.FirstOrDefault(field =>
-                        string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
+                        string.Equals(field.Name.AsUnquoted(trim: true, dbSetting), dbField.Name.AsUnquoted(trim: true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                 .AsList();
 
             // Variables for the entity action
@@ -212,7 +212,7 @@ namespace RepoDb.Contexts.Providers
                     .GetDataEntityDbParameterSetterCompiledFunction(entityType,
                         string.Concat(entityType.FullName, CharConstant.Period, tableName, ".Merge"),
                         inputFields?.AsList(),
-                        null,
+outputFields: null,
                         dbSetting,
                         dbHelper),
                 KeyPropertySetterFunc = keyPropertySetterFunc

@@ -58,10 +58,10 @@ namespace RepoDb
 
             // Variables
             var key = GenerateHashCode(type);
-            var result = default(TPropertyHandler);
+            TPropertyHandler result;
 
             // Try get the value
-            if (cache.TryGetValue(key, out var value) == false)
+            if (!cache.TryGetValue(key, out var value))
             {
                 value = typeLevelResolver.Resolve(type);
                 result = Converter.ToType<TPropertyHandler>(value);
@@ -149,10 +149,10 @@ namespace RepoDb
 
             // Variables
             var key = GenerateHashCode(entityType, propertyInfo);
-            var result = default(TPropertyHandler);
+            TPropertyHandler result;
 
             // Try get the value
-            if (cache.TryGetValue(key, out var value) == false)
+            if (!cache.TryGetValue(key, out var value))
             {
                 value = propertyLevelResolver.Resolve(entityType, propertyInfo);
                 result = Converter.ToType<TPropertyHandler>(value);
@@ -215,7 +215,7 @@ namespace RepoDb
         {
             if (obj == null)
             {
-                throw new NullReferenceException($"The argument '{argument}' cannot be null.");
+                throw new ArgumentNullException(argument);
             }
         }
 

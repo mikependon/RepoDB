@@ -21,16 +21,20 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="value">The value to be converted.</param>
         /// <returns>A <see cref="long"/> value of the object.</returns>
-        internal static long ToNumber(this object value) =>
-            Convert.ToInt64(value);
+        internal static long ToNumber(this object value)
+        {
+            return Convert.ToInt64(value, System.Globalization.CultureInfo.InvariantCulture);
+        }
 
         /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
-        internal static void ThrowIfNull<T>(T obj) =>
-            ThrowIfNull(obj, null);
+        internal static void ThrowIfNull<T>(T obj)
+        {
+            ThrowIfNull(obj, argument: null);
+        }
 
         /// <summary>
         /// 
@@ -47,11 +51,11 @@ namespace RepoDb.Extensions
             }
             if (string.IsNullOrEmpty(argument))
             {
-                throw new NullReferenceException();
+                throw new ArgumentNullException(nameof(argument));
             }
             else
             {
-                throw new NullReferenceException($"The argument '{argument}' cannot be null.");
+                throw new ArgumentNullException(argument);
             }
         }
     }

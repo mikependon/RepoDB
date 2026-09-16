@@ -16,35 +16,29 @@ namespace RepoDb
     /// <summary>
     /// 
     /// </summary>
-    internal class TraceResult
+    /// <remarks>
+    /// 
+    /// </remarks>
+    /// <param name="log"></param>
+    internal class TraceResult(CancellableTraceLog log)
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="log"></param>
-        public TraceResult(CancellableTraceLog log)
-        {
-            SessionId = log.SessionId;
-            StartTime = log.StartTime;
-            CancellableTraceLog = log;
-        }
 
         #region Properties
 
         /// <summary>
         /// 
         /// </summary>
-        public Guid SessionId { get; }
+        public Guid SessionId { get; } = log.SessionId;
 
         /// <summary>
         /// 
         /// </summary>
-        public DateTime StartTime { get; }
+        public DateTime StartTime { get; } = log.StartTime;
 
         /// <summary>
         /// 
         /// </summary>
-        public CancellableTraceLog CancellableTraceLog { get; }
+        public CancellableTraceLog CancellableTraceLog { get; } = log;
 
         #endregion
 
@@ -57,10 +51,12 @@ namespace RepoDb
         /// <param name="command"></param>
         /// <returns></returns>
         public static TraceResult Create(string key,
-            DbCommand command) =>
-            new TraceResult(
+            DbCommand command)
+        {
+            return new TraceResult(
                 new CancellableTraceLog(Guid.NewGuid(),
                     key, command.CommandText, GetParameters(command)));
+        }
 
         /// <summary>
         /// 

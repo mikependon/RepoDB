@@ -47,14 +47,14 @@ namespace RepoDb.Reflection
             var dbParameterValueProperty = StaticType.DbParameter.GetProperty("Value");
 
             // Get the entity property
-            var propertyName = field.Name.AsUnquoted(true, dbSetting).AsAlphaNumeric();
+            var propertyName = field.Name.AsUnquoted(trim: true, dbSetting).AsAlphaNumeric();
             var property = (typeOfEntity.GetProperty(propertyName) ?? typeOfEntity.GetMappedProperty(propertyName)?.PropertyInfo)?.SetMethod;
 
             // Get the command parameter
             var name = parameterName ?? propertyName;
             var parameters = Expression.Property(dbCommandParameterExpression, dbCommandParametersProperty);
             var parameter = Expression.Call(parameters, dbParameterCollectionIndexerMethod,
-                Expression.Constant(index > 0 ? string.Concat(name, "_", index.ToString()) : name));
+                Expression.Constant(index > 0 ? string.Concat(name, "_", index.ToString(System.Globalization.CultureInfo.InvariantCulture)) : name));
 
             // Assign the Parameter.Value into DataEntity.Property
             var value = Expression.Property(parameter, dbParameterValueProperty);

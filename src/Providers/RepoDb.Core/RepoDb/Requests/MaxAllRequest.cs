@@ -16,7 +16,24 @@ namespace RepoDb.Requests
     /// <summary>
     /// A class that holds the value of the 'MaxAll' operation arguments.
     /// </summary>
-    internal class MaxAllRequest : BaseRequest
+    /// <remarks>
+    /// Creates a new instance of <see cref="MaxAllRequest"/> object.
+    /// </remarks>
+    /// <param name="name">The name of the request.</param>
+    /// <param name="connection">The connection object.</param>
+    /// <param name="transaction">The transaction object.</param>
+    /// <param name="field">The field object.</param>
+    /// <param name="hints">The hints for the table.</param>
+    /// <param name="statementBuilder">The statement builder.</param>
+    internal class MaxAllRequest(string name,
+        IDbConnection connection,
+        IDbTransaction transaction,
+        Field field = null,
+        string hints = null,
+        IStatementBuilder statementBuilder = null) : BaseRequest(name,
+              connection,
+              transaction,
+              statementBuilder)
     {
         private int? hashCode = null;
 
@@ -46,38 +63,14 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="MaxAllRequest"/> object.
-        /// </summary>
-        /// <param name="name">The name of the request.</param>
-        /// <param name="connection">The connection object.</param>
-        /// <param name="transaction">The transaction object.</param>
-        /// <param name="field">The field object.</param>
-        /// <param name="hints">The hints for the table.</param>
-        /// <param name="statementBuilder">The statement builder.</param>
-        public MaxAllRequest(string name,
-            IDbConnection connection,
-            IDbTransaction transaction,
-            Field field = null,
-            string hints = null,
-            IStatementBuilder statementBuilder = null)
-            : base(name,
-                  connection,
-                  transaction,
-                  statementBuilder)
-        {
-            Field = field;
-            Hints = hints;
-        }
-
-        /// <summary>
         /// Gets the field to be maximized.
         /// </summary>
-        public Field Field { get; }
+        public Field Field { get; } = field;
 
         /// <summary>
         /// Gets the hints for the table.
         /// </summary>
-        public string Hints { get; }
+        public string Hints { get; } = hints;
 
         #region Equality and comparers
 
@@ -94,22 +87,22 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = HashCode.Combine(base.GetHashCode(), Name, ".MaxAll");
+            var computedHashCode = HashCode.Combine(base.GetHashCode(), Name, ".MaxAll");
 
             // Add the field
             if (Field != null)
             {
-                hashCode = HashCode.Combine(hashCode, Field);
+                computedHashCode = HashCode.Combine(computedHashCode, Field);
             }
 
             // Add the hints
             if (!string.IsNullOrWhiteSpace(Hints))
             {
-                hashCode = HashCode.Combine(hashCode, Hints);
+                computedHashCode = HashCode.Combine(computedHashCode, Hints);
             }
 
             // Set and return the hashcode
-            return (this.hashCode = hashCode).Value;
+            return (this.hashCode = computedHashCode).Value;
         }
 
         #endregion

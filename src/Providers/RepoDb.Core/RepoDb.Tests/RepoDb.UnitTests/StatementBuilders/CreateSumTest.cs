@@ -159,7 +159,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var field = new Field("Value");
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
             {
                 statementBuilder.CreateSum(tableName: tableName,
                     field: field,
@@ -176,7 +176,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var field = new Field("Value");
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
             {
                 statementBuilder.CreateSum(tableName: tableName,
                     field: field,
@@ -193,7 +193,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var field = new Field("Value");
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
             {
                 statementBuilder.CreateSum(tableName: tableName,
                     field: field,
@@ -209,7 +209,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = " ";
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
             {
                 statementBuilder.CreateSum(tableName: tableName,
                     field: null,

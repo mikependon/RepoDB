@@ -141,7 +141,7 @@ namespace RepoDb
         /// <returns>The cached list <see cref="ClassProperty"/> objects.</returns>
         public static IEnumerable<ClassProperty> Get(Type entityType)
         {
-            if (entityType is null || TypeCache.Get(entityType).IsClassType() != true)
+            if (entityType is null || !TypeCache.Get(entityType).IsClassType())
             {
                 return null;
             }
@@ -150,7 +150,7 @@ namespace RepoDb
             var key = GenerateHashCode(entityType);
 
             // Try get the value
-            if (cache.TryGetValue(key, out var properties) == false)
+            if (!cache.TryGetValue(key, out var properties))
             {
                 properties = entityType.GetClassProperties().AsList();
                 cache.TryAdd(key, properties);
@@ -193,7 +193,7 @@ namespace RepoDb
         {
             if (obj == null)
             {
-                throw new NullReferenceException($"The argument '{argument}' cannot be null.");
+                throw new ArgumentNullException(argument);
             }
         }
 

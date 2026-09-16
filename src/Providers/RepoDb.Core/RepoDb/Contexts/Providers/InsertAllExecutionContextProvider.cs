@@ -48,7 +48,7 @@ namespace RepoDb.Contexts.Providers
                 ";",
                 fields?.Select(f => f.Name).Join(","),
                 ";",
-                batchSize.ToString(),
+                batchSize.ToString(System.Globalization.CultureInfo.InvariantCulture),
                 ";",
                 hints);
         }
@@ -161,7 +161,7 @@ namespace RepoDb.Contexts.Providers
             }
 
             // Create
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
             string commandText;
 
             // Create a different kind of requests
@@ -174,7 +174,7 @@ namespace RepoDb.Contexts.Providers
                     batchSize,
                     hints,
                     statementBuilder);
-                commandText = await CommandTextCache.GetInsertAllTextAsync(request, cancellationToken);
+                commandText = await CommandTextCache.GetInsertAllTextAsync(request, cancellationToken).ConfigureAwait(false);
             }
             else
             {
@@ -184,7 +184,7 @@ namespace RepoDb.Contexts.Providers
                     fields,
                     hints,
                     statementBuilder);
-                commandText = await CommandTextCache.GetInsertTextAsync(request, cancellationToken);
+                commandText = await CommandTextCache.GetInsertTextAsync(request, cancellationToken).ConfigureAwait(false);
             }
 
             // Call
@@ -228,11 +228,10 @@ namespace RepoDb.Contexts.Providers
 
             // Filter the actual properties for input fields
             inputFields = dbFields?.GetItems()
-                .Where(dbField =>
-                    dbField.IsIdentity == false)
+                .Where(dbField => !dbField.IsIdentity)
                 .Where(dbField =>
                     fields.FirstOrDefault(field =>
-                        string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
+                        string.Equals(field.Name.AsUnquoted(trim: true, dbSetting), dbField.Name.AsUnquoted(trim: true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                 .AsList();
 
             // Variables for the context
@@ -255,7 +254,7 @@ namespace RepoDb.Contexts.Providers
                     .GetDataEntityDbParameterSetterCompiledFunction(entityType,
                         string.Concat(entityType.FullName, CharConstant.Period, tableName, ".InsertAll"),
                         inputFields,
-                        null,
+outputFields: null,
                         dbSetting,
                         dbHelper);
             }
@@ -265,7 +264,7 @@ namespace RepoDb.Contexts.Providers
                     .GetDataEntityListDbParameterSetterCompiledFunction(entityType,
                         string.Concat(entityType.FullName, CharConstant.Period, tableName, ".InsertAll"),
                         inputFields,
-                        null,
+outputFields: null,
                         batchSize,
                         dbSetting,
                         dbHelper);
@@ -281,7 +280,7 @@ namespace RepoDb.Contexts.Providers
                 MultipleDataEntitiesParametersSetterFunc = multipleEntitiesParametersSetterFunc,
                 KeyPropertySetterFunc = keyPropertySetterFunc,
                 HasIdentityKey = keyField != null &&
-                    string.Equals(keyField.Name.AsUnquoted(true, dbSetting), dbFields?.GetIdentity()?.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)
+                    string.Equals(keyField.Name.AsUnquoted(trim: true, dbSetting), dbFields?.GetIdentity()?.Name.AsUnquoted(trim: true, dbSetting), StringComparison.OrdinalIgnoreCase)
             };
         }
     }

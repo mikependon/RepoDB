@@ -17,29 +17,24 @@ namespace RepoDb.Resolvers
     /// <summary>
     /// A class that is being used to resolve the <see cref="Field"/> name conversion.
     /// </summary>
-    public class DbConvertFieldResolver : IResolver<Field, IDbSetting, string>
+    /// <remarks>
+    /// Creates a new instance of <see cref="DbConvertFieldResolver"/> class.
+    /// </remarks>
+    public class DbConvertFieldResolver(IResolver<Type, DbType?> dbTypeResolver,
+        IResolver<DbType, string> stringNameResolver) : IResolver<Field, IDbSetting, string>
     {
-        /// <summary>
-        /// Creates a new instance of <see cref="DbConvertFieldResolver"/> class.
-        /// </summary>
-        public DbConvertFieldResolver(IResolver<Type, DbType?> dbTypeResolver,
-            IResolver<DbType, string> stringNameResolver)
-        {
-            DbTypeResolver = dbTypeResolver;
-            StringNameResolver = stringNameResolver;
-        }
 
         #region Properties
 
         /// <summary>
         /// Gets the resolver that is being used to resolve the .NET CLR type and <see cref="DbType"/>.
         /// </summary>
-        public IResolver<Type, DbType?> DbTypeResolver { get; }
+        public IResolver<Type, DbType?> DbTypeResolver { get; } = dbTypeResolver;
 
         /// <summary>
         /// Gets the resolver that is being used to resolve the <see cref="DbType"/> and the database type string name.
         /// </summary>
-        public IResolver<DbType, string> StringNameResolver { get; }
+        public IResolver<DbType, string> StringNameResolver { get; } = stringNameResolver;
 
         #endregion
 
@@ -59,7 +54,7 @@ namespace RepoDb.Resolvers
                 var dbType = DbTypeResolver.Resolve(field.Type);
                 if (dbType != null)
                 {
-                    var dbTypeName = StringNameResolver.Resolve(dbType.Value).ToUpper();
+                    var dbTypeName = StringNameResolver.Resolve(dbType.Value).ToUpperInvariant();
                     var parenIndex = dbTypeName.IndexOf('(');
                     var quotedDbTypeName = parenIndex >= 0
                         ? string.Concat(dbTypeName.Substring(0, parenIndex).AsQuoted(dbSetting), dbTypeName.Substring(parenIndex))
@@ -67,7 +62,7 @@ namespace RepoDb.Resolvers
                     return string.Concat("CAST(", field.Name.AsField(dbSetting), " AS ", quotedDbTypeName, ")");
                 }
             }
-            return field?.Name?.AsQuoted(true, true, dbSetting);
+            return field?.Name?.AsQuoted(trim: true, ignoreSchema: true, dbSetting);
         }
 
         #endregion

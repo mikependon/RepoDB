@@ -19,85 +19,85 @@ namespace RepoDb
 
         #region AverageAll
 
-        /// <averagemary>
+        /// <summary>
         /// Computes the average value of the target field.
-        /// </averagemary>
+        /// </summary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value of the target field.</returns>
         public double AverageAll(Field field,
             string hints = null,
             string traceKey = TraceKeys.AverageAll,
-			IDbTransaction transaction = null)
+            IDbTransaction transaction = null)
         {
             return DbRepository.AverageAll<TEntity>(field: field,
                 hints: hints,
                 traceKey: traceKey,
-				transaction: transaction);
+                transaction: transaction);
         }
 
-        /// <averagemary>
+        /// <summary>
         /// Computes the average value of the target field.
-        /// </averagemary>
+        /// </summary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value of the target field.</returns>
         public double AverageAll(Expression<Func<TEntity, object>> field,
             string hints = null,
             string traceKey = TraceKeys.AverageAll,
-			IDbTransaction transaction = null)
+            IDbTransaction transaction = null)
         {
             return DbRepository.AverageAll<TEntity>(field: field,
                 hints: hints,
                 traceKey: traceKey,
-				transaction: transaction);
+                transaction: transaction);
         }
 
-        /// <averagemary>
+        /// <summary>
         /// Computes the average value of the target field in an asynchronous way.
-        /// </averagemary>
+        /// </summary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
         public Task<double> AverageAllAsync(Field field,
             string hints = null,
             string traceKey = TraceKeys.AverageAll,
-			IDbTransaction transaction = null,
+            IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.AverageAllAsync<TEntity>(field: field,
                 hints: hints,
                 traceKey: traceKey,
-				transaction: transaction,
+                transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 
-        /// <averagemary>
+        /// <summary>
         /// Computes the average value of the target field in an asynchronous way.
-        /// </averagemary>
+        /// </summary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
         public Task<double> AverageAllAsync(Expression<Func<TEntity, object>> field,
             string hints = null,
             string traceKey = TraceKeys.AverageAll,
-			IDbTransaction transaction = null,
+            IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.AverageAllAsync<TEntity>(field: field,
                 hints: hints,
                 traceKey: traceKey,
-				transaction: transaction,
+                transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 
@@ -105,89 +105,89 @@ namespace RepoDb
 
         #region AverageAll<TResult>
 
-        /// <averagemary>
+        /// <summary>
         /// Computes the average value of the target field.
-        /// </averagemary>
+        /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value of the target field.</returns>
         public TResult AverageAll<TResult>(Field field,
             string hints = null,
             string traceKey = TraceKeys.AverageAll,
-			IDbTransaction transaction = null)
+            IDbTransaction transaction = null)
         {
             return DbRepository.AverageAll<TEntity, TResult>(field: field,
                 hints: hints,
                 traceKey: traceKey,
-				transaction: transaction);
+                transaction: transaction);
         }
 
-        /// <averagemary>
+        /// <summary>
         /// Computes the average value of the target field.
-        /// </averagemary>
+        /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value of the target field.</returns>
         public TResult AverageAll<TResult>(Expression<Func<TEntity, TResult>> field,
             string hints = null,
             string traceKey = TraceKeys.AverageAll,
-			IDbTransaction transaction = null)
+            IDbTransaction transaction = null)
         {
             return DbRepository.AverageAll<TEntity, TResult>(field: field,
                 hints: hints,
                 traceKey: traceKey,
-				transaction: transaction);
+                transaction: transaction);
         }
 
-        /// <averagemary>
+        /// <summary>
         /// Computes the average value of the target field in an asynchronous way.
-        /// </averagemary>
+        /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
         public Task<TResult> AverageAllAsync<TResult>(Field field,
             string hints = null,
             string traceKey = TraceKeys.AverageAll,
-			IDbTransaction transaction = null,
+            IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.AverageAllAsync<TEntity, TResult>(field: field,
                 hints: hints,
                 traceKey: traceKey,
-				transaction: transaction,
+                transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 
-        /// <averagemary>
+        /// <summary>
         /// Computes the average value of the target field in an asynchronous way.
-        /// </averagemary>
+        /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
         public Task<TResult> AverageAllAsync<TResult>(Expression<Func<TEntity, TResult>> field,
             string hints = null,
             string traceKey = TraceKeys.AverageAll,
-			IDbTransaction transaction = null,
+            IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.AverageAllAsync<TEntity, TResult>(field: field,
                 hints: hints,
                 traceKey: traceKey,
-				transaction: transaction,
+                transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 

@@ -14,15 +14,13 @@ namespace RepoDb.Attributes.Parameter
     /// An attribute that is being used to define a value to the <see cref="DbParameter.Precision"/>
     /// property via a class property mapping.
     /// </summary>
-    public class PrecisionAttribute : PropertyValueAttribute
+    /// <remarks>
+    /// Creates a new instance of <see cref="PrecisionAttribute"/> class.
+    /// </remarks>
+    /// <param name="precision">The precision of the parameter.</param>
+    [System.AttributeUsage(System.AttributeTargets.All)]
+    public class PrecisionAttribute(byte precision) : PropertyValueAttribute(typeof(DbParameter), nameof(DbParameter.Precision), precision)
     {
-        /// <summary>
-        /// Creates a new instance of <see cref="PrecisionAttribute"/> class.
-        /// </summary>
-        /// <param name="precision">The precision of the parameter.</param>
-        public PrecisionAttribute(byte precision)
-            : base(typeof(DbParameter), nameof(DbParameter.Precision), precision)
-        { }
 
         /// <summary>
         /// Gets the mapped precision value of the parameter.

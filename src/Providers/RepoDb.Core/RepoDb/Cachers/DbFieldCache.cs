@@ -108,13 +108,13 @@ namespace RepoDb
             }
 
             // Add the hashcode of the table name
-            if (string.IsNullOrWhiteSpace(tableName) == false)
+            if (!string.IsNullOrWhiteSpace(tableName))
             {
                 key = HashCode.Combine(key, StringComparer.Ordinal.GetHashCode(tableName));
             }
 
             // Try get the value
-            if (cache.TryGetValue(key, out var result) == false)
+            if (!cache.TryGetValue(key, out var result))
             {
                 // Get from DB
                 result = new DbFieldCollection(connection
@@ -200,13 +200,13 @@ namespace RepoDb
             }
 
             // Add the hashcode of the table name
-            if (string.IsNullOrWhiteSpace(tableName) == false)
+            if (!string.IsNullOrWhiteSpace(tableName))
             {
                 key = HashCode.Combine(key, StringComparer.Ordinal.GetHashCode(tableName));
             }
 
             // Try get the value
-            if (cache.TryGetValue(key, out var result) == false)
+            if (!cache.TryGetValue(key, out var result))
             {
                 // Get from DB
                 var dbFields = await connection

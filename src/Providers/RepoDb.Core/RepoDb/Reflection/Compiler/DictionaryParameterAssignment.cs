@@ -35,7 +35,7 @@ namespace RepoDb.Reflection
         {
             var parameterAssignmentExpressions = new List<Expression>();
             var dbParameterExpression = Expression.Variable(StaticType.DbParameter,
-                string.Concat("parameter", dbField.Name.AsUnquoted(true, dbSetting).AsAlphaNumeric()));
+                string.Concat("parameter", dbField.Name.AsUnquoted(trim: true, dbSetting).AsAlphaNumeric()));
 
             // Variable
             var createParameterExpression = GetDbCommandCreateParameterExpression(dbCommandExpression, dbField);

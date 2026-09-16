@@ -49,7 +49,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 var result = connection.SumAll<IdentityCompleteTable>(e => e.ColumnInt);
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -66,7 +66,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     SqlServerTableHints.NoLock);
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -86,7 +86,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 var result = await connection.SumAllAsync<IdentityCompleteTable>(e => e.ColumnInt);
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -103,7 +103,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     SqlServerTableHints.NoLock);
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -128,7 +128,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     Field.Parse<IdentityCompleteTable>(e => e.ColumnInt).First());
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -146,7 +146,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     SqlServerTableHints.NoLock);
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -167,7 +167,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     Field.Parse<IdentityCompleteTable>(e => e.ColumnInt).First());
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -185,7 +185,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     SqlServerTableHints.NoLock);
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 

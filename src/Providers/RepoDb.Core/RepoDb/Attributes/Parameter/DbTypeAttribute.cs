@@ -15,15 +15,13 @@ namespace RepoDb.Attributes.Parameter
     /// An attribute that is being used to define a value to the <see cref="DbParameter.DbType"/>
     /// property via a class property mapping.
     /// </summary>
-    public class DbTypeAttribute : PropertyValueAttribute
+    /// <remarks>
+    /// Creates a new instance of <see cref="DbTypeAttribute"/> class.
+    /// </remarks>
+    /// <param name="dbType">The equivalent <see cref="System.Data.DbType"/> value of the parameter.</param>
+    [System.AttributeUsage(System.AttributeTargets.All)]
+    public class DbTypeAttribute(DbType dbType) : PropertyValueAttribute(typeof(DbParameter), nameof(DbParameter.DbType), dbType)
     {
-        /// <summary>
-        /// Creates a new instance of <see cref="DbTypeAttribute"/> class.
-        /// </summary>
-        /// <param name="dbType">The equivalent <see cref="System.Data.DbType"/> value of the parameter.</param>
-        public DbTypeAttribute(DbType dbType)
-            : base(typeof(DbParameter), nameof(DbParameter.DbType), dbType)
-        { }
 
         /// <summary>
         /// Gets the mapped <see cref="DbParameter.DbType"/> value of the parameter.

@@ -96,7 +96,7 @@ namespace RepoDb.UnitTests.Cachers
         [TestMethod]
         public void ThrowExcpetionOnClassMappingCacheIfTheTypeIsNull()
         {
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
             {
                 // Act
                 ClassMappedNameCache.Get(null);

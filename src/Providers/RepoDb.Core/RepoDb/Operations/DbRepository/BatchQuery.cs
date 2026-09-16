@@ -32,7 +32,7 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(string tableName,
@@ -41,17 +41,17 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.BatchQuery<TEntity>(tableName: tableName,
+                return dbConnection.BatchQuery<TEntity>(tableName: tableName,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
@@ -59,14 +59,14 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -81,7 +81,7 @@ namespace RepoDb
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(string tableName,
@@ -91,17 +91,17 @@ namespace RepoDb
             object where,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.BatchQuery<TEntity>(tableName: tableName,
+                return dbConnection.BatchQuery<TEntity>(tableName: tableName,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
@@ -110,14 +110,14 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -132,7 +132,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(string tableName,
@@ -142,18 +142,18 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
             where TEntity : class
         {
 
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.BatchQuery<TEntity>(tableName: tableName,
+                return dbConnection.BatchQuery<TEntity>(tableName: tableName,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
@@ -162,14 +162,14 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -184,7 +184,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(string tableName,
@@ -194,17 +194,17 @@ namespace RepoDb
             QueryField where,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.BatchQuery<TEntity>(tableName: tableName,
+                return dbConnection.BatchQuery<TEntity>(tableName: tableName,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
@@ -213,14 +213,14 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -235,7 +235,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(string tableName,
@@ -245,17 +245,17 @@ namespace RepoDb
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.BatchQuery<TEntity>(tableName: tableName,
+                return dbConnection.BatchQuery<TEntity>(tableName: tableName,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
@@ -264,14 +264,14 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -286,7 +286,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(string tableName,
@@ -296,17 +296,17 @@ namespace RepoDb
             QueryGroup where,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.BatchQuery<TEntity>(tableName: tableName,
+                return dbConnection.BatchQuery<TEntity>(tableName: tableName,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
@@ -315,14 +315,14 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -335,7 +335,7 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(int page,
@@ -343,31 +343,31 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.BatchQuery<TEntity>(page: page,
+                return dbConnection.BatchQuery<TEntity>(page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -381,7 +381,7 @@ namespace RepoDb
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(int page,
@@ -390,17 +390,17 @@ namespace RepoDb
             IEnumerable<Field> fields,
             object where,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.BatchQuery<TEntity>(page: page,
+                return dbConnection.BatchQuery<TEntity>(page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
                     where: where,
@@ -408,14 +408,14 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -429,7 +429,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(int page,
@@ -438,17 +438,17 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.BatchQuery<TEntity>(page: page,
+                return dbConnection.BatchQuery<TEntity>(page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
                     where: where,
@@ -456,14 +456,14 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -477,7 +477,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(int page,
@@ -486,17 +486,17 @@ namespace RepoDb
             QueryField where,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.BatchQuery<TEntity>(page: page,
+                return dbConnection.BatchQuery<TEntity>(page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
                     where: where,
@@ -504,14 +504,14 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -525,7 +525,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(int page,
@@ -534,17 +534,17 @@ namespace RepoDb
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.BatchQuery<TEntity>(page: page,
+                return dbConnection.BatchQuery<TEntity>(page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
                     where: where,
@@ -552,14 +552,14 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -573,7 +573,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(int page,
@@ -582,31 +582,31 @@ namespace RepoDb
             QueryGroup where,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.BatchQuery<TEntity>(page: page,
+                return dbConnection.BatchQuery<TEntity>(page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -624,7 +624,7 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -634,18 +634,18 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.BatchQueryAsync<TEntity>(tableName: tableName,
+                return await dbConnection.BatchQueryAsync<TEntity>(tableName: tableName,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
@@ -653,15 +653,15 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -676,7 +676,7 @@ namespace RepoDb
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -687,18 +687,18 @@ namespace RepoDb
             object where,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.BatchQueryAsync<TEntity>(tableName: tableName,
+                return await dbConnection.BatchQueryAsync<TEntity>(tableName: tableName,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
@@ -707,15 +707,15 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -730,7 +730,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -741,19 +741,19 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
 
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.BatchQueryAsync<TEntity>(tableName: tableName,
+                return await dbConnection.BatchQueryAsync(tableName: tableName,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
@@ -762,15 +762,15 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -785,7 +785,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -796,18 +796,18 @@ namespace RepoDb
             QueryField where,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.BatchQueryAsync<TEntity>(tableName: tableName,
+                return await dbConnection.BatchQueryAsync<TEntity>(tableName: tableName,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
@@ -816,15 +816,15 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -839,7 +839,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -850,18 +850,18 @@ namespace RepoDb
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.BatchQueryAsync<TEntity>(tableName: tableName,
+                return await dbConnection.BatchQueryAsync<TEntity>(tableName: tableName,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
@@ -870,15 +870,15 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -893,7 +893,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -904,18 +904,18 @@ namespace RepoDb
             QueryGroup where,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.BatchQueryAsync<TEntity>(tableName: tableName,
+                return await dbConnection.BatchQueryAsync<TEntity>(tableName: tableName,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
@@ -924,15 +924,15 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -945,7 +945,7 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -954,33 +954,33 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.BatchQueryAsync<TEntity>(page: page,
+                return await dbConnection.BatchQueryAsync<TEntity>(page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -994,7 +994,7 @@ namespace RepoDb
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -1004,19 +1004,19 @@ namespace RepoDb
             object where,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
 
                 // Call the method
-                return await connection.BatchQueryAsync<TEntity>(page: page,
+                return await dbConnection.BatchQueryAsync<TEntity>(page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
                     where: where,
@@ -1024,15 +1024,15 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -1046,7 +1046,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -1056,19 +1056,19 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
 
                 // Call the method
-                return await connection.BatchQueryAsync<TEntity>(page: page,
+                return await dbConnection.BatchQueryAsync(page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
                     where: where,
@@ -1076,15 +1076,15 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -1098,7 +1098,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -1108,19 +1108,19 @@ namespace RepoDb
             QueryField where,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
 
                 // Call the method
-                return await connection.BatchQueryAsync<TEntity>(page: page,
+                return await dbConnection.BatchQueryAsync<TEntity>(page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
                     where: where,
@@ -1128,15 +1128,15 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -1150,7 +1150,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -1160,19 +1160,19 @@ namespace RepoDb
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
 
                 // Call the method
-                return await connection.BatchQueryAsync<TEntity>(page: page,
+                return await dbConnection.BatchQueryAsync<TEntity>(page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
                     where: where,
@@ -1180,15 +1180,15 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -1202,7 +1202,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -1212,19 +1212,19 @@ namespace RepoDb
             QueryGroup where,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
 
                 // Call the method
-                return await connection.BatchQueryAsync<TEntity>(page: page,
+                return await dbConnection.BatchQueryAsync<TEntity>(page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
                     where: where,
@@ -1232,15 +1232,15 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -1257,7 +1257,7 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
         public IEnumerable<dynamic> BatchQuery(string tableName,
@@ -1266,16 +1266,16 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.BatchQuery(tableName: tableName,
+                return dbConnection.BatchQuery(tableName: tableName,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
@@ -1283,14 +1283,14 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -1304,7 +1304,7 @@ namespace RepoDb
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
         public IEnumerable<dynamic> BatchQuery(string tableName,
@@ -1314,16 +1314,16 @@ namespace RepoDb
             object where,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.BatchQuery(tableName: tableName,
+                return dbConnection.BatchQuery(tableName: tableName,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
@@ -1332,14 +1332,14 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -1353,7 +1353,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
         public IEnumerable<dynamic> BatchQuery(string tableName,
@@ -1363,16 +1363,16 @@ namespace RepoDb
             QueryField where,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.BatchQuery(tableName: tableName,
+                return dbConnection.BatchQuery(tableName: tableName,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
@@ -1381,14 +1381,14 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -1402,7 +1402,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
         public IEnumerable<dynamic> BatchQuery(string tableName,
@@ -1412,16 +1412,16 @@ namespace RepoDb
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.BatchQuery(tableName: tableName,
+                return dbConnection.BatchQuery(tableName: tableName,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
@@ -1430,14 +1430,14 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -1451,7 +1451,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
         public IEnumerable<dynamic> BatchQuery(string tableName,
@@ -1461,16 +1461,16 @@ namespace RepoDb
             QueryGroup where,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.BatchQuery(tableName: tableName,
+                return dbConnection.BatchQuery(tableName: tableName,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
@@ -1479,14 +1479,14 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -1503,7 +1503,7 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
@@ -1513,17 +1513,17 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.BatchQueryAsync(tableName: tableName,
+                return await dbConnection.BatchQueryAsync(tableName: tableName,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
@@ -1531,15 +1531,15 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -1553,7 +1553,7 @@ namespace RepoDb
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
@@ -1564,18 +1564,18 @@ namespace RepoDb
             object where,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
 
                 // Call the method
-                return await connection.BatchQueryAsync(tableName: tableName,
+                return await dbConnection.BatchQueryAsync(tableName: tableName,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
@@ -1584,15 +1584,15 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -1606,7 +1606,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
@@ -1617,18 +1617,18 @@ namespace RepoDb
             QueryField where,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
 
                 // Call the method
-                return await connection.BatchQueryAsync(tableName: tableName,
+                return await dbConnection.BatchQueryAsync(tableName: tableName,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
@@ -1637,15 +1637,15 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -1659,7 +1659,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
@@ -1670,18 +1670,18 @@ namespace RepoDb
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
 
                 // Call the method
-                return await connection.BatchQueryAsync(tableName: tableName,
+                return await dbConnection.BatchQueryAsync(tableName: tableName,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
@@ -1690,15 +1690,15 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -1712,7 +1712,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
@@ -1723,18 +1723,18 @@ namespace RepoDb
             QueryGroup where,
             IEnumerable<Field> fields = null,
             string hints = null,
-			string traceKey = TraceKeys.BatchQuery,
+            string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
 
                 // Call the method
-                return await connection.BatchQueryAsync(tableName: tableName,
+                return await dbConnection.BatchQueryAsync(tableName: tableName,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
@@ -1743,15 +1743,15 @@ namespace RepoDb
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 

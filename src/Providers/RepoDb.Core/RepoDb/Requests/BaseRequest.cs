@@ -15,25 +15,11 @@ namespace RepoDb.Requests
     /// <summary>
     /// A base class for all operational request.
     /// </summary>
-    internal abstract class BaseRequest : IEquatable<BaseRequest>
+    internal abstract class BaseRequest(string name,
+        IDbConnection connection,
+        IDbTransaction transaction,
+        IStatementBuilder statementBuilder = null) : IEquatable<BaseRequest>
     {
-        /// <summary>
-        /// Creates a new instance of <see cref="BaseRequest"/> object.
-        /// </summary>
-        /// <param name="name">The name of request.</param>
-        /// <param name="connection">The connection object.</param>
-        /// <param name="transaction">The transaction object.</param>
-        /// <param name="statementBuilder">The statement builder.</param>
-        public BaseRequest(string name,
-            IDbConnection connection,
-            IDbTransaction transaction,
-            IStatementBuilder statementBuilder = null)
-        {
-            Name = name;
-            Connection = connection;
-            Transaction = transaction;
-            StatementBuilder = statementBuilder;
-        }
 
         /// <summary>
         /// Gets the type.
@@ -43,22 +29,22 @@ namespace RepoDb.Requests
         /// <summary>
         /// Gets the name.
         /// </summary>
-        public string Name { get; }
+        public string Name { get; } = name;
 
         /// <summary>
         /// Gets the connection object.
         /// </summary>
-        public IDbConnection Connection { get; }
+        public IDbConnection Connection { get; } = connection;
 
         /// <summary>
         /// Gets the transaction object.
         /// </summary>
-        public IDbTransaction Transaction { get; }
+        public IDbTransaction Transaction { get; } = transaction;
 
         /// <summary>
         /// Gets the statement builder.
         /// </summary>
-        public IStatementBuilder StatementBuilder { get; }
+        public IStatementBuilder StatementBuilder { get; } = statementBuilder;
 
         #region Equality and comparers
 
@@ -85,16 +71,20 @@ namespace RepoDb.Requests
         /// </summary>
         /// <param name="obj">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equals.</returns>
-        public override bool Equals(object obj) =>
-            (obj is null) ? false : obj.GetHashCode() == GetHashCode();
+        public override bool Equals(object obj)
+        {
+            return (obj is null) ? false : obj.GetHashCode() == GetHashCode();
+        }
 
         /// <summary>
         /// Compares the <see cref="BaseRequest"/> object equality against the given target object.
         /// </summary>
         /// <param name="other">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public bool Equals(BaseRequest other) =>
-            (other is null) ? false : other.GetHashCode() == GetHashCode();
+        public bool Equals(BaseRequest other)
+        {
+            return (other is null) ? false : other.GetHashCode() == GetHashCode();
+        }
 
         /// <summary>
         /// Compares the equality of the two <see cref="BaseRequest"/> objects.
@@ -113,8 +103,7 @@ namespace RepoDb.Requests
         /// <param name="objB">The second <see cref="BaseRequest"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
         public static bool operator !=(BaseRequest objA,
-            BaseRequest objB) =>
-            (objA == objB) == false;
+            BaseRequest objB) => !(objA == objB);
 
         #endregion
     }

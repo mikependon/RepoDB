@@ -31,7 +31,10 @@ namespace RepoDb
         /// Setup the globalized configurations for the application.
         /// </summary>
         /// <returns>The used global configuration instance itself.</returns>
-        public static GlobalConfiguration Setup() => Setup(new());
+        public static GlobalConfiguration Setup()
+        {
+            return Setup(new());
+        }
 
         /// <summary>
         /// Setup the globalized configurations for the application.

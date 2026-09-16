@@ -14,7 +14,6 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
-using System.Text;
 
 namespace RepoDb.SqlServer.IntegrationTests
 {
@@ -22,7 +21,7 @@ namespace RepoDb.SqlServer.IntegrationTests
     {
         static Helper()
         {
-            EpocDate = new DateTime(1970, 1, 1, 0, 0, 0);
+            EpocDate = DateTime.UnixEpoch;
         }
 
         /// <summary>
@@ -48,11 +47,11 @@ namespace RepoDb.SqlServer.IntegrationTests
             var propertiesOfType2 = typeof(T2).GetProperties();
             propertiesOfType1.AsList().ForEach(propertyOfType1 =>
             {
-                if (propertyOfType1.Name == "Id")
+                if (string.Equals(propertyOfType1.Name, "Id", StringComparison.Ordinal))
                 {
                     return;
                 }
-                var propertyOfType2 = propertiesOfType2.FirstOrDefault(p => p.Name == propertyOfType1.Name);
+                var propertyOfType2 = propertiesOfType2.FirstOrDefault(p => string.Equals(p.Name, propertyOfType1.Name, StringComparison.Ordinal));
                 if (propertyOfType2 == null)
                 {
                     return;
@@ -116,7 +115,7 @@ namespace RepoDb.SqlServer.IntegrationTests
             var properties = obj.GetType().GetProperties();
             properties.AsList().ForEach(property =>
             {
-                if (property.Name == "Id")
+                if (string.Equals(property.Name, "Id", StringComparison.Ordinal))
                 {
                     return;
                 }
@@ -141,7 +140,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                         {
                             value2 = dateTime.TimeOfDay;
                         }
-                        Assert.AreEqual(Convert.ChangeType(value1, propertyType), Convert.ChangeType(value2, propertyType),
+                        Assert.AreEqual(Convert.ChangeType(value1, propertyType, System.Globalization.CultureInfo.InvariantCulture), Convert.ChangeType(value2, propertyType, System.Globalization.CultureInfo.InvariantCulture),
                             $"Assert failed for '{property.Name}'. The values are '{value1}' and '{value2}'.");
                     }
                 }
@@ -159,7 +158,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         {
             var tables = new List<IdentityCompleteTable>();
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff", System.Globalization.CultureInfo.InvariantCulture), System.Globalization.CultureInfo.InvariantCulture),
                     DateTimeKind.Unspecified);
             for (var i = 0; i < count; i++)
             {
@@ -212,7 +211,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         public static void UpdateCompleteTableProperties(IdentityCompleteTable table)
         {
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff", System.Globalization.CultureInfo.InvariantCulture), System.Globalization.CultureInfo.InvariantCulture),
                     DateTimeKind.Unspecified);
             table.ColumnBigInt = Convert.ToInt64(2);
             table.ColumnBinary = (byte[])null;
@@ -259,7 +258,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         {
             var tables = new List<dynamic>();
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff", System.Globalization.CultureInfo.InvariantCulture), System.Globalization.CultureInfo.InvariantCulture),
                     DateTimeKind.Unspecified);
             for (var i = 0; i < count; i++)
             {
@@ -312,7 +311,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         public static void UpdateCompleteTableAsDynamicProperties(dynamic table)
         {
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff", System.Globalization.CultureInfo.InvariantCulture), System.Globalization.CultureInfo.InvariantCulture),
                     DateTimeKind.Unspecified);
             table.ColumnBigInt = Convert.ToInt64(2);
             table.ColumnBinary = (byte[])null;
@@ -359,7 +358,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         {
             var tables = new List<ExpandoObject>();
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff", System.Globalization.CultureInfo.InvariantCulture), System.Globalization.CultureInfo.InvariantCulture),
                     DateTimeKind.Unspecified);
             for (var i = 0; i < count; i++)
             {
@@ -411,7 +410,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         public static void UpdateCompleteTableAsExpandoObjectProperties(ExpandoObject table)
         {
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff", System.Globalization.CultureInfo.InvariantCulture), System.Globalization.CultureInfo.InvariantCulture),
                     DateTimeKind.Unspecified);
             var item = table as IDictionary<string, object>;
             item["ColumnBigInt"] = Convert.ToInt64(2);
@@ -463,7 +462,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         {
             var tables = new List<NonIdentityCompleteTable>();
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff", System.Globalization.CultureInfo.InvariantCulture), System.Globalization.CultureInfo.InvariantCulture),
                     DateTimeKind.Unspecified);
             for (var i = 0; i < count; i++)
             {
@@ -516,7 +515,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         public static void UpdateNonIdentityCompleteTableProperties(NonIdentityCompleteTable table)
         {
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff", System.Globalization.CultureInfo.InvariantCulture), System.Globalization.CultureInfo.InvariantCulture),
                     DateTimeKind.Unspecified);
             table.ColumnBigInt = Convert.ToInt64(2);
             table.ColumnBinary = (byte[])null;
@@ -563,7 +562,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         {
             var tables = new List<dynamic>();
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff", System.Globalization.CultureInfo.InvariantCulture), System.Globalization.CultureInfo.InvariantCulture),
                     DateTimeKind.Unspecified);
             for (var i = 0; i < count; i++)
             {
@@ -616,7 +615,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         public static void UpdateNonIdentityCompleteTableAsDynamicProperties(dynamic table)
         {
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff", System.Globalization.CultureInfo.InvariantCulture), System.Globalization.CultureInfo.InvariantCulture),
                     DateTimeKind.Unspecified);
             table.ColumnBigInt = Convert.ToInt64(2);
             table.ColumnBinary = (byte[])null;
@@ -663,7 +662,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         {
             var tables = new List<ExpandoObject>();
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff", System.Globalization.CultureInfo.InvariantCulture), System.Globalization.CultureInfo.InvariantCulture),
                     DateTimeKind.Unspecified);
             for (var i = 0; i < count; i++)
             {
@@ -715,7 +714,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         public static void UpdateNonIdentityCompleteTableAsExpandoObjectProperties(ExpandoObject table)
         {
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff", System.Globalization.CultureInfo.InvariantCulture), System.Globalization.CultureInfo.InvariantCulture),
                     DateTimeKind.Unspecified);
             var item = table as IDictionary<string, object>;
             item["ColumnBigInt"] = Convert.ToInt64(2);

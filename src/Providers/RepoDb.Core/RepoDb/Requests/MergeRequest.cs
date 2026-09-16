@@ -66,7 +66,7 @@ namespace RepoDb.Requests
             IEnumerable<Field> qualifiers = null,
             string hints = null,
             IStatementBuilder statementBuilder = null)
-            : this(null,
+            : this(type: null,
                 name,
                 connection,
                 transaction,
@@ -136,14 +136,14 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = HashCode.Combine(base.GetHashCode(), Name, ".Merge");
+            var computedHashCode = HashCode.Combine(base.GetHashCode(), Name, ".Merge");
 
             // Get the qualifier <see cref="Field"/> objects
             if (Fields != null)
             {
                 foreach (var field in Fields)
                 {
-                    hashCode = HashCode.Combine(hashCode, field);
+                    computedHashCode = HashCode.Combine(computedHashCode, field);
                 }
             }
 
@@ -152,18 +152,18 @@ namespace RepoDb.Requests
             {
                 foreach (var field in Qualifiers)
                 {
-                    hashCode = HashCode.Combine(hashCode, field);
+                    computedHashCode = HashCode.Combine(computedHashCode, field);
                 }
             }
 
             // Add the hints
             if (!string.IsNullOrWhiteSpace(Hints))
             {
-                hashCode = HashCode.Combine(hashCode, Hints);
+                computedHashCode = HashCode.Combine(computedHashCode, Hints);
             }
 
             // Set and return the hashcode
-            return (this.hashCode = hashCode).Value;
+            return (this.hashCode = computedHashCode).Value;
         }
 
         #endregion

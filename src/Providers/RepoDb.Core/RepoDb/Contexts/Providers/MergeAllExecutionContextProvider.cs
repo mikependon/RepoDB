@@ -52,7 +52,7 @@ namespace RepoDb.Contexts.Providers
                 ";",
                 fields?.Select(f => f.Name).Join(","),
                 ";",
-                batchSize.ToString(),
+                batchSize.ToString(System.Globalization.CultureInfo.InvariantCulture),
                 ";",
                 hints);
         }
@@ -176,7 +176,7 @@ namespace RepoDb.Contexts.Providers
             }
 
             // Create
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
             string commandText;
 
             // Create a different kind of requests
@@ -190,7 +190,7 @@ namespace RepoDb.Contexts.Providers
                     batchSize,
                     hints,
                     statementBuilder);
-                commandText = await CommandTextCache.GetMergeAllTextAsync(request, cancellationToken);
+                commandText = await CommandTextCache.GetMergeAllTextAsync(request, cancellationToken).ConfigureAwait(false);
             }
             else
             {
@@ -201,7 +201,7 @@ namespace RepoDb.Contexts.Providers
                     qualifiers,
                     hints,
                     statementBuilder);
-                commandText = await CommandTextCache.GetMergeTextAsync(request, cancellationToken);
+                commandText = await CommandTextCache.GetMergeTextAsync(request, cancellationToken).ConfigureAwait(false);
             }
 
             // Call
@@ -259,17 +259,17 @@ namespace RepoDb.Contexts.Providers
             inputFields = dbFields?.GetItems()
                 .Where(dbField =>
                     fields.FirstOrDefault(field =>
-                        string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
+                        string.Equals(field.Name.AsUnquoted(trim: true, dbSetting), dbField.Name.AsUnquoted(trim: true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                 .AsList();
 
             // Exclude the fields not on the actual entity
-            if (TypeCache.Get(entityType).IsClassType() == false)
+            if (!TypeCache.Get(entityType).IsClassType())
             {
                 var entityFields = Field.Parse(entities?.FirstOrDefault());
                 inputFields = inputFields?
                     .Where(field =>
                         entityFields.FirstOrDefault(f =>
-                            string.Equals(f.Name.AsUnquoted(true, dbSetting), field.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
+                            string.Equals(f.Name.AsUnquoted(trim: true, dbSetting), field.Name.AsUnquoted(trim: true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                     .AsList();
             }
 
@@ -300,7 +300,7 @@ namespace RepoDb.Contexts.Providers
                     .GetDataEntityDbParameterSetterCompiledFunction(entityType,
                         string.Concat(entityType.FullName, CharConstant.Period, tableName, ".MergeAll"),
                         inputFields,
-                        null,
+outputFields: null,
                         dbSetting,
                         dbHelper);
             }
@@ -310,7 +310,7 @@ namespace RepoDb.Contexts.Providers
                     .GetDataEntityListDbParameterSetterCompiledFunction(entityType,
                         string.Concat(entityType.FullName, CharConstant.Period, tableName, ".MergeAll"),
                         inputFields,
-                        null,
+outputFields: null,
                         batchSize,
                         dbSetting,
                         dbHelper);

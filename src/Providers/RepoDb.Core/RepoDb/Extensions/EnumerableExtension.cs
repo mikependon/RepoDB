@@ -63,8 +63,7 @@ namespace RepoDb.Extensions
         /// <param name="value">The actual enumerable instance.</param>
         /// <returns>The <see cref="IEnumerable{T}"/> object in which the items are of type <typeparamref name="TargetType"/>.</returns>
         [Obsolete("Use the 'WithType<T>' method instead.")]
-        public static IEnumerable<TargetType> OfTargetType<SourceType, TargetType>(this IEnumerable<SourceType> value) =>
-            value as IEnumerable<TargetType> ?? value.OfType<TargetType>();
+        public static IEnumerable<TargetType> OfTargetType<SourceType, TargetType>(this IEnumerable<SourceType> value) => value as IEnumerable<TargetType> ?? value.OfType<TargetType>();
 
         /// <summary>
         /// Checks whether the instance of <see cref="IEnumerable"/> is of type <see cref="IEnumerable{T}"/>, then casts it, otherwise, 
@@ -74,8 +73,7 @@ namespace RepoDb.Extensions
         /// <typeparam name="T">The target type.</typeparam>
         /// <param name="value">The actual enumerable instance.</param>
         /// <returns>The <see cref="IEnumerable{T}"/> object in which the items are of type <typeparamref name="T"/>.</returns>
-        public static IEnumerable<T> WithType<T>(this IEnumerable value) =>
-            value as IEnumerable<T> ?? value.OfType<T>();
+        public static IEnumerable<T> WithType<T>(this IEnumerable value) => value as IEnumerable<T> ?? value.OfType<T>();
 
         /// <summary>
         /// Checks whether the instance of <see cref="IEnumerable{T}"/> is of type <see cref="List{T}"/>, then casts it, otherwise, converts it.
@@ -84,8 +82,7 @@ namespace RepoDb.Extensions
         /// <typeparam name="T">The target type.</typeparam>
         /// <param name="value">The actual enumerable instance.</param>
         /// <returns>The converted <see cref="IList{T}"/> object.</returns>
-        public static List<T> AsList<T>(this IEnumerable<T> value) =>
-            value as List<T> ?? value?.ToList();
+        public static List<T> AsList<T>(this IEnumerable<T> value) => value as List<T> ?? value?.ToList();
 
         /// <summary>
         /// Checks whether the instance of <see cref="IEnumerable{T}"/> is an array of <typeparamref name="T"/>, then casts it, otherwise, converts it.
@@ -94,8 +91,7 @@ namespace RepoDb.Extensions
         /// <typeparam name="T">The target type.</typeparam>
         /// <param name="value">The actual enumerable instance.</param>
         /// <returns>The converted <see cref="Array"/> object.</returns>
-        public static T[] AsArray<T>(this IEnumerable<T> value) =>
-            value as T[] ?? value?.ToArray();
+        public static T[] AsArray<T>(this IEnumerable<T> value) => value as T[] ?? value?.ToArray();
 
         /// <summary>
         /// Gets a value indicating whether the current collection is null or empty.
@@ -113,8 +109,7 @@ namespace RepoDb.Extensions
         /// <param name="source">The actual enumerable instance.</param>
         /// <param name="comparer">An <see cref="IEqualityComparer{T}"/> to compare keys.</param>
         /// <returns>The created <see cref="HashSet{T}"/> object.</returns>
-        internal static HashSet<T> ToHashSet<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer) => 
-            new(source, comparer);
+        internal static HashSet<T> ToHashSet<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer) => new(source, comparer);
 
         /// <summary>
         /// Creates a new <see cref="HashSet{T}"/> from an <see cref="IEnumerable{T}"/>.

@@ -51,7 +51,7 @@ namespace RepoDb
         {
             var queryFields = queryGroupTypeMap
                 .QueryGroup?
-                .GetFields(true);
+                .GetFields(traverse: true);
 
             // Identify if there are fields to count
             if (queryFields?.Any() != true)
@@ -60,7 +60,7 @@ namespace RepoDb
             }
 
             // Fix the variables for the parameters
-            if (fixParameters == true)
+            if (fixParameters)
             {
                 queryGroupTypeMap.QueryGroup.Fix();
             }
@@ -157,7 +157,7 @@ namespace RepoDb
 
             for (var i = 0; i < values.Count; i++)
             {
-                var parameterName = string.Concat(queryField.Parameter.Name, "_In_", i.ToString());
+                var parameterName = string.Concat(queryField.Parameter.Name, "_In_", i.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 if (dictionary.ContainsKey(parameterName))
                 {
                     continue;

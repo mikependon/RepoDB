@@ -71,7 +71,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<IdentityCompleteTable>());
-                Assert.AreEqual(table.Id, Convert.ToInt64(result));
+                Assert.AreEqual(table.Id, Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var queryResult = connection.Query<IdentityCompleteTable>(result);
@@ -104,7 +104,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<IdentityCompleteTable>());
-                Assert.AreEqual(table.Id, Convert.ToInt64(result));
+                Assert.AreEqual(table.Id, Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var queryResult = connection.Query<IdentityCompleteTable>(result);
@@ -152,7 +152,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<IdentityCompleteTable>());
-                Assert.AreEqual(table.Id, Convert.ToInt64(result));
+                Assert.AreEqual(table.Id, Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var queryResult = connection.Query<IdentityCompleteTable>(result);
@@ -185,7 +185,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<IdentityCompleteTable>());
-                Assert.AreEqual(table.Id, Convert.ToInt64(result));
+                Assert.AreEqual(table.Id, Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var queryResult = connection.Query<IdentityCompleteTable>(result);
@@ -259,7 +259,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<IdentityCompleteTable>());
-                Assert.AreEqual(table.Id, Convert.ToInt64(result));
+                Assert.AreEqual(table.Id, Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var queryResult = connection.Query<IdentityCompleteTable>(result);
@@ -321,7 +321,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<IdentityCompleteTable>());
-                Assert.AreEqual(table.Id, Convert.ToInt64(result));
+                Assert.AreEqual(table.Id, Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var queryResult = connection.Query<IdentityCompleteTable>(result);
@@ -345,7 +345,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<IdentityCompleteTable>());
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.IsTrue(Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
 
                 // Act
                 var queryResult = connection.Query<IdentityCompleteTable>(result);
@@ -372,7 +372,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<IdentityCompleteTable>());
-                Assert.AreEqual(table.Id, Convert.ToInt64(result));
+                Assert.AreEqual(table.Id, Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var queryResult = connection.Query<IdentityCompleteTable>(result);
@@ -404,7 +404,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<IdentityCompleteTable>());
-                Assert.AreEqual(table.Id, Convert.ToInt64(result));
+                Assert.AreEqual(table.Id, Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var queryResult = connection.Query<IdentityCompleteTable>(result);
@@ -474,7 +474,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<IdentityCompleteTable>());
-                Assert.AreEqual(table.Id, Convert.ToInt64(result));
+                Assert.AreEqual(table.Id, Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var queryResult = connection.Query<IdentityCompleteTable>(result);
@@ -533,7 +533,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<IdentityCompleteTable>());
-                Assert.AreEqual(table.Id, Convert.ToInt64(result));
+                Assert.AreEqual(table.Id, Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var queryResult = connection.Query<IdentityCompleteTable>(result);
@@ -557,7 +557,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<IdentityCompleteTable>());
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.IsTrue(Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
 
                 // Act
                 var queryResult = connection.Query<IdentityCompleteTable>(result);
@@ -584,7 +584,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<IdentityCompleteTable>());
-                Assert.AreEqual(table.Id, Convert.ToInt64(result));
+                Assert.AreEqual(table.Id, Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var queryResult = connection.Query<IdentityCompleteTable>(result);
@@ -616,7 +616,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<IdentityCompleteTable>());
-                Assert.AreEqual(table.Id, Convert.ToInt64(result));
+                Assert.AreEqual(table.Id, Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var queryResult = connection.Query<IdentityCompleteTable>(result);

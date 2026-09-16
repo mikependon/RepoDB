@@ -34,8 +34,10 @@ namespace RepoDb.Extensions
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         private static string AsField(this Field field,
-            IDbSetting dbSetting) =>
-            field.Name.AsQuoted(true, dbSetting);
+            IDbSetting dbSetting)
+        {
+            return field.Name.AsQuoted(trim: true, dbSetting);
+        }
 
         /// <summary>
         /// 
@@ -46,8 +48,10 @@ namespace RepoDb.Extensions
         /// <returns></returns>
         private static string AsParameter(this Field field,
             int index,
-            IDbSetting dbSetting) =>
-            field.Name.AsParameter(index, dbSetting);
+            IDbSetting dbSetting)
+        {
+            return field.Name.AsParameter(index, dbSetting);
+        }
 
         /// <summary>
         /// 
@@ -58,8 +62,10 @@ namespace RepoDb.Extensions
         /// <returns></returns>
         private static string AsAliasField(this Field field,
             string alias,
-            IDbSetting dbSetting) =>
-            field.Name.AsAliasField(alias, dbSetting);
+            IDbSetting dbSetting)
+        {
+            return field.Name.AsAliasField(alias, dbSetting);
+        }
 
         /// <summary>
         /// 
@@ -70,8 +76,10 @@ namespace RepoDb.Extensions
         /// <returns></returns>
         private static string AsParameterAsField(this Field field,
             int index,
-            IDbSetting dbSetting) =>
-            field.Name.AsParameterAsField(index, dbSetting);
+            IDbSetting dbSetting)
+        {
+            return field.Name.AsParameterAsField(index, dbSetting);
+        }
 
         /// <summary>
         /// 
@@ -82,8 +90,10 @@ namespace RepoDb.Extensions
         /// <returns></returns>
         private static string AsFieldAndParameter(this Field field,
             int index,
-            IDbSetting dbSetting) =>
-            field.Name.AsFieldAndParameter(index, dbSetting);
+            IDbSetting dbSetting)
+        {
+            return field.Name.AsFieldAndParameter(index, dbSetting);
+        }
 
         /// <summary>
         /// 
@@ -96,8 +106,10 @@ namespace RepoDb.Extensions
         private static string AsFieldAndAliasField(this Field field,
             string leftAlias,
             string rightAlias,
-            IDbSetting dbSetting) =>
-            field.Name.AsFieldAndAliasField(leftAlias, rightAlias, dbSetting);
+            IDbSetting dbSetting)
+        {
+            return field.Name.AsFieldAndAliasField(leftAlias, rightAlias, dbSetting);
+        }
 
         /// <summary>
         /// Creates a string representation of the JOIN statement for the target qualifier <see cref="Field"/> objects.
@@ -112,8 +124,10 @@ namespace RepoDb.Extensions
             string leftAlias,
             string rightAlias,
             bool considerNulls,
-            IDbSetting dbSetting) =>
-            field.Name.AsJoinQualifier(leftAlias, rightAlias, considerNulls, dbSetting);
+            IDbSetting dbSetting)
+        {
+            return field.Name.AsJoinQualifier(leftAlias, rightAlias, considerNulls, dbSetting);
+        }
 
         /// <summary>
         /// 
@@ -122,8 +136,10 @@ namespace RepoDb.Extensions
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         internal static IEnumerable<string> AsFields(this IEnumerable<Field> fields,
-            IDbSetting dbSetting) =>
-            fields?.Select(field => field.AsField(dbSetting));
+            IDbSetting dbSetting)
+        {
+            return fields?.Select(field => field.AsField(dbSetting));
+        }
 
         /// <summary>
         /// 
@@ -134,8 +150,10 @@ namespace RepoDb.Extensions
         /// <returns></returns>
         internal static IEnumerable<string> AsParameters(this IEnumerable<Field> fields,
             int index,
-            IDbSetting dbSetting) =>
-            fields?.Select(field => field.AsParameter(index, dbSetting));
+            IDbSetting dbSetting)
+        {
+            return fields?.Select(field => field.AsParameter(index, dbSetting));
+        }
 
         /// <summary>
         /// 
@@ -146,8 +164,10 @@ namespace RepoDb.Extensions
         /// <returns></returns>
         internal static IEnumerable<string> AsAliasFields(this IEnumerable<Field> fields,
             string alias,
-            IDbSetting dbSetting) =>
-            fields?.Select(field => field.AsAliasField(alias, dbSetting));
+            IDbSetting dbSetting)
+        {
+            return fields?.Select(field => field.AsAliasField(alias, dbSetting));
+        }
 
         /// <summary>
         /// 
@@ -158,8 +178,10 @@ namespace RepoDb.Extensions
         /// <returns></returns>
         internal static IEnumerable<string> AsParametersAsFields(this IEnumerable<Field> fields,
             int index,
-            IDbSetting dbSetting) =>
-            fields?.Select(field => field.AsParameterAsField(index, dbSetting));
+            IDbSetting dbSetting)
+        {
+            return fields?.Select(field => field.AsParameterAsField(index, dbSetting));
+        }
 
         /// <summary>
         /// 
@@ -170,8 +192,10 @@ namespace RepoDb.Extensions
         /// <returns></returns>
         internal static IEnumerable<string> AsFieldsAndParameters(this IEnumerable<Field> fields,
             int index,
-            IDbSetting dbSetting) =>
-            fields?.Select(field => field.AsFieldAndParameter(index, dbSetting));
+            IDbSetting dbSetting)
+        {
+            return fields?.Select(field => field.AsFieldAndParameter(index, dbSetting));
+        }
 
         /// <summary>
         /// 
@@ -184,8 +208,10 @@ namespace RepoDb.Extensions
         internal static IEnumerable<string> AsFieldsAndAliasFields(this IEnumerable<Field> fields,
             string leftAlias,
             string rightAlias,
-            IDbSetting dbSetting) =>
-            fields?.Select(field => field.AsFieldAndAliasField(leftAlias, rightAlias, dbSetting));
+            IDbSetting dbSetting)
+        {
+            return fields?.Select(field => field.AsFieldAndAliasField(leftAlias, rightAlias, dbSetting));
+        }
     }
 }
 

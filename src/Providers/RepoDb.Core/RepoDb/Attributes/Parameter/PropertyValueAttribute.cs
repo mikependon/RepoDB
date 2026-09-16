@@ -17,6 +17,7 @@ namespace RepoDb.Attributes.Parameter
     /// <summary>
     /// An attribute that is being used to set a value to any property of the <see cref="IDbDataParameter"/> object.
     /// </summary>
+    [AttributeUsage(AttributeTargets.All)]
     public class PropertyValueAttribute : Attribute, IEquatable<PropertyValueAttribute>
     {
         private int? hashCode = null;
@@ -32,7 +33,7 @@ namespace RepoDb.Attributes.Parameter
         public PropertyValueAttribute(Type parameterType,
             string propertyName,
             object value)
-            : this(parameterType, propertyName, value, true)
+            : this(parameterType, propertyName, value, includedInCompilation: true)
         { }
 
         /// <summary>
@@ -99,8 +100,10 @@ namespace RepoDb.Attributes.Parameter
         /// Gets the string representation of the current attribute object.
         /// </summary>
         /// <returns>The represented string.</returns>
-        public override string ToString() =>
-            $"{ParameterType?.FullName}.{PropertyName} = {Value}";
+        public override string ToString()
+        {
+            return $"{ParameterType?.FullName}.{PropertyName} = {Value}";
+        }
 
         /// <summary>
         /// 
@@ -141,7 +144,10 @@ namespace RepoDb.Attributes.Parameter
         /// <summary>
         /// 
         /// </summary>
-        internal virtual object GetValue() => Value;
+        internal virtual object GetValue()
+        {
+            return Value;
+        }
 
         /// <summary>
         /// Provider-aware variant of <see cref="GetValue()"/>. The default implementation simply delegates to
@@ -151,7 +157,10 @@ namespace RepoDb.Attributes.Parameter
         /// therefore honor <see cref="IDbSetting.ParameterPrefix"/>).
         /// </summary>
         /// <param name="dbSetting"></param>
-        internal virtual object GetValue(IDbSetting dbSetting) => GetValue();
+        internal virtual object GetValue(IDbSetting dbSetting)
+        {
+            return GetValue();
+        }
 
         #endregion
 
@@ -177,7 +186,7 @@ namespace RepoDb.Attributes.Parameter
         /// <param name="parameterType"></param>
         private void ValidateParameterType(Type parameterType)
         {
-            if (StaticType.IDbDataParameter.IsAssignableFrom(parameterType) == false)
+            if (!StaticType.IDbDataParameter.IsAssignableFrom(parameterType))
             {
                 throw new InvalidOperationException($"The parameter type must be deriving from the '{StaticType.IDbDataParameter.FullName}' interface. " +
                     $"The current passed parameter type is '{parameterType.FullName}'.");
@@ -208,42 +217,39 @@ namespace RepoDb.Attributes.Parameter
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
         {
-            if (this.hashCode != null)
+            if (hashCode != null)
             {
-                return this.hashCode.Value;
+                return hashCode.Value;
             }
 
-            // FullName: This is to ensure that even the user has created an identical formatting 
-            //  on the derived class with the existing classes, the Type.FullName could still 
+            // FullName: This is to ensure that even the user has created an identical formatting
+            //  on the derived class with the existing classes, the Type.FullName could still
             // differentiate the instances
-            var hashCode = HashCode.Combine(GetType().FullName);
-
-            // Base
-            hashCode = HashCode.Combine(hashCode, base.GetHashCode());
+            var computedHashCode = HashCode.Combine(GetType().FullName);
 
             // PropertyName
             if (PropertyName != null)
             {
-                hashCode = HashCode.Combine(hashCode, PropertyName);
+                computedHashCode = HashCode.Combine(computedHashCode, PropertyName);
             }
 
             // ParameterType
             if (ParameterType != null)
             {
-                hashCode = HashCode.Combine(hashCode, ParameterType);
+                computedHashCode = HashCode.Combine(computedHashCode, ParameterType);
             }
 
             // IncludedInCompilation
-            hashCode = HashCode.Combine(hashCode, IncludedInCompilation);
+            computedHashCode = HashCode.Combine(computedHashCode, IncludedInCompilation);
 
             // Value
             if (Value != null)
             {
-                hashCode = HashCode.Combine(hashCode, Value);
+                computedHashCode = HashCode.Combine(computedHashCode, Value);
             }
 
             // Return
-            return (this.hashCode = hashCode).Value;
+            return (hashCode = computedHashCode).Value;
         }
 
         /// <summary>
@@ -293,8 +299,7 @@ namespace RepoDb.Attributes.Parameter
         /// <param name="objB">The second <see cref="PropertyValueAttribute"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
         public static bool operator !=(PropertyValueAttribute objA,
-            PropertyValueAttribute objB) =>
-            (objA == objB) == false;
+            PropertyValueAttribute objB) => !(objA == objB);
 
         #endregion
     }

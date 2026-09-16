@@ -16,6 +16,7 @@ namespace RepoDb.Attributes
     /// <summary>
     /// An attribute that is used to define a handler for the property transformation.
     /// </summary>
+    [AttributeUsage(AttributeTargets.All)]
     public class ClassHandlerAttribute : Attribute
     {
         /// <summary>
@@ -53,11 +54,12 @@ namespace RepoDb.Attributes
 
         #endregion
     }
-    
+
 #if NET7_0_OR_GREATER
     /// <summary>
     /// An attribute that is used to define a handler for the property transformation.
     /// </summary>
+    [AttributeUsage(AttributeTargets.All)]
     public class ClassHandlerAttribute<T> : Attribute
     {
         /// <summary>

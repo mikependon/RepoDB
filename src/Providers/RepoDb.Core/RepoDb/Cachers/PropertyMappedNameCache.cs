@@ -105,7 +105,7 @@ namespace RepoDb
             var key = GenerateHashCode(entityType, propertyInfo);
 
             // Try get the value
-            if (cache.TryGetValue(key, out var result) == false)
+            if (!cache.TryGetValue(key, out var result))
             {
                 result = resolver.Resolve(propertyInfo, entityType);
                 cache.TryAdd(key, result);
@@ -150,7 +150,7 @@ namespace RepoDb
         {
             if (obj == null)
             {
-                throw new NullReferenceException($"The argument '{argument}' cannot be null.");
+                throw new ArgumentNullException(argument);
             }
         }
 

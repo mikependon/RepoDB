@@ -470,8 +470,8 @@ namespace RepoDb.SqlServer.UnitTests.Resolvers
         public void ThrowOnExceptionTestSqlServerTypeNameToClientTypeResolverIfDbTypeNameIsNull()
         {
             // Act
-            Assert.Throws<NullReferenceException>(() =>
-                m_resolver.Resolve(null));
+            Assert.Throws<ArgumentNullException>(() =>
+                m_resolver.Resolve(dbTypeName: null));
         }
     }
 }

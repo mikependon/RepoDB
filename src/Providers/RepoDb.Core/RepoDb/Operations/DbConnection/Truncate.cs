@@ -28,14 +28,14 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of rows affected.</returns>
         public static int Truncate<TEntity>(this IDbConnection connection,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.Truncate,
+            string traceKey = TraceKeys.Truncate,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -43,7 +43,7 @@ namespace RepoDb
         {
             return TruncateInternal<TEntity>(connection: connection,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -55,14 +55,14 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of rows affected.</returns>
         internal static int TruncateInternal<TEntity>(this IDbConnection connection,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.Truncate,
+            string traceKey = TraceKeys.Truncate,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -78,7 +78,7 @@ namespace RepoDb
             return TruncateInternalBase(connection: connection,
                 request: request,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace);
         }
@@ -93,7 +93,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -101,7 +101,7 @@ namespace RepoDb
         /// <returns>The number of rows affected.</returns>
         public static Task<int> TruncateAsync<TEntity>(this IDbConnection connection,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.Truncate,
+            string traceKey = TraceKeys.Truncate,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -110,7 +110,7 @@ namespace RepoDb
         {
             return TruncateAsyncInternal<TEntity>(connection: connection,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -123,7 +123,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -131,7 +131,7 @@ namespace RepoDb
         /// <returns>The number of rows affected.</returns>
         internal static Task<int> TruncateAsyncInternal<TEntity>(this IDbConnection connection,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.Truncate,
+            string traceKey = TraceKeys.Truncate,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -148,7 +148,7 @@ namespace RepoDb
             return TruncateAsyncInternalBase(connection: connection,
                 request: request,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 cancellationToken: cancellationToken);
@@ -164,7 +164,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -172,7 +172,7 @@ namespace RepoDb
         public static int Truncate(this IDbConnection connection,
             string tableName,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.Truncate,
+            string traceKey = TraceKeys.Truncate,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -180,7 +180,7 @@ namespace RepoDb
             return TruncateInternal(connection: connection,
                 tableName: tableName,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -192,7 +192,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -200,7 +200,7 @@ namespace RepoDb
         internal static int TruncateInternal(this IDbConnection connection,
             string tableName,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.Truncate,
+            string traceKey = TraceKeys.Truncate,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -215,7 +215,7 @@ namespace RepoDb
             return TruncateInternalBase(connection: connection,
                 request: request,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace);
         }
@@ -230,7 +230,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -239,7 +239,7 @@ namespace RepoDb
         public static Task<int> TruncateAsync(this IDbConnection connection,
             string tableName,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.Truncate,
+            string traceKey = TraceKeys.Truncate,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -248,7 +248,7 @@ namespace RepoDb
             return TruncateAsyncInternal(connection: connection,
                 tableName: tableName,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -261,7 +261,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -270,7 +270,7 @@ namespace RepoDb
         internal static Task<int> TruncateAsyncInternal(this IDbConnection connection,
             string tableName,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.Truncate,
+            string traceKey = TraceKeys.Truncate,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -286,7 +286,7 @@ namespace RepoDb
             return TruncateAsyncInternalBase(connection: connection,
                 request: request,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 cancellationToken: cancellationToken);
@@ -302,14 +302,14 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="TruncateRequest"/> object.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>The number of rows affected.</returns>
         internal static int TruncateInternalBase(this IDbConnection connection,
             TruncateRequest request,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.Truncate,
+            string traceKey = TraceKeys.Truncate,
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
@@ -323,11 +323,11 @@ namespace RepoDb
                 param: null,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 entityType: request.Type,
-                dbFields: DbFieldCache.Get(connection, request.Name, transaction, true),
+                dbFields: DbFieldCache.Get(connection, request.Name, transaction, enableValidation: true),
                 skipCommandArrayParametersCheck: true);
 
             // Return the result
@@ -344,7 +344,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="TruncateRequest"/> object.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -352,7 +352,7 @@ namespace RepoDb
         internal static async Task<int> TruncateAsyncInternalBase(this IDbConnection connection,
             TruncateRequest request,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.Truncate,
+            string traceKey = TraceKeys.Truncate,
             IDbTransaction transaction = null,
             ITrace trace = null,
             CancellationToken cancellationToken = default)
@@ -367,13 +367,13 @@ namespace RepoDb
                 param: null,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 cancellationToken: cancellationToken,
                 entityType: request.Type,
-                dbFields: await DbFieldCache.GetAsync(connection, request.Name, transaction, true, cancellationToken),
-                skipCommandArrayParametersCheck: true);
+                dbFields: await DbFieldCache.GetAsync(connection, request.Name, transaction, enableValidation: true, cancellationToken).ConfigureAwait(false),
+                skipCommandArrayParametersCheck: true).ConfigureAwait(false);
 
             // Return the result
             return result;

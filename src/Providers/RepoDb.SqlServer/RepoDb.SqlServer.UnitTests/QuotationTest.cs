@@ -32,10 +32,10 @@ namespace RepoDb.SqlServer.UnitTests
             var setting = DbSettingMapper.Get<SqlConnection>();
 
             // Act
-            var result = "Field".AsQuoted(true, setting);
+            var result = "Field".AsQuoted(trim: true, setting);
 
             // Assert
-            Assert.AreEqual("[Field]", result);
+            Assert.AreEqual("[Field]", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -45,10 +45,10 @@ namespace RepoDb.SqlServer.UnitTests
             var setting = DbSettingMapper.Get<SqlConnection>();
 
             // Act
-            var result = " Field ".AsQuoted(true, setting);
+            var result = " Field ".AsQuoted(trim: true, setting);
 
             // Assert
-            Assert.AreEqual("[Field]", result);
+            Assert.AreEqual("[Field]", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -61,7 +61,7 @@ namespace RepoDb.SqlServer.UnitTests
             var result = " Field ".AsQuoted(setting);
 
             // Assert
-            Assert.AreEqual("[ Field ]", result);
+            Assert.AreEqual("[ Field ]", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -74,7 +74,7 @@ namespace RepoDb.SqlServer.UnitTests
             var result = "[Field]".AsQuoted(setting);
 
             // Assert
-            Assert.AreEqual("[Field]", result);
+            Assert.AreEqual("[Field]", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -87,7 +87,7 @@ namespace RepoDb.SqlServer.UnitTests
             var result = "[ Field ]".AsQuoted(setting);
 
             // Assert
-            Assert.AreEqual("[ Field ]", result);
+            Assert.AreEqual("[ Field ]", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -97,10 +97,10 @@ namespace RepoDb.SqlServer.UnitTests
             var setting = DbSettingMapper.Get<SqlConnection>();
 
             // Act
-            var result = " [ Field ] ".AsQuoted(true, setting);
+            var result = " [ Field ] ".AsQuoted(trim: true, setting);
 
             // Assert
-            Assert.AreEqual("[ Field ]", result);
+            Assert.AreEqual("[ Field ]", result, System.StringComparer.Ordinal);
         }
 
         #endregion
@@ -114,10 +114,10 @@ namespace RepoDb.SqlServer.UnitTests
             var setting = DbSettingMapper.Get<SqlConnection>();
 
             // Act
-            var result = "[Field]".AsUnquoted(true, setting);
+            var result = "[Field]".AsUnquoted(trim: true, setting);
 
             // Assert
-            Assert.AreEqual("Field", result);
+            Assert.AreEqual("Field", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -127,10 +127,10 @@ namespace RepoDb.SqlServer.UnitTests
             var setting = DbSettingMapper.Get<SqlConnection>();
 
             // Act
-            var result = " [ Field ] ".AsUnquoted(true, setting);
+            var result = " [ Field ] ".AsUnquoted(trim: true, setting);
 
             // Assert
-            Assert.AreEqual("Field", result);
+            Assert.AreEqual("Field", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -143,7 +143,7 @@ namespace RepoDb.SqlServer.UnitTests
             var result = "[ Field ]".AsUnquoted(setting);
 
             // Assert
-            Assert.AreEqual(" Field ", result);
+            Assert.AreEqual(" Field ", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -156,7 +156,7 @@ namespace RepoDb.SqlServer.UnitTests
             var result = "Field".AsUnquoted(setting);
 
             // Assert
-            Assert.AreEqual("Field", result);
+            Assert.AreEqual("Field", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -169,7 +169,7 @@ namespace RepoDb.SqlServer.UnitTests
             var result = " Field ".AsUnquoted(setting);
 
             // Assert
-            Assert.AreEqual(" Field ", result);
+            Assert.AreEqual(" Field ", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -179,10 +179,10 @@ namespace RepoDb.SqlServer.UnitTests
             var setting = DbSettingMapper.Get<SqlConnection>();
 
             // Act
-            var result = " Field ".AsUnquoted(true, setting);
+            var result = " Field ".AsUnquoted(trim: true, setting);
 
             // Assert
-            Assert.AreEqual("Field", result);
+            Assert.AreEqual("Field", result, System.StringComparer.Ordinal);
         }
 
         #endregion

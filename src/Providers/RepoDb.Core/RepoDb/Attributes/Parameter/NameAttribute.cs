@@ -16,15 +16,13 @@ namespace RepoDb.Attributes.Parameter
     /// An attribute that is being used to define a value to the <see cref="DbParameter.ParameterName"/>
     /// property via a class property mapping.
     /// </summary>
-    public class NameAttribute : PropertyValueAttribute
+    /// <remarks>
+    /// Creates a new instance of <see cref="NameAttribute"/> class.
+    /// </remarks>
+    /// <param name="name">The name of the mapping that is equivalent to the database object/field.</param>
+    [System.AttributeUsage(System.AttributeTargets.All)]
+    public class NameAttribute(string name) : PropertyValueAttribute(typeof(DbParameter), nameof(DbParameter.ParameterName), name, includedInCompilation: false)
     {
-        /// <summary>
-        /// Creates a new instance of <see cref="NameAttribute"/> class.
-        /// </summary>
-        /// <param name="name">The name of the mapping that is equivalent to the database object/field.</param>
-        public NameAttribute(string name)
-            : base(typeof(DbParameter), nameof(DbParameter.ParameterName), name, false)
-        { }
 
         /// <summary>
         /// Gets the mapped name of the equivalent database object/field.
@@ -40,7 +38,10 @@ namespace RepoDb.Attributes.Parameter
         /// the runtime (non-compiled) <c>QueryField</c>/dynamic-parameter path actually invokes.
         /// </summary>
         /// <returns></returns>
-        internal override object GetValue() => Name.AsParameter();
+        internal override object GetValue()
+        {
+            return Name.AsParameter();
+        }
 
         /// <summary>
         /// Builds the actual <see cref="DbParameter.ParameterName"/> value for the current provider, honoring
@@ -49,6 +50,9 @@ namespace RepoDb.Attributes.Parameter
         /// </summary>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        internal override object GetValue(IDbSetting dbSetting) => Name.AsParameterName(dbSetting);
+        internal override object GetValue(IDbSetting dbSetting)
+        {
+            return Name.AsParameterName(dbSetting);
+        }
     }
 }

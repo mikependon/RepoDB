@@ -29,26 +29,26 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> QueryAll<TEntity>(string tableName,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
-			string cacheKey = null,
-			string traceKey = TraceKeys.QueryAll,
+            string cacheKey = null,
+            string traceKey = TraceKeys.QueryAll,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.QueryAll<TEntity>(tableName: tableName,
+                return dbConnection.QueryAll<TEntity>(tableName: tableName,
                     fields: fields,
                     orderBy: orderBy,
                     hints: hints,
@@ -56,7 +56,7 @@ namespace RepoDb
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -64,7 +64,7 @@ namespace RepoDb
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -75,32 +75,32 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> QueryAll<TEntity>(IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
-			string cacheKey = null,
-			string traceKey = TraceKeys.QueryAll,
+            string cacheKey = null,
+            string traceKey = TraceKeys.QueryAll,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.QueryAll<TEntity>(fields: fields,
+                return dbConnection.QueryAll<TEntity>(fields: fields,
                     orderBy: orderBy,
                     hints: hints,
                     cacheKey: cacheKey,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -108,7 +108,7 @@ namespace RepoDb
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -124,8 +124,8 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -133,19 +133,19 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
-			string cacheKey = null,
-			string traceKey = TraceKeys.QueryAll,
+            string cacheKey = null,
+            string traceKey = TraceKeys.QueryAll,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.QueryAllAsync<TEntity>(tableName: tableName,
+                return await dbConnection.QueryAllAsync<TEntity>(tableName: tableName,
                     fields: fields,
                     orderBy: orderBy,
                     hints: hints,
@@ -153,16 +153,16 @@ namespace RepoDb
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -173,43 +173,43 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> QueryAllAsync<TEntity>(IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
-			string cacheKey = null,
-			string traceKey = TraceKeys.QueryAll,
+            string cacheKey = null,
+            string traceKey = TraceKeys.QueryAll,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.QueryAllAsync<TEntity>(fields: fields,
+                return await dbConnection.QueryAllAsync<TEntity>(fields: fields,
                     orderBy: orderBy,
                     hints: hints,
                     cacheKey: cacheKey,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -224,25 +224,25 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<dynamic> QueryAll(string tableName,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
-			string cacheKey = null,
-			string traceKey = TraceKeys.QueryAll,
+            string cacheKey = null,
+            string traceKey = TraceKeys.QueryAll,
             IDbTransaction transaction = null)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.QueryAll(tableName: tableName,
+                return dbConnection.QueryAll(tableName: tableName,
                     fields: fields,
                     orderBy: orderBy,
                     hints: hints,
@@ -250,7 +250,7 @@ namespace RepoDb
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -258,7 +258,7 @@ namespace RepoDb
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -273,8 +273,8 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -282,18 +282,18 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
-			string cacheKey = null,
-			string traceKey = TraceKeys.QueryAll,
+            string cacheKey = null,
+            string traceKey = TraceKeys.QueryAll,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.QueryAllAsync(tableName: tableName,
+                return await dbConnection.QueryAllAsync(tableName: tableName,
                     fields: fields,
                     orderBy: orderBy,
                     hints: hints,
@@ -301,16 +301,16 @@ namespace RepoDb
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
-					transaction: transaction,
+                    transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 

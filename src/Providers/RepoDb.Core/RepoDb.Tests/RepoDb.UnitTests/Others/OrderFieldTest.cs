@@ -205,7 +205,7 @@ namespace RepoDb.UnitTests.Others
             var orderBy = (object)null;
 
             // Act/Assert
-            Assert.Throws<NullReferenceException>(() => OrderField.Parse(orderBy));
+            Assert.Throws<ArgumentNullException>(() => OrderField.Parse(orderBy));
         }
     }
 }

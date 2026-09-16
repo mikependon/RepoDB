@@ -14,15 +14,13 @@ namespace RepoDb.Attributes.Parameter.SqlServer
     /// An attribute used to define a value to the <see cref="SqlParameter.UdtTypeName"/> property via an entity property
     /// before the actual execution.
     /// </summary>
-    public class UdtTypeNameAttribute : PropertyValueAttribute
+    /// <remarks>
+    /// Creates a new instance of <see cref="UdtTypeNameAttribute"/> class.
+    /// </remarks>
+    /// <param name="udtTypeName">The name of the user-defined type.</param>
+    [System.AttributeUsage(System.AttributeTargets.All)]
+    public class UdtTypeNameAttribute(string udtTypeName) : PropertyValueAttribute(typeof(SqlParameter), nameof(SqlParameter.UdtTypeName), udtTypeName)
     {
-        /// <summary>
-        /// Creates a new instance of <see cref="UdtTypeNameAttribute"/> class.
-        /// </summary>
-        /// <param name="udtTypeName">The name of the user-defined type.</param>
-        public UdtTypeNameAttribute(string udtTypeName)
-            : base(typeof(SqlParameter), nameof(SqlParameter.UdtTypeName), udtTypeName)
-        { }
 
         /// <summary>
         /// Gets the name of the currently mapped user-defined type of the parameter.

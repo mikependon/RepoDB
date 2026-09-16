@@ -46,13 +46,13 @@ namespace RepoDb.SqlServer.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = helper.GetFields(connection, "IdentityCompleteTable", null);
+                var fields = helper.GetFields(connection, "IdentityCompleteTable", transaction: null);
 
                 // Assert
                 using (var reader = connection.ExecuteReader(@"SELECT COLUMN_NAME AS ColumnName
                     FROM INFORMATION_SCHEMA.COLUMNS
                     WHERE
-	                    TABLE_NAME = @TableName
+                        TABLE_NAME = @TableName
                     ORDER BY ORDINAL_POSITION;", new { TableName = "IdentityCompleteTable" }))
                 {
                     var fieldCount = 0;
@@ -83,12 +83,12 @@ namespace RepoDb.SqlServer.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = helper.GetFields(connection, "IdentityCompleteTable", null);
-                var primary = fields.FirstOrDefault(f => f.IsPrimary == true);
+                var fields = helper.GetFields(connection, "IdentityCompleteTable", transaction: null);
+                var primary = fields.FirstOrDefault(f => f.IsPrimary);
 
                 // Assert
                 Assert.IsNotNull(primary);
-                Assert.AreEqual("Id", primary.Name);
+                Assert.AreEqual("Id", primary.Name, StringComparer.Ordinal);
             }
         }
 
@@ -101,12 +101,12 @@ namespace RepoDb.SqlServer.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = helper.GetFields(connection, "IdentityCompleteTable", null);
-                var primary = fields.FirstOrDefault(f => f.IsIdentity == true);
+                var fields = helper.GetFields(connection, "IdentityCompleteTable", transaction: null);
+                var primary = fields.FirstOrDefault(f => f.IsIdentity);
 
                 // Assert
                 Assert.IsNotNull(primary);
-                Assert.AreEqual("Id", primary.Name);
+                Assert.AreEqual("Id", primary.Name, StringComparer.Ordinal);
             }
         }
 
@@ -123,13 +123,13 @@ namespace RepoDb.SqlServer.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = await helper.GetFieldsAsync(connection, "IdentityCompleteTable", null);
+                var fields = await helper.GetFieldsAsync(connection, "IdentityCompleteTable", transaction: null);
 
                 // Assert
                 using (var reader = connection.ExecuteReader(@"SELECT COLUMN_NAME AS ColumnName
                     FROM INFORMATION_SCHEMA.COLUMNS
                     WHERE
-	                    TABLE_NAME = @TableName
+                        TABLE_NAME = @TableName
                     ORDER BY ORDINAL_POSITION;", new { TableName = "IdentityCompleteTable" }))
                 {
                     var fieldCount = 0;
@@ -160,12 +160,12 @@ namespace RepoDb.SqlServer.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = await helper.GetFieldsAsync(connection, "IdentityCompleteTable", null);
-                var primary = fields.FirstOrDefault(f => f.IsPrimary == true);
+                var fields = await helper.GetFieldsAsync(connection, "IdentityCompleteTable", transaction: null);
+                var primary = fields.FirstOrDefault(f => f.IsPrimary);
 
                 // Assert
                 Assert.IsNotNull(primary);
-                Assert.AreEqual("Id", primary.Name);
+                Assert.AreEqual("Id", primary.Name, StringComparer.Ordinal);
             }
         }
 
@@ -178,12 +178,12 @@ namespace RepoDb.SqlServer.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = await helper.GetFieldsAsync(connection, "IdentityCompleteTable", null);
-                var primary = fields.FirstOrDefault(f => f.IsIdentity == true);
+                var fields = await helper.GetFieldsAsync(connection, "IdentityCompleteTable", transaction: null);
+                var primary = fields.FirstOrDefault(f => f.IsIdentity);
 
                 // Assert
                 Assert.IsNotNull(primary);
-                Assert.AreEqual("Id", primary.Name);
+                Assert.AreEqual("Id", primary.Name, StringComparer.Ordinal);
             }
         }
 
@@ -212,7 +212,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                 Assert.IsTrue(table.Id > 0);
 
                 // Act
-                var result = helper.GetScopeIdentity<long>(connection, null);
+                var result = helper.GetScopeIdentity<long>(connection, transaction: null);
 
                 // Assert
                 Assert.AreEqual(insertResult, result);
@@ -240,7 +240,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                 Assert.IsTrue(table.Id > 0);
 
                 // Act
-                var result = await helper.GetScopeIdentityAsync<long>(connection, null);
+                var result = await helper.GetScopeIdentityAsync<long>(connection, transaction: null);
 
                 // Assert
                 Assert.AreEqual(insertResult, result);

@@ -48,7 +48,7 @@ namespace RepoDb.Reflection
             }
 
             // Property Handler
-            valueExpression = ConvertExpressionToPropertyHandlerSetExpression(valueExpression, null, null, targetType);
+            valueExpression = ConvertExpressionToPropertyHandlerSetExpression(valueExpression, parameterExpression: null, classProperty: null, targetType);
 
             // Assign the value into DataEntity.Property
             var dictionaryParameter = Expression.Parameter(StaticType.Object, "entity");

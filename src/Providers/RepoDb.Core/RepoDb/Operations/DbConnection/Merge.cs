@@ -39,7 +39,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -80,7 +80,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -122,7 +122,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -164,7 +164,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -206,7 +206,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -248,7 +248,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -291,7 +291,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -334,7 +334,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -374,7 +374,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -411,9 +411,9 @@ namespace RepoDb
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifier">The qualifier field to be used during merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-		/// <param name="hints">The table hints to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -451,9 +451,9 @@ namespace RepoDb
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifiers">The list of qualifier fields to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-		/// <param name="hints">The table hints to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -493,7 +493,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -531,9 +531,9 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-		/// <param name="hints">The table hints to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -571,9 +571,9 @@ namespace RepoDb
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifier">The qualifier field to be used during merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-		/// <param name="hints">The table hints to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -614,7 +614,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -653,9 +653,9 @@ namespace RepoDb
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifiers">The expression for the qualifier fields.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-		/// <param name="hints">The table hints to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -695,9 +695,9 @@ namespace RepoDb
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifiers">The list of qualifier fields to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-		/// <param name="hints">The table hints to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -719,9 +719,9 @@ namespace RepoDb
             var setting = connection.GetDbSetting();
 
             // Return the result
-            if (setting.IsUseUpsert == false)
+            if (!setting.IsUseUpsert)
             {
-                if (TypeCache.Get(GetEntityType(entity)).IsDictionaryStringObject() == true)
+                if (TypeCache.Get(GetEntityType(entity)).IsDictionaryStringObject())
                 {
                     return MergeInternalBase<IDictionary<string, object>, TResult>(connection: connection,
                         tableName: tableName,
@@ -752,7 +752,7 @@ namespace RepoDb
             }
             else
             {
-                if (TypeCache.Get(GetEntityType(entity)).IsDictionaryStringObject() == true)
+                if (TypeCache.Get(GetEntityType(entity)).IsDictionaryStringObject())
                 {
                     return UpsertInternalBase<IDictionary<string, object>, TResult>(connection: connection,
                         tableName: tableName,
@@ -797,7 +797,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -841,7 +841,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -886,7 +886,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -931,7 +931,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -976,7 +976,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1021,7 +1021,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1067,7 +1067,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1113,7 +1113,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1154,9 +1154,9 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-		/// <param name="hints">The table hints to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1196,9 +1196,9 @@ namespace RepoDb
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifier">The field to be used during merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-		/// <param name="hints">The table hints to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1239,9 +1239,9 @@ namespace RepoDb
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifiers">The list of qualifier fields to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-		/// <param name="hints">The table hints to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1284,7 +1284,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1325,9 +1325,9 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-		/// <param name="hints">The table hints to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1368,9 +1368,9 @@ namespace RepoDb
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifier">The field to be used during merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-		/// <param name="hints">The table hints to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1412,9 +1412,9 @@ namespace RepoDb
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifiers">The list of qualifier fields to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-		/// <param name="hints">The table hints to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1458,7 +1458,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1501,9 +1501,9 @@ namespace RepoDb
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifiers">The list of qualifier fields to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-		/// <param name="hints">The table hints to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1527,9 +1527,9 @@ namespace RepoDb
             var setting = connection.GetDbSetting();
 
             // Return the result
-            if (setting.IsUseUpsert == false)
+            if (!setting.IsUseUpsert)
             {
-                if (TypeCache.Get(GetEntityType(entity)).IsDictionaryStringObject() == true)
+                if (TypeCache.Get(GetEntityType(entity)).IsDictionaryStringObject())
                 {
                     return MergeAsyncInternalBase<IDictionary<string, object>, TResult>(connection: connection,
                         tableName: tableName,
@@ -1562,7 +1562,7 @@ namespace RepoDb
             }
             else
             {
-                if (TypeCache.Get(GetEntityType(entity)).IsDictionaryStringObject() == true)
+                if (TypeCache.Get(GetEntityType(entity)).IsDictionaryStringObject())
                 {
                     return UpsertAsyncInternalBase<IDictionary<string, object>, TResult>(connection: connection,
                         tableName: tableName,
@@ -1608,7 +1608,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1647,7 +1647,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1687,7 +1687,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1727,7 +1727,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1767,7 +1767,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1808,7 +1808,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1851,7 +1851,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1893,7 +1893,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1936,7 +1936,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1979,7 +1979,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -2022,7 +2022,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -2066,7 +2066,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -2115,7 +2115,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -2204,7 +2204,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -2244,9 +2244,9 @@ namespace RepoDb
             }
 
             // Get the properties
-            if (isDictionaryType == false)
+            if (!isDictionaryType)
             {
-                if (type.IsGenericType == true)
+                if (type.IsGenericType)
                 {
                     properties = type.GetClassProperties();
                 }
@@ -2292,7 +2292,7 @@ namespace RepoDb
                 statementBuilder: statementBuilder);
 
             // Check the existence
-            if (exists == true)
+            if (exists)
             {
                 // Call the update operation
                 var updateResult = connection.Update<TEntity>(tableName,
@@ -2309,7 +2309,7 @@ namespace RepoDb
                 // Check if there is result
                 if (updateResult > 0)
                 {
-                    if (isDictionaryType == false)
+                    if (!isDictionaryType)
                     {
                         if (primaryKey != null)
                         {
@@ -2363,7 +2363,7 @@ namespace RepoDb
         /// <param name="qualifiers">The list of qualifier fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -2387,7 +2387,7 @@ namespace RepoDb
             if (qualifiers?.Any() != true)
             {
                 var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction,
-                    entity?.GetType() ?? typeof(TEntity), cancellationToken);
+                    entity?.GetType() ?? typeof(TEntity), cancellationToken).ConfigureAwait(false);
                 qualifiers = key.AsEnumerable();
             }
 
@@ -2401,11 +2401,11 @@ namespace RepoDb
                 hints,
                 transaction,
                 statementBuilder,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
             var result = default(TResult);
 
             // Create the command
-            using (var command = (DbCommand)(await connection.EnsureOpenAsync(cancellationToken)).CreateCommand(context.CommandText,
+            using (var command = (DbCommand)(await connection.EnsureOpenAsync(cancellationToken).ConfigureAwait(false)).CreateCommand(context.CommandText,
                 CommandType.Text, commandTimeout, transaction))
             {
                 // Set the values
@@ -2413,7 +2413,7 @@ namespace RepoDb
 
                 // Before Execution
                 var traceResult = await Tracer
-                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
                 // Silent cancellation
                 if (traceResult?.CancellableTraceLog?.IsCancelled == true)
@@ -2422,11 +2422,11 @@ namespace RepoDb
                 }
 
                 // Actual Execution
-                result = Converter.ToType<TResult>(await command.ExecuteScalarAsync(cancellationToken));
+                result = Converter.ToType<TResult>(await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false));
 
                 // After Execution
                 await Tracer
-                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
 
                 // Set the return value
                 if (result != null)
@@ -2455,7 +2455,7 @@ namespace RepoDb
         /// <param name="qualifiers">The list of qualifier fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -2478,7 +2478,7 @@ namespace RepoDb
             // Variables needed
             var type = entity?.GetType() ?? typeof(TEntity);
             var isDictionaryType = TypeCache.Get(type).IsDictionaryStringObject();
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
             var primary = dbFields?.GetPrimary();
             var properties = (IEnumerable<ClassProperty>)null;
             var primaryKey = (ClassProperty)null;
@@ -2497,9 +2497,9 @@ namespace RepoDb
             }
 
             // Get the properties
-            if (isDictionaryType == false)
+            if (!isDictionaryType)
             {
-                if (type.IsGenericType == true)
+                if (type.IsGenericType)
                 {
                     properties = type.GetClassProperties();
                 }
@@ -2543,13 +2543,13 @@ namespace RepoDb
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken).ConfigureAwait(false);
 
             // Check the existence
-            if (exists == true)
+            if (exists)
             {
                 // Call the update operation
-                var updateResult = await connection.UpdateAsync<TEntity>(tableName,
+                var updateResult = await connection.UpdateAsync(tableName,
                     entity,
                     where,
                     fields: fields,
@@ -2559,12 +2559,12 @@ namespace RepoDb
                     transaction: transaction,
                     trace: trace,
                     statementBuilder: statementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
 
                 // Check if there is result
                 if (updateResult > 0)
                 {
-                    if (isDictionaryType == false)
+                    if (!isDictionaryType)
                     {
                         if (primaryKey != null)
                         {
@@ -2593,7 +2593,7 @@ namespace RepoDb
                     transaction: transaction,
                     trace: trace,
                     statementBuilder: statementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
 
                 // Set the result
                 result = Converter.ToType<TResult>(insertResult);

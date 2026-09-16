@@ -29,7 +29,7 @@ namespace RepoDb
         /// <param name="value">The value of the parameter.</param>
         public Parameter(string name,
             object value)
-            : this(name, value, null, null)
+            : this(name, value, dbType: null, prefix: null)
         { }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace RepoDb
         public Parameter(string name,
             object value,
             DbType? dbType)
-            : this(name, value, dbType, null)
+            : this(name, value, dbType, prefix: null)
         { }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace RepoDb
             // Name is required
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new NullReferenceException(name);
+                throw new ArgumentNullException(nameof(name));
             }
 
             // Set the properties
@@ -123,15 +123,19 @@ namespace RepoDb
         /// Set the name of the parameter.
         /// </summary>
         /// <param name="name">The new name.</param>
-        internal void SetName(string name) =>
+        internal void SetName(string name)
+        {
             Name = name;
+        }
 
         /// <summary>
         /// Set the value of the parameter.
         /// </summary>
         /// <param name="value">The new value.</param>
-        internal void SetValue(object value) =>
+        internal void SetValue(object value)
+        {
             Value = value;
+        }
 
         /// <summary>
         /// Resets the <see cref="Parameter"/> object back to its default state (as is newly instantiated).
@@ -147,8 +151,10 @@ namespace RepoDb
         /// Stringify the current object. Will return the format of <b>Name (Value)</b> text.
         /// </summary>
         /// <returns></returns>
-        public override string ToString() =>
-            string.Concat(Name, " (", Value.ToString(), ")");
+        public override string ToString()
+        {
+            return string.Concat(Name, " (", Value.ToString(), ")");
+        }
 
         #endregion
 
@@ -165,19 +171,17 @@ namespace RepoDb
                 return this.hashCode.Value;
             }
 
-            var hashCode = 0;
-
             // OriginalName
-            hashCode = OriginalName.GetHashCode();
+            int computedHashCode = StringComparer.Ordinal.GetHashCode(OriginalName);
 
             // DbType
             if (DbType.HasValue)
             {
-                hashCode = HashCode.Combine(hashCode, DbType.Value.GetHashCode());
+                computedHashCode = HashCode.Combine(computedHashCode, DbType.Value.GetHashCode());
             }
 
             // Set and return the hashcode
-            return (this.hashCode = hashCode).Value;
+            return (this.hashCode = computedHashCode).Value;
         }
 
         /// <summary>
@@ -227,8 +231,7 @@ namespace RepoDb
         /// <param name="objB">The second <see cref="Parameter"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
         public static bool operator !=(Parameter objA,
-            Parameter objB) =>
-            (objA == objB) == false;
+            Parameter objB) => !(objA == objB);
 
         #endregion
     }

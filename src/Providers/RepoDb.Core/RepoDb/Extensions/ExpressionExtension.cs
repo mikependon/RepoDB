@@ -50,24 +50,30 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
         /// <returns>Returns true if the expression can be extracted as <see cref="QueryField"/> object.</returns>
-        internal static bool IsExtractable(this Expression expression) =>
-            extractableExpressionTypes.Contains(expression.NodeType);
+        internal static bool IsExtractable(this Expression expression)
+        {
+            return extractableExpressionTypes.Contains(expression.NodeType);
+        }
 
         /// <summary>
         /// Identify whether the instance of <see cref="Expression"/> can be grouped as <see cref="QueryGroup"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
         /// <returns>Returns true if the expression can be grouped as <see cref="QueryGroup"/> object.</returns>
-        internal static bool IsGroupable(this Expression expression) =>
-            expression.NodeType == ExpressionType.AndAlso || expression.NodeType == ExpressionType.OrElse;
+        internal static bool IsGroupable(this Expression expression)
+        {
+            return expression.NodeType == ExpressionType.AndAlso || expression.NodeType == ExpressionType.OrElse;
+        }
 
         /// <summary>
         /// Identify whether the instance of <see cref="Expression"/> is using the <see cref="Math"/> object operations.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
         /// <returns>Returns true if the expression is using the <see cref="Math"/> object operations.</returns>
-        internal static bool IsMathematical(this Expression expression) =>
-            mathematicalExpressionTypes.Contains(expression.NodeType);
+        internal static bool IsMathematical(this Expression expression)
+        {
+            return mathematicalExpressionTypes.Contains(expression.NodeType);
+        }
 
         #region GetField
 
@@ -117,7 +123,7 @@ namespace RepoDb.Extensions
             else
             {
                 // Contains
-                if (expression.Method.Name == "Contains")
+                if (string.Equals(expression.Method.Name, "Contains", StringComparison.Ordinal))
                 {
                     var last = expression.Arguments.Last();
                     if (last is MemberExpression memberExpression)
@@ -191,9 +197,9 @@ namespace RepoDb.Extensions
             }
             else
             {
-                if (expression.Method.Name == "Contains" ||
-                    expression.Method.Name == "StartsWith" ||
-                    expression.Method.Name == "EndsWith")
+                if (string.Equals(expression.Method.Name, "Contains", StringComparison.Ordinal) ||
+string.Equals(expression.Method.Name, "StartsWith", StringComparison.Ordinal) ||
+string.Equals(expression.Method.Name, "EndsWith", StringComparison.Ordinal))
                 {
                     var last = expression.Arguments.Last();
                     if (last is MemberExpression memberExpression)
@@ -210,8 +216,10 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="expression">The instance of <see cref="MemberExpression"/> to be checked.</param>
         /// <returns>The name of the <see cref="MemberInfo"/>.</returns>
-        public static string GetName(this MemberExpression expression) =>
-            expression.Member.GetMappedName();
+        public static string GetName(this MemberExpression expression)
+        {
+            return expression.Member.GetMappedName();
+        }
 
         #endregion
 
@@ -323,16 +331,20 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="expression">The instance of <see cref="ConstantExpression"/> object where the value is to be extracted.</param>
         /// <returns>The extracted value from <see cref="ConstantExpression"/> object.</returns>
-        public static object GetValue(this ConstantExpression expression) =>
-            expression.Value;
+        public static object GetValue(this ConstantExpression expression)
+        {
+            return expression.Value;
+        }
 
         /// <summary>
         /// Gets a value from the current instance of <see cref="UnaryExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="UnaryExpression"/> object where the value is to be extracted.</param>
         /// <returns>The extracted value from <see cref="UnaryExpression"/> object.</returns>
-        public static object GetValue(this UnaryExpression expression) =>
-            expression.Operand.GetValue();
+        public static object GetValue(this UnaryExpression expression)
+        {
+            return expression.Operand.GetValue();
+        }
 
         /// <summary>
         /// Gets a value from the current instance of <see cref="MethodCallExpression"/> object.
@@ -350,8 +362,8 @@ namespace RepoDb.Extensions
                 // In .NET 10, implicit conversion operators to ByRefLike types (e.g. ReadOnlySpan<T>.op_Implicit
                 // from T[]) cannot be invoked via reflection. Return the underlying argument value directly —
                 // callers expecting IEnumerable can still work with the original array.
-                if (expression.Method.Name == "op_Implicit"
-                    && IsRefLikeType(expression.Method.ReturnType)
+                if (string.Equals(expression.Method.Name, "op_Implicit"
+, StringComparison.Ordinal) && IsRefLikeType(expression.Method.ReturnType)
                     && expression.Arguments.Count == 1)
                 {
                     return expression.Arguments[0].GetValue();
@@ -365,17 +377,21 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="type">The type to be evaluated.</param>
         /// <returns>True if the type is supporting the IsByRefLike namespace.</returns>
-        private static bool IsRefLikeType(Type type) =>
-            type.GetCustomAttributes(false)
-                .Any(a => a.GetType().FullName == "System.Runtime.CompilerServices.IsByRefLikeAttribute");
+        private static bool IsRefLikeType(Type type)
+        {
+            return type.GetCustomAttributes(inherit: false)
+                .Any(a => string.Equals(a.GetType().FullName, "System.Runtime.CompilerServices.IsByRefLikeAttribute", StringComparison.Ordinal));
+        }
 
         /// <summary>
         /// Gets a value from the current instance of <see cref="MemberExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="MemberExpression"/> object where the value is to be extracted.</param>
         /// <returns>The extracted value from <see cref="MemberExpression"/> object.</returns>
-        public static object GetValue(this MemberExpression expression) =>
-            expression.Member.GetValue(expression.Expression?.GetValue());
+        public static object GetValue(this MemberExpression expression)
+        {
+            return expression.Member.GetValue(expression.Expression?.GetValue());
+        }
 
         /// <summary>
         /// Gets a value from the current instance of <see cref="NewArrayExpression"/> object.
@@ -496,8 +512,10 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="expression">The instance of <see cref="DefaultExpression"/> object where the value is to be extracted.</param>
         /// <returns>The extracted value from <see cref="DefaultExpression"/> object.</returns>
-        public static object GetValue(this DefaultExpression expression) =>
-            expression.Type.IsValueType ? Activator.CreateInstance(expression.Type) : null;
+        public static object GetValue(this DefaultExpression expression)
+        {
+            return expression.Type.IsValueType ? Activator.CreateInstance(expression.Type) : null;
+        }
 
         #endregion
 
@@ -508,8 +526,10 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be converted.</param>
         /// <returns>A converted instance of <see cref="MemberExpression"/> object.</returns>
-        public static MemberExpression ToMember(this Expression expression) =>
-            (MemberExpression)expression;
+        public static MemberExpression ToMember(this Expression expression)
+        {
+            return (MemberExpression)expression;
+        }
 
         #endregion
 

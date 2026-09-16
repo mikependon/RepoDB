@@ -42,8 +42,10 @@ namespace RepoDb
         /// <typeparam name="TClassHandler">The type of the handler.</typeparam>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         public static void Add<TType, TClassHandler>(bool force = false)
-            where TClassHandler : new() =>
+            where TClassHandler : new()
+        {
             Add(typeof(TType), new TClassHandler(), force);
+        }
 
         /// <summary>
         /// Adds a mapping between a .NET CLR type and a <see cref="IClassHandler{TEntity}"/> object.
@@ -53,8 +55,10 @@ namespace RepoDb
         /// <param name="classHandler">The instance of the class handler. The type must implement the <see cref="IClassHandler{TEntity}"/> interface.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         public static void Add<TType, TClassHandler>(TClassHandler classHandler,
-            bool force = false) =>
+            bool force = false)
+        {
             Add(typeof(TType), classHandler, force);
+        }
 
         /// <summary>
         /// Adds a mapping between a .NET CLR type and a <see cref="IClassHandler{TEntity}"/> object.
@@ -100,8 +104,10 @@ namespace RepoDb
         /// <typeparam name="TType">The target .NET CLR type.</typeparam>
         /// <typeparam name="TClassHandler">The type of the handler.</typeparam>
         /// <returns>An instance of mapped class handler for .NET CLR type.</returns>
-        public static TClassHandler Get<TType, TClassHandler>() =>
-            Get<TClassHandler>(typeof(TType));
+        public static TClassHandler Get<TType, TClassHandler>()
+        {
+            return Get<TClassHandler>(typeof(TType));
+        }
 
         /// <summary>
         /// Get the existing mapped class handler of the .NET CLR type.
@@ -136,8 +142,10 @@ namespace RepoDb
         /// Removes the existing mapped class handler of the .NET CLR type.
         /// </summary>
         /// <typeparam name="T">The target .NET CLR type.</typeparam>
-        public static void Remove<T>() =>
+        public static void Remove<T>()
+        {
             Remove(typeof(T));
+        }
 
         /// <summary>
         /// Removes the existing mapped class handler of the .NET CLR type.
@@ -176,8 +184,10 @@ namespace RepoDb
         /// </summary>
         /// <param name="type">The type of the data entity.</param>
         /// <returns>The generated hashcode.</returns>
-        private static int GenerateHashCode(Type type) =>
-            TypeExtension.GenerateHashCode(type);
+        private static int GenerateHashCode(Type type)
+        {
+            return TypeExtension.GenerateHashCode(type);
+        }
 
         /// <summary>
         /// 
@@ -186,7 +196,7 @@ namespace RepoDb
         private static void Guard(Type type)
         {
             ObjectExtension.ThrowIfNull(type, "type");
-            if (type.IsInterfacedTo(StaticType.IClassHandler) == false)
+            if (!type.IsInterfacedTo(StaticType.IClassHandler))
             {
                 throw new InvalidTypeException($"The type '{type.FullName}' must implement the '{StaticType.IClassHandler.FullName}' interface.");
             }

@@ -37,8 +37,10 @@ namespace RepoDb
         /// </summary>
         /// <param name="dbType">The <see cref="System.Data.DbType"/> object where to map the .NET CLR type.</param>
         /// <returns>The current instance.</returns>
-        public TypeMapFluentDefinition<TType> DbType(DbType? dbType) =>
-            DbType(dbType, false);
+        public TypeMapFluentDefinition<TType> DbType(DbType? dbType)
+        {
+            return DbType(dbType, force: false);
+        }
 
         /// <summary>
         /// Defines a mapping between a .NET CLR type and a <see cref="System.Data.DbType"/> object.
@@ -64,8 +66,10 @@ namespace RepoDb
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
         /// <returns>The current instance.</returns>
         public TypeMapFluentDefinition<TType> PropertyHandler<TPropertyHandler>()
-            where TPropertyHandler : new() =>
-            PropertyHandler(new TPropertyHandler(), false);
+            where TPropertyHandler : new()
+        {
+            return PropertyHandler(new TPropertyHandler(), force: false);
+        }
 
         /// <summary>
         /// Defines a mapping between a .NET CLR type and a <see cref="IPropertyHandler{TInput, TResult}"/> object. It uses the <see cref="Activator.CreateInstance(Type)"/> method to create the instance of target property handler.
@@ -75,8 +79,10 @@ namespace RepoDb
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         /// <returns>The current instance.</returns>
         public TypeMapFluentDefinition<TType> PropertyHandler<TPropertyHandler>(bool force)
-            where TPropertyHandler : new() =>
-            PropertyHandler(new TPropertyHandler(), force);
+            where TPropertyHandler : new()
+        {
+            return PropertyHandler(new TPropertyHandler(), force);
+        }
 
         /// <summary>
         /// Defines a mapping between a .NET CLR type and a <see cref="IPropertyHandler{TInput, TResult}"/> object.
@@ -84,8 +90,10 @@ namespace RepoDb
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
         /// <param name="propertyHandler">The instance of the property handler. The type must implement the <see cref="IPropertyHandler{TInput, TResult}"/> interface.</param>
         /// <returns>The current instance.</returns>
-        public TypeMapFluentDefinition<TType> PropertyHandler<TPropertyHandler>(TPropertyHandler propertyHandler) =>
-            PropertyHandler<TPropertyHandler>(propertyHandler, false);
+        public TypeMapFluentDefinition<TType> PropertyHandler<TPropertyHandler>(TPropertyHandler propertyHandler)
+        {
+            return PropertyHandler<TPropertyHandler>(propertyHandler, force: false);
+        }
 
         /// <summary>
         /// Defines a mapping between a .NET CLR type and a <see cref="IPropertyHandler{TInput, TResult}"/> object.
@@ -111,8 +119,10 @@ namespace RepoDb
         /// <typeparam name="T">The target type.</typeparam>
         /// <param name="attributes">The list of <see cref="PropertyValueAttribute"/> object.</param>
         /// <remarks>The default behavior will be affected if the settings are not handled properly by the user (i.e.: setting the type <see cref="string"/> name attribute to something would affect all the objects properties with type <see cref="string"/>).</remarks>
-        public TypeMapFluentDefinition<TType> PropertyValueAttributes<T>(IEnumerable<PropertyValueAttribute> attributes) =>
-            PropertyValueAttributes<T>(attributes, false);
+        public TypeMapFluentDefinition<TType> PropertyValueAttributes<T>(IEnumerable<PropertyValueAttribute> attributes)
+        {
+            return PropertyValueAttributes<T>(attributes, force: false);
+        }
 
         /// <summary>
         /// Defines a mapping between a .NET CLR type and the list of <see cref="PropertyValueAttribute"/> object.
@@ -122,8 +132,10 @@ namespace RepoDb
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         /// <remarks>The default behavior will be affected if the settings are not handled properly by the user (i.e.: setting the type <see cref="string"/> name attribute to something would affect all the objects properties with type <see cref="string"/>).</remarks>
         public TypeMapFluentDefinition<TType> PropertyValueAttributes<T>(IEnumerable<PropertyValueAttribute> attributes,
-            bool force) =>
-            PropertyValueAttributes(typeof(T), attributes, force);
+            bool force)
+        {
+            return PropertyValueAttributes(typeof(T), attributes, force);
+        }
 
         /// <summary>
         /// Defines a mapping between a .NET CLR type and the list of <see cref="PropertyValueAttribute"/> object.
@@ -132,8 +144,10 @@ namespace RepoDb
         /// <param name="attributes">The list of <see cref="PropertyValueAttribute"/> object.</param>
         /// <remarks>The default behavior will be affected if the settings are not handled properly by the user (i.e.: setting the type <see cref="string"/> name attribute to something would affect all the objects properties with type <see cref="string"/>).</remarks>
         public TypeMapFluentDefinition<TType> PropertyValueAttributes(Type type,
-            IEnumerable<PropertyValueAttribute> attributes) =>
-            PropertyValueAttributes(type, attributes, false);
+            IEnumerable<PropertyValueAttribute> attributes)
+        {
+            return PropertyValueAttributes(type, attributes, force: false);
+        }
 
         /// <summary>
         /// Defines a mapping between a .NET CLR type and the list of <see cref="PropertyValueAttribute"/> object.

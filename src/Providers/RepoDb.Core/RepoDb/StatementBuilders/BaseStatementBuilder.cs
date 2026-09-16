@@ -21,39 +21,27 @@ namespace RepoDb.StatementBuilders
     /// <summary>
     /// A base class for all <see cref="IStatementBuilder"/>-based objects.
     /// </summary>
-    public abstract class BaseStatementBuilder : IStatementBuilder
+    public abstract class BaseStatementBuilder(IDbSetting dbSetting,
+        IResolver<Field, IDbSetting, string> convertFieldResolver = null,
+        IResolver<Type, Type> averageableClientTypeResolver = null) : IStatementBuilder
     {
-        /// <summary>
-        /// Creates a new instance of <see cref="BaseStatementBuilder"/> class.
-        /// </summary>
-        /// <param name="dbSetting">The database settings object currently in used.</param>
-        /// <param name="convertFieldResolver">The resolver used when converting a field in the database layer.</param>
-        /// <param name="averageableClientTypeResolver">The resolver used to identity the type for average.</param>
-        public BaseStatementBuilder(IDbSetting dbSetting,
-            IResolver<Field, IDbSetting, string> convertFieldResolver = null,
-            IResolver<Type, Type> averageableClientTypeResolver = null)
-        {
-            DbSetting = dbSetting ?? throw new NullReferenceException("The database setting cannot be null.");
-            ConvertFieldResolver = convertFieldResolver;
-            AverageableClientTypeResolver = averageableClientTypeResolver;
-        }
 
         #region Properties
 
         /// <summary>
         /// Gets the database setting object that is currently in used.
         /// </summary>
-        protected IDbSetting DbSetting { get; }
+        protected IDbSetting DbSetting { get; } = dbSetting ?? throw new ArgumentNullException(nameof(dbSetting), "The database setting cannot be null.");
 
         /// <summary>
         /// Gets the resolver used to convert the <see cref="Field"/> object.
         /// </summary>
-        protected IResolver<Field, IDbSetting, string> ConvertFieldResolver { get; }
+        protected IResolver<Field, IDbSetting, string> ConvertFieldResolver { get; } = convertFieldResolver;
 
         /// <summary>
         /// Gets the resolver that is being used to resolve the type to be averageable type.
         /// </summary>
-        protected IResolver<Type, Type> AverageableClientTypeResolver { get; }
+        protected IResolver<Type, Type> AverageableClientTypeResolver { get; } = averageableClientTypeResolver;
 
         #endregion
 
@@ -83,7 +71,7 @@ namespace RepoDb.StatementBuilders
             // Check the field
             if (field == null)
             {
-                throw new NullReferenceException("The field cannot be null.");
+                throw new ArgumentNullException(nameof(field), "The field cannot be null.");
             }
             else
             {
@@ -132,7 +120,7 @@ namespace RepoDb.StatementBuilders
             // Check the field
             if (field == null)
             {
-                throw new NullReferenceException("The field cannot be null.");
+                throw new ArgumentNullException(nameof(field), "The field cannot be null.");
             }
             else
             {
@@ -183,7 +171,7 @@ namespace RepoDb.StatementBuilders
             // Build the query
             builder.Clear()
                 .Select()
-                .Count(null, DbSetting)
+                .Count(field: null, DbSetting)
                 .WriteText($"AS {"CountValue".AsQuoted(DbSetting)}")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
@@ -220,7 +208,7 @@ namespace RepoDb.StatementBuilders
             // Build the query
             builder.Clear()
                 .Select()
-                .Count(null, DbSetting)
+                .Count(field: null, DbSetting)
                 .WriteText($"AS {"CountValue".AsQuoted(DbSetting)}")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
@@ -374,14 +362,14 @@ namespace RepoDb.StatementBuilders
 
             // Primary Key
             if (primaryField != null &&
-                primaryField.HasDefaultValue == false &&
+!primaryField.HasDefaultValue &&
                 !string.Equals(primaryField.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase))
             {
                 var isPresent = fields
                     .FirstOrDefault(f =>
                         string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
 
-                if (isPresent == false)
+                if (!isPresent)
                 {
                     throw new PrimaryFieldNotFoundException($"Primary field '{primaryField.Name}' must be present from the list.");
                 }
@@ -452,14 +440,14 @@ namespace RepoDb.StatementBuilders
 
             // Primary Key
             if (primaryField != null &&
-                primaryField.HasDefaultValue == false &&
+!primaryField.HasDefaultValue &&
                 !string.Equals(primaryField.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase))
             {
                 var isPresent = fields
                     .FirstOrDefault(f =>
                         string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
 
-                if (isPresent == false)
+                if (!isPresent)
                 {
                     throw new PrimaryFieldNotFoundException($"As the primary field '{primaryField.Name}' is not an identity nor has a default value, it must be present on the insert operation.");
                 }
@@ -551,7 +539,7 @@ namespace RepoDb.StatementBuilders
             // Check the field
             if (field == null)
             {
-                throw new NullReferenceException("The field cannot be null.");
+                throw new ArgumentNullException(nameof(field), "The field cannot be null.");
             }
 
             // Initialize the builder
@@ -596,7 +584,7 @@ namespace RepoDb.StatementBuilders
             // Check the field
             if (field == null)
             {
-                throw new NullReferenceException("The field cannot be null.");
+                throw new ArgumentNullException(nameof(field), "The field cannot be null.");
             }
 
             // Initialize the builder
@@ -642,7 +630,7 @@ namespace RepoDb.StatementBuilders
             // Check the field
             if (field == null)
             {
-                throw new NullReferenceException("The field cannot be null.");
+                throw new ArgumentNullException(nameof(field), "The field cannot be null.");
             }
 
             // Initialize the builder
@@ -687,7 +675,7 @@ namespace RepoDb.StatementBuilders
             // Check the field
             if (field == null)
             {
-                throw new NullReferenceException("The field cannot be null.");
+                throw new ArgumentNullException(nameof(field), "The field cannot be null.");
             }
 
             // Initialize the builder
@@ -737,7 +725,7 @@ namespace RepoDb.StatementBuilders
             // There should be fields
             if (fields?.Any() != true)
             {
-                throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
+                throw new ArgumentException($"The list of queryable fields must not be null for '{tableName}'.", nameof(fields));
             }
 
             // Initialize the builder
@@ -785,7 +773,7 @@ namespace RepoDb.StatementBuilders
             // There should be fields
             if (fields?.Any() != true)
             {
-                throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
+                throw new ArgumentException($"The list of queryable fields must not be null for '{tableName}'.", nameof(fields));
             }
 
             // Initialize the builder
@@ -831,7 +819,7 @@ namespace RepoDb.StatementBuilders
             // Check the field
             if (field == null)
             {
-                throw new NullReferenceException("The field cannot be null.");
+                throw new ArgumentNullException(nameof(field), "The field cannot be null.");
             }
 
             // Initialize the builder
@@ -876,7 +864,7 @@ namespace RepoDb.StatementBuilders
             // Check the field
             if (field == null)
             {
-                throw new NullReferenceException("The field cannot be null.");
+                throw new ArgumentNullException(nameof(field), "The field cannot be null.");
             }
 
             // Initialize the builder
@@ -957,7 +945,7 @@ namespace RepoDb.StatementBuilders
                     !string.Equals(f.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
 
             // Check if there are updatable fields
-            if (updatableFields.Any() != true)
+            if (!updatableFields.Any())
             {
                 throw new EmptyException("The list of updatable fields cannot be null or empty.");
             }
@@ -1026,7 +1014,7 @@ namespace RepoDb.StatementBuilders
                         string.Equals(field.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == null);
 
                 // Throw an error we found any unmatches
-                if (unmatchesQualifiers.Any() == true)
+                if (unmatchesQualifiers.Any())
                 {
                     throw new InvalidQualifiersException($"The qualifiers '{unmatchesQualifiers.Select(field => field.Name).Join(", ")}' are not " +
                         $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
@@ -1041,7 +1029,7 @@ namespace RepoDb.StatementBuilders
                         string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
 
                     // Throw if not present
-                    if (isPresent == false)
+                    if (!isPresent)
                     {
                         throw new InvalidQualifiersException($"There are no qualifier field objects found for '{tableName}'. Ensure that the " +
                             $"primary field is present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
@@ -1053,7 +1041,7 @@ namespace RepoDb.StatementBuilders
                 else
                 {
                     // Throw exception, qualifiers are not defined
-                    throw new NullReferenceException($"There are no qualifier field objects found for '{tableName}'.");
+                    throw new InvalidQualifiersException($"There are no qualifier field objects found for '{tableName}'.");
                 }
             }
 
@@ -1064,7 +1052,7 @@ namespace RepoDb.StatementBuilders
                     qualifiers.FirstOrDefault(q => string.Equals(q.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == null);
 
             // Check if there are updatable fields
-            if (fields.Any() != true)
+            if (!fields.Any())
             {
                 throw new EmptyException("The list of updatable fields cannot be null or empty.");
             }
@@ -1201,7 +1189,7 @@ namespace RepoDb.StatementBuilders
         {
             if (string.IsNullOrWhiteSpace(tableName))
             {
-                throw new NullReferenceException("The name of the table could be null.");
+                throw new ArgumentNullException(nameof(tableName), "The name of the table could be null.");
             }
         }
 
@@ -1251,7 +1239,7 @@ namespace RepoDb.StatementBuilders
         /// <exception cref="NotSupportedException"></exception>
         protected void ValidateMultipleStatementExecution(int batchSize = Constant.DefaultBatchOperationSize)
         {
-            if (DbSetting.IsMultiStatementExecutable == false && batchSize > 1)
+            if (!DbSetting.IsMultiStatementExecutable && batchSize > 1)
             {
                 throw new NotSupportedException($"Multiple execution is not supported based on the current database setting '{DbSetting.GetType().FullName}'. Consider setting the batchSize to 1.");
             }

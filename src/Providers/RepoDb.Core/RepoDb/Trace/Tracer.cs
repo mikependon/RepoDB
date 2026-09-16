@@ -33,7 +33,7 @@ namespace RepoDb
             ITrace trace,
             DbCommand command)
         {
-            if (string.IsNullOrEmpty(key) || (trace == null && GlobalConfiguration.Options.UseRegisteredGlobalTraces == false))
+            if (string.IsNullOrEmpty(key) || (trace == null && !GlobalConfiguration.Options.UseRegisteredGlobalTraces))
             {
                 return null;
             }
@@ -71,20 +71,20 @@ namespace RepoDb
             DbCommand command,
             CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrEmpty(key) || (trace == null && GlobalConfiguration.Options.UseRegisteredGlobalTraces == false))
+            if (string.IsNullOrEmpty(key) || (trace == null && !GlobalConfiguration.Options.UseRegisteredGlobalTraces))
             {
                 return null;
             }
 
             var result = TraceResult.Create(key, command);
 
-            await trace?.BeforeExecutionAsync(result.CancellableTraceLog, cancellationToken);
+            await (trace?.BeforeExecutionAsync(result.CancellableTraceLog, cancellationToken)).ConfigureAwait(false);
 
             if (GlobalConfiguration.Options.UseRegisteredGlobalTraces)
             {
                 foreach (var globalTrace in GlobalTraceRegistration.GetTracers())
                 {
-                    await globalTrace.BeforeExecutionAsync(result.CancellableTraceLog, cancellationToken);
+                    await globalTrace.BeforeExecutionAsync(result.CancellableTraceLog, cancellationToken).ConfigureAwait(false);
                 }
             }
 
@@ -116,7 +116,7 @@ namespace RepoDb
             var globalTraces = GlobalTraceRegistration.GetTracers();
             if (trace == null &&
                 (
-                    GlobalConfiguration.Options.UseRegisteredGlobalTraces == false ||
+!GlobalConfiguration.Options.UseRegisteredGlobalTraces ||
                     globalTraces.Count == 0)
                 )
             {
@@ -163,7 +163,7 @@ namespace RepoDb
             var globalTraces = GlobalTraceRegistration.GetTracers();
             if (trace == null &&
                 (
-                    GlobalConfiguration.Options.UseRegisteredGlobalTraces == false ||
+!GlobalConfiguration.Options.UseRegisteredGlobalTraces ||
                     globalTraces.Count == 0)
                 )
             {
@@ -176,11 +176,11 @@ namespace RepoDb
                 value,
                 result.CancellableTraceLog);
 
-            await trace?.AfterExecutionAsync(log, cancellationToken);
+            await (trace?.AfterExecutionAsync(log, cancellationToken)).ConfigureAwait(false);
 
             foreach (var globalTrace in globalTraces)
             {
-                await globalTrace.AfterExecutionAsync(log, cancellationToken);
+                await globalTrace.AfterExecutionAsync(log, cancellationToken).ConfigureAwait(false);
             }
         }
 

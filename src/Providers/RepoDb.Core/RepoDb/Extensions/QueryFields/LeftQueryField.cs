@@ -28,7 +28,7 @@ namespace RepoDb.Extensions.QueryFields
         /// <param name="value">The value to be used for the query expression.</param>
         public LeftQueryField(string fieldName,
             object value)
-            : this(fieldName, Operation.Equal, value, null)
+            : this(fieldName, Operation.Equal, value, dbType: null)
         { }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace RepoDb.Extensions.QueryFields
         public LeftQueryField(string fieldName,
             Operation operation,
             object value)
-            : this(fieldName, operation, value, null, 0)
+            : this(fieldName, operation, value, dbType: null, 0)
         { }
 
         /// <summary>
@@ -112,13 +112,13 @@ namespace RepoDb.Extensions.QueryFields
             }
 
             // Base
-            var hashCode = base.GetHashCode();
+            var computedHashCode = base.GetHashCode();
 
             // CharCount
-            hashCode = HashCode.Combine(hashCode, CharCount);
+            computedHashCode = HashCode.Combine(computedHashCode, CharCount);
 
             // Return
-            return (this.hashCode = hashCode).Value;
+            return (this.hashCode = computedHashCode).Value;
         }
 
         #endregion

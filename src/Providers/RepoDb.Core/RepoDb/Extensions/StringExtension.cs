@@ -20,7 +20,10 @@ namespace RepoDb.Extensions
     /// </summary>
     public static class StringExtension
     {
+        // MA0009: single negated character class, no nested quantifiers/alternation, so it is not susceptible to catastrophic backtracking.
+#pragma warning disable MA0009 // Add regex evaluation timeout
         private static readonly Regex alphaNumericRegex = new(@"[^a-zA-Z0-9]", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+#pragma warning restore MA0009
 
         /// <summary>
         /// Joins an array string with a given separator.
@@ -29,8 +32,10 @@ namespace RepoDb.Extensions
         /// <param name="separator">The separator to be used.</param>
         /// <returns>A joined string from a given array of strings separated by the defined separator.</returns>
         public static string Join(this IEnumerable<string> strings,
-            string separator) =>
-            Join(strings, separator, true);
+            string separator)
+        {
+            return Join(strings, separator, trim: true);
+        }
 
         /// <summary>
         /// Joins an array string with a given separator.
@@ -55,8 +60,10 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="value">The string value where the non-alphanumeric characters will be removed.</param>
         /// <returns>The alphanumeric string.</returns>
-        public static string AsAlphaNumeric(this string value) =>
-            AsAlphaNumeric(value, true);
+        public static string AsAlphaNumeric(this string value)
+        {
+            return AsAlphaNumeric(value, trim: true);
+        }
 
         /// <summary>
         /// Removes the non-alphanumeric characters.
@@ -82,8 +89,10 @@ namespace RepoDb.Extensions
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>True if the value is open-quoted.</returns>
         public static bool IsOpenQuoted(this string value,
-            IDbSetting dbSetting) =>
-            dbSetting != null ? value.StartsWith(dbSetting.OpeningQuote) : false;
+            IDbSetting dbSetting)
+        {
+            return dbSetting != null && value.StartsWith(dbSetting.OpeningQuote, StringComparison.Ordinal);
+        }
 
         /// <summary>
         /// Check whether the string value is close-quoted.
@@ -92,8 +101,10 @@ namespace RepoDb.Extensions
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>True if the value is close-quoted.</returns>
         public static bool IsCloseQuoted(this string value,
-            IDbSetting dbSetting) =>
-            dbSetting != null ? value.EndsWith(dbSetting.ClosingQuote) : false;
+            IDbSetting dbSetting)
+        {
+            return dbSetting != null && value.EndsWith(dbSetting.ClosingQuote, StringComparison.Ordinal);
+        }
 
         /// <summary>
         /// Unquotes a string.
@@ -102,8 +113,10 @@ namespace RepoDb.Extensions
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The unquoted string.</returns>
         public static string AsUnquoted(this string value,
-            IDbSetting dbSetting) =>
-            AsUnquoted(value, false, dbSetting);
+            IDbSetting dbSetting)
+        {
+            return AsUnquoted(value, trim: false, dbSetting);
+        }
 
         /// <summary>
         /// Unquotes a string.
@@ -165,8 +178,10 @@ namespace RepoDb.Extensions
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The quoted string.</returns>
         public static string AsQuoted(this string value,
-            IDbSetting dbSetting) =>
-            AsQuoted(value, false, false, dbSetting);
+            IDbSetting dbSetting)
+        {
+            return AsQuoted(value, trim: false, ignoreSchema: false, dbSetting);
+        }
 
         /// <summary>
         /// Quotes a string.
@@ -177,8 +192,10 @@ namespace RepoDb.Extensions
         /// <returns>The quoted string.</returns>
         public static string AsQuoted(this string value,
             bool trim,
-            IDbSetting dbSetting) =>
-            AsQuoted(value, trim, false, dbSetting);
+            IDbSetting dbSetting)
+        {
+            return AsQuoted(value, trim, ignoreSchema: false, dbSetting);
+        }
 
         /// <summary>
         /// Quotes a string.
@@ -221,7 +238,6 @@ namespace RepoDb.Extensions
         private static string AsQuotedForDatabaseSchemaTableInternal(this string value,
             IDbSetting dbSetting)
         {
-            // TODO: Refactor this method
             var splitted = value.Split(CharConstant.Period);
             if (splitted.Length > 2)
             {
@@ -304,8 +320,10 @@ namespace RepoDb.Extensions
         /// <param name="dbSetting">The <see cref="IDbSetting"/> object to be used.</param>
         /// <returns>The string value represented as database field.</returns>
         public static string AsField(this string value,
-            IDbSetting dbSetting) =>
-            AsField(value, null, dbSetting);
+            IDbSetting dbSetting)
+        {
+            return AsField(value, functionFormat: null, dbSetting);
+        }
 
         /// <summary>
         /// 
@@ -316,9 +334,11 @@ namespace RepoDb.Extensions
         /// <returns></returns>
         public static string AsField(this string value,
             string functionFormat,
-            IDbSetting dbSetting) =>
-            string.IsNullOrWhiteSpace(functionFormat) ? value.AsQuoted(true, true, dbSetting) :
-                string.Format(functionFormat, value.AsQuoted(true, true, dbSetting));
+            IDbSetting dbSetting)
+        {
+            return string.IsNullOrWhiteSpace(functionFormat) ? value.AsQuoted(trim: true, ignoreSchema: true, dbSetting) :
+                string.Format(System.Globalization.CultureInfo.InvariantCulture, functionFormat, value.AsQuoted(trim: true, ignoreSchema: true, dbSetting));
+        }
 
         /// <summary>
         /// Returns the string as a parameter placeholder token suitable for embedding directly into a generated SQL
@@ -326,8 +346,10 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="value">The string to be converted.</param>
         /// <returns>The string value represented as a SQL text parameter placeholder.</returns>
-        public static string AsParameter(this string value) =>
-            AsParameter(value, 0, null);
+        public static string AsParameter(this string value)
+        {
+            return AsParameter(value, 0, dbSetting: null);
+        }
 
         /// <summary>
         /// Returns the string as a parameter placeholder token suitable for embedding directly into a generated SQL
@@ -337,8 +359,10 @@ namespace RepoDb.Extensions
         /// <param name="dbSetting">The <see cref="IDbSetting"/> object to be used.</param>
         /// <returns>The string value represented as a SQL text parameter placeholder.</returns>
         public static string AsParameter(this string value,
-            IDbSetting dbSetting) =>
-            AsParameter(value, 0, dbSetting);
+            IDbSetting dbSetting)
+        {
+            return AsParameter(value, 0, dbSetting);
+        }
 
         /// <summary>
         /// Returns the string as a parameter placeholder token suitable for embedding directly into a generated SQL
@@ -350,8 +374,10 @@ namespace RepoDb.Extensions
         /// <returns>The string value represented as a SQL text parameter placeholder.</returns>
         public static string AsParameter(this string value,
             int index,
-            IDbSetting dbSetting) =>
-            AsParameterWithPrefix(value, index, dbSetting, dbSetting?.SqlTextParameterPrefix ?? "@");
+            IDbSetting dbSetting)
+        {
+            return AsParameterWithPrefix(value, index, dbSetting, dbSetting?.SqlTextParameterPrefix ?? "@");
+        }
 
         /// <summary>
         /// Returns the string as the actual value to be assigned to a real <see cref="System.Data.Common.DbParameter.ParameterName"/>
@@ -363,8 +389,10 @@ namespace RepoDb.Extensions
         /// <param name="dbSetting">The <see cref="IDbSetting"/> object to be used.</param>
         /// <returns>The string value represented as an actual database parameter name.</returns>
         internal static string AsParameterName(this string value,
-            IDbSetting dbSetting) =>
-            AsParameterName(value, 0, dbSetting);
+            IDbSetting dbSetting)
+        {
+            return AsParameterName(value, 0, dbSetting);
+        }
 
         /// <summary>
         /// Returns the string as the actual value to be assigned to a real <see cref="System.Data.Common.DbParameter.ParameterName"/>
@@ -378,8 +406,10 @@ namespace RepoDb.Extensions
         /// <returns>The string value represented as an actual database parameter name.</returns>
         internal static string AsParameterName(this string value,
             int index,
-            IDbSetting dbSetting) =>
-            AsParameterWithPrefix(value, index, dbSetting, dbSetting?.ParameterPrefix ?? "@");
+            IDbSetting dbSetting)
+        {
+            return AsParameterWithPrefix(value, index, dbSetting, dbSetting?.ParameterPrefix ?? "@");
+        }
 
         /// <summary>
         /// Shared core used by <see cref="AsParameter(string, int, IDbSetting)"/> and <see cref="AsParameterName(string, int, IDbSetting)"/>.
@@ -399,8 +429,8 @@ namespace RepoDb.Extensions
 
             value = string.Concat(parameterPrefix,
                 (alreadyPrefixed ? value.Substring(parameterPrefix.Length) : value)
-                .AsUnquoted(true, dbSetting).AsAlphaNumeric());
-            value = index > 0 ? string.Concat(value, "_", index.ToString()) : value;
+                .AsUnquoted(trim: true, dbSetting).AsAlphaNumeric());
+            value = index > 0 ? string.Concat(value, "_", index.ToString(System.Globalization.CultureInfo.InvariantCulture)) : value;
 
             return value;
         }
@@ -434,9 +464,11 @@ namespace RepoDb.Extensions
             string leftAlias,
             string rightAlias,
             bool considerNulls,
-            IDbSetting dbSetting) =>
-            considerNulls ? AsJoinQualifierWithNullChecks(value, leftAlias, rightAlias, dbSetting) :
+            IDbSetting dbSetting)
+        {
+            return considerNulls ? AsJoinQualifierWithNullChecks(value, leftAlias, rightAlias, dbSetting) :
                 AsJoinQualifierWithoutNullChecks(value, leftAlias, rightAlias, dbSetting);
+        }
 
         /// <summary>
         /// 
@@ -449,9 +481,11 @@ namespace RepoDb.Extensions
         private static string AsJoinQualifierWithoutNullChecks(this string value,
             string leftAlias,
             string rightAlias,
-            IDbSetting dbSetting) =>
-            string.Concat(leftAlias, CharConstant.Period, value.AsQuoted(true, true, dbSetting), " = ",
-                rightAlias, CharConstant.Period, value.AsQuoted(true, true, dbSetting));
+            IDbSetting dbSetting)
+        {
+            return string.Concat(leftAlias, CharConstant.Period, value.AsQuoted(trim: true, ignoreSchema: true, dbSetting), " = ",
+                rightAlias, CharConstant.Period, value.AsQuoted(trim: true, ignoreSchema: true, dbSetting));
+        }
 
         /// <summary>
         /// 
@@ -467,8 +501,8 @@ namespace RepoDb.Extensions
             IDbSetting dbSetting)
         {
             var qualifiersWithoutNullChecks = AsJoinQualifierWithoutNullChecks(value, leftAlias, rightAlias, dbSetting);
-            var qualifiersWithNullChecks = string.Concat("(", leftAlias, CharConstant.Period, value.AsQuoted(true, true, dbSetting), " IS NULL",
-                " AND ", rightAlias, CharConstant.Period, value.AsQuoted(true, true, dbSetting), " IS NULL)");
+            var qualifiersWithNullChecks = string.Concat("(", leftAlias, CharConstant.Period, value.AsQuoted(trim: true, ignoreSchema: true, dbSetting), " IS NULL",
+                " AND ", rightAlias, CharConstant.Period, value.AsQuoted(trim: true, ignoreSchema: true, dbSetting), " IS NULL)");
             return string.Concat("(", qualifiersWithoutNullChecks, " OR ", qualifiersWithNullChecks, ")");
         }
 
@@ -481,8 +515,10 @@ namespace RepoDb.Extensions
         /// <returns></returns>
         internal static string AsAliasField(this string value,
             string alias,
-            IDbSetting dbSetting) =>
-            string.Concat(alias, CharConstant.Period, value.AsQuoted(true, true, dbSetting));
+            IDbSetting dbSetting)
+        {
+            return string.Concat(alias, CharConstant.Period, value.AsQuoted(trim: true, ignoreSchema: true, dbSetting));
+        }
 
         /// <summary>
         /// 
@@ -493,8 +529,10 @@ namespace RepoDb.Extensions
         /// <returns></returns>
         internal static string AsParameterAsField(this string value,
             int index,
-            IDbSetting dbSetting) =>
-            string.Concat(AsParameter(value, index, dbSetting), " AS ", AsField(value, dbSetting));
+            IDbSetting dbSetting)
+        {
+            return string.Concat(AsParameter(value, index, dbSetting), " AS ", AsField(value, dbSetting));
+        }
 
         /// <summary>
         /// 
@@ -505,8 +543,10 @@ namespace RepoDb.Extensions
         /// <returns></returns>
         internal static string AsFieldAndParameter(this string value,
             int index,
-            IDbSetting dbSetting) =>
-            string.Concat(AsField(value, dbSetting), " = ", AsParameter(value, index, dbSetting));
+            IDbSetting dbSetting)
+        {
+            return string.Concat(AsField(value, dbSetting), " = ", AsParameter(value, index, dbSetting));
+        }
 
         /// <summary>
         /// 
@@ -519,10 +559,12 @@ namespace RepoDb.Extensions
         internal static string AsFieldAndAliasField(this string value,
             string leftAlias,
             string rightAlias,
-            IDbSetting dbSetting) =>
-            string.Concat(
+            IDbSetting dbSetting)
+        {
+            return string.Concat(
                 (string.IsNullOrWhiteSpace(leftAlias) ? string.Empty : string.Concat(leftAlias, CharConstant.Period)), AsField(value, dbSetting), " = ",
                 (string.IsNullOrWhiteSpace(rightAlias) ? string.Empty : string.Concat(rightAlias, CharConstant.Period)), AsField(value, dbSetting));
+        }
 
         /// <summary>
         /// 
@@ -531,8 +573,10 @@ namespace RepoDb.Extensions
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         internal static IEnumerable<string> AsFields(this IEnumerable<string> values,
-            IDbSetting dbSetting) =>
-            values?.Select(value => value.AsField(dbSetting));
+            IDbSetting dbSetting)
+        {
+            return values?.Select(value => value.AsField(dbSetting));
+        }
 
         /// <summary>
         /// 
@@ -543,8 +587,10 @@ namespace RepoDb.Extensions
         /// <returns></returns>
         internal static IEnumerable<string> AsAliasFields(this IEnumerable<string> values,
             string alias,
-            IDbSetting dbSetting) =>
-            values?.Select(value => value.AsAliasField(alias, dbSetting));
+            IDbSetting dbSetting)
+        {
+            return values?.Select(value => value.AsAliasField(alias, dbSetting));
+        }
 
         /// <summary>
         /// 
@@ -557,16 +603,20 @@ namespace RepoDb.Extensions
         internal static IEnumerable<string> AsFieldsAndAliasFields(this IEnumerable<string> values,
             string leftAlias,
             string rightAlias,
-            IDbSetting dbSetting) =>
-            values?.Select(value => value.AsFieldAndAliasField(leftAlias, rightAlias, dbSetting));
+            IDbSetting dbSetting)
+        {
+            return values?.Select(value => value.AsFieldAndAliasField(leftAlias, rightAlias, dbSetting));
+        }
 
         /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
-        internal static void ThrowIfNullOrEmpty<T>(T obj) =>
-            ThrowIfNullOrEmpty(obj, null);
+        internal static void ThrowIfNullOrEmpty<T>(T obj)
+        {
+            ThrowIfNullOrEmpty(obj, argument: null);
+        }
 
         /// <summary>
         /// 
@@ -581,11 +631,11 @@ namespace RepoDb.Extensions
             {
                 if (string.IsNullOrEmpty(argument))
                 {
-                    throw new NullReferenceException();
+                    throw new ArgumentNullException(nameof(argument));
                 }
                 else
                 {
-                    throw new NullReferenceException($"The argument '{argument}' cannot be null.");
+                    throw new ArgumentNullException(argument);
                 }
             }
         }
@@ -594,8 +644,10 @@ namespace RepoDb.Extensions
         /// 
         /// </summary>
         /// <param name="value"></param>
-        internal static void ThrowIfNullOrWhiteSpace(string value) =>
-            ThrowIfNullOrWhiteSpace(value, null);
+        internal static void ThrowIfNullOrWhiteSpace(string value)
+        {
+            ThrowIfNullOrWhiteSpace(value, argument: null);
+        }
 
         /// <summary>
         /// 
@@ -611,11 +663,11 @@ namespace RepoDb.Extensions
             }
             if (string.IsNullOrWhiteSpace(argument))
             {
-                throw new NullReferenceException();
+                throw new ArgumentException("The value is either null or whitespace.", nameof(argument));
             }
             else
             {
-                throw new NullReferenceException($"The argument '{argument}' is either null or whitespace.");
+                throw new ArgumentException("The value is either null or whitespace.", argument);
             }
         }
     }

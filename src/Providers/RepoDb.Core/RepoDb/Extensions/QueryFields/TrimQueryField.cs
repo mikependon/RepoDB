@@ -25,7 +25,7 @@ namespace RepoDb.Extensions.QueryFields
         /// <param name="value">The value to be used for the query expression.</param>
         public TrimQueryField(string fieldName,
             object value)
-            : this(fieldName, Operation.Equal, value, null)
+            : this(fieldName, Operation.Equal, value, dbType: null)
         { }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace RepoDb.Extensions.QueryFields
         public TrimQueryField(string fieldName,
             Operation operation,
             object value)
-            : base(fieldName, operation, value, null, "TRIM({0})")
+            : base(fieldName, operation, value, dbType: null, "TRIM({0})")
         { }
 
         /// <summary>

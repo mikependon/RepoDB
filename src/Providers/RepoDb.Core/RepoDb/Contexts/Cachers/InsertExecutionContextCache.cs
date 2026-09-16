@@ -18,13 +18,15 @@ namespace RepoDb.Contexts.Cachers
     /// </summary>
     public static class InsertExecutionContextCache
     {
-        private static ConcurrentDictionary<string, InsertExecutionContext> cache = new();
+        private static ConcurrentDictionary<string, InsertExecutionContext> cache = new(StringComparer.Ordinal);
 
         /// <summary>
         /// Flushes all the cached execution context.
         /// </summary>
-        public static void Flush() =>
+        public static void Flush()
+        {
             cache.Clear();
+        }
 
         /// <summary>
         /// 
@@ -34,8 +36,10 @@ namespace RepoDb.Contexts.Cachers
         /// <param name="context"></param>
         internal static void Add(Type type,
             string key,
-            InsertExecutionContext context) =>
+            InsertExecutionContext context)
+        {
             cache.TryAdd(key, context);
+        }
 
         /// <summary>
         /// 
