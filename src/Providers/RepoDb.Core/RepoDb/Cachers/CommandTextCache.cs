@@ -113,12 +113,12 @@ namespace RepoDb
                     request.Name,
                     request.Fields,
                     request.Transaction,
-                    cancellationToken);
+                    cancellationToken).ConfigureAwait(false);
                 await ValidateOrderFieldsAsync(request.Connection,
                     request.Name,
                     request.OrderBy,
                     request.Transaction,
-                    cancellationToken);
+                    cancellationToken).ConfigureAwait(false);
                 commandText = GetBatchQueryTextInternal(request, fields);
                 cache.TryAdd(request, commandText);
             }
@@ -292,9 +292,9 @@ namespace RepoDb
                     request.Name,
                     request.Fields,
                     request.Transaction,
-                    cancellationToken);
-                var primaryField = await GetPrimaryFieldAsync(request, cancellationToken);
-                var identityField = await GetIdentityFieldAsync(request, cancellationToken);
+                    cancellationToken).ConfigureAwait(false);
+                var primaryField = await GetPrimaryFieldAsync(request, cancellationToken).ConfigureAwait(false);
+                var identityField = await GetIdentityFieldAsync(request, cancellationToken).ConfigureAwait(false);
                 commandText = GetInsertTextInternal(request, fields, primaryField, identityField);
                 cache.TryAdd(request, commandText);
             }
@@ -362,9 +362,9 @@ namespace RepoDb
                     request.Name,
                     request.Fields,
                     request.Transaction,
-                    cancellationToken);
-                var primaryField = await GetPrimaryFieldAsync(request, cancellationToken);
-                var identityField = await GetIdentityFieldAsync(request, cancellationToken);
+                    cancellationToken).ConfigureAwait(false);
+                var primaryField = await GetPrimaryFieldAsync(request, cancellationToken).ConfigureAwait(false);
+                var identityField = await GetIdentityFieldAsync(request, cancellationToken).ConfigureAwait(false);
                 commandText = GetInsertAllTextInternal(request, fields, primaryField, identityField);
                 cache.TryAdd(request, commandText);
             }
@@ -478,9 +478,9 @@ namespace RepoDb
                     request.Name,
                     request.Fields,
                     request.Transaction,
-                    cancellationToken);
-                var primaryField = await GetPrimaryFieldAsync(request, cancellationToken);
-                var identityField = await GetIdentityFieldAsync(request, cancellationToken);
+                    cancellationToken).ConfigureAwait(false);
+                var primaryField = await GetPrimaryFieldAsync(request, cancellationToken).ConfigureAwait(false);
+                var identityField = await GetIdentityFieldAsync(request, cancellationToken).ConfigureAwait(false);
                 commandText = GetMergeTextInternal(request, fields, primaryField, identityField);
                 cache.TryAdd(request, commandText);
             }
@@ -549,9 +549,9 @@ namespace RepoDb
                     request.Name,
                     request.Fields,
                     request.Transaction,
-                    cancellationToken);
-                var primaryField = await GetPrimaryFieldAsync(request, cancellationToken);
-                var identityField = await GetIdentityFieldAsync(request, cancellationToken);
+                    cancellationToken).ConfigureAwait(false);
+                var primaryField = await GetPrimaryFieldAsync(request, cancellationToken).ConfigureAwait(false);
+                var identityField = await GetIdentityFieldAsync(request, cancellationToken).ConfigureAwait(false);
                 commandText = GetMergeAllTextInternal(request, fields, primaryField, identityField);
                 cache.TryAdd(request, commandText);
             }
@@ -668,12 +668,12 @@ namespace RepoDb
                     request.Name,
                     request.Fields,
                     request.Transaction,
-                    cancellationToken);
+                    cancellationToken).ConfigureAwait(false);
                 await ValidateOrderFieldsAsync(request.Connection,
                     request.Name,
                     request.OrderBy,
                     request.Transaction,
-                    cancellationToken);
+                    cancellationToken).ConfigureAwait(false);
                 commandText = GetQueryTextInternal(request, fields);
                 cache.TryAdd(request, commandText);
             }
@@ -740,12 +740,12 @@ namespace RepoDb
                     request.Name,
                     request.Fields,
                     request.Transaction,
-                    cancellationToken);
+                    cancellationToken).ConfigureAwait(false);
                 await ValidateOrderFieldsAsync(request.Connection,
                     request.Name,
                     request.OrderBy,
                     request.Transaction,
-                    cancellationToken);
+                    cancellationToken).ConfigureAwait(false);
                 commandText = GetQueryAllTextInternal(request, fields);
                 cache.TryAdd(request, commandText);
             }
@@ -810,12 +810,12 @@ namespace RepoDb
                     request.Name,
                     request.Fields,
                     request.Transaction,
-                    cancellationToken);
+                    cancellationToken).ConfigureAwait(false);
                 await ValidateOrderFieldsAsync(request.Connection,
                     request.Name,
                     request.OrderBy,
                     request.Transaction,
-                    cancellationToken);
+                    cancellationToken).ConfigureAwait(false);
                 commandText = GetQueryMultipleTextInternal(request, fields);
                 cache.TryAdd(request, commandText);
             }
@@ -882,12 +882,12 @@ namespace RepoDb
                     request.Name,
                     request.Fields,
                     request.Transaction,
-                    cancellationToken);
+                    cancellationToken).ConfigureAwait(false);
                 await ValidateOrderFieldsAsync(request.Connection,
                     request.Name,
                     request.OrderBy,
                     request.Transaction,
-                    cancellationToken);
+                    cancellationToken).ConfigureAwait(false);
                 commandText = GetSkipQueryTextInternal(request, fields);
                 cache.TryAdd(request, commandText);
             }
@@ -1019,9 +1019,9 @@ namespace RepoDb
                     request.Name,
                     request.Fields,
                     request.Transaction,
-                    cancellationToken);
-                var primaryField = await GetPrimaryFieldAsync(request, cancellationToken);
-                var identityField = await GetIdentityFieldAsync(request, cancellationToken);
+                    cancellationToken).ConfigureAwait(false);
+                var primaryField = await GetPrimaryFieldAsync(request, cancellationToken).ConfigureAwait(false);
+                var identityField = await GetIdentityFieldAsync(request, cancellationToken).ConfigureAwait(false);
                 commandText = GetUpdateTextInternal(request, fields, primaryField, identityField);
                 cache.TryAdd(request, commandText);
             }
@@ -1090,9 +1090,9 @@ namespace RepoDb
                     request.Name,
                     request.Fields,
                     request.Transaction,
-                    cancellationToken);
-                var primaryField = await GetPrimaryFieldAsync(request, cancellationToken);
-                var identityField = await GetIdentityFieldAsync(request, cancellationToken);
+                    cancellationToken).ConfigureAwait(false);
+                var primaryField = await GetPrimaryFieldAsync(request, cancellationToken).ConfigureAwait(false);
+                var identityField = await GetIdentityFieldAsync(request, cancellationToken).ConfigureAwait(false);
                 commandText = GetUpdateAllTextInternal(request, fields, primaryField, identityField);
                 cache.TryAdd(request, commandText);
             }
@@ -1129,8 +1129,10 @@ namespace RepoDb
         /// <summary>
         /// Flushes all the existing cached command texts.
         /// </summary>
-        public static void Flush() =>
+        public static void Flush()
+        {
             cache.Clear();
+        }
 
         /// <summary>
         /// 
@@ -1168,7 +1170,7 @@ namespace RepoDb
         {
             if (orderFields?.Any() == true)
             {
-                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
                 ValidateOrderFieldsInternal(orderFields, dbFields, connection.GetDbSetting());
             }
         }
@@ -1186,7 +1188,7 @@ namespace RepoDb
             var unmatchesOrderFields = dbFields?.IsEmpty() == false ?
                 orderFields
                     .Where(of =>
-                        dbFields.GetByUnquotedName(of.Name.AsUnquoted(true, dbSetting)) == null) : null;
+                        dbFields.GetByUnquotedName(of.Name.AsUnquoted(trim: true, dbSetting)) == null) : null;
             if (unmatchesOrderFields?.Any() == true)
             {
                 throw new MissingFieldsException($"The order fields '{unmatchesOrderFields.Select(of => of.Name).Join(", ")}' are not present from the actual table.");
@@ -1233,7 +1235,7 @@ namespace RepoDb
             {
                 return null;
             }
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
             return GetTargetFieldsInternal(fields, dbFields, connection.GetDbSetting());
         }
 
@@ -1251,7 +1253,7 @@ namespace RepoDb
             return dbFields?.IsEmpty() == false ?
                 fields
                     .Where(f =>
-                        dbFields.GetByUnquotedName(f.Name.AsUnquoted(true, dbSetting)) != null) :
+                        dbFields.GetByUnquotedName(f.Name.AsUnquoted(trim: true, dbSetting)) != null) :
                 fields;
         }
 
@@ -1275,7 +1277,7 @@ namespace RepoDb
         private static async Task<DbField> GetPrimaryFieldAsync(BaseRequest request,
             CancellationToken cancellationToken = default)
         {
-            var dbFields = await DbFieldCache.GetAsync(request.Connection, request.Name, request.Transaction, cancellationToken);
+            var dbFields = await DbFieldCache.GetAsync(request.Connection, request.Name, request.Transaction, cancellationToken).ConfigureAwait(false);
             return GetPrimaryField(request, dbFields);
         }
 
@@ -1297,15 +1299,15 @@ namespace RepoDb
                     string.Equals(identityField?.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase);
 
                 return new DbField(primaryField.Name,
-                    true,
+isPrimary: true,
                     isIdentity,
-                    false,
+isNullable: false,
                     primaryField.Type,
-                    null,
-                    null,
-                    null,
-                    null,
-                    false);
+size: null,
+precision: null,
+scale: null,
+databaseType: null,
+hasDefaultValue: false);
             }
 
             return null;
@@ -1331,7 +1333,7 @@ namespace RepoDb
         private static async Task<DbField> GetIdentityFieldAsync(BaseRequest request,
             CancellationToken cancellationToken = default)
         {
-            var dbFields = await DbFieldCache.GetAsync(request.Connection, request.Name, request.Transaction, cancellationToken);
+            var dbFields = await DbFieldCache.GetAsync(request.Connection, request.Name, request.Transaction, cancellationToken).ConfigureAwait(false);
             return GetIdentityField(request, dbFields);
         }
 
@@ -1354,14 +1356,14 @@ namespace RepoDb
 
                 return new DbField(identityField.Name,
                     isPrimary,
-                    true,
-                    false,
+isIdentity: true,
+isNullable: false,
                     identityField.Type,
-                    null,
-                    null,
-                    null,
-                    null,
-                    false);
+size: null,
+precision: null,
+scale: null,
+databaseType: null,
+hasDefaultValue: false);
             }
 
             return null;
@@ -1374,9 +1376,11 @@ namespace RepoDb
         /// <param name="dbFields"></param>
         /// <returns></returns>
         private static Field GetPrimaryField(Type type,
-            DbFieldCollection dbFields) =>
-            (type != null && type.IsObjectType() == false ? PrimaryCache.Get(type) : null)?.AsField() ??
+            DbFieldCollection dbFields)
+        {
+            return (type != null && type.IsObjectType() == false ? PrimaryCache.Get(type) : null)?.AsField() ??
                 dbFields?.GetPrimary()?.AsField();
+        }
 
         /// <summary>
         /// 
@@ -1385,9 +1389,11 @@ namespace RepoDb
         /// <param name="dbFields"></param>
         /// <returns></returns>
         private static Field GetIdentityField(Type type,
-            DbFieldCollection dbFields) =>
-            (type != null && type.IsObjectType() == false ? IdentityCache.Get(type) : null)?.AsField() ??
+            DbFieldCollection dbFields)
+        {
+            return (type != null && type.IsObjectType() == false ? IdentityCache.Get(type) : null)?.AsField() ??
                 dbFields?.GetIdentity()?.AsField();
+        }
 
         /// <summary>
         ///
@@ -1396,8 +1402,10 @@ namespace RepoDb
         /// <param name="builder"></param>
         /// <returns></returns>
         private static IStatementBuilder EnsureStatementBuilder(IDbConnection connection,
-            IStatementBuilder builder) =>
-            builder ?? connection.GetStatementBuilder();
+            IStatementBuilder builder)
+        {
+            return builder ?? connection.GetStatementBuilder();
+        }
 
         #endregion
     }

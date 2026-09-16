@@ -23,7 +23,7 @@ namespace RepoDb
     /// </summary>
     public class MemoryCache : ICache
     {
-        private readonly ConcurrentDictionary<string, object> _cache = new();
+        private readonly ConcurrentDictionary<string, object> _cache = new(StringComparer.Ordinal);
 
         #region Sync
 
@@ -38,8 +38,10 @@ namespace RepoDb
         public void Add<T>(string key,
             T value,
             int expiration = Constant.DefaultCacheItemExpirationInMinutes,
-            bool throwException = true) =>
+            bool throwException = true)
+        {
             Add(new CacheItem<T>(key, value, expiration), throwException);
+        }
 
         /// <summary>
         /// Adds a cache item value.
@@ -75,8 +77,10 @@ namespace RepoDb
         /// <summary>
         /// Clears the collection of the cache.
         /// </summary>
-        public void Clear() =>
+        public void Clear()
+        {
             _cache.Clear();
+        }
 
         /// <summary>
         /// Checks whether the key is present in the collection.
@@ -148,8 +152,10 @@ namespace RepoDb
             T value,
             int expiration = Constant.DefaultCacheItemExpirationInMinutes,
             bool throwException = true,
-            CancellationToken cancellationToken = default) =>
-            AddAsync(new CacheItem<T>(key, value, expiration), throwException, cancellationToken);
+            CancellationToken cancellationToken = default)
+        {
+            return AddAsync(new CacheItem<T>(key, value, expiration), throwException, cancellationToken);
+        }
 
         /// <summary>
         /// Adds a cache item value in an asynchronous way.
@@ -183,8 +189,10 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A boolean value that signifies the presence of the key from the collection.</returns>
         public Task<bool> ContainsAsync(string key,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult(Contains(key));
+            CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(Contains(key));
+        }
 
         /// <summary>
         /// Gets an object from the cache collection in an asynchronous way.
@@ -196,8 +204,10 @@ namespace RepoDb
         /// <returns>A cached item object from the cache collection based on the given key.</returns>
         public Task<CacheItem<T>> GetAsync<T>(string key,
             bool throwException = true,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult(Get<T>(key, throwException));
+            CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(Get<T>(key, throwException));
+        }
 
         /// <summary>
         /// Removes the item from the cache collection in an asynchronous way.
@@ -221,18 +231,22 @@ namespace RepoDb
         /// Gets the enumerator of the cache collection.
         /// </summary>
         /// <returns></returns>
-        IEnumerator IEnumerable.GetEnumerator() =>
-            GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
 
         /// <summary>
         /// Gets the enumerator of the cache collection.
         /// </summary>
         /// <returns></returns>
-        public IEnumerator GetEnumerator() =>
-            _cache
+        public IEnumerator GetEnumerator()
+        {
+            return _cache
                 .Where(kvp => (kvp.Value as IExpirable)?.IsExpired() == false)
                 .Select(kvp => kvp.Value)
                 .GetEnumerator();
+        }
 
         #endregion
     }

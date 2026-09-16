@@ -17,7 +17,7 @@ namespace RepoDb
     public static class TypeCache
     {
         private static readonly ConcurrentDictionary<Type, CachedType> cache = new ConcurrentDictionary<Type, CachedType>();
-        private static readonly CachedType nullCachedType = new CachedType(null);
+        private static readonly CachedType nullCachedType = new CachedType(type: null);
 
         /// <summary>
         /// Gets the cached <see cref="CachedType"/> object that is being mapped on a type.

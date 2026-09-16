@@ -31,8 +31,10 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <returns>The cached primary property.</returns>
         public static ClassProperty Get<TEntity>()
-            where TEntity : class =>
-            Get(typeof(TEntity));
+            where TEntity : class
+        {
+            return Get(typeof(TEntity));
+        }
 
         /// <summary>
         /// Gets the cached primary property of the data entity.
@@ -62,16 +64,20 @@ namespace RepoDb
         /// <summary>
         /// Flushes all the existing cached primary <see cref="ClassProperty"/> objects.
         /// </summary>
-        public static void Flush() =>
+        public static void Flush()
+        {
             cache.Clear();
+        }
 
         /// <summary>
         /// Generates a hashcode for caching.
         /// </summary>
         /// <param name="type">The type of the data entity.</param>
         /// <returns>The generated hashcode.</returns>
-        private static int GenerateHashCode(Type type) =>
-            TypeExtension.GenerateHashCode(type);
+        private static int GenerateHashCode(Type type)
+        {
+            return TypeExtension.GenerateHashCode(type);
+        }
 
         #endregion
     }

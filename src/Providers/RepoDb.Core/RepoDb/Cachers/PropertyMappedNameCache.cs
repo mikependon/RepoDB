@@ -38,8 +38,10 @@ namespace RepoDb
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>The cached column name mappings of the property.</returns>
         public static string Get<TEntity>(Expression<Func<TEntity, object>> expression)
-            where TEntity : class =>
-            Get<TEntity>(ExpressionExtension.GetProperty<TEntity>(expression));
+            where TEntity : class
+        {
+            return Get<TEntity>(ExpressionExtension.GetProperty<TEntity>(expression));
+        }
 
         /// <summary>
         /// Gets the cached column name mappings of the property (via property name).
@@ -48,8 +50,10 @@ namespace RepoDb
         /// <param name="propertyName">The name of the property.</param>
         /// <returns>The cached column name mappings of the property.</returns>
         public static string Get<TEntity>(string propertyName)
-            where TEntity : class =>
-            Get<TEntity>(TypeExtension.GetProperty<TEntity>(propertyName));
+            where TEntity : class
+        {
+            return Get<TEntity>(TypeExtension.GetProperty<TEntity>(propertyName));
+        }
 
         /// <summary>
         /// Gets the cached column name mappings of the property (via <see cref="Field"/> object).
@@ -58,8 +62,10 @@ namespace RepoDb
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
         /// <returns>The cached column name mappings of the property.</returns>
         public static string Get<TEntity>(Field field)
-            where TEntity : class =>
-            Get<TEntity>(TypeExtension.GetProperty<TEntity>(field.Name));
+            where TEntity : class
+        {
+            return Get<TEntity>(TypeExtension.GetProperty<TEntity>(field.Name));
+        }
 
         /// <summary>
         /// Gets the cached column name mappings of the property.
@@ -68,16 +74,20 @@ namespace RepoDb
         /// <param name="propertyInfo">The target property.</param>
         /// <returns>The cached column name mappings of the property.</returns>
         internal static string Get<TEntity>(PropertyInfo propertyInfo)
-            where TEntity : class =>
-            Get(typeof(TEntity), propertyInfo);
+            where TEntity : class
+        {
+            return Get(typeof(TEntity), propertyInfo);
+        }
 
         /// <summary>
         /// Gets the cached column name mappings of the property.
         /// </summary>
         /// <param name="propertyInfo">The target property.</param>
         /// <returns>The cached column name mappings of the property.</returns>
-        internal static string Get(PropertyInfo propertyInfo) =>
-            Get(propertyInfo.DeclaringType, propertyInfo);
+        internal static string Get(PropertyInfo propertyInfo)
+        {
+            return Get(propertyInfo.DeclaringType, propertyInfo);
+        }
 
         /// <summary>
         /// Gets the cached column name mappings of the property.
@@ -112,8 +122,10 @@ namespace RepoDb
         /// <summary>
         /// Flushes all the existing cached property mapped names.
         /// </summary>
-        public static void Flush() =>
+        public static void Flush()
+        {
             cache.Clear();
+        }
 
         /// <summary>
         /// Generates a hashcode for caching.
@@ -122,8 +134,10 @@ namespace RepoDb
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
         /// <returns>The generated hashcode.</returns>
         private static int GenerateHashCode(Type entityType,
-            PropertyInfo propertyInfo) =>
-            TypeExtension.GenerateHashCode(entityType, propertyInfo);
+            PropertyInfo propertyInfo)
+        {
+            return TypeExtension.GenerateHashCode(entityType, propertyInfo);
+        }
 
         /// <summary>
         /// Validates the target object presence.
