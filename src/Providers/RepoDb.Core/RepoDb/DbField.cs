@@ -47,7 +47,7 @@ namespace RepoDb
             // Name is required
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new NullReferenceException("Name");
+                throw new ArgumentNullException(nameof(name));
             }
 
             // Set the properties
@@ -133,7 +133,10 @@ namespace RepoDb
         /// Gets the type to map to, including nullable
         /// </summary>
         /// <returns></returns>
-        public Type TypeNullable() => IsNullable && Type.IsValueType ? typeof(System.Nullable<>).MakeGenericType(Type) : Type;
+        public Type TypeNullable()
+        {
+            return IsNullable && Type.IsValueType ? typeof(System.Nullable<>).MakeGenericType(Type) : Type;
+        }
 
         #endregion
 
@@ -143,8 +146,10 @@ namespace RepoDb
         /// Gets the string that represents the instance of this <see cref="DbField"/> object.
         /// </summary>
         /// <returns>The string that represents the instance of this <see cref="DbField"/> object.</returns>
-        public override string ToString() =>
-            string.Concat(Name, ", ", IsPrimary.ToString(), " (", hashCode.ToString(), ")");
+        public override string ToString()
+        {
+            return string.Concat(Name, ", ", IsPrimary.ToString(), " (", hashCode.ToString(), ")");
+        }
 
         #endregion
 
@@ -162,7 +167,7 @@ namespace RepoDb
             }
 
             // Set the hashcode
-            var hashCode = HashCode.Combine(Name, IsPrimary, IsIdentity, IsNullable);
+            hashCode = HashCode.Combine(Name, IsPrimary, IsIdentity, IsNullable);
 
             if (Type != null)
             {
@@ -190,7 +195,7 @@ namespace RepoDb
             }
 
             // Set and return the hashcode
-            return (this.hashCode = hashCode).Value;
+            return hashCode.Value;
         }
 
         /// <summary>
@@ -240,8 +245,7 @@ namespace RepoDb
         /// <param name="objB">The second <see cref="DbField"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
         public static bool operator !=(DbField objA,
-            DbField objB) =>
-            (objA == objB) == false;
+            DbField objB) => !(objA == objB);
 
         #endregion
     }

@@ -45,16 +45,20 @@ namespace RepoDb
         /// </summary>
         /// <param name="value">The value to be checked for <see cref="DBNull.Value"/>.</param>
         /// <returns>The converted value.</returns>
-        public static object NullToDbNull(object value) =>
-            value is null ? DBNull.Value : value;
+        public static object NullToDbNull(object value)
+        {
+            return value is null ? DBNull.Value : value;
+        }
 
         /// <summary>
         /// Converts the value into null if the value is equals to <see cref="DBNull.Value"/>.
         /// </summary>
         /// <param name="value">The value to be checked for <see cref="DBNull.Value"/>.</param>
         /// <returns>The converted value.</returns>
-        public static object DbNullToNull(object value) =>
-            ReferenceEquals(DBNull.Value, value) ? null : value;
+        public static object DbNullToNull(object value)
+        {
+            return ReferenceEquals(DBNull.Value, value) ? null : value;
+        }
 
         /// <summary>
         /// Converts a value to a target type if the value is equals to null or <see cref="DBNull.Value"/>.
@@ -62,8 +66,10 @@ namespace RepoDb
         /// <typeparam name="T">The target type.</typeparam>
         /// <param name="value">The value to be converted.</param>
         /// <returns>The converted value.</returns>
-        public static T ToType<T>(object value) =>
-            ToType<T>(value, false);
+        public static T ToType<T>(object value)
+        {
+            return ToType<T>(value, forceAutomatic: false);
+        }
 
         /// <summary>
         /// Converts a value to a target type if the value is equals to null or <see cref="DBNull.Value"/>.
@@ -95,7 +101,7 @@ namespace RepoDb
             try
             {
                 value = (typeof(T).Equals(StaticType.Guid) && value is string) ?
-                    (T)StringToGuidAsObject(value) : (T)Convert.ChangeType(value, typeof(T));
+                    (T)StringToGuidAsObject(value) : (T)Convert.ChangeType(value, typeof(T), System.Globalization.CultureInfo.InvariantCulture);
                 if (value == DBNull.Value)
                 {
                     throw new Exception("Failed to convert the 'DBNull' value.");

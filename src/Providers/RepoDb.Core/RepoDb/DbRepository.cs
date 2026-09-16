@@ -292,33 +292,33 @@ namespace RepoDb
         /// <returns>An instance of the <see cref="DbConnection"/> object.</returns>
         public virtual TDbConnection CreateConnection(bool force)
         {
-            var connection = (TDbConnection)null;
+            var newConnection = (TDbConnection)null;
             if (force == false && ConnectionPersistency == ConnectionPersistency.Instance)
             {
                 lock (syncLock)
                 {
                     if (this.connection == null)
                     {
-                        connection = new TDbConnection
+                        newConnection = new TDbConnection
                         {
                             ConnectionString = ConnectionString
                         };
-                        this.connection = connection;
+                        this.connection = newConnection;
                     }
                     else
                     {
-                        connection = this.connection;
+                        newConnection = this.connection;
                     }
                 }
             }
             else
             {
-                connection = new TDbConnection
+                newConnection = new TDbConnection
                 {
                     ConnectionString = ConnectionString
                 };
             }
-            return connection;
+            return newConnection;
         }
 
         /// <summary>
@@ -381,12 +381,12 @@ namespace RepoDb
             IDbTransaction transaction = null)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.ExecuteQuery(commandText: commandText,
+                return dbConnection.ExecuteQuery(commandText: commandText,
                     param: param,
                     commandType: commandType,
                     cacheKey: cacheKey,
@@ -398,7 +398,7 @@ namespace RepoDb
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -434,12 +434,12 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.ExecuteQueryAsync(commandText: commandText,
+                return await dbConnection.ExecuteQueryAsync(commandText: commandText,
                     param: param,
                     commandType: commandType,
                     cacheKey: cacheKey,
@@ -447,12 +447,12 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cache: Cache,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -488,12 +488,12 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.ExecuteQuery<TEntity>(commandText: commandText,
+                return dbConnection.ExecuteQuery<TEntity>(commandText: commandText,
                     param: param,
                     commandType: commandType,
                     cacheKey: cacheKey,
@@ -505,7 +505,7 @@ namespace RepoDb
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -543,12 +543,12 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.ExecuteQueryAsync<TEntity>(commandText: commandText,
+                return await dbConnection.ExecuteQueryAsync<TEntity>(commandText: commandText,
                     param: param,
                     commandType: commandType,
                     cacheKey: cacheKey,
@@ -556,12 +556,12 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cache: Cache,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -587,12 +587,12 @@ namespace RepoDb
             IDbTransaction transaction = null)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.ExecuteNonQuery(commandText: commandText,
+                return dbConnection.ExecuteNonQuery(commandText: commandText,
                     param: param,
                     commandType: commandType,
                     commandTimeout: CommandTimeout,
@@ -601,7 +601,7 @@ namespace RepoDb
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -629,22 +629,22 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.ExecuteNonQueryAsync(commandText: commandText,
+                return await dbConnection.ExecuteNonQueryAsync(commandText: commandText,
                     param: param,
                     commandType: commandType,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -675,12 +675,12 @@ namespace RepoDb
             IDbTransaction transaction = null)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.ExecuteScalar(commandText: commandText,
+                return dbConnection.ExecuteScalar(commandText: commandText,
                     param: param,
                     commandType: commandType,
                     cacheKey: cacheKey,
@@ -692,7 +692,7 @@ namespace RepoDb
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -725,12 +725,12 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.ExecuteScalarAsync(commandText: commandText,
+                return await dbConnection.ExecuteScalarAsync(commandText: commandText,
                     param: param,
                     commandType: commandType,
                     commandTimeout: CommandTimeout,
@@ -738,12 +738,12 @@ namespace RepoDb
                     cacheItemExpiration: CacheItemExpiration,
                     transaction: transaction,
                     cache: Cache,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -775,12 +775,12 @@ namespace RepoDb
             IDbTransaction transaction = null)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.ExecuteScalar<TResult>(commandText: commandText,
+                return dbConnection.ExecuteScalar<TResult>(commandText: commandText,
                     param: param,
                     commandType: commandType,
                     cacheKey: cacheKey,
@@ -792,7 +792,7 @@ namespace RepoDb
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -826,12 +826,12 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.ExecuteScalarAsync<TResult>(commandText: commandText,
+                return await dbConnection.ExecuteScalarAsync<TResult>(commandText: commandText,
                     param: param,
                     commandType: commandType,
                     cacheKey: cacheKey,
@@ -839,12 +839,12 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cache: Cache,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -876,7 +876,7 @@ namespace RepoDb
             IDbTransaction transaction = null)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
             var isDisposeConnection = (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall);
 
             /*
@@ -885,7 +885,7 @@ namespace RepoDb
              */
 
             // Call the method
-            return connection.ExecuteQueryMultipleInternal(commandText: commandText,
+            return dbConnection.ExecuteQueryMultipleInternal(commandText: commandText,
                 param: param,
                 commandType: commandType,
                 cacheKey: cacheKey,
@@ -926,7 +926,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
             var isDisposeConnection = (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall);
 
             /*
@@ -935,7 +935,7 @@ namespace RepoDb
              */
 
             // Call the method
-            return connection.ExecuteQueryMultipleAsyncInternal(commandText: commandText,
+            return dbConnection.ExecuteQueryMultipleAsyncInternal(commandText: commandText,
                 param: param,
                 commandType: commandType,
                 cacheKey: cacheKey,

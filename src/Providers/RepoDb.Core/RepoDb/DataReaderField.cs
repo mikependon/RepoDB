@@ -39,7 +39,9 @@ namespace RepoDb
         /// Returns a string that represents the current object.
         /// </summary>
         /// <returns>The name of the field and the type.</returns>
-        public override string ToString() =>
-            string.Concat(Name, " (", Type?.FullName, ")");
+        public override string ToString()
+        {
+            return string.Concat(Name, " (", Type?.FullName, ")");
+        }
     }
 }
