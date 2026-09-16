@@ -28,8 +28,10 @@ namespace RepoDb
         /// <summary>
         /// Flushes all the existing cached enumerable of <see cref="DbField"/> objects.
         /// </summary>
-        public static void Flush() =>
+        public static void Flush()
+        {
             cache.Clear();
+        }
 
         /// <summary>
         /// Throws an exception of any of the validation needed is failing.
@@ -60,8 +62,10 @@ namespace RepoDb
         /// <returns>The cached field definitions of the entity.</returns>
         public static DbFieldCollection Get(IDbConnection connection,
             string tableName,
-            IDbTransaction transaction) =>
-            Get(connection, tableName, transaction, true);
+            IDbTransaction transaction)
+        {
+            return Get(connection, tableName, transaction, enableValidation: true);
+        }
 
         /// <summary>
         /// Gets the cached list of <see cref="DbField"/> objects of the table based on the data entity mapped name.
@@ -74,8 +78,10 @@ namespace RepoDb
         public static DbFieldCollection Get(IDbConnection connection,
             string tableName,
             IDbTransaction transaction,
-            bool enableValidation) =>
-            GetInternal(connection, tableName, transaction, enableValidation);
+            bool enableValidation)
+        {
+            return GetInternal(connection, tableName, transaction, enableValidation);
+        }
 
         /// <summary>
         /// Gets the cached field definitions of the entity.
@@ -98,13 +104,13 @@ namespace RepoDb
             // Note: For SqlConnection, the ConnectionString is changing if the (Integrated Security=False). Actually for this isolation, the database name is enough.
             if (!string.IsNullOrWhiteSpace(connection.Database))
             {
-                key = HashCode.Combine(key, connection.Database.GetHashCode());
+                key = HashCode.Combine(key, StringComparer.Ordinal.GetHashCode(connection.Database));
             }
 
             // Add the hashcode of the table name
             if (string.IsNullOrWhiteSpace(tableName) == false)
             {
-                key = HashCode.Combine(key, tableName.GetHashCode());
+                key = HashCode.Combine(key, StringComparer.Ordinal.GetHashCode(tableName));
             }
 
             // Try get the value
@@ -144,8 +150,10 @@ namespace RepoDb
         public static Task<DbFieldCollection> GetAsync(IDbConnection connection,
             string tableName,
             IDbTransaction transaction,
-            CancellationToken cancellationToken = default) =>
-            GetAsync(connection, tableName, transaction, true, cancellationToken);
+            CancellationToken cancellationToken = default)
+        {
+            return GetAsync(connection, tableName, transaction, enableValidation: true, cancellationToken);
+        }
 
         /// <summary>
         /// Gets the cached list of <see cref="DbField"/> objects of the table based on the data entity mapped name in an asynchronous way.
@@ -160,8 +168,10 @@ namespace RepoDb
             string tableName,
             IDbTransaction transaction,
             bool enableValidation,
-            CancellationToken cancellationToken = default) =>
-            GetAsyncInternal(connection, tableName, transaction, enableValidation, cancellationToken);
+            CancellationToken cancellationToken = default)
+        {
+            return GetAsyncInternal(connection, tableName, transaction, enableValidation, cancellationToken);
+        }
 
         /// <summary>
         /// Gets the cached field definitions of the entity in an asynchronous way.
@@ -186,13 +196,13 @@ namespace RepoDb
             // Note: For SqlConnection, the ConnectionString is changing if the (Integrated Security=False). Actually for this isolation, the database name is enough.
             if (!string.IsNullOrWhiteSpace(connection.Database))
             {
-                key = HashCode.Combine(key, connection.Database.GetHashCode());
+                key = HashCode.Combine(key, StringComparer.Ordinal.GetHashCode(connection.Database));
             }
 
             // Add the hashcode of the table name
             if (string.IsNullOrWhiteSpace(tableName) == false)
             {
-                key = HashCode.Combine(key, tableName.GetHashCode());
+                key = HashCode.Combine(key, StringComparer.Ordinal.GetHashCode(tableName));
             }
 
             // Try get the value
@@ -201,7 +211,7 @@ namespace RepoDb
                 // Get from DB
                 var dbFields = await connection
                     .GetDbHelper()
-                    .GetFieldsAsync(connection, tableName, transaction, cancellationToken);
+                    .GetFieldsAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
                 result = new DbFieldCollection(dbFields, connection.GetDbSetting());
 
                 // Validate

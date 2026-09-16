@@ -33,8 +33,10 @@ namespace RepoDb
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
         public static ClassProperty Get<TEntity>(Expression<Func<TEntity, object>> expression)
-            where TEntity : class =>
-            Get(typeof(TEntity), ExpressionExtension.GetProperty<TEntity>(expression), false);
+            where TEntity : class
+        {
+            return Get(typeof(TEntity), ExpressionExtension.GetProperty<TEntity>(expression), includeMappings: false);
+        }
 
         /// <summary>
         /// Gets the cached <see cref="ClassProperty"/> object of the data entity (via property name).
@@ -45,8 +47,10 @@ namespace RepoDb
         /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
         public static ClassProperty Get<TEntity>(string propertyName,
             bool includeMappings = false)
-            where TEntity : class =>
-            Get(typeof(TEntity), propertyName, includeMappings);
+            where TEntity : class
+        {
+            return Get(typeof(TEntity), propertyName, includeMappings);
+        }
 
         /// <summary>
         /// Gets the cached <see cref="ClassProperty"/> object of the data entity (via property name).
@@ -78,8 +82,10 @@ namespace RepoDb
         /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
         public static ClassProperty Get<TEntity>(Field field,
             bool includeMappings = false)
-            where TEntity : class =>
-            Get(typeof(TEntity), field, includeMappings);
+            where TEntity : class
+        {
+            return Get(typeof(TEntity), field, includeMappings);
+        }
 
         /// <summary>
         /// Gets the cached <see cref="ClassProperty"/> object of the data entity (via <see cref="Field"/> object).
@@ -123,8 +129,10 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <returns>The cached list <see cref="ClassProperty"/> objects.</returns>
         public static IEnumerable<ClassProperty> Get<TEntity>()
-            where TEntity : class =>
-            Get(typeof(TEntity));
+            where TEntity : class
+        {
+            return Get(typeof(TEntity));
+        }
 
         /// <summary>
         /// Gets the cached list of <see cref="ClassProperty"/> objects of the data entity.
@@ -159,16 +167,20 @@ namespace RepoDb
         /// <summary>
         /// Flushes all the existing cached enumerable of <see cref="ClassProperty"/> objects.
         /// </summary>
-        public static void Flush() =>
+        public static void Flush()
+        {
             cache.Clear();
+        }
 
         /// <summary>
         /// Generates a hashcode for caching.
         /// </summary>
         /// <param name="type">The type of the data entity.</param>
         /// <returns>The generated hashcode.</returns>
-        private static int GenerateHashCode(Type type) =>
-            TypeExtension.GenerateHashCode(type);
+        private static int GenerateHashCode(Type type)
+        {
+            return TypeExtension.GenerateHashCode(type);
+        }
 
         /// <summary>
         /// Validates the target object presence.

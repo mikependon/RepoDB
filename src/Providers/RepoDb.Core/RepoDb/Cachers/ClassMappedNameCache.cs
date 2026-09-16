@@ -30,8 +30,10 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="T">The type of the target type.</typeparam>
         /// <returns>The cached mapped name of the data entity.</returns>
-        public static string Get<T>() =>
-            Get(typeof(T));
+        public static string Get<T>()
+        {
+            return Get(typeof(T));
+        }
 
         /// <summary>
         /// Gets the cached database object name of the data entity type.
@@ -64,16 +66,20 @@ namespace RepoDb
         /// <summary>
         /// Flushes all the existing cached class mapped names.
         /// </summary>
-        public static void Flush() =>
+        public static void Flush()
+        {
             cache.Clear();
+        }
 
         /// <summary>
         /// Generates a hashcode for caching.
         /// </summary>
         /// <param name="type">The type of the data entity.</param>
         /// <returns>The generated hashcode.</returns>
-        private static int GenerateHashCode(Type type) =>
-            TypeExtension.GenerateHashCode(type);
+        private static int GenerateHashCode(Type type)
+        {
+            return TypeExtension.GenerateHashCode(type);
+        }
 
         /// <summary>
         /// Validates the target object presence.

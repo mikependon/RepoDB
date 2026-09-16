@@ -40,8 +40,10 @@ namespace RepoDb
         /// <typeparam name="TType">The .NET CLR type.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
         /// <returns>The mapped <see cref="IPropertyHandler{TInput, TResult}"/> object of the .NET CLR type.</returns>
-        public static TPropertyHandler Get<TType, TPropertyHandler>() =>
-            Get<TPropertyHandler>(typeof(TType));
+        public static TPropertyHandler Get<TType, TPropertyHandler>()
+        {
+            return Get<TPropertyHandler>(typeof(TType));
+        }
 
         /// <summary>
         /// Type Level: Gets the cached <see cref="IPropertyHandler{TInput, TResult}"/> object that is being mapped to a specific .NET CLR type.
@@ -87,8 +89,10 @@ namespace RepoDb
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>The mapped <see cref="IPropertyHandler{TInput, TResult}"/> object of the property.</returns>
         public static TPropertyHandler Get<TEntity, TPropertyHandler>(Expression<Func<TEntity, object>> expression)
-            where TEntity : class =>
-            Get<TEntity, TPropertyHandler>(ExpressionExtension.GetProperty<TEntity>(expression));
+            where TEntity : class
+        {
+            return Get<TEntity, TPropertyHandler>(ExpressionExtension.GetProperty<TEntity>(expression));
+        }
 
         /// <summary>
         /// Property Level: Gets the cached <see cref="IPropertyHandler{TInput, TResult}"/> object that is being mapped on a specific class property (via property name).
@@ -98,8 +102,10 @@ namespace RepoDb
         /// <param name="propertyName">The name of the property.</param>
         /// <returns>The mapped <see cref="IPropertyHandler{TInput, TResult}"/> object of the property.</returns>
         public static TPropertyHandler Get<TEntity, TPropertyHandler>(string propertyName)
-            where TEntity : class =>
-            Get<TEntity, TPropertyHandler>(TypeExtension.GetProperty<TEntity>(propertyName));
+            where TEntity : class
+        {
+            return Get<TEntity, TPropertyHandler>(TypeExtension.GetProperty<TEntity>(propertyName));
+        }
 
         /// <summary>
         /// Property Level: Gets the cached <see cref="IPropertyHandler{TInput, TResult}"/> object that is being mapped on a specific class property (via <see cref="Field"/> object).
@@ -109,8 +115,10 @@ namespace RepoDb
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
         /// <returns>The mapped <see cref="IPropertyHandler{TInput, TResult}"/> object of the property.</returns>
         public static TPropertyHandler Get<TEntity, TPropertyHandler>(Field field)
-            where TEntity : class =>
-            Get<TEntity, TPropertyHandler>(TypeExtension.GetProperty<TEntity>(field.Name));
+            where TEntity : class
+        {
+            return Get<TEntity, TPropertyHandler>(TypeExtension.GetProperty<TEntity>(field.Name));
+        }
 
 
         /// <summary>
@@ -121,8 +129,10 @@ namespace RepoDb
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
         /// <returns>The mapped <see cref="IPropertyHandler{TInput, TResult}"/> object of the property.</returns>
         internal static TPropertyHandler Get<TEntity, TPropertyHandler>(PropertyInfo propertyInfo)
-            where TEntity : class =>
-            Get<TPropertyHandler>(typeof(TEntity), propertyInfo);
+            where TEntity : class
+        {
+            return Get<TPropertyHandler>(typeof(TEntity), propertyInfo);
+        }
 
         /// <summary>
         /// Property Level: Gets the cached <see cref="IPropertyHandler{TInput, TResult}"/> object that is being mapped on a specific <see cref="PropertyInfo"/> object.
@@ -167,16 +177,20 @@ namespace RepoDb
         /// <summary>
         /// Flushes all the existing cached <see cref="IPropertyHandler{TInput, TResult}"/> objects.
         /// </summary>
-        public static void Flush() =>
+        public static void Flush()
+        {
             cache.Clear();
+        }
 
         /// <summary>
         /// Generates a hashcode for caching.
         /// </summary>
         /// <param name="type">The type of the data entity.</param>
         /// <returns>The generated hashcode.</returns>
-        private static int GenerateHashCode(Type type) =>
-            TypeExtension.GenerateHashCode(type);
+        private static int GenerateHashCode(Type type)
+        {
+            return TypeExtension.GenerateHashCode(type);
+        }
 
         /// <summary>
         /// Generates a hashcode for caching.
@@ -185,8 +199,10 @@ namespace RepoDb
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
         /// <returns>The generated hashcode.</returns>
         private static int GenerateHashCode(Type entityType,
-            PropertyInfo propertyInfo) =>
-            TypeExtension.GenerateHashCode(entityType, propertyInfo);
+            PropertyInfo propertyInfo)
+        {
+            return TypeExtension.GenerateHashCode(entityType, propertyInfo);
+        }
 
         /// <summary>
         /// Validates the target object presence.
