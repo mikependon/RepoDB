@@ -58,12 +58,14 @@ namespace RepoDb.Telemetry.Core
             _apiKey = apiKey;
             _errorCallback = errorCallback;
             _logger = logger;
+#pragma warning disable MA0039 // Do not write your own certificate validation method
             _httpClient = certificateValidationCallback == null
                 ? _defaultHttpClient
                 : new HttpClient(new HttpClientHandler
                 {
                     ServerCertificateCustomValidationCallback = certificateValidationCallback
                 });
+#pragma warning restore MA0039 // Do not write your own certificate validation method
         }
 
         #endregion
