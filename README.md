@@ -1,5 +1,7 @@
 <div align="center">
-    <image src="logo.png" style="width:256px;" />
+    <a href="https://repodb.net">
+        <image src="logo.png" style="width:256px;" />
+    </a>
     <br/>
     <span style="font-size:16px;font-weight:bold;">A production-ready data access platform for .NET applications.</span>
 </div>
