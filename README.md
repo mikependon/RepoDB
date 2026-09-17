@@ -71,11 +71,12 @@ Fluent operations (Query, Insert, Merge, Delete, Update, and [more](http://repod
 
 While raw SQL execution methods work with **any** ADO.NET-compatible provider:
 
-- [ExecuteQuery](http://repodb.net/operation/executequery)
 - [ExecuteNonQuery](http://repodb.net/operation/executenonquery)
-- [ExecuteScalar](http://repodb.net/operation/executescalar)
-- [ExecuteReader](http://repodb.net/operation/executereader)
+- [ExecuteQuery](http://repodb.net/operation/executequery)
+- [ExecuteQueryFirst](http://repodb.net/operation/executequeryfirst)
 - [ExecuteQueryMultiple](http://repodb.net/operation/executequerymultiple)
+- [ExecuteReader](http://repodb.net/operation/executereader)
+- [ExecuteScalar](http://repodb.net/operation/executescalar)
 
 Explore individual features in the [documentation](http://repodb.net/docs).
 
@@ -112,7 +113,7 @@ Every supported database has a dedicated bulk-operations add-on (`BulkInsert`, `
 | [MySQL Connector](https://www.nuget.org/packages/RepoDb.MySqlConnector.BulkOperations) | ✅ | ✅ | [MySqlConnectorBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.MySqlConnector.BulkOperations/RepoDb.MySqlConnector.BulkOperations/Base/WriteToServer.cs) Native |
 | [Oracle](https://www.nuget.org/packages/RepoDb.Oracle.BulkOperations) | ✅ | ✅ | [OracleBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.Oracle.BulkOperations/RepoDb.Oracle.BulkOperations/Base/WriteToServer.cs) Native / [OracleBulkArrayBinder](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.Oracle.BulkOperations/RepoDb.Oracle.BulkOperations/OracleBulkArrayBinder.cs) (Async Native) |
 | [PostgreSQL](https://www.nuget.org/packages/RepoDb.PostgreSql.BulkOperations) | ✅ | ✅ | [NpgsqlBinaryImporter](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.PostgreSql.BulkOperations/RepoDb.PostgreSql.BulkOperations/Base/BinaryImport.cs) Native |
-| [SAP HANA](https://www.nuget.org/packages/RepoDb.SapHana.BulkOperations) | ✅ | ⚠️ | [HanaBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.SapHana.BulkOperations/RepoDb.SapHana.BulkOperations/Base/WriteToServer.cs) Native (Sync) / `AsyncOverAsync` or [SapHanaCommandBatcher](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.SapHana.BulkOperations/RepoDb.SapHana.BulkOperations/SapHanaCommandBatcher.cs) |
+| [SAP HANA](https://www.nuget.org/packages/RepoDb.SapHana.BulkOperations) | ✅ | ⚠️ | [HanaBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.SapHana.BulkOperations/RepoDb.SapHana.BulkOperations/Base/WriteToServer.cs) Native (Sync) / `AsyncOverSync` or [SapHanaCommandBatcher](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.SapHana.BulkOperations/RepoDb.SapHana.BulkOperations/SapHanaCommandBatcher.cs) |
 | [SQL Server](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations) | ✅ | ✅ | [SqlBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.SqlServer.BulkOperations/RepoDb.SqlServer.BulkOperations/Base/WriteToServer.cs) Native |
 | [Vertica](https://www.nuget.org/packages/RepoDb.Vertica.BulkOperations) | ✅ | ⚠️ | [VerticaBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.Vertica.BulkOperations/RepoDb.Vertica.BulkOperations/VerticaBulkCopy.cs) (via [VerticaCopyStream](https://www.nuget.org/packages/Vertica.Data)) / `Async` over `Sync` |
 
