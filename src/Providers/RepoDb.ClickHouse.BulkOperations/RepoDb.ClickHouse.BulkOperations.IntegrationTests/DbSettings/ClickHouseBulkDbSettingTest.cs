@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ClickHouse.Driver.ADO;
 using RepoDb.DbSettings;
@@ -63,7 +64,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.DbSettings
             var setting = DbSettingMapper.Get<ClickHouseConnection>();
 
             // Assert
-            Assert.AreEqual("`", setting.ClosingQuote);
+            Assert.AreEqual("`", setting.ClosingQuote, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -153,7 +154,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.DbSettings
             var setting = DbSettingMapper.Get<ClickHouseConnection>();
 
             // Assert
-            Assert.AreEqual(";", setting.MultiStatementSeparator);
+            Assert.AreEqual(";", setting.MultiStatementSeparator, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -163,7 +164,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.DbSettings
             var setting = DbSettingMapper.Get<ClickHouseConnection>();
 
             // Assert
-            Assert.AreEqual("`", setting.OpeningQuote);
+            Assert.AreEqual("`", setting.OpeningQuote, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -173,7 +174,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.DbSettings
             var setting = DbSettingMapper.Get<ClickHouseConnection>();
 
             // Assert
-            Assert.AreEqual(string.Empty, setting.ParameterPrefix);
+            Assert.AreEqual(string.Empty, setting.ParameterPrefix, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -183,7 +184,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.DbSettings
             var setting = DbSettingMapper.Get<ClickHouseConnection>();
 
             // Assert
-            Assert.AreEqual("@", setting.SqlTextParameterPrefix);
+            Assert.AreEqual("@", setting.SqlTextParameterPrefix, StringComparer.Ordinal);
         }
 
         [TestMethod]

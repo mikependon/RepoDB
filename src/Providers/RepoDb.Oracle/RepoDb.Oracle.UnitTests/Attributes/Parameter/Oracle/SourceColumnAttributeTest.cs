@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Oracle.ManagedDataAccess.Client;
 using RepoDb.Attributes.Parameter.Oracle;
@@ -51,7 +52,7 @@ namespace RepoDb.Oracle.UnitTests.Attributes.Parameter.Oracle
 
             // Assert
             var parameter = (OracleParameter)command.Parameters[":ColumnName"];
-            Assert.AreEqual("MappedColumnName", parameter.SourceColumn);
+            Assert.AreEqual("MappedColumnName", parameter.SourceColumn, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -73,7 +74,7 @@ namespace RepoDb.Oracle.UnitTests.Attributes.Parameter.Oracle
 
             // Assert
             var parameter = (OracleParameter)command.Parameters[":ColumnName"];
-            Assert.AreEqual("MappedColumnName", parameter.SourceColumn);
+            Assert.AreEqual("MappedColumnName", parameter.SourceColumn, StringComparer.Ordinal);
         }
     }
 }

@@ -61,9 +61,9 @@ namespace RepoDb.IntegrationTests.Types.Bytes
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnBinary.Take(entity.ColumnBinary.Length).ToArray()));
-                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnImage));
-                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnVarBinary));
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnBinary.Take(entity.ColumnBinary.Length).ToArray()), StringComparer.Ordinal);
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnImage), StringComparer.Ordinal);
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnVarBinary), StringComparer.Ordinal);
                 Assert.AreEqual(entity.ColumnTinyInt, data.ColumnTinyInt);
             }
         }
@@ -123,9 +123,9 @@ namespace RepoDb.IntegrationTests.Types.Bytes
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnBinaryMapped.Take(entity.ColumnBinaryMapped.Length).ToArray()));
-                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnImageMapped));
-                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnVarBinaryMapped));
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnBinaryMapped.Take(entity.ColumnBinaryMapped.Length).ToArray()), StringComparer.Ordinal);
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnImageMapped), StringComparer.Ordinal);
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnVarBinaryMapped), StringComparer.Ordinal);
                 Assert.AreEqual(entity.ColumnTinyIntMapped, data.ColumnTinyIntMapped);
             }
         }
@@ -187,9 +187,9 @@ namespace RepoDb.IntegrationTests.Types.Bytes
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnBinary.Take(entity.ColumnBinary.Length).ToArray()));
-                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnImage));
-                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnVarBinary));
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnBinary.Take(entity.ColumnBinary.Length).ToArray()), StringComparer.Ordinal);
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnImage), StringComparer.Ordinal);
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnVarBinary), StringComparer.Ordinal);
                 Assert.AreEqual(entity.ColumnTinyInt, data.ColumnTinyInt);
             }
         }
@@ -253,9 +253,9 @@ namespace RepoDb.IntegrationTests.Types.Bytes
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnBinaryMapped.Take(entity.ColumnBinaryMapped.Length).ToArray()));
-                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnImageMapped));
-                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnVarBinaryMapped));
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnBinaryMapped.Take(entity.ColumnBinaryMapped.Length).ToArray()), StringComparer.Ordinal);
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnImageMapped), StringComparer.Ordinal);
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnVarBinaryMapped), StringComparer.Ordinal);
                 Assert.AreEqual(entity.ColumnTinyIntMapped, data.ColumnTinyIntMapped);
             }
         }
@@ -321,7 +321,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.AreEqual(text, Encoding.UTF8.GetString(((byte[])data.ColumnBinary).Take(entity.ColumnBinary.Length).ToArray()));
+                Assert.AreEqual(text, Encoding.UTF8.GetString(((byte[])data.ColumnBinary).Take(entity.ColumnBinary.Length).ToArray()), StringComparer.Ordinal);
                 Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnImage));
                 Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnVarBinary));
                 Assert.AreEqual(entity.ColumnTinyInt, data.ColumnTinyInt);
@@ -353,7 +353,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.AreEqual(text, Encoding.UTF8.GetString(((byte[])data.ColumnBinary).Take(entity.ColumnBinary.Length).ToArray()));
+                Assert.AreEqual(text, Encoding.UTF8.GetString(((byte[])data.ColumnBinary).Take(entity.ColumnBinary.Length).ToArray()), StringComparer.Ordinal);
                 Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnImage));
                 Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnVarBinary));
                 Assert.AreEqual(entity.ColumnTinyInt, data.ColumnTinyInt);
@@ -447,7 +447,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.AreEqual(text, Encoding.UTF8.GetString(((byte[])data.ColumnBinary).Take(entity.ColumnBinary.Length).ToArray()));
+                Assert.AreEqual(text, Encoding.UTF8.GetString(((byte[])data.ColumnBinary).Take(entity.ColumnBinary.Length).ToArray()), StringComparer.Ordinal);
                 Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnImage));
                 Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnVarBinary));
                 Assert.AreEqual(entity.ColumnTinyInt, data.ColumnTinyInt);
@@ -480,7 +480,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.AreEqual(text, Encoding.UTF8.GetString(((byte[])data.ColumnBinary).Take(entity.ColumnBinary.Length).ToArray()));
+                Assert.AreEqual(text, Encoding.UTF8.GetString(((byte[])data.ColumnBinary).Take(entity.ColumnBinary.Length).ToArray()), StringComparer.Ordinal);
                 Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnImage));
                 Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnVarBinary));
                 Assert.AreEqual(entity.ColumnTinyInt, data.ColumnTinyInt);

@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Oracle.ManagedDataAccess.Client;
 using RepoDb.Enumerations;
@@ -1196,7 +1197,7 @@ namespace RepoDb.Oracle.IntegrationTests
                 var queryResult = connection.Query<CompleteTable>(entity.Id);
 
                 // Assert
-                Assert.AreEqual("Updated", queryResult.First().ColumnVarchar);
+                Assert.AreEqual("Updated", queryResult.First().ColumnVarchar, StringComparer.Ordinal);
             }
         }
 
@@ -1228,7 +1229,7 @@ namespace RepoDb.Oracle.IntegrationTests
                 var queryResult = connection.Query<CompleteTable>(entity.Id);
 
                 // Assert
-                Assert.AreEqual(originalColumnVarchar, queryResult.First().ColumnVarchar);
+                Assert.AreEqual(originalColumnVarchar, queryResult.First().ColumnVarchar, StringComparer.Ordinal);
             }
         }
 
@@ -1263,7 +1264,7 @@ namespace RepoDb.Oracle.IntegrationTests
                 var queryResult = connection.Query<CompleteTable>(entity.Id);
 
                 // Assert
-                Assert.AreEqual("Updated", queryResult.First().ColumnVarchar);
+                Assert.AreEqual("Updated", queryResult.First().ColumnVarchar, StringComparer.Ordinal);
             }
         }
 
@@ -1295,7 +1296,7 @@ namespace RepoDb.Oracle.IntegrationTests
                 var queryResult = connection.Query<CompleteTable>(entity.Id);
 
                 // Assert
-                Assert.AreEqual(originalColumnVarchar, queryResult.First().ColumnVarchar);
+                Assert.AreEqual(originalColumnVarchar, queryResult.First().ColumnVarchar, StringComparer.Ordinal);
             }
         }
 
@@ -1334,7 +1335,7 @@ namespace RepoDb.Oracle.IntegrationTests
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Assert.AreEqual("Updated", queryResult.First(item => item.Id == entity.Id).ColumnVarchar));
+                entities.ForEach(entity => Assert.AreEqual("Updated", queryResult.First(item => item.Id == entity.Id).ColumnVarchar, StringComparer.Ordinal));
             }
         }
 
@@ -1366,7 +1367,7 @@ namespace RepoDb.Oracle.IntegrationTests
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Assert.AreEqual(originalValues[entity.Id], queryResult.First(item => item.Id == entity.Id).ColumnVarchar));
+                entities.ForEach(entity => Assert.AreEqual(originalValues[entity.Id], queryResult.First(item => item.Id == entity.Id).ColumnVarchar, StringComparer.Ordinal));
             }
         }
 
@@ -1401,7 +1402,7 @@ namespace RepoDb.Oracle.IntegrationTests
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Assert.AreEqual("Updated", queryResult.First(item => item.Id == entity.Id).ColumnVarchar));
+                entities.ForEach(entity => Assert.AreEqual("Updated", queryResult.First(item => item.Id == entity.Id).ColumnVarchar, StringComparer.Ordinal));
             }
         }
 
@@ -1433,7 +1434,7 @@ namespace RepoDb.Oracle.IntegrationTests
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Assert.AreEqual(originalValues[entity.Id], queryResult.First(item => item.Id == entity.Id).ColumnVarchar));
+                entities.ForEach(entity => Assert.AreEqual(originalValues[entity.Id], queryResult.First(item => item.Id == entity.Id).ColumnVarchar, StringComparer.Ordinal));
             }
         }
 
@@ -1574,7 +1575,7 @@ namespace RepoDb.Oracle.IntegrationTests
                     var queryResult = connection.QueryAll<CompleteTable>();
 
                     // Assert
-                    entities.ForEach(entity => Assert.AreEqual("Updated", queryResult.First(item => item.Id == entity.Id).ColumnVarchar));
+                    entities.ForEach(entity => Assert.AreEqual("Updated", queryResult.First(item => item.Id == entity.Id).ColumnVarchar, StringComparer.Ordinal));
                 }
 
                 // Complete
@@ -1605,7 +1606,7 @@ namespace RepoDb.Oracle.IntegrationTests
                     var queryResult = connection.QueryAll<CompleteTable>();
 
                     // Assert
-                    entities.ForEach(entity => Assert.AreEqual("Updated", queryResult.First(item => item.Id == entity.Id).ColumnVarchar));
+                    entities.ForEach(entity => Assert.AreEqual("Updated", queryResult.First(item => item.Id == entity.Id).ColumnVarchar, StringComparer.Ordinal));
                 }
 
                 // Complete

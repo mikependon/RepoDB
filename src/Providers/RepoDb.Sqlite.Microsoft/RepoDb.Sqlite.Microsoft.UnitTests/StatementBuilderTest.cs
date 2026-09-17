@@ -43,7 +43,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var expected = "SELECT [Id], [Name] FROM [Table] ORDER BY [Id] ASC LIMIT 10 ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -61,7 +61,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var expected = "SELECT [Id], [Name] FROM [Table] ORDER BY [Id] ASC LIMIT 30, 10 ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -157,7 +157,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var expected = "SELECT 1 AS [ExistsValue] FROM [Table] WHERE ([Id] = @Id) LIMIT 1 ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         #endregion
@@ -178,7 +178,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var expected = "INSERT INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id, @Name, @Address ) ; SELECT NULL AS [Result] ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -195,7 +195,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var expected = "INSERT INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id, @Name, @Address ) ; SELECT CAST(@Id AS INT) AS [Result] ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -212,7 +212,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var expected = "INSERT INTO [Table] ( [Name], [Address] ) VALUES ( @Name, @Address ) ; SELECT CAST(last_insert_rowid() AS INT) AS [Result] ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -249,7 +249,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var expected = "INSERT INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id, @Name, @Address ) , ( @Id_1, @Name_1, @Address_1 ) , ( @Id_2, @Name_2, @Address_2 ) ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -268,7 +268,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
                 " ( @Id_1, @Name_1, @Address_1 ) , ( @Id_2, @Name_2, @Address_2 ) RETURNING CAST([Id] AS INT) AS [Result] ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -286,7 +286,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var expected = "INSERT INTO [Table] ( [Name], [Address] ) VALUES ( @Name, @Address ) , ( @Name_1, @Address_1 ) , ( @Name_2, @Address_2 ) RETURNING CAST([Id] AS INT) AS [Result] ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -582,7 +582,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var expected = "SELECT [Id], [Name], [Address] FROM [Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -601,7 +601,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var expected = "SELECT [Id], [Name], [Address] FROM [Table] WHERE ([Id] = @Id AND [Name] = @Name) ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -620,7 +620,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var expected = "SELECT [Id], [Name], [Address] FROM [Table] LIMIT 10 ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -639,7 +639,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var expected = "SELECT [Id], [Name], [Address] FROM [Table] ORDER BY [Id] ASC ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -658,7 +658,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var expected = "SELECT [Id], [Name], [Address] FROM [Table] ORDER BY [Id] ASC, [Name] ASC ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -677,7 +677,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var expected = "SELECT [Id], [Name], [Address] FROM [Table] ORDER BY [Id] DESC ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -696,7 +696,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var expected = "SELECT [Id], [Name], [Address] FROM [Table] ORDER BY [Id] DESC, [Name] DESC ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -715,7 +715,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var expected = "SELECT [Id], [Name], [Address] FROM [Table] ORDER BY [Id] ASC, [Name] DESC ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -753,7 +753,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var expected = "SELECT [Id], [Name] FROM [Table] ORDER BY [Id] ASC LIMIT 10 ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -771,7 +771,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var expected = "SELECT [Id], [Name] FROM [Table] ORDER BY [Id] ASC LIMIT 30, 10 ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -866,7 +866,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var expected = "DELETE FROM [Table] ; VACUUM ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         #endregion

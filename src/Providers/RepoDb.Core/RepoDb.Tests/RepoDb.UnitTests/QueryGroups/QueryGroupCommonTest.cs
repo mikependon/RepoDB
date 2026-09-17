@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.Extensions;
@@ -147,7 +148,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] = @Field1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -161,7 +162,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] <> @Field1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -175,7 +176,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] < @Field1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -189,7 +190,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] > @Field1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -203,7 +204,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] <= @Field1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -217,7 +218,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] >= @Field1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -231,7 +232,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] LIKE @Field1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -245,7 +246,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] NOT LIKE @Field1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -259,7 +260,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] BETWEEN @Field1_Left AND @Field1_Right)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -273,7 +274,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] NOT BETWEEN @Field1_Left AND @Field1_Right)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -287,7 +288,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] IN (@Field1_In_0, @Field1_In_1, @Field1_In_2))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -301,7 +302,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] NOT IN (@Field1_In_0, @Field1_In_1, @Field1_In_2))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         #endregion
@@ -323,7 +324,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] = @Field1 AND [Field2] = @Field2)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -341,7 +342,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] = @Field1 AND [Field1] = @Field1_1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         #endregion
@@ -363,7 +364,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] = @Field1 AND [Field2] = @Field2)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -382,7 +383,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] = @Field1 AND [Field2] = @Field2)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -401,7 +402,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] = @Field1 OR [Field2] = @Field2)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         #endregion
@@ -423,7 +424,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] = @Field1 AND [Field2] = @Field2)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -442,7 +443,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] = @Field1 AND [Field2] = @Field2)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -461,7 +462,7 @@ namespace RepoDb.UnitTests
             var expected = "NOT ([Field1] = @Field1 AND [Field2] = @Field2)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         #endregion
@@ -484,7 +485,7 @@ namespace RepoDb.UnitTests
             var expected = "(([Field1] = @Field1 AND [Field2] = @Field2))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -503,7 +504,7 @@ namespace RepoDb.UnitTests
             var expected = "(([Field1] = @Field1 AND [Field1] = @Field1_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -523,7 +524,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] = @Field1 AND ([Field2] = @Field2 AND [Field3] = @Field3))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -543,7 +544,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] = @Field1 AND ([Field2] = @Field2 AND [Field2] = @Field2_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -563,7 +564,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] = @Field1 AND ([Field1] = @Field1_1 AND [Field1] = @Field1_2))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -584,7 +585,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] = @Field1 OR ([Field2] = @Field2 AND [Field3] = @Field3))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -605,7 +606,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] = @Field1 AND ([Field2] = @Field2 OR [Field3] = @Field3))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -627,7 +628,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] = @Field1 OR ([Field2] = @Field2 OR [Field3] = @Field3))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -653,7 +654,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field2] = @Field2 OR (([Field1] NOT LIKE @Field1 AND [Field1] NOT LIKE @Field1_1 AND [Field1] NOT LIKE @Field1_2) OR ([Field1] = @Field1_3)))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         #endregion
@@ -675,7 +676,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] = @Field1 AND [Field2] <> @Field2)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -693,7 +694,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] = @Field1 AND [Field1] <> @Field1_1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -711,7 +712,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] = @Field1 AND [Field2] BETWEEN @Field2_Left AND @Field2_Right)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -729,7 +730,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] = @Field1 AND [Field1] BETWEEN @Field1_1_Left AND @Field1_1_Right)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -747,7 +748,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] = @Field1 AND [Field2] LIKE @Field2)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -765,7 +766,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] = @Field1 AND [Field2] LIKE @Field2)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -783,7 +784,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] = @Field1 AND [Field2] IN (@Field2_In_0, @Field2_In_1, @Field2_In_2))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -801,7 +802,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] = @Field1 AND [Field1] IN (@Field1_1_In_0, @Field1_1_In_1, @Field1_1_In_2))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         #endregion
@@ -819,7 +820,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field 1] = @Field_1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -833,7 +834,7 @@ namespace RepoDb.UnitTests
             var expected = "([Date Of Birth] = @Date_Of_Birth)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
 
@@ -848,7 +849,7 @@ namespace RepoDb.UnitTests
             var expected = "([Date.Of.Birth/BirthDay] = @Date_Of_Birth_BirthDay)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         #endregion

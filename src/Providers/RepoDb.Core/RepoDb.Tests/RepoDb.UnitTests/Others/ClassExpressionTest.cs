@@ -59,7 +59,7 @@ namespace RepoDb.UnitTests
             for (var i = 0; i < entities.Count(); i++)
             {
                 var entity = entities.ElementAt(i);
-                Assert.AreEqual(entity.Property1, propertyValues.ElementAt(i));
+                Assert.AreEqual(entity.Property1, propertyValues.ElementAt(i), StringComparer.Ordinal);
             }
         }
 
@@ -77,7 +77,7 @@ namespace RepoDb.UnitTests
             for (var i = 0; i < entities.Count(); i++)
             {
                 var entity = entities.ElementAt(i);
-                Assert.AreEqual(entity.Property1, propertyValues.ElementAt(i));
+                Assert.AreEqual(entity.Property1, propertyValues.ElementAt(i), StringComparer.Ordinal);
             }
         }
 
@@ -95,7 +95,7 @@ namespace RepoDb.UnitTests
             for (var i = 0; i < entities.Count(); i++)
             {
                 var entity = entities.ElementAt(i);
-                Assert.AreEqual(entity.Property1, propertyValues.ElementAt(i));
+                Assert.AreEqual(entity.Property1, propertyValues.ElementAt(i), StringComparer.Ordinal);
             }
         }
 
@@ -128,9 +128,9 @@ namespace RepoDb.UnitTests
 
             // Assert
             Assert.AreEqual(2, propertyValues.Count());
-            Assert.AreEqual("Id", propertyValues.ElementAt(0).Name);
+            Assert.AreEqual("Id", propertyValues.ElementAt(0).Name, StringComparer.Ordinal);
             Assert.AreEqual(entity.Id, propertyValues.ElementAt(0).Value);
-            Assert.AreEqual("Property1", propertyValues.ElementAt(1).Name);
+            Assert.AreEqual("Property1", propertyValues.ElementAt(1).Name, StringComparer.Ordinal);
             Assert.AreEqual(entity.Property1, propertyValues.ElementAt(1).Value);
         }
 

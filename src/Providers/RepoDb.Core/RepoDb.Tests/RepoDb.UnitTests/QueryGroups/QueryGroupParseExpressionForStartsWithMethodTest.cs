@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace RepoDb.UnitTests
@@ -25,7 +26,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] LIKE @PropertyString)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -39,7 +40,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] NOT LIKE @PropertyString)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -53,7 +54,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] LIKE @PropertyString)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -67,7 +68,7 @@ namespace RepoDb.UnitTests
             var expected = "NOT ([PropertyString] LIKE @PropertyString)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -81,7 +82,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] LIKE @PropertyString)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -95,7 +96,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] LIKE @_PropertyString_)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -109,7 +110,7 @@ namespace RepoDb.UnitTests
             var expected = "([Property / . String] LIKE @Property_____String)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
     }
 }

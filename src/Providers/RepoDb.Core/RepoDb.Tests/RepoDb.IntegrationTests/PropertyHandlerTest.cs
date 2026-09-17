@@ -176,7 +176,7 @@ namespace RepoDb.IntegrationTests
                 {
                     return null;
                 }
-                return new Dictionary<string, string>() { { "MyKey", input } };
+                return new Dictionary<string, string>(StringComparer.Ordinal) { { "MyKey", input } };
             }
 
             public string Set(IDictionary<string, string> input, PropertyHandlerSetOptions options)
@@ -442,7 +442,7 @@ namespace RepoDb.IntegrationTests
             return new CompleteTableWithPropertyHandlerForDictionary
             {
                 SessionId = Guid.NewGuid(),
-                ColumnNVarChar = new Dictionary<string, string>() { { "MyKey", $"Value-{Guid.NewGuid()}" } }
+                ColumnNVarChar = new Dictionary<string, string>(StringComparer.Ordinal) { { "MyKey", $"Value-{Guid.NewGuid()}" } }
             };
         }
 
@@ -453,7 +453,7 @@ namespace RepoDb.IntegrationTests
                 yield return new CompleteTableWithPropertyHandlerForDictionary
                 {
                     SessionId = Guid.NewGuid(),
-                    ColumnNVarChar = new Dictionary<string, string>() { { $"Key-{i}", $"Value-{Guid.NewGuid()}" } }
+                    ColumnNVarChar = new Dictionary<string, string>(StringComparer.Ordinal) { { $"Key-{i}", $"Value-{Guid.NewGuid()}" } }
                 };
             }
         }

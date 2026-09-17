@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -31,7 +32,7 @@ namespace RepoDb.UnitTests
             var expected = "[Value]";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -45,7 +46,7 @@ namespace RepoDb.UnitTests
             var expected = "[ Field Value ]";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -59,7 +60,7 @@ namespace RepoDb.UnitTests
             var expected = "[Field Value]";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -73,7 +74,7 @@ namespace RepoDb.UnitTests
             var expected = "[Database].[Schema].[Name]";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -87,7 +88,7 @@ namespace RepoDb.UnitTests
             var expected = "[Schema].[Dotted.Name]";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -101,7 +102,7 @@ namespace RepoDb.UnitTests
             var expected = "[Database].[Schema].[Dotted.Name]";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -115,7 +116,7 @@ namespace RepoDb.UnitTests
             var expected = "[Database].[Schema].[Dotted.Name]";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         #endregion
@@ -133,7 +134,7 @@ namespace RepoDb.UnitTests
             var expected = "Value";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -147,7 +148,7 @@ namespace RepoDb.UnitTests
             var expected = " Field Value ";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -161,7 +162,7 @@ namespace RepoDb.UnitTests
             var expected = "Field Value";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -175,7 +176,7 @@ namespace RepoDb.UnitTests
             var expected = "Database.Schema.Name";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -189,7 +190,7 @@ namespace RepoDb.UnitTests
             var expected = "Schema.Dotted.Name";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -203,7 +204,7 @@ namespace RepoDb.UnitTests
             var expected = "Database.Schema.Dotted.Name";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -217,7 +218,7 @@ namespace RepoDb.UnitTests
             var expected = "Database.Schema.Dotted.Name";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         #endregion

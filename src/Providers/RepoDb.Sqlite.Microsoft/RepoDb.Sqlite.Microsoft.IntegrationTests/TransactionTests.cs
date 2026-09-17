@@ -7,6 +7,7 @@
 
 #endregion
 
+using System;
 using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
@@ -1361,7 +1362,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 var queryResult = connection.Query<MdsCompleteTable>(entity.Id);
 
                 // Assert
-                Assert.AreEqual("false", queryResult.First().ColumnBoolean);
+                Assert.AreEqual("false", queryResult.First().ColumnBoolean, StringComparer.Ordinal);
             }
         }
 
@@ -1395,7 +1396,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 var queryResult = connection.Query<MdsCompleteTable>(entity.Id);
 
                 // Assert
-                Assert.AreEqual("true", queryResult.First().ColumnBoolean);
+                Assert.AreEqual("true", queryResult.First().ColumnBoolean, StringComparer.Ordinal);
             }
         }
 
@@ -1433,7 +1434,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 var queryResult = connection.Query<MdsCompleteTable>(entity.Id);
 
                 // Assert
-                Assert.AreEqual("false", queryResult.First().ColumnBoolean);
+                Assert.AreEqual("false", queryResult.First().ColumnBoolean, StringComparer.Ordinal);
             }
         }
 
@@ -1467,7 +1468,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 var queryResult = connection.Query<MdsCompleteTable>(entity.Id);
 
                 // Assert
-                Assert.AreEqual("true", queryResult.First().ColumnBoolean);
+                Assert.AreEqual("true", queryResult.First().ColumnBoolean, StringComparer.Ordinal);
             }
         }
 
@@ -1509,7 +1510,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 var queryResult = connection.QueryAll<MdsCompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Assert.AreEqual("false", queryResult.First(item => item.Id == entity.Id).ColumnBoolean));
+                entities.ForEach(entity => Assert.AreEqual("false", queryResult.First(item => item.Id == entity.Id).ColumnBoolean, StringComparer.Ordinal));
             }
         }
 
@@ -1543,7 +1544,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 var queryResult = connection.QueryAll<MdsCompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Assert.AreEqual("true", queryResult.First(item => item.Id == entity.Id).ColumnBoolean));
+                entities.ForEach(entity => Assert.AreEqual("true", queryResult.First(item => item.Id == entity.Id).ColumnBoolean, StringComparer.Ordinal));
             }
         }
 
@@ -1581,7 +1582,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 var queryResult = connection.QueryAll<MdsCompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Assert.AreEqual("false", queryResult.First(item => item.Id == entity.Id).ColumnBoolean));
+                entities.ForEach(entity => Assert.AreEqual("false", queryResult.First(item => item.Id == entity.Id).ColumnBoolean, StringComparer.Ordinal));
             }
         }
 
@@ -1615,7 +1616,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 var queryResult = connection.QueryAll<MdsCompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Assert.AreEqual("true", queryResult.First(item => item.Id == entity.Id).ColumnBoolean));
+                entities.ForEach(entity => Assert.AreEqual("true", queryResult.First(item => item.Id == entity.Id).ColumnBoolean, StringComparer.Ordinal));
             }
         }
 
@@ -1763,7 +1764,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                     var queryResult = connection.QueryAll<MdsCompleteTable>();
 
                     // Assert
-                    entities.ForEach(entity => Assert.AreEqual("false", queryResult.First(item => item.Id == entity.Id).ColumnBoolean));
+                    entities.ForEach(entity => Assert.AreEqual("false", queryResult.First(item => item.Id == entity.Id).ColumnBoolean, StringComparer.Ordinal));
                 }
 
                 // Complete
@@ -1797,7 +1798,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                     var queryResult = connection.QueryAll<MdsCompleteTable>();
 
                     // Assert
-                    entities.ForEach(entity => Assert.AreEqual("false", queryResult.First(item => item.Id == entity.Id).ColumnBoolean));
+                    entities.ForEach(entity => Assert.AreEqual("false", queryResult.First(item => item.Id == entity.Id).ColumnBoolean, StringComparer.Ordinal));
                 }
 
                 // Complete

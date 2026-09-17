@@ -285,7 +285,7 @@ namespace RepoDb.IntegrationTests.Operations
                     statementBuilder: null);
 
                 // Assert (2)
-                Assert.AreEqual(tables.ElementAt(2).ColumnNVarChar, result.ElementAt(0).ColumnNVarChar);
+                Assert.AreEqual(tables.ElementAt(2).ColumnNVarChar, result.ElementAt(0).ColumnNVarChar, StringComparer.Ordinal);
             }
         }
 
@@ -658,7 +658,7 @@ namespace RepoDb.IntegrationTests.Operations
                     statementBuilder: null);
 
                 // Assert (2)
-                Assert.AreEqual(tables.ElementAt(2).ColumnNVarChar, result.ElementAt(0).ColumnNVarChar);
+                Assert.AreEqual(tables.ElementAt(2).ColumnNVarChar, result.ElementAt(0).ColumnNVarChar, StringComparer.Ordinal);
             }
         }
 
@@ -1309,7 +1309,7 @@ namespace RepoDb.IntegrationTests.Operations
                     statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (2)
-                Assert.AreEqual(tables.ElementAt(2).ColumnNVarChar, result.ElementAt(0).ColumnNVarChar);
+                Assert.AreEqual(tables.ElementAt(2).ColumnNVarChar, result.ElementAt(0).ColumnNVarChar, StringComparer.Ordinal);
             }
         }
 
@@ -1682,7 +1682,7 @@ namespace RepoDb.IntegrationTests.Operations
                     statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (2)
-                Assert.AreEqual(tables.ElementAt(2).ColumnNVarChar, result.ElementAt(0).ColumnNVarChar);
+                Assert.AreEqual(tables.ElementAt(2).ColumnNVarChar, result.ElementAt(0).ColumnNVarChar, StringComparer.Ordinal);
             }
         }
 

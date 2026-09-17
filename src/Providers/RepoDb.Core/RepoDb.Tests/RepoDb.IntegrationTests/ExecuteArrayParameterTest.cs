@@ -135,7 +135,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new Dictionary<string, object>
+            var param = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 {"Values", values }
             };
@@ -337,7 +337,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new Dictionary<string, object>
+            var param = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 {"Values", values }
             };
@@ -524,7 +524,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new Dictionary<string, object>
+            var param = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 {"Values", values }
             };
@@ -691,7 +691,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new Dictionary<string, object>
+            var param = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 {"Values", values }
             };
@@ -885,7 +885,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new Dictionary<string, object>
+            var param = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 {"Values", values }
             };
@@ -1115,7 +1115,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new Dictionary<string, object>
+            var param = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 {"Values", values }
             };
@@ -1318,7 +1318,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new Dictionary<string, object>
+            var param = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 {"Values", values }
             };
@@ -1485,7 +1485,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new Dictionary<string, object>
+            var param = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 {"Values", values }
             };
@@ -1671,7 +1671,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new Dictionary<string, object>
+            var param = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 {"Values", values }
             };
@@ -1873,7 +1873,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new Dictionary<string, object>
+            var param = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 {"Values", values }
             };
@@ -2060,7 +2060,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new Dictionary<string, object>
+            var param = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 {"Values", values }
             };
@@ -2227,7 +2227,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new Dictionary<string, object>
+            var param = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 {"Values", values }
             };
@@ -2394,7 +2394,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new Dictionary<string, object>
+            var param = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 {"Values", values }
             };
@@ -2561,7 +2561,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new Dictionary<string, object>
+            var param = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 {"Values", values }
             };

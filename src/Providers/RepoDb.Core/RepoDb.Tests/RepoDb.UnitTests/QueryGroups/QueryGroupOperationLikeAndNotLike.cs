@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 
@@ -26,7 +27,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] LIKE @Field1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -44,7 +45,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] LIKE @Field1 AND [Field2] LIKE @Field2)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -62,7 +63,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] LIKE @Field1 AND [Field1] LIKE @Field1_1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -81,7 +82,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] LIKE @Field1 OR [Field1] LIKE @Field1_1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         #endregion
@@ -99,7 +100,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] NOT LIKE @Field1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -117,7 +118,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] NOT LIKE @Field1 AND [Field2] NOT LIKE @Field2)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -135,7 +136,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] NOT LIKE @Field1 AND [Field1] NOT LIKE @Field1_1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -154,7 +155,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] NOT LIKE @Field1 OR [Field1] NOT LIKE @Field1_1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         #endregion

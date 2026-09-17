@@ -48,7 +48,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"SET [Field1] = @Field1, [Field2] = @Field2, [Field3] = @Field3 ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -71,7 +71,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"SET [Field1] = @Field1, [Field2] = @Field2, [Field3] = @Field3 ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -94,7 +94,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"SET [Field1] = @Field1, [Field2] = @Field2, [Field3] = @Field3 ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -121,7 +121,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"WHERE ([Field1] = @m_Field1) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -149,7 +149,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"WHERE ([Field1] = @m_Field1) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -177,7 +177,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"WHERE ([Field1] = @m_Field1) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -205,7 +205,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"WHERE ([Field1] = @m_Field1) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -233,7 +233,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"WHERE ([Id] = @m_Id) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -261,7 +261,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"WHERE ([Id] = @m_Id) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -289,7 +289,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"WHERE ([Id] = @m_Id) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -317,7 +317,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"WHERE ([Id] = @m_Id) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -345,7 +345,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"WHERE ([Id] = @m_Id) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -369,7 +369,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"SET [Field1] = @Field1, [Field2] = @Field2, [Field3] = @Field3 ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]

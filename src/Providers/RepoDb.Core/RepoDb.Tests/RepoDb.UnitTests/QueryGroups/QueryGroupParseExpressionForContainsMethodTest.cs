@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] LIKE @PropertyString)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -41,7 +42,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] NOT LIKE @PropertyString)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -55,7 +56,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] LIKE @PropertyString)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -69,7 +70,7 @@ namespace RepoDb.UnitTests
             var expected = "NOT ([PropertyString] LIKE @PropertyString)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -83,7 +84,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] NOT LIKE @PropertyString)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -97,7 +98,7 @@ namespace RepoDb.UnitTests
             var expected = "NOT ([PropertyString] NOT LIKE @PropertyString)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -111,7 +112,7 @@ namespace RepoDb.UnitTests
             var expected = "NOT ([PropertyString] LIKE @PropertyString)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -125,7 +126,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] LIKE @PropertyString)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -139,7 +140,7 @@ namespace RepoDb.UnitTests
             var expected = "NOT ([PropertyString] NOT LIKE @PropertyString)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -153,7 +154,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] NOT LIKE @PropertyString)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -171,7 +172,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] LIKE @PropertyString)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -189,7 +190,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] NOT LIKE @PropertyString)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -207,7 +208,7 @@ namespace RepoDb.UnitTests
             var expected = "NOT ([PropertyString] LIKE @PropertyString)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -225,7 +226,7 @@ namespace RepoDb.UnitTests
             var expected = "NOT ([PropertyString] NOT LIKE @PropertyString)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -243,7 +244,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] LIKE @PropertyString)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -261,7 +262,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] NOT LIKE @PropertyString)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -275,7 +276,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] LIKE @PropertyString)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -289,7 +290,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] NOT LIKE @PropertyString)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -303,7 +304,7 @@ namespace RepoDb.UnitTests
             var expected = "NOT ([PropertyString] LIKE @PropertyString)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -317,7 +318,7 @@ namespace RepoDb.UnitTests
             var expected = "NOT ([PropertyString] LIKE @PropertyString)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -331,7 +332,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] LIKE @PropertyString)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -345,7 +346,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] NOT LIKE @PropertyString)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -359,7 +360,7 @@ namespace RepoDb.UnitTests
             var expected = "(([PropertyString] LIKE @PropertyString) OR ([PropertyString] LIKE @PropertyString_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -373,7 +374,7 @@ namespace RepoDb.UnitTests
             var expected = "(([PropertyString] LIKE @PropertyString) AND ([PropertyString] LIKE @PropertyString_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -387,7 +388,7 @@ namespace RepoDb.UnitTests
             var expected = "NOT (([PropertyString] LIKE @PropertyString) OR ([PropertyString] LIKE @PropertyString_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -401,7 +402,7 @@ namespace RepoDb.UnitTests
             var expected = "(([PropertyString] LIKE @PropertyString) OR ([PropertyString] LIKE @PropertyString_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -415,7 +416,7 @@ namespace RepoDb.UnitTests
             var expected = "NOT (([PropertyString] LIKE @PropertyString) AND ([PropertyString] LIKE @PropertyString_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -429,7 +430,7 @@ namespace RepoDb.UnitTests
             var expected = "(([PropertyString] LIKE @PropertyString) AND ([PropertyString] LIKE @PropertyString_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -443,7 +444,7 @@ namespace RepoDb.UnitTests
             var expected = "(([PropertyString] NOT LIKE @PropertyString) OR ([PropertyString] LIKE @PropertyString_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -457,7 +458,7 @@ namespace RepoDb.UnitTests
             var expected = "(([PropertyString] NOT LIKE @PropertyString) AND ([PropertyString] LIKE @PropertyString_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -471,7 +472,7 @@ namespace RepoDb.UnitTests
             var expected = "(([PropertyString] LIKE @PropertyString) OR ([PropertyString] NOT LIKE @PropertyString_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -485,7 +486,7 @@ namespace RepoDb.UnitTests
             var expected = "(([PropertyString] LIKE @PropertyString) AND ([PropertyString] NOT LIKE @PropertyString_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -499,7 +500,7 @@ namespace RepoDb.UnitTests
             var expected = "(([PropertyString] NOT LIKE @PropertyString) OR ([PropertyString] NOT LIKE @PropertyString_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -513,7 +514,7 @@ namespace RepoDb.UnitTests
             var expected = "(([PropertyString] NOT LIKE @PropertyString) AND ([PropertyString] NOT LIKE @PropertyString_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -527,7 +528,7 @@ namespace RepoDb.UnitTests
             var expected = "(([PropertyString] LIKE @PropertyString) AND ([PropertyString] <> @PropertyString_1 OR [PropertyString] <> @PropertyString_2))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -541,7 +542,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] LIKE @PropertyString)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -555,7 +556,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] LIKE @_PropertyString_)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -569,7 +570,7 @@ namespace RepoDb.UnitTests
             var expected = "([Property / . String] LIKE @Property_____String)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         #endregion
@@ -587,7 +588,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] IN (@PropertyInt_In_0, @PropertyInt_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -601,7 +602,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] NOT IN (@PropertyInt_In_0, @PropertyInt_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -615,7 +616,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] NOT IN (@PropertyInt_In_0, @PropertyInt_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -629,7 +630,7 @@ namespace RepoDb.UnitTests
             var expected = "NOT ([PropertyInt] IN (@PropertyInt_In_0, @PropertyInt_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -643,7 +644,7 @@ namespace RepoDb.UnitTests
             var expected = "NOT ([PropertyInt] NOT IN (@PropertyInt_In_0, @PropertyInt_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -658,7 +659,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] IN (@PropertyInt_In_0, @PropertyInt_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -673,7 +674,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] NOT IN (@PropertyInt_In_0, @PropertyInt_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -687,7 +688,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] IN (@PropertyInt_In_0, @PropertyInt_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -702,7 +703,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] IN (@PropertyInt_In_0, @PropertyInt_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -717,7 +718,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] NOT IN (@PropertyInt_In_0, @PropertyInt_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -732,7 +733,7 @@ namespace RepoDb.UnitTests
             var expected = "NOT ([PropertyInt] IN (@PropertyInt_In_0, @PropertyInt_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -747,7 +748,7 @@ namespace RepoDb.UnitTests
             var expected = "NOT ([PropertyInt] NOT IN (@PropertyInt_In_0, @PropertyInt_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -761,7 +762,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] IN (@PropertyString_In_0, @PropertyString_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -775,7 +776,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] NOT IN (@PropertyString_In_0, @PropertyString_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -790,7 +791,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] IN (@PropertyString_In_0, @PropertyString_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -805,7 +806,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] NOT IN (@PropertyString_In_0, @PropertyString_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -819,7 +820,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] IN (@_PropertyString__In_0, @_PropertyString__In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -833,7 +834,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] NOT IN (@_PropertyString__In_0, @_PropertyString__In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -848,7 +849,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] IN (@_PropertyString__In_0, @_PropertyString__In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -863,7 +864,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] IN (@_PropertyString__In_0, @_PropertyString__In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -877,7 +878,7 @@ namespace RepoDb.UnitTests
             var expected = "([Property / . String] IN (@Property_____String_In_0, @Property_____String_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -891,7 +892,7 @@ namespace RepoDb.UnitTests
             var expected = "([Property / . String] NOT IN (@Property_____String_In_0, @Property_____String_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -906,7 +907,7 @@ namespace RepoDb.UnitTests
             var expected = "([Property / . String] IN (@Property_____String_In_0, @Property_____String_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -921,7 +922,7 @@ namespace RepoDb.UnitTests
             var expected = "([Property / . String] NOT IN (@Property_____String_In_0, @Property_____String_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         #endregion
@@ -939,7 +940,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] IN (@PropertyInt_In_0, @PropertyInt_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -953,7 +954,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] NOT IN (@PropertyInt_In_0, @PropertyInt_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -967,7 +968,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] NOT IN (@PropertyInt_In_0, @PropertyInt_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -981,7 +982,7 @@ namespace RepoDb.UnitTests
             var expected = "NOT ([PropertyInt] NOT IN (@PropertyInt_In_0, @PropertyInt_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -996,7 +997,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] IN (@PropertyInt_In_0, @PropertyInt_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1011,7 +1012,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] NOT IN (@PropertyInt_In_0, @PropertyInt_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1025,7 +1026,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] IN (@PropertyInt_In_0, @PropertyInt_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1039,7 +1040,7 @@ namespace RepoDb.UnitTests
             var expected = "NOT ([PropertyInt] IN (@PropertyInt_In_0, @PropertyInt_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1054,7 +1055,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] IN (@PropertyInt_In_0, @PropertyInt_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1069,7 +1070,7 @@ namespace RepoDb.UnitTests
             var expected = "NOT ([PropertyInt] IN (@PropertyInt_In_0, @PropertyInt_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1083,7 +1084,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] IN (@PropertyString_In_0, @PropertyString_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1098,7 +1099,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] IN (@PropertyString_In_0, @PropertyString_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1112,7 +1113,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] IN (@_PropertyString__In_0, @_PropertyString__In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1127,7 +1128,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyString] IN (@_PropertyString__In_0, @_PropertyString__In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1141,7 +1142,7 @@ namespace RepoDb.UnitTests
             var expected = "([Property / . String] IN (@Property_____String_In_0, @Property_____String_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1156,7 +1157,7 @@ namespace RepoDb.UnitTests
             var expected = "([Property / . String] IN (@Property_____String_In_0, @Property_____String_In_1))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         #endregion

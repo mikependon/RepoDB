@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
 using RepoDb.Attributes.Parameter;
@@ -141,7 +142,7 @@ namespace RepoDb.UnitTests.Mappers
             var expected = "[schema].[Table]";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         /*
@@ -156,7 +157,7 @@ namespace RepoDb.UnitTests.Mappers
             var expected = "[dbo].[Table]";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         /*
@@ -176,7 +177,7 @@ namespace RepoDb.UnitTests.Mappers
             var expected = "[sc].[Table]";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         /*
@@ -211,7 +212,7 @@ namespace RepoDb.UnitTests.Mappers
             var expected = "PrimaryId";
 
             // Assert
-            Assert.AreEqual(expected, actual.GetMappedName());
+            Assert.AreEqual(expected, actual.GetMappedName(), StringComparer.Ordinal);
         }
 
         /*
@@ -226,7 +227,7 @@ namespace RepoDb.UnitTests.Mappers
             var expected = "Id";
 
             // Assert
-            Assert.AreEqual(expected, actual.GetMappedName());
+            Assert.AreEqual(expected, actual.GetMappedName(), StringComparer.Ordinal);
         }
 
         /*
@@ -246,7 +247,7 @@ namespace RepoDb.UnitTests.Mappers
             var expected = "RowId";
 
             // Assert
-            Assert.AreEqual(expected, actual.GetMappedName());
+            Assert.AreEqual(expected, actual.GetMappedName(), StringComparer.Ordinal);
         }
 
         /*
@@ -281,7 +282,7 @@ namespace RepoDb.UnitTests.Mappers
             var expected = "PrimaryId";
 
             // Assert
-            Assert.AreEqual(expected, actual.GetMappedName());
+            Assert.AreEqual(expected, actual.GetMappedName(), StringComparer.Ordinal);
         }
 
         /*
@@ -296,7 +297,7 @@ namespace RepoDb.UnitTests.Mappers
             var expected = "Id";
 
             // Assert
-            Assert.AreEqual(expected, actual.GetMappedName());
+            Assert.AreEqual(expected, actual.GetMappedName(), StringComparer.Ordinal);
         }
 
         /*
@@ -316,7 +317,7 @@ namespace RepoDb.UnitTests.Mappers
             var expected = "RowId";
 
             // Assert
-            Assert.AreEqual(expected, actual.GetMappedName());
+            Assert.AreEqual(expected, actual.GetMappedName(), StringComparer.Ordinal);
         }
 
         /*
@@ -351,7 +352,7 @@ namespace RepoDb.UnitTests.Mappers
             var expected = "ColumnString";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         /*
@@ -366,7 +367,7 @@ namespace RepoDb.UnitTests.Mappers
             var expected = "ColumnString";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         /*
@@ -386,7 +387,7 @@ namespace RepoDb.UnitTests.Mappers
             var expected = "ColumnStringOverriden";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         /*

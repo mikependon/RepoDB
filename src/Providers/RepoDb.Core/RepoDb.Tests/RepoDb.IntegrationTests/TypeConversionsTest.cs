@@ -60,7 +60,7 @@ namespace RepoDb.IntegrationTests
                 var data = connection.ExecuteQuery<string>("SELECT 'ABC' AS Value;").First();
 
                 // Assert
-                Assert.AreEqual("ABC", data);
+                Assert.AreEqual("ABC", data, StringComparer.Ordinal);
             }
         }
 
@@ -73,7 +73,7 @@ namespace RepoDb.IntegrationTests
                 var data = (await connection.ExecuteQueryAsync<string>("SELECT 'ABC' AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
-                Assert.AreEqual("ABC", data);
+                Assert.AreEqual("ABC", data, StringComparer.Ordinal);
             }
         }
 
@@ -328,7 +328,7 @@ namespace RepoDb.IntegrationTests
                 var data = connection.ExecuteQuery<string>("SELECT CONVERT(INT, 10) AS Value;").First();
 
                 // Assert
-                Assert.AreEqual("10", data);
+                Assert.AreEqual("10", data, StringComparer.Ordinal);
             }
         }
 
@@ -341,7 +341,7 @@ namespace RepoDb.IntegrationTests
                 var data = (await connection.ExecuteQueryAsync<string>("SELECT CONVERT(INT, 10) AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
-                Assert.AreEqual("10", data);
+                Assert.AreEqual("10", data, StringComparer.Ordinal);
             }
         }
 
@@ -410,7 +410,7 @@ namespace RepoDb.IntegrationTests
                 var data = connection.ExecuteQuery<string>("SELECT CONVERT(BIGINT, 10) AS Value;").First();
 
                 // Assert
-                Assert.AreEqual("10", data);
+                Assert.AreEqual("10", data, StringComparer.Ordinal);
             }
         }
 
@@ -423,7 +423,7 @@ namespace RepoDb.IntegrationTests
                 var data = (await connection.ExecuteQueryAsync<string>("SELECT CONVERT(BIGINT, 10) AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
-                Assert.AreEqual("10", data);
+                Assert.AreEqual("10", data, StringComparer.Ordinal);
             }
         }
 
@@ -493,7 +493,7 @@ namespace RepoDb.IntegrationTests
                 var data = connection.ExecuteQuery<string>("SELECT CONVERT(DECIMAL(18,2), 100.05) AS Value;").First();
 
                 // Assert
-                Assert.AreEqual("100.05", data);
+                Assert.AreEqual("100.05", data, StringComparer.Ordinal);
             }
         }
 
@@ -507,7 +507,7 @@ namespace RepoDb.IntegrationTests
                 var data = (await connection.ExecuteQueryAsync<string>("SELECT CONVERT(DECIMAL(18,2), 100.05) AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
-                Assert.AreEqual("100.05", data);
+                Assert.AreEqual("100.05", data, StringComparer.Ordinal);
             }
         }
 
@@ -577,7 +577,7 @@ namespace RepoDb.IntegrationTests
                 var data = connection.ExecuteQuery<string>("SELECT CONVERT(REAL, 100.05) AS Value;").First();
 
                 // Assert
-                Assert.AreEqual("100.05", data);
+                Assert.AreEqual("100.05", data, StringComparer.Ordinal);
             }
         }
 
@@ -591,7 +591,7 @@ namespace RepoDb.IntegrationTests
                 var data = (await connection.ExecuteQueryAsync<string>("SELECT CONVERT(REAL, 100.05) AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
-                Assert.AreEqual("100.05", data);
+                Assert.AreEqual("100.05", data, StringComparer.Ordinal);
             }
         }
 
@@ -662,7 +662,7 @@ namespace RepoDb.IntegrationTests
                     var data = connection.ExecuteQuery<string>("SELECT CONVERT(DATETIME2(5), '1970-01-01') AS Value;").First();
 
                     // Assert
-                    Assert.AreEqual("1970-01-01T00:00:00.000000", DateTime.Parse(data).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"));
+                    Assert.AreEqual("1970-01-01T00:00:00.000000", DateTime.Parse(data).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"), StringComparer.Ordinal);
                 }
             }
         }
@@ -678,7 +678,7 @@ namespace RepoDb.IntegrationTests
                     var data = (await connection.ExecuteQueryAsync<string>("SELECT CONVERT(DATETIME2(5), '1970-01-01') AS Value;").ConfigureAwait(false)).First();
 
                     // Assert
-                    Assert.AreEqual("1970-01-01T00:00:00.000000", DateTime.Parse(data).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"));
+                    Assert.AreEqual("1970-01-01T00:00:00.000000", DateTime.Parse(data).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"), StringComparer.Ordinal);
                 }
             }
         }
@@ -892,7 +892,7 @@ namespace RepoDb.IntegrationTests
                     Assert.IsTrue(e.Message.Contains(nameof(Direction3)));
 
                     // We are in an EN-US scope so the message should match
-                    Assert.AreEqual("The value of argument 'value' (10) is invalid for Enum type 'Direction3'. (Parameter 'value')", e.Message);
+                    Assert.AreEqual("The value of argument 'value' (10) is invalid for Enum type 'Direction3'. (Parameter 'value')", e.Message, StringComparer.Ordinal);
                 }
             }
         }
@@ -956,7 +956,7 @@ namespace RepoDb.IntegrationTests
                     Assert.IsTrue(e.Message.Contains(nameof(Direction3)));
 
                     // We are in an EN-US scope so the message should match
-                    Assert.AreEqual("The value of argument 'value' (10) is invalid for Enum type 'Direction3'. (Parameter 'value')", e.Message);
+                    Assert.AreEqual("The value of argument 'value' (10) is invalid for Enum type 'Direction3'. (Parameter 'value')", e.Message, StringComparer.Ordinal);
                 }
             }
         }
@@ -984,7 +984,7 @@ namespace RepoDb.IntegrationTests
                     Assert.IsTrue(e.Message.Contains(nameof(Direction)));
 
                     // We are in an EN-US scope so the message should match
-                    Assert.AreEqual("Invalid value for Direction (Parameter 'value')\nActual value was Center.", e.Message.Replace("\r", ""));
+                    Assert.AreEqual("Invalid value for Direction (Parameter 'value')\nActual value was Center.", e.Message.Replace("\r", ""), StringComparer.Ordinal);
                 }
 
                 // Assert
@@ -1034,7 +1034,7 @@ namespace RepoDb.IntegrationTests
                     Assert.IsTrue(e.Message.Contains(nameof(Direction3)));
 
                     // We are in an EN-US scope so the message should match
-                    Assert.AreEqual("Invalid value for Direction3 (Parameter 'value')\nActual value was Center.", e.Message.Replace("\r", ""));
+                    Assert.AreEqual("Invalid value for Direction3 (Parameter 'value')\nActual value was Center.", e.Message.Replace("\r", ""), StringComparer.Ordinal);
                 }
 
                 try
@@ -1047,7 +1047,7 @@ namespace RepoDb.IntegrationTests
                     Assert.IsTrue(e.Message.Contains(nameof(Direction3)));
 
                     // We are in an EN-US scope so the message should match
-                    Assert.AreEqual("Invalid value for Direction3 (Parameter 'value')\nActual value was 9.", e.Message.Replace("\r", ""));
+                    Assert.AreEqual("Invalid value for Direction3 (Parameter 'value')\nActual value was 9.", e.Message.Replace("\r", ""), StringComparer.Ordinal);
                 }
 
                 // Assert
@@ -1073,7 +1073,7 @@ namespace RepoDb.IntegrationTests
                     Assert.IsTrue(e.Message.Contains(nameof(Direction4)));
 
                     // We are in an EN-US scope so the message should match
-                    Assert.AreEqual("Invalid value for Direction4 (Parameter 'value')\nActual value was Center.", e.Message.Replace("\r", ""));
+                    Assert.AreEqual("Invalid value for Direction4 (Parameter 'value')\nActual value was Center.", e.Message.Replace("\r", ""), StringComparer.Ordinal);
                 }
 
                 try
@@ -1086,7 +1086,7 @@ namespace RepoDb.IntegrationTests
                     Assert.IsTrue(e.Message.Contains(nameof(Direction4)));
 
                     // We are in an EN-US scope so the message should match
-                    Assert.AreEqual("Invalid value for Direction4 (Parameter 'value')\nActual value was 9.", e.Message.Replace("\r", ""));
+                    Assert.AreEqual("Invalid value for Direction4 (Parameter 'value')\nActual value was 9.", e.Message.Replace("\r", ""), StringComparer.Ordinal);
                 }
 
                 // Assert
@@ -1119,7 +1119,7 @@ namespace RepoDb.IntegrationTests
                     Assert.IsTrue(e.Message.Contains(nameof(Direction)));
 
                     // We are in an EN-US scope so the message should match
-                    Assert.AreEqual("Invalid value for Direction (Parameter 'value')\nActual value was Center.", e.Message.Replace("\r", ""));
+                    Assert.AreEqual("Invalid value for Direction (Parameter 'value')\nActual value was Center.", e.Message.Replace("\r", ""), StringComparer.Ordinal);
                 }
 
                 // Assert
@@ -1169,7 +1169,7 @@ namespace RepoDb.IntegrationTests
                     Assert.IsTrue(e.Message.Contains(nameof(Direction3)));
 
                     // We are in an EN-US scope so the message should match
-                    Assert.AreEqual("Invalid value for Direction3 (Parameter 'value')\nActual value was Center.", e.Message.Replace("\r", ""));
+                    Assert.AreEqual("Invalid value for Direction3 (Parameter 'value')\nActual value was Center.", e.Message.Replace("\r", ""), StringComparer.Ordinal);
                 }
 
                 try
@@ -1182,7 +1182,7 @@ namespace RepoDb.IntegrationTests
                     Assert.IsTrue(e.Message.Contains(nameof(Direction3)));
 
                     // We are in an EN-US scope so the message should match
-                    Assert.AreEqual("Invalid value for Direction3 (Parameter 'value')\nActual value was 9.", e.Message.Replace("\r", ""));
+                    Assert.AreEqual("Invalid value for Direction3 (Parameter 'value')\nActual value was 9.", e.Message.Replace("\r", ""), StringComparer.Ordinal);
                 }
 
                 // Assert
@@ -1208,7 +1208,7 @@ namespace RepoDb.IntegrationTests
                     Assert.IsTrue(e.Message.Contains(nameof(Direction4)));
 
                     // We are in an EN-US scope so the message should match
-                    Assert.AreEqual("Invalid value for Direction4 (Parameter 'value')\nActual value was Center.", e.Message.Replace("\r", ""));
+                    Assert.AreEqual("Invalid value for Direction4 (Parameter 'value')\nActual value was Center.", e.Message.Replace("\r", ""), StringComparer.Ordinal);
                 }
 
                 try
@@ -1221,7 +1221,7 @@ namespace RepoDb.IntegrationTests
                     Assert.IsTrue(e.Message.Contains(nameof(Direction4)));
 
                     // We are in an EN-US scope so the message should match
-                    Assert.AreEqual("Invalid value for Direction4 (Parameter 'value')\nActual value was 9.", e.Message.Replace("\r", ""));
+                    Assert.AreEqual("Invalid value for Direction4 (Parameter 'value')\nActual value was 9.", e.Message.Replace("\r", ""), StringComparer.Ordinal);
                 }
 
                 // Assert
@@ -1281,7 +1281,7 @@ namespace RepoDb.IntegrationTests
                     Assert.IsTrue(e.Message.Contains(nameof(Direction3)));
 
                     // We are in an EN-US scope so the message should match
-                    Assert.AreEqual("Invalid value for Direction3 (Parameter 'value')\nActual value was North, West.", e.Message.Replace("\r", ""));
+                    Assert.AreEqual("Invalid value for Direction3 (Parameter 'value')\nActual value was North, West.", e.Message.Replace("\r", ""), StringComparer.Ordinal);
                 }
 
                 Assert.AreEqual(Direction3.South, data);
@@ -1338,7 +1338,7 @@ namespace RepoDb.IntegrationTests
                     Assert.IsTrue(e.Message.Contains(nameof(Direction3)));
 
                     // We are in an EN-US scope so the message should match
-                    Assert.AreEqual("Invalid value for Direction3 (Parameter 'value')\nActual value was North, West.", e.Message.Replace("\r", ""));
+                    Assert.AreEqual("Invalid value for Direction3 (Parameter 'value')\nActual value was North, West.", e.Message.Replace("\r", ""), StringComparer.Ordinal);
                 }
 
                 Assert.AreEqual(Direction3.South, data);
@@ -1378,7 +1378,7 @@ namespace RepoDb.IntegrationTests
                 var data = connection.Query<StringToBigIntClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(entity.ColumnBigInt, data.ColumnBigInt);
+                Assert.AreEqual(entity.ColumnBigInt, data.ColumnBigInt, StringComparer.Ordinal);
 
                 // Act Delete
                 var deletedRows = connection.Delete<StringToBigIntClass>(e => e.SessionId == (Guid)id);
@@ -1411,7 +1411,7 @@ namespace RepoDb.IntegrationTests
                 var data = (await connection.QueryAsync<StringToBigIntClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(entity.ColumnBigInt, data.ColumnBigInt);
+                Assert.AreEqual(entity.ColumnBigInt, data.ColumnBigInt, StringComparer.Ordinal);
 
                 // Act Delete
                 var deletedRows = await connection.DeleteAsync<StringToBigIntClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false);
@@ -1456,7 +1456,7 @@ namespace RepoDb.IntegrationTests
                 var data = connection.Query<StringToBitClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(entity.ColumnBit, data.ColumnBit);
+                Assert.AreEqual(entity.ColumnBit, data.ColumnBit, StringComparer.Ordinal);
             }
         }
 
@@ -1479,7 +1479,7 @@ namespace RepoDb.IntegrationTests
                 var data = (await connection.QueryAsync<StringToBitClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(entity.ColumnBit, data.ColumnBit);
+                Assert.AreEqual(entity.ColumnBit, data.ColumnBit, StringComparer.Ordinal);
             }
         }
 
@@ -1515,7 +1515,7 @@ namespace RepoDb.IntegrationTests
                 var data = connection.Query<StringToDecimalClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(entity.ColumnDecimal, data.ColumnDecimal);
+                Assert.AreEqual(entity.ColumnDecimal, data.ColumnDecimal, StringComparer.Ordinal);
             }
         }
 
@@ -1539,7 +1539,7 @@ namespace RepoDb.IntegrationTests
                 var data = (await connection.QueryAsync<StringToDecimalClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(entity.ColumnDecimal, data.ColumnDecimal);
+                Assert.AreEqual(entity.ColumnDecimal, data.ColumnDecimal, StringComparer.Ordinal);
             }
         }
 
@@ -1575,7 +1575,7 @@ namespace RepoDb.IntegrationTests
                 var data = connection.Query<StringToFloatClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(entity.ColumnFloat, data.ColumnFloat);
+                Assert.AreEqual(entity.ColumnFloat, data.ColumnFloat, StringComparer.Ordinal);
             }
         }
 
@@ -1599,7 +1599,7 @@ namespace RepoDb.IntegrationTests
                 var data = (await connection.QueryAsync<StringToFloatClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(entity.ColumnFloat, data.ColumnFloat);
+                Assert.AreEqual(entity.ColumnFloat, data.ColumnFloat, StringComparer.Ordinal);
             }
         }
 
@@ -1634,7 +1634,7 @@ namespace RepoDb.IntegrationTests
                 var data = connection.Query<StringToIntClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(entity.ColumnInt, data.ColumnInt);
+                Assert.AreEqual(entity.ColumnInt, data.ColumnInt, StringComparer.Ordinal);
             }
         }
 
@@ -1657,7 +1657,7 @@ namespace RepoDb.IntegrationTests
                 var data = (await connection.QueryAsync<StringToIntClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(entity.ColumnInt, data.ColumnInt);
+                Assert.AreEqual(entity.ColumnInt, data.ColumnInt, StringComparer.Ordinal);
             }
         }
 
@@ -1693,7 +1693,7 @@ namespace RepoDb.IntegrationTests
                 var data = connection.Query<StringToMoneyClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(entity.ColumnMoney, data.ColumnMoney);
+                Assert.AreEqual(entity.ColumnMoney, data.ColumnMoney, StringComparer.Ordinal);
             }
         }
 
@@ -1717,7 +1717,7 @@ namespace RepoDb.IntegrationTests
                 var data = (await connection.QueryAsync<StringToMoneyClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(entity.ColumnMoney, data.ColumnMoney);
+                Assert.AreEqual(entity.ColumnMoney, data.ColumnMoney, StringComparer.Ordinal);
             }
         }
 
@@ -1753,7 +1753,7 @@ namespace RepoDb.IntegrationTests
                 var data = connection.Query<StringToNumericClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(entity.ColumnNumeric, data.ColumnNumeric);
+                Assert.AreEqual(entity.ColumnNumeric, data.ColumnNumeric, StringComparer.Ordinal);
             }
         }
 
@@ -1777,7 +1777,7 @@ namespace RepoDb.IntegrationTests
                 var data = (await connection.QueryAsync<StringToNumericClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(entity.ColumnNumeric, data.ColumnNumeric);
+                Assert.AreEqual(entity.ColumnNumeric, data.ColumnNumeric, StringComparer.Ordinal);
             }
         }
 
@@ -1813,7 +1813,7 @@ namespace RepoDb.IntegrationTests
                 var data = connection.Query<StringToRealClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(entity.ColumnReal, data.ColumnReal);
+                Assert.AreEqual(entity.ColumnReal, data.ColumnReal, StringComparer.Ordinal);
             }
         }
 
@@ -1837,7 +1837,7 @@ namespace RepoDb.IntegrationTests
                 var data = (await connection.QueryAsync<StringToRealClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(entity.ColumnReal, data.ColumnReal);
+                Assert.AreEqual(entity.ColumnReal, data.ColumnReal, StringComparer.Ordinal);
             }
         }
 
@@ -1872,7 +1872,7 @@ namespace RepoDb.IntegrationTests
                 var data = connection.Query<StringToSmallIntClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(entity.ColumnSmallInt, data.ColumnSmallInt);
+                Assert.AreEqual(entity.ColumnSmallInt, data.ColumnSmallInt, StringComparer.Ordinal);
             }
         }
 
@@ -1895,7 +1895,7 @@ namespace RepoDb.IntegrationTests
                 var data = (await connection.QueryAsync<StringToSmallIntClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(entity.ColumnSmallInt, data.ColumnSmallInt);
+                Assert.AreEqual(entity.ColumnSmallInt, data.ColumnSmallInt, StringComparer.Ordinal);
             }
         }
 
@@ -1931,7 +1931,7 @@ namespace RepoDb.IntegrationTests
                 var data = connection.Query<StringToSmallMoneyClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(entity.ColumnSmallMoney, data.ColumnSmallMoney);
+                Assert.AreEqual(entity.ColumnSmallMoney, data.ColumnSmallMoney, StringComparer.Ordinal);
             }
         }
 
@@ -1955,7 +1955,7 @@ namespace RepoDb.IntegrationTests
                 var data = (await connection.QueryAsync<StringToSmallMoneyClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(entity.ColumnSmallMoney, data.ColumnSmallMoney);
+                Assert.AreEqual(entity.ColumnSmallMoney, data.ColumnSmallMoney, StringComparer.Ordinal);
             }
         }
 
@@ -1992,7 +1992,7 @@ namespace RepoDb.IntegrationTests
                     var data = connection.Query<StringToDateClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                     // Assert
-                    Assert.AreEqual("1970-01-01T00:00:00.000000", DateTime.Parse(data.ColumnDate).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"));
+                    Assert.AreEqual("1970-01-01T00:00:00.000000", DateTime.Parse(data.ColumnDate).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"), StringComparer.Ordinal);
                 }
             }
         }
@@ -2018,7 +2018,7 @@ namespace RepoDb.IntegrationTests
                     var data = (await connection.QueryAsync<StringToDateClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                     // Assert
-                    Assert.AreEqual("1970-01-01T00:00:00.000000", DateTime.Parse(data.ColumnDate).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"));
+                    Assert.AreEqual("1970-01-01T00:00:00.000000", DateTime.Parse(data.ColumnDate).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"), StringComparer.Ordinal);
                 }
             }
         }
@@ -2056,7 +2056,7 @@ namespace RepoDb.IntegrationTests
                     var data = connection.Query<StringToDateTimeClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                     // Assert
-                    Assert.AreEqual("1970-01-01T11:30:00.000000", DateTime.Parse(data.ColumnDateTime).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"));
+                    Assert.AreEqual("1970-01-01T11:30:00.000000", DateTime.Parse(data.ColumnDateTime).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"), StringComparer.Ordinal);
                 }
             }
         }
@@ -2082,7 +2082,7 @@ namespace RepoDb.IntegrationTests
                     var data = (await connection.QueryAsync<StringToDateTimeClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                     // Assert
-                    Assert.AreEqual("1970-01-01T11:30:00.000000", DateTime.Parse(data.ColumnDateTime).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"));
+                    Assert.AreEqual("1970-01-01T11:30:00.000000", DateTime.Parse(data.ColumnDateTime).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"), StringComparer.Ordinal);
                 }
             }
         }
@@ -2120,7 +2120,7 @@ namespace RepoDb.IntegrationTests
                     var data = connection.Query<StringToDateTime2Class>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                     // Assert
-                    Assert.AreEqual("2019-03-03T15:22:10.000000", DateTime.Parse(data.ColumnDateTime2).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"));
+                    Assert.AreEqual("2019-03-03T15:22:10.000000", DateTime.Parse(data.ColumnDateTime2).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"), StringComparer.Ordinal);
                 }
             }
         }
@@ -2146,7 +2146,7 @@ namespace RepoDb.IntegrationTests
                     var data = (await connection.QueryAsync<StringToDateTime2Class>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                     // Assert
-                    Assert.AreEqual("2019-03-03T15:22:10.000000", DateTime.Parse(data.ColumnDateTime2).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"));
+                    Assert.AreEqual("2019-03-03T15:22:10.000000", DateTime.Parse(data.ColumnDateTime2).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"), StringComparer.Ordinal);
                 }
             }
         }
@@ -2182,7 +2182,7 @@ namespace RepoDb.IntegrationTests
                 var data = connection.Query<StringToUniqueIdentifierClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(entity.ColumnUniqueIdentifier, data.ColumnUniqueIdentifier);
+                Assert.AreEqual(entity.ColumnUniqueIdentifier, data.ColumnUniqueIdentifier, StringComparer.Ordinal);
             }
         }
 
@@ -2205,7 +2205,7 @@ namespace RepoDb.IntegrationTests
                 var data = (await connection.QueryAsync<StringToUniqueIdentifierClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(entity.ColumnUniqueIdentifier, data.ColumnUniqueIdentifier);
+                Assert.AreEqual(entity.ColumnUniqueIdentifier, data.ColumnUniqueIdentifier, StringComparer.Ordinal);
             }
         }
 

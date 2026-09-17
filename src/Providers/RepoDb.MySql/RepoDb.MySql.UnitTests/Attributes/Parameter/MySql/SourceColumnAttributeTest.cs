@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySql.Data.MySqlClient;
 using RepoDb.Attributes.Parameter.MySql;
@@ -51,7 +52,7 @@ namespace RepoDb.MySql.UnitTests.Attributes.Parameter.MySql
 
             // Assert
             var parameter = command.Parameters["@ColumnName"];
-            Assert.AreEqual("MappedColumnName", parameter.SourceColumn);
+            Assert.AreEqual("MappedColumnName", parameter.SourceColumn, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -73,7 +74,7 @@ namespace RepoDb.MySql.UnitTests.Attributes.Parameter.MySql
 
             // Assert
             var parameter = command.Parameters["@ColumnName"];
-            Assert.AreEqual("MappedColumnName", parameter.SourceColumn);
+            Assert.AreEqual("MappedColumnName", parameter.SourceColumn, StringComparer.Ordinal);
         }
     }
 }

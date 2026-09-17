@@ -38,7 +38,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests.Resolvers
             var result = resolver.Resolve(field, setting);
 
             // Assert
-            Assert.AreEqual("CAST([Field] AS [INT])", result);
+            Assert.AreEqual("CAST([Field] AS [INT])", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -53,7 +53,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests.Resolvers
             var result = resolver.Resolve(field, setting);
 
             // Assert
-            Assert.AreEqual("CAST([Field] AS [BIGINT])", result);
+            Assert.AreEqual("CAST([Field] AS [BIGINT])", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -68,7 +68,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests.Resolvers
             var result = resolver.Resolve(field, setting);
 
             // Assert
-            Assert.AreEqual("CAST([Field] AS [INT])", result);
+            Assert.AreEqual("CAST([Field] AS [INT])", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -83,7 +83,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests.Resolvers
             var result = resolver.Resolve(field, setting);
 
             // Assert
-            Assert.AreEqual("CAST([Field] AS [DATETIME])", result);
+            Assert.AreEqual("CAST([Field] AS [DATETIME])", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -98,7 +98,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests.Resolvers
             var result = resolver.Resolve(field, setting);
 
             // Assert
-            Assert.AreEqual("CAST([Field] AS [TEXT])", result);
+            Assert.AreEqual("CAST([Field] AS [TEXT])", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -113,7 +113,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests.Resolvers
             var result = resolver.Resolve(field, setting);
 
             // Assert
-            Assert.AreEqual("CAST([Field] AS [BLOB])", result);
+            Assert.AreEqual("CAST([Field] AS [BLOB])", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -128,7 +128,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests.Resolvers
             var result = resolver.Resolve(field, setting);
 
             // Assert
-            Assert.AreEqual("CAST([Field] AS [DECIMAL])", result);
+            Assert.AreEqual("CAST([Field] AS [DECIMAL])", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -143,7 +143,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests.Resolvers
             var result = resolver.Resolve(field, setting);
 
             // Assert
-            Assert.AreEqual("CAST([Field] AS [REAL])", result);
+            Assert.AreEqual("CAST([Field] AS [REAL])", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -158,7 +158,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests.Resolvers
             var result = resolver.Resolve(field, setting);
 
             // Assert
-            Assert.AreEqual("CAST([Field] AS [TIME])", result);
+            Assert.AreEqual("CAST([Field] AS [TIME])", result, StringComparer.Ordinal);
         }
 
         #endregion

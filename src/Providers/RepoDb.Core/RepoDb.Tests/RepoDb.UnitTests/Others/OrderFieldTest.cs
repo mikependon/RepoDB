@@ -66,7 +66,7 @@ namespace RepoDb.UnitTests.Others
             var parsed = OrderField.Ascending<OrderFieldTestMappedClass>(p => p.PropertyString);
 
             // Assert
-            Assert.AreEqual("PropertyText", parsed.Name);
+            Assert.AreEqual("PropertyText", parsed.Name, StringComparer.Ordinal);
             Assert.AreEqual(Order.Ascending, parsed.Order);
         }
 
@@ -89,7 +89,7 @@ namespace RepoDb.UnitTests.Others
             var parsed = OrderField.Descending<OrderFieldTestMappedClass>(p => p.PropertyString);
 
             // Assert
-            Assert.AreEqual("PropertyText", parsed.Name);
+            Assert.AreEqual("PropertyText", parsed.Name, StringComparer.Ordinal);
             Assert.AreEqual(Order.Descending, parsed.Order);
         }
 
@@ -112,7 +112,7 @@ namespace RepoDb.UnitTests.Others
             var parsed = OrderField.Parse<OrderFieldTestMappedClass>(p => p.PropertyString, Order.Ascending);
 
             // Assert
-            Assert.AreEqual("PropertyText", parsed.Name);
+            Assert.AreEqual("PropertyText", parsed.Name, StringComparer.Ordinal);
             Assert.AreEqual(Order.Ascending, parsed.Order);
         }
 
@@ -148,7 +148,7 @@ namespace RepoDb.UnitTests.Others
             var parsed = OrderField.Parse<OrderFieldTestMappedClass>(p => p.PropertyString, Order.Descending);
 
             // Assert
-            Assert.AreEqual("PropertyText", parsed.Name);
+            Assert.AreEqual("PropertyText", parsed.Name, StringComparer.Ordinal);
             Assert.AreEqual(Order.Descending, parsed.Order);
         }
 

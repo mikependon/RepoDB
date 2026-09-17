@@ -453,8 +453,8 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(2, result.Count);
-                Assert.AreEqual("ABC", result[0]);
-                Assert.AreEqual("DEF", result[1]);
+                Assert.AreEqual("ABC", result[0], StringComparer.Ordinal);
+                Assert.AreEqual("DEF", result[1], StringComparer.Ordinal);
             }
         }
 
@@ -468,8 +468,8 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(2, result.Count);
-                Assert.AreEqual("ABC", result[0]);
-                Assert.AreEqual("DEF", result[1]);
+                Assert.AreEqual("ABC", result[0], StringComparer.Ordinal);
+                Assert.AreEqual("DEF", result[1], StringComparer.Ordinal);
             }
         }
 
@@ -483,7 +483,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(2, result.Count);
-                result.ForEach(item => Assert.AreEqual(default(string), item));
+                result.ForEach(item => Assert.AreEqual(default(string), item, StringComparer.Ordinal));
             }
         }
 
@@ -497,7 +497,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(2, result.Count);
-                result.ForEach(item => Assert.AreEqual(default(string), item));
+                result.ForEach(item => Assert.AreEqual(default(string), item, StringComparer.Ordinal));
             }
         }
 
@@ -1837,7 +1837,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(1, result.Count);
-                Assert.AreEqual("ABC", result[0]);
+                Assert.AreEqual("ABC", result[0], StringComparer.Ordinal);
             }
         }
 
@@ -1852,7 +1852,7 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(1, result.Count);
-                Assert.AreEqual("ABC", result[0]);
+                Assert.AreEqual("ABC", result[0], StringComparer.Ordinal);
             }
         }
 
@@ -1867,9 +1867,9 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(3, result.Count);
-                Assert.AreEqual("ABC", result[0]);
-                Assert.AreEqual("DEF", result[1]);
-                Assert.AreEqual("GHI", result[2]);
+                Assert.AreEqual("ABC", result[0], StringComparer.Ordinal);
+                Assert.AreEqual("DEF", result[1], StringComparer.Ordinal);
+                Assert.AreEqual("GHI", result[2], StringComparer.Ordinal);
             }
         }
 
@@ -1884,9 +1884,9 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(3, result.Count);
-                Assert.AreEqual("ABC", result[0]);
-                Assert.AreEqual("DEF", result[1]);
-                Assert.AreEqual("GHI", result[2]);
+                Assert.AreEqual("ABC", result[0], StringComparer.Ordinal);
+                Assert.AreEqual("DEF", result[1], StringComparer.Ordinal);
+                Assert.AreEqual("GHI", result[2], StringComparer.Ordinal);
             }
         }
 

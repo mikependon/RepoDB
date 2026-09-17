@@ -104,7 +104,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(table =>
                 {
                     var entity = result.FirstOrDefault(item => item.Id == table.Id);
-                    Assert.AreEqual(table.ColumnNVarChar, entity.ColumnNVarChar);
+                    Assert.AreEqual(table.ColumnNVarChar, entity.ColumnNVarChar, StringComparer.Ordinal);
                 });
             }
         }
@@ -220,7 +220,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(table =>
                 {
                     var entity = result.FirstOrDefault(item => item.Id == table.Id);
-                    Assert.AreEqual(table.ColumnNVarChar, entity.ColumnNVarChar);
+                    Assert.AreEqual(table.ColumnNVarChar, entity.ColumnNVarChar, StringComparer.Ordinal);
                 });
             }
         }
@@ -405,7 +405,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(table =>
                 {
                     var entity = result.FirstOrDefault(item => item.Id == table.Id);
-                    Assert.AreEqual(table.ColumnNVarChar, entity.ColumnNVarChar);
+                    Assert.AreEqual(table.ColumnNVarChar, entity.ColumnNVarChar, StringComparer.Ordinal);
                 });
             }
         }
@@ -521,7 +521,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(table =>
                 {
                     var entity = result.FirstOrDefault(item => item.Id == table.Id);
-                    Assert.AreEqual(table.ColumnNVarChar, entity.ColumnNVarChar);
+                    Assert.AreEqual(table.ColumnNVarChar, entity.ColumnNVarChar, StringComparer.Ordinal);
                 });
             }
         }

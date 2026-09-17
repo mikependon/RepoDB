@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
 
@@ -29,7 +30,7 @@ namespace RepoDb.UnitTests.Attributes
             var expected = "WhateverId";
 
             // Assert
-            Assert.AreEqual(expected, actual.PropertyInfo.Name);
+            Assert.AreEqual(expected, actual.PropertyInfo.Name, StringComparer.Ordinal);
         }
     }
 }

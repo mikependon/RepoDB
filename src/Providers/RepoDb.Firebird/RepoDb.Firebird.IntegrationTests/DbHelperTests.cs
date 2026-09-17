@@ -86,7 +86,7 @@ namespace RepoDb.Firebird.IntegrationTests
 
                 // Assert
                 Assert.IsNotNull(primary);
-                Assert.AreEqual("Id", primary.Name);
+                Assert.AreEqual("Id", primary.Name, StringComparer.Ordinal);
             }
         }
 
@@ -104,7 +104,7 @@ namespace RepoDb.Firebird.IntegrationTests
 
                 // Assert
                 Assert.IsNotNull(primary);
-                Assert.AreEqual("Id", primary.Name);
+                Assert.AreEqual("Id", primary.Name, StringComparer.Ordinal);
             }
         }
 
@@ -162,7 +162,7 @@ namespace RepoDb.Firebird.IntegrationTests
 
                 // Assert
                 Assert.IsNotNull(primary);
-                Assert.AreEqual("Id", primary.Name);
+                Assert.AreEqual("Id", primary.Name, StringComparer.Ordinal);
             }
         }
 
@@ -180,7 +180,7 @@ namespace RepoDb.Firebird.IntegrationTests
 
                 // Assert
                 Assert.IsNotNull(primary);
-                Assert.AreEqual("Id", primary.Name);
+                Assert.AreEqual("Id", primary.Name, StringComparer.Ordinal);
             }
         }
 

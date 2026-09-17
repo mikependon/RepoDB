@@ -82,7 +82,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(entity.ColumnNVarChar, queryResult.ColumnNVarChar);
+                Assert.AreEqual(entity.ColumnNVarChar, queryResult.ColumnNVarChar, StringComparer.Ordinal);
             }
         }
 
@@ -130,7 +130,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(entity.ColumnNVarChar, queryResult.ColumnNVarChar);
+                Assert.AreEqual(entity.ColumnNVarChar, queryResult.ColumnNVarChar, StringComparer.Ordinal);
             }
         }
 
@@ -177,7 +177,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var queryResult = connection.Query<NonIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(entity.ColumnNVarChar, queryResult.ColumnNVarChar);
+                Assert.AreEqual(entity.ColumnNVarChar, queryResult.ColumnNVarChar, StringComparer.Ordinal);
             }
         }
 
@@ -864,7 +864,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(entity.ColumnNVarChar, queryResult.ColumnNVarChar);
+                Assert.AreEqual(entity.ColumnNVarChar, queryResult.ColumnNVarChar, StringComparer.Ordinal);
             }
         }
 
@@ -911,7 +911,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(entity.ColumnNVarChar, queryResult.ColumnNVarChar);
+                Assert.AreEqual(entity.ColumnNVarChar, queryResult.ColumnNVarChar, StringComparer.Ordinal);
             }
         }
 
@@ -958,7 +958,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var queryResult = connection.Query<NonIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(entity.ColumnNVarChar, queryResult.ColumnNVarChar);
+                Assert.AreEqual(entity.ColumnNVarChar, queryResult.ColumnNVarChar, StringComparer.Ordinal);
             }
         }
 

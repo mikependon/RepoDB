@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using IBM.Data.Db2;
 using RepoDb.DbSettings;
@@ -40,7 +41,7 @@ namespace RepoDb.Db2.UnitTests
             var setting = DbSettingMapper.Get<DB2Connection>();
 
             // Assert
-            Assert.AreEqual("\"", setting.ClosingQuote);
+            Assert.AreEqual("\"", setting.ClosingQuote, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -101,7 +102,7 @@ namespace RepoDb.Db2.UnitTests
             // interior-separator pattern already confirmed working for Db2 multi-statement
             // command text elsewhere in this provider (see ExecuteQueryMultipleTest.cs and
             // Db2StatementBuilder.WrapMergeWithReturningResult).
-            Assert.AreEqual(";", setting.MultiStatementSeparator);
+            Assert.AreEqual(";", setting.MultiStatementSeparator, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -131,7 +132,7 @@ namespace RepoDb.Db2.UnitTests
             var setting = DbSettingMapper.Get<DB2Connection>();
 
             // Assert
-            Assert.AreEqual("\"", setting.OpeningQuote);
+            Assert.AreEqual("\"", setting.OpeningQuote, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -141,7 +142,7 @@ namespace RepoDb.Db2.UnitTests
             var setting = DbSettingMapper.Get<DB2Connection>();
 
             // Assert
-            Assert.AreEqual(":", setting.ParameterPrefix);
+            Assert.AreEqual(":", setting.ParameterPrefix, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -151,7 +152,7 @@ namespace RepoDb.Db2.UnitTests
             var setting = DbSettingMapper.Get<DB2Connection>();
 
             // Assert
-            Assert.AreEqual(":", setting.SqlTextParameterPrefix);
+            Assert.AreEqual(":", setting.SqlTextParameterPrefix, StringComparer.Ordinal);
         }
     }
 }

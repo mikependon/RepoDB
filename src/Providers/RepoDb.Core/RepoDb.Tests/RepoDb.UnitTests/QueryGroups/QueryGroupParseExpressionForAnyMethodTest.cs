@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 
@@ -26,7 +27,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] = @PropertyInt OR [PropertyInt] = @PropertyInt_1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -40,7 +41,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] <> @PropertyInt OR [PropertyInt] <> @PropertyInt_1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -55,7 +56,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] = @PropertyInt OR [PropertyInt] = @PropertyInt_1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -70,7 +71,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] <> @PropertyInt OR [PropertyInt] <> @PropertyInt_1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -88,7 +89,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] = @PropertyInt OR [PropertyInt] = @PropertyInt_1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -106,7 +107,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] <> @PropertyInt OR [PropertyInt] <> @PropertyInt_1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -124,7 +125,7 @@ namespace RepoDb.UnitTests
             var expected = "NOT ([PropertyInt] = @PropertyInt OR [PropertyInt] = @PropertyInt_1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -142,7 +143,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] = @PropertyInt OR [PropertyInt] = @PropertyInt_1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -156,7 +157,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] = @PropertyInt OR [PropertyInt] = @PropertyInt_1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -170,7 +171,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] <> @PropertyInt OR [PropertyInt] <> @PropertyInt_1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -184,7 +185,7 @@ namespace RepoDb.UnitTests
             var expected = "NOT ([PropertyInt] = @PropertyInt OR [PropertyInt] = @PropertyInt_1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -198,7 +199,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] = @PropertyInt OR [PropertyInt] = @PropertyInt_1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -212,7 +213,7 @@ namespace RepoDb.UnitTests
             var expected = "NOT ([PropertyInt] <> @PropertyInt OR [PropertyInt] <> @PropertyInt_1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -226,7 +227,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] <> @PropertyInt OR [PropertyInt] <> @PropertyInt_1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
     }
 }

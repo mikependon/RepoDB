@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace RepoDb.UnitTests
@@ -23,7 +24,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] IS NULL)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -37,7 +38,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] = @Field1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -51,7 +52,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] = @Field1 AND [Field2] = @Field2)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
     }
 }

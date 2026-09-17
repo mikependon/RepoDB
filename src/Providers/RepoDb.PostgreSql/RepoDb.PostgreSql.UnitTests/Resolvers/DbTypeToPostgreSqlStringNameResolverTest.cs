@@ -7,6 +7,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Resolvers;
 using System.Data;
@@ -23,7 +24,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
 
             // Assert
-            Assert.AreEqual("BIGINT", resolver.Resolve(DbType.Int64));
+            Assert.AreEqual("BIGINT", resolver.Resolve(DbType.Int64), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -33,7 +34,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
 
             // Assert
-            Assert.AreEqual("BYTEA", resolver.Resolve(DbType.Byte));
+            Assert.AreEqual("BYTEA", resolver.Resolve(DbType.Byte), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -43,7 +44,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
 
             // Assert
-            Assert.AreEqual("BYTEA", resolver.Resolve(DbType.Binary));
+            Assert.AreEqual("BYTEA", resolver.Resolve(DbType.Binary), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -53,7 +54,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
 
             // Assert
-            Assert.AreEqual("BOOLEAN", resolver.Resolve(DbType.Boolean));
+            Assert.AreEqual("BOOLEAN", resolver.Resolve(DbType.Boolean), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -63,7 +64,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
 
             // Assert
-            Assert.AreEqual("TEXT", resolver.Resolve(DbType.String));
+            Assert.AreEqual("TEXT", resolver.Resolve(DbType.String), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -73,7 +74,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
 
             // Assert
-            Assert.AreEqual("TEXT", resolver.Resolve(DbType.AnsiString));
+            Assert.AreEqual("TEXT", resolver.Resolve(DbType.AnsiString), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -83,7 +84,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
 
             // Assert
-            Assert.AreEqual("TEXT", resolver.Resolve(DbType.AnsiStringFixedLength));
+            Assert.AreEqual("TEXT", resolver.Resolve(DbType.AnsiStringFixedLength), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -93,7 +94,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
 
             // Assert
-            Assert.AreEqual("TEXT", resolver.Resolve(DbType.StringFixedLength));
+            Assert.AreEqual("TEXT", resolver.Resolve(DbType.StringFixedLength), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -103,7 +104,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
 
             // Assert
-            Assert.AreEqual("DATE", resolver.Resolve(DbType.Date));
+            Assert.AreEqual("DATE", resolver.Resolve(DbType.Date), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -113,7 +114,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
 
             // Assert
-            Assert.AreEqual("TIMESTAMP", resolver.Resolve(DbType.DateTime));
+            Assert.AreEqual("TIMESTAMP", resolver.Resolve(DbType.DateTime), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -123,7 +124,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
 
             // Assert
-            Assert.AreEqual("TIMESTAMP", resolver.Resolve(DbType.DateTime2));
+            Assert.AreEqual("TIMESTAMP", resolver.Resolve(DbType.DateTime2), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -133,7 +134,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
 
             // Assert
-            Assert.AreEqual("TIMESTAMPTZ", resolver.Resolve(DbType.DateTimeOffset));
+            Assert.AreEqual("TIMESTAMPTZ", resolver.Resolve(DbType.DateTimeOffset), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -143,7 +144,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
 
             // Assert
-            Assert.AreEqual("NUMERIC", resolver.Resolve(DbType.Decimal));
+            Assert.AreEqual("NUMERIC", resolver.Resolve(DbType.Decimal), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -153,7 +154,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
 
             // Assert
-            Assert.AreEqual("REAL", resolver.Resolve(DbType.Single));
+            Assert.AreEqual("REAL", resolver.Resolve(DbType.Single), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -163,7 +164,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
 
             // Assert
-            Assert.AreEqual("DOUBLE PRECISION", resolver.Resolve(DbType.Double));
+            Assert.AreEqual("DOUBLE PRECISION", resolver.Resolve(DbType.Double), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -173,7 +174,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
 
             // Assert
-            Assert.AreEqual("INTEGER", resolver.Resolve(DbType.Int32));
+            Assert.AreEqual("INTEGER", resolver.Resolve(DbType.Int32), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -183,7 +184,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
 
             // Assert
-            Assert.AreEqual("SMALLINT", resolver.Resolve(DbType.Int16));
+            Assert.AreEqual("SMALLINT", resolver.Resolve(DbType.Int16), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -193,7 +194,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
 
             // Assert
-            Assert.AreEqual("INTERVAL", resolver.Resolve(DbType.Time));
+            Assert.AreEqual("INTERVAL", resolver.Resolve(DbType.Time), StringComparer.Ordinal);
         }
     }
 }

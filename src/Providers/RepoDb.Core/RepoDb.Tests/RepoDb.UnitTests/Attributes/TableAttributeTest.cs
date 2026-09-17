@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -32,7 +33,7 @@ namespace RepoDb.UnitTests.Attributes
             var expected = "Name";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -43,7 +44,7 @@ namespace RepoDb.UnitTests.Attributes
             var expected = "[dbo].[Name]";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
     }
 }

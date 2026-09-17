@@ -77,7 +77,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.COLUMNDATETIME2, data.COLUMNDATETIME2);
                 Assert.AreEqual(entity.COLUMNDATETIME, data.COLUMNDATETIME);
                 Assert.AreEqual(entity.COLUMNINT, data.COLUMNINT);
-                Assert.AreEqual(entity.COLUMNNVARCHAR, data.COLUMNNVARCHAR);
+                Assert.AreEqual(entity.COLUMNNVARCHAR, data.COLUMNNVARCHAR, StringComparer.Ordinal);
             }
         }
 
@@ -111,7 +111,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.COLUMNDATETIME2, data.COLUMNDATETIME2);
                 Assert.AreEqual(entity.COLUMNDATETIME, data.COLUMNDATETIME);
                 Assert.AreEqual(entity.COLUMNINT, data.COLUMNINT);
-                Assert.AreEqual(entity.COLUMNNVARCHAR, data.COLUMNNVARCHAR);
+                Assert.AreEqual(entity.COLUMNNVARCHAR, data.COLUMNNVARCHAR, StringComparer.Ordinal);
             }
         }
 
@@ -145,7 +145,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.COLUMNDATETIME2, data.COLUMNDATETIME2);
                 Assert.AreEqual(entity.COLUMNDATETIME, data.COLUMNDATETIME);
                 Assert.AreEqual(entity.COLUMNINT, data.COLUMNINT);
-                Assert.AreEqual(entity.COLUMNNVARCHAR, data.COLUMNNVARCHAR);
+                Assert.AreEqual(entity.COLUMNNVARCHAR, data.COLUMNNVARCHAR, StringComparer.Ordinal);
             }
         }
 
@@ -179,7 +179,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.COLUMNDATETIME2, data.COLUMNDATETIME2);
                 Assert.AreEqual(entity.COLUMNDATETIME, data.COLUMNDATETIME);
                 Assert.AreEqual(entity.COLUMNINT, data.COLUMNINT);
-                Assert.AreEqual(entity.COLUMNNVARCHAR, data.COLUMNNVARCHAR);
+                Assert.AreEqual(entity.COLUMNNVARCHAR, data.COLUMNNVARCHAR, StringComparer.Ordinal);
             }
         }
 
@@ -236,7 +236,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -270,7 +270,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -304,7 +304,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -338,7 +338,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 

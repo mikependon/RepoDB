@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Resolvers;
 using System.Data;
@@ -33,7 +34,7 @@ namespace RepoDb.Firebird.UnitTests.Resolvers
             var result = resolver.Resolve(DbType.Int64);
 
             // Assert
-            Assert.AreEqual("BIGINT", result);
+            Assert.AreEqual("BIGINT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -46,7 +47,7 @@ namespace RepoDb.Firebird.UnitTests.Resolvers
             var result = resolver.Resolve(DbType.Int32);
 
             // Assert
-            Assert.AreEqual("INTEGER", result);
+            Assert.AreEqual("INTEGER", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -59,7 +60,7 @@ namespace RepoDb.Firebird.UnitTests.Resolvers
             var result = resolver.Resolve(DbType.Int16);
 
             // Assert
-            Assert.AreEqual("SMALLINT", result);
+            Assert.AreEqual("SMALLINT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -72,7 +73,7 @@ namespace RepoDb.Firebird.UnitTests.Resolvers
             var result = resolver.Resolve(DbType.Byte);
 
             // Assert - Firebird has no TINYINT; the next-widest exact type is SMALLINT.
-            Assert.AreEqual("SMALLINT", result);
+            Assert.AreEqual("SMALLINT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -85,7 +86,7 @@ namespace RepoDb.Firebird.UnitTests.Resolvers
             var result = resolver.Resolve(DbType.Double);
 
             // Assert
-            Assert.AreEqual("DOUBLE PRECISION", result);
+            Assert.AreEqual("DOUBLE PRECISION", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -98,7 +99,7 @@ namespace RepoDb.Firebird.UnitTests.Resolvers
             var result = resolver.Resolve(DbType.Single);
 
             // Assert
-            Assert.AreEqual("FLOAT", result);
+            Assert.AreEqual("FLOAT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -111,7 +112,7 @@ namespace RepoDb.Firebird.UnitTests.Resolvers
             var result = resolver.Resolve(DbType.Decimal);
 
             // Assert
-            Assert.AreEqual("DECIMAL(18,2)", result);
+            Assert.AreEqual("DECIMAL(18,2)", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -124,7 +125,7 @@ namespace RepoDb.Firebird.UnitTests.Resolvers
             var result = resolver.Resolve(DbType.Boolean);
 
             // Assert
-            Assert.AreEqual("BOOLEAN", result);
+            Assert.AreEqual("BOOLEAN", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -137,7 +138,7 @@ namespace RepoDb.Firebird.UnitTests.Resolvers
             var result = resolver.Resolve(DbType.Date);
 
             // Assert
-            Assert.AreEqual("DATE", result);
+            Assert.AreEqual("DATE", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -150,7 +151,7 @@ namespace RepoDb.Firebird.UnitTests.Resolvers
             var result = resolver.Resolve(DbType.DateTime);
 
             // Assert
-            Assert.AreEqual("TIMESTAMP", result);
+            Assert.AreEqual("TIMESTAMP", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -163,7 +164,7 @@ namespace RepoDb.Firebird.UnitTests.Resolvers
             var result = resolver.Resolve(DbType.DateTimeOffset);
 
             // Assert
-            Assert.AreEqual("TIMESTAMP WITH TIME ZONE", result);
+            Assert.AreEqual("TIMESTAMP WITH TIME ZONE", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -176,7 +177,7 @@ namespace RepoDb.Firebird.UnitTests.Resolvers
             var result = resolver.Resolve(DbType.Time);
 
             // Assert
-            Assert.AreEqual("TIME", result);
+            Assert.AreEqual("TIME", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -189,7 +190,7 @@ namespace RepoDb.Firebird.UnitTests.Resolvers
             var result = resolver.Resolve(DbType.Guid);
 
             // Assert
-            Assert.AreEqual("CHAR(16) CHARACTER SET OCTETS", result);
+            Assert.AreEqual("CHAR(16) CHARACTER SET OCTETS", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -202,7 +203,7 @@ namespace RepoDb.Firebird.UnitTests.Resolvers
             var result = resolver.Resolve(DbType.Binary);
 
             // Assert
-            Assert.AreEqual("BLOB SUB_TYPE 0", result);
+            Assert.AreEqual("BLOB SUB_TYPE 0", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -215,7 +216,7 @@ namespace RepoDb.Firebird.UnitTests.Resolvers
             var result = resolver.Resolve(DbType.String);
 
             // Assert
-            Assert.AreEqual("VARCHAR(8191)", result);
+            Assert.AreEqual("VARCHAR(8191)", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -228,7 +229,7 @@ namespace RepoDb.Firebird.UnitTests.Resolvers
             var result = resolver.Resolve(DbType.AnsiStringFixedLength);
 
             // Assert
-            Assert.AreEqual("CHAR(8191)", result);
+            Assert.AreEqual("CHAR(8191)", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -241,7 +242,7 @@ namespace RepoDb.Firebird.UnitTests.Resolvers
             var result = resolver.Resolve(DbType.Xml);
 
             // Assert
-            Assert.AreEqual("BLOB SUB_TYPE TEXT", result);
+            Assert.AreEqual("BLOB SUB_TYPE TEXT", result, StringComparer.Ordinal);
         }
     }
 }

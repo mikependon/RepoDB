@@ -23,7 +23,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] = @PropertyInt)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -37,7 +37,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] = @PropertyInt)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -54,7 +54,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] = @PropertyInt)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -65,7 +65,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] = @PropertyInt)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -79,7 +79,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] = @PropertyInt)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         // Others
@@ -92,7 +92,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] = @PropertyInt)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -103,7 +103,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] = @PropertyInt)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -114,7 +114,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] = @PropertyInt)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         private string TestParseExpressionWithIntArgumentParameterMethod<TEntity>(int value) where TEntity : QueryGroupTestExpressionClass
@@ -134,7 +134,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] = @PropertyInt)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
     }
 }

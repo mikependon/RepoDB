@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
 using RepoDb.Attributes.Parameter.Npgsql;
@@ -52,7 +53,7 @@ namespace RepoDb.PostgreSql.UnitTests.Attributes.Parameter.Npgsql
 
                     // Assert
                     var parameter = command.Parameters["@ColumnName"];
-                    Assert.AreEqual("DataTypeName", parameter.DataTypeName);
+                    Assert.AreEqual("DataTypeName", parameter.DataTypeName, StringComparer.Ordinal);
                 }
             }
         }
@@ -77,7 +78,7 @@ namespace RepoDb.PostgreSql.UnitTests.Attributes.Parameter.Npgsql
 
                     // Assert
                     var parameter = command.Parameters["@ColumnName"];
-                    Assert.AreEqual("DataTypeName", parameter.DataTypeName);
+                    Assert.AreEqual("DataTypeName", parameter.DataTypeName, StringComparer.Ordinal);
                 }
             }
         }

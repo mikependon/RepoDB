@@ -24,7 +24,7 @@ namespace RepoDb.Telemetry.Core.UnitTests.Models
             var expected = "Default";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -39,7 +39,7 @@ namespace RepoDb.Telemetry.Core.UnitTests.Models
             var expected = "Reporting";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -54,7 +54,7 @@ namespace RepoDb.Telemetry.Core.UnitTests.Models
             var expected = "MyApplication";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -85,7 +85,7 @@ namespace RepoDb.Telemetry.Core.UnitTests.Models
             var expected = "Query";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -116,7 +116,7 @@ namespace RepoDb.Telemetry.Core.UnitTests.Models
             var expected = "SELECT * FROM [Table];";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -161,7 +161,7 @@ namespace RepoDb.Telemetry.Core.UnitTests.Models
             var expected = "MyMachine";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -176,7 +176,7 @@ namespace RepoDb.Telemetry.Core.UnitTests.Models
             var expected = "RepoDb.Telemetry.Core";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -191,7 +191,7 @@ namespace RepoDb.Telemetry.Core.UnitTests.Models
             var expected = "1.0.0";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
     }
 }

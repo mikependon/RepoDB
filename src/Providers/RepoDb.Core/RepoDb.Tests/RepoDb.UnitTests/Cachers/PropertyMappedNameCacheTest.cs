@@ -50,7 +50,7 @@ namespace RepoDb.UnitTests.Cachers
             var expected = "ColumnString";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -62,7 +62,7 @@ namespace RepoDb.UnitTests.Cachers
             var expected = "PropertyName";
 
             // Assert
-            Assert.AreEqual(expected, property.GetMappedName());
+            Assert.AreEqual(expected, property.GetMappedName(), StringComparer.Ordinal);
         }
 
         [TestMethod]

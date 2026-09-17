@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text;
 
@@ -23,7 +24,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyBytes] = @PropertyBytes)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -34,7 +35,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyBytes] = @PropertyBytes)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -48,7 +49,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyBytes] = @PropertyBytes)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -65,7 +66,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyBytes] = @PropertyBytes)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -76,7 +77,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyBytes] = @PropertyBytes)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -90,7 +91,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyBytes] = @PropertyBytes)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
     }
 }

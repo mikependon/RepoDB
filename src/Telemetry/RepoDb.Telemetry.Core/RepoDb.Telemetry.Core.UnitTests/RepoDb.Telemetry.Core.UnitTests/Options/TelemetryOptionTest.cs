@@ -24,7 +24,7 @@ namespace RepoDb.Telemetry.Core.UnitTests.Options
             var expected = "MyApplication";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -36,7 +36,7 @@ namespace RepoDb.Telemetry.Core.UnitTests.Options
             var expected = "Default";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -48,7 +48,7 @@ namespace RepoDb.Telemetry.Core.UnitTests.Options
             var expected = "http://localhost:5000";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -60,7 +60,7 @@ namespace RepoDb.Telemetry.Core.UnitTests.Options
             string expected = null;
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -87,7 +87,7 @@ namespace RepoDb.Telemetry.Core.UnitTests.Options
             var expected = "Reporting";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -102,7 +102,7 @@ namespace RepoDb.Telemetry.Core.UnitTests.Options
             var expected = "https://collector.example.com";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -117,7 +117,7 @@ namespace RepoDb.Telemetry.Core.UnitTests.Options
             var expected = "12345";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]

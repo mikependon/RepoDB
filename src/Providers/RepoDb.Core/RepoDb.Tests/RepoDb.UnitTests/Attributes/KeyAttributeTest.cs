@@ -7,6 +7,7 @@
 
 #endregion
 
+using System;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
@@ -43,7 +44,7 @@ namespace RepoDb.UnitTests.Attributes
             var expected = "WhateverId";
 
             // Assert
-            Assert.AreEqual(expected, actual.PropertyInfo.Name);
+            Assert.AreEqual(expected, actual.PropertyInfo.Name, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -54,7 +55,7 @@ namespace RepoDb.UnitTests.Attributes
             var expected = "KeyId";
 
             // Assert
-            Assert.AreEqual(expected, actual.PropertyInfo.Name);
+            Assert.AreEqual(expected, actual.PropertyInfo.Name, StringComparer.Ordinal);
         }
     }
 }

@@ -892,7 +892,7 @@ namespace RepoDb.IntegrationTests.Operations
                     // Assert
                     var value3 = result.Scalar<string>();
                     Assert.IsNotNull(value3);
-                    Assert.AreEqual("USER", value3);
+                    Assert.AreEqual("USER", value3, StringComparer.Ordinal);
                 }
             }
         }
@@ -931,7 +931,7 @@ namespace RepoDb.IntegrationTests.Operations
                     // Assert
                     var value3 = result.Scalar<string>();
                     Assert.IsNotNull(value3);
-                    Assert.AreEqual(param.Value3, value3);
+                    Assert.AreEqual(param.Value3, value3, StringComparer.Ordinal);
                 }
             }
         }
@@ -1042,7 +1042,7 @@ namespace RepoDb.IntegrationTests.Operations
                     result.NextResult();
                     var value3 = result.Scalar<string>(false);
                     Assert.IsNotNull(value3);
-                    Assert.AreEqual("USER", value3);
+                    Assert.AreEqual("USER", value3, StringComparer.Ordinal);
                 }
             }
         }
@@ -1227,7 +1227,7 @@ namespace RepoDb.IntegrationTests.Operations
                     // Assert
                     var value3 = result.Scalar<string>();
                     Assert.IsNotNull(value3);
-                    Assert.AreEqual("USER", value3);
+                    Assert.AreEqual("USER", value3, StringComparer.Ordinal);
                 }
             }
         }
@@ -1266,7 +1266,7 @@ namespace RepoDb.IntegrationTests.Operations
                     // Assert
                     var value3 = result.Scalar<string>();
                     Assert.IsNotNull(value3);
-                    Assert.AreEqual(param.Value3, value3);
+                    Assert.AreEqual(param.Value3, value3, StringComparer.Ordinal);
                 }
             }
         }
@@ -1377,7 +1377,7 @@ namespace RepoDb.IntegrationTests.Operations
                     result.NextResult();
                     var value3 = result.Scalar<string>(false);
                     Assert.IsNotNull(value3);
-                    Assert.AreEqual("USER", value3);
+                    Assert.AreEqual("USER", value3, StringComparer.Ordinal);
                 }
             }
         }

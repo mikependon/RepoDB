@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
 using System.Linq;
@@ -53,7 +54,7 @@ namespace RepoDb.UnitTests.Cachers
             var expected = "Id";
 
             // Assert
-            Assert.AreEqual(expected, actual.GetMappedName());
+            Assert.AreEqual(expected, actual.GetMappedName(), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -64,7 +65,7 @@ namespace RepoDb.UnitTests.Cachers
             var expected = "Id";
 
             // Assert
-            Assert.AreEqual(expected, actual.GetMappedName());
+            Assert.AreEqual(expected, actual.GetMappedName(), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -75,7 +76,7 @@ namespace RepoDb.UnitTests.Cachers
             var expected = "Id";
 
             // Assert
-            Assert.AreEqual(expected, actual.GetMappedName());
+            Assert.AreEqual(expected, actual.GetMappedName(), StringComparer.Ordinal);
         }
 
         #endregion
@@ -101,7 +102,7 @@ namespace RepoDb.UnitTests.Cachers
             var expected = "Property2";
 
             // Assert
-            Assert.AreEqual(expected, actual.GetMappedName());
+            Assert.AreEqual(expected, actual.GetMappedName(), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -112,7 +113,7 @@ namespace RepoDb.UnitTests.Cachers
             var expected = "Property2";
 
             // Assert
-            Assert.AreEqual(expected, actual.GetMappedName());
+            Assert.AreEqual(expected, actual.GetMappedName(), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -123,7 +124,7 @@ namespace RepoDb.UnitTests.Cachers
             var expected = "Property2";
 
             // Assert
-            Assert.AreEqual(expected, actual.GetMappedName());
+            Assert.AreEqual(expected, actual.GetMappedName(), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -134,7 +135,7 @@ namespace RepoDb.UnitTests.Cachers
             var expected = "Property4";
 
             // Assert
-            Assert.AreEqual(expected, actual.GetMappedName());
+            Assert.AreEqual(expected, actual.GetMappedName(), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -145,7 +146,7 @@ namespace RepoDb.UnitTests.Cachers
             var expected = "Property4";
 
             // Assert
-            Assert.AreEqual(expected, actual.GetMappedName());
+            Assert.AreEqual(expected, actual.GetMappedName(), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -156,7 +157,7 @@ namespace RepoDb.UnitTests.Cachers
             var expected = "Property4";
 
             // Assert
-            Assert.AreEqual(expected, actual.GetMappedName());
+            Assert.AreEqual(expected, actual.GetMappedName(), StringComparer.Ordinal);
         }
 
         #endregion

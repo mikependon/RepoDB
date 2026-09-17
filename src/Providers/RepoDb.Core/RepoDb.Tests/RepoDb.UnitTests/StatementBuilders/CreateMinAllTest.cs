@@ -46,7 +46,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "SELECT MIN ([Value]) AS [MinValue] FROM [Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -65,7 +65,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "SELECT MIN ([Value]) AS [MinValue] FROM [Table] WITH (NOLOCK) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -83,7 +83,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "SELECT MIN ([Value]) AS [MinValue] FROM [dbo].[Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -101,7 +101,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "SELECT MIN ([Value]) AS [MinValue] FROM [dbo].[Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]

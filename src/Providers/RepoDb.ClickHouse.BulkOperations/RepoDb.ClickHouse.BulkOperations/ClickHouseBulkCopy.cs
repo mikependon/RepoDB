@@ -130,7 +130,7 @@ namespace RepoDb.ClickHouse.BulkOperations
                 BatchSize = BatchSize ?? 100_000,
                 MaxDegreeOfParallelism = 4,
                 MaxExecutionTime = TimeSpan.FromSeconds(BulkCopyTimeout),
-                CustomSettings = new Dictionary<string, object>
+                CustomSettings = new Dictionary<string, object>(StringComparer.Ordinal)
                 {
                     ["optimize_on_insert"] = 0,
                 },

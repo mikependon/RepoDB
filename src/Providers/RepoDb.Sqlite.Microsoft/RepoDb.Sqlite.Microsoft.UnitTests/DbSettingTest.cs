@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -41,7 +42,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var setting = DbSettingMapper.Get<SqliteConnection>();
 
             // Assert
-            Assert.AreEqual("]", setting.ClosingQuote);
+            Assert.AreEqual("]", setting.ClosingQuote, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -101,7 +102,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var setting = DbSettingMapper.Get<SqliteConnection>();
 
             // Assert
-            Assert.AreEqual("[", setting.OpeningQuote);
+            Assert.AreEqual("[", setting.OpeningQuote, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -111,7 +112,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var setting = DbSettingMapper.Get<SqliteConnection>();
 
             // Assert
-            Assert.AreEqual("@", setting.ParameterPrefix);
+            Assert.AreEqual("@", setting.ParameterPrefix, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -121,7 +122,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var setting = DbSettingMapper.Get<SqliteConnection>();
 
             // Assert
-            Assert.AreEqual("@", setting.SqlTextParameterPrefix);
+            Assert.AreEqual("@", setting.SqlTextParameterPrefix, StringComparer.Ordinal);
         }
 
         #endregion

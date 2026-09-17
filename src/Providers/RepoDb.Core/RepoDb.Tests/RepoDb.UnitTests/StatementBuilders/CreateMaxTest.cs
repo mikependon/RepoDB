@@ -46,7 +46,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "SELECT MAX ([Value]) AS [MaxValue] FROM [Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -68,7 +68,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"WHERE ([Id] = @Id) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -87,7 +87,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "SELECT MAX ([Value]) AS [MaxValue] FROM [Table] WITH (NOLOCK) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -111,7 +111,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"WHERE ([Id] = @Id) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -129,7 +129,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "SELECT MAX ([Value]) AS [MaxValue] FROM [dbo].[Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -147,7 +147,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "SELECT MAX ([Value]) AS [MaxValue] FROM [dbo].[Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]

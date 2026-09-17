@@ -81,7 +81,7 @@ namespace RepoDb.DbHelpers
         /// <returns></returns>
         private HashSet<string> GetBlobTypes()
         {
-            return new()
+            return new(StringComparer.Ordinal)
             {
                 "blob",
                 "blobasarray",

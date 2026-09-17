@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySql.Data.MySqlClient;
 using RepoDb.Resolvers;
@@ -33,7 +34,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.Binary);
 
             // Assert
-            Assert.AreEqual("BINARY", result);
+            Assert.AreEqual("BINARY", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -46,7 +47,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.Bit);
 
             // Assert
-            Assert.AreEqual("BIT", result);
+            Assert.AreEqual("BIT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -59,7 +60,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.Blob);
 
             // Assert
-            Assert.AreEqual("BLOB", result);
+            Assert.AreEqual("BLOB", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -72,7 +73,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.Byte);
 
             // Assert
-            Assert.AreEqual("TINYINT", result);
+            Assert.AreEqual("TINYINT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -85,7 +86,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.UByte);
 
             // Assert
-            Assert.AreEqual("TINYINT", result);
+            Assert.AreEqual("TINYINT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -98,7 +99,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.Date);
 
             // Assert
-            Assert.AreEqual("DATE", result);
+            Assert.AreEqual("DATE", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -111,7 +112,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.DateTime);
 
             // Assert
-            Assert.AreEqual("DATETIME", result);
+            Assert.AreEqual("DATETIME", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -124,7 +125,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.Decimal);
 
             // Assert
-            Assert.AreEqual("DECIMAL", result);
+            Assert.AreEqual("DECIMAL", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -137,7 +138,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.Double);
 
             // Assert
-            Assert.AreEqual("DOUBLE", result);
+            Assert.AreEqual("DOUBLE", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -150,7 +151,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.Enum);
 
             // Assert
-            Assert.AreEqual("TEXT", result);
+            Assert.AreEqual("TEXT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -163,7 +164,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.Guid);
 
             // Assert
-            Assert.AreEqual("TEXT", result);
+            Assert.AreEqual("TEXT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -176,7 +177,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.Set);
 
             // Assert
-            Assert.AreEqual("TEXT", result);
+            Assert.AreEqual("TEXT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -189,7 +190,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.Text);
 
             // Assert
-            Assert.AreEqual("TEXT", result);
+            Assert.AreEqual("TEXT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -202,7 +203,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.Float);
 
             // Assert
-            Assert.AreEqual("FLOAT", result);
+            Assert.AreEqual("FLOAT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -215,7 +216,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.Geometry);
 
             // Assert
-            Assert.AreEqual("GEOMETRY", result);
+            Assert.AreEqual("GEOMETRY", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -228,7 +229,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.Int16);
 
             // Assert
-            Assert.AreEqual("SMALLINT", result);
+            Assert.AreEqual("SMALLINT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -241,7 +242,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.Int24);
 
             // Assert
-            Assert.AreEqual("SMALLINT", result);
+            Assert.AreEqual("SMALLINT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -254,7 +255,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.UInt24);
 
             // Assert
-            Assert.AreEqual("SMALLINT", result);
+            Assert.AreEqual("SMALLINT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -267,7 +268,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.UInt16);
 
             // Assert
-            Assert.AreEqual("SMALLINT", result);
+            Assert.AreEqual("SMALLINT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -280,7 +281,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.Int32);
 
             // Assert
-            Assert.AreEqual("INT", result);
+            Assert.AreEqual("INT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -293,7 +294,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.UInt32);
 
             // Assert
-            Assert.AreEqual("INT", result);
+            Assert.AreEqual("INT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -306,7 +307,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.Int64);
 
             // Assert
-            Assert.AreEqual("BIGINT", result);
+            Assert.AreEqual("BIGINT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -319,7 +320,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.UInt64);
 
             // Assert
-            Assert.AreEqual("BIGINT", result);
+            Assert.AreEqual("BIGINT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -332,7 +333,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.JSON);
 
             // Assert
-            Assert.AreEqual("JSON", result);
+            Assert.AreEqual("JSON", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -345,7 +346,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.LongBlob);
 
             // Assert
-            Assert.AreEqual("LONGBLOB", result);
+            Assert.AreEqual("LONGBLOB", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -358,7 +359,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.LongText);
 
             // Assert
-            Assert.AreEqual("LONGTEXT", result);
+            Assert.AreEqual("LONGTEXT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -371,7 +372,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.MediumBlob);
 
             // Assert
-            Assert.AreEqual("MEDIUMBLOB", result);
+            Assert.AreEqual("MEDIUMBLOB", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -384,7 +385,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.MediumText);
 
             // Assert
-            Assert.AreEqual("MEDIUMTEXT", result);
+            Assert.AreEqual("MEDIUMTEXT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -397,7 +398,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.Newdate);
 
             // Assert
-            Assert.AreEqual("DATE", result);
+            Assert.AreEqual("DATE", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -410,7 +411,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.NewDecimal);
 
             // Assert
-            Assert.AreEqual("DECIMAL", result);
+            Assert.AreEqual("DECIMAL", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -423,7 +424,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.String);
 
             // Assert
-            Assert.AreEqual("STRING", result);
+            Assert.AreEqual("STRING", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -436,7 +437,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.Time);
 
             // Assert
-            Assert.AreEqual("TIME", result);
+            Assert.AreEqual("TIME", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -449,7 +450,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.Timestamp);
 
             // Assert
-            Assert.AreEqual("TIMESTAMP", result);
+            Assert.AreEqual("TIMESTAMP", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -462,7 +463,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.TinyBlob);
 
             // Assert
-            Assert.AreEqual("TINYBLOB", result);
+            Assert.AreEqual("TINYBLOB", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -475,7 +476,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.TinyText);
 
             // Assert
-            Assert.AreEqual("TINYTEXT", result);
+            Assert.AreEqual("TINYTEXT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -488,7 +489,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.VarBinary);
 
             // Assert
-            Assert.AreEqual("VARBINARY", result);
+            Assert.AreEqual("VARBINARY", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -501,7 +502,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.VarChar);
 
             // Assert
-            Assert.AreEqual("VARCHAR", result);
+            Assert.AreEqual("VARCHAR", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -514,7 +515,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.VarString);
 
             // Assert
-            Assert.AreEqual("VARCHAR", result);
+            Assert.AreEqual("VARCHAR", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -527,7 +528,7 @@ namespace RepoDb.MySql.UnitTests.Resolvers
             var result = resolver.Resolve(MySqlDbType.Year);
 
             // Assert
-            Assert.AreEqual("YEAR", result);
+            Assert.AreEqual("YEAR", result, StringComparer.Ordinal);
         }
     }
 }

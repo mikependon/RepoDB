@@ -67,7 +67,7 @@ namespace RepoDb.UnitTests.Mappers
             var expected = "PropertyString";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -82,7 +82,7 @@ namespace RepoDb.UnitTests.Mappers
             var expected = "PropertyString";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -96,7 +96,7 @@ namespace RepoDb.UnitTests.Mappers
             var expected = "PropertyString";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
 
@@ -116,7 +116,7 @@ namespace RepoDb.UnitTests.Mappers
             var expected = "PropertyText";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -131,7 +131,7 @@ namespace RepoDb.UnitTests.Mappers
             var expected = "PropertyText";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -145,7 +145,7 @@ namespace RepoDb.UnitTests.Mappers
             var expected = "PropertyText";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         /*
@@ -165,7 +165,7 @@ namespace RepoDb.UnitTests.Mappers
             var expected = "PropertyText";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -181,7 +181,7 @@ namespace RepoDb.UnitTests.Mappers
             var expected = "PropertyText";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -196,7 +196,7 @@ namespace RepoDb.UnitTests.Mappers
             var expected = "PropertyText";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         /*
@@ -357,7 +357,7 @@ namespace RepoDb.UnitTests.Mappers
             var expected = "ColumnText";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -371,7 +371,7 @@ namespace RepoDb.UnitTests.Mappers
             var expected = "ColumnText";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -385,7 +385,7 @@ namespace RepoDb.UnitTests.Mappers
             var expected = "ColumnText";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         #endregion

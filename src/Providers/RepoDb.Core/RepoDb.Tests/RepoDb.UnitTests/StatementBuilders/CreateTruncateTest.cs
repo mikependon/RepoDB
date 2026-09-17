@@ -40,7 +40,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "TRUNCATE TABLE [Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -55,7 +55,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "TRUNCATE TABLE [dbo].[Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -70,7 +70,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "TRUNCATE TABLE [dbo].[Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]

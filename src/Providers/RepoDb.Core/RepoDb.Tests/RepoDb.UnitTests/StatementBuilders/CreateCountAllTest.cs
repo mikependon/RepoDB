@@ -44,7 +44,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "SELECT COUNT (*) AS [CountValue] FROM [Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -61,7 +61,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "SELECT COUNT (*) AS [CountValue] FROM [Table] WITH (NOLOCK) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -77,7 +77,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "SELECT COUNT (*) AS [CountValue] FROM [dbo].[Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -93,7 +93,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "SELECT COUNT (*) AS [CountValue] FROM [dbo].[Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]

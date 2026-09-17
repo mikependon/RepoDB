@@ -57,7 +57,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"ORDER BY [__RepoDb_OrderColumn] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -86,7 +86,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"ORDER BY [__RepoDb_OrderColumn] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -116,7 +116,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"ORDER BY [__RepoDb_OrderColumn] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -147,7 +147,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"ORDER BY [__RepoDb_OrderColumn] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -179,7 +179,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"ORDER BY [__RepoDb_OrderColumn] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -210,7 +210,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"ORDER BY [__RepoDb_OrderColumn] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -243,7 +243,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"ORDER BY [__RepoDb_OrderColumn] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]

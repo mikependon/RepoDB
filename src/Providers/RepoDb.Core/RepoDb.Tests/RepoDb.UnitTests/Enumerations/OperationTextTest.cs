@@ -7,6 +7,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.Extensions;
@@ -26,7 +27,7 @@ namespace RepoDb.UnitTests.Enumerations
             var text = operation.GetText();
 
             // Assert
-            Assert.AreEqual("=", text);
+            Assert.AreEqual("=", text, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -39,7 +40,7 @@ namespace RepoDb.UnitTests.Enumerations
             var text = operation.GetText();
 
             // Assert
-            Assert.AreEqual("<>", text);
+            Assert.AreEqual("<>", text, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -52,7 +53,7 @@ namespace RepoDb.UnitTests.Enumerations
             var text = operation.GetText();
 
             // Assert
-            Assert.AreEqual("<", text);
+            Assert.AreEqual("<", text, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -65,7 +66,7 @@ namespace RepoDb.UnitTests.Enumerations
             var text = operation.GetText();
 
             // Assert
-            Assert.AreEqual(">", text);
+            Assert.AreEqual(">", text, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -78,7 +79,7 @@ namespace RepoDb.UnitTests.Enumerations
             var text = operation.GetText();
 
             // Assert
-            Assert.AreEqual("<=", text);
+            Assert.AreEqual("<=", text, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -91,7 +92,7 @@ namespace RepoDb.UnitTests.Enumerations
             var text = operation.GetText();
 
             // Assert
-            Assert.AreEqual(">=", text);
+            Assert.AreEqual(">=", text, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -104,7 +105,7 @@ namespace RepoDb.UnitTests.Enumerations
             var text = operation.GetText();
 
             // Assert
-            Assert.AreEqual("LIKE", text);
+            Assert.AreEqual("LIKE", text, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -117,7 +118,7 @@ namespace RepoDb.UnitTests.Enumerations
             var text = operation.GetText();
 
             // Assert
-            Assert.AreEqual("NOT LIKE", text);
+            Assert.AreEqual("NOT LIKE", text, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -130,7 +131,7 @@ namespace RepoDb.UnitTests.Enumerations
             var text = operation.GetText();
 
             // Assert
-            Assert.AreEqual("BETWEEN", text);
+            Assert.AreEqual("BETWEEN", text, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -143,7 +144,7 @@ namespace RepoDb.UnitTests.Enumerations
             var text = operation.GetText();
 
             // Assert
-            Assert.AreEqual("NOT BETWEEN", text);
+            Assert.AreEqual("NOT BETWEEN", text, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -156,7 +157,7 @@ namespace RepoDb.UnitTests.Enumerations
             var text = operation.GetText();
 
             // Assert
-            Assert.AreEqual("IN", text);
+            Assert.AreEqual("IN", text, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -169,7 +170,7 @@ namespace RepoDb.UnitTests.Enumerations
             var text = operation.GetText();
 
             // Assert
-            Assert.AreEqual("NOT IN", text);
+            Assert.AreEqual("NOT IN", text, StringComparer.Ordinal);
         }
     }
 }

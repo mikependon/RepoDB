@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace RepoDb.UnitTests
@@ -22,7 +23,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyBoolean] = @PropertyBoolean)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -36,7 +37,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyBoolean] = @PropertyBoolean)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -53,7 +54,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyBoolean] = @PropertyBoolean)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -64,7 +65,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyBoolean] = @PropertyBoolean)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -78,7 +79,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyBoolean] = @PropertyBoolean)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -89,7 +90,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyBoolean] <> @PropertyBoolean)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -100,7 +101,7 @@ namespace RepoDb.UnitTests
             var expected = "(([PropertyString] <> @PropertyString) AND ([PropertyBoolean] <> @PropertyBoolean))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -111,7 +112,7 @@ namespace RepoDb.UnitTests
             var expected = "(([PropertyString] <> @PropertyString) OR ([PropertyBoolean] <> @PropertyBoolean))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
     }
 }

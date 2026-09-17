@@ -80,7 +80,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(table.RowGuid, result.RowGuid);
-                Assert.AreEqual(table.ColumnNVarChar, result.ColumnNVarChar);
+                Assert.AreEqual(table.ColumnNVarChar, result.ColumnNVarChar, StringComparer.Ordinal);
             }
         }
 
@@ -126,7 +126,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(table.RowGuid, result.RowGuid);
-                Assert.AreEqual(table.ColumnNVarChar, result.ColumnNVarChar);
+                Assert.AreEqual(table.ColumnNVarChar, result.ColumnNVarChar, StringComparer.Ordinal);
             }
         }
 
@@ -294,7 +294,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(table.RowGuid, result.RowGuid);
-                Assert.AreEqual(table.ColumnNVarChar, result.ColumnNVarChar);
+                Assert.AreEqual(table.ColumnNVarChar, result.ColumnNVarChar, StringComparer.Ordinal);
             }
         }
 
@@ -340,7 +340,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(table.RowGuid, result.RowGuid);
-                Assert.AreEqual(table.ColumnNVarChar, result.ColumnNVarChar);
+                Assert.AreEqual(table.ColumnNVarChar, result.ColumnNVarChar, StringComparer.Ordinal);
             }
         }
 
@@ -706,7 +706,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(table.RowGuid, result.RowGuid);
-                Assert.AreEqual(table.ColumnNVarChar, result.ColumnNVarChar);
+                Assert.AreEqual(table.ColumnNVarChar, result.ColumnNVarChar, StringComparer.Ordinal);
             }
         }
 
@@ -1049,7 +1049,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(table.RowGuid, result.RowGuid);
-                Assert.AreEqual(table.ColumnNVarChar, result.ColumnNVarChar);
+                Assert.AreEqual(table.ColumnNVarChar, result.ColumnNVarChar, StringComparer.Ordinal);
             }
         }
 

@@ -331,7 +331,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -357,7 +357,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -383,7 +383,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -409,7 +409,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -435,7 +435,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -461,7 +461,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -486,7 +486,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -511,7 +511,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -537,7 +537,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -563,7 +563,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -602,7 +602,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -637,7 +637,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -672,7 +672,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -707,7 +707,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -744,7 +744,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -781,7 +781,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -818,7 +818,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -855,7 +855,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -892,7 +892,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -929,7 +929,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -969,7 +969,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -1005,7 +1005,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -1040,7 +1040,7 @@ namespace RepoDb.IntegrationTests
                     Assert.AreEqual(entity.ColumnDateTimeMapped, mappedObject.ColumnDateTimeMapped);
                     Assert.AreEqual(entity.ColumnFloatMapped, mappedObject.ColumnFloatMapped);
                     Assert.AreEqual(entity.ColumnIntMapped, mappedObject.ColumnIntMapped);
-                    Assert.AreEqual(entity.ColumnNVarCharMapped, mappedObject.ColumnNVarCharMapped);
+                    Assert.AreEqual(entity.ColumnNVarCharMapped, mappedObject.ColumnNVarCharMapped, StringComparer.Ordinal);
                 });
             }
         }
@@ -1072,7 +1072,7 @@ namespace RepoDb.IntegrationTests
                     Assert.AreEqual(entity.ColumnDateTimeMapped, mappedObject.ColumnDateTimeMapped);
                     Assert.AreEqual(entity.ColumnFloatMapped, mappedObject.ColumnFloatMapped);
                     Assert.AreEqual(entity.ColumnIntMapped, mappedObject.ColumnIntMapped);
-                    Assert.AreEqual(entity.ColumnNVarCharMapped, mappedObject.ColumnNVarCharMapped);
+                    Assert.AreEqual(entity.ColumnNVarCharMapped, mappedObject.ColumnNVarCharMapped, StringComparer.Ordinal);
                 });
             }
         }
@@ -1123,7 +1123,7 @@ namespace RepoDb.IntegrationTests
                     Assert.AreEqual(entity.ColumnDateTimeMapped, mappedObject.ColumnDateTimeMapped);
                     Assert.AreEqual(entity.ColumnFloatMapped, mappedObject.ColumnFloatMapped);
                     Assert.AreEqual(entity.ColumnIntMapped, mappedObject.ColumnIntMapped);
-                    Assert.AreEqual(entity.ColumnNVarCharMapped, mappedObject.ColumnNVarCharMapped);
+                    Assert.AreEqual(entity.ColumnNVarCharMapped, mappedObject.ColumnNVarCharMapped, StringComparer.Ordinal);
                 });
             }
         }
@@ -1170,7 +1170,7 @@ namespace RepoDb.IntegrationTests
                     Assert.AreEqual(entity.ColumnDateTimeMapped, mappedObject.ColumnDateTimeMapped);
                     Assert.AreEqual(entity.ColumnFloatMapped, mappedObject.ColumnFloatMapped);
                     Assert.AreEqual(entity.ColumnIntMapped, mappedObject.ColumnIntMapped);
-                    Assert.AreEqual(entity.ColumnNVarCharMapped, mappedObject.ColumnNVarCharMapped);
+                    Assert.AreEqual(entity.ColumnNVarCharMapped, mappedObject.ColumnNVarCharMapped, StringComparer.Ordinal);
                 });
             }
         }
@@ -1204,7 +1204,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -1229,7 +1229,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -1254,7 +1254,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -1279,7 +1279,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -1304,7 +1304,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -1329,7 +1329,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -1354,7 +1354,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -1379,7 +1379,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -1404,7 +1404,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -1429,7 +1429,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -1467,7 +1467,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -1501,7 +1501,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -1535,7 +1535,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -1569,7 +1569,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -1605,7 +1605,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -1641,7 +1641,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -1677,7 +1677,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -1713,7 +1713,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -1749,7 +1749,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -1785,7 +1785,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -1824,7 +1824,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -1859,7 +1859,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -1893,7 +1893,7 @@ namespace RepoDb.IntegrationTests
                     Assert.AreEqual(entity.ColumnDateTime2Mapped, mappedObject.ColumnDateTime2Mapped);
                     Assert.AreEqual(entity.ColumnDateTimeMapped, mappedObject.ColumnDateTimeMapped);
                     Assert.AreEqual(entity.ColumnIntMapped, mappedObject.ColumnIntMapped);
-                    Assert.AreEqual(entity.ColumnNVarCharMapped, mappedObject.ColumnNVarCharMapped);
+                    Assert.AreEqual(entity.ColumnNVarCharMapped, mappedObject.ColumnNVarCharMapped, StringComparer.Ordinal);
                 });
             }
         }
@@ -1924,7 +1924,7 @@ namespace RepoDb.IntegrationTests
                     Assert.AreEqual(entity.ColumnDateTime2Mapped, mappedObject.ColumnDateTime2Mapped);
                     Assert.AreEqual(entity.ColumnDateTimeMapped, mappedObject.ColumnDateTimeMapped);
                     Assert.AreEqual(entity.ColumnIntMapped, mappedObject.ColumnIntMapped);
-                    Assert.AreEqual(entity.ColumnNVarCharMapped, mappedObject.ColumnNVarCharMapped);
+                    Assert.AreEqual(entity.ColumnNVarCharMapped, mappedObject.ColumnNVarCharMapped, StringComparer.Ordinal);
                 });
             }
         }
@@ -1973,7 +1973,7 @@ namespace RepoDb.IntegrationTests
                     Assert.AreEqual(entity.ColumnDateTime2Mapped, mappedObject.ColumnDateTime2Mapped);
                     Assert.AreEqual(entity.ColumnDateTimeMapped, mappedObject.ColumnDateTimeMapped);
                     Assert.AreEqual(entity.ColumnIntMapped, mappedObject.ColumnIntMapped);
-                    Assert.AreEqual(entity.ColumnNVarCharMapped, mappedObject.ColumnNVarCharMapped);
+                    Assert.AreEqual(entity.ColumnNVarCharMapped, mappedObject.ColumnNVarCharMapped, StringComparer.Ordinal);
                 });
             }
         }
@@ -2018,7 +2018,7 @@ namespace RepoDb.IntegrationTests
                     Assert.AreEqual(entity.ColumnDateTime2Mapped, mappedObject.ColumnDateTime2Mapped);
                     Assert.AreEqual(entity.ColumnDateTimeMapped, mappedObject.ColumnDateTimeMapped);
                     Assert.AreEqual(entity.ColumnIntMapped, mappedObject.ColumnIntMapped);
-                    Assert.AreEqual(entity.ColumnNVarCharMapped, mappedObject.ColumnNVarCharMapped);
+                    Assert.AreEqual(entity.ColumnNVarCharMapped, mappedObject.ColumnNVarCharMapped, StringComparer.Ordinal);
                 });
             }
         }

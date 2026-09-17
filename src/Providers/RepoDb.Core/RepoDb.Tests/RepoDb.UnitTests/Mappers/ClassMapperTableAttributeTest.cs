@@ -62,7 +62,7 @@ namespace RepoDb.UnitTests.Mappers
             var expected = "[dbo].[Person]";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         /*
@@ -81,7 +81,7 @@ namespace RepoDb.UnitTests.Mappers
             var expected = "[dbo].[Person]";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         /*
@@ -133,7 +133,7 @@ namespace RepoDb.UnitTests.Mappers
             var expected = "[sales].[Person]";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         #endregion

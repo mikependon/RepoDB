@@ -7,6 +7,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySqlConnector;
 
@@ -40,7 +41,7 @@ namespace RepoDb.MySqlConnector.UnitTests
             var setting = DbSettingMapper.Get<MySqlConnection>();
 
             // Assert
-            Assert.AreEqual("`", setting.ClosingQuote);
+            Assert.AreEqual("`", setting.ClosingQuote, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -100,7 +101,7 @@ namespace RepoDb.MySqlConnector.UnitTests
             var setting = DbSettingMapper.Get<MySqlConnection>();
 
             // Assert
-            Assert.AreEqual("`", setting.OpeningQuote);
+            Assert.AreEqual("`", setting.OpeningQuote, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -110,7 +111,7 @@ namespace RepoDb.MySqlConnector.UnitTests
             var setting = DbSettingMapper.Get<MySqlConnection>();
 
             // Assert
-            Assert.AreEqual("@", setting.ParameterPrefix);
+            Assert.AreEqual("@", setting.ParameterPrefix, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -120,7 +121,7 @@ namespace RepoDb.MySqlConnector.UnitTests
             var setting = DbSettingMapper.Get<MySqlConnection>();
 
             // Assert
-            Assert.AreEqual("@", setting.SqlTextParameterPrefix);
+            Assert.AreEqual("@", setting.SqlTextParameterPrefix, StringComparer.Ordinal);
         }
     }
 }

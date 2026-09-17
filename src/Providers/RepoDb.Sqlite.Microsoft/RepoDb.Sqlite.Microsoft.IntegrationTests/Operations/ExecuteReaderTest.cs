@@ -60,7 +60,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                         // Assert
                         Assert.IsNotNull(table);
                         Assert.AreEqual(columnInt, table.ColumnInt);
-                        Assert.AreEqual(columnDateTime, table.ColumnDateTime);
+                        Assert.AreEqual(columnDateTime, table.ColumnDateTime, StringComparer.Ordinal);
                     }
                 }
             }
@@ -90,7 +90,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                             // Assert
                             Assert.IsNotNull(table);
                             Assert.AreEqual(columnInt, table.ColumnInt);
-                            Assert.AreEqual(columnDateTime, table.ColumnDateTime);
+                            Assert.AreEqual(columnDateTime, table.ColumnDateTime, StringComparer.Ordinal);
                         }
                     } while (reader.NextResult());
                 }
@@ -163,7 +163,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                         // Assert
                         Assert.IsNotNull(table);
                         Assert.AreEqual(columnInt, table.ColumnInt);
-                        Assert.AreEqual(columnDateTime, table.ColumnDateTime);
+                        Assert.AreEqual(columnDateTime, table.ColumnDateTime, StringComparer.Ordinal);
                     }
                 }
             }
@@ -193,7 +193,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                             // Assert
                             Assert.IsNotNull(table);
                             Assert.AreEqual(columnInt, table.ColumnInt);
-                            Assert.AreEqual(columnDateTime, table.ColumnDateTime);
+                            Assert.AreEqual(columnDateTime, table.ColumnDateTime, StringComparer.Ordinal);
                         }
                     } while (reader.NextResult());
                 }

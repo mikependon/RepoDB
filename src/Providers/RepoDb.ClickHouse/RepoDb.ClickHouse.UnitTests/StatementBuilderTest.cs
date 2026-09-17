@@ -42,7 +42,7 @@ namespace RepoDb.ClickHouse.UnitTests
             var expected = "SELECT `Id`, `Name` FROM `Table` ORDER BY `Id` ASC LIMIT 10 ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -60,7 +60,7 @@ namespace RepoDb.ClickHouse.UnitTests
             var expected = "SELECT `Id`, `Name` FROM `Table` ORDER BY `Id` ASC LIMIT 30, 10 ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -157,7 +157,7 @@ namespace RepoDb.ClickHouse.UnitTests
             var expected = "SELECT COUNT (*) AS `CountValue` FROM `Table` ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -173,7 +173,7 @@ namespace RepoDb.ClickHouse.UnitTests
             var expected = "SELECT COUNT (*) AS `CountValue` FROM `Table` WHERE (`Id` = @Id) ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -205,7 +205,7 @@ namespace RepoDb.ClickHouse.UnitTests
             var expected = "SELECT 1 AS `ExistsValue` FROM `Table` WHERE (`Id` = @Id) LIMIT 1 ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         #endregion
@@ -226,7 +226,7 @@ namespace RepoDb.ClickHouse.UnitTests
             var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -243,7 +243,7 @@ namespace RepoDb.ClickHouse.UnitTests
             var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -294,7 +294,7 @@ namespace RepoDb.ClickHouse.UnitTests
             var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -345,7 +345,7 @@ namespace RepoDb.ClickHouse.UnitTests
             var expected = "SELECT MAX (`Field`) AS `MaxValue` FROM `Table` ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         #endregion
@@ -366,7 +366,7 @@ namespace RepoDb.ClickHouse.UnitTests
             var expected = "SELECT MIN (`Field`) AS `MinValue` FROM `Table` ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         #endregion
@@ -388,7 +388,7 @@ namespace RepoDb.ClickHouse.UnitTests
             var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -441,7 +441,7 @@ namespace RepoDb.ClickHouse.UnitTests
             var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -496,7 +496,7 @@ namespace RepoDb.ClickHouse.UnitTests
             var expected = "SELECT `Id`, `Name`, `Address` FROM `Table` ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -515,7 +515,7 @@ namespace RepoDb.ClickHouse.UnitTests
             var expected = "SELECT `Id`, `Name`, `Address` FROM `Table` WHERE (`Id` = @Id AND `Name` = @Name) ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -534,7 +534,7 @@ namespace RepoDb.ClickHouse.UnitTests
             var expected = "SELECT `Id`, `Name`, `Address` FROM `Table` LIMIT 10 ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -553,7 +553,7 @@ namespace RepoDb.ClickHouse.UnitTests
             var expected = "SELECT `Id`, `Name`, `Address` FROM `Table` ORDER BY `Id` ASC ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -591,7 +591,7 @@ namespace RepoDb.ClickHouse.UnitTests
             var expected = "SELECT `Id`, `Name` FROM `Table` ORDER BY `Id` ASC LIMIT 10 ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -609,7 +609,7 @@ namespace RepoDb.ClickHouse.UnitTests
             var expected = "SELECT `Id`, `Name` FROM `Table` ORDER BY `Id` ASC LIMIT 30, 10 ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         #endregion
@@ -630,7 +630,7 @@ namespace RepoDb.ClickHouse.UnitTests
             var expected = "SELECT SUM (`Field`) AS `SumValue` FROM `Table` ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         #endregion
@@ -652,7 +652,7 @@ namespace RepoDb.ClickHouse.UnitTests
             var expected = "ALTER TABLE `Table` UPDATE `Name` = @Name, `Address` = @Address WHERE (`Id` = @Id) ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         #endregion
@@ -675,7 +675,7 @@ namespace RepoDb.ClickHouse.UnitTests
             var expected = "ALTER TABLE `Table` UPDATE `Name` = @Name, `Address` = @Address WHERE (`Id` = @Id) ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]

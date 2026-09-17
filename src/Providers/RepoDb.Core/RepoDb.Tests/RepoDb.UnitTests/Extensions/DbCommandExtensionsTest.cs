@@ -71,7 +71,7 @@ namespace RepoDb.UnitTests.Extensions
         public void TestDbCommandCreateParametersPropertyHandlerPropertyLevelInvocationViaDictionary()
         {
             // Arrange
-            var param = new Dictionary<string, object> { { "Id", "9963c864-ab4f-43f8-9dc9-43038565b971" } };
+            var param = new Dictionary<string, object>(StringComparer.Ordinal) { { "Id", "9963c864-ab4f-43f8-9dc9-43038565b971" } };
             FluentMapper
                 .Entity<TestClass>()
                 .PropertyHandler<StringToGuidPropertyHandler>(e => e.Id);
@@ -262,7 +262,7 @@ where id in (@normalArray0, @normalArray1)
   and id in (@concat1ArrayA0, @concat1ArrayA1, @concat1ArrayB0, @concat1ArrayB1)
   and id in ((SELECT @concat2ArrayA WHERE 1 = 0), @concat2ArrayB0, @concat2ArrayB1)
   and id in ((SELECT @concat3ArrayA WHERE 1 = 0), (SELECT @concat3ArrayB WHERE 1 = 0))";
-                Assert.AreEqual(expectedSql, command.CommandText);
+                Assert.AreEqual(expectedSql, command.CommandText, StringComparer.Ordinal);
                 Assert.AreEqual(13, command.Parameters.Count);
                 Assert.AreEqual(5, command.Parameters["@normalArray0"].Value);
                 Assert.AreEqual(6, command.Parameters["@normalArray1"].Value);

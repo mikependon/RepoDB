@@ -4348,7 +4348,7 @@ namespace RepoDb.IntegrationTests
             {
                 var entry = new CustomedEnumModel<CustomedStringEnum> { Value = CustomedStringEnum.B };
                 var stringValue = connection.ExecuteQuery<string>("select @Value", entry).First();
-                Assert.AreEqual("Special-B", stringValue);
+                Assert.AreEqual("Special-B", stringValue, StringComparer.Ordinal);
 
                 var nullEntry = new CustomedEnumModel<CustomedStringEnum> { Value = null };
                 var nullStringValue = connection.ExecuteQuery<string>("select @Value", nullEntry).First();
@@ -4364,7 +4364,7 @@ namespace RepoDb.IntegrationTests
             {
                 var entry = new CustomedEnumModel<CustomedStringEnum> { Value = CustomedStringEnum.B };
                 var stringValue = (await connection.ExecuteQueryAsync<string>("select @Value", entry).ConfigureAwait(false)).First();
-                Assert.AreEqual("Special-B", stringValue);
+                Assert.AreEqual("Special-B", stringValue, StringComparer.Ordinal);
 
                 var nullEntry = new CustomedEnumModel<CustomedStringEnum> { Value = null };
                 var nullStringValue = (await connection.ExecuteQueryAsync<string>("select @Value", nullEntry).ConfigureAwait(false)).First();

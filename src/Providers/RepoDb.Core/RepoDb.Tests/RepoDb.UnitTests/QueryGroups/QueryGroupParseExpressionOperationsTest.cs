@@ -23,7 +23,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] = @PropertyInt)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -34,7 +34,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] <> @PropertyInt)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -45,7 +45,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] > @PropertyInt)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -56,7 +56,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] >= @PropertyInt)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -67,7 +67,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] < @PropertyInt)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -78,7 +78,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] <= @PropertyInt)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         // Equals Boolean
@@ -91,7 +91,7 @@ namespace RepoDb.UnitTests
             var expected = "NOT ([PropertyInt] = @PropertyInt)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -102,7 +102,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] = @PropertyInt)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         // Parameter
@@ -115,7 +115,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyInt] = @PropertyInt)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         // ExpectedException

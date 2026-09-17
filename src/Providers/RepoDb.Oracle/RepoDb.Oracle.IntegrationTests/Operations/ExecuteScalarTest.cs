@@ -100,7 +100,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 new { tables.Last().Id });
 
             // Assert
-            Assert.AreEqual(tables.Last().ColumnVarchar, result);
+            Assert.AreEqual(tables.Last().ColumnVarchar, result, StringComparer.Ordinal);
         }
 
         #endregion
@@ -173,7 +173,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 new { tables.Last().Id }).ConfigureAwait(false);
 
             // Assert
-            Assert.AreEqual(tables.Last().ColumnVarchar, result);
+            Assert.AreEqual(tables.Last().ColumnVarchar, result, StringComparer.Ordinal);
         }
 
         #endregion

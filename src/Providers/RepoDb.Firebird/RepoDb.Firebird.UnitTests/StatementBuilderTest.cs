@@ -42,7 +42,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "SELECT FIRST 10 SKIP 0 \"Id\", \"Name\" FROM \"Table\" ORDER BY \"Id\" ASC";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -60,7 +60,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "SELECT FIRST 10 SKIP 30 \"Id\", \"Name\" FROM \"Table\" ORDER BY \"Id\" ASC";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -157,7 +157,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "SELECT COUNT (*) AS \"CountValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -173,7 +173,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "SELECT COUNT (*) AS \"CountValue\" FROM \"Table\" WHERE (\"Id\" = @Id)";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -205,7 +205,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "SELECT COUNT (*) AS \"CountValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -236,7 +236,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "SELECT FIRST 1 1 AS \"ExistsValue\" FROM \"Table\" WHERE (\"Id\" = @Id)";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -270,7 +270,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id, @Name, @Address )";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -289,7 +289,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id, @Name, @Address ) RETURNING \"Id\" AS \"Result\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -306,7 +306,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "INSERT INTO \"Table\" ( \"Name\", \"Address\" ) VALUES ( @Name, @Address ) RETURNING \"Id\" AS \"Result\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -357,7 +357,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "INSERT INTO \"Table\" ( \"Name\", \"Address\" ) VALUES ( @Name, @Address ) RETURNING \"Id\" AS \"Result\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -411,7 +411,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "SELECT MAX (\"Field\") AS \"MaxValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -428,7 +428,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "SELECT MAX (\"Field\") AS \"MaxValue\" FROM \"Table\" WHERE (\"Id\" = @Id)";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -462,7 +462,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "SELECT MAX (\"Field\") AS \"MaxValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -496,7 +496,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "SELECT MIN (\"Field\") AS \"MinValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -513,7 +513,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "SELECT MIN (\"Field\") AS \"MinValue\" FROM \"Table\" WHERE (\"Id\" = @Id)";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -547,7 +547,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "SELECT MIN (\"Field\") AS \"MinValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -581,7 +581,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "SELECT SUM (\"Field\") AS \"SumValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -598,7 +598,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "SELECT SUM (\"Field\") AS \"SumValue\" FROM \"Table\" WHERE (\"Id\" = @Id)";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -632,7 +632,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "SELECT SUM (\"Field\") AS \"SumValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -668,7 +668,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "SELECT AVG (CAST(\"Field\" AS DOUBLE PRECISION)) AS \"AverageValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -687,7 +687,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "SELECT AVG (CAST(\"Field\" AS DOUBLE PRECISION)) AS \"AverageValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -706,7 +706,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "SELECT AVG (CAST(\"Field\" AS DECIMAL(18,2))) AS \"AverageValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -743,7 +743,7 @@ namespace RepoDb.Firebird.UnitTests
                 "MATCHING ( \"Id\" ) RETURNING \"Id\" AS \"Result\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -762,7 +762,7 @@ namespace RepoDb.Firebird.UnitTests
                 "MATCHING ( \"Id\" ) RETURNING \"Id\" AS \"Result\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -789,7 +789,7 @@ namespace RepoDb.Firebird.UnitTests
                 "SUSPEND; END";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -808,7 +808,7 @@ namespace RepoDb.Firebird.UnitTests
                 "MATCHING ( \"Name\" ) RETURNING \"Id\" AS \"Result\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -863,7 +863,7 @@ namespace RepoDb.Firebird.UnitTests
                 "MATCHING ( \"Id\" ) RETURNING \"Id\" AS \"Result\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -935,7 +935,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "SELECT \"Id\", \"Name\", \"Address\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -954,7 +954,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "SELECT \"Id\", \"Name\", \"Address\" FROM \"Table\" WHERE (\"Id\" = @Id AND \"Name\" = @Name)";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -973,7 +973,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "SELECT FIRST 10 \"Id\", \"Name\", \"Address\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -992,7 +992,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "SELECT \"Id\", \"Name\", \"Address\" FROM \"Table\" ORDER BY \"Id\" ASC";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1011,7 +1011,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "SELECT \"Id\", \"Name\", \"Address\" FROM \"Table\" ORDER BY \"Id\" ASC, \"Name\" ASC";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1030,7 +1030,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "SELECT \"Id\", \"Name\", \"Address\" FROM \"Table\" ORDER BY \"Id\" DESC";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1068,7 +1068,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "SELECT FIRST 10 SKIP 0 \"Id\", \"Name\" FROM \"Table\" ORDER BY \"Id\" ASC";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1086,7 +1086,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "SELECT FIRST 10 SKIP 30 \"Id\", \"Name\" FROM \"Table\" ORDER BY \"Id\" ASC";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1185,7 +1185,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "UPDATE \"Table\" SET \"Name\" = @Name, \"Address\" = @Address WHERE (\"Id\" = @Id)";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1220,7 +1220,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "DELETE FROM \"Table\" WHERE (\"Id\" = @Id)";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1234,7 +1234,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "DELETE FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         #endregion
@@ -1253,7 +1253,7 @@ namespace RepoDb.Firebird.UnitTests
             var expected = "DELETE FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         #endregion

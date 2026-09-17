@@ -818,7 +818,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
-            var param = new Dictionary<string, object>
+            var param = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 { "ColumnFloat", last.ColumnFloat },
                 { "ColumnInt", last.ColumnInt }
@@ -970,7 +970,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
-                var param = new Dictionary<string, int>();
+                var param = new Dictionary<string, int>(StringComparer.Ordinal);
 
                 // Act
                 Assert.Throws<InvalidParameterException>(() => connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param));
@@ -1172,7 +1172,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
-            var param = new Dictionary<string, object>
+            var param = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 { "ColumnFloat", last.ColumnFloat },
                 { "ColumnInt", last.ColumnInt }
@@ -1324,7 +1324,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
-                var param = new Dictionary<string, int>();
+                var param = new Dictionary<string, int>(StringComparer.Ordinal);
 
                 // Act
                 await Assert.ThrowsAsync<InvalidParameterException>(async () => await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param).ConfigureAwait(false)).ConfigureAwait(false);

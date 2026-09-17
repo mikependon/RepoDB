@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using IBM.Data.Db2;
 using RepoDb.Attributes.Parameter.Db2;
@@ -51,7 +52,7 @@ namespace RepoDb.Db2.UnitTests.Attributes.Parameter.Db2
 
             // Assert
             var parameter = (DB2Parameter)command.Parameters[":ColumnName"];
-            Assert.AreEqual("MappedColumnName", parameter.SourceColumn);
+            Assert.AreEqual("MappedColumnName", parameter.SourceColumn, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -73,7 +74,7 @@ namespace RepoDb.Db2.UnitTests.Attributes.Parameter.Db2
 
             // Assert
             var parameter = (DB2Parameter)command.Parameters[":ColumnName"];
-            Assert.AreEqual("MappedColumnName", parameter.SourceColumn);
+            Assert.AreEqual("MappedColumnName", parameter.SourceColumn, StringComparer.Ordinal);
         }
     }
 }

@@ -49,7 +49,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"( @Field1, @Field2, @Field3 ) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -72,7 +72,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"( @Field1, @Field2, @Field3 ) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -95,7 +95,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"( @Field1, @Field2, @Field3 ) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -119,7 +119,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"( @Field1, @Field2, @Field3 ) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -143,7 +143,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"( @Field2, @Field3 ) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -168,7 +168,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"( @Field1, @Field3 ) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -192,7 +192,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"( @Field1, @Field2, @Field3 ) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]

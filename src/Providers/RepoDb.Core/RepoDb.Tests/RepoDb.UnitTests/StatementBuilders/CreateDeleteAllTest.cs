@@ -40,7 +40,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "DELETE FROM [Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -55,7 +55,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "DELETE FROM [dbo].[Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -70,7 +70,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "DELETE FROM [dbo].[Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -86,7 +86,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "DELETE FROM [Table] WITH (TABLOCK) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
