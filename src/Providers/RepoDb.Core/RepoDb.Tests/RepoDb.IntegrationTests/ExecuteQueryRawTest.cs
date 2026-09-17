@@ -18,6 +18,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using RepoDb.Interfaces;
 using RepoDb.Options;
+using System.Globalization;
 
 namespace RepoDb.IntegrationTests
 {
@@ -170,39 +171,39 @@ namespace RepoDb.IntegrationTests
             public static implicit operator string(StringRecord source) => source.Value;
             public static implicit operator StringRecord(string source) => new StringRecord(source);
 
-            public TypeCode GetTypeCode() => throw new NotImplementedException();
+            public TypeCode GetTypeCode() => throw new NotSupportedException();
 
-            public bool ToBoolean(IFormatProvider provider) => throw new NotImplementedException();
+            public bool ToBoolean(IFormatProvider provider) => throw new NotSupportedException();
 
-            public byte ToByte(IFormatProvider provider) => throw new NotImplementedException();
+            public byte ToByte(IFormatProvider provider) => throw new NotSupportedException();
 
-            public char ToChar(IFormatProvider provider) => throw new NotImplementedException();
+            public char ToChar(IFormatProvider provider) => throw new NotSupportedException();
 
-            public DateTime ToDateTime(IFormatProvider provider) => throw new NotImplementedException();
+            public DateTime ToDateTime(IFormatProvider provider) => throw new NotSupportedException();
 
-            public decimal ToDecimal(IFormatProvider provider) => throw new NotImplementedException();
+            public decimal ToDecimal(IFormatProvider provider) => throw new NotSupportedException();
 
-            public double ToDouble(IFormatProvider provider) => throw new NotImplementedException();
+            public double ToDouble(IFormatProvider provider) => throw new NotSupportedException();
 
-            public short ToInt16(IFormatProvider provider) => throw new NotImplementedException();
+            public short ToInt16(IFormatProvider provider) => throw new NotSupportedException();
 
-            public int ToInt32(IFormatProvider provider) => throw new NotImplementedException();
+            public int ToInt32(IFormatProvider provider) => throw new NotSupportedException();
 
-            public long ToInt64(IFormatProvider provider) => throw new NotImplementedException();
+            public long ToInt64(IFormatProvider provider) => throw new NotSupportedException();
 
-            public sbyte ToSByte(IFormatProvider provider) => throw new NotImplementedException();
+            public sbyte ToSByte(IFormatProvider provider) => throw new NotSupportedException();
 
-            public float ToSingle(IFormatProvider provider) => throw new NotImplementedException();
+            public float ToSingle(IFormatProvider provider) => throw new NotSupportedException();
 
             public string ToString(IFormatProvider provider) => Value;
 
-            public object ToType(Type conversionType, IFormatProvider provider) => throw new NotImplementedException();
+            public object ToType(Type conversionType, IFormatProvider provider) => throw new NotSupportedException();
 
-            public ushort ToUInt16(IFormatProvider provider) => throw new NotImplementedException();
+            public ushort ToUInt16(IFormatProvider provider) => throw new NotSupportedException();
 
-            public uint ToUInt32(IFormatProvider provider) => throw new NotImplementedException();
+            public uint ToUInt32(IFormatProvider provider) => throw new NotSupportedException();
 
-            public ulong ToUInt64(IFormatProvider provider) => throw new NotImplementedException();
+            public ulong ToUInt64(IFormatProvider provider) => throw new NotSupportedException();
         }
 
         #endregion
@@ -937,7 +938,7 @@ namespace RepoDb.IntegrationTests
                     ColumnDecimal = Convert.ToDecimal(123456789.45),
                     ColumnDate = DateTime.UtcNow.Date,
                     ColumnTime = DateTime.UtcNow.TimeOfDay,
-                    ColumnDateTime = DateTime.Parse("2019-01-01 00:00:05.123"),
+                    ColumnDateTime = DateTime.Parse("2019-01-01 00:00:05.123", CultureInfo.InvariantCulture),
                     ColumnDateTime2 = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
                 };
 
@@ -975,7 +976,7 @@ namespace RepoDb.IntegrationTests
                     ColumnDecimal = Convert.ToDecimal(123456789.45),
                     ColumnDate = DateTime.UtcNow.Date,
                     ColumnTime = DateTime.UtcNow.TimeOfDay,
-                    ColumnDateTime = DateTime.Parse("2019-01-01 00:00:05.123"),
+                    ColumnDateTime = DateTime.Parse("2019-01-01 00:00:05.123", CultureInfo.InvariantCulture),
                     ColumnDateTime2 = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
                 };
 
@@ -1077,7 +1078,7 @@ namespace RepoDb.IntegrationTests
                     ColumnDecimal = Convert.ToDecimal(123456789.45),
                     ColumnDate = DateTime.UtcNow.Date,
                     ColumnTime = DateTime.UtcNow.TimeOfDay,
-                    ColumnDateTime = DateTime.Parse("2019-01-01 00:00:05.123"),
+                    ColumnDateTime = DateTime.Parse("2019-01-01 00:00:05.123", CultureInfo.InvariantCulture),
                     ColumnDateTime2 = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
                 };
 
@@ -1117,7 +1118,7 @@ namespace RepoDb.IntegrationTests
                     ColumnDecimal = Convert.ToDecimal(123456789.45),
                     ColumnDate = DateTime.UtcNow.Date,
                     ColumnTime = DateTime.UtcNow.TimeOfDay,
-                    ColumnDateTime = DateTime.Parse("2019-01-01 00:00:05.123"),
+                    ColumnDateTime = DateTime.Parse("2019-01-01 00:00:05.123", CultureInfo.InvariantCulture),
                     ColumnDateTime2 = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
                 };
 
@@ -1161,7 +1162,7 @@ namespace RepoDb.IntegrationTests
                     ColumnDecimal = (decimal?)Convert.ToDecimal(123456789.45),
                     ColumnDate = (DateTime?)DateTime.UtcNow.Date,
                     ColumnTime = (TimeSpan?)DateTime.UtcNow.TimeOfDay,
-                    ColumnDateTime = (DateTime?)DateTime.Parse("2019-01-01 00:00:05.123"),
+                    ColumnDateTime = (DateTime?)DateTime.Parse("2019-01-01 00:00:05.123", CultureInfo.InvariantCulture),
                     ColumnDateTime2 = (DateTime?)DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
                 };
 
@@ -1199,7 +1200,7 @@ namespace RepoDb.IntegrationTests
                     ColumnDecimal = (decimal?)Convert.ToDecimal(123456789.45),
                     ColumnDate = (DateTime?)DateTime.UtcNow.Date,
                     ColumnTime = (TimeSpan?)DateTime.UtcNow.TimeOfDay,
-                    ColumnDateTime = (DateTime?)DateTime.Parse("2019-01-01 00:00:05.123"),
+                    ColumnDateTime = (DateTime?)DateTime.Parse("2019-01-01 00:00:05.123", CultureInfo.InvariantCulture),
                     ColumnDateTime2 = (DateTime?)DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
                 };
 
@@ -1301,7 +1302,7 @@ namespace RepoDb.IntegrationTests
                     ColumnDecimal = (decimal?)Convert.ToDecimal(123456789.45),
                     ColumnDate = (DateTime?)DateTime.UtcNow.Date,
                     ColumnTime = (TimeSpan?)DateTime.UtcNow.TimeOfDay,
-                    ColumnDateTime = (DateTime?)DateTime.Parse("2019-01-01 00:00:05.123"),
+                    ColumnDateTime = (DateTime?)DateTime.Parse("2019-01-01 00:00:05.123", CultureInfo.InvariantCulture),
                     ColumnDateTime2 = (DateTime?)DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
                 };
 
@@ -1341,7 +1342,7 @@ namespace RepoDb.IntegrationTests
                     ColumnDecimal = (decimal?)Convert.ToDecimal(123456789.45),
                     ColumnDate = (DateTime?)DateTime.UtcNow.Date,
                     ColumnTime = (TimeSpan?)DateTime.UtcNow.TimeOfDay,
-                    ColumnDateTime = (DateTime?)DateTime.Parse("2019-01-01 00:00:05.123"),
+                    ColumnDateTime = (DateTime?)DateTime.Parse("2019-01-01 00:00:05.123", CultureInfo.InvariantCulture),
                     ColumnDateTime2 = (DateTime?)DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
                 };
 
@@ -1389,7 +1390,7 @@ namespace RepoDb.IntegrationTests
                     ColumnDecimalMapped = Convert.ToDecimal(123456789.45),
                     ColumnDateMapped = DateTime.UtcNow.Date,
                     ColumnTimeMapped = DateTime.UtcNow.TimeOfDay,
-                    ColumnDateTimeMapped = DateTime.Parse("2019-01-01 00:00:05.123"),
+                    ColumnDateTimeMapped = DateTime.Parse("2019-01-01 00:00:05.123", CultureInfo.InvariantCulture),
                     ColumnDateTime2Mapped = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
                 };
 
@@ -1427,7 +1428,7 @@ namespace RepoDb.IntegrationTests
                     ColumnDecimalMapped = Convert.ToDecimal(123456789.45),
                     ColumnDateMapped = DateTime.UtcNow.Date,
                     ColumnTimeMapped = DateTime.UtcNow.TimeOfDay,
-                    ColumnDateTimeMapped = DateTime.Parse("2019-01-01 00:00:05.123"),
+                    ColumnDateTimeMapped = DateTime.Parse("2019-01-01 00:00:05.123", CultureInfo.InvariantCulture),
                     ColumnDateTime2Mapped = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
                 };
 
@@ -1529,7 +1530,7 @@ namespace RepoDb.IntegrationTests
                     ColumnDecimalMapped = Convert.ToDecimal(123456789.45),
                     ColumnDateMapped = DateTime.UtcNow.Date,
                     ColumnTimeMapped = DateTime.UtcNow.TimeOfDay,
-                    ColumnDateTimeMapped = DateTime.Parse("2019-01-01 00:00:05.123"),
+                    ColumnDateTimeMapped = DateTime.Parse("2019-01-01 00:00:05.123", CultureInfo.InvariantCulture),
                     ColumnDateTime2Mapped = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
                 };
 
@@ -1569,7 +1570,7 @@ namespace RepoDb.IntegrationTests
                     ColumnDecimalMapped = Convert.ToDecimal(123456789.45),
                     ColumnDateMapped = DateTime.UtcNow.Date,
                     ColumnTimeMapped = DateTime.UtcNow.TimeOfDay,
-                    ColumnDateTimeMapped = DateTime.Parse("2019-01-01 00:00:05.123"),
+                    ColumnDateTimeMapped = DateTime.Parse("2019-01-01 00:00:05.123", CultureInfo.InvariantCulture),
                     ColumnDateTime2Mapped = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
                 };
 
@@ -1613,7 +1614,7 @@ namespace RepoDb.IntegrationTests
                     ColumnDecimalMapped = (decimal?)Convert.ToDecimal(123456789.45),
                     ColumnDateMapped = (DateTime?)DateTime.UtcNow.Date,
                     ColumnTimeMapped = (TimeSpan?)DateTime.UtcNow.TimeOfDay,
-                    ColumnDateTimeMapped = (DateTime?)DateTime.Parse("2019-01-01 00:00:05.123"),
+                    ColumnDateTimeMapped = (DateTime?)DateTime.Parse("2019-01-01 00:00:05.123", CultureInfo.InvariantCulture),
                     ColumnDateTime2Mapped = (DateTime?)DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
                 };
 
@@ -1651,7 +1652,7 @@ namespace RepoDb.IntegrationTests
                     ColumnDecimalMapped = (decimal?)Convert.ToDecimal(123456789.45),
                     ColumnDateMapped = (DateTime?)DateTime.UtcNow.Date,
                     ColumnTimeMapped = (TimeSpan?)DateTime.UtcNow.TimeOfDay,
-                    ColumnDateTimeMapped = (DateTime?)DateTime.Parse("2019-01-01 00:00:05.123"),
+                    ColumnDateTimeMapped = (DateTime?)DateTime.Parse("2019-01-01 00:00:05.123", CultureInfo.InvariantCulture),
                     ColumnDateTime2Mapped = (DateTime?)DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
                 };
 
@@ -1753,7 +1754,7 @@ namespace RepoDb.IntegrationTests
                     ColumnDecimalMapped = (decimal?)Convert.ToDecimal(123456789.45),
                     ColumnDateMapped = (DateTime?)DateTime.UtcNow.Date,
                     ColumnTimeMapped = (TimeSpan?)DateTime.UtcNow.TimeOfDay,
-                    ColumnDateTimeMapped = (DateTime?)DateTime.Parse("2019-01-01 00:00:05.123"),
+                    ColumnDateTimeMapped = (DateTime?)DateTime.Parse("2019-01-01 00:00:05.123", CultureInfo.InvariantCulture),
                     ColumnDateTime2Mapped = (DateTime?)DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
                 };
 
@@ -1793,7 +1794,7 @@ namespace RepoDb.IntegrationTests
                     ColumnDecimalMapped = (decimal?)Convert.ToDecimal(123456789.45),
                     ColumnDateMapped = (DateTime?)DateTime.UtcNow.Date,
                     ColumnTimeMapped = (TimeSpan?)DateTime.UtcNow.TimeOfDay,
-                    ColumnDateTimeMapped = (DateTime?)DateTime.Parse("2019-01-01 00:00:05.123"),
+                    ColumnDateTimeMapped = (DateTime?)DateTime.Parse("2019-01-01 00:00:05.123", CultureInfo.InvariantCulture),
                     ColumnDateTime2Mapped = (DateTime?)DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
                 };
 
@@ -2042,7 +2043,7 @@ namespace RepoDb.IntegrationTests
                     ColumnDecimal = Convert.ToDecimal(123456789.45),
                     ColumnDate = DateTime.UtcNow.Date,
                     ColumnTime = DateTime.UtcNow.TimeOfDay,
-                    ColumnDateTime = DateTime.Parse("2019-01-01 00:00:05.123"),
+                    ColumnDateTime = DateTime.Parse("2019-01-01 00:00:05.123", CultureInfo.InvariantCulture),
                     ColumnDateTime2 = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
                 };
 
@@ -2094,7 +2095,7 @@ namespace RepoDb.IntegrationTests
                     ColumnDecimal = Convert.ToDecimal(123456789.45),
                     ColumnDate = DateTime.UtcNow.Date,
                     ColumnTime = DateTime.UtcNow.TimeOfDay,
-                    ColumnDateTime = DateTime.Parse("2019-01-01 00:00:05.123"),
+                    ColumnDateTime = DateTime.Parse("2019-01-01 00:00:05.123", CultureInfo.InvariantCulture),
                     ColumnDateTime2 = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
                 };
 
@@ -2226,7 +2227,7 @@ namespace RepoDb.IntegrationTests
                     ColumnDecimal = Convert.ToDecimal(123456789.45),
                     ColumnDate = DateTime.UtcNow.Date,
                     ColumnTime = DateTime.UtcNow.TimeOfDay,
-                    ColumnDateTime = DateTime.Parse("2019-01-01 00:00:05.123"),
+                    ColumnDateTime = DateTime.Parse("2019-01-01 00:00:05.123", CultureInfo.InvariantCulture),
                     ColumnDateTime2 = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
                 };
 
@@ -2281,7 +2282,7 @@ namespace RepoDb.IntegrationTests
                     ColumnDecimal = Convert.ToDecimal(123456789.45),
                     ColumnDate = DateTime.UtcNow.Date,
                     ColumnTime = DateTime.UtcNow.TimeOfDay,
-                    ColumnDateTime = DateTime.Parse("2019-01-01 00:00:05.123"),
+                    ColumnDateTime = DateTime.Parse("2019-01-01 00:00:05.123", CultureInfo.InvariantCulture),
                     ColumnDateTime2 = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
                 };
 
@@ -2340,7 +2341,7 @@ namespace RepoDb.IntegrationTests
                     ColumnDecimal = (decimal?)Convert.ToDecimal(123456789.45),
                     ColumnDate = (DateTime?)DateTime.UtcNow.Date,
                     ColumnTime = (TimeSpan?)DateTime.UtcNow.TimeOfDay,
-                    ColumnDateTime = (DateTime?)DateTime.Parse("2019-01-01 00:00:05.123"),
+                    ColumnDateTime = (DateTime?)DateTime.Parse("2019-01-01 00:00:05.123", CultureInfo.InvariantCulture),
                     ColumnDateTime2 = (DateTime?)DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
                 };
 
@@ -2391,7 +2392,7 @@ namespace RepoDb.IntegrationTests
                     ColumnDecimal = (decimal?)Convert.ToDecimal(123456789.45),
                     ColumnDate = (DateTime?)DateTime.UtcNow.Date,
                     ColumnTime = (TimeSpan?)DateTime.UtcNow.TimeOfDay,
-                    ColumnDateTime = (DateTime?)DateTime.Parse("2019-01-01 00:00:05.123"),
+                    ColumnDateTime = (DateTime?)DateTime.Parse("2019-01-01 00:00:05.123", CultureInfo.InvariantCulture),
                     ColumnDateTime2 = (DateTime?)DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
                 };
 
@@ -2522,7 +2523,7 @@ namespace RepoDb.IntegrationTests
                     ColumnDecimal = (decimal?)Convert.ToDecimal(123456789.45),
                     ColumnDate = (DateTime?)DateTime.UtcNow.Date,
                     ColumnTime = (TimeSpan?)DateTime.UtcNow.TimeOfDay,
-                    ColumnDateTime = (DateTime?)DateTime.Parse("2019-01-01 00:00:05.123"),
+                    ColumnDateTime = (DateTime?)DateTime.Parse("2019-01-01 00:00:05.123", CultureInfo.InvariantCulture),
                     ColumnDateTime2 = (DateTime?)DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
                 };
 
@@ -2577,7 +2578,7 @@ namespace RepoDb.IntegrationTests
                     ColumnDecimal = (decimal?)Convert.ToDecimal(123456789.45),
                     ColumnDate = (DateTime?)DateTime.UtcNow.Date,
                     ColumnTime = (TimeSpan?)DateTime.UtcNow.TimeOfDay,
-                    ColumnDateTime = (DateTime?)DateTime.Parse("2019-01-01 00:00:05.123"),
+                    ColumnDateTime = (DateTime?)DateTime.Parse("2019-01-01 00:00:05.123", CultureInfo.InvariantCulture),
                     ColumnDateTime2 = (DateTime?)DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
                 };
 
