@@ -65,7 +65,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = await connection.TruncateAsync<MdsCompleteTable>();
+                var result = await connection.TruncateAsync<MdsCompleteTable>().ConfigureAwait(false);
                 var countResult = connection.CountAll<MdsCompleteTable>();
 
                 // Assert
@@ -111,7 +111,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = await connection.TruncateAsync(ClassMappedNameCache.Get<MdsCompleteTable>());
+                var result = await connection.TruncateAsync(ClassMappedNameCache.Get<MdsCompleteTable>()).ConfigureAwait(false);
                 var countResult = connection.CountAll<MdsCompleteTable>();
 
                 // Assert

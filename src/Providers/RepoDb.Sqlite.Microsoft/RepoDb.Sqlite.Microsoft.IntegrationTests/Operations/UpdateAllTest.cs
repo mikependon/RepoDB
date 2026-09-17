@@ -75,7 +75,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 tables.AsList().ForEach(table => Helper.UpdateMdsCompleteTableProperties(table));
 
                 // Act
-                var result = await connection.UpdateAllAsync<MdsCompleteTable>(tables);
+                var result = await connection.UpdateAllAsync<MdsCompleteTable>(tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -160,7 +160,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 tables.AsList().ForEach(table => Helper.UpdateMdsCompleteTableProperties(table));
 
                 // Act
-                var result = await connection.UpdateAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(), tables);
+                var result = await connection.UpdateAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(), tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -185,7 +185,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 
                 // Act
                 var result = await connection.UpdateAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(10, result);

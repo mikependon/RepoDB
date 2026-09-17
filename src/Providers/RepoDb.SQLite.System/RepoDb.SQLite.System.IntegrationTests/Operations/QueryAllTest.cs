@@ -100,7 +100,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
             {
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
-                    await connection.QueryAllAsync<SdsCompleteTable>(hints: "WhatEver"));
+                    await connection.QueryAllAsync<SdsCompleteTable>(hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -158,7 +158,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var queryResult = await connection.QueryAllAsync(ClassMappedNameCache.Get<SdsCompleteTable>());
+                var queryResult = await connection.QueryAllAsync(ClassMappedNameCache.Get<SdsCompleteTable>()).ConfigureAwait(false);
 
                 // Assert
                 tables.AsList().ForEach(table =>
@@ -178,7 +178,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.QueryAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
                         (object)null,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

@@ -124,7 +124,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Act & Assert: async counterpart of the same known ClickHouse limitation.
             await Assert.ThrowsAsync<ClickHouseServerException>(() =>
                 connection.ExecuteQueryMultipleAsync(@"SELECT * FROM `CompleteTable`;
-                    SELECT * FROM `CompleteTable`;"));
+                    SELECT * FROM `CompleteTable`;")).ConfigureAwait(false);
         }
 
         [TestMethod]
@@ -143,7 +143,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
                     {
                         Id1 = tables.First().Id,
                         Id2 = tables.Last().Id
-                    }));
+                    })).ConfigureAwait(false);
         }
 
         [TestMethod]
@@ -158,7 +158,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             await Assert.ThrowsAsync<ClickHouseServerException>(() =>
                 connection.ExecuteQueryMultipleAsync(@"SELECT * FROM `CompleteTable` WHERE Id = @Id;
                     SELECT * FROM `CompleteTable` WHERE Id = @Id;",
-                    new { Id = tables.Last().Id }));
+                    new { Id = tables.Last().Id })).ConfigureAwait(false);
         }
 
         #endregion

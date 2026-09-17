@@ -78,7 +78,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
             using (var connection = new HanaConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteScalarAsync("SELECT COUNT(*) FROM \"CompleteTable\";");
+                var result = await connection.ExecuteScalarAsync("SELECT COUNT(*) FROM \"CompleteTable\";").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
@@ -94,7 +94,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
             using (var connection = new HanaConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM \"CompleteTable\";");
+                var result = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM \"CompleteTable\";").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);

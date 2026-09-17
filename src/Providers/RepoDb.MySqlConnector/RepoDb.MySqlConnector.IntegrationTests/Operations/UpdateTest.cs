@@ -214,7 +214,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = await connection.UpdateAsync<CompleteTable>(table);
+                var result = await connection.UpdateAsync<CompleteTable>(table).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -239,7 +239,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = await connection.UpdateAsync<CompleteTable>(table, e => e.Id == table.Id);
+                var result = await connection.UpdateAsync<CompleteTable>(table, e => e.Id == table.Id).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -264,7 +264,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = await connection.UpdateAsync<CompleteTable>(table, new { table.Id });
+                var result = await connection.UpdateAsync<CompleteTable>(table, new { table.Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -289,7 +289,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = await connection.UpdateAsync<CompleteTable>(table, new QueryField("Id", table.Id));
+                var result = await connection.UpdateAsync<CompleteTable>(table, new QueryField("Id", table.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -319,7 +319,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = await connection.UpdateAsync<CompleteTable>(table, queryFields);
+                var result = await connection.UpdateAsync<CompleteTable>(table, queryFields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -350,7 +350,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = await connection.UpdateAsync<CompleteTable>(table, queryGroup);
+                var result = await connection.UpdateAsync<CompleteTable>(table, queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -561,7 +561,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    entity);
+                    entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -586,7 +586,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = await connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(), table);
+                var result = await connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(), table).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -611,7 +611,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = await connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(), table, new { table.Id });
+                var result = await connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(), table, new { table.Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -636,7 +636,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = await connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(), table, new QueryField("Id", table.Id));
+                var result = await connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(), table, new QueryField("Id", table.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -666,7 +666,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = await connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(), table, queryFields);
+                var result = await connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(), table, queryFields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -697,7 +697,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = await connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(), table, queryGroup);
+                var result = await connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(), table, queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);

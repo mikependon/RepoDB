@@ -105,7 +105,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             using (var connection = new OracleConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAllAsync<CompleteTable>();
+                var result = await connection.CountAllAsync<CompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -124,7 +124,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 try
                 {
                     // Act
-                    var result = await connection.CountAllAsync<CompleteTable>();
+                    var result = await connection.CountAllAsync<CompleteTable>().ConfigureAwait(false);
 
                     // Assert
                     Assert.AreEqual(tables.Count(), result);
@@ -147,7 +147,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 // Act/Assert: AreTableHintsSupported == false for Oracle - any non-null/non-whitespace
                 // "hints" argument must throw, rather than silently being ignored.
                 await Assert.ThrowsAsync<NotSupportedException>(() =>
-                    connection.CountAllAsync<CompleteTable>(hints: "NOLOCK"));
+                    connection.CountAllAsync<CompleteTable>(hints: "NOLOCK")).ConfigureAwait(false);
             }
         }
 
@@ -188,7 +188,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             using (var connection = new OracleConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAllAsync(ClassMappedNameCache.Get<CompleteTable>());
+                var result = await connection.CountAllAsync(ClassMappedNameCache.Get<CompleteTable>()).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);

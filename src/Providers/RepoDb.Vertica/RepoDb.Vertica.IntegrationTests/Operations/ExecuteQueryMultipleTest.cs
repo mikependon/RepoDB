@@ -83,9 +83,9 @@ namespace RepoDb.Vertica.IntegrationTests.Operations
             using var connection = new VerticaConnection(Database.ConnectionString);
 
             // Act
-            using var extractor = await connection.ExecuteQueryMultipleAsync("SELECT * FROM \"CompleteTable\"; SELECT * FROM \"CompleteTable\"");
-            var result1 = await extractor.ExtractAsync<CompleteTable>();
-            var result2 = await extractor.ExtractAsync<CompleteTable>();
+            using var extractor = await connection.ExecuteQueryMultipleAsync("SELECT * FROM \"CompleteTable\"; SELECT * FROM \"CompleteTable\"").ConfigureAwait(false);
+            var result1 = await extractor.ExtractAsync<CompleteTable>().ConfigureAwait(false);
+            var result2 = await extractor.ExtractAsync<CompleteTable>().ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count(), result1.Count());
@@ -105,7 +105,7 @@ namespace RepoDb.Vertica.IntegrationTests.Operations
             await Assert.ThrowsAsync<VerticaException>(() =>
                 connection.ExecuteQueryMultipleAsync(
                     "SELECT * FROM \"CompleteTable\" WHERE \"Id\" = @Id; SELECT * FROM \"CompleteTable\" WHERE \"Id\" = @Id",
-                    new { Id = id }));
+                    new { Id = id })).ConfigureAwait(false);
         }
 
         #endregion

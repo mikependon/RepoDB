@@ -128,7 +128,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MergeAsync<CompleteTable>(table);
+                var result = await connection.MergeAsync<CompleteTable>(table).ConfigureAwait(false);
                 var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
@@ -149,7 +149,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = await connection.MergeAsync<CompleteTable>(table);
+                var result = await connection.MergeAsync<CompleteTable>(table).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -182,7 +182,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MergeAsync<CompleteTable>(table,
-                    qualifiers: qualifiers);
+                    qualifiers: qualifiers).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -429,7 +429,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    table);
+                    table).ConfigureAwait(false);
                 var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
@@ -448,7 +448,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    table);
+                    table).ConfigureAwait(false);
                 var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
@@ -471,7 +471,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    table);
+                    table).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -499,7 +499,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    entity);
+                    entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -531,7 +531,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     table,
-                    qualifiers: qualifiers);
+                    qualifiers: qualifiers).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -555,7 +555,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    (object)table);
+                    (object)table).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -582,7 +582,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    table);
+                    table).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -614,7 +614,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     table,
-                    qualifiers: qualifiers);
+                    qualifiers: qualifiers).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());

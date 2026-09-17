@@ -385,14 +385,14 @@ namespace RepoDb
             where TEntity : class
         {
             var entityList = entities.AsList();
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
             var identityField = dbFields.GetIdentity();
             var returnIdentity = identityBehavior == FirebirdBulkImportIdentityBehavior.ReturnIdentity && identityField != null;
 
             return returnIdentity
                 ? await connection.BulkInsertBaseForReturnIdentityAsync(tableName, entityList, mappings, bulkCopyTimeout, batchSize,
-                    ResolvePseudoTableType(pseudoTableType, entityList?.Count), trace, traceKey, transaction, cancellationToken)
-                : await connection.BulkInsertBaseNoReturnIdentityAsync(tableName, entityList, mappings, bulkCopyTimeout, batchSize, trace, traceKey, transaction, cancellationToken);
+                    ResolvePseudoTableType(pseudoTableType, entityList?.Count), trace, traceKey, transaction, cancellationToken).ConfigureAwait(false)
+                : await connection.BulkInsertBaseNoReturnIdentityAsync(tableName, entityList, mappings, bulkCopyTimeout, batchSize, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -427,29 +427,29 @@ namespace RepoDb
             var pseudoTableName = FirebirdText.CreatePseudoTableName("I");
 
             using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
-            var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+            var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
             int result;
             try
             {
-                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
                 var identityField = dbFields.GetIdentity().AsField();
                 var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField).AsList();
 
-                await FirebirdExecution.CreatePseudoTableAsync(connection, pseudoTableName, insertFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+                await FirebirdExecution.CreatePseudoTableAsync(connection, pseudoTableName, insertFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
 
                 var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : insertFields;
                 using var entityTable = BuildEntityDataTable(entities, entityFields, includeRowOrder: true);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, entityTable, mappings: WithRowOrderMapping(mappings), bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction, cancellationToken: cancellationToken);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, entityTable, mappings: WithRowOrderMapping(mappings), bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-                result = await FirebirdExecution.InsertFromPseudoTableForReturnIdentityAsync(connection, tableName, pseudoTableName, insertFields, identityField, entities, trace, traceKey, transaction, cancellationToken);
+                result = await FirebirdExecution.InsertFromPseudoTableForReturnIdentityAsync(connection, tableName, pseudoTableName, insertFields, identityField, entities, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
             }
             finally
             {
-                await FirebirdExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
+                await FirebirdExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
             }
 
-            await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+            await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
             return result;
         }
 
@@ -481,17 +481,17 @@ namespace RepoDb
             where TEntity : class
         {
             using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
-            var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+            var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
             var identityField = dbFields.GetIdentity()?.AsField();
             var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField).AsList();
             var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : insertFields;
             using var entityTable = BuildEntityDataTable(entities, entityFields);
             var writeMappings = mappings ?? insertFields.Select(f => new FirebirdCommandBatcherMapItem(f.Name, f.Name)).AsList();
-            var result = await WriteToServerAsyncInternal(connection, tableName, entityTable, mappings: writeMappings, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction, cancellationToken: cancellationToken);
+            var result = await WriteToServerAsyncInternal(connection, tableName, entityTable, mappings: writeMappings, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-            await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+            await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
             return result;
         }
 
@@ -535,14 +535,14 @@ namespace RepoDb
                 throw new ArgumentNullException(nameof(table));
             }
 
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
             var identityField = dbFields.GetIdentity();
             var returnIdentity = identityBehavior == FirebirdBulkImportIdentityBehavior.ReturnIdentity && identityField != null;
 
             return returnIdentity
                 ? await connection.BulkInsertBaseForReturnIdentityAsync(tableName, table, rowState, mappings, bulkCopyTimeout, batchSize,
-                    ResolvePseudoTableType(pseudoTableType, table?.Rows.Count), trace, traceKey, transaction, cancellationToken)
-                : await connection.BulkInsertBaseNoReturnIdentityAsync(tableName, table, rowState, mappings, bulkCopyTimeout, batchSize, trace, traceKey, transaction, cancellationToken);
+                    ResolvePseudoTableType(pseudoTableType, table?.Rows.Count), trace, traceKey, transaction, cancellationToken).ConfigureAwait(false)
+                : await connection.BulkInsertBaseNoReturnIdentityAsync(tableName, table, rowState, mappings, bulkCopyTimeout, batchSize, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -578,29 +578,29 @@ namespace RepoDb
             var pseudoTableName = FirebirdText.CreatePseudoTableName("I");
 
             using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
-            var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+            var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
             int result;
             try
             {
-                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
                 var identityField = dbFields.GetIdentity().AsField();
                 var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField).AsList();
 
-                await FirebirdExecution.CreatePseudoTableAsync(connection, pseudoTableName, insertFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+                await FirebirdExecution.CreatePseudoTableAsync(connection, pseudoTableName, insertFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
 
                 using var orderedTable = AddRowOrderColumn(table, rows);
                 var writeMappings = mappings != null ? WithRowOrderMapping(mappings) : GetDefaultMappingsForDataTable(orderedTable, identityField).AsList();
-                await WriteToServerAsyncInternal(connection, pseudoTableName, orderedTable, mappings: writeMappings, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction, cancellationToken: cancellationToken);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, orderedTable, mappings: writeMappings, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-                result = await FirebirdExecution.InsertFromPseudoTableForReturnIdentityForDataTableAsync(connection, tableName, pseudoTableName, insertFields, identityField, rows, trace, traceKey, transaction, cancellationToken);
+                result = await FirebirdExecution.InsertFromPseudoTableForReturnIdentityForDataTableAsync(connection, tableName, pseudoTableName, insertFields, identityField, rows, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
             }
             finally
             {
-                await FirebirdExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
+                await FirebirdExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
             }
 
-            await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+            await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
             return result;
         }
 
@@ -632,13 +632,13 @@ namespace RepoDb
             CancellationToken cancellationToken)
         {
             using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
-            var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+            var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-            var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken))?.GetIdentity()?.AsField();
+            var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false))?.GetIdentity()?.AsField();
             var writeMappings = mappings ?? GetDefaultMappingsForDataTable(table, identityField).AsList();
-            var result = await WriteToServerAsyncInternal(connection, tableName, table, rowState, writeMappings, bulkCopyTimeout, batchSize, transaction, cancellationToken);
+            var result = await WriteToServerAsyncInternal(connection, tableName, table, rowState, writeMappings, bulkCopyTimeout, batchSize, transaction, cancellationToken).ConfigureAwait(false);
 
-            await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+            await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
             return result;
         }
 
@@ -672,12 +672,12 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
-            var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+            var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-            var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken))?.GetIdentity()?.AsField();
-            var result = await WriteToServerAsyncInternal(connection, tableName, reader, mappings ?? GetDefaultMappingsForDataReader(connection, tableName, reader, transaction, identityField).AsList(), bulkCopyTimeout, batchSize, transaction, cancellationToken);
+            var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false))?.GetIdentity()?.AsField();
+            var result = await WriteToServerAsyncInternal(connection, tableName, reader, mappings ?? GetDefaultMappingsForDataReader(connection, tableName, reader, transaction, identityField).AsList(), bulkCopyTimeout, batchSize, transaction, cancellationToken).ConfigureAwait(false);
 
-            await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+            await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
             return result;
         }
 

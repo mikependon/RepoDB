@@ -102,7 +102,7 @@ namespace RepoDb.Oracle.BulkOperations
 
             var dbReader = reader as DbDataReader;
 
-            while (dbReader != null ? await dbReader.ReadAsync(cancellationToken) : reader.Read())
+            while (dbReader != null ? await dbReader.ReadAsync(cancellationToken).ConfigureAwait(false) : reader.Read())
             {
                 var values = new object[fieldCount];
                 for (var i = 0; i < fieldCount; i++)
@@ -203,7 +203,7 @@ namespace RepoDb.Oracle.BulkOperations
 
             var dbSetting = connection.GetDbSetting();
             var unquotedTableName = DestinationTableName.AsUnquoted(true, dbSetting);
-            var dbFieldList = await connection.GetDbHelper().GetFieldsAsync(connection, unquotedTableName, Transaction, cancellationToken);
+            var dbFieldList = await connection.GetDbHelper().GetFieldsAsync(connection, unquotedTableName, Transaction, cancellationToken).ConfigureAwait(false);
             var dbFields = new DbFieldCollection(dbFieldList, dbSetting);
             var identity = dbFields.GetIdentity();
 
@@ -249,7 +249,7 @@ namespace RepoDb.Oracle.BulkOperations
                 return 0;
             }
 
-            mappings = await ExcludeIdentityColumnAsync(mappings, cancellationToken);
+            mappings = await ExcludeIdentityColumnAsync(mappings, cancellationToken).ConfigureAwait(false);
             if (mappings.Count == 0)
             {
                 return 0;
@@ -287,7 +287,7 @@ namespace RepoDb.Oracle.BulkOperations
                 }
 
                 affectedRows += await command.ExecuteNonQueryAsync(
-                    cancellationToken);
+                    cancellationToken).ConfigureAwait(false);
             }
 
             return affectedRows;
@@ -313,10 +313,10 @@ namespace RepoDb.Oracle.BulkOperations
             }
 
             var mappings = ResolveMappings(reader);
-            var dataTable = await ToDataTableAsync(reader, cancellationToken);
+            var dataTable = await ToDataTableAsync(reader, cancellationToken).ConfigureAwait(false);
             var rows = dataTable.Rows.OfType<DataRow>().ToArray();
 
-            return await BindArrayCoreAsync(dataTable, rows, mappings, cancellationToken);
+            return await BindArrayCoreAsync(dataTable, rows, mappings, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>

@@ -75,7 +75,7 @@ namespace RepoDb.Vertica.BulkOperations.Extensions
             CancellationToken cancellationToken = default)
         {
             var commandText = VerticaText.GetCreatePseudoTableSql(pseudoTableName, fields, dbFields, pseudoTableType, connection.GetDbSetting());
-            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace RepoDb.Vertica.BulkOperations.Extensions
             CancellationToken cancellationToken = default)
         {
             var commandText = VerticaText.GetDropPseudoTableSql(pseudoTableName, connection.GetDbSetting());
-            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -205,14 +205,14 @@ namespace RepoDb.Vertica.BulkOperations.Extensions
             where TEntity : class
         {
             var commandText = VerticaText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, connection.GetDbSetting());
-            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
 
             if (entities.Count == 0)
             {
                 return 0;
             }
 
-            var lastIdentity = Convert.ToInt64(await connection.GetDbHelper().GetScopeIdentityAsync<object>(connection, transaction, cancellationToken));
+            var lastIdentity = Convert.ToInt64(await connection.GetDbHelper().GetScopeIdentityAsync<object>(connection, transaction, cancellationToken).ConfigureAwait(false));
             var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
 
             for (var i = 0; i < entities.Count; i++)
@@ -287,14 +287,14 @@ namespace RepoDb.Vertica.BulkOperations.Extensions
             CancellationToken cancellationToken = default)
         {
             var commandText = VerticaText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, connection.GetDbSetting());
-            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
 
             if (rows.Count == 0)
             {
                 return 0;
             }
 
-            var lastIdentity = Convert.ToInt64(await connection.GetDbHelper().GetScopeIdentityAsync<object>(connection, transaction, cancellationToken));
+            var lastIdentity = Convert.ToInt64(await connection.GetDbHelper().GetScopeIdentityAsync<object>(connection, transaction, cancellationToken).ConfigureAwait(false));
 
             SetIdentityValues(rows, identityField, i => lastIdentity - (rows.Count - 1 - i));
 
@@ -409,12 +409,12 @@ namespace RepoDb.Vertica.BulkOperations.Extensions
             var updateText = VerticaText.GetMergeUpdateFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, identityField, connection.GetDbSetting());
             if (updateText != null)
             {
-                await connection.ExecuteNonQueryAsync(updateText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+                await connection.ExecuteNonQueryAsync(updateText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             var insertText = VerticaText.GetMergeInsertFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, identityField, connection.GetDbSetting());
-            await connection.ExecuteNonQueryAsync(insertText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(insertText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
             var countText = VerticaText.GetPseudoTableRowCountSql(pseudoTableName, connection.GetDbSetting());
-            return await connection.ExecuteScalarAsync<int>(countText, transaction: transaction, cancellationToken: cancellationToken);
+            return await connection.ExecuteScalarAsync<int>(countText, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -474,7 +474,7 @@ namespace RepoDb.Vertica.BulkOperations.Extensions
                 return [];
             }
 
-            var lastIdentity = Convert.ToInt64(await connection.GetDbHelper().GetScopeIdentityAsync<object>(connection, transaction, cancellationToken));
+            var lastIdentity = Convert.ToInt64(await connection.GetDbHelper().GetScopeIdentityAsync<object>(connection, transaction, cancellationToken).ConfigureAwait(false));
             var identities = new long[insertedCount];
 
             for (var i = 0; i < insertedCount; i++)
@@ -595,17 +595,17 @@ namespace RepoDb.Vertica.BulkOperations.Extensions
             var updateText = VerticaText.GetMergeUpdateFromPseudoTableSql(tableName, pseudoTableName, fields, qualifierList, identityField, dbSetting);
             if (updateText != null)
             {
-                await connection.ExecuteNonQueryAsync(updateText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+                await connection.ExecuteNonQueryAsync(updateText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             var insertText = VerticaText.GetMergeInsertFromPseudoTableSql(tableName, pseudoTableName, fields, qualifierList, identityField, dbSetting);
-            var insertedCount = await connection.ExecuteNonQueryAsync(insertText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            var insertedCount = await connection.ExecuteNonQueryAsync(insertText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
 
             var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
 
             if (identityIsQualifier)
             {
                 var getter = PropertyCache.Get(typeof(TEntity), identityField, true)?.PropertyInfo;
-                var newIdentities = await ComputeNewRowIdentitiesAsync(connection, insertedCount, transaction, cancellationToken);
+                var newIdentities = await ComputeNewRowIdentitiesAsync(connection, insertedCount, transaction, cancellationToken).ConfigureAwait(false);
                 var newIndex = 0;
 
                 for (var i = 0; i < entities.Count; i++)
@@ -623,10 +623,10 @@ namespace RepoDb.Vertica.BulkOperations.Extensions
             var selectText = VerticaText.GetSelectIdentityAfterMergeSql(tableName, pseudoTableName, qualifierList, identityField, dbSetting);
 
             using var command = CreateReaderCommand(connection, selectText, transaction);
-            using var reader = await command.ExecuteReaderAsync(cancellationToken);
+            using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
             var result = 0;
 
-            while (await reader.ReadAsync(cancellationToken))
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
                 setter?.Invoke(entities[result], Converter.DbNullToNull(reader.GetValue(0)));
                 result++;
@@ -737,14 +737,14 @@ namespace RepoDb.Vertica.BulkOperations.Extensions
             var updateText = VerticaText.GetMergeUpdateFromPseudoTableSql(tableName, pseudoTableName, fields, qualifierList, identityField, dbSetting);
             if (updateText != null)
             {
-                await connection.ExecuteNonQueryAsync(updateText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+                await connection.ExecuteNonQueryAsync(updateText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             var insertText = VerticaText.GetMergeInsertFromPseudoTableSql(tableName, pseudoTableName, fields, qualifierList, identityField, dbSetting);
-            var insertedCount = await connection.ExecuteNonQueryAsync(insertText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            var insertedCount = await connection.ExecuteNonQueryAsync(insertText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
 
             if (identityIsQualifier)
             {
-                var newIdentities = await ComputeNewRowIdentitiesAsync(connection, insertedCount, transaction, cancellationToken);
+                var newIdentities = await ComputeNewRowIdentitiesAsync(connection, insertedCount, transaction, cancellationToken).ConfigureAwait(false);
                 var newIndex = 0;
 
                 SetIdentityValues(rows, identityField, i =>
@@ -760,9 +760,9 @@ namespace RepoDb.Vertica.BulkOperations.Extensions
             var values = new List<object>();
 
             using (var command = CreateReaderCommand(connection, selectText, transaction))
-            using (var reader = await command.ExecuteReaderAsync(cancellationToken))
+            using (var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
             {
-                while (await reader.ReadAsync(cancellationToken))
+                while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
                 {
                     values.Add(Converter.DbNullToNull(reader.GetValue(0)));
                 }
@@ -831,7 +831,7 @@ namespace RepoDb.Vertica.BulkOperations.Extensions
             CancellationToken cancellationToken = default)
         {
             var commandText = VerticaText.GetMergeUpdateFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, identityField, connection.GetDbSetting());
-            return commandText == null ? 0 : await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            return commandText == null ? 0 : await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         #endregion
@@ -883,7 +883,7 @@ namespace RepoDb.Vertica.BulkOperations.Extensions
             CancellationToken cancellationToken = default)
         {
             var commandText = VerticaText.GetDeleteFromPseudoTableSql(tableName, pseudoTableName, qualifiers, connection.GetDbSetting());
-            return await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            return await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         #endregion

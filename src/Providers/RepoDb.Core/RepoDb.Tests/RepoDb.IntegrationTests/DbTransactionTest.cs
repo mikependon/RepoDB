@@ -71,7 +71,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.BatchQueryAsync<IdentityTable>(0, 10, OrderField.Parse(new { Id = Order.Ascending }), it => it.Id != 0, transaction: transaction);
+                    await connection.BatchQueryAsync<IdentityTable>(0, 10, OrderField.Parse(new { Id = Order.Ascending }), it => it.Id != 0, transaction: transaction).ConfigureAwait(false);
                 }
             }
         }
@@ -111,7 +111,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.CountAsync<IdentityTable>(it => it.Id != 0, transaction: transaction);
+                    await connection.CountAsync<IdentityTable>(it => it.Id != 0, transaction: transaction).ConfigureAwait(false);
                 }
             }
         }
@@ -151,7 +151,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.CountAllAsync<IdentityTable>(transaction: transaction);
+                    await connection.CountAllAsync<IdentityTable>(transaction: transaction).ConfigureAwait(false);
                 }
             }
         }
@@ -235,7 +235,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.DeleteAsync<IdentityTable>(entity, transaction: transaction);
+                    await connection.DeleteAsync<IdentityTable>(entity, transaction: transaction).ConfigureAwait(false);
 
                     // Act
                     transaction.Commit();
@@ -261,7 +261,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.DeleteAsync<IdentityTable>(entity, transaction: transaction);
+                    await connection.DeleteAsync<IdentityTable>(entity, transaction: transaction).ConfigureAwait(false);
 
                     // Act
                     transaction.Rollback();
@@ -351,7 +351,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.DeleteAllAsync<IdentityTable>(transaction: transaction);
+                    await connection.DeleteAllAsync<IdentityTable>(transaction: transaction).ConfigureAwait(false);
 
                     // Act
                     transaction.Commit();
@@ -377,7 +377,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.DeleteAllAsync<IdentityTable>(transaction: transaction);
+                    await connection.DeleteAllAsync<IdentityTable>(transaction: transaction).ConfigureAwait(false);
 
                     // Act
                     transaction.Rollback();
@@ -458,7 +458,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.InsertAsync<IdentityTable>(entity, transaction: transaction);
+                    await connection.InsertAsync<IdentityTable>(entity, transaction: transaction).ConfigureAwait(false);
 
                     // Act
                     transaction.Commit();
@@ -481,7 +481,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.InsertAsync<IdentityTable>(entity, transaction: transaction);
+                    await connection.InsertAsync<IdentityTable>(entity, transaction: transaction).ConfigureAwait(false);
 
                     // Act
                     transaction.Rollback();
@@ -562,7 +562,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.InsertAllAsync<IdentityTable>(entities, transaction: transaction);
+                    await connection.InsertAllAsync<IdentityTable>(entities, transaction: transaction).ConfigureAwait(false);
 
                     // Act
                     transaction.Commit();
@@ -585,7 +585,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.InsertAllAsync<IdentityTable>(entities, transaction: transaction);
+                    await connection.InsertAllAsync<IdentityTable>(entities, transaction: transaction).ConfigureAwait(false);
 
                     // Act
                     transaction.Rollback();
@@ -666,7 +666,7 @@ namespace RepoDb.IntegrationTests
                 var transaction = connection.EnsureOpen().BeginTransaction();
 
                 // Act
-                await connection.MergeAsync<IdentityTable>(entity, transaction: transaction);
+                await connection.MergeAsync<IdentityTable>(entity, transaction: transaction).ConfigureAwait(false);
 
                 // Act
                 transaction.Commit();
@@ -688,7 +688,7 @@ namespace RepoDb.IntegrationTests
                 var transaction = connection.EnsureOpen().BeginTransaction();
 
                 // Act
-                await connection.MergeAsync<IdentityTable>(entity, transaction: transaction);
+                await connection.MergeAsync<IdentityTable>(entity, transaction: transaction).ConfigureAwait(false);
 
                 // Act
                 transaction.Rollback();
@@ -768,7 +768,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.MergeAllAsync<IdentityTable>(entities, transaction: transaction);
+                    await connection.MergeAllAsync<IdentityTable>(entities, transaction: transaction).ConfigureAwait(false);
 
                     // Act
                     transaction.Commit();
@@ -791,7 +791,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.MergeAllAsync<IdentityTable>(entities, transaction: transaction);
+                    await connection.MergeAllAsync<IdentityTable>(entities, transaction: transaction).ConfigureAwait(false);
 
                     // Act
                     transaction.Rollback();
@@ -837,7 +837,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.QueryAsync<IdentityTable>(it => it.Id != 0, transaction: transaction);
+                    await connection.QueryAsync<IdentityTable>(it => it.Id != 0, transaction: transaction).ConfigureAwait(false);
                 }
             }
         }
@@ -877,7 +877,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.QueryAllAsync<IdentityTable>(transaction: transaction);
+                    await connection.QueryAllAsync<IdentityTable>(transaction: transaction).ConfigureAwait(false);
                 }
             }
         }
@@ -1016,7 +1016,7 @@ namespace RepoDb.IntegrationTests
                     // Act
                     await connection.QueryMultipleAsync<IdentityTable, IdentityTable>(it => it.Id != 0,
                         it => it.Id != 0,
-                        transaction: transaction);
+                        transaction: transaction).ConfigureAwait(false);
                 }
             }
         }
@@ -1033,7 +1033,7 @@ namespace RepoDb.IntegrationTests
                     await connection.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable>(it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
-                        transaction: transaction);
+                        transaction: transaction).ConfigureAwait(false);
                 }
             }
         }
@@ -1051,7 +1051,7 @@ namespace RepoDb.IntegrationTests
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
-                        transaction: transaction);
+                        transaction: transaction).ConfigureAwait(false);
                 }
             }
         }
@@ -1070,7 +1070,7 @@ namespace RepoDb.IntegrationTests
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
-                        transaction: transaction);
+                        transaction: transaction).ConfigureAwait(false);
                 }
             }
         }
@@ -1090,7 +1090,7 @@ namespace RepoDb.IntegrationTests
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
-                        transaction: transaction);
+                        transaction: transaction).ConfigureAwait(false);
                 }
             }
         }
@@ -1111,7 +1111,7 @@ namespace RepoDb.IntegrationTests
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
-                        transaction: transaction);
+                        transaction: transaction).ConfigureAwait(false);
                 }
             }
         }
@@ -1151,7 +1151,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.TruncateAsync<IdentityTable>(transaction: transaction);
+                    await connection.TruncateAsync<IdentityTable>(transaction: transaction).ConfigureAwait(false);
                 }
             }
         }
@@ -1247,7 +1247,7 @@ namespace RepoDb.IntegrationTests
                     entity.ColumnBit = false;
 
                     // Act
-                    await connection.UpdateAsync<IdentityTable>(entity, transaction: transaction);
+                    await connection.UpdateAsync<IdentityTable>(entity, transaction: transaction).ConfigureAwait(false);
 
                     // Act
                     transaction.Commit();
@@ -1278,7 +1278,7 @@ namespace RepoDb.IntegrationTests
                     entity.ColumnBit = false;
 
                     // Act
-                    await connection.UpdateAsync<IdentityTable>(entity, transaction: transaction);
+                    await connection.UpdateAsync<IdentityTable>(entity, transaction: transaction).ConfigureAwait(false);
 
                     // Act
                     transaction.Rollback();
@@ -1383,7 +1383,7 @@ namespace RepoDb.IntegrationTests
                     entities.ForEach(entity => entity.ColumnBit = false);
 
                     // Act
-                    await connection.UpdateAllAsync<IdentityTable>(entities, transaction: transaction);
+                    await connection.UpdateAllAsync<IdentityTable>(entities, transaction: transaction).ConfigureAwait(false);
 
                     // Act
                     transaction.Commit();
@@ -1414,7 +1414,7 @@ namespace RepoDb.IntegrationTests
                     entities.ForEach(entity => entity.ColumnBit = false);
 
                     // Act
-                    await connection.UpdateAllAsync<IdentityTable>(entities, transaction: transaction);
+                    await connection.UpdateAllAsync<IdentityTable>(entities, transaction: transaction).ConfigureAwait(false);
 
                     // Act
                     transaction.Rollback();
@@ -1471,7 +1471,7 @@ namespace RepoDb.IntegrationTests
                 using (var connection = new SqlConnection(Database.ConnectionString))
                 {
                     // Act
-                    await connection.InsertAllAsync<IdentityTable>(entities);
+                    await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                     // Assert
                     Assert.AreEqual(entities.Count, connection.CountAll<IdentityTable>());
@@ -1519,7 +1519,7 @@ namespace RepoDb.IntegrationTests
                 using (var connection = new SqlConnection(Database.ConnectionString))
                 {
                     // Act
-                    await connection.MergeAllAsync<IdentityTable>(entities);
+                    await connection.MergeAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                     // Assert
                     Assert.AreEqual(entities.Count, connection.CountAll<IdentityTable>());
@@ -1582,7 +1582,7 @@ namespace RepoDb.IntegrationTests
                     entities.ForEach(entity => entity.ColumnBit = false);
 
                     // Act
-                    await connection.UpdateAllAsync<IdentityTable>(entities);
+                    await connection.UpdateAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                     // Act
                     var queryResult = connection.QueryAll<IdentityTable>();

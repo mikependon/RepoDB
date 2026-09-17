@@ -139,7 +139,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 
                 // Act
                 using (var extractor = await connection.ExecuteQueryMultipleAsync(@"SELECT * FROM [MdsCompleteTable];
-                    SELECT * FROM [MdsCompleteTable];"))
+                    SELECT * FROM [MdsCompleteTable];").ConfigureAwait(false))
                 {
                     var list = new List<IEnumerable<MdsCompleteTable>>();
 
@@ -172,7 +172,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                     {
                         Id1 = tables.First().Id,
                         Id2 = tables.Last().Id
-                    }))
+                    }).ConfigureAwait(false))
                 {
                     var list = new List<IEnumerable<MdsCompleteTable>>();
 
@@ -200,7 +200,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 // Act
                 using (var extractor = await connection.ExecuteQueryMultipleAsync(@"SELECT * FROM [MdsCompleteTable] WHERE Id = @Id;
                     SELECT * FROM [MdsCompleteTable] WHERE Id = @Id;",
-                    new { Id = tables.Last().Id }))
+                    new { Id = tables.Last().Id }).ConfigureAwait(false))
                 {
                     var list = new List<IEnumerable<MdsCompleteTable>>();
 

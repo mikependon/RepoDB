@@ -111,10 +111,10 @@ namespace RepoDb
 
             if (TypeCache.Get(entityType).IsDictionaryStringObject())
             {
-                while (await reader.ReadAsync(cancellationToken))
+                while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
                 {
-                    var value = Converter.DbNullToNull(await reader.GetFieldValueAsync<object>(0, cancellationToken));
-                    var index = await reader.GetFieldValueAsync<int>(1, cancellationToken);
+                    var value = Converter.DbNullToNull(await reader.GetFieldValueAsync<object>(0, cancellationToken).ConfigureAwait(false));
+                    var index = await reader.GetFieldValueAsync<int>(1, cancellationToken).ConfigureAwait(false);
                     var dictionary = (IDictionary<string, object>)list[(index < 0 ? result : index)];
                     dictionary[identityDbField.Name] = value;
                     result++;
@@ -123,10 +123,10 @@ namespace RepoDb
             else
             {
                 var func = Compiler.GetPropertySetterFunc<TEntity>(identityDbField.Name);
-                while (await reader.ReadAsync(cancellationToken))
+                while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
                 {
-                    var value = Converter.DbNullToNull(await reader.GetFieldValueAsync<object>(0, cancellationToken));
-                    var index = await reader.GetFieldValueAsync<int>(1, cancellationToken);
+                    var value = Converter.DbNullToNull(await reader.GetFieldValueAsync<object>(0, cancellationToken).ConfigureAwait(false));
+                    var index = await reader.GetFieldValueAsync<int>(1, cancellationToken).ConfigureAwait(false);
                     var entity = list[(index < 0 ? result : index)];
                     func(entity, value);
                     result++;
@@ -172,9 +172,9 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             var result = 0;
-            while (await reader.ReadAsync(cancellationToken))
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
-                var value = Converter.DbNullToNull(await reader.GetFieldValueAsync<object>(0, cancellationToken));
+                var value = Converter.DbNullToNull(await reader.GetFieldValueAsync<object>(0, cancellationToken).ConfigureAwait(false));
                 dataTable.Rows[result][identityColumn] = value;
                 result++;
             }
@@ -427,7 +427,7 @@ namespace RepoDb
             if (transaction == null)
             {
                 // Add the transaction if not present
-                return (T)(await connection.EnsureOpenAsync(cancellationToken)).BeginTransaction();
+                return (T)(await connection.EnsureOpenAsync(cancellationToken).ConfigureAwait(false)).BeginTransaction();
             }
 
             // Validate the objects

@@ -829,7 +829,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
-                    entity);
+                    entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -854,7 +854,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeResult = await connection.MergeAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
                     entity,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -877,7 +877,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeResult = await connection.MergeAsync<IdentityTable>(entity);
+                var mergeResult = await connection.MergeAsync<IdentityTable>(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -901,7 +901,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<IdentityTable>(entity,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -924,7 +924,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeResult = await connection.MergeAsync<NonIdentityTable>(entity);
+                var mergeResult = await connection.MergeAsync<NonIdentityTable>(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -948,7 +948,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<NonIdentityTable>(entity,
-                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnNVarChar)));
+                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnNVarChar))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -972,7 +972,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<IdentityTable>(entity,
-                    qualifiers: Field.From(nameof(IdentityTable.ColumnInt)));
+                    qualifiers: Field.From(nameof(IdentityTable.ColumnInt))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -996,7 +996,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<NonIdentityTable>(entity,
-                    qualifiers: Field.From(nameof(NonIdentityTable.ColumnInt)));
+                    qualifiers: Field.From(nameof(NonIdentityTable.ColumnInt))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -1020,7 +1020,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<IdentityTable>(entity,
-                    qualifiers: Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) }));
+                    qualifiers: Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) })).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -1044,7 +1044,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<NonIdentityTable>(entity,
-                    qualifiers: Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }));
+                    qualifiers: Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) })).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -1067,7 +1067,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeResult = await connection.MergeAsync<IdentityTable, long>(entity);
+                var mergeResult = await connection.MergeAsync<IdentityTable, long>(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -1090,7 +1090,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeResult = await connection.MergeAsync<NonIdentityTable, Guid>(entity);
+                var mergeResult = await connection.MergeAsync<NonIdentityTable, Guid>(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -1114,7 +1114,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<IdentityTable, long>(entity,
-                    qualifiers: Field.From(nameof(IdentityTable.ColumnInt)));
+                    qualifiers: Field.From(nameof(IdentityTable.ColumnInt))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -1138,7 +1138,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<NonIdentityTable, Guid>(entity,
-                    qualifiers: Field.From(nameof(NonIdentityTable.ColumnInt)));
+                    qualifiers: Field.From(nameof(NonIdentityTable.ColumnInt))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -1162,7 +1162,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<IdentityTable, long>(entity,
-                    qualifiers: Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) }));
+                    qualifiers: Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) })).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -1186,7 +1186,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<NonIdentityTable, Guid>(entity,
-                    qualifiers: Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }));
+                    qualifiers: Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) })).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -1212,7 +1212,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.Insert<IdentityTable>(entity);
 
                 // Act
-                var mergeResult = await connection.MergeAsync<IdentityTable>(entity);
+                var mergeResult = await connection.MergeAsync<IdentityTable>(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -1238,7 +1238,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.Insert<NonIdentityTable>(entity);
 
                 // Act
-                var mergeResult = await connection.MergeAsync<NonIdentityTable>(entity);
+                var mergeResult = await connection.MergeAsync<NonIdentityTable>(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -1265,7 +1265,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeResult = await connection.MergeAsync<IdentityTable>(entity,
-                    qualifiers: Field.From(nameof(IdentityTable.ColumnInt)));
+                    qualifiers: Field.From(nameof(IdentityTable.ColumnInt))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -1292,7 +1292,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeResult = await connection.MergeAsync<NonIdentityTable>(entity,
-                    qualifiers: Field.From(nameof(NonIdentityTable.ColumnInt)));
+                    qualifiers: Field.From(nameof(NonIdentityTable.ColumnInt))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -1319,7 +1319,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeResult = await connection.MergeAsync<IdentityTable>(entity,
-                    qualifiers: Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) }));
+                    qualifiers: Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) })).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -1346,7 +1346,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeResult = await connection.MergeAsync<NonIdentityTable>(entity,
-                    qualifiers: Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }));
+                    qualifiers: Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) })).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -1372,7 +1372,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.Insert<IdentityTable>(entity);
 
                 // Act
-                var mergeResult = await connection.MergeAsync<IdentityTable, long>(entity);
+                var mergeResult = await connection.MergeAsync<IdentityTable, long>(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -1398,7 +1398,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.Insert<NonIdentityTable>(entity);
 
                 // Act
-                var mergeResult = await connection.MergeAsync<NonIdentityTable, Guid>(entity);
+                var mergeResult = await connection.MergeAsync<NonIdentityTable, Guid>(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -1425,7 +1425,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeResult = await connection.MergeAsync<IdentityTable, long>(entity,
-                    qualifiers: Field.From(nameof(IdentityTable.ColumnInt)));
+                    qualifiers: Field.From(nameof(IdentityTable.ColumnInt))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -1452,7 +1452,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeResult = await connection.MergeAsync<NonIdentityTable, Guid>(entity,
-                    qualifiers: Field.From(nameof(NonIdentityTable.ColumnInt)));
+                    qualifiers: Field.From(nameof(NonIdentityTable.ColumnInt))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -1479,7 +1479,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeResult = await connection.MergeAsync<IdentityTable, long>(entity,
-                    qualifiers: Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) }));
+                    qualifiers: Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) })).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -1506,7 +1506,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeResult = await connection.MergeAsync<NonIdentityTable, Guid>(entity,
-                    qualifiers: Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }));
+                    qualifiers: Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) })).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -1529,7 +1529,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeResult = await connection.MergeAsync<IdentityTable>(entity, hints: SqlServerTableHints.TabLock);
+                var mergeResult = await connection.MergeAsync<IdentityTable>(entity, hints: SqlServerTableHints.TabLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -1556,7 +1556,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeResult = await connection.MergeAsync<WithExtraFieldsIdentityTable>(entity);
+                var mergeResult = await connection.MergeAsync<WithExtraFieldsIdentityTable>(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -1582,7 +1582,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.Insert<WithExtraFieldsIdentityTable>(entity);
 
                 // Act
-                var mergeResult = await connection.MergeAsync<WithExtraFieldsIdentityTable>(entity);
+                var mergeResult = await connection.MergeAsync<WithExtraFieldsIdentityTable>(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -1783,14 +1783,14 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeResult = await connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
                     (object)entity,
-                    qualifiers: Field.From(nameof(NonIdentityTable.ColumnInt)));
+                    qualifiers: Field.From(nameof(NonIdentityTable.ColumnInt))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
-                Assert.AreEqual(1, await connection.CountAllAsync<NonIdentityTable>());
+                Assert.AreEqual(1, await connection.CountAllAsync<NonIdentityTable>().ConfigureAwait(false));
 
                 // Act
-                var queryResult = (await connection.QueryAsync<NonIdentityTable>((Guid)entity.Id)).FirstOrDefault();
+                var queryResult = (await connection.QueryAsync<NonIdentityTable>((Guid)entity.Id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Helper.AssertMembersEquality(queryResult, entity);
@@ -2209,7 +2209,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (object)entity);
+                    (object)entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -2234,7 +2234,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeResult = await connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
                     (object)entity,
-                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnNVarChar)));
+                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnNVarChar))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -2258,7 +2258,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (object)entity);
+                    (object)entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -2283,7 +2283,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeResult = await connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
                     (object)entity,
-                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnNVarChar)));
+                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnNVarChar))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -2307,7 +2307,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    entity);
+                    entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
@@ -2332,7 +2332,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeResult = await connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
                     entity,
-                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnNVarChar)));
+                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnNVarChar))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
@@ -2357,7 +2357,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeResult = await connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
                     (object)entity,
-                    qualifiers: Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }));
+                    qualifiers: Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) })).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -2381,7 +2381,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (object)entity);
+                    (object)entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -2406,7 +2406,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeResult = await connection.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(),
                     (object)entity,
-                    qualifiers: Field.From(nameof(NonIdentityTable.ColumnInt)));
+                    qualifiers: Field.From(nameof(NonIdentityTable.ColumnInt))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -2431,7 +2431,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeResult = await connection.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(),
                     (object)entity,
-                    qualifiers: Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }));
+                    qualifiers: Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) })).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -2459,7 +2459,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeResult = await connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (object)entity);
+                    (object)entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -2488,7 +2488,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeResult = await connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
                     (object)entity,
-                    qualifiers: Field.From(nameof(NonIdentityTable.ColumnInt)));
+                    qualifiers: Field.From(nameof(NonIdentityTable.ColumnInt))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -2520,7 +2520,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeResult = await connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    table);
+                    table).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
@@ -2553,7 +2553,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeResult = await connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
                     table,
-                    qualifiers: Field.From(nameof(NonIdentityTable.Id)));
+                    qualifiers: Field.From(nameof(NonIdentityTable.Id))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
@@ -2582,7 +2582,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeResult = await connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
                     (object)entity,
-                    qualifiers: Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }));
+                    qualifiers: Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) })).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -2610,7 +2610,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeResult = await connection.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (object)entity);
+                    (object)entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -2639,7 +2639,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeResult = await connection.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(),
                     (object)entity,
-                    qualifiers: Field.From(nameof(NonIdentityTable.ColumnInt)));
+                    qualifiers: Field.From(nameof(NonIdentityTable.ColumnInt))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -2668,7 +2668,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeResult = await connection.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(),
                     (object)entity,
-                    qualifiers: Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }));
+                    qualifiers: Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) })).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -2692,7 +2692,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    entity);
+                    entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -2717,7 +2717,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeResult = await connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
                     (object)entity,
-                    hints: SqlServerTableHints.TabLock);
+                    hints: SqlServerTableHints.TabLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, mergeResult);
@@ -2743,8 +2743,8 @@ namespace RepoDb.IntegrationTests.Operations
                 await Assert.ThrowsAsync<InvalidQualifiersException>(async () =>
                 {
                     await connection.MergeAsync(ClassMappedNameCache.Get<NonKeyedTable>(),
-                        (object)entity);
-                });
+                        (object)entity).ConfigureAwait(false);
+                }).ConfigureAwait(false);
             }
         }
 

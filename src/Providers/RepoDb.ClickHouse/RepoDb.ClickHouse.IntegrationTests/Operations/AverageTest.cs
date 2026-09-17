@@ -102,7 +102,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.AverageAsync<CompleteTable>(e => e.ColumnInt,
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnInt), Convert.ToDouble(result));
@@ -120,7 +120,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
                 // Act
                 var ids = new[] { tables.First().Id, tables.Last().Id };
                 var result = await connection.AverageAsync<CompleteTable>(e => e.ColumnInt,
-                    e => ids.Contains(e.Id));
+                    e => ids.Contains(e.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Average(e => e.ColumnInt), Convert.ToDouble(result));
@@ -139,7 +139,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.AverageAsync<CompleteTable>(e => e.ColumnInt,
                         (object)null,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -220,7 +220,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
                 // Act
                 var result = await connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnInt), Convert.ToDouble(result));
@@ -239,7 +239,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
                 var ids = new[] { tables.First().Id, tables.Last().Id };
                 var result = await connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
-                    new QueryField("Id", Operation.In, ids));
+                    new QueryField("Id", Operation.In, ids)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Average(e => e.ColumnInt), Convert.ToDouble(result));
@@ -259,7 +259,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
                     await connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
                         Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
                         (object)null,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

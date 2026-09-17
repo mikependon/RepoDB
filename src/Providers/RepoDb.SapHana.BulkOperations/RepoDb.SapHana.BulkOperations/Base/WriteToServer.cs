@@ -167,7 +167,7 @@ namespace RepoDb
             Field excludeField = null)
             where TEntity : class
         {
-            await connection.EnsureOpenAsync(cancellationToken);
+            await connection.EnsureOpenAsync(cancellationToken).ConfigureAwait(false);
             var dbSetting = connection.GetDbSetting();
             if (dbSetting is SapHanaBulkDbSetting bulkDbSetting && bulkDbSetting.WriteToServerExecution == SapHanaWriteToServerExecution.AsyncOverSync)
             {
@@ -180,7 +180,7 @@ namespace RepoDb
                 return 0;
             }
             using var batcher = CreateSapHanaCommandBatcher(connection, tableName, resolvedMappings, bulkCopyTimeout, batchSize, transaction, dbSetting);
-            await batcher.WriteToServerAsync(reader, cancellationToken);
+            await batcher.WriteToServerAsync(reader, cancellationToken).ConfigureAwait(false);
             return entities != null ? entities.Count() : 0;
         }
 
@@ -207,7 +207,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default,
             Field excludeField = null)
         {
-            await connection.EnsureOpenAsync(cancellationToken);
+            await connection.EnsureOpenAsync(cancellationToken).ConfigureAwait(false);
             var dbSetting = connection.GetDbSetting();
             if (dbSetting is SapHanaBulkDbSetting bulkDbSetting && bulkDbSetting.WriteToServerExecution == SapHanaWriteToServerExecution.AsyncOverSync)
             {
@@ -221,7 +221,7 @@ namespace RepoDb
                 return 0;
             }
             using var batcher = CreateSapHanaCommandBatcher(connection, tableName, resolvedMappings, bulkCopyTimeout, batchSize, null, dbSetting);
-            await batcher.WriteToServerAsync(rows, cancellationToken);
+            await batcher.WriteToServerAsync(rows, cancellationToken).ConfigureAwait(false);
             return rows != null ? rows.Length : 0;
         }
 
@@ -248,7 +248,7 @@ namespace RepoDb
             HanaTransaction transaction = null,
             Field excludeField = null)
         {
-            await connection.EnsureOpenAsync(cancellationToken);
+            await connection.EnsureOpenAsync(cancellationToken).ConfigureAwait(false);
             var dbSetting = connection.GetDbSetting();
             if (dbSetting is SapHanaBulkDbSetting bulkDbSetting && bulkDbSetting.WriteToServerExecution == SapHanaWriteToServerExecution.AsyncOverSync)
             {
@@ -260,7 +260,7 @@ namespace RepoDb
                 return 0;
             }
             using var batcher = CreateSapHanaCommandBatcher(connection, tableName, resolvedMappings, bulkCopyTimeout, batchSize, transaction, dbSetting);
-            return await batcher.WriteToServerAsync(reader, cancellationToken);
+            return await batcher.WriteToServerAsync(reader, cancellationToken).ConfigureAwait(false);
         }
 
         #endregion

@@ -138,7 +138,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 using (var extractor = await connection.ExecuteQueryMultipleAsync("SELECT * FROM \"IdentityCompleteTable\"; " +
-                    "SELECT * FROM \"IdentityCompleteTable\";"))
+                    "SELECT * FROM \"IdentityCompleteTable\";").ConfigureAwait(false))
                 {
                     var list = new List<IEnumerable<IdentityCompleteTable>>();
 
@@ -171,7 +171,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     {
                         Id1 = tables.First().Id,
                         Id2 = tables.Last().Id
-                    }))
+                    }).ConfigureAwait(false))
                 {
                     var list = new List<IEnumerable<IdentityCompleteTable>>();
 
@@ -199,7 +199,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 // Act
                 using (var extractor = await connection.ExecuteQueryMultipleAsync("SELECT * FROM \"IdentityCompleteTable\" WHERE \"Id\" = @Id; " +
                     "SELECT * FROM \"IdentityCompleteTable\" WHERE \"Id\" = @Id;",
-                    new { Id = tables.Last().Id }))
+                    new { Id = tables.Last().Id }).ConfigureAwait(false))
                 {
                     var list = new List<IEnumerable<IdentityCompleteTable>>();
 

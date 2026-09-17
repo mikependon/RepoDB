@@ -165,7 +165,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var queryResult = await connection.QueryAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>());
+                var queryResult = await connection.QueryAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>()).ConfigureAwait(false);
 
                 // Assert
                 tables.AsList().ForEach(table =>
@@ -183,7 +183,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var queryResult = await connection.QueryAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
-                    hints: SqlServerTableHints.NoLock);
+                    hints: SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 tables.AsList().ForEach(table =>

@@ -182,7 +182,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 
                 // Act
                 var result = await connection.SumAsync<MdsCompleteTable>(e => e.ColumnInt,
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
@@ -200,7 +200,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 
                 // Act
                 var result = await connection.SumAsync<MdsCompleteTable>(e => e.ColumnInt,
-                    e => ids.Contains(e.Id));
+                    e => ids.Contains(e.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Sum(e => e.ColumnInt), Convert.ToInt32(result));
@@ -217,7 +217,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 
                 // Act
                 var result = await connection.SumAsync<MdsCompleteTable>(e => e.ColumnInt,
-                    new { tables.First().Id });
+                    new { tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
@@ -234,7 +234,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 
                 // Act
                 var result = await connection.SumAsync<MdsCompleteTable>(e => e.ColumnInt,
-                    new QueryField("Id", tables.First().Id));
+                    new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
@@ -256,7 +256,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 
                 // Act
                 var result = await connection.SumAsync<MdsCompleteTable>(e => e.ColumnInt,
-                    queryFields);
+                    queryFields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
@@ -279,7 +279,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 
                 // Act
                 var result = await connection.SumAsync<MdsCompleteTable>(e => e.ColumnInt,
-                    queryGroup);
+                    queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
@@ -298,7 +298,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.SumAsync<MdsCompleteTable>(e => e.ColumnInt,
                         (object)null,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -443,7 +443,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 // Act
                 var result = await connection.SumAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
@@ -461,7 +461,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 // Act
                 var result = await connection.SumAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
-                    new { tables.First().Id });
+                    new { tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
@@ -479,7 +479,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 // Act
                 var result = await connection.SumAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
-                    new QueryField("Id", tables.First().Id));
+                    new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
@@ -502,7 +502,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 // Act
                 var result = await connection.SumAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
-                    queryFields);
+                    queryFields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
@@ -526,7 +526,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 // Act
                 var result = await connection.SumAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
-                    queryGroup);
+                    queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
@@ -546,7 +546,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                     await connection.SumAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
                         new Field("ColumnInt", typeof(int)),
                         (object)null,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

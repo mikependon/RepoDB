@@ -116,7 +116,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
-            var result = await connection.ExecuteScalarAsync("SELECT COUNT(*) FROM \"CompleteTable\"");
+            var result = await connection.ExecuteScalarAsync("SELECT COUNT(*) FROM \"CompleteTable\"").ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, Convert.ToInt32(result));
@@ -134,7 +134,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             try
             {
                 // Act
-                var result = await connection.ExecuteScalarAsync("SELECT COUNT(*) FROM \"CompleteTable\"");
+                var result = await connection.ExecuteScalarAsync("SELECT COUNT(*) FROM \"CompleteTable\"").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, Convert.ToInt32(result));
@@ -154,7 +154,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
-            var result = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM \"CompleteTable\"");
+            var result = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM \"CompleteTable\"").ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, result);
@@ -170,7 +170,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
 
             // Act
             var result = await connection.ExecuteScalarAsync<string>("SELECT \"ColumnVarchar\" FROM \"CompleteTable\" WHERE \"Id\" = :Id",
-                new { tables.Last().Id });
+                new { tables.Last().Id }).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Last().ColumnVarchar, result);

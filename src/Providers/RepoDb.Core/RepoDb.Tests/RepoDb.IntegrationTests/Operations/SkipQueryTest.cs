@@ -56,7 +56,7 @@ namespace RepoDb.IntegrationTests.Operations
                     skip: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
-                    where: queryGroup);
+                    where: queryGroup).ConfigureAwait(false);
 
                 // Assert (10, 13)
                 Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
@@ -116,7 +116,7 @@ namespace RepoDb.IntegrationTests.Operations
                     skip: 4,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
-                    where: queryGroup);
+                    where: queryGroup).ConfigureAwait(false);
 
                 // Assert (15, 12)
                 Helper.AssertPropertiesEquality(tables.ElementAt(15), result.ElementAt(0));

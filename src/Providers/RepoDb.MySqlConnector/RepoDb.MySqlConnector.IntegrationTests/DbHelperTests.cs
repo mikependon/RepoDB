@@ -124,7 +124,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null);
+                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null).ConfigureAwait(false);
 
                 // Assert
                 using (var reader = connection.ExecuteReader(@"SELECT COLUMN_NAME AS ColumnName
@@ -162,7 +162,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null);
+                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null).ConfigureAwait(false);
                 var primary = fields.FirstOrDefault(f => f.IsPrimary == true);
 
                 // Assert
@@ -180,7 +180,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null);
+                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null).ConfigureAwait(false);
                 var primary = fields.FirstOrDefault(f => f.IsIdentity == true);
 
                 // Assert
@@ -242,7 +242,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests
                 Assert.IsTrue(table.Id > 0);
 
                 // Act
-                var result = await helper.GetScopeIdentityAsync<long>(connection, null);
+                var result = await helper.GetScopeIdentityAsync<long>(connection, null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(insertResult, result);

@@ -108,9 +108,9 @@ namespace RepoDb
             VerticaTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            await connection.EnsureOpenAsync(cancellationToken);
+            await connection.EnsureOpenAsync(cancellationToken).ConfigureAwait(false);
             var batcher = CreateVerticaBulkCopy(connection, tableName, mappings, bulkCopyTimeout, batchSize, transaction);
-            return await batcher.WriteToServerAsync(table, rowState, cancellationToken);
+            return await batcher.WriteToServerAsync(table, rowState, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -134,9 +134,9 @@ namespace RepoDb
             VerticaTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            await connection.EnsureOpenAsync(cancellationToken);
+            await connection.EnsureOpenAsync(cancellationToken).ConfigureAwait(false);
             var batcher = CreateVerticaBulkCopy(connection, tableName, mappings, bulkCopyTimeout, batchSize, transaction);
-            return await batcher.WriteToServerAsync(reader, cancellationToken);
+            return await batcher.WriteToServerAsync(reader, cancellationToken).ConfigureAwait(false);
         }
 
         #endregion

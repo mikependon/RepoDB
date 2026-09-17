@@ -131,7 +131,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MergeAllAsync<CompleteTable>(tables);
+                var result = await connection.MergeAllAsync<CompleteTable>(tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -151,7 +151,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = await connection.MergeAllAsync<CompleteTable>(tables);
+                var result = await connection.MergeAllAsync<CompleteTable>(tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -176,7 +176,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MergeAllAsync<CompleteTable>(tables,
-                    qualifiers: qualifiers);
+                    qualifiers: qualifiers).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -307,7 +307,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -325,7 +325,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    (IEnumerable<object>)tables);
+                    (IEnumerable<object>)tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -343,7 +343,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -364,7 +364,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -390,7 +390,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
                 // Act
                 var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     tables,
-                    qualifiers: qualifiers);
+                    qualifiers: qualifiers).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);

@@ -266,7 +266,7 @@ namespace RepoDb
             where TEntity : class
         {
             var entityList = entities.AsList();
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
             var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields).AsList();
             var identityField = dbFields.GetIdentity()?.AsField();
@@ -280,24 +280,24 @@ namespace RepoDb
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
 
             using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
-            var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+            var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
             int result;
             try
             {
-                await VerticaExecution.CreatePseudoTableAsync(connection, pseudoTableName, stagingFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+                await VerticaExecution.CreatePseudoTableAsync(connection, pseudoTableName, stagingFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
 
                 var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : stagingFields;
                 using var entityTable = BuildEntityDataTable(entityList, entityFields);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, entityTable, mappings: mappings, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction, cancellationToken: cancellationToken);
-                result = await VerticaExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, entityTable, mappings: mappings, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+                result = await VerticaExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
             }
             finally
             {
-                await VerticaExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
+                await VerticaExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
             }
 
-            await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+            await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
             return result;
         }
 
@@ -341,7 +341,7 @@ namespace RepoDb
                 throw new ArgumentNullException(nameof(table));
             }
 
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
             var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields).AsList();
             var identityField = dbFields.GetIdentity()?.AsField();
@@ -355,21 +355,21 @@ namespace RepoDb
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
 
             using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
-            var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+            var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
             int result;
             try
             {
-                await VerticaExecution.CreatePseudoTableAsync(connection, pseudoTableName, stagingFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, transaction, cancellationToken);
-                result = await VerticaExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken);
+                await VerticaExecution.CreatePseudoTableAsync(connection, pseudoTableName, stagingFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, transaction, cancellationToken).ConfigureAwait(false);
+                result = await VerticaExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
             }
             finally
             {
-                await VerticaExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
+                await VerticaExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
             }
 
-            await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+            await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
             return result;
         }
 
@@ -406,7 +406,7 @@ namespace RepoDb
             VerticaTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
             var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields).AsList();
             var identityField = dbFields.GetIdentity()?.AsField();
@@ -420,21 +420,21 @@ namespace RepoDb
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
 
             using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
-            var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+            var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
             int result;
             try
             {
-                await VerticaExecution.CreatePseudoTableAsync(connection, pseudoTableName, stagingFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, reader, mappings ?? GetDefaultMappingsForDataReader(connection, tableName, reader, transaction).AsList(), bulkCopyTimeout, batchSize, transaction, cancellationToken);
-                result = await VerticaExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken);
+                await VerticaExecution.CreatePseudoTableAsync(connection, pseudoTableName, stagingFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, reader, mappings ?? GetDefaultMappingsForDataReader(connection, tableName, reader, transaction).AsList(), bulkCopyTimeout, batchSize, transaction, cancellationToken).ConfigureAwait(false);
+                result = await VerticaExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
             }
             finally
             {
-                await VerticaExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
+                await VerticaExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
             }
 
-            await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+            await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
             return result;
         }
 

@@ -137,7 +137,7 @@ namespace RepoDb
         {
             var identityBehavior = PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
             var dbSetting = connection.GetDbSetting();
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
             var primaryKey = dbFields.GetPrimary();
             var pseudoTableName = tableName;
             IEnumerable<PostgreSqlBulkInsertMapItem> mappings = null;
@@ -170,7 +170,7 @@ namespace RepoDb
                         identityBehavior,
                         dbSetting,
                         transaction,
-                        cancellationToken),
+                        cancellationToken).ConfigureAwait(false),
 
                 // getDeleteToPseudoCommandText
                 () =>
@@ -190,7 +190,7 @@ namespace RepoDb
                 trace,
                 traceKey,
                 transaction,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
         }
 
         #endregion

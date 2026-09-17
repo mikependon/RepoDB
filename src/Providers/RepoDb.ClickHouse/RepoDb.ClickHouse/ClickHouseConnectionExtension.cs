@@ -72,7 +72,7 @@ namespace RepoDb
                     "SELECT COUNT(1) FROM system.mutations WHERE database = @Database AND table = @Table AND is_done = 0;",
                     new { connection.Database, Table = tableName },
                     transaction: transaction,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
                 if (pending == 0)
                 {
                     return;
@@ -81,7 +81,7 @@ namespace RepoDb
                 {
                     throw new TimeoutException($"Timed out waiting for pending mutations on table '{tableName}' to complete.");
                 }
-                await Task.Delay(MutationPollInterval, cancellationToken);
+                await Task.Delay(MutationPollInterval, cancellationToken).ConfigureAwait(false);
             }
         }
     }

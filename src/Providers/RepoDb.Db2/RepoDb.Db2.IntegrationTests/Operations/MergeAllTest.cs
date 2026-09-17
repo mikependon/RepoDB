@@ -242,7 +242,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act: see the class-level remarks on why batchSize is pinned to 1 here.
-            var result = await connection.MergeAllAsync<CompleteTable>(tables, batchSize: 1);
+            var result = await connection.MergeAllAsync<CompleteTable>(tables, batchSize: 1).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, result);
@@ -250,7 +250,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             Assert.IsTrue(tables.All(table => table.Id > 0));
 
             // Act
-            var queryResult = await connection.QueryAllAsync<CompleteTable>();
+            var queryResult = await connection.QueryAllAsync<CompleteTable>().ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, queryResult.Count());
@@ -269,7 +269,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             try
             {
                 // Act: see the class-level remarks on why batchSize is pinned to 1 here.
-                var result = await connection.MergeAllAsync<CompleteTable>(tables, batchSize: 1);
+                var result = await connection.MergeAllAsync<CompleteTable>(tables, batchSize: 1).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -277,7 +277,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 Assert.IsTrue(tables.All(table => table.Id > 0));
 
                 // Act
-                var queryResult = await connection.QueryAllAsync<CompleteTable>();
+                var queryResult = await connection.QueryAllAsync<CompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
@@ -301,14 +301,14 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             tables.ForEach(table => table.ColumnVarchar = $"Merged-{table.Id}");
 
             // Act: see the class-level remarks on why batchSize is pinned to 1 here.
-            var result = await connection.MergeAllAsync<CompleteTable>(tables, batchSize: 1);
+            var result = await connection.MergeAllAsync<CompleteTable>(tables, batchSize: 1).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, result);
             Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
 
             // Act
-            var queryResult = await connection.QueryAllAsync<CompleteTable>();
+            var queryResult = await connection.QueryAllAsync<CompleteTable>().ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, queryResult.Count());
@@ -332,14 +332,14 @@ namespace RepoDb.Db2.IntegrationTests.Operations
 
             // Act: "Id" is still the identity column here even though it's passed explicitly -
             // see the class-level remarks on why batchSize is pinned to 1 here.
-            var result = await connection.MergeAllAsync<CompleteTable>(tables, qualifiers, batchSize: 1);
+            var result = await connection.MergeAllAsync<CompleteTable>(tables, qualifiers, batchSize: 1).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, result);
             Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
 
             // Act
-            var queryResult = await connection.QueryAllAsync<CompleteTable>();
+            var queryResult = await connection.QueryAllAsync<CompleteTable>().ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, queryResult.Count());
@@ -359,7 +359,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act: see the sync counterpart's remarks on why this is safe to batch.
-            var result = await connection.MergeAllAsync<CompleteTable>(tables, qualifiers, batchSize: 10);
+            var result = await connection.MergeAllAsync<CompleteTable>(tables, qualifiers, batchSize: 10).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, result);
@@ -367,7 +367,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             Assert.IsTrue(tables.All(table => table.Id > 0));
 
             // Act
-            var queryResult = await connection.QueryAllAsync<CompleteTable>();
+            var queryResult = await connection.QueryAllAsync<CompleteTable>().ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, queryResult.Count());
@@ -384,7 +384,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
 
             // Act/Assert: see the sync counterpart's remarks.
             await Assert.ThrowsAsync<System.NotSupportedException>(() =>
-                connection.MergeAllAsync<CompleteTable>(tables));
+                connection.MergeAllAsync<CompleteTable>(tables)).ConfigureAwait(false);
         }
 
         [TestMethod]
@@ -396,14 +396,14 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act: see the class-level remarks on why batchSize is pinned to 1 here.
-            var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(), tables, batchSize: 1);
+            var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(), tables, batchSize: 1).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, result);
             Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
 
             // Act
-            var queryResult = await connection.QueryAllAsync<CompleteTable>();
+            var queryResult = await connection.QueryAllAsync<CompleteTable>().ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, queryResult.Count());

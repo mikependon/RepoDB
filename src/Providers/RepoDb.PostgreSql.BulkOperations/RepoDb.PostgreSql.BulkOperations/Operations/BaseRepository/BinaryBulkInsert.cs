@@ -142,7 +142,7 @@ namespace RepoDb
                     identityBehavior: identityBehavior == BulkImportIdentityBehavior.ReturnIdentity ? PostgreSqlBulkImportIdentityBehavior.ReturnIdentity : PostgreSqlBulkImportIdentityBehavior.KeepIdentity,
                     pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
 
         /// <summary>
         /// Inserts a list of entities into the target table by bulk in an asynchronous way. Underneath this operation is a call directly to the existing
@@ -182,7 +182,7 @@ namespace RepoDb
                     identityBehavior: identityBehavior == BulkImportIdentityBehavior.ReturnIdentity ? PostgreSqlBulkImportIdentityBehavior.ReturnIdentity : PostgreSqlBulkImportIdentityBehavior.KeepIdentity,
                     pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
 
         #endregion
 

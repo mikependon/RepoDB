@@ -86,7 +86,7 @@ namespace RepoDb.Firebird.IntegrationTests.Operations
 
             // Act & Assert: async counterpart of the same known Firebird limitation.
             await Assert.ThrowsAsync<FbException>(() =>
-                connection.ExecuteQueryMultipleAsync("SELECT * FROM \"CompleteTable\"; SELECT * FROM \"CompleteTable\""));
+                connection.ExecuteQueryMultipleAsync("SELECT * FROM \"CompleteTable\"; SELECT * FROM \"CompleteTable\"")).ConfigureAwait(false);
         }
 
         #endregion

@@ -237,7 +237,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteScalarAsync("SELECT * FROM (SELECT 1 AS Column1) TMP WHERE 1 = 0;");
+                var result = await connection.ExecuteScalarAsync("SELECT * FROM (SELECT 1 AS Column1) TMP WHERE 1 = 0;").ConfigureAwait(false);
 
                 // Assert
                 Assert.IsNull(result);
@@ -250,7 +250,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteScalarAsync("SELECT 1;");
+                var result = await connection.ExecuteScalarAsync("SELECT 1;").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -263,7 +263,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteScalarAsync("SELECT 2 UNION ALL SELECT 1;");
+                var result = await connection.ExecuteScalarAsync("SELECT 2 UNION ALL SELECT 1;").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(2, result);
@@ -276,7 +276,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteScalarAsync("SELECT 1 AS Value1, 2 AS Value2;");
+                var result = await connection.ExecuteScalarAsync("SELECT 1 AS Value1, 2 AS Value2;").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -295,7 +295,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteScalarAsync("SELECT @Value1;", param);
+                var result = await connection.ExecuteScalarAsync("SELECT @Value1;", param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(param.Value1, result);
@@ -315,7 +315,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteScalarAsync("SELECT @Value1, @Value2;", param);
+                var result = await connection.ExecuteScalarAsync("SELECT @Value1, @Value2;", param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(param.Value1, result);
@@ -335,7 +335,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteScalarAsync("SELECT @Value1 AS Value1 UNION ALL SELECT @Value2;", param);
+                var result = await connection.ExecuteScalarAsync("SELECT @Value1 AS Value1 UNION ALL SELECT @Value2;", param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(param.Value1, result);
@@ -356,7 +356,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.ExecuteScalarAsync("[dbo].[sp_get_identity_table_by_id]",
                     param: new { tables.Last().Id },
-                    commandType: CommandType.StoredProcedure);
+                    commandType: CommandType.StoredProcedure).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Last().Id, result);
@@ -371,7 +371,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.ExecuteScalarAsync("[dbo].[sp_multiply]",
                     param: new { Value1 = 100, Value2 = 200 },
-                    commandType: CommandType.StoredProcedure);
+                    commandType: CommandType.StoredProcedure).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(20000, result);
@@ -395,7 +395,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.ExecuteScalarAsync("[dbo].[sp_multiply_with_output]",
                     param: param,
-                    commandType: CommandType.StoredProcedure);
+                    commandType: CommandType.StoredProcedure).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(20000, result);
@@ -409,7 +409,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await Assert.ThrowsAsync<SqlException>(async () => await connection.ExecuteScalarAsync("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
+                await Assert.ThrowsAsync<SqlException>(async () => await connection.ExecuteScalarAsync("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -419,7 +419,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await Assert.ThrowsAsync<SqlException>(async () => await connection.ExecuteScalarAsync("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
+                await Assert.ThrowsAsync<SqlException>(async () => await connection.ExecuteScalarAsync("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -604,7 +604,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteScalarAsync<object>("SELECT * FROM (SELECT 1 AS Column1) TMP WHERE 1 = 0;");
+                var result = await connection.ExecuteScalarAsync<object>("SELECT * FROM (SELECT 1 AS Column1) TMP WHERE 1 = 0;").ConfigureAwait(false);
 
                 // Assert
                 Assert.IsNull(result);
@@ -617,7 +617,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteScalarAsync<int>("SELECT 1;");
+                var result = await connection.ExecuteScalarAsync<int>("SELECT 1;").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -630,7 +630,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteScalarAsync<int>("SELECT 2 UNION ALL SELECT 1;");
+                var result = await connection.ExecuteScalarAsync<int>("SELECT 2 UNION ALL SELECT 1;").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(2, result);
@@ -643,7 +643,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteScalarAsync<int>("SELECT 1 AS Value1, 2 AS Value2;");
+                var result = await connection.ExecuteScalarAsync<int>("SELECT 1 AS Value1, 2 AS Value2;").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -662,7 +662,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteScalarAsync<DateTime>("SELECT @Value1;", param);
+                var result = await connection.ExecuteScalarAsync<DateTime>("SELECT @Value1;", param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(param.Value1, result);
@@ -682,7 +682,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteScalarAsync<DateTime>("SELECT @Value1, @Value2;", param);
+                var result = await connection.ExecuteScalarAsync<DateTime>("SELECT @Value1, @Value2;", param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(param.Value1, result);
@@ -702,7 +702,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteScalarAsync<DateTime>("SELECT @Value1 AS Value1 UNION ALL SELECT @Value2;", param);
+                var result = await connection.ExecuteScalarAsync<DateTime>("SELECT @Value1 AS Value1 UNION ALL SELECT @Value2;", param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(param.Value1, result);
@@ -723,7 +723,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.ExecuteScalarAsync<long>("[dbo].[sp_get_identity_table_by_id]",
                     param: new { tables.Last().Id },
-                    commandType: CommandType.StoredProcedure);
+                    commandType: CommandType.StoredProcedure).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Last().Id, result);
@@ -738,7 +738,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.ExecuteScalarAsync<int>("[dbo].[sp_multiply]",
                     param: new { Value1 = 100, Value2 = 200 },
-                    commandType: CommandType.StoredProcedure);
+                    commandType: CommandType.StoredProcedure).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(20000, result);
@@ -751,7 +751,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await Assert.ThrowsAsync<SqlException>(async () => await connection.ExecuteScalarAsync<object>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
+                await Assert.ThrowsAsync<SqlException>(async () => await connection.ExecuteScalarAsync<object>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -761,7 +761,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await Assert.ThrowsAsync<SqlException>(async () => await connection.ExecuteScalarAsync<object>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
+                await Assert.ThrowsAsync<SqlException>(async () => await connection.ExecuteScalarAsync<object>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

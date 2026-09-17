@@ -148,7 +148,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
             using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = await connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`;"))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`;").ConfigureAwait(false))
                 {
                     while (reader.Read())
                     {
@@ -176,7 +176,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
             using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = await connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`; SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`;"))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`; SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`;").ConfigureAwait(false))
                 {
                     do
                     {
@@ -207,7 +207,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
             using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM `CompleteTable`;"))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM `CompleteTable`;").ConfigureAwait(false))
                 {
                     // Act
                     var result = DataReader.ToEnumerable<CompleteTable>((DbDataReader)reader).AsList();
@@ -227,7 +227,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
             using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM `CompleteTable`;"))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM `CompleteTable`;").ConfigureAwait(false))
                 {
                     // Act
                     var result = DataReader.ToEnumerable((DbDataReader)reader).AsList();

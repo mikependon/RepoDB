@@ -207,7 +207,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.SumAllAsync<IdentityTable>(e => e.ColumnInt);
+                var result = await connection.SumAllAsync<IdentityTable>(e => e.ColumnInt).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnInt), Convert.ToInt32(result));
@@ -227,7 +227,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.SumAllAsync<IdentityTable>(e => e.ColumnInt,
-                    hints: SqlServerTableHints.NoLock);
+                    hints: SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnInt), Convert.ToInt32(result));
@@ -246,7 +246,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.SumAllAsync<IdentityTable, int?>(e => e.ColumnInt);
+                var result = await connection.SumAllAsync<IdentityTable, int?>(e => e.ColumnInt).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnInt), result);
@@ -266,7 +266,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.SumAllAsync<IdentityTable, int?>(e => e.ColumnInt,
-                    hints: SqlServerTableHints.NoLock);
+                    hints: SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnInt), result);
@@ -285,7 +285,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.SumAllAsync<IdentityTable, decimal?>(e => e.ColumnDecimal);
+                var result = await connection.SumAllAsync<IdentityTable, decimal?>(e => e.ColumnDecimal).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnDecimal), result);
@@ -305,7 +305,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.SumAllAsync<IdentityTable, decimal?>(e => e.ColumnDecimal,
-                    hints: SqlServerTableHints.NoLock);
+                    hints: SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnDecimal), result);
@@ -324,7 +324,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.SumAllAsync<IdentityTable, double?>(e => e.ColumnFloat);
+                var result = await connection.SumAllAsync<IdentityTable, double?>(e => e.ColumnFloat).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnFloat), result);
@@ -344,7 +344,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.SumAllAsync<IdentityTable, double?>(e => e.ColumnFloat,
-                    hints: SqlServerTableHints.NoLock);
+                    hints: SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnFloat), result);
@@ -536,7 +536,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.SumAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    new Field("ColumnInt"));
+                    new Field("ColumnInt")).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnInt), Convert.ToInt32(result));
@@ -557,7 +557,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.SumAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    hints: SqlServerTableHints.NoLock);
+                    hints: SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnInt), Convert.ToInt32(result));
@@ -577,7 +577,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.SumAllAsync<int?>(ClassMappedNameCache.Get<IdentityTable>(),
-                    new Field("ColumnInt"));
+                    new Field("ColumnInt")).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnInt), result);
@@ -598,7 +598,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.SumAllAsync<int?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    hints: SqlServerTableHints.NoLock);
+                    hints: SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnInt), result);
@@ -618,7 +618,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.SumAllAsync<decimal?>(ClassMappedNameCache.Get<IdentityTable>(),
-                    new Field("ColumnDecimal"));
+                    new Field("ColumnDecimal")).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnDecimal), result);
@@ -639,7 +639,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.SumAllAsync<decimal?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnDecimal"),
-                    hints: SqlServerTableHints.NoLock);
+                    hints: SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnDecimal), result);
@@ -659,7 +659,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.SumAllAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
-                    new Field("ColumnFloat"));
+                    new Field("ColumnFloat")).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnFloat), result);
@@ -680,7 +680,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.SumAllAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnFloat"),
-                    hints: SqlServerTableHints.NoLock);
+                    hints: SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnFloat), result);

@@ -189,7 +189,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAsync<IdentityCompleteTable>((object)null);
+                var result = await connection.DeleteAsync<IdentityCompleteTable>((object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -205,7 +205,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAsync<IdentityCompleteTable>(tables.First().Id);
+                var result = await connection.DeleteAsync<IdentityCompleteTable>(tables.First().Id).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -221,7 +221,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAsync<IdentityCompleteTable>(tables.First());
+                var result = await connection.DeleteAsync<IdentityCompleteTable>(tables.First()).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -237,7 +237,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAsync<IdentityCompleteTable>(e => e.Id == tables.First().Id);
+                var result = await connection.DeleteAsync<IdentityCompleteTable>(e => e.Id == tables.First().Id).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -253,7 +253,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAsync<IdentityCompleteTable>(new { Id = tables.First().Id });
+                var result = await connection.DeleteAsync<IdentityCompleteTable>(new { Id = tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -269,7 +269,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAsync<IdentityCompleteTable>(new QueryField("Id", tables.First().Id));
+                var result = await connection.DeleteAsync<IdentityCompleteTable>(new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -290,7 +290,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAsync<IdentityCompleteTable>(queryFields);
+                var result = await connection.DeleteAsync<IdentityCompleteTable>(queryFields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(8, result);
@@ -312,7 +312,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAsync<IdentityCompleteTable>(queryGroup);
+                var result = await connection.DeleteAsync<IdentityCompleteTable>(queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(8, result);
@@ -447,7 +447,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(), (object)null);
+                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(), (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -463,7 +463,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAsync<IdentityCompleteTable>(tables.First().Id);
+                var result = await connection.DeleteAsync<IdentityCompleteTable>(tables.First().Id).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -479,7 +479,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(), new { Id = tables.First().Id });
+                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(), new { Id = tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -495,7 +495,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(), new QueryField("Id", tables.First().Id));
+                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(), new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -516,7 +516,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(), queryFields);
+                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(), queryFields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(8, result);
@@ -538,7 +538,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(), queryGroup);
+                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(), queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(8, result);

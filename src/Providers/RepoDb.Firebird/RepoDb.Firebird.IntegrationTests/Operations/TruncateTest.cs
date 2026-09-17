@@ -64,7 +64,7 @@ namespace RepoDb.Firebird.IntegrationTests.Operations
             using (var connection = new FbConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.TruncateAsync<CompleteTable>();
+                var result = await connection.TruncateAsync<CompleteTable>().ConfigureAwait(false);
                 var countResult = connection.CountAll<CompleteTable>();
 
                 // Assert
@@ -110,7 +110,7 @@ namespace RepoDb.Firebird.IntegrationTests.Operations
             using (var connection = new FbConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.TruncateAsync(ClassMappedNameCache.Get<CompleteTable>());
+                var result = await connection.TruncateAsync(ClassMappedNameCache.Get<CompleteTable>()).ConfigureAwait(false);
                 var countResult = connection.CountAll<CompleteTable>();
 
                 // Assert

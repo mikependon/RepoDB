@@ -65,7 +65,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.TruncateAsync<CompleteTable>();
+                var result = await connection.TruncateAsync<CompleteTable>().ConfigureAwait(false);
                 var countResult = connection.CountAll<CompleteTable>();
 
                 // Assert
@@ -111,7 +111,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.TruncateAsync(ClassMappedNameCache.Get<CompleteTable>());
+                var result = await connection.TruncateAsync(ClassMappedNameCache.Get<CompleteTable>()).ConfigureAwait(false);
                 var countResult = connection.CountAll<CompleteTable>();
 
                 // Assert

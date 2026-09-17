@@ -182,13 +182,13 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             });
 
             // Act
-            var result = await connection.UpdateAllAsync<CompleteTable>(tables);
+            var result = await connection.UpdateAllAsync<CompleteTable>(tables).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, result);
 
             // Act
-            var queryResult = await connection.QueryAllAsync<CompleteTable>();
+            var queryResult = await connection.QueryAllAsync<CompleteTable>().ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, queryResult.Count());
@@ -214,13 +214,13 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             try
             {
                 // Act
-                var result = await connection.UpdateAllAsync<CompleteTable>(tables);
+                var result = await connection.UpdateAllAsync<CompleteTable>(tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
 
                 // Act
-                var queryResult = await connection.QueryAllAsync<CompleteTable>();
+                var queryResult = await connection.QueryAllAsync<CompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
@@ -248,13 +248,13 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             tables.ForEach(table => table.ColumnVarchar = $"Updated-{table.Id}");
 
             // Act
-            var result = await connection.UpdateAllAsync<CompleteTable>(tables, qualifiers);
+            var result = await connection.UpdateAllAsync<CompleteTable>(tables, qualifiers).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, result);
 
             // Act
-            var queryResult = await connection.QueryAllAsync<CompleteTable>();
+            var queryResult = await connection.QueryAllAsync<CompleteTable>().ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, queryResult.Count());
@@ -273,13 +273,13 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             tables.ForEach(table => table.ColumnVarchar = $"Updated-{table.Id}");
 
             // Act
-            var result = await connection.UpdateAllAsync(ClassMappedNameCache.Get<CompleteTable>(), tables);
+            var result = await connection.UpdateAllAsync(ClassMappedNameCache.Get<CompleteTable>(), tables).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, result);
 
             // Act
-            var queryResult = await connection.QueryAllAsync<CompleteTable>();
+            var queryResult = await connection.QueryAllAsync<CompleteTable>().ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, queryResult.Count());

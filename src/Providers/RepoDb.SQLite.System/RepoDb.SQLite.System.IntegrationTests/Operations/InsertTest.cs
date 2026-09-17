@@ -108,7 +108,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var table = Helper.CreateSdsCompleteTables(1).First();
 
                 // Act
-                var result = await connection.InsertAsync<SdsCompleteTable>(table);
+                var result = await connection.InsertAsync<SdsCompleteTable>(table).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<SdsCompleteTable>());
@@ -136,7 +136,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var table = Helper.CreateSdsNonIdentityCompleteTables(1).First();
 
                 // Act
-                var result = await connection.InsertAsync<SdsNonIdentityCompleteTable>(table);
+                var result = await connection.InsertAsync<SdsNonIdentityCompleteTable>(table).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<SdsNonIdentityCompleteTable>());
@@ -345,7 +345,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
 
                 // Act
                 var result = await connection.InsertAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
-                    table);
+                    table).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<SdsCompleteTable>());
@@ -373,7 +373,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
 
                 // Act
                 var result = await connection.InsertAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
-                    table);
+                    table).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<SdsCompleteTable>());
@@ -402,7 +402,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
 
                 // Act
                 var result = await connection.InsertAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
-                    (object)table);
+                    (object)table).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<SdsCompleteTable>());
@@ -430,7 +430,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
 
                 // Act
                 var result = await connection.InsertAsync(ClassMappedNameCache.Get<SdsNonIdentityCompleteTable>(),
-                    table);
+                    table).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<SdsNonIdentityCompleteTable>());
@@ -458,7 +458,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
 
                 // Act
                 var result = await connection.InsertAsync(ClassMappedNameCache.Get<SdsNonIdentityCompleteTable>(),
-                    table);
+                    table).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<SdsNonIdentityCompleteTable>());
@@ -486,7 +486,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
 
                 // Act
                 var result = await connection.InsertAsync(ClassMappedNameCache.Get<SdsNonIdentityCompleteTable>(),
-                    (object)table);
+                    (object)table).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<SdsNonIdentityCompleteTable>());

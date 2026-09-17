@@ -96,7 +96,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.InsertAllAsync<CompleteTable>(tables);
+                var result = await connection.InsertAllAsync<CompleteTable>(tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
@@ -120,7 +120,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.InsertAllAsync<NonIdentityCompleteTable>(tables);
+                var result = await connection.InsertAllAsync<NonIdentityCompleteTable>(tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
@@ -302,7 +302,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
@@ -326,7 +326,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
@@ -350,7 +350,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
@@ -375,7 +375,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
@@ -399,7 +399,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
@@ -423,7 +423,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());

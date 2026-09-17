@@ -41,10 +41,10 @@ namespace RepoDb.Benchmarks.Db2.RepoDb
         [Benchmark]
         public async Task BulkInsertAllAsync()
         {
-            await using var connection = await GetConnection().EnsureOpenAsync() as DB2Connection;
+            await using var connection = await GetConnection().EnsureOpenAsync().ConfigureAwait(false) as DB2Connection;
 
             var persons = GetPersons(Rows);
-            await connection.BulkInsertAsync(persons);
+            await connection.BulkInsertAsync(persons).ConfigureAwait(false);
         }
 
         private static IEnumerable<Person> GetPersons(int count)

@@ -192,7 +192,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable];",
                     cacheKey: cacheKey,
                     cacheItemExpiration: cacheItemExpiration,
-                    cache: cache);
+                    cache: cache).ConfigureAwait(false);
                 var item = cache.Get<IEnumerable<IdentityTable>>(cacheKey);
 
                 // Assert
@@ -220,7 +220,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var result = await connection.ExecuteQueryAsync("SELECT * FROM [sc].[IdentityTable];",
                     cacheKey: cacheKey,
                     cacheItemExpiration: cacheItemExpiration,
-                    cache: cache);
+                    cache: cache).ConfigureAwait(false);
                 var item = cache.Get<IEnumerable<dynamic>>(cacheKey);
 
                 // Assert
@@ -248,7 +248,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var result = await connection.ExecuteQueryAsync<ExpandoObject>("SELECT * FROM [sc].[IdentityTable];",
                     cacheKey: cacheKey,
                     cacheItemExpiration: cacheItemExpiration,
-                    cache: cache);
+                    cache: cache).ConfigureAwait(false);
                 var item = cache.Get<IEnumerable<ExpandoObject>>(cacheKey);
 
                 // Assert
@@ -276,7 +276,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var result = await connection.ExecuteQueryAsync<IDictionary<string, object>>("SELECT * FROM [sc].[IdentityTable];",
                     cacheKey: cacheKey,
                     cacheItemExpiration: cacheItemExpiration,
-                    cache: cache);
+                    cache: cache).ConfigureAwait(false);
                 var item = cache.Get<IEnumerable<IDictionary<string, object>>>(cacheKey);
 
                 // Assert
@@ -331,7 +331,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var result = await connection.ExecuteScalarAsync<DateTime>("SELECT GETUTCDATE();",
                     cacheKey: cacheKey,
                     cacheItemExpiration: cacheItemExpiration,
-                    cache: cache);
+                    cache: cache).ConfigureAwait(false);
                 var item = cache.Get<DateTime>(cacheKey);
 
                 // Assert
@@ -643,7 +643,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(await connection.InsertAsync(entity));
+                entity.Id = Convert.ToInt32(await connection.InsertAsync(entity).ConfigureAwait(false));
 
                 // Act
                 var result = await connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
@@ -656,7 +656,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
                 var item = cache.Get<IEnumerable<dynamic>>(cacheKey);
 
                 // Assert
@@ -1028,7 +1028,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: Helper.StatementBuilder);
+                    statementBuilder: Helper.StatementBuilder).ConfigureAwait(false);
 
                 var item = cache.Get<IEnumerable<IdentityTable>>(cacheKey);
 
@@ -1063,7 +1063,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
                 var item = cache.Get<IEnumerable<IdentityTable>>(cacheKey);
 
                 // Assert
@@ -1097,7 +1097,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
                 var item = cache.Get<IEnumerable<IdentityTable>>(cacheKey);
 
                 // Assert
@@ -1131,7 +1131,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
                 var item = cache.Get<IEnumerable<IdentityTable>>(cacheKey);
 
                 // Assert
@@ -1165,7 +1165,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
                 var item = cache.Get<IEnumerable<IdentityTable>>(cacheKey);
 
                 // Assert
@@ -1205,7 +1205,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: Helper.StatementBuilder);
+                    statementBuilder: Helper.StatementBuilder).ConfigureAwait(false);
 
                 var item = cache.Get<IEnumerable<dynamic>>(cacheKey);
 
@@ -1242,7 +1242,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
                 var item = cache.Get<IEnumerable<dynamic>>(cacheKey);
 
                 // Assert
@@ -1299,7 +1299,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(await connection.InsertAsync(entity));
+                entity.Id = Convert.ToInt32(await connection.InsertAsync(entity).ConfigureAwait(false));
 
                 // Act
                 var result = await connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
@@ -1312,7 +1312,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
                 var item = cache.Get<IEnumerable<dynamic>>(cacheKey);
 
                 // Assert
@@ -1347,7 +1347,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
                 var item = cache.Get<IEnumerable<dynamic>>(cacheKey);
 
                 // Assert
@@ -1387,7 +1387,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: Helper.StatementBuilder);
+                    statementBuilder: Helper.StatementBuilder).ConfigureAwait(false);
 
                 var item = cache.Get<IEnumerable<ExpandoObject>>(cacheKey);
 
@@ -1424,7 +1424,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
                 var item = cache.Get<IEnumerable<ExpandoObject>>(cacheKey);
 
                 // Assert
@@ -1459,7 +1459,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
                 var item = cache.Get<IEnumerable<ExpandoObject>>(cacheKey);
 
                 // Assert
@@ -1494,7 +1494,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
                 var item = cache.Get<IEnumerable<ExpandoObject>>(cacheKey);
 
                 // Assert
@@ -1534,7 +1534,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: Helper.StatementBuilder);
+                    statementBuilder: Helper.StatementBuilder).ConfigureAwait(false);
 
                 var item = cache.Get<IEnumerable<IDictionary<string, object>>>(cacheKey);
 
@@ -1571,7 +1571,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
                 var item = cache.Get<IEnumerable<IDictionary<string, object>>>(cacheKey);
 
                 // Assert
@@ -1606,7 +1606,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
                 var item = cache.Get<IEnumerable<IDictionary<string, object>>>(cacheKey);
 
                 // Assert
@@ -1641,7 +1641,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
                 var item = cache.Get<IEnumerable<IDictionary<string, object>>>(cacheKey);
 
                 // Assert
@@ -1819,7 +1819,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
                 var item = cache.Get<IEnumerable<IdentityTable>>(cacheKey);
 
                 // Assert
@@ -1853,7 +1853,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
                 var item = cache.Get<IEnumerable<dynamic>>(cacheKey);
 
                 // Assert
@@ -1887,7 +1887,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
                 var item = cache.Get<IEnumerable<ExpandoObject>>(cacheKey);
 
                 // Assert
@@ -1921,7 +1921,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
                 var item = cache.Get<IEnumerable<IDictionary<string, object>>>(cacheKey);
 
                 // Assert

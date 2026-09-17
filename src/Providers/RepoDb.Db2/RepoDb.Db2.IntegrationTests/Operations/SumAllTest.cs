@@ -108,7 +108,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.SumAllAsync<CompleteTable>(e => e.ColumnSmallInt);
+                var result = await connection.SumAllAsync<CompleteTable>(e => e.ColumnSmallInt).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(e => e.ColumnSmallInt), Convert.ToInt32(result));
@@ -127,7 +127,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 try
                 {
                     // Act
-                    var result = await connection.SumAllAsync<CompleteTable>(e => e.ColumnSmallInt);
+                    var result = await connection.SumAllAsync<CompleteTable>(e => e.ColumnSmallInt).ConfigureAwait(false);
 
                     // Assert
                     Assert.AreEqual(tables.Sum(e => e.ColumnSmallInt), Convert.ToInt32(result));
@@ -150,7 +150,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 // Act/Assert: AreTableHintsSupported == false for Db2 - any non-null/non-whitespace
                 // "hints" argument must throw, rather than silently being ignored.
                 await Assert.ThrowsAsync<NotSupportedException>(() =>
-                    connection.SumAllAsync<CompleteTable>(e => e.ColumnSmallInt, hints: "NOLOCK"));
+                    connection.SumAllAsync<CompleteTable>(e => e.ColumnSmallInt, hints: "NOLOCK")).ConfigureAwait(false);
             }
         }
 
@@ -193,7 +193,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.SumAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    new Field("ColumnSmallInt", typeof(short)));
+                    new Field("ColumnSmallInt", typeof(short))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(e => e.ColumnSmallInt), Convert.ToInt32(result));

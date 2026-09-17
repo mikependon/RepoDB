@@ -248,10 +248,10 @@ namespace RepoDb.IntegrationTests
                     "(SessionId, ColumnBit, ColumnNVarChar) " +
                     "VALUES " +
                     "(@SessionId, @ColumnBit, @ColumnNVarChar); " +
-                    "SELECT CONVERT(UNIQUEIDENTIFIER, @SessionId);", entity);
+                    "SELECT CONVERT(UNIQUEIDENTIFIER, @SessionId);", entity).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(1, await connection.CountAllAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>());
+                Assert.AreEqual(1, await connection.CountAllAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>().ConfigureAwait(false));
                 Assert.AreNotEqual(id, Guid.Empty);
                 Assert.AreEqual(entity.SessionId, id);
             }
@@ -288,10 +288,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler, Guid>(entity);
+                var id = await connection.InsertAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler, Guid>(entity).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(1, await connection.CountAllAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>());
+                Assert.AreEqual(1, await connection.CountAllAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>().ConfigureAwait(false));
                 Assert.AreNotEqual(id, Guid.Empty);
                 Assert.AreEqual(entity.SessionId, id);
             }
@@ -324,10 +324,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler, Guid>(entity);
+                var id = await connection.InsertAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler, Guid>(entity).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(1, await connection.CountAllAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>());
+                Assert.AreEqual(1, await connection.CountAllAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>().ConfigureAwait(false));
                 Assert.AreNotEqual(id, Guid.Empty);
                 Assert.AreEqual(entity.SessionId, id);
             }
@@ -362,10 +362,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.InsertAllAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>(entities);
+                var result = await connection.InsertAllAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>(entities).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(entities.Count(), await connection.CountAllAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>());
+                Assert.AreEqual(entities.Count(), await connection.CountAllAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>().ConfigureAwait(false));
             }
         }
 
@@ -394,10 +394,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.InsertAllAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>(entities);
+                var result = await connection.InsertAllAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>(entities).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(entities.Count(), await connection.CountAllAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>());
+                Assert.AreEqual(entities.Count(), await connection.CountAllAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>().ConfigureAwait(false));
             }
         }
 
@@ -431,8 +431,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertResult = await connection.InsertAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler, Guid>(entity);
-                var queryResult = (await connection.QueryAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>(insertResult)).First();
+                var insertResult = await connection.InsertAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler, Guid>(entity).ConfigureAwait(false);
+                var queryResult = (await connection.QueryAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>(insertResult).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -465,8 +465,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertResult = await connection.InsertAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler, Guid>(entity);
-                var queryResult = (await connection.QueryAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>(insertResult)).First();
+                var insertResult = await connection.InsertAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler, Guid>(entity).ConfigureAwait(false);
+                var queryResult = (await connection.QueryAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>(insertResult).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -503,8 +503,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertResult = await connection.InsertAllAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>(entities);
-                var queryResult = (await connection.QueryAllAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>()).AsList();
+                var insertResult = await connection.InsertAllAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>(entities).ConfigureAwait(false);
+                var queryResult = (await connection.QueryAllAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>().ConfigureAwait(false)).AsList();
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -537,8 +537,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertResult = await connection.InsertAllAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>(entities);
-                var queryResult = (await connection.QueryAllAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>()).AsList();
+                var insertResult = await connection.InsertAllAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>(entities).ConfigureAwait(false);
+                var queryResult = (await connection.QueryAllAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>().ConfigureAwait(false)).AsList();
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -581,9 +581,9 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync(entities);
+                var insertAllResult = await connection.InsertAllAsync(entities).ConfigureAwait(false);
                 var executeResult = await connection.ExecuteQueryAsync<EnumCompleteTable>("SELECT * FROM CompleteTable WHERE ColumnNVarChar = @ColumnNVarChar;",
-                    new { ColumnNVarChar = Direction.West });
+                    new { ColumnNVarChar = Direction.West }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, executeResult.Count());
@@ -623,9 +623,9 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync(entities);
+                var insertAllResult = await connection.InsertAllAsync(entities).ConfigureAwait(false);
                 var executeResult = await connection.ExecuteQueryAsync<TypeLevelMappedForStringEnumCompleteTable>("SELECT * FROM CompleteTable WHERE ColumnNVarChar = @ColumnNVarChar;",
-                    new { ColumnNVarChar = Continent.Asia });
+                    new { ColumnNVarChar = Continent.Asia }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Where(e => e.ColumnNVarChar == Continent.Asia).Count(), executeResult.Count());
@@ -670,10 +670,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync(entities);
+                var insertAllResult = await connection.InsertAllAsync(entities).ConfigureAwait(false);
 
                 // Assert
-                var queryResult = await connection.QueryAsync<EnumCompleteTable>(new { ColumnNVarChar = Direction.West });
+                var queryResult = await connection.QueryAsync<EnumCompleteTable>(new { ColumnNVarChar = Direction.West }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -714,8 +714,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync(entities);
-                var queryResult = await connection.QueryAsync(where);
+                var insertAllResult = await connection.InsertAllAsync(entities).ConfigureAwait(false);
+                var queryResult = await connection.QueryAsync(where).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -754,8 +754,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync(entities);
-                var queryResult = await connection.QueryAsync<EnumCompleteTable>(new QueryField("ColumnNVarChar", Direction.West));
+                var insertAllResult = await connection.InsertAllAsync(entities).ConfigureAwait(false);
+                var queryResult = await connection.QueryAsync<EnumCompleteTable>(new QueryField("ColumnNVarChar", Direction.West)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -794,8 +794,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync(entities);
-                var queryResult = await connection.QueryAsync<EnumCompleteTable>(new QueryField("ColumnNVarChar", Direction.West).AsEnumerable());
+                var insertAllResult = await connection.InsertAllAsync(entities).ConfigureAwait(false);
+                var queryResult = await connection.QueryAsync<EnumCompleteTable>(new QueryField("ColumnNVarChar", Direction.West).AsEnumerable()).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -834,8 +834,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync(entities);
-                var queryResult = await connection.QueryAsync<EnumCompleteTable>(new QueryGroup(new QueryField("ColumnNVarChar", Direction.West)));
+                var insertAllResult = await connection.InsertAllAsync(entities).ConfigureAwait(false);
+                var queryResult = await connection.QueryAsync<EnumCompleteTable>(new QueryGroup(new QueryField("ColumnNVarChar", Direction.West))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -880,8 +880,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync(entities);
-                var queryResult = await connection.QueryAsync(where);
+                var insertAllResult = await connection.InsertAllAsync(entities).ConfigureAwait(false);
+                var queryResult = await connection.QueryAsync(where).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -922,8 +922,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync(entities);
-                var queryResult = await connection.QueryAsync(where);
+                var insertAllResult = await connection.InsertAllAsync(entities).ConfigureAwait(false);
+                var queryResult = await connection.QueryAsync(where).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -976,8 +976,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync(entities);
-                var queryResult = await connection.QueryAsync<EnumCompleteTable>(where);
+                var insertAllResult = await connection.InsertAllAsync(entities).ConfigureAwait(false);
+                var queryResult = await connection.QueryAsync<EnumCompleteTable>(where).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -1030,8 +1030,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync(entities);
-                var queryResult = await connection.QueryAsync<EnumCompleteTable>(where);
+                var insertAllResult = await connection.InsertAllAsync(entities).ConfigureAwait(false);
+                var queryResult = await connection.QueryAsync<EnumCompleteTable>(where).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -1080,15 +1080,15 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<EnumCompleteTable, Guid>(entity);
+                var id = await connection.InsertAsync<EnumCompleteTable, Guid>(entity).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(1, await connection.CountAllAsync<EnumCompleteTable>());
+                Assert.AreEqual(1, await connection.CountAllAsync<EnumCompleteTable>().ConfigureAwait(false));
                 Assert.AreNotEqual(id, Guid.Empty);
                 Assert.AreEqual(entity.SessionId, id);
 
                 // Act
-                var queryResult = await connection.QueryAsync<EnumCompleteTable>(id);
+                var queryResult = await connection.QueryAsync<EnumCompleteTable>(id).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult.First());
@@ -1128,15 +1128,15 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<EnumCompleteTable, Guid>(entity);
+                var id = await connection.InsertAsync<EnumCompleteTable, Guid>(entity).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(1, await connection.CountAllAsync<EnumCompleteTable>());
+                Assert.AreEqual(1, await connection.CountAllAsync<EnumCompleteTable>().ConfigureAwait(false));
                 Assert.AreNotEqual(id, Guid.Empty);
                 Assert.AreEqual(entity.SessionId, id);
 
                 // Act
-                var queryResult = await connection.QueryAsync<FlaggedEnumForIntCompleteTable>(id);
+                var queryResult = await connection.QueryAsync<FlaggedEnumForIntCompleteTable>(id).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult.First());
@@ -1176,15 +1176,15 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<EnumAsIntForStringCompleteTable, Guid>(entity);
+                var id = await connection.InsertAsync<EnumAsIntForStringCompleteTable, Guid>(entity).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(1, await connection.CountAllAsync<EnumAsIntForStringCompleteTable>());
+                Assert.AreEqual(1, await connection.CountAllAsync<EnumAsIntForStringCompleteTable>().ConfigureAwait(false));
                 Assert.AreNotEqual(id, Guid.Empty);
                 Assert.AreEqual(entity.SessionId, id);
 
                 // Act
-                var queryResult = await connection.QueryAsync<EnumAsIntForStringCompleteTable>(id);
+                var queryResult = await connection.QueryAsync<EnumAsIntForStringCompleteTable>(id).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult.First());
@@ -1224,15 +1224,15 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<EnumAsIntForStringCompleteTable, Guid>(entity);
+                var id = await connection.InsertAsync<EnumAsIntForStringCompleteTable, Guid>(entity).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(1, await connection.CountAllAsync<EnumAsIntForStringCompleteTable>());
+                Assert.AreEqual(1, await connection.CountAllAsync<EnumAsIntForStringCompleteTable>().ConfigureAwait(false));
                 Assert.AreNotEqual(id, Guid.Empty);
                 Assert.AreEqual(entity.SessionId, id);
 
                 // Act
-                var queryResult = await connection.QueryAsync<FlaggedEnumForIntCompleteTable>(id);
+                var queryResult = await connection.QueryAsync<FlaggedEnumForIntCompleteTable>(id).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult.First());
@@ -1272,15 +1272,15 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<FlaggedEnumForStringCompleteTable, Guid>(entity);
+                var id = await connection.InsertAsync<FlaggedEnumForStringCompleteTable, Guid>(entity).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(1, await connection.CountAllAsync<FlaggedEnumForStringCompleteTable>());
+                Assert.AreEqual(1, await connection.CountAllAsync<FlaggedEnumForStringCompleteTable>().ConfigureAwait(false));
                 Assert.AreNotEqual(id, Guid.Empty);
                 Assert.AreEqual(entity.SessionId, id);
 
                 // Act
-                var queryResult = await connection.QueryAsync<FlaggedEnumForIntCompleteTable>(id);
+                var queryResult = await connection.QueryAsync<FlaggedEnumForIntCompleteTable>(id).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult.First());
@@ -1320,15 +1320,15 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<FlaggedEnumForStringCompleteTable, Guid>(entity);
+                var id = await connection.InsertAsync<FlaggedEnumForStringCompleteTable, Guid>(entity).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(1, await connection.CountAllAsync<FlaggedEnumForStringCompleteTable>());
+                Assert.AreEqual(1, await connection.CountAllAsync<FlaggedEnumForStringCompleteTable>().ConfigureAwait(false));
                 Assert.AreNotEqual(id, Guid.Empty);
                 Assert.AreEqual(entity.SessionId, id);
 
                 // Act
-                var queryResult = await connection.QueryAsync<FlaggedEnumForIntCompleteTable>(id);
+                var queryResult = await connection.QueryAsync<FlaggedEnumForIntCompleteTable>(id).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult.First());
@@ -1368,15 +1368,15 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<FlaggedEnumForIntCompleteTable, Guid>(entity);
+                var id = await connection.InsertAsync<FlaggedEnumForIntCompleteTable, Guid>(entity).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(1, await connection.CountAllAsync<FlaggedEnumForIntCompleteTable>());
+                Assert.AreEqual(1, await connection.CountAllAsync<FlaggedEnumForIntCompleteTable>().ConfigureAwait(false));
                 Assert.AreNotEqual(id, Guid.Empty);
                 Assert.AreEqual(entity.SessionId, id);
 
                 // Act
-                var queryResult = await connection.QueryAsync<FlaggedEnumForIntCompleteTable>(id);
+                var queryResult = await connection.QueryAsync<FlaggedEnumForIntCompleteTable>(id).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult.First());
@@ -1416,15 +1416,15 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<FlaggedEnumForIntCompleteTable, Guid>(entity);
+                var id = await connection.InsertAsync<FlaggedEnumForIntCompleteTable, Guid>(entity).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(1, await connection.CountAllAsync<FlaggedEnumForIntCompleteTable>());
+                Assert.AreEqual(1, await connection.CountAllAsync<FlaggedEnumForIntCompleteTable>().ConfigureAwait(false));
                 Assert.AreNotEqual(id, Guid.Empty);
                 Assert.AreEqual(entity.SessionId, id);
 
                 // Act
-                var queryResult = await connection.QueryAsync<FlaggedEnumForIntCompleteTable>(id);
+                var queryResult = await connection.QueryAsync<FlaggedEnumForIntCompleteTable>(id).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult.First());
@@ -1464,11 +1464,11 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync(entities);
+                var insertAllResult = await connection.InsertAllAsync(entities).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(insertAllResult, await connection.CountAllAsync<EnumCompleteTable>());
-                var queryResult = await connection.QueryAllAsync<EnumCompleteTable>();
+                Assert.AreEqual(insertAllResult, await connection.CountAllAsync<EnumCompleteTable>().ConfigureAwait(false));
+                var queryResult = await connection.QueryAllAsync<EnumCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -1504,11 +1504,11 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync(entities);
+                var insertAllResult = await connection.InsertAllAsync(entities).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(insertAllResult, await connection.CountAllAsync<EnumCompleteTable>());
-                var queryResult = await connection.QueryAllAsync<EnumCompleteTable>();
+                Assert.AreEqual(insertAllResult, await connection.CountAllAsync<EnumCompleteTable>().ConfigureAwait(false));
+                var queryResult = await connection.QueryAllAsync<EnumCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -1544,11 +1544,11 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync(entities);
+                var insertAllResult = await connection.InsertAllAsync(entities).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(insertAllResult, await connection.CountAllAsync<EnumAsIntForStringCompleteTable>());
-                var queryResult = await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>();
+                Assert.AreEqual(insertAllResult, await connection.CountAllAsync<EnumAsIntForStringCompleteTable>().ConfigureAwait(false));
+                var queryResult = await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -1584,11 +1584,11 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync(entities);
+                var insertAllResult = await connection.InsertAllAsync(entities).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(insertAllResult, await connection.CountAllAsync<EnumAsIntForStringCompleteTable>());
-                var queryResult = await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>();
+                Assert.AreEqual(insertAllResult, await connection.CountAllAsync<EnumAsIntForStringCompleteTable>().ConfigureAwait(false));
+                var queryResult = await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -1624,11 +1624,11 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync<FlaggedEnumForStringCompleteTable>(entities);
+                var insertAllResult = await connection.InsertAllAsync<FlaggedEnumForStringCompleteTable>(entities).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(insertAllResult, await connection.CountAllAsync<FlaggedEnumForStringCompleteTable>());
-                var queryResult = await connection.QueryAllAsync<FlaggedEnumForStringCompleteTable>();
+                Assert.AreEqual(insertAllResult, await connection.CountAllAsync<FlaggedEnumForStringCompleteTable>().ConfigureAwait(false));
+                var queryResult = await connection.QueryAllAsync<FlaggedEnumForStringCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -1664,11 +1664,11 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync<FlaggedEnumForStringCompleteTable>(entities);
+                var insertAllResult = await connection.InsertAllAsync<FlaggedEnumForStringCompleteTable>(entities).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(insertAllResult, await connection.CountAllAsync<FlaggedEnumForStringCompleteTable>());
-                var queryResult = await connection.QueryAllAsync<FlaggedEnumForStringCompleteTable>();
+                Assert.AreEqual(insertAllResult, await connection.CountAllAsync<FlaggedEnumForStringCompleteTable>().ConfigureAwait(false));
+                var queryResult = await connection.QueryAllAsync<FlaggedEnumForStringCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -1704,11 +1704,11 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync<FlaggedEnumForIntCompleteTable>(entities);
+                var insertAllResult = await connection.InsertAllAsync<FlaggedEnumForIntCompleteTable>(entities).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(insertAllResult, await connection.CountAllAsync<FlaggedEnumForIntCompleteTable>());
-                var queryResult = await connection.QueryAllAsync<FlaggedEnumForIntCompleteTable>();
+                Assert.AreEqual(insertAllResult, await connection.CountAllAsync<FlaggedEnumForIntCompleteTable>().ConfigureAwait(false));
+                var queryResult = await connection.QueryAllAsync<FlaggedEnumForIntCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -1744,11 +1744,11 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync<FlaggedEnumForIntCompleteTable>(entities);
+                var insertAllResult = await connection.InsertAllAsync<FlaggedEnumForIntCompleteTable>(entities).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(insertAllResult, await connection.CountAllAsync<FlaggedEnumForIntCompleteTable>());
-                var queryResult = await connection.QueryAllAsync<FlaggedEnumForIntCompleteTable>();
+                Assert.AreEqual(insertAllResult, await connection.CountAllAsync<FlaggedEnumForIntCompleteTable>().ConfigureAwait(false));
+                var queryResult = await connection.QueryAllAsync<FlaggedEnumForIntCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -1792,15 +1792,15 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.MergeAsync(entity);
+                var id = await connection.MergeAsync(entity).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(1, await connection.CountAllAsync<EnumCompleteTable>());
+                Assert.AreEqual(1, await connection.CountAllAsync<EnumCompleteTable>().ConfigureAwait(false));
                 Assert.AreNotEqual(id, Guid.Empty);
                 Assert.AreEqual(entity.SessionId, id);
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<EnumCompleteTable>()).First();
+                var queryResult = (await connection.QueryAllAsync<EnumCompleteTable>().ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1840,15 +1840,15 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.MergeAsync(entity);
+                var id = await connection.MergeAsync(entity).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(1, await connection.CountAllAsync<EnumCompleteTable>());
+                Assert.AreEqual(1, await connection.CountAllAsync<EnumCompleteTable>().ConfigureAwait(false));
                 Assert.AreNotEqual(id, Guid.Empty);
                 Assert.AreEqual(entity.SessionId, id);
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<EnumCompleteTable>()).First();
+                var queryResult = (await connection.QueryAllAsync<EnumCompleteTable>().ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1896,7 +1896,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<EnumCompleteTable, Guid>(entity);
+                var id = await connection.InsertAsync<EnumCompleteTable, Guid>(entity).ConfigureAwait(false);
 
                 // Setup
                 entity.ColumnBigInt = Direction.East;
@@ -1906,13 +1906,13 @@ namespace RepoDb.IntegrationTests
                 entity.ColumnSmallInt = Direction.East;
 
                 // Act
-                var mergeResult = await connection.MergeAsync(entity);
+                var mergeResult = await connection.MergeAsync(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.SessionId, mergeResult);
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<EnumCompleteTable>()).First();
+                var queryResult = (await connection.QueryAllAsync<EnumCompleteTable>().ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1960,7 +1960,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<EnumCompleteTable, Guid>(entity);
+                var id = await connection.InsertAsync<EnumCompleteTable, Guid>(entity).ConfigureAwait(false);
 
                 // Setup
                 entity.ColumnBigInt = null;
@@ -1970,13 +1970,13 @@ namespace RepoDb.IntegrationTests
                 entity.ColumnSmallInt = Direction.None;
 
                 // Act
-                var mergeResult = await connection.MergeAsync(entity);
+                var mergeResult = await connection.MergeAsync(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.SessionId, mergeResult);
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<EnumCompleteTable>()).First();
+                var queryResult = (await connection.QueryAllAsync<EnumCompleteTable>().ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -2016,15 +2016,15 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.MergeAsync(entity);
+                var id = await connection.MergeAsync(entity).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(1, await connection.CountAllAsync<EnumAsIntForStringCompleteTable>());
+                Assert.AreEqual(1, await connection.CountAllAsync<EnumAsIntForStringCompleteTable>().ConfigureAwait(false));
                 Assert.AreNotEqual(id, Guid.Empty);
                 Assert.AreEqual(entity.SessionId, id);
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>()).First();
+                var queryResult = (await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>().ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -2064,15 +2064,15 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.MergeAsync(entity);
+                var id = await connection.MergeAsync(entity).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(1, await connection.CountAllAsync<EnumAsIntForStringCompleteTable>());
+                Assert.AreEqual(1, await connection.CountAllAsync<EnumAsIntForStringCompleteTable>().ConfigureAwait(false));
                 Assert.AreNotEqual(id, Guid.Empty);
                 Assert.AreEqual(entity.SessionId, id);
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>()).First();
+                var queryResult = (await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>().ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -2116,19 +2116,19 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<EnumAsIntForStringCompleteTable, Guid>(entity);
+                var id = await connection.InsertAsync<EnumAsIntForStringCompleteTable, Guid>(entity).ConfigureAwait(false);
 
                 // Setup
                 entity.ColumnNVarChar = Direction.East;
 
                 // Act
-                var mergeResult = await connection.MergeAsync(entity);
+                var mergeResult = await connection.MergeAsync(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.SessionId, mergeResult);
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>()).First();
+                var queryResult = (await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>().ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -2172,19 +2172,19 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<EnumAsIntForStringCompleteTable, Guid>(entity);
+                var id = await connection.InsertAsync<EnumAsIntForStringCompleteTable, Guid>(entity).ConfigureAwait(false);
 
                 // Setup
                 entity.ColumnNVarChar = null;
 
                 // Act
-                var mergeResult = await connection.MergeAsync(entity);
+                var mergeResult = await connection.MergeAsync(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.SessionId, mergeResult);
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>()).First();
+                var queryResult = (await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>().ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -2224,15 +2224,15 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.MergeAsync(entity);
+                var id = await connection.MergeAsync(entity).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(1, await connection.CountAllAsync<FlaggedEnumForStringCompleteTable>());
+                Assert.AreEqual(1, await connection.CountAllAsync<FlaggedEnumForStringCompleteTable>().ConfigureAwait(false));
                 Assert.AreNotEqual(id, Guid.Empty);
                 Assert.AreEqual(entity.SessionId, id);
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<FlaggedEnumForStringCompleteTable>()).First();
+                var queryResult = (await connection.QueryAllAsync<FlaggedEnumForStringCompleteTable>().ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -2272,15 +2272,15 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.MergeAsync(entity);
+                var id = await connection.MergeAsync(entity).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(1, await connection.CountAllAsync<FlaggedEnumForStringCompleteTable>());
+                Assert.AreEqual(1, await connection.CountAllAsync<FlaggedEnumForStringCompleteTable>().ConfigureAwait(false));
                 Assert.AreNotEqual(id, Guid.Empty);
                 Assert.AreEqual(entity.SessionId, id);
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<FlaggedEnumForStringCompleteTable>()).First();
+                var queryResult = (await connection.QueryAllAsync<FlaggedEnumForStringCompleteTable>().ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -2320,15 +2320,15 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.MergeAsync(entity);
+                var id = await connection.MergeAsync(entity).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(1, await connection.CountAllAsync<FlaggedEnumForIntCompleteTable>());
+                Assert.AreEqual(1, await connection.CountAllAsync<FlaggedEnumForIntCompleteTable>().ConfigureAwait(false));
                 Assert.AreNotEqual(id, Guid.Empty);
                 Assert.AreEqual(entity.SessionId, id);
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<FlaggedEnumForIntCompleteTable>()).First();
+                var queryResult = (await connection.QueryAllAsync<FlaggedEnumForIntCompleteTable>().ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -2368,15 +2368,15 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.MergeAsync(entity);
+                var id = await connection.MergeAsync(entity).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(1, await connection.CountAllAsync<FlaggedEnumForIntCompleteTable>());
+                Assert.AreEqual(1, await connection.CountAllAsync<FlaggedEnumForIntCompleteTable>().ConfigureAwait(false));
                 Assert.AreNotEqual(id, Guid.Empty);
                 Assert.AreEqual(entity.SessionId, id);
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<FlaggedEnumForIntCompleteTable>()).First();
+                var queryResult = (await connection.QueryAllAsync<FlaggedEnumForIntCompleteTable>().ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -2416,11 +2416,11 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeAllResult = await connection.MergeAllAsync(entities);
+                var mergeAllResult = await connection.MergeAllAsync(entities).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(mergeAllResult, await connection.CountAllAsync<EnumCompleteTable>());
-                var queryResult = await connection.QueryAllAsync<EnumCompleteTable>();
+                Assert.AreEqual(mergeAllResult, await connection.CountAllAsync<EnumCompleteTable>().ConfigureAwait(false));
+                var queryResult = await connection.QueryAllAsync<EnumCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -2456,11 +2456,11 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeAllResult = await connection.MergeAllAsync(entities);
+                var mergeAllResult = await connection.MergeAllAsync(entities).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(mergeAllResult, await connection.CountAllAsync<EnumCompleteTable>());
-                var queryResult = await connection.QueryAllAsync<EnumCompleteTable>();
+                Assert.AreEqual(mergeAllResult, await connection.CountAllAsync<EnumCompleteTable>().ConfigureAwait(false));
+                var queryResult = await connection.QueryAllAsync<EnumCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -2511,7 +2511,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync(entities);
+                var insertAllResult = await connection.InsertAllAsync(entities).ConfigureAwait(false);
 
                 // Setup
                 entities.ForEach(entity =>
@@ -2524,13 +2524,13 @@ namespace RepoDb.IntegrationTests
                 });
 
                 // Act
-                var mergeAllResult = await connection.MergeAllAsync(entities);
+                var mergeAllResult = await connection.MergeAllAsync(entities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, mergeAllResult);
 
                 // Act
-                var queryResult = await connection.QueryAllAsync<EnumCompleteTable>();
+                var queryResult = await connection.QueryAllAsync<EnumCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -2581,7 +2581,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync(entities);
+                var insertAllResult = await connection.InsertAllAsync(entities).ConfigureAwait(false);
 
                 // Setup
                 entities.ForEach(entity =>
@@ -2594,13 +2594,13 @@ namespace RepoDb.IntegrationTests
                 });
 
                 // Act
-                var mergeAllResult = await connection.MergeAllAsync(entities);
+                var mergeAllResult = await connection.MergeAllAsync(entities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, mergeAllResult);
 
                 // Act
-                var queryResult = await connection.QueryAllAsync<EnumCompleteTable>();
+                var queryResult = await connection.QueryAllAsync<EnumCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -2636,11 +2636,11 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeAllResult = await connection.MergeAllAsync(entities);
+                var mergeAllResult = await connection.MergeAllAsync(entities).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(mergeAllResult, await connection.CountAllAsync<EnumAsIntForStringCompleteTable>());
-                var queryResult = await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>();
+                Assert.AreEqual(mergeAllResult, await connection.CountAllAsync<EnumAsIntForStringCompleteTable>().ConfigureAwait(false));
+                var queryResult = await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -2676,11 +2676,11 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeAllResult = await connection.MergeAllAsync(entities);
+                var mergeAllResult = await connection.MergeAllAsync(entities).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(mergeAllResult, await connection.CountAllAsync<EnumAsIntForStringCompleteTable>());
-                var queryResult = await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>();
+                Assert.AreEqual(mergeAllResult, await connection.CountAllAsync<EnumAsIntForStringCompleteTable>().ConfigureAwait(false));
+                var queryResult = await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -2727,7 +2727,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync(entities);
+                var insertAllResult = await connection.InsertAllAsync(entities).ConfigureAwait(false);
 
                 // Setup
                 entities.ForEach(entity =>
@@ -2736,13 +2736,13 @@ namespace RepoDb.IntegrationTests
                 });
 
                 // Act
-                var mergeAllResult = await connection.MergeAllAsync(entities);
+                var mergeAllResult = await connection.MergeAllAsync(entities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, mergeAllResult);
 
                 // Act
-                var queryResult = await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>();
+                var queryResult = await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -2789,7 +2789,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync(entities);
+                var insertAllResult = await connection.InsertAllAsync(entities).ConfigureAwait(false);
 
                 // Setup
                 entities.ForEach(entity =>
@@ -2798,13 +2798,13 @@ namespace RepoDb.IntegrationTests
                 });
 
                 // Act
-                var mergeAllResult = await connection.MergeAllAsync(entities);
+                var mergeAllResult = await connection.MergeAllAsync(entities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, mergeAllResult);
 
                 // Act
-                var queryResult = await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>();
+                var queryResult = await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -2840,11 +2840,11 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeAllResult = await connection.MergeAllAsync(entities);
+                var mergeAllResult = await connection.MergeAllAsync(entities).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(mergeAllResult, await connection.CountAllAsync<FlaggedEnumForStringCompleteTable>());
-                var queryResult = await connection.QueryAllAsync<FlaggedEnumForStringCompleteTable>();
+                Assert.AreEqual(mergeAllResult, await connection.CountAllAsync<FlaggedEnumForStringCompleteTable>().ConfigureAwait(false));
+                var queryResult = await connection.QueryAllAsync<FlaggedEnumForStringCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -2880,11 +2880,11 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeAllResult = await connection.MergeAllAsync(entities);
+                var mergeAllResult = await connection.MergeAllAsync(entities).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(mergeAllResult, await connection.CountAllAsync<FlaggedEnumForStringCompleteTable>());
-                var queryResult = await connection.QueryAllAsync<FlaggedEnumForStringCompleteTable>();
+                Assert.AreEqual(mergeAllResult, await connection.CountAllAsync<FlaggedEnumForStringCompleteTable>().ConfigureAwait(false));
+                var queryResult = await connection.QueryAllAsync<FlaggedEnumForStringCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -2920,11 +2920,11 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeAllResult = await connection.MergeAllAsync(entities);
+                var mergeAllResult = await connection.MergeAllAsync(entities).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(mergeAllResult, await connection.CountAllAsync<FlaggedEnumForIntCompleteTable>());
-                var queryResult = await connection.QueryAllAsync<FlaggedEnumForIntCompleteTable>();
+                Assert.AreEqual(mergeAllResult, await connection.CountAllAsync<FlaggedEnumForIntCompleteTable>().ConfigureAwait(false));
+                var queryResult = await connection.QueryAllAsync<FlaggedEnumForIntCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -2960,11 +2960,11 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeAllResult = await connection.MergeAllAsync(entities);
+                var mergeAllResult = await connection.MergeAllAsync(entities).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(mergeAllResult, await connection.CountAllAsync<FlaggedEnumForIntCompleteTable>());
-                var queryResult = await connection.QueryAllAsync<FlaggedEnumForIntCompleteTable>();
+                Assert.AreEqual(mergeAllResult, await connection.CountAllAsync<FlaggedEnumForIntCompleteTable>().ConfigureAwait(false));
+                var queryResult = await connection.QueryAllAsync<FlaggedEnumForIntCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -3001,8 +3001,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertResult = await connection.InsertAsync<EnumCompleteTable, Guid>(entity);
-                var queryResult = (await connection.QueryAllAsync<EnumCompleteTable>()).First();
+                var insertResult = await connection.InsertAsync<EnumCompleteTable, Guid>(entity).ConfigureAwait(false);
+                var queryResult = (await connection.QueryAllAsync<EnumCompleteTable>().ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -3035,8 +3035,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertResult = await connection.InsertAsync<EnumCompleteTable, Guid>(entity);
-                var queryResult = (await connection.QueryAllAsync<EnumCompleteTable>()).First();
+                var insertResult = await connection.InsertAsync<EnumCompleteTable, Guid>(entity).ConfigureAwait(false);
+                var queryResult = (await connection.QueryAllAsync<EnumCompleteTable>().ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -3069,8 +3069,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertResult = await connection.InsertAsync<EnumAsIntForStringCompleteTable, Guid>(entity);
-                var queryResult = (await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>()).First();
+                var insertResult = await connection.InsertAsync<EnumAsIntForStringCompleteTable, Guid>(entity).ConfigureAwait(false);
+                var queryResult = (await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>().ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -3103,8 +3103,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertResult = await connection.InsertAsync<EnumAsIntForStringCompleteTable, Guid>(entity);
-                var queryResult = (await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>()).First();
+                var insertResult = await connection.InsertAsync<EnumAsIntForStringCompleteTable, Guid>(entity).ConfigureAwait(false);
+                var queryResult = (await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>().ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -3137,8 +3137,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertResult = await connection.InsertAsync<FlaggedEnumForStringCompleteTable, Guid>(entity);
-                var queryResult = (await connection.QueryAllAsync<FlaggedEnumForStringCompleteTable>()).First();
+                var insertResult = await connection.InsertAsync<FlaggedEnumForStringCompleteTable, Guid>(entity).ConfigureAwait(false);
+                var queryResult = (await connection.QueryAllAsync<FlaggedEnumForStringCompleteTable>().ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -3171,8 +3171,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertResult = await connection.InsertAsync<FlaggedEnumForStringCompleteTable, Guid>(entity);
-                var queryResult = (await connection.QueryAllAsync<FlaggedEnumForStringCompleteTable>()).First();
+                var insertResult = await connection.InsertAsync<FlaggedEnumForStringCompleteTable, Guid>(entity).ConfigureAwait(false);
+                var queryResult = (await connection.QueryAllAsync<FlaggedEnumForStringCompleteTable>().ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -3205,8 +3205,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertResult = await connection.InsertAsync<FlaggedEnumForIntCompleteTable, Guid>(entity);
-                var queryResult = (await connection.QueryAllAsync<FlaggedEnumForIntCompleteTable>()).First();
+                var insertResult = await connection.InsertAsync<FlaggedEnumForIntCompleteTable, Guid>(entity).ConfigureAwait(false);
+                var queryResult = (await connection.QueryAllAsync<FlaggedEnumForIntCompleteTable>().ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -3239,8 +3239,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertResult = await connection.InsertAsync<FlaggedEnumForIntCompleteTable, Guid>(entity);
-                var queryResult = (await connection.QueryAllAsync<FlaggedEnumForIntCompleteTable>()).First();
+                var insertResult = await connection.InsertAsync<FlaggedEnumForIntCompleteTable, Guid>(entity).ConfigureAwait(false);
+                var queryResult = (await connection.QueryAllAsync<FlaggedEnumForIntCompleteTable>().ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -3292,7 +3292,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<EnumCompleteTable, Guid>(entity);
+                var id = await connection.InsertAsync<EnumCompleteTable, Guid>(entity).ConfigureAwait(false);
 
                 // Setup
                 entity.ColumnBigInt = Direction.East;
@@ -3302,13 +3302,13 @@ namespace RepoDb.IntegrationTests
                 entity.ColumnSmallInt = Direction.East;
 
                 // Act
-                var updateResult = await connection.UpdateAsync(entity);
+                var updateResult = await connection.UpdateAsync(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, updateResult);
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<EnumCompleteTable>()).First();
+                var queryResult = (await connection.QueryAllAsync<EnumCompleteTable>().ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -3356,7 +3356,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<EnumCompleteTable, Guid>(entity);
+                var id = await connection.InsertAsync<EnumCompleteTable, Guid>(entity).ConfigureAwait(false);
 
                 // Setup
                 entity.ColumnBigInt = null;
@@ -3366,13 +3366,13 @@ namespace RepoDb.IntegrationTests
                 entity.ColumnSmallInt = Direction.None;
 
                 // Act
-                var updateResult = await connection.UpdateAsync(entity);
+                var updateResult = await connection.UpdateAsync(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, updateResult);
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<EnumCompleteTable>()).First();
+                var queryResult = (await connection.QueryAllAsync<EnumCompleteTable>().ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -3416,19 +3416,19 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<EnumAsIntForStringCompleteTable, Guid>(entity);
+                var id = await connection.InsertAsync<EnumAsIntForStringCompleteTable, Guid>(entity).ConfigureAwait(false);
 
                 // Setup
                 entity.ColumnNVarChar = Direction.East;
 
                 // Act
-                var updateResult = await connection.UpdateAsync(entity);
+                var updateResult = await connection.UpdateAsync(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, updateResult);
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>()).First();
+                var queryResult = (await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>().ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -3472,19 +3472,19 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<EnumAsIntForStringCompleteTable, Guid>(entity);
+                var id = await connection.InsertAsync<EnumAsIntForStringCompleteTable, Guid>(entity).ConfigureAwait(false);
 
                 // Setup
                 entity.ColumnNVarChar = null;
 
                 // Act
-                var updateResult = await connection.UpdateAsync(entity);
+                var updateResult = await connection.UpdateAsync(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, updateResult);
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>()).First();
+                var queryResult = (await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>().ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -3528,19 +3528,19 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<FlaggedEnumForStringCompleteTable, Guid>(entity);
+                var id = await connection.InsertAsync<FlaggedEnumForStringCompleteTable, Guid>(entity).ConfigureAwait(false);
 
                 // Setup
                 entity.ColumnNVarChar = StorageType.Drive | StorageType.File | StorageType.MemoryStorage;
 
                 // Act
-                var updateResult = await connection.UpdateAsync(entity);
+                var updateResult = await connection.UpdateAsync(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, updateResult);
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<FlaggedEnumForStringCompleteTable>()).First();
+                var queryResult = (await connection.QueryAllAsync<FlaggedEnumForStringCompleteTable>().ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -3584,19 +3584,19 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<FlaggedEnumForStringCompleteTable, Guid>(entity);
+                var id = await connection.InsertAsync<FlaggedEnumForStringCompleteTable, Guid>(entity).ConfigureAwait(false);
 
                 // Setup
                 entity.ColumnNVarChar = null;
 
                 // Act
-                var updateResult = await connection.UpdateAsync(entity);
+                var updateResult = await connection.UpdateAsync(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, updateResult);
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<FlaggedEnumForStringCompleteTable>()).First();
+                var queryResult = (await connection.QueryAllAsync<FlaggedEnumForStringCompleteTable>().ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -3640,19 +3640,19 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<FlaggedEnumForIntCompleteTable, Guid>(entity);
+                var id = await connection.InsertAsync<FlaggedEnumForIntCompleteTable, Guid>(entity).ConfigureAwait(false);
 
                 // Setup
                 entity.ColumnNVarChar = StorageType.Drive | StorageType.File | StorageType.MemoryStorage;
 
                 // Act
-                var updateResult = await connection.UpdateAsync(entity);
+                var updateResult = await connection.UpdateAsync(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, updateResult);
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<FlaggedEnumForIntCompleteTable>()).First();
+                var queryResult = (await connection.QueryAllAsync<FlaggedEnumForIntCompleteTable>().ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -3696,19 +3696,19 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<FlaggedEnumForIntCompleteTable, Guid>(entity);
+                var id = await connection.InsertAsync<FlaggedEnumForIntCompleteTable, Guid>(entity).ConfigureAwait(false);
 
                 // Setup
                 entity.ColumnNVarChar = null;
 
                 // Act
-                var updateResult = await connection.UpdateAsync(entity);
+                var updateResult = await connection.UpdateAsync(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, updateResult);
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<FlaggedEnumForIntCompleteTable>()).First();
+                var queryResult = (await connection.QueryAllAsync<FlaggedEnumForIntCompleteTable>().ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -3763,7 +3763,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync(entities);
+                var insertAllResult = await connection.InsertAllAsync(entities).ConfigureAwait(false);
 
                 // Setup
                 entities.ForEach(entity =>
@@ -3776,13 +3776,13 @@ namespace RepoDb.IntegrationTests
                 });
 
                 // Act
-                var updateAllResult = await connection.UpdateAllAsync(entities);
+                var updateAllResult = await connection.UpdateAllAsync(entities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, updateAllResult);
 
                 // Act
-                var queryResult = await connection.QueryAllAsync<EnumCompleteTable>();
+                var queryResult = await connection.QueryAllAsync<EnumCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -3833,7 +3833,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync(entities);
+                var insertAllResult = await connection.InsertAllAsync(entities).ConfigureAwait(false);
 
                 // Setup
                 entities.ForEach(entity =>
@@ -3846,13 +3846,13 @@ namespace RepoDb.IntegrationTests
                 });
 
                 // Act
-                var updateAllResult = await connection.UpdateAllAsync(entities);
+                var updateAllResult = await connection.UpdateAllAsync(entities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, updateAllResult);
 
                 // Act
-                var queryResult = await connection.QueryAllAsync<EnumCompleteTable>();
+                var queryResult = await connection.QueryAllAsync<EnumCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -3899,7 +3899,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync(entities);
+                var insertAllResult = await connection.InsertAllAsync(entities).ConfigureAwait(false);
 
                 // Setup
                 entities.ForEach(entity =>
@@ -3908,13 +3908,13 @@ namespace RepoDb.IntegrationTests
                 });
 
                 // Act
-                var updateAllResult = await connection.UpdateAllAsync(entities);
+                var updateAllResult = await connection.UpdateAllAsync(entities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, updateAllResult);
 
                 // Act
-                var queryResult = await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>();
+                var queryResult = await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -3961,7 +3961,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync(entities);
+                var insertAllResult = await connection.InsertAllAsync(entities).ConfigureAwait(false);
 
                 // Setup
                 entities.ForEach(entity =>
@@ -3970,13 +3970,13 @@ namespace RepoDb.IntegrationTests
                 });
 
                 // Act
-                var updateAllResult = await connection.UpdateAllAsync(entities);
+                var updateAllResult = await connection.UpdateAllAsync(entities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, updateAllResult);
 
                 // Act
-                var queryResult = await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>();
+                var queryResult = await connection.QueryAllAsync<EnumAsIntForStringCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -4023,7 +4023,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync(entities);
+                var insertAllResult = await connection.InsertAllAsync(entities).ConfigureAwait(false);
 
                 // Setup
                 entities.ForEach(entity =>
@@ -4032,13 +4032,13 @@ namespace RepoDb.IntegrationTests
                 });
 
                 // Act
-                var updateAllResult = await connection.UpdateAllAsync(entities);
+                var updateAllResult = await connection.UpdateAllAsync(entities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, updateAllResult);
 
                 // Act
-                var queryResult = await connection.QueryAllAsync<FlaggedEnumForStringCompleteTable>();
+                var queryResult = await connection.QueryAllAsync<FlaggedEnumForStringCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -4085,7 +4085,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync(entities);
+                var insertAllResult = await connection.InsertAllAsync(entities).ConfigureAwait(false);
 
                 // Setup
                 entities.ForEach(entity =>
@@ -4094,13 +4094,13 @@ namespace RepoDb.IntegrationTests
                 });
 
                 // Act
-                var updateAllResult = await connection.UpdateAllAsync(entities);
+                var updateAllResult = await connection.UpdateAllAsync(entities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, updateAllResult);
 
                 // Act
-                var queryResult = await connection.QueryAllAsync<FlaggedEnumForStringCompleteTable>();
+                var queryResult = await connection.QueryAllAsync<FlaggedEnumForStringCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -4147,7 +4147,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync(entities);
+                var insertAllResult = await connection.InsertAllAsync(entities).ConfigureAwait(false);
 
                 // Setup
                 entities.ForEach(entity =>
@@ -4156,13 +4156,13 @@ namespace RepoDb.IntegrationTests
                 });
 
                 // Act
-                var updateAllResult = await connection.UpdateAllAsync(entities);
+                var updateAllResult = await connection.UpdateAllAsync(entities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, updateAllResult);
 
                 // Act
-                var queryResult = await connection.QueryAllAsync<FlaggedEnumForIntCompleteTable>();
+                var queryResult = await connection.QueryAllAsync<FlaggedEnumForIntCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -4209,7 +4209,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync(entities);
+                var insertAllResult = await connection.InsertAllAsync(entities).ConfigureAwait(false);
 
                 // Setup
                 entities.ForEach(entity =>
@@ -4218,13 +4218,13 @@ namespace RepoDb.IntegrationTests
                 });
 
                 // Act
-                var updateAllResult = await connection.UpdateAllAsync(entities);
+                var updateAllResult = await connection.UpdateAllAsync(entities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, updateAllResult);
 
                 // Act
-                var queryResult = await connection.QueryAllAsync<FlaggedEnumForIntCompleteTable>();
+                var queryResult = await connection.QueryAllAsync<FlaggedEnumForIntCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -4326,16 +4326,16 @@ namespace RepoDb.IntegrationTests
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                var enumValue = (await connection.ExecuteQueryAsync<CustomedStringEnum>("select 'Special-B'")).First();
+                var enumValue = (await connection.ExecuteQueryAsync<CustomedStringEnum>("select 'Special-B'").ConfigureAwait(false)).First();
                 Assert.AreEqual(CustomedStringEnum.B, enumValue);
 
-                var nullEnumValue = (await connection.ExecuteQueryAsync<CustomedStringEnum?>("select convert(varchar, null)")).First();
+                var nullEnumValue = (await connection.ExecuteQueryAsync<CustomedStringEnum?>("select convert(varchar, null)").ConfigureAwait(false)).First();
                 Assert.IsNull(nullEnumValue);
 
-                var entry = (await connection.ExecuteQueryAsync<CustomedEnumModel<CustomedStringEnum>>("select 'Special-B' Value")).First();
+                var entry = (await connection.ExecuteQueryAsync<CustomedEnumModel<CustomedStringEnum>>("select 'Special-B' Value").ConfigureAwait(false)).First();
                 Assert.AreEqual(CustomedStringEnum.B, entry.Value);
 
-                var nullEntry = (await connection.ExecuteQueryAsync<CustomedEnumModel<CustomedStringEnum>>("select convert(varchar, null) Value")).First();
+                var nullEntry = (await connection.ExecuteQueryAsync<CustomedEnumModel<CustomedStringEnum>>("select convert(varchar, null) Value").ConfigureAwait(false)).First();
                 Assert.IsNull(nullEntry.Value);
             }
         }
@@ -4363,11 +4363,11 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 var entry = new CustomedEnumModel<CustomedStringEnum> { Value = CustomedStringEnum.B };
-                var stringValue = (await connection.ExecuteQueryAsync<string>("select @Value", entry)).First();
+                var stringValue = (await connection.ExecuteQueryAsync<string>("select @Value", entry).ConfigureAwait(false)).First();
                 Assert.AreEqual("Special-B", stringValue);
 
                 var nullEntry = new CustomedEnumModel<CustomedStringEnum> { Value = null };
-                var nullStringValue = (await connection.ExecuteQueryAsync<string>("select @Value", nullEntry)).First();
+                var nullStringValue = (await connection.ExecuteQueryAsync<string>("select @Value", nullEntry).ConfigureAwait(false)).First();
                 Assert.IsNull(nullStringValue);
             }
         }
@@ -4402,16 +4402,16 @@ namespace RepoDb.IntegrationTests
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                var enumValue = (await connection.ExecuteQueryAsync<CustomedDecimalEnum>("select convert(decimal(8,3), 6.2)")).First();
+                var enumValue = (await connection.ExecuteQueryAsync<CustomedDecimalEnum>("select convert(decimal(8,3), 6.2)").ConfigureAwait(false)).First();
                 Assert.AreEqual(CustomedDecimalEnum.B, enumValue);
 
-                var nullEnumValue = (await connection.ExecuteQueryAsync<CustomedDecimalEnum?>("select convert(decimal(8,3), null)")).First();
+                var nullEnumValue = (await connection.ExecuteQueryAsync<CustomedDecimalEnum?>("select convert(decimal(8,3), null)").ConfigureAwait(false)).First();
                 Assert.IsNull(nullEnumValue);
 
-                var entry = (await connection.ExecuteQueryAsync<CustomedEnumModel<CustomedDecimalEnum>>("select convert(decimal(8,3), 6.2) Value")).First();
+                var entry = (await connection.ExecuteQueryAsync<CustomedEnumModel<CustomedDecimalEnum>>("select convert(decimal(8,3), 6.2) Value").ConfigureAwait(false)).First();
                 Assert.AreEqual(CustomedDecimalEnum.B, entry.Value);
 
-                var nullEntry = (await connection.ExecuteQueryAsync<CustomedEnumModel<CustomedDecimalEnum>>("select convert(decimal(8,3), null) Value")).First();
+                var nullEntry = (await connection.ExecuteQueryAsync<CustomedEnumModel<CustomedDecimalEnum>>("select convert(decimal(8,3), null) Value").ConfigureAwait(false)).First();
                 Assert.IsNull(nullEntry.Value);
             }
         }
@@ -4439,11 +4439,11 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 var entry = new CustomedEnumModel<CustomedDecimalEnum> { Value = CustomedDecimalEnum.B };
-                var decimalValue = (await connection.ExecuteQueryAsync<decimal>("select @Value", entry)).First();
+                var decimalValue = (await connection.ExecuteQueryAsync<decimal>("select @Value", entry).ConfigureAwait(false)).First();
                 Assert.AreEqual(6.2m, decimalValue);
 
                 var nullEntry = new CustomedEnumModel<CustomedDecimalEnum> { Value = null };
-                var nullDecimalValue = (await connection.ExecuteQueryAsync<decimal?>("select convert(decimal, @Value)", nullEntry)).First();
+                var nullDecimalValue = (await connection.ExecuteQueryAsync<decimal?>("select convert(decimal, @Value)", nullEntry).ConfigureAwait(false)).First();
                 Assert.IsNull(nullDecimalValue);
             }
         }
@@ -4487,15 +4487,15 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<EnumCompleteTableWithPropertyHandler, Guid>(entity);
+                var id = await connection.InsertAsync<EnumCompleteTableWithPropertyHandler, Guid>(entity).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(1, await connection.CountAllAsync<EnumCompleteTable>());
+                Assert.AreEqual(1, await connection.CountAllAsync<EnumCompleteTable>().ConfigureAwait(false));
                 Assert.AreNotEqual(id, Guid.Empty);
                 Assert.AreEqual(entity.SessionId, id);
 
                 // Act
-                var queryResult = await connection.QueryAsync<EnumCompleteTable>(id);
+                var queryResult = await connection.QueryAsync<EnumCompleteTable>(id).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult.First());
@@ -4535,15 +4535,15 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler, Guid>(entity);
+                var id = await connection.InsertAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler, Guid>(entity).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(1, await connection.CountAllAsync<EnumCompleteTable>());
+                Assert.AreEqual(1, await connection.CountAllAsync<EnumCompleteTable>().ConfigureAwait(false));
                 Assert.AreNotEqual(id, Guid.Empty);
                 Assert.AreEqual(entity.SessionId, id);
 
                 // Act
-                var queryResult = await connection.QueryAsync<EnumCompleteTable>(id);
+                var queryResult = await connection.QueryAsync<EnumCompleteTable>(id).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult.First());
@@ -4603,13 +4603,13 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<Guid>(ClassMappedNameCache.Get<EnumCompleteTable>(), entity);
+                var id = await connection.InsertAsync<Guid>(ClassMappedNameCache.Get<EnumCompleteTable>(), entity).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(1, await connection.CountAllAsync<EnumCompleteTable>());
+                Assert.AreEqual(1, await connection.CountAllAsync<EnumCompleteTable>().ConfigureAwait(false));
 
                 // Act
-                var queryResult = await connection.QueryAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>(id);
+                var queryResult = await connection.QueryAsync<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>(id).ConfigureAwait(false);
 
                 // Setup
                 var expected = new
@@ -4662,13 +4662,13 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<Guid>(ClassMappedNameCache.Get<EnumCompleteTable>(), entity);
+                var id = await connection.InsertAsync<Guid>(ClassMappedNameCache.Get<EnumCompleteTable>(), entity).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(1, await connection.CountAllAsync<EnumCompleteTable>());
+                Assert.AreEqual(1, await connection.CountAllAsync<EnumCompleteTable>().ConfigureAwait(false));
 
                 // Act
-                await Assert.ThrowsAsync<InvalidOperationException>(async () => await connection.QueryAsync<EnumCompleteTableWithPropertyHandler>(id));
+                await Assert.ThrowsAsync<InvalidOperationException>(async () => await connection.QueryAsync<EnumCompleteTableWithPropertyHandler>(id).ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

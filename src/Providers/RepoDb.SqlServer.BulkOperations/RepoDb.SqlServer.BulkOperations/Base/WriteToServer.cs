@@ -329,11 +329,11 @@ namespace RepoDb
                 AddMappings(sqlBulkCopy, mappings);
 
                 // Open the connection and do the operation
-                await connection.EnsureOpenAsync(cancellationToken: cancellationToken);
+                await connection.EnsureOpenAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
                 using (var reader = new DataEntityDataReader<TEntity>(tableName, entities, connection, transaction, hasOrderingColumn))
                 {
                     var writeToServerMethod = Compiler.GetParameterizedMethodFunc<SqlBulkCopy, Task>("WriteToServerAsync", new[] { typeof(DbDataReader), typeof(CancellationToken) });
-                    await writeToServerMethod(sqlBulkCopy, new object[] { reader, cancellationToken });
+                    await writeToServerMethod(sqlBulkCopy, new object[] { reader, cancellationToken }).ConfigureAwait(false);
                     result = reader.RecordsAffected;
                 }
 
@@ -405,9 +405,9 @@ namespace RepoDb
                 AddMappings(sqlBulkCopy, mappings);
 
                 // Open the connection and do the operation
-                await connection.EnsureOpenAsync(cancellationToken);
+                await connection.EnsureOpenAsync(cancellationToken).ConfigureAwait(false);
                 var writeToServerMethod = Compiler.GetParameterizedMethodFunc<SqlBulkCopy, Task>("WriteToServerAsync", new[] { typeof(DbDataReader), typeof(CancellationToken) });
-                await writeToServerMethod(sqlBulkCopy, new object[] { reader, cancellationToken });
+                await writeToServerMethod(sqlBulkCopy, new object[] { reader, cancellationToken }).ConfigureAwait(false);
 
                 // Set the return value
                 var rowsCopiedFieldOrProperty = Compiler.GetFieldGetterFunc<SqlBulkCopy, int>("_rowsCopied") ??
@@ -484,16 +484,16 @@ namespace RepoDb
                 AddMappings(sqlBulkCopy, mappings);
 
                 // Open the connection and do the operation
-                await connection.EnsureOpenAsync(cancellationToken);
+                await connection.EnsureOpenAsync(cancellationToken).ConfigureAwait(false);
                 if (rowState.HasValue == true)
                 {
                     var writeToServerMethod = Compiler.GetParameterizedMethodFunc<SqlBulkCopy, Task>("WriteToServerAsync", new[] { typeof(DataTable), typeof(DataRowState), typeof(CancellationToken) });
-                    await writeToServerMethod(sqlBulkCopy, new object[] { table, rowState.Value, cancellationToken });
+                    await writeToServerMethod(sqlBulkCopy, new object[] { table, rowState.Value, cancellationToken }).ConfigureAwait(false);
                 }
                 else
                 {
                     var writeToServerMethod = Compiler.GetParameterizedMethodFunc<SqlBulkCopy, Task>("WriteToServerAsync", new[] { typeof(DataTable), typeof(CancellationToken) });
-                    await writeToServerMethod(sqlBulkCopy, new object[] { table, cancellationToken });
+                    await writeToServerMethod(sqlBulkCopy, new object[] { table, cancellationToken }).ConfigureAwait(false);
                 }
 
                 // Set the result

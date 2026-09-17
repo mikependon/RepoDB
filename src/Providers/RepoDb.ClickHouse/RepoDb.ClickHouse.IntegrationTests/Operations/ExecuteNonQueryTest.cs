@@ -89,10 +89,10 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteNonQueryAsync("DELETE FROM `CompleteTable` WHERE 1 = 1;");
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM `CompleteTable` WHERE 1 = 1;").ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(0, await connection.CountAllAsync<CompleteTable>());
+                Assert.AreEqual(0, await connection.CountAllAsync<CompleteTable>().ConfigureAwait(false));
             }
         }
 
@@ -106,10 +106,10 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.ExecuteNonQueryAsync("DELETE FROM `CompleteTable` WHERE Id = @Id;",
-                    new { tables.Last().Id });
+                    new { tables.Last().Id }).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Count() - 1, await connection.CountAllAsync<CompleteTable>());
+                Assert.AreEqual(tables.Count() - 1, await connection.CountAllAsync<CompleteTable>().ConfigureAwait(false));
             }
         }
 

@@ -75,7 +75,7 @@ namespace RepoDb.ClickHouse.BulkOperations
             var projectedReader = new ColumnFilteredDataReader(reader,
                 ColumnMappings.Select(m => m.SourceOrdinal).ToArray());
 
-            var rowsWritten = await InsertBinaryAsync(EnumerateRows(projectedReader), cancellationToken);
+            var rowsWritten = await InsertBinaryAsync(EnumerateRows(projectedReader), cancellationToken).ConfigureAwait(false);
             return checked((int)rowsWritten);
         }
 
@@ -107,7 +107,7 @@ namespace RepoDb.ClickHouse.BulkOperations
                         : null)
                     .ToArray());
 
-            var rowsWritten = await InsertBinaryAsync(rowValues, cancellationToken);
+            var rowsWritten = await InsertBinaryAsync(rowValues, cancellationToken).ConfigureAwait(false);
             return checked((int)rowsWritten);
         }
 
@@ -141,7 +141,7 @@ namespace RepoDb.ClickHouse.BulkOperations
                 ColumnMappings.Select(m => m.DestinationColumn).ToArray(),
                 rows,
                 options,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>

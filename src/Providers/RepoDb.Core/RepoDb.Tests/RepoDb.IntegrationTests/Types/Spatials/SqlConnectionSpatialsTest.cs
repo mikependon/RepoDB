@@ -73,10 +73,10 @@ namespace RepoDb.IntegrationTests.Types.Spatials
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<SpatialsClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<SpatialsClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -125,10 +125,10 @@ namespace RepoDb.IntegrationTests.Types.Spatials
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<SpatialsClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<SpatialsClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -177,10 +177,10 @@ namespace RepoDb.IntegrationTests.Types.Spatials
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<SpatialsMapClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<SpatialsMapClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -229,10 +229,10 @@ namespace RepoDb.IntegrationTests.Types.Spatials
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<SpatialsMapClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<SpatialsMapClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -397,10 +397,10 @@ namespace RepoDb.IntegrationTests.Types.Spatials
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(ClassMappedNameCache.Get<SpatialsClass>(), entity);
+                var id = await connection.InsertAsync(ClassMappedNameCache.Get<SpatialsClass>(), entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync(ClassMappedNameCache.Get<SpatialsClass>(), new { SessionId = (Guid)id })).FirstOrDefault();
+                var data = (await connection.QueryAsync(ClassMappedNameCache.Get<SpatialsClass>(), new { SessionId = (Guid)id }).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -449,10 +449,10 @@ namespace RepoDb.IntegrationTests.Types.Spatials
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(ClassMappedNameCache.Get<SpatialsClass>(), entity);
+                var id = await connection.InsertAsync(ClassMappedNameCache.Get<SpatialsClass>(), entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync(ClassMappedNameCache.Get<SpatialsClass>(), new { SessionId = (Guid)id })).FirstOrDefault();
+                var data = (await connection.QueryAsync(ClassMappedNameCache.Get<SpatialsClass>(), new { SessionId = (Guid)id }).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);

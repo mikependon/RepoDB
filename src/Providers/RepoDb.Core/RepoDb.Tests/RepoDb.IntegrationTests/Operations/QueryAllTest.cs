@@ -354,7 +354,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.QueryAllAsync<string>(ClassMappedNameCache.Get<IdentityTable>(),
-                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar));
+                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -374,7 +374,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.QueryAllAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>());
+                var result = await connection.QueryAllAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>()).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -398,7 +398,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.QueryAllAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar)));
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -422,7 +422,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.QueryAllAsync<IdentityTable>();
+                var result = await connection.QueryAllAsync<IdentityTable>().ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -445,7 +445,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.QueryAllAsync<dynamic>(ClassMappedNameCache.Get<IdentityTable>());
+                var result = await connection.QueryAllAsync<dynamic>(ClassMappedNameCache.Get<IdentityTable>()).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -468,7 +468,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.QueryAllAsync<ExpandoObject>(ClassMappedNameCache.Get<IdentityTable>());
+                var result = await connection.QueryAllAsync<ExpandoObject>(ClassMappedNameCache.Get<IdentityTable>()).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -491,7 +491,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.QueryAllAsync<IDictionary<string, object>>(ClassMappedNameCache.Get<IdentityTable>());
+                var result = await connection.QueryAllAsync<IDictionary<string, object>>(ClassMappedNameCache.Get<IdentityTable>()).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -514,7 +514,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.QueryAllAsync<IdentityTable>(fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar)));
+                var result = await connection.QueryAllAsync<IdentityTable>(fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -539,7 +539,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.QueryAllAsync<IdentityTable>(orderBy: orderBy);
+                var result = await connection.QueryAllAsync<IdentityTable>(orderBy: orderBy).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -562,7 +562,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.QueryAllAsync<IdentityTable>(hints: SqlServerTableHints.NoLock);
+                var result = await connection.QueryAllAsync<IdentityTable>(hints: SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -587,7 +587,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.QueryAllAsync<IdentityTable>(orderBy: orderBy,
-                    hints: SqlServerTableHints.NoLock);
+                    hints: SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -607,7 +607,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await Assert.ThrowsAsync<MissingFieldsException>(async () => await connection.QueryAllAsync<IdentityTable>(orderBy: orderBy.AsEnumerable()));
+                await Assert.ThrowsAsync<MissingFieldsException>(async () => await connection.QueryAllAsync<IdentityTable>(orderBy: orderBy.AsEnumerable()).ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -627,7 +627,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.QueryAllAsync<WithExtraFieldsIdentityTable>();
+                var result = await connection.QueryAllAsync<WithExtraFieldsIdentityTable>().ConfigureAwait(false);
 
                 // Assert
                 result.AsList().ForEach(item =>
@@ -886,7 +886,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.QueryAllAsync<dynamic>(ClassMappedNameCache.Get<IdentityTable>());
+                var result = await connection.QueryAllAsync<dynamic>(ClassMappedNameCache.Get<IdentityTable>()).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -918,7 +918,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.QueryAllAsync<dynamic>(ClassMappedNameCache.Get<IdentityTable>(),
-                    Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar)));
+                    Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -943,7 +943,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.QueryAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar)));
+                    Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -967,7 +967,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.QueryAllAsync(ClassMappedNameCache.Get<IdentityTable>());
+                var result = await connection.QueryAllAsync(ClassMappedNameCache.Get<IdentityTable>()).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -1000,7 +1000,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.QueryAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    orderBy: orderBy);
+                    orderBy: orderBy).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -1032,7 +1032,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.QueryAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    hints: SqlServerTableHints.NoLock);
+                    hints: SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -1066,7 +1066,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.QueryAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     orderBy: orderBy,
-                    hints: SqlServerTableHints.NoLock);
+                    hints: SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -1096,7 +1096,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 await Assert.ThrowsAsync<MissingFieldsException>(async () =>
                     await connection.QueryAllAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
-                        orderBy: orderBy.AsEnumerable()));
+                        orderBy: orderBy.AsEnumerable()).ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

@@ -99,7 +99,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
             {
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
-                    await connection.QueryAllAsync<CompleteTable>(hints: "WhatEver").ConfigureAwait(false));
+                    await connection.QueryAllAsync<CompleteTable>(hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -157,7 +157,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
             using (var connection = new HanaConnection(Database.ConnectionString))
             {
                 // Act
-                var queryResult = await connection.QueryAllAsync(ClassMappedNameCache.Get<CompleteTable>());
+                var queryResult = await connection.QueryAllAsync(ClassMappedNameCache.Get<CompleteTable>()).ConfigureAwait(false);
 
                 // Assert
                 tables.AsList().ForEach(table =>
@@ -177,7 +177,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
                         (object)null,
-                        hints: "WhatEver").ConfigureAwait(false));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

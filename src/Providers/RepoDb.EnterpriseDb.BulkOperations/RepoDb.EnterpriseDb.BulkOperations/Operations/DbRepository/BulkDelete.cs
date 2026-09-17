@@ -124,7 +124,7 @@ namespace RepoDb
             EDBTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            await repository.BulkDeleteAsync(ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+            await repository.BulkDeleteAsync(ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
 
         /// <summary>
         /// Deletes existing rows from the database in bulk in an asynchronous way, matched by the defined
@@ -160,7 +160,7 @@ namespace RepoDb
 
             try
             {
-                return await connection.BulkDeleteAsync(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, qualifiers != null ? Field.Parse(qualifiers) : null, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+                return await connection.BulkDeleteAsync(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, qualifiers != null ? Field.Parse(qualifiers) : null, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
             }
             finally
             {

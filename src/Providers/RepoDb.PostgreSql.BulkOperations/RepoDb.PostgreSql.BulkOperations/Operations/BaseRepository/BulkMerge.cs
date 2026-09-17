@@ -175,7 +175,7 @@ namespace RepoDb
                     trace: trace,
                     traceKey: traceKey,
                     transaction: transaction,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
 
         /// <summary>
         /// Merges a list of entities into the target table by bulk in an asynchronous way. This operation is inserting a row (if not present), and updating an existing 
@@ -226,7 +226,7 @@ namespace RepoDb
                     trace: trace,
                     traceKey: traceKey,
                     transaction: transaction,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
 
         #endregion
 

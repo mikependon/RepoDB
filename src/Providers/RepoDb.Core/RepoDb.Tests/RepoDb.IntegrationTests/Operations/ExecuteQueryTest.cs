@@ -336,7 +336,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.ExecuteQueryAsync("SELECT * FROM [sc].[IdentityTable];");
+                var result = await connection.ExecuteQueryAsync("SELECT * FROM [sc].[IdentityTable];").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -370,7 +370,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.ExecuteQueryAsync("SELECT * FROM [sc].[IdentityTable] WHERE ColumnInt BETWEEN @From AND @To;",
-                    new { From = 3, To = 4 });
+                    new { From = 3, To = 4 }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -404,7 +404,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.ExecuteQueryAsync("SELECT * FROM [sc].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
-                    new { ColumnInt = new[] { 5, 6, 7 } });
+                    new { ColumnInt = new[] { 5, 6, 7 } }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
@@ -438,7 +438,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.ExecuteQueryAsync("SELECT TOP (@Top) * FROM [sc].[IdentityTable];",
-                    new { Top = 2 });
+                    new { Top = 2 }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -472,7 +472,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.ExecuteQueryAsync("[dbo].[sp_get_identity_tables]",
-                    commandType: CommandType.StoredProcedure);
+                    commandType: CommandType.StoredProcedure).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -507,7 +507,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.ExecuteQueryAsync("[dbo].[sp_get_identity_table_by_id]",
                     param: new { tables.Last().Id },
-                    commandType: CommandType.StoredProcedure);
+                    commandType: CommandType.StoredProcedure).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -542,7 +542,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = (await connection.ExecuteQueryAsync("[dbo].[sp_multiply]",
                     param: new { Value1 = 100, Value2 = 200 },
-                    commandType: CommandType.StoredProcedure)).FirstOrDefault();
+                    commandType: CommandType.StoredProcedure).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 var kvp = result as IDictionary<string, object>;
@@ -572,7 +572,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = (await connection.ExecuteQueryAsync("[dbo].[sp_multiply_with_output]",
                     param: param,
-                    commandType: CommandType.StoredProcedure)).FirstOrDefault();
+                    commandType: CommandType.StoredProcedure).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 var kvp = result as IDictionary<string, object>;
@@ -590,7 +590,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await Assert.ThrowsAsync<SqlException>(async () => await connection.ExecuteQueryAsync("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
+                await Assert.ThrowsAsync<SqlException>(async () => await connection.ExecuteQueryAsync("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -600,7 +600,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await Assert.ThrowsAsync<SqlException>(async () => await connection.ExecuteQueryAsync("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
+                await Assert.ThrowsAsync<SqlException>(async () => await connection.ExecuteQueryAsync("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -795,10 +795,10 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync(tables);
+                await connection.InsertAllAsync(tables).ConfigureAwait(false);
 
                 // Act
-                var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT Id, ColumnBit, ColumnDateTime, ColumnInt FROM [sc].[IdentityTable];");
+                var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT Id, ColumnBit, ColumnDateTime, ColumnInt FROM [sc].[IdentityTable];").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(10, result.Count());
@@ -1026,7 +1026,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable];");
+                var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable];").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -1047,7 +1047,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE ColumnInt BETWEEN @From AND @To;",
-                    new { From = 3, To = 4 });
+                    new { From = 3, To = 4 }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -1068,7 +1068,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
-                    new { ColumnInt = new[] { 5, 6, 7 } });
+                    new { ColumnInt = new[] { 5, 6, 7 } }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
@@ -1089,7 +1089,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT TOP (@Top) * FROM [sc].[IdentityTable];",
-                    new { Top = 2 });
+                    new { Top = 2 }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -1110,7 +1110,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("[dbo].[sp_get_identity_tables]",
-                    commandType: CommandType.StoredProcedure);
+                    commandType: CommandType.StoredProcedure).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -1132,7 +1132,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("[dbo].[sp_get_identity_table_by_id]",
                     param: new { tables.Last().Id },
-                    commandType: CommandType.StoredProcedure);
+                    commandType: CommandType.StoredProcedure).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -1152,7 +1152,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.ExecuteQueryAsync<LiteIdentityTable>("SELECT * FROM [sc].[IdentityTable];");
+                var result = await connection.ExecuteQueryAsync<LiteIdentityTable>("SELECT * FROM [sc].[IdentityTable];").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(10, result.Count());
@@ -1184,7 +1184,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param);
+                var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -1210,7 +1210,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param);
+                var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -1236,7 +1236,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", (object)param);
+                var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", (object)param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -1262,7 +1262,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param);
+                var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -1288,7 +1288,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param);
+                var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -1310,7 +1310,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE ColumnFloat = @ColumnFloat;", param);
+                var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE ColumnFloat = @ColumnFloat;", param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -1327,7 +1327,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var param = new Dictionary<string, int>();
 
                 // Act
-                await Assert.ThrowsAsync<InvalidParameterException>(async () => await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param));
+                await Assert.ThrowsAsync<InvalidParameterException>(async () => await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param).ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -1337,7 +1337,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await Assert.ThrowsAsync<SqlException>(async () => await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
+                await Assert.ThrowsAsync<SqlException>(async () => await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -1360,7 +1360,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await Assert.ThrowsAsync<SqlException>(async () => await connection.ExecuteQueryAsync<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
+                await Assert.ThrowsAsync<SqlException>(async () => await connection.ExecuteQueryAsync<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

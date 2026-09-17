@@ -301,10 +301,10 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 await connection.InsertAllAsync<WithExtraFieldsIdentityTable>(tables,
-                    1);
+                    1).ConfigureAwait(false);
 
                 // Act
-                var result = (await connection.QueryAllAsync<IdentityTable>()).AsList();
+                var result = (await connection.QueryAllAsync<IdentityTable>().ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -330,7 +330,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 await connection.InsertAllAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -356,7 +356,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 await connection.InsertAllAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
                     tables,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).ConfigureAwait(false);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -381,7 +381,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(tables);
+                await connection.InsertAllAsync<IdentityTable>(tables).ConfigureAwait(false);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -406,7 +406,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 await connection.InsertAllAsync<IdentityTable>(tables,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).ConfigureAwait(false);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -432,7 +432,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 await connection.InsertAllAsync<IdentityTable>(tables,
-                    1);
+                    1).ConfigureAwait(false);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -456,7 +456,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<NonIdentityTable>(tables);
+                await connection.InsertAllAsync<NonIdentityTable>(tables).ConfigureAwait(false);
 
                 // Act
                 var result = connection.QueryAll<NonIdentityTable>().AsList();
@@ -481,7 +481,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 await connection.InsertAllAsync<NonIdentityTable>(tables,
-                    1);
+                    1).ConfigureAwait(false);
 
                 // Act
                 var result = connection.QueryAll<NonIdentityTable>().AsList();
@@ -506,7 +506,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 await connection.InsertAllAsync<IdentityTable>(tables,
-                    hints: SqlServerTableHints.TabLock);
+                    hints: SqlServerTableHints.TabLock).ConfigureAwait(false);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -534,7 +534,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<WithExtraFieldsIdentityTable>(tables);
+                await connection.InsertAllAsync<WithExtraFieldsIdentityTable>(tables).ConfigureAwait(false);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -559,7 +559,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 await connection.InsertAllAsync<WithExtraFieldsIdentityTable>(tables,
-                    1);
+                    1).ConfigureAwait(false);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -1020,7 +1020,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 await connection.InsertAllAsync<object>(ClassMappedNameCache.Get<IdentityTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -1046,7 +1046,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 await connection.InsertAllAsync<object>(ClassMappedNameCache.Get<IdentityTable>(),
                     tables,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).ConfigureAwait(false);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -1072,7 +1072,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 await connection.InsertAllAsync<object>(ClassMappedNameCache.Get<IdentityTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 tables.ForEach(table => Assert.IsTrue(((dynamic)table).Id > 0));
@@ -1102,7 +1102,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 await connection.InsertAllAsync<object>(ClassMappedNameCache.Get<IdentityTable>(),
                     tables,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).ConfigureAwait(false);
 
                 // Assert
                 tables.ForEach(table => Assert.IsTrue(((dynamic)table).Id > 0));
@@ -1132,7 +1132,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 await connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -1158,7 +1158,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 await connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     tables,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).ConfigureAwait(false);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -1185,7 +1185,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 await connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     tables,
-                    1);
+                    1).ConfigureAwait(false);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -1211,7 +1211,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 await connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     tables.Item1,
-                    fields: tables.Item2);
+                    fields: tables.Item2).ConfigureAwait(false);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -1238,7 +1238,7 @@ namespace RepoDb.IntegrationTests.Operations
                 await connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     tables.Item1,
                     1,
-                    fields: tables.Item2);
+                    fields: tables.Item2).ConfigureAwait(false);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -1263,7 +1263,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 await connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Act
                 var result = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>()).AsList();
@@ -1289,7 +1289,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 await connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
                     tables,
-                    1);
+                    1).ConfigureAwait(false);
 
                 // Act
                 var result = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>()).AsList();
@@ -1315,7 +1315,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 await connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
                     tables.Item1,
-                    fields: tables.Item2);
+                    fields: tables.Item2).ConfigureAwait(false);
 
                 // Act
                 var result = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>()).AsList();
@@ -1342,7 +1342,7 @@ namespace RepoDb.IntegrationTests.Operations
                 await connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
                     tables.Item1,
                     1,
-                    fields: tables.Item2);
+                    fields: tables.Item2).ConfigureAwait(false);
 
                 // Act
                 var result = connection.QueryAll<NonIdentityTable>().AsList();
@@ -1372,7 +1372,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var insertAllResult = await connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Act
                 var result = connection.QueryAll(ClassMappedNameCache.Get<IdentityTable>()).AsList();
@@ -1398,7 +1398,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 await connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     tables,
-                    hints: SqlServerTableHints.TabLock);
+                    hints: SqlServerTableHints.TabLock).ConfigureAwait(false);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();

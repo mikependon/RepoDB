@@ -123,7 +123,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var fields = await helper.GetFieldsAsync(connection, "SdsCompleteTable", null);
+                var fields = await helper.GetFieldsAsync(connection, "SdsCompleteTable", null).ConfigureAwait(false);
 
                 // Assert
                 using (var reader = connection.ExecuteReader("pragma table_info([SdsCompleteTable]);"))
@@ -157,7 +157,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var fields = await helper.GetFieldsAsync(connection, "SdsCompleteTable", null);
+                var fields = await helper.GetFieldsAsync(connection, "SdsCompleteTable", null).ConfigureAwait(false);
                 var primary = fields.FirstOrDefault(f => f.IsPrimary == true);
 
                 // Assert
@@ -176,7 +176,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var fields = await helper.GetFieldsAsync(connection, "SdsCompleteTable", null);
+                var fields = await helper.GetFieldsAsync(connection, "SdsCompleteTable", null).ConfigureAwait(false);
                 var primary = fields.FirstOrDefault(f => f.IsIdentity == true);
 
                 // Assert
@@ -244,7 +244,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 Assert.IsTrue(table.Id > 0);
 
                 // Act
-                var result = await helper.GetScopeIdentityAsync<long>(connection, null);
+                var result = await helper.GetScopeIdentityAsync<long>(connection, null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(insertResult, result);

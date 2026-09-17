@@ -95,7 +95,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var result = await connection.ExecuteNonQueryAsync("DELETE FROM [SdsCompleteTable];");
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM [SdsCompleteTable];").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -112,7 +112,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
 
                 // Act
                 var result = await connection.ExecuteNonQueryAsync("DELETE FROM [SdsCompleteTable] WHERE Id = @Id;",
-                    new { tables.Last().Id });
+                    new { tables.Last().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -128,7 +128,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var result = await connection.ExecuteNonQueryAsync("DELETE FROM [SdsCompleteTable]; VACUUM;");
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM [SdsCompleteTable]; VACUUM;").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual((tables.Count() * 2), result);

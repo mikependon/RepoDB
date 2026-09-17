@@ -161,13 +161,13 @@ namespace RepoDb.IntegrationTests.Operations
                 var item = Helper.CreateIdentityTable();
 
                 // Act
-                var id = await connection.InsertAsync<IdentityTable, long>(item);
+                var id = await connection.InsertAsync<IdentityTable, long>(item).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(item.Id > 0);
 
                 // Act
-                var result = (await connection.QueryAsync<IdentityTable>(id))?.FirstOrDefault();
+                var result = (await connection.QueryAsync<IdentityTable>(id).ConfigureAwait(false))?.FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(item, result);
@@ -260,7 +260,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var id = await connection.InsertAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
-                    table);
+                    table).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(table.Id > 0);
@@ -284,7 +284,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var id = await connection.InsertAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
                     table,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(table.Id > 0);
@@ -307,7 +307,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<IdentityTable, long>(table);
+                var id = await connection.InsertAsync<IdentityTable, long>(table).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(table.Id > 0);
@@ -330,7 +330,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var id = await connection.InsertAsync<IdentityTable>(table,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(table.Id > 0);
@@ -375,13 +375,13 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<IdentityTable, long>(table);
+                var id = await connection.InsertAsync<IdentityTable, long>(table).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(table.Id > 0);
 
                 // Act
-                var result = (await connection.QueryAsync<IdentityTable>(id))?.FirstOrDefault();
+                var result = (await connection.QueryAsync<IdentityTable>(id).ConfigureAwait(false))?.FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, result);
@@ -397,7 +397,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<NonIdentityTable, Guid>(table);
+                var id = await connection.InsertAsync<NonIdentityTable, Guid>(table).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreNotEqual(Guid.Empty, table.Id);
@@ -421,7 +421,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var id = await connection.InsertAsync<IdentityTable, long>(table,
-                    hints: SqlServerTableHints.TabLock);
+                    hints: SqlServerTableHints.TabLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(table.Id > 0);
@@ -447,7 +447,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<WithExtraFieldsIdentityTable, long>(table);
+                var id = await connection.InsertAsync<WithExtraFieldsIdentityTable, long>(table).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(table.Id > 0);
@@ -817,7 +817,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var id = await connection.InsertAsync<dynamic, long>(ClassMappedNameCache.Get<IdentityTable>(),
-                    (object)table);
+                    (object)table).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(id > 0);
@@ -841,7 +841,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var id = await connection.InsertAsync<dynamic, long>(ClassMappedNameCache.Get<IdentityTable>(),
                     (object)table,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(id > 0);
@@ -865,7 +865,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var id = await connection.InsertAsync<ExpandoObject, long>(ClassMappedNameCache.Get<IdentityTable>(),
-                    table);
+                    table).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(id > 0);
@@ -890,7 +890,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var id = await connection.InsertAsync<ExpandoObject, long>(ClassMappedNameCache.Get<IdentityTable>(),
                     table,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(id > 0);
@@ -916,7 +916,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var id = await connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
-                    (object)table);
+                    (object)table).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(id > 0);
@@ -940,7 +940,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var id = await connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
                     (object)table,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(id > 0);
@@ -964,7 +964,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var id = await connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
-                    table);
+                    table).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(id > 0);
@@ -989,7 +989,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var id = await connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
                     table,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(id > 0);
@@ -1015,7 +1015,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var id = await connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
-                    table);
+                    table).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(id > 0);
@@ -1039,7 +1039,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var id = await connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
                     table,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(id > 0);
@@ -1063,7 +1063,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var id = await connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
-                    table);
+                    table).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(id > 0);
@@ -1086,7 +1086,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var id = await connection.InsertAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    table);
+                    table).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreNotEqual(Guid.Empty, table.Id);
@@ -1109,7 +1109,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var id = await connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
-                    table);
+                    table).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(id > 0);
@@ -1133,7 +1133,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var id = await connection.InsertAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     table,
-                    hints: SqlServerTableHints.TabLock);
+                    hints: SqlServerTableHints.TabLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(table.Id > 0);

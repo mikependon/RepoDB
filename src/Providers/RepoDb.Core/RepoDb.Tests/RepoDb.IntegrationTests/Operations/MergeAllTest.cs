@@ -626,7 +626,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeAllResult = await connection.MergeAllAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -655,7 +655,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeAllResult = await connection.MergeAllAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
                     tables,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -682,7 +682,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeAllResult = await connection.MergeAllAsync<IdentityTable>(tables);
+                var mergeAllResult = await connection.MergeAllAsync<IdentityTable>(tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -710,7 +710,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeAllResult = await connection.MergeAllAsync<IdentityTable>(tables,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -738,7 +738,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeAllResult = await connection.MergeAllAsync<IdentityTable>(tables,
-                    Field.From(nameof(IdentityTable.ColumnInt)));
+                    Field.From(nameof(IdentityTable.ColumnInt))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -766,7 +766,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeAllResult = await connection.MergeAllAsync<IdentityTable>(tables,
-                    Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) }));
+                    Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) })).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -796,7 +796,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll<IdentityTable>(tables);
 
                 // Act
-                var mergeAllResult = await connection.MergeAllAsync<IdentityTable>(tables);
+                var mergeAllResult = await connection.MergeAllAsync<IdentityTable>(tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -827,7 +827,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeAllResult = await connection.MergeAllAsync<IdentityTable>(tables,
-                    Field.From(nameof(IdentityTable.ColumnInt)));
+                    Field.From(nameof(IdentityTable.ColumnInt))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -858,7 +858,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeAllResult = await connection.MergeAllAsync<IdentityTable>(tables,
-                    Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) }));
+                    Field.From(new[] { nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal) })).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -885,7 +885,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeAllResult = await connection.MergeAllAsync<NonIdentityTable>(tables);
+                var mergeAllResult = await connection.MergeAllAsync<NonIdentityTable>(tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -913,7 +913,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeAllResult = await connection.MergeAllAsync<NonIdentityTable>(tables,
-                    Field.From(nameof(NonIdentityTable.Id)));
+                    Field.From(nameof(NonIdentityTable.Id))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -941,7 +941,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeAllResult = await connection.MergeAllAsync<NonIdentityTable>(tables,
-                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }));
+                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) })).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -971,7 +971,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll<NonIdentityTable>(tables);
 
                 // Act
-                var mergeAllResult = await connection.MergeAllAsync<NonIdentityTable>(tables);
+                var mergeAllResult = await connection.MergeAllAsync<NonIdentityTable>(tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -1002,7 +1002,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeAllResult = await connection.MergeAllAsync<NonIdentityTable>(tables,
-                    Field.From(nameof(NonIdentityTable.Id)));
+                    Field.From(nameof(NonIdentityTable.Id))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -1033,7 +1033,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeAllResult = await connection.MergeAllAsync<NonIdentityTable>(tables,
-                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }));
+                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) })).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -1061,7 +1061,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeAllResult = await connection.MergeAllAsync<IdentityTable>(tables,
-                    hints: SqlServerTableHints.TabLock);
+                    hints: SqlServerTableHints.TabLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -1092,7 +1092,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeAllResult = await connection.MergeAllAsync<IdentityTable>(tables, 1);
+                var mergeAllResult = await connection.MergeAllAsync<IdentityTable>(tables, 1).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -1119,7 +1119,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeAllResult = await connection.MergeAllAsync<IdentityTable>(tables);
+                var mergeAllResult = await connection.MergeAllAsync<IdentityTable>(tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -1146,7 +1146,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeAllResult = await connection.MergeAllAsync<NonIdentityTable>(tables, 1);
+                var mergeAllResult = await connection.MergeAllAsync<NonIdentityTable>(tables, 1).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -1173,7 +1173,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeAllResult = await connection.MergeAllAsync<NonIdentityTable>(tables);
+                var mergeAllResult = await connection.MergeAllAsync<NonIdentityTable>(tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -1817,7 +1817,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeAllResult = await connection.MergeAllAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -1846,7 +1846,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeAllResult = await connection.MergeAllAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
                     tables,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -1874,7 +1874,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeAllResult = await connection.MergeAllAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -1905,7 +1905,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeAllResult = await connection.MergeAllAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
                     tables,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -1935,7 +1935,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeAllResult = await connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -1964,7 +1964,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeAllResult = await connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
                     tables,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -1993,7 +1993,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeAllResult = await connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
                     tables,
-                    Field.From(nameof(NonIdentityTable.Id)));
+                    Field.From(nameof(NonIdentityTable.Id))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -2022,7 +2022,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeAllResult = await connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
                     tables,
-                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }));
+                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) })).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -2053,7 +2053,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeAllResult = await connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -2085,7 +2085,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeAllResult = await connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
                     tables,
-                    Field.From(nameof(NonIdentityTable.Id)));
+                    Field.From(nameof(NonIdentityTable.Id))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -2116,7 +2116,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeAllResult = await connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -2150,7 +2150,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeAllResult = await connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
                     tables,
-                    Field.From(nameof(NonIdentityTable.Id)));
+                    Field.From(nameof(NonIdentityTable.Id))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -2184,7 +2184,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeAllResult = await connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
                     tables,
-                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }));
+                    Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) })).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -2217,7 +2217,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeAllResult = await connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -2246,7 +2246,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeAllResult = await connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
                     tables,
-                    hints: SqlServerTableHints.TabLock);
+                    hints: SqlServerTableHints.TabLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -2273,7 +2273,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await Assert.ThrowsAsync<KeyFieldNotFoundException>(async () => await connection.MergeAllAsync(ClassMappedNameCache.Get<NonKeyedTable>(), tables));
+                await Assert.ThrowsAsync<KeyFieldNotFoundException>(async () => await connection.MergeAllAsync(ClassMappedNameCache.Get<NonKeyedTable>(), tables).ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -2286,7 +2286,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await Assert.ThrowsAsync<KeyFieldNotFoundException>(async () => await connection.MergeAllAsync(ClassMappedNameCache.Get<NonKeyedTable>(), tables));
+                await Assert.ThrowsAsync<KeyFieldNotFoundException>(async () => await connection.MergeAllAsync(ClassMappedNameCache.Get<NonKeyedTable>(), tables).ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -2299,7 +2299,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await Assert.ThrowsAsync<KeyFieldNotFoundException>(async () => await connection.MergeAllAsync(ClassMappedNameCache.Get<NonKeyedTable>(), tables));
+                await Assert.ThrowsAsync<KeyFieldNotFoundException>(async () => await connection.MergeAllAsync(ClassMappedNameCache.Get<NonKeyedTable>(), tables).ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -2316,7 +2316,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeAllResult = await connection.MergeAllAsync<IdentityTable>(tables, 1);
+                var mergeAllResult = await connection.MergeAllAsync<IdentityTable>(tables, 1).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -2343,7 +2343,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeAllResult = await connection.MergeAllAsync<IdentityTable>(tables);
+                var mergeAllResult = await connection.MergeAllAsync<IdentityTable>(tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -2370,7 +2370,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeAllResult = await connection.MergeAllAsync<NonIdentityTable>(tables, 1);
+                var mergeAllResult = await connection.MergeAllAsync<NonIdentityTable>(tables, 1).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -2397,7 +2397,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeAllResult = await connection.MergeAllAsync<NonIdentityTable>(tables);
+                var mergeAllResult = await connection.MergeAllAsync<NonIdentityTable>(tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);

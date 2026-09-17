@@ -144,7 +144,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
             {
                 // Act
                 using (var extractor = await connection.ExecuteQueryMultipleAsync(@"SELECT * FROM ""CompleteTable"";
-                    SELECT * FROM ""CompleteTable"";"))
+                    SELECT * FROM ""CompleteTable"";").ConfigureAwait(false))
                 {
                     var list = new List<IEnumerable<CompleteTable>>();
 
@@ -178,7 +178,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                     {
                         Id1 = tables.First().Id,
                         Id2 = tables.Last().Id
-                    }))
+                    }).ConfigureAwait(false))
                 {
                     var list = new List<IEnumerable<CompleteTable>>();
 
@@ -207,7 +207,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                 // Act
                 using (var extractor = await connection.ExecuteQueryMultipleAsync(@"SELECT * FROM ""CompleteTable"" WHERE Id = :Id;
                     SELECT * FROM ""CompleteTable"" WHERE Id = :Id;",
-                    new { Id = tables.Last().Id }))
+                    new { Id = tables.Last().Id }).ConfigureAwait(false))
                 {
                     var list = new List<IEnumerable<CompleteTable>>();
 

@@ -224,7 +224,7 @@ namespace RepoDb
                 transaction,
                 trace,
                 traceKey,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -264,20 +264,20 @@ namespace RepoDb
 
             // Before Execution
             var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
             // Variables
             var dbSetting = connection.GetDbSetting();
             var hasTransaction = transaction != null;
             int result;
 
-            transaction = await CreateOrValidateCurrentTransactionAsync(connection, transaction, cancellationToken);
+            transaction = await CreateOrValidateCurrentTransactionAsync(connection, transaction, cancellationToken).ConfigureAwait(false);
             var tempTableName = CreateBulkDeleteTempTableName(tableName, pseudoTableType == SqlServerBulkImportPseudoTableType.Physical, dbSetting);
 
             try
             {
                 // Get the DB Fields
-                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken);
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken).ConfigureAwait(false);
 
                 // Variables needed
                 var primaryDbField = dbFields?.GetPrimary();
@@ -292,7 +292,7 @@ namespace RepoDb
 
                 // Create the temporary table and its qualifier index (index must exist before the data load)
                 var primaryOrIdentityField = primaryOrIdentityDbField.AsField();
-                await CreateTemporaryTableWithIndexAsync(connection, tableName, tempTableName, primaryOrIdentityField.AsEnumerable(), primaryOrIdentityField.AsEnumerable(), dbSetting, false, transaction, trace, cancellationToken);
+                await CreateTemporaryTableWithIndexAsync(connection, tableName, tempTableName, primaryOrIdentityField.AsEnumerable(), primaryOrIdentityField.AsEnumerable(), dbSetting, false, transaction, trace, cancellationToken).ConfigureAwait(false);
 
                 // Do the bulk insertion first
                 using (var table = CreateDataTableWithSingleColumn(primaryOrIdentityField, primaryKeys))
@@ -312,7 +312,7 @@ namespace RepoDb
                        batchSize,
                        false,
                        transaction,
-                       cancellationToken);
+                       cancellationToken).ConfigureAwait(false);
                 }
 
                 // Delete the actual delete
@@ -321,11 +321,11 @@ namespace RepoDb
                     primaryOrIdentityField.AsEnumerable(),
                     hints,
                     dbSetting);
-                result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkDelete, cancellationToken: cancellationToken);
+                result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkDelete, cancellationToken: cancellationToken).ConfigureAwait(false);
 
                 // Drop the table after used
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken);
+                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false);
 
                 CommitTransaction(transaction, hasTransaction);
             }
@@ -341,7 +341,7 @@ namespace RepoDb
 
             // After Execution
             await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
 
             // Return the result
             return result;

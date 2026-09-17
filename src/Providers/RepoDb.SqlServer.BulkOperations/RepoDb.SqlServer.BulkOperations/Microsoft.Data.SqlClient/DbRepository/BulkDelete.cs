@@ -172,7 +172,7 @@ namespace RepoDb
                 trace: trace,
                 traceKey: traceKey,
                 transaction: transaction,
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -223,7 +223,7 @@ namespace RepoDb
                 trace: trace,
                 traceKey: traceKey,
                 transaction: transaction,
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         #endregion

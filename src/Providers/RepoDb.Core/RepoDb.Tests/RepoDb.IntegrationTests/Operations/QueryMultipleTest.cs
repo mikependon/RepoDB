@@ -430,7 +430,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.QueryMultipleAsync<IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
-                    where2: item => item.ColumnInt == 2);
+                    where2: item => item.ColumnInt == 2).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
@@ -457,7 +457,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = await connection.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
-                    where3: item => item.ColumnInt == 3);
+                    where3: item => item.ColumnInt == 3).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
@@ -486,7 +486,7 @@ namespace RepoDb.IntegrationTests.Operations
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3,
-                    where4: item => item.ColumnInt == 4);
+                    where4: item => item.ColumnInt == 4).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
@@ -517,7 +517,7 @@ namespace RepoDb.IntegrationTests.Operations
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3,
                     where4: item => item.ColumnInt == 4,
-                    where5: item => item.ColumnInt == 5);
+                    where5: item => item.ColumnInt == 5).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
@@ -550,7 +550,7 @@ namespace RepoDb.IntegrationTests.Operations
                     where3: item => item.ColumnInt == 3,
                     where4: item => item.ColumnInt == 4,
                     where5: item => item.ColumnInt == 5,
-                    where6: item => item.ColumnInt == 6);
+                    where6: item => item.ColumnInt == 6).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
@@ -585,7 +585,7 @@ namespace RepoDb.IntegrationTests.Operations
                     where4: item => item.ColumnInt == 4,
                     where5: item => item.ColumnInt == 5,
                     where6: item => item.ColumnInt == 6,
-                    where7: item => item.ColumnInt == 7);
+                    where7: item => item.ColumnInt == 7).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
@@ -620,7 +620,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.QueryMultipleAsync<WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable>(
                     where1: item => item.ColumnInt == 1,
-                    where2: item => item.ColumnInt == 2);
+                    where2: item => item.ColumnInt == 2).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
@@ -647,7 +647,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = await connection.QueryMultipleAsync<WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
-                    where3: item => item.ColumnInt == 3);
+                    where3: item => item.ColumnInt == 3).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
@@ -676,7 +676,7 @@ namespace RepoDb.IntegrationTests.Operations
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3,
-                    where4: item => item.ColumnInt == 4);
+                    where4: item => item.ColumnInt == 4).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
@@ -707,7 +707,7 @@ namespace RepoDb.IntegrationTests.Operations
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3,
                     where4: item => item.ColumnInt == 4,
-                    where5: item => item.ColumnInt == 5);
+                    where5: item => item.ColumnInt == 5).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
@@ -740,7 +740,7 @@ namespace RepoDb.IntegrationTests.Operations
                     where3: item => item.ColumnInt == 3,
                     where4: item => item.ColumnInt == 4,
                     where5: item => item.ColumnInt == 5,
-                    where6: item => item.ColumnInt == 6);
+                    where6: item => item.ColumnInt == 6).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
@@ -775,7 +775,7 @@ namespace RepoDb.IntegrationTests.Operations
                     where4: item => item.ColumnInt == 4,
                     where5: item => item.ColumnInt == 5,
                     where6: item => item.ColumnInt == 6,
-                    where7: item => item.ColumnInt == 7);
+                    where7: item => item.ColumnInt == 7).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());

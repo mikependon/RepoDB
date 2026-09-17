@@ -174,7 +174,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var result = await connection.ExistsAsync<SdsCompleteTable>((object)null);
+                var result = await connection.ExistsAsync<SdsCompleteTable>((object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -191,7 +191,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var ids = new[] { tables.First().Id, tables.Last().Id };
 
                 // Act
-                var result = await connection.ExistsAsync<SdsCompleteTable>(e => ids.Contains(e.Id));
+                var result = await connection.ExistsAsync<SdsCompleteTable>(e => ids.Contains(e.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -207,7 +207,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var result = await connection.ExistsAsync<SdsCompleteTable>(new { tables.First().Id });
+                var result = await connection.ExistsAsync<SdsCompleteTable>(new { tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -223,7 +223,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var result = await connection.ExistsAsync<SdsCompleteTable>(new QueryField("Id", tables.First().Id));
+                var result = await connection.ExistsAsync<SdsCompleteTable>(new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -244,7 +244,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 };
 
                 // Act
-                var result = await connection.ExistsAsync<SdsCompleteTable>(queryFields);
+                var result = await connection.ExistsAsync<SdsCompleteTable>(queryFields).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -266,7 +266,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var queryGroup = new QueryGroup(queryFields);
 
                 // Act
-                var result = await connection.ExistsAsync<SdsCompleteTable>(queryGroup);
+                var result = await connection.ExistsAsync<SdsCompleteTable>(queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -284,7 +284,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.ExistsAsync<SdsCompleteTable>((object)null,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -422,7 +422,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
 
                 // Act
                 var result = await connection.ExistsAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -439,7 +439,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
 
                 // Act
                 var result = await connection.ExistsAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
-                    new { tables.First().Id });
+                    new { tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -456,7 +456,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
 
                 // Act
                 var result = await connection.ExistsAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
-                    new QueryField("Id", tables.First().Id));
+                    new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -478,7 +478,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
 
                 // Act
                 var result = await connection.ExistsAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
-                    queryFields);
+                    queryFields).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -501,7 +501,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
 
                 // Act
                 var result = await connection.ExistsAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
-                    queryGroup);
+                    queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -520,7 +520,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.ExistsAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
                         (object)null,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

@@ -177,23 +177,23 @@ namespace RepoDb.DbHelpers
         private async Task<DbField> ReaderToDbFieldAsync(DbDataReader reader,
             CancellationToken cancellationToken = default)
         {
-            var fieldType = await reader.GetFieldValueAsync<short>(4, cancellationToken);
-            var subType = await reader.IsDBNullAsync(5, cancellationToken) ? (short?)null :
-                await reader.GetFieldValueAsync<short>(5, cancellationToken);
-            var characterSetId = await reader.IsDBNullAsync(6, cancellationToken) ? (short?)null :
-                await reader.GetFieldValueAsync<short>(6, cancellationToken);
+            var fieldType = await reader.GetFieldValueAsync<short>(4, cancellationToken).ConfigureAwait(false);
+            var subType = await reader.IsDBNullAsync(5, cancellationToken).ConfigureAwait(false) ? (short?)null :
+                await reader.GetFieldValueAsync<short>(5, cancellationToken).ConfigureAwait(false);
+            var characterSetId = await reader.IsDBNullAsync(6, cancellationToken).ConfigureAwait(false) ? (short?)null :
+                await reader.GetFieldValueAsync<short>(6, cancellationToken).ConfigureAwait(false);
             var columnType = ResolveColumnTypeName(fieldType, subType, characterSetId);
 
-            return new DbField(await reader.GetFieldValueAsync<string>(0, cancellationToken),
-                await reader.GetFieldValueAsync<bool>(1, cancellationToken),
-                await reader.GetFieldValueAsync<bool>(2, cancellationToken),
-                await reader.GetFieldValueAsync<bool>(3, cancellationToken),
+            return new DbField(await reader.GetFieldValueAsync<string>(0, cancellationToken).ConfigureAwait(false),
+                await reader.GetFieldValueAsync<bool>(1, cancellationToken).ConfigureAwait(false),
+                await reader.GetFieldValueAsync<bool>(2, cancellationToken).ConfigureAwait(false),
+                await reader.GetFieldValueAsync<bool>(3, cancellationToken).ConfigureAwait(false),
                 DbTypeResolver.Resolve(columnType),
-                await reader.IsDBNullAsync(7, cancellationToken) ? (int?)null : await reader.GetFieldValueAsync<int>(7, cancellationToken),
-                await reader.IsDBNullAsync(8, cancellationToken) ? null : byte.Parse((await reader.GetFieldValueAsync<short>(8, cancellationToken)).ToString()),
-                await reader.IsDBNullAsync(9, cancellationToken) ? null : byte.Parse((await reader.GetFieldValueAsync<short>(9, cancellationToken)).ToString()),
+                await reader.IsDBNullAsync(7, cancellationToken).ConfigureAwait(false) ? (int?)null : await reader.GetFieldValueAsync<int>(7, cancellationToken).ConfigureAwait(false),
+                await reader.IsDBNullAsync(8, cancellationToken).ConfigureAwait(false) ? null : byte.Parse((await reader.GetFieldValueAsync<short>(8, cancellationToken).ConfigureAwait(false)).ToString()),
+                await reader.IsDBNullAsync(9, cancellationToken).ConfigureAwait(false) ? null : byte.Parse((await reader.GetFieldValueAsync<short>(9, cancellationToken).ConfigureAwait(false)).ToString()),
                 columnType,
-                await reader.GetFieldValueAsync<bool>(10, cancellationToken),
+                await reader.GetFieldValueAsync<bool>(10, cancellationToken).ConfigureAwait(false),
                 "FIREBIRD");
         }
 
@@ -262,14 +262,14 @@ namespace RepoDb.DbHelpers
 
             // Iterate and extract
             using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, param, transaction: transaction,
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken).ConfigureAwait(false);
 
             var dbFields = new List<DbField>();
 
             // Iterate the list of the fields
-            while (await reader.ReadAsync(cancellationToken))
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
-                dbFields.Add(await ReaderToDbFieldAsync(reader, cancellationToken));
+                dbFields.Add(await ReaderToDbFieldAsync(reader, cancellationToken).ConfigureAwait(false));
             }
 
             // Return the list of fields

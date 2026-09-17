@@ -1287,16 +1287,16 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
             // Act
             await connection.BulkInsertAsync(tableName,
                 entities: entities,
-                identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
+                identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity).ConfigureAwait(false);
 
             // Act
-            var result = await connection.BulkDeleteAsync(tableName, entities);
+            var result = await connection.BulkDeleteAsync(tableName, entities).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(entities.Count, result);
 
             // Assert
-            var countResult = await connection.CountAllAsync(tableName);
+            var countResult = await connection.CountAllAsync(tableName).ConfigureAwait(false);
             Assert.AreEqual(0, countResult);
         }
 

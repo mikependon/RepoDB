@@ -64,14 +64,14 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAsync<Entity<InheritedIdentityTable>>(entity);
+                await connection.InsertAsync<Entity<InheritedIdentityTable>>(entity).ConfigureAwait(false);
 
                 // Act
-                var deleteResult = await connection.DeleteAsync<InheritedIdentityTable>(entity);
+                var deleteResult = await connection.DeleteAsync<InheritedIdentityTable>(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(deleteResult > 0);
-                Assert.AreEqual(0, await connection.CountAllAsync<InheritedIdentityTable>());
+                Assert.AreEqual(0, await connection.CountAllAsync<InheritedIdentityTable>().ConfigureAwait(false));
             }
         }
 
@@ -104,14 +104,14 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAsync(entity);
+                await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act
-                var deleteResult = await connection.DeleteAsync<InheritedIdentityTable>(entity.Id);
+                var deleteResult = await connection.DeleteAsync<InheritedIdentityTable>(entity.Id).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(deleteResult > 0);
-                Assert.AreEqual(0, await connection.CountAllAsync<InheritedIdentityTable>());
+                Assert.AreEqual(0, await connection.CountAllAsync<InheritedIdentityTable>().ConfigureAwait(false));
             }
         }
 
@@ -151,14 +151,14 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertResult = await connection.InsertAsync<Entity<InheritedIdentityTable>, long>(entity);
+                var insertResult = await connection.InsertAsync<Entity<InheritedIdentityTable>, long>(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(insertResult > 0);
                 Assert.AreEqual(entity.Id, insertResult);
 
                 // Act
-                var queryResult = (await connection.QueryAsync<InheritedIdentityTable>(entity.Id)).FirstOrDefault();
+                var queryResult = (await connection.QueryAsync<InheritedIdentityTable>(entity.Id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -207,14 +207,14 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync<Entity<InheritedIdentityTable>>(entities);
+                var insertAllResult = await connection.InsertAllAsync<Entity<InheritedIdentityTable>>(entities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, insertAllResult);
-                Assert.AreEqual(entities.Count, await connection.CountAllAsync<InheritedIdentityTable>());
+                Assert.AreEqual(entities.Count, await connection.CountAllAsync<InheritedIdentityTable>().ConfigureAwait(false));
 
                 // Act
-                var queryResult = await connection.QueryAllAsync<InheritedIdentityTable>();
+                var queryResult = await connection.QueryAllAsync<InheritedIdentityTable>().ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -259,14 +259,14 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeResult = await connection.MergeAsync<Entity<InheritedIdentityTable>, long>(entity);
+                var mergeResult = await connection.MergeAsync<Entity<InheritedIdentityTable>, long>(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(mergeResult > 0);
                 Assert.AreEqual(entity.Id, mergeResult);
 
                 // Act
-                var queryResult = (await connection.QueryAsync<InheritedIdentityTable>(entity.Id)).FirstOrDefault();
+                var queryResult = (await connection.QueryAsync<InheritedIdentityTable>(entity.Id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -317,26 +317,26 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertResult = await connection.MergeAsync<Entity<InheritedIdentityTable>, long>(entity);
+                var insertResult = await connection.MergeAsync<Entity<InheritedIdentityTable>, long>(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(insertResult > 0);
                 Assert.AreEqual(entity.Id, insertResult);
-                Assert.AreEqual(1, await connection.CountAllAsync<InheritedIdentityTable>());
+                Assert.AreEqual(1, await connection.CountAllAsync<InheritedIdentityTable>().ConfigureAwait(false));
 
                 // Setup
                 entity.ColumnBit = false;
                 entity.ColumnDateTime2 = DateTime.UtcNow;
 
                 // Act
-                var mergeResult = await connection.MergeAsync<Entity<InheritedIdentityTable>, long>(entity);
+                var mergeResult = await connection.MergeAsync<Entity<InheritedIdentityTable>, long>(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(mergeResult > 0);
                 Assert.AreEqual(entity.Id, mergeResult);
 
                 // Act
-                var queryResult = (await connection.QueryAsync<InheritedIdentityTable>(entity.Id)).FirstOrDefault();
+                var queryResult = (await connection.QueryAsync<InheritedIdentityTable>(entity.Id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -384,13 +384,13 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeAllRequest = await connection.MergeAllAsync<Entity<InheritedIdentityTable>>(entities);
+                var mergeAllRequest = await connection.MergeAllAsync<Entity<InheritedIdentityTable>>(entities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, mergeAllRequest);
 
                 // Act
-                var queryResult = await connection.QueryAllAsync<InheritedIdentityTable>();
+                var queryResult = await connection.QueryAllAsync<InheritedIdentityTable>().ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -446,7 +446,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync<Entity<InheritedIdentityTable>>(entities);
+                var insertAllResult = await connection.InsertAllAsync<Entity<InheritedIdentityTable>>(entities).ConfigureAwait(false);
 
                 // Setup
                 entities.ForEach(entity =>
@@ -456,13 +456,13 @@ namespace RepoDb.IntegrationTests
                 });
 
                 // Act
-                var mergeAllResult = await connection.MergeAllAsync<Entity<InheritedIdentityTable>>(entities);
+                var mergeAllResult = await connection.MergeAllAsync<Entity<InheritedIdentityTable>>(entities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, mergeAllResult);
 
                 // Act
-                var queryResult = await connection.QueryAllAsync<InheritedIdentityTable>();
+                var queryResult = await connection.QueryAllAsync<InheritedIdentityTable>().ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -504,10 +504,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAsync<Entity<InheritedIdentityTable>, long>(entity);
+                await connection.InsertAsync<Entity<InheritedIdentityTable>, long>(entity).ConfigureAwait(false);
 
                 // Act
-                var queryResult = (await connection.QueryAsync<InheritedIdentityTable>(entity.Id)).FirstOrDefault();
+                var queryResult = (await connection.QueryAsync<InheritedIdentityTable>(entity.Id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(queryResult);
@@ -558,20 +558,20 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAsync<Entity<InheritedIdentityTable>, long>(entity);
+                await connection.InsertAsync<Entity<InheritedIdentityTable>, long>(entity).ConfigureAwait(false);
 
                 // Setup
                 entity.ColumnBit = false;
                 entity.ColumnDateTime2 = DateTime.UtcNow;
 
                 // Act
-                var updateResult = await connection.UpdateAsync<Entity<InheritedIdentityTable>>(entity);
+                var updateResult = await connection.UpdateAsync<Entity<InheritedIdentityTable>>(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(updateResult > 0);
 
                 // Act
-                var queryResult = (await connection.QueryAsync<InheritedIdentityTable>(entity.Id)).FirstOrDefault();
+                var queryResult = (await connection.QueryAsync<InheritedIdentityTable>(entity.Id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(queryResult);
@@ -618,20 +618,20 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAsync<Entity<InheritedIdentityTable>, long>(entity);
+                await connection.InsertAsync<Entity<InheritedIdentityTable>, long>(entity).ConfigureAwait(false);
 
                 // Setup
                 entity.ColumnBit = false;
                 entity.ColumnDateTime2 = DateTime.UtcNow;
 
                 // Act
-                var updateResult = await connection.UpdateAsync<Entity<InheritedIdentityTable>>(entity, entity.Id);
+                var updateResult = await connection.UpdateAsync<Entity<InheritedIdentityTable>>(entity, entity.Id).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(updateResult > 0);
 
                 // Act
-                var queryResult = (await connection.QueryAsync<InheritedIdentityTable>(entity.Id)).FirstOrDefault();
+                var queryResult = (await connection.QueryAsync<InheritedIdentityTable>(entity.Id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(queryResult);
@@ -690,7 +690,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<Entity<InheritedIdentityTable>>(entities);
+                await connection.InsertAllAsync<Entity<InheritedIdentityTable>>(entities).ConfigureAwait(false);
 
                 // Setup
                 entities.ForEach(entity =>
@@ -700,13 +700,13 @@ namespace RepoDb.IntegrationTests
                 });
 
                 // Act
-                var updateAllResult = await connection.UpdateAllAsync<Entity<InheritedIdentityTable>>(entities);
+                var updateAllResult = await connection.UpdateAllAsync<Entity<InheritedIdentityTable>>(entities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, updateAllResult);
 
                 // Act
-                var queryResult = await connection.QueryAllAsync<InheritedIdentityTable>();
+                var queryResult = await connection.QueryAllAsync<InheritedIdentityTable>().ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());

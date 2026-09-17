@@ -269,7 +269,7 @@ namespace RepoDb.Firebird.BulkOperations
 
             try
             {
-                while (dbReader != null ? await dbReader.ReadAsync(cancellationToken) : reader.Read())
+                while (dbReader != null ? await dbReader.ReadAsync(cancellationToken).ConfigureAwait(false) : reader.Read())
                 {
                     var values = new object[sourceOrdinals.Length];
                     for (var i = 0; i < sourceOrdinals.Length; i++)
@@ -281,8 +281,8 @@ namespace RepoDb.Firebird.BulkOperations
 
                     if (pendingRows >= effectiveBatchSize)
                     {
-                        affectedRows += EnsureSuccessAndCount(await batch.ExecuteNonQueryAsync(cancellationToken));
-                        await batch.DisposeAsync();
+                        affectedRows += EnsureSuccessAndCount(await batch.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false));
+                        await batch.DisposeAsync().ConfigureAwait(false);
                         batch = CreateBatch(commandText);
                         pendingRows = 0;
                     }
@@ -290,12 +290,12 @@ namespace RepoDb.Firebird.BulkOperations
 
                 if (pendingRows > 0)
                 {
-                    affectedRows += EnsureSuccessAndCount(await batch.ExecuteNonQueryAsync(cancellationToken));
+                    affectedRows += EnsureSuccessAndCount(await batch.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false));
                 }
             }
             finally
             {
-                await batch.DisposeAsync();
+                await batch.DisposeAsync().ConfigureAwait(false);
             }
 
             return affectedRows;
@@ -338,7 +338,7 @@ namespace RepoDb.Firebird.BulkOperations
                     AddRow(batch, mappings.Select(m => row[m.SourceColumn]).ToArray());
                 }
 
-                affectedRows += EnsureSuccessAndCount(await batch.ExecuteNonQueryAsync(cancellationToken));
+                affectedRows += EnsureSuccessAndCount(await batch.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false));
             }
 
             return affectedRows;

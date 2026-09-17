@@ -170,7 +170,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             using var connection = new OracleConnection(Database.ConnectionString);
 
             // Act
-            var result = await connection.MergeAsync<CompleteTable>(table);
+            var result = await connection.MergeAsync<CompleteTable>(table).ConfigureAwait(false);
 
             // Assert
             Assert.IsTrue(Convert.ToInt64(result) > 0);
@@ -195,7 +195,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             try
             {
                 // Act
-                var result = await connection.MergeAsync<CompleteTable>(table);
+                var result = await connection.MergeAsync<CompleteTable>(table).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(Convert.ToInt64(result) > 0);
@@ -224,7 +224,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             UpdateCompleteTableProperties(table);
 
             // Act
-            var result = await connection.MergeAsync<CompleteTable>(table);
+            var result = await connection.MergeAsync<CompleteTable>(table).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -253,7 +253,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
 
             // Act
             var result = await connection.MergeAsync<CompleteTable>(table,
-                qualifiers: qualifiers);
+                qualifiers: qualifiers).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -366,7 +366,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
 
             // Act
             var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                table);
+                table).ConfigureAwait(false);
 
             // Assert
             Assert.IsTrue(Convert.ToInt64(result) > 0);
@@ -391,7 +391,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
 
             // Act
             var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                table);
+                table).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -421,7 +421,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             // Act
             var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
                 table,
-                qualifiers: qualifiers);
+                qualifiers: qualifiers).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -465,7 +465,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             // Act/Assert: AreTableHintsSupported = false for Oracle - BaseStatementBuilder.GuardHints
             // throws for any non-null/non-whitespace hints, regardless of operation.
             await Assert.ThrowsAsync<System.NotSupportedException>(() =>
-                connection.MergeAsync<CompleteTable>(table, hints: "NOLOCK"));
+                connection.MergeAsync<CompleteTable>(table, hints: "NOLOCK")).ConfigureAwait(false);
         }
 
         #endregion

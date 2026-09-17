@@ -152,7 +152,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var result = await connection.BatchQueryAsync<MdsCompleteTable>(0,
                     3,
                     OrderField.Ascending<MdsCompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.ElementAt(0));
@@ -172,7 +172,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var result = await connection.BatchQueryAsync<MdsCompleteTable>(0,
                     3,
                     OrderField.Descending<MdsCompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(9), result.ElementAt(0));
@@ -192,7 +192,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var result = await connection.BatchQueryAsync<MdsCompleteTable>(2,
                     3,
                     OrderField.Ascending<MdsCompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(6), result.ElementAt(0));
@@ -212,7 +212,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var result = await connection.BatchQueryAsync<MdsCompleteTable>(2,
                     3,
                     OrderField.Descending<MdsCompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(0));
@@ -234,7 +234,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                         3,
                         OrderField.Ascending<MdsCompleteTable>(c => c.Id).AsEnumerable(),
                         (object)null,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -366,7 +366,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                     0,
                     3,
                     OrderField.Ascending<MdsCompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertMembersEquality(tables.ElementAt(0), result.ElementAt(0));
@@ -387,7 +387,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                     0,
                     3,
                     OrderField.Descending<MdsCompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertMembersEquality(tables.ElementAt(9), result.ElementAt(0));
@@ -408,7 +408,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                     2,
                     3,
                     OrderField.Ascending<MdsCompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertMembersEquality(tables.ElementAt(6), result.ElementAt(0));
@@ -429,7 +429,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                     2,
                     3,
                     OrderField.Descending<MdsCompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertMembersEquality(tables.ElementAt(3), result.ElementAt(0));
@@ -452,7 +452,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                         3,
                         OrderField.Ascending<MdsCompleteTable>(c => c.Id).AsEnumerable(),
                         (object)null,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

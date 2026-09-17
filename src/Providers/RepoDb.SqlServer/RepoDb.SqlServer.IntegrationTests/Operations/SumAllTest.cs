@@ -83,7 +83,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.SumAllAsync<IdentityCompleteTable>(e => e.ColumnInt);
+                var result = await connection.SumAllAsync<IdentityCompleteTable>(e => e.ColumnInt).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
@@ -100,7 +100,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.SumAllAsync<IdentityCompleteTable>(e => e.ColumnInt,
-                    SqlServerTableHints.NoLock);
+                    SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
@@ -164,7 +164,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.SumAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
-                    Field.Parse<IdentityCompleteTable>(e => e.ColumnInt).First());
+                    Field.Parse<IdentityCompleteTable>(e => e.ColumnInt).First()).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
@@ -182,7 +182,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 // Act
                 var result = await connection.SumAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     Field.Parse<IdentityCompleteTable>(e => e.ColumnInt).First(),
-                    SqlServerTableHints.NoLock);
+                    SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));

@@ -139,7 +139,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
 
                 // Act
                 using (var extractor = await connection.ExecuteQueryMultipleAsync(@"SELECT * FROM [SdsCompleteTable];
-                    SELECT * FROM [SdsCompleteTable];"))
+                    SELECT * FROM [SdsCompleteTable];").ConfigureAwait(false))
                 {
                     var list = new List<IEnumerable<SdsCompleteTable>>();
 
@@ -172,7 +172,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                     {
                         Id1 = tables.First().Id,
                         Id2 = tables.Last().Id
-                    }))
+                    }).ConfigureAwait(false))
                 {
                     var list = new List<IEnumerable<SdsCompleteTable>>();
 
@@ -200,7 +200,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 // Act
                 using (var extractor = await connection.ExecuteQueryMultipleAsync(@"SELECT * FROM [SdsCompleteTable] WHERE Id = @Id;
                     SELECT * FROM [SdsCompleteTable] WHERE Id = @Id;",
-                    new { Id = tables.Last().Id }))
+                    new { Id = tables.Last().Id }).ConfigureAwait(false))
                 {
                     var list = new List<IEnumerable<SdsCompleteTable>>();
 

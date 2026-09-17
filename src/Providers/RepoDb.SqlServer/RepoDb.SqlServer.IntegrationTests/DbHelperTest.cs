@@ -123,7 +123,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = await helper.GetFieldsAsync(connection, "IdentityCompleteTable", transaction: null);
+                var fields = await helper.GetFieldsAsync(connection, "IdentityCompleteTable", transaction: null).ConfigureAwait(false);
 
                 // Assert
                 using (var reader = connection.ExecuteReader(@"SELECT COLUMN_NAME AS ColumnName
@@ -160,7 +160,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = await helper.GetFieldsAsync(connection, "IdentityCompleteTable", transaction: null);
+                var fields = await helper.GetFieldsAsync(connection, "IdentityCompleteTable", transaction: null).ConfigureAwait(false);
                 var primary = fields.FirstOrDefault(f => f.IsPrimary);
 
                 // Assert
@@ -178,7 +178,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = await helper.GetFieldsAsync(connection, "IdentityCompleteTable", transaction: null);
+                var fields = await helper.GetFieldsAsync(connection, "IdentityCompleteTable", transaction: null).ConfigureAwait(false);
                 var primary = fields.FirstOrDefault(f => f.IsIdentity);
 
                 // Assert
@@ -240,7 +240,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                 Assert.IsTrue(table.Id > 0);
 
                 // Act
-                var result = await helper.GetScopeIdentityAsync<long>(connection, transaction: null);
+                var result = await helper.GetScopeIdentityAsync<long>(connection, transaction: null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(insertResult, result);

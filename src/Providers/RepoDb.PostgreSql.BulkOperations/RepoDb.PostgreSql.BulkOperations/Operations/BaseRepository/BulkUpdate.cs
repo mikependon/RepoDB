@@ -151,7 +151,7 @@ namespace RepoDb
                     trace: trace,
                     traceKey: traceKey,
                     transaction: transaction,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
 
         /// <summary>
         /// Update the existing rows via entities by bulk in an asynchronous way. Underneath this operation is a call directly to the existing
@@ -194,7 +194,7 @@ namespace RepoDb
                     trace: trace,
                     traceKey: traceKey,
                     transaction: transaction,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
 
         #endregion
 

@@ -79,7 +79,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
             using (var connection = new HanaConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAllAsync<CompleteTable>();
+                var result = await connection.CountAllAsync<CompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -96,7 +96,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
             {
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
-                    await connection.CountAllAsync<CompleteTable>(hints: "WhatEver").ConfigureAwait(false));
+                    await connection.CountAllAsync<CompleteTable>(hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -152,7 +152,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
             using (var connection = new HanaConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAllAsync(ClassMappedNameCache.Get<CompleteTable>());
+                var result = await connection.CountAllAsync(ClassMappedNameCache.Get<CompleteTable>()).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -170,7 +170,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.CountAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                        hints: "WhatEver").ConfigureAwait(false));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

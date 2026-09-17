@@ -74,7 +74,7 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             CancellationToken cancellationToken = default)
         {
             var commandText = FirebirdText.GetCreatePseudoTableSql(pseudoTableName, fields, dbFields, pseudoTableType, connection.GetDbSetting());
-            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             CancellationToken cancellationToken = default)
         {
             var commandText = FirebirdText.GetCreatePseudoTableIndexSql(pseudoTableName, qualifiers, connection.GetDbSetting());
-            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             CancellationToken cancellationToken = default)
         {
             var commandText = FirebirdText.GetDropPseudoTableSql(pseudoTableName, connection.GetDbSetting());
-            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -247,10 +247,10 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
 
             using var command = CreateReaderCommand(connection, commandText, transaction);
-            using var reader = await command.ExecuteReaderAsync(cancellationToken);
+            using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
             var result = 0;
 
-            while (await reader.ReadAsync(cancellationToken))
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
                 setter?.Invoke(entities[result], Converter.DbNullToNull(reader.GetValue(0)));
                 result++;
@@ -325,10 +325,10 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             var commandText = FirebirdText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, connection.GetDbSetting());
 
             using var command = CreateReaderCommand(connection, commandText, transaction);
-            using var reader = await command.ExecuteReaderAsync(cancellationToken);
+            using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
             var result = 0;
 
-            while (await reader.ReadAsync(cancellationToken))
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
                 rows[result][identityField.Name] = Converter.DbNullToNull(reader.GetValue(0));
                 result++;
@@ -396,9 +396,9 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             CancellationToken cancellationToken = default)
         {
             var commandText = FirebirdText.GetMergeFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, identityField, false, connection.GetDbSetting());
-            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
             var countText = FirebirdText.GetPseudoTableRowCountSql(pseudoTableName, connection.GetDbSetting());
-            return await connection.ExecuteScalarAsync<int>(countText, transaction: transaction, cancellationToken: cancellationToken);
+            return await connection.ExecuteScalarAsync<int>(countText, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -477,10 +477,10 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
 
             using var command = CreateReaderCommand(connection, commandText, transaction);
-            using var reader = await command.ExecuteReaderAsync(cancellationToken);
+            using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
             var result = 0;
 
-            while (await reader.ReadAsync(cancellationToken))
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
                 setter?.Invoke(entities[result], Converter.DbNullToNull(reader.GetValue(0)));
                 result++;
@@ -559,10 +559,10 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             var commandText = FirebirdText.GetMergeFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, identityField, true, connection.GetDbSetting());
 
             using var command = CreateReaderCommand(connection, commandText, transaction);
-            using var reader = await command.ExecuteReaderAsync(cancellationToken);
+            using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
             var result = 0;
 
-            while (await reader.ReadAsync(cancellationToken))
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
                 rows[result][identityField.Name] = Converter.DbNullToNull(reader.GetValue(0));
                 result++;
@@ -624,7 +624,7 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             CancellationToken cancellationToken = default)
         {
             var commandText = FirebirdText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, connection.GetDbSetting());
-            return await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            return await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         #endregion
@@ -676,7 +676,7 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             CancellationToken cancellationToken = default)
         {
             var commandText = FirebirdText.GetDeleteFromPseudoTableSql(tableName, pseudoTableName, qualifiers, connection.GetDbSetting());
-            return await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            return await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         #endregion

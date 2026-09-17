@@ -515,10 +515,10 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 person.ColumnText = null;
 
                 // Act
-                await connection.InsertAsync(person);
+                await connection.InsertAsync(person).ConfigureAwait(false);
 
                 // Query
-                var queryResult = (await connection.QueryAsync<PersonWithText>(person.Id)).First();
+                var queryResult = (await connection.QueryAsync<PersonWithText>(person.Id).ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.IsNull(queryResult.ColumnText);
@@ -534,10 +534,10 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 var person = GetPersonWithText(1).First();
 
                 // Act
-                await connection.InsertAsync(person);
+                await connection.InsertAsync(person).ConfigureAwait(false);
 
                 // Query
-                var queryResult = (await connection.QueryAsync<PersonWithText>(person.Id)).First();
+                var queryResult = (await connection.QueryAsync<PersonWithText>(person.Id).ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual(person.ColumnText, queryResult.ColumnText);
@@ -553,10 +553,10 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 var people = GetPersonWithText(10).AsList();
 
                 // Act
-                await connection.InsertAllAsync(people);
+                await connection.InsertAllAsync(people).ConfigureAwait(false);
 
                 // Query
-                var queryResult = (await connection.QueryAllAsync<PersonWithText>()).AsList();
+                var queryResult = (await connection.QueryAllAsync<PersonWithText>().ConfigureAwait(false)).AsList();
 
                 // Assert
                 people.ForEach(p =>
@@ -577,10 +577,10 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 person.ColumnInteger = null;
 
                 // Act
-                await connection.InsertAsync(person);
+                await connection.InsertAsync(person).ConfigureAwait(false);
 
                 // Query
-                var queryResult = (await connection.QueryAsync<PersonWithInteger>(person.Id)).First();
+                var queryResult = (await connection.QueryAsync<PersonWithInteger>(person.Id).ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.IsNull(queryResult.ColumnInteger);
@@ -596,10 +596,10 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 var person = GetPersonWithInteger(1).First();
 
                 // Act
-                await connection.InsertAsync(person);
+                await connection.InsertAsync(person).ConfigureAwait(false);
 
                 // Query
-                var queryResult = (await connection.QueryAsync<PersonWithInteger>(person.Id)).First();
+                var queryResult = (await connection.QueryAsync<PersonWithInteger>(person.Id).ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual(person.ColumnInteger, queryResult.ColumnInteger);
@@ -615,10 +615,10 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 var people = GetPersonWithInteger(10).AsList();
 
                 // Act
-                await connection.InsertAllAsync(people);
+                await connection.InsertAllAsync(people).ConfigureAwait(false);
 
                 // Query
-                var queryResult = (await connection.QueryAllAsync<PersonWithInteger>()).AsList();
+                var queryResult = (await connection.QueryAllAsync<PersonWithInteger>().ConfigureAwait(false)).AsList();
 
                 // Assert
                 people.ForEach(p =>
@@ -638,10 +638,10 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 var person = GetPersonWithTextAsInteger(1).First();
 
                 // Act
-                await connection.InsertAsync(person);
+                await connection.InsertAsync(person).ConfigureAwait(false);
 
                 // Query
-                var queryResult = (await connection.QueryAsync<PersonWithTextAsInteger>(person.Id)).First();
+                var queryResult = (await connection.QueryAsync<PersonWithTextAsInteger>(person.Id).ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual(person.ColumnText, queryResult.ColumnText);
@@ -657,10 +657,10 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 var people = GetPersonWithTextAsInteger(10).AsList();
 
                 // Act
-                await connection.InsertAllAsync(people);
+                await connection.InsertAllAsync(people).ConfigureAwait(false);
 
                 // Query
-                var queryResult = (await connection.QueryAllAsync<PersonWithTextAsInteger>()).AsList();
+                var queryResult = (await connection.QueryAllAsync<PersonWithTextAsInteger>().ConfigureAwait(false)).AsList();
 
                 // Assert
                 people.ForEach(p =>
@@ -674,17 +674,17 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public async Task TestInsertAndQueryAsyncEnumAsEnum()
         {
-            using (var connection = await _enumDataSource.OpenConnectionAsync())
+            using (var connection = await _enumDataSource.OpenConnectionAsync().ConfigureAwait(false))
             {
                 // Setup
                 var person = GetPersonWithEnum(1).First();
 
                 // Act
-                await connection.InsertAsync(person);
+                await connection.InsertAsync(person).ConfigureAwait(false);
 
                 // Query
-                await connection.ReloadTypesAsync();
-                var queryResult = (await connection.QueryAsync<PersonWithEnum>(person.Id)).First();
+                await connection.ReloadTypesAsync().ConfigureAwait(false);
+                var queryResult = (await connection.QueryAsync<PersonWithEnum>(person.Id).ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual(person.ColumnEnumHand, queryResult.ColumnEnumHand);
@@ -694,17 +694,17 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public async Task TestInsertAndQueryAsyncEnumAsEnumAsBatch()
         {
-            using (var connection = await _enumDataSource.OpenConnectionAsync())
+            using (var connection = await _enumDataSource.OpenConnectionAsync().ConfigureAwait(false))
             {
                 // Setup
                 var people = GetPersonWithEnum(10).AsList();
 
                 // Act
-                await connection.InsertAllAsync(people);
+                await connection.InsertAllAsync(people).ConfigureAwait(false);
 
                 // Query
-                await connection.ReloadTypesAsync();
-                var queryResult = (await connection.QueryAllAsync<PersonWithEnum>()).AsList();
+                await connection.ReloadTypesAsync().ConfigureAwait(false);
+                var queryResult = (await connection.QueryAllAsync<PersonWithEnum>().ConfigureAwait(false)).AsList();
 
                 // Assert
                 people.ForEach(p =>
@@ -718,17 +718,17 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public async Task TestInsertAndQueryAsyncEnumAsEnumViaEnum()
         {
-            using (var connection = await _enumDataSource.OpenConnectionAsync())
+            using (var connection = await _enumDataSource.OpenConnectionAsync().ConfigureAwait(false))
             {
                 // Setup
                 var person = GetPersonWithEnum(1).First();
 
                 // Act
-                await connection.InsertAsync(person);
+                await connection.InsertAsync(person).ConfigureAwait(false);
 
                 // Query
-                await connection.ReloadTypesAsync();
-                var queryResult = (await connection.QueryAsync<PersonWithEnum>(where: p => p.ColumnEnumHand == person.ColumnEnumHand)).First();
+                await connection.ReloadTypesAsync().ConfigureAwait(false);
+                var queryResult = (await connection.QueryAsync<PersonWithEnum>(where: p => p.ColumnEnumHand == person.ColumnEnumHand).ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual(person.ColumnEnumHand, queryResult.ColumnEnumHand);
@@ -738,17 +738,17 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public async Task TestInsertAndQueryAsyncEnumAsEnumViaDynamicEnum()
         {
-            using (var connection = await _enumDataSource.OpenConnectionAsync())
+            using (var connection = await _enumDataSource.OpenConnectionAsync().ConfigureAwait(false))
             {
                 // Setup
                 var person = GetPersonWithEnum(1).First();
 
                 // Act
-                await connection.InsertAsync(person);
+                await connection.InsertAsync(person).ConfigureAwait(false);
 
                 // Query
-                await connection.ReloadTypesAsync();
-                var queryResult = (await connection.QueryAsync<PersonWithEnum>(new { ColumnEnumHand = person.ColumnEnumHand })).First();
+                await connection.ReloadTypesAsync().ConfigureAwait(false);
+                var queryResult = (await connection.QueryAsync<PersonWithEnum>(new { ColumnEnumHand = person.ColumnEnumHand }).ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual(person.ColumnEnumHand, queryResult.ColumnEnumHand);
@@ -758,18 +758,18 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public async Task TestInsertAndQueryAsyncEnumAsNullableEnumAsNull()
         {
-            using (var connection = await _enumDataSource.OpenConnectionAsync())
+            using (var connection = await _enumDataSource.OpenConnectionAsync().ConfigureAwait(false))
             {
                 // Setup
                 var person = GetPersonWithNullableEnum(1).First();
                 person.ColumnEnumHand = null;
 
                 // Act
-                await connection.InsertAsync(person);
+                await connection.InsertAsync(person).ConfigureAwait(false);
 
                 // Query
-                await connection.ReloadTypesAsync();
-                var queryResult = (await connection.QueryAsync<PersonWithNullableEnum>(person.Id)).First();
+                await connection.ReloadTypesAsync().ConfigureAwait(false);
+                var queryResult = (await connection.QueryAsync<PersonWithNullableEnum>(person.Id).ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.IsNull(queryResult.ColumnEnumHand);
@@ -779,17 +779,17 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public async Task TestInsertAndQueryAsyncEnumAsNullableEnum()
         {
-            using (var connection = await _enumDataSource.OpenConnectionAsync())
+            using (var connection = await _enumDataSource.OpenConnectionAsync().ConfigureAwait(false))
             {
                 // Setup
                 var person = GetPersonWithNullableEnum(1).First();
 
                 // Act
-                await connection.InsertAsync(person);
+                await connection.InsertAsync(person).ConfigureAwait(false);
 
                 // Query
-                await connection.ReloadTypesAsync();
-                var queryResult = (await connection.QueryAsync<PersonWithNullableEnum>(person.Id)).First();
+                await connection.ReloadTypesAsync().ConfigureAwait(false);
+                var queryResult = (await connection.QueryAsync<PersonWithNullableEnum>(person.Id).ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual(person.ColumnEnumHand, queryResult.ColumnEnumHand);
@@ -799,17 +799,17 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public async Task TestInsertAndQueryAsyncEnumAsNullableEnumAsBatch()
         {
-            using (var connection = await _enumDataSource.OpenConnectionAsync())
+            using (var connection = await _enumDataSource.OpenConnectionAsync().ConfigureAwait(false))
             {
                 // Setup
                 var people = GetPersonWithNullableEnum(10).AsList();
 
                 // Act
-                await connection.InsertAllAsync(people);
+                await connection.InsertAllAsync(people).ConfigureAwait(false);
 
                 // Query
-                await connection.ReloadTypesAsync();
-                var queryResult = (await connection.QueryAllAsync<PersonWithNullableEnum>()).AsList();
+                await connection.ReloadTypesAsync().ConfigureAwait(false);
+                var queryResult = (await connection.QueryAllAsync<PersonWithNullableEnum>().ConfigureAwait(false)).AsList();
 
                 // Assert
                 people.ForEach(p =>
@@ -823,17 +823,17 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public async Task TestInsertAndQueryAsyncEnumAsNullableEnumByEnum()
         {
-            using (var connection = await _enumDataSource.OpenConnectionAsync())
+            using (var connection = await _enumDataSource.OpenConnectionAsync().ConfigureAwait(false))
             {
                 // Setup
                 var person = GetPersonWithNullableEnum(1).First();
 
                 // Act
-                await connection.InsertAsync(person);
+                await connection.InsertAsync(person).ConfigureAwait(false);
 
                 // Query
-                await connection.ReloadTypesAsync();
-                var queryResult = (await connection.QueryAsync<PersonWithNullableEnum>(where: p => p.ColumnEnumHand == person.ColumnEnumHand)).First();
+                await connection.ReloadTypesAsync().ConfigureAwait(false);
+                var queryResult = (await connection.QueryAsync<PersonWithNullableEnum>(where: p => p.ColumnEnumHand == person.ColumnEnumHand).ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual(person.ColumnEnumHand, queryResult.ColumnEnumHand);

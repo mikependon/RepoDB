@@ -187,7 +187,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
-            using var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\"");
+            using var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\"").ConfigureAwait(false);
             while (reader.Read())
             {
                 // Act
@@ -215,7 +215,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             try
             {
                 // Act
-                using var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\"");
+                using var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\"").ConfigureAwait(false);
                 while (reader.Read())
                 {
                     // Act
@@ -245,7 +245,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
-            using var reader = await connection.ExecuteReaderAsync("SELECT * FROM \"CompleteTable\"");
+            using var reader = await connection.ExecuteReaderAsync("SELECT * FROM \"CompleteTable\"").ConfigureAwait(false);
             var result = DataReader.ToEnumerable<CompleteTable>((DbDataReader)reader).ToList();
 
             // Assert
@@ -262,7 +262,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
-            using var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnVarchar\", \"ColumnInt\" FROM \"CompleteTable\"");
+            using var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnVarchar\", \"ColumnInt\" FROM \"CompleteTable\"").ConfigureAwait(false);
             var result = DataReader.ToEnumerable((DbDataReader)reader).ToList();
 
             // Assert
@@ -287,7 +287,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Act
             using var reader = await connection.ExecuteReaderAsync(
                 "SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\"; " +
-                "SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\"");
+                "SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\"").ConfigureAwait(false);
             do
             {
                 while (reader.Read())

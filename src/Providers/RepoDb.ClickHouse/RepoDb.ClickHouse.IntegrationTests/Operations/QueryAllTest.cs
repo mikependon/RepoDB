@@ -99,7 +99,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             {
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
-                    await connection.QueryAllAsync<CompleteTable>(hints: "WhatEver"));
+                    await connection.QueryAllAsync<CompleteTable>(hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -157,7 +157,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
-                var queryResult = await connection.QueryAllAsync(ClassMappedNameCache.Get<CompleteTable>());
+                var queryResult = await connection.QueryAllAsync(ClassMappedNameCache.Get<CompleteTable>()).ConfigureAwait(false);
 
                 // Assert
                 tables.AsList().ForEach(table =>
@@ -177,7 +177,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
                         (object)null,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

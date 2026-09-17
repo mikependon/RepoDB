@@ -99,10 +99,10 @@ namespace RepoDb.IntegrationTests
             using (var repository = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await repository.InsertAsync(entity);
+                var id = await repository.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await repository.QueryAsync<COMPLETETABLE>(e => e.SESSIONID == (Guid)id)).FirstOrDefault();
+                var data = (await repository.QueryAsync<COMPLETETABLE>(e => e.SESSIONID == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -167,10 +167,10 @@ namespace RepoDb.IntegrationTests
             using (var repository = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await repository.InsertAllAsync(new[] { entity });
+                var id = await repository.InsertAllAsync(new[] { entity }).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await repository.QueryAsync<COMPLETETABLE>(e => e.SESSIONID == entity.SESSIONID)).FirstOrDefault();
+                var data = (await repository.QueryAsync<COMPLETETABLE>(e => e.SESSIONID == entity.SESSIONID).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -258,10 +258,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<MappedTableAndWithImproperCasingForClassAndFieldsClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<MappedTableAndWithImproperCasingForClassAndFieldsClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -326,10 +326,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAllAsync(new[] { entity });
+                var id = await connection.InsertAllAsync(new[] { entity }).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<MappedTableAndWithImproperCasingForClassAndFieldsClass>(e => e.SessionId == entity.SessionId)).FirstOrDefault();
+                var data = (await connection.QueryAsync<MappedTableAndWithImproperCasingForClassAndFieldsClass>(e => e.SessionId == entity.SessionId).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -434,10 +434,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync("COMPLETETABLE", entity);
+                var id = await connection.InsertAsync("COMPLETETABLE", entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync("COMPLETETABLE", new { SessionId = (Guid)id })).FirstOrDefault();
+                var data = (await connection.QueryAsync("COMPLETETABLE", new { SessionId = (Guid)id }).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -461,10 +461,10 @@ namespace RepoDb.IntegrationTests
                 };
 
                 // Act
-                var rows = await connection.UpdateAsync("COMPLETETABLE", entity);
+                var rows = await connection.UpdateAsync("COMPLETETABLE", entity).ConfigureAwait(false);
 
                 // Act Query
-                data = (await connection.QueryAsync("COMPLETETABLE", new { SessionId = (Guid)id })).FirstOrDefault();
+                data = (await connection.QueryAsync("COMPLETETABLE", new { SessionId = (Guid)id }).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -476,10 +476,10 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.COLUMNNVARCHAR, data.ColumnNVarChar);
 
                 // Act Delete
-                rows = await connection.DeleteAsync("COMPLETETABLE", entity.SESSIONID);
+                rows = await connection.DeleteAsync("COMPLETETABLE", entity.SESSIONID).ConfigureAwait(false);
 
                 // Act Query
-                data = (await connection.QueryAsync("COMPLETETABLE", new { SessionId = (Guid)id })).FirstOrDefault();
+                data = (await connection.QueryAsync("COMPLETETABLE", new { SessionId = (Guid)id }).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNull(data);
@@ -580,10 +580,10 @@ namespace RepoDb.IntegrationTests
                 // Act Insert
                 var id = await connection.InsertAllAsync("COMPLETETABLE",
                     new[] { entity },
-                    fields: entity.GetType().GetProperties().AsFields());
+                    fields: entity.GetType().GetProperties().AsFields()).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync("COMPLETETABLE", new { SessionId = entity.SESSIONID })).FirstOrDefault();
+                var data = (await connection.QueryAsync("COMPLETETABLE", new { SessionId = entity.SESSIONID }).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -609,10 +609,10 @@ namespace RepoDb.IntegrationTests
                 // Act
                 var rows = await connection.UpdateAllAsync("COMPLETETABLE",
                     new[] { entity },
-                    fields: entity.GetType().GetProperties().AsFields());
+                    fields: entity.GetType().GetProperties().AsFields()).ConfigureAwait(false);
 
                 // Act Query
-                data = (await connection.QueryAsync("COMPLETETABLE", new { SessionId = entity.SESSIONID })).FirstOrDefault();
+                data = (await connection.QueryAsync("COMPLETETABLE", new { SessionId = entity.SESSIONID }).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -624,10 +624,10 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.COLUMNNVARCHAR, data.ColumnNVarChar);
 
                 // Act Delete
-                rows = await connection.DeleteAsync("COMPLETETABLE", entity.SESSIONID);
+                rows = await connection.DeleteAsync("COMPLETETABLE", entity.SESSIONID).ConfigureAwait(false);
 
                 // Act Query
-                data = (await connection.QueryAsync("COMPLETETABLE", new { SessionId = entity.SESSIONID })).FirstOrDefault();
+                data = (await connection.QueryAsync("COMPLETETABLE", new { SessionId = entity.SESSIONID }).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNull(data);

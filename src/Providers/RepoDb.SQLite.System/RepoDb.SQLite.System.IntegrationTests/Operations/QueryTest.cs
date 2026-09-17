@@ -191,7 +191,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var table = Database.CreateSdsCompleteTables(1, connection).First();
 
                 // Act
-                var result = (await connection.QueryAsync<SdsCompleteTable>(table.Id)).First();
+                var result = (await connection.QueryAsync<SdsCompleteTable>(table.Id).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, result);
@@ -207,7 +207,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var table = Database.CreateSdsCompleteTables(1, connection).First();
 
                 // Act
-                var result = (await connection.QueryAsync<SdsCompleteTable>(e => e.Id == table.Id)).First();
+                var result = (await connection.QueryAsync<SdsCompleteTable>(e => e.Id == table.Id).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, result);
@@ -223,7 +223,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var table = Database.CreateSdsCompleteTables(1, connection).First();
 
                 // Act
-                var result = (await connection.QueryAsync<SdsCompleteTable>(new { table.Id })).First();
+                var result = (await connection.QueryAsync<SdsCompleteTable>(new { table.Id }).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, result);
@@ -239,7 +239,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var table = Database.CreateSdsCompleteTables(1, connection).First();
 
                 // Act
-                var result = (await connection.QueryAsync<SdsCompleteTable>(new QueryField("Id", table.Id))).First();
+                var result = (await connection.QueryAsync<SdsCompleteTable>(new QueryField("Id", table.Id)).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, result);
@@ -260,7 +260,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 };
 
                 // Act
-                var result = (await connection.QueryAsync<SdsCompleteTable>(queryFields)).First();
+                var result = (await connection.QueryAsync<SdsCompleteTable>(queryFields).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, result);
@@ -282,7 +282,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var queryGroup = new QueryGroup(queryFields);
 
                 // Act
-                var result = (await connection.QueryAsync<SdsCompleteTable>(queryGroup)).First();
+                var result = (await connection.QueryAsync<SdsCompleteTable>(queryGroup).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, result);
@@ -299,7 +299,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
 
                 // Act
                 var result = await connection.QueryAsync<SdsCompleteTable>((object)null,
-                    top: 2);
+                    top: 2).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -318,7 +318,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.QueryAsync<SdsCompleteTable>((object)null,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -469,7 +469,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var table = Database.CreateSdsCompleteTables(1, connection).First();
 
                 // Act
-                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), table.Id)).First();
+                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), table.Id).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertMembersEquality(table, result);
@@ -485,7 +485,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var table = Database.CreateSdsCompleteTables(1, connection).First();
 
                 // Act
-                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), new { table.Id })).First();
+                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), new { table.Id }).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertMembersEquality(table, result);
@@ -501,7 +501,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var table = Database.CreateSdsCompleteTables(1, connection).First();
 
                 // Act
-                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), new QueryField("Id", table.Id))).First();
+                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), new QueryField("Id", table.Id)).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertMembersEquality(table, result);
@@ -522,7 +522,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 };
 
                 // Act
-                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), queryFields)).First();
+                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), queryFields).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertMembersEquality(table, result);
@@ -544,7 +544,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var queryGroup = new QueryGroup(queryFields);
 
                 // Act
-                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), queryGroup)).First();
+                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), queryGroup).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertMembersEquality(table, result);
@@ -562,7 +562,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 // Act
                 var result = await connection.QueryAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
                     (object)null,
-                    top: 2);
+                    top: 2).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -582,7 +582,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.QueryAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
                         (object)null,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

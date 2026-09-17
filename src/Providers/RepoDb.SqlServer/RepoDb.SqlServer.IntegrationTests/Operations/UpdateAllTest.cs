@@ -79,7 +79,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = await connection.UpdateAllAsync<IdentityCompleteTable>(tables);
+                var result = await connection.UpdateAllAsync<IdentityCompleteTable>(tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -172,7 +172,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.UpdateAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -199,7 +199,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.UpdateAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(10, result);

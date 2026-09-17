@@ -148,7 +148,7 @@ namespace RepoDb
                     batchSize: batchSize,
                     pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
 
         /// <summary>
         /// Delete the existing rows via entities by bulk in an asynchronous way. Underneath this operation is a call directly to the existing
@@ -190,7 +190,7 @@ namespace RepoDb
                     batchSize: batchSize,
                     pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
 
         #endregion
 

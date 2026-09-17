@@ -296,7 +296,7 @@ namespace RepoDb.Vertica.BulkOperations
                 }
             }
 
-            return await ExecuteAsync(mappings, stream, cancellationToken);
+            return await ExecuteAsync(mappings, stream, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -367,7 +367,7 @@ namespace RepoDb.Vertica.BulkOperations
                 }
             }
 
-            return await ExecuteAsync(mappings, stream, cancellationToken);
+            return await ExecuteAsync(mappings, stream, cancellationToken).ConfigureAwait(false);
         }
 
         #endregion

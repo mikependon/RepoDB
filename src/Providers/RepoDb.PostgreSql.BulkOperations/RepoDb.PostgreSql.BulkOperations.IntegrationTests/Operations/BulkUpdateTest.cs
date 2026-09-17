@@ -1731,13 +1731,13 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
             // Act
             await connection.BulkInsertAsync(tableName,
                 entities: createdEntities,
-                identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
+                identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity).ConfigureAwait(false);
 
             // Prepare
             var updatedEntities = Helper.UpdateBulkOperationLightIdentityTables(createdEntities);
 
             // Act
-            var result = await connection.BulkUpdateAsync(tableName, updatedEntities);
+            var result = await connection.BulkUpdateAsync(tableName, updatedEntities).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(updatedEntities.Count, result);

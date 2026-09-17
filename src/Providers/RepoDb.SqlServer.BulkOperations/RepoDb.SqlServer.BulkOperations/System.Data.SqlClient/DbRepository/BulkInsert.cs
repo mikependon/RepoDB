@@ -393,7 +393,7 @@ namespace RepoDb
                     isReturnIdentity: isReturnIdentity,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
@@ -453,7 +453,7 @@ namespace RepoDb
                     isReturnIdentity: isReturnIdentity,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
@@ -501,7 +501,7 @@ namespace RepoDb
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
                     transaction: transaction,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
@@ -554,7 +554,7 @@ namespace RepoDb
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
                     transaction: transaction,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
@@ -614,7 +614,7 @@ namespace RepoDb
                     isReturnIdentity: isReturnIdentity,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
@@ -675,7 +675,7 @@ namespace RepoDb
                     isReturnIdentity: isReturnIdentity,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {

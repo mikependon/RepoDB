@@ -127,7 +127,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MergeAsync<IdentityCompleteTable>(table);
+                var result = await connection.MergeAsync<IdentityCompleteTable>(table).ConfigureAwait(false);
                 var queryResult = connection.Query<IdentityCompleteTable>(result);
 
                 // Assert
@@ -148,7 +148,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = await connection.MergeAsync<IdentityCompleteTable>(table);
+                var result = await connection.MergeAsync<IdentityCompleteTable>(table).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<IdentityCompleteTable>());
@@ -181,7 +181,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MergeAsync<IdentityCompleteTable>(table,
-                    qualifiers: qualifiers);
+                    qualifiers: qualifiers).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<IdentityCompleteTable>());
@@ -428,7 +428,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
-                    table);
+                    table).ConfigureAwait(false);
                 var queryResult = connection.Query<IdentityCompleteTable>(result);
 
                 // Assert
@@ -447,7 +447,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
-                    table);
+                    table).ConfigureAwait(false);
                 var queryResult = connection.Query<IdentityCompleteTable>(result);
 
                 // Assert
@@ -470,7 +470,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
-                    table);
+                    table).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<IdentityCompleteTable>());
@@ -498,7 +498,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
-                    table);
+                    table).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<IdentityCompleteTable>());
@@ -529,7 +529,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     table,
-                    qualifiers: qualifiers);
+                    qualifiers: qualifiers).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<IdentityCompleteTable>());
@@ -553,7 +553,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
-                    (object)table);
+                    (object)table).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<IdentityCompleteTable>());
@@ -580,7 +580,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
-                    table);
+                    table).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<IdentityCompleteTable>());
@@ -612,7 +612,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     table,
-                    qualifiers: qualifiers);
+                    qualifiers: qualifiers).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<IdentityCompleteTable>());

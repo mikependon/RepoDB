@@ -121,7 +121,7 @@ namespace RepoDb.Firebird.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null);
+                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null).ConfigureAwait(false);
 
                 // Assert
                 using (var reader = connection.ExecuteReader(@"SELECT TRIM(RDB$FIELD_NAME) AS ColumnName
@@ -157,7 +157,7 @@ namespace RepoDb.Firebird.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null);
+                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null).ConfigureAwait(false);
                 var primary = fields.FirstOrDefault(f => f.IsPrimary == true);
 
                 // Assert
@@ -175,7 +175,7 @@ namespace RepoDb.Firebird.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null);
+                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null).ConfigureAwait(false);
                 var primary = fields.FirstOrDefault(f => f.IsIdentity == true);
 
                 // Assert
@@ -240,7 +240,7 @@ namespace RepoDb.Firebird.IntegrationTests
                 // Firebird has no session-wide "last identity" concept (see FirebirdDbHelper.GetScopeIdentityAsync),
                 // so the helper deliberately throws instead of returning a (meaningless) value.
                 await Assert.ThrowsAsync<NotSupportedException>(() =>
-                    helper.GetScopeIdentityAsync<long>(connection, null));
+                    helper.GetScopeIdentityAsync<long>(connection, null)).ConfigureAwait(false);
             }
         }
 

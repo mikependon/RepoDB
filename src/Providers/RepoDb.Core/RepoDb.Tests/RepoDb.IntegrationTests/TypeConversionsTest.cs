@@ -70,7 +70,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<string>("SELECT 'ABC' AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<string>("SELECT 'ABC' AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual("ABC", data);
@@ -96,7 +96,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<long>("SELECT '100' AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<long>("SELECT '100' AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual(100, data);
@@ -122,7 +122,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<int>("SELECT '100' AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<int>("SELECT '100' AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual(100, data);
@@ -148,7 +148,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<double>("SELECT '100' AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<double>("SELECT '100' AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual(100, data);
@@ -174,7 +174,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<Guid>("SELECT 'DE415ED3-24CB-4090-985B-0C76809578C8' AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<Guid>("SELECT 'DE415ED3-24CB-4090-985B-0C76809578C8' AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual(Guid.Parse("DE415ED3-24CB-4090-985B-0C76809578C8"), data);
@@ -200,7 +200,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<DateTime>("SELECT '1970-01-01' AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<DateTime>("SELECT '1970-01-01' AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual(DateTime.Parse("1970-01-01"), data);
@@ -226,7 +226,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<bool>("SELECT 'true' AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<bool>("SELECT 'true' AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual(true, data);
@@ -254,7 +254,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<decimal>("SELECT '100.05' AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<decimal>("SELECT '100.05' AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual((decimal)100.05, data);
@@ -282,7 +282,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<float>("SELECT '100.05' AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<float>("SELECT '100.05' AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual((float)100.05, data);
@@ -312,7 +312,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<int>("SELECT CONVERT(INT, 10) AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<int>("SELECT CONVERT(INT, 10) AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual(10, data);
@@ -338,7 +338,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<string>("SELECT CONVERT(INT, 10) AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<string>("SELECT CONVERT(INT, 10) AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual("10", data);
@@ -364,7 +364,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<long>("SELECT CONVERT(INT, 10) AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<long>("SELECT CONVERT(INT, 10) AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual(10, data);
@@ -394,7 +394,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<long>("SELECT CONVERT(BIGINT, 10) AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<long>("SELECT CONVERT(BIGINT, 10) AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual((long)10, data);
@@ -420,7 +420,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<string>("SELECT CONVERT(BIGINT, 10) AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<string>("SELECT CONVERT(BIGINT, 10) AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual("10", data);
@@ -446,7 +446,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<int>("SELECT CONVERT(BIGINT, 10) AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<int>("SELECT CONVERT(BIGINT, 10) AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual(10, data);
@@ -476,7 +476,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<decimal>("SELECT CONVERT(DECIMAL(18,2), 100.05) AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<decimal>("SELECT CONVERT(DECIMAL(18,2), 100.05) AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual((decimal)100.05, data);
@@ -504,7 +504,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<string>("SELECT CONVERT(DECIMAL(18,2), 100.05) AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<string>("SELECT CONVERT(DECIMAL(18,2), 100.05) AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual("100.05", data);
@@ -530,7 +530,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<float>("SELECT CONVERT(DECIMAL(18,2), 100.05) AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<float>("SELECT CONVERT(DECIMAL(18,2), 100.05) AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual((float)100.05, data);
@@ -560,7 +560,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<float>("SELECT CONVERT(REAL, 100.05) AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<float>("SELECT CONVERT(REAL, 100.05) AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual((float)100.05, data);
@@ -588,7 +588,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<string>("SELECT CONVERT(REAL, 100.05) AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<string>("SELECT CONVERT(REAL, 100.05) AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual("100.05", data);
@@ -614,7 +614,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<decimal>("SELECT CONVERT(REAL, 100.05) AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<decimal>("SELECT CONVERT(REAL, 100.05) AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual((decimal)100.05, data);
@@ -644,7 +644,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<DateTime>("SELECT CONVERT(DATETIME2(5), '1970-01-01') AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<DateTime>("SELECT CONVERT(DATETIME2(5), '1970-01-01') AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual(DateTime.Parse("1970-01-01"), data);
@@ -675,7 +675,7 @@ namespace RepoDb.IntegrationTests
                 using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
                 {
                     // Act Query
-                    var data = (await connection.ExecuteQueryAsync<string>("SELECT CONVERT(DATETIME2(5), '1970-01-01') AS Value;")).First();
+                    var data = (await connection.ExecuteQueryAsync<string>("SELECT CONVERT(DATETIME2(5), '1970-01-01') AS Value;").ConfigureAwait(false)).First();
 
                     // Assert
                     Assert.AreEqual("1970-01-01T00:00:00.000000", DateTime.Parse(data).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"));
@@ -706,7 +706,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<Guid>("SELECT CONVERT(UNIQUEIDENTIFIER, 'DE415ED3-24CB-4090-985B-0C76809578C8') AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<Guid>("SELECT CONVERT(UNIQUEIDENTIFIER, 'DE415ED3-24CB-4090-985B-0C76809578C8') AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual(Guid.Parse("DE415ED3-24CB-4090-985B-0C76809578C8"), data);
@@ -732,7 +732,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<string>("SELECT CONVERT(UNIQUEIDENTIFIER, 'DE415ED3-24CB-4090-985B-0C76809578C8') AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<string>("SELECT CONVERT(UNIQUEIDENTIFIER, 'DE415ED3-24CB-4090-985B-0C76809578C8') AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.IsTrue(string.Equals("DE415ED3-24CB-4090-985B-0C76809578C8", data, StringComparison.OrdinalIgnoreCase));
@@ -762,7 +762,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<bool>("SELECT CONVERT(BIT, 1) AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<bool>("SELECT CONVERT(BIT, 1) AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.IsTrue(data);
@@ -788,7 +788,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<string>("SELECT CONVERT(BIT, 1) AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<string>("SELECT CONVERT(BIT, 1) AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.IsTrue(string.Equals("true", data, StringComparison.OrdinalIgnoreCase));
@@ -906,9 +906,9 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<Direction>("SELECT CONVERT(INT, 1) AS Value;")).First();
-                var data0 = (await connection.ExecuteQueryAsync<Direction>("SELECT CONVERT(INT, 0) AS Value;")).First();
-                var data10 = (await connection.ExecuteQueryAsync<Direction>("SELECT CONVERT(INT, 10) AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<Direction>("SELECT CONVERT(INT, 1) AS Value;").ConfigureAwait(false)).First();
+                var data0 = (await connection.ExecuteQueryAsync<Direction>("SELECT CONVERT(INT, 0) AS Value;").ConfigureAwait(false)).First();
+                var data10 = (await connection.ExecuteQueryAsync<Direction>("SELECT CONVERT(INT, 10) AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual(Direction.North, data);
@@ -922,9 +922,9 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<Direction2>("SELECT CONVERT(INT, 1) AS Value;")).First();
-                var data0 = (await connection.ExecuteQueryAsync<Direction2>("SELECT CONVERT(INT, 0) AS Value;")).First();
-                var data10 = (await connection.ExecuteQueryAsync<Direction2>("SELECT CONVERT(INT, 10) AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<Direction2>("SELECT CONVERT(INT, 1) AS Value;").ConfigureAwait(false)).First();
+                var data0 = (await connection.ExecuteQueryAsync<Direction2>("SELECT CONVERT(INT, 0) AS Value;").ConfigureAwait(false)).First();
+                var data10 = (await connection.ExecuteQueryAsync<Direction2>("SELECT CONVERT(INT, 10) AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual(Direction2.North, data);
@@ -939,8 +939,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<Direction3>("SELECT CONVERT(INT, 1) AS Value;")).First();
-                var data0 = (await connection.ExecuteQueryAsync<Direction3>("SELECT CONVERT(INT, 0) AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<Direction3>("SELECT CONVERT(INT, 1) AS Value;").ConfigureAwait(false)).First();
+                var data0 = (await connection.ExecuteQueryAsync<Direction3>("SELECT CONVERT(INT, 0) AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual(Direction3.North, data);
@@ -948,7 +948,7 @@ namespace RepoDb.IntegrationTests
 
                 try
                 {
-                    var data10 = (await connection.ExecuteQueryAsync<Direction3>("SELECT CONVERT(INT, 10) AS Value;")).First();
+                    var data10 = (await connection.ExecuteQueryAsync<Direction3>("SELECT CONVERT(INT, 10) AS Value;").ConfigureAwait(false)).First();
                     Assert.Fail("Should have failed");
                 }
                 catch (InvalidEnumArgumentException e)
@@ -1105,13 +1105,13 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<Direction>("SELECT 'North' AS Value;")).First();
-                var data0 = (await connection.ExecuteQueryAsync<Direction>("SELECT 'None' AS Value;")).First();
-                var data3 = (await connection.ExecuteQueryAsync<Direction>("SELECT '3' AS Value;")).First();
-                var data9 = (await connection.ExecuteQueryAsync<Direction>("SELECT '9' AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<Direction>("SELECT 'North' AS Value;").ConfigureAwait(false)).First();
+                var data0 = (await connection.ExecuteQueryAsync<Direction>("SELECT 'None' AS Value;").ConfigureAwait(false)).First();
+                var data3 = (await connection.ExecuteQueryAsync<Direction>("SELECT '3' AS Value;").ConfigureAwait(false)).First();
+                var data9 = (await connection.ExecuteQueryAsync<Direction>("SELECT '9' AS Value;").ConfigureAwait(false)).First();
                 try
                 {
-                    var data10 = (await connection.ExecuteQueryAsync<Direction>("SELECT 'Center' AS Value;")).First();
+                    var data10 = (await connection.ExecuteQueryAsync<Direction>("SELECT 'Center' AS Value;").ConfigureAwait(false)).First();
                     Assert.Fail("Should have failed Direction/3");
                 }
                 catch (ArgumentOutOfRangeException e)
@@ -1135,11 +1135,11 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<Direction2>("SELECT 'North' AS Value;")).First();
-                var data0 = (await connection.ExecuteQueryAsync<Direction2>("SELECT 'None' AS Value;")).First();
-                var data3 = (await connection.ExecuteQueryAsync<Direction2>("SELECT '3' AS Value;")).First();
-                var data9 = (await connection.ExecuteQueryAsync<Direction2>("SELECT '9' AS Value;")).First();
-                var data10 = (await connection.ExecuteQueryAsync<Direction2>("SELECT 'Center' AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<Direction2>("SELECT 'North' AS Value;").ConfigureAwait(false)).First();
+                var data0 = (await connection.ExecuteQueryAsync<Direction2>("SELECT 'None' AS Value;").ConfigureAwait(false)).First();
+                var data3 = (await connection.ExecuteQueryAsync<Direction2>("SELECT '3' AS Value;").ConfigureAwait(false)).First();
+                var data9 = (await connection.ExecuteQueryAsync<Direction2>("SELECT '9' AS Value;").ConfigureAwait(false)).First();
+                var data10 = (await connection.ExecuteQueryAsync<Direction2>("SELECT 'Center' AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual(Direction2.North, data);
@@ -1156,12 +1156,12 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<Direction3>("SELECT 'North' AS Value;")).First();
-                var data0 = (await connection.ExecuteQueryAsync<Direction3>("SELECT 'None' AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<Direction3>("SELECT 'North' AS Value;").ConfigureAwait(false)).First();
+                var data0 = (await connection.ExecuteQueryAsync<Direction3>("SELECT 'None' AS Value;").ConfigureAwait(false)).First();
 
                 try
                 {
-                    var data10 = (await connection.ExecuteQueryAsync<Direction3>("SELECT 'Center' AS Value;")).First();
+                    var data10 = (await connection.ExecuteQueryAsync<Direction3>("SELECT 'Center' AS Value;").ConfigureAwait(false)).First();
                     Assert.Fail("Should have failed Direction3/Center");
                 }
                 catch (ArgumentOutOfRangeException e)
@@ -1174,7 +1174,7 @@ namespace RepoDb.IntegrationTests
 
                 try
                 {
-                    var data9 = (await connection.ExecuteQueryAsync<Direction3>("SELECT '9' AS Value;")).First();
+                    var data9 = (await connection.ExecuteQueryAsync<Direction3>("SELECT '9' AS Value;").ConfigureAwait(false)).First();
                     Assert.Fail("Should have failed Direction3/9");
                 }
                 catch (ArgumentOutOfRangeException e)
@@ -1195,12 +1195,12 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<Direction4>("SELECT 'North' AS Value;")).First();
-                var data0 = (await connection.ExecuteQueryAsync<Direction4>("SELECT 'None' AS Value;")).First();
-                var data3 = (await connection.ExecuteQueryAsync<Direction4>("SELECT '3' AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<Direction4>("SELECT 'North' AS Value;").ConfigureAwait(false)).First();
+                var data0 = (await connection.ExecuteQueryAsync<Direction4>("SELECT 'None' AS Value;").ConfigureAwait(false)).First();
+                var data3 = (await connection.ExecuteQueryAsync<Direction4>("SELECT '3' AS Value;").ConfigureAwait(false)).First();
                 try
                 {
-                    var data10 = (await connection.ExecuteQueryAsync<Direction4>("SELECT 'Center' AS Value;")).First();
+                    var data10 = (await connection.ExecuteQueryAsync<Direction4>("SELECT 'Center' AS Value;").ConfigureAwait(false)).First();
                     Assert.Fail("Should have failed Direction/3");
                 }
                 catch (ArgumentOutOfRangeException e)
@@ -1213,7 +1213,7 @@ namespace RepoDb.IntegrationTests
 
                 try
                 {
-                    var data9 = (await connection.ExecuteQueryAsync<Direction4>("SELECT '9' AS Value;")).First();
+                    var data9 = (await connection.ExecuteQueryAsync<Direction4>("SELECT '9' AS Value;").ConfigureAwait(false)).First();
                     Assert.Fail("Should have failed Direction/9");
                 }
                 catch (ArgumentOutOfRangeException e)
@@ -1297,8 +1297,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<Direction>("SELECT 'North, East' AS Value;")).First();
-                var data2 = (await connection.ExecuteQueryAsync<Direction>("SELECT 'North, West' AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<Direction>("SELECT 'North, East' AS Value;").ConfigureAwait(false)).First();
+                var data2 = (await connection.ExecuteQueryAsync<Direction>("SELECT 'North, West' AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual(Direction.South, data); // Flag behavior
@@ -1311,8 +1311,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<Direction2>("SELECT 'North, East' AS Value;")).First();
-                var data2 = (await connection.ExecuteQueryAsync<Direction2>("SELECT 'North, West' AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<Direction2>("SELECT 'North, East' AS Value;").ConfigureAwait(false)).First();
+                var data2 = (await connection.ExecuteQueryAsync<Direction2>("SELECT 'North, West' AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual(Direction2.South, data); // Flag behavior
@@ -1326,11 +1326,11 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<Direction3>("SELECT 'North, East' AS Value;")).First();
+                var data = (await connection.ExecuteQueryAsync<Direction3>("SELECT 'North, East' AS Value;").ConfigureAwait(false)).First();
 
                 try
                 {
-                    var data2 = (await connection.ExecuteQueryAsync<Direction3>("SELECT 'North, West' AS Value;")).First();
+                    var data2 = (await connection.ExecuteQueryAsync<Direction3>("SELECT 'North, West' AS Value;").ConfigureAwait(false)).First();
                     Assert.Fail("Should have failed Direction3/North, West");
                 }
                 catch (ArgumentOutOfRangeException e)
@@ -1405,19 +1405,19 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<StringToBigIntClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<StringToBigIntClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnBigInt, data.ColumnBigInt);
 
                 // Act Delete
-                var deletedRows = await connection.DeleteAsync<StringToBigIntClass>(e => e.SessionId == (Guid)id);
+                var deletedRows = await connection.DeleteAsync<StringToBigIntClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false);
 
                 // Act Query
-                data = (await connection.QueryAsync<StringToBigIntClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                data = (await connection.QueryAsync<StringToBigIntClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(1, deletedRows);
@@ -1473,10 +1473,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<StringToBitClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<StringToBitClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnBit, data.ColumnBit);
@@ -1533,10 +1533,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<StringToDecimalClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<StringToDecimalClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnDecimal, data.ColumnDecimal);
@@ -1593,10 +1593,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<StringToFloatClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<StringToFloatClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnFloat, data.ColumnFloat);
@@ -1651,10 +1651,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<StringToIntClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<StringToIntClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnInt, data.ColumnInt);
@@ -1711,10 +1711,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<StringToMoneyClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<StringToMoneyClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnMoney, data.ColumnMoney);
@@ -1771,10 +1771,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<StringToNumericClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<StringToNumericClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnNumeric, data.ColumnNumeric);
@@ -1831,10 +1831,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<StringToRealClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<StringToRealClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnReal, data.ColumnReal);
@@ -1889,10 +1889,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<StringToSmallIntClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<StringToSmallIntClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnSmallInt, data.ColumnSmallInt);
@@ -1949,10 +1949,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<StringToSmallMoneyClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<StringToSmallMoneyClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnSmallMoney, data.ColumnSmallMoney);
@@ -2012,10 +2012,10 @@ namespace RepoDb.IntegrationTests
                 using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
                 {
                     // Act Insert
-                    var id = await connection.InsertAsync(entity);
+                    var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                     // Act Query
-                    var data = (await connection.QueryAsync<StringToDateClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                    var data = (await connection.QueryAsync<StringToDateClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                     // Assert
                     Assert.AreEqual("1970-01-01T00:00:00.000000", DateTime.Parse(data.ColumnDate).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"));
@@ -2076,10 +2076,10 @@ namespace RepoDb.IntegrationTests
                 using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
                 {
                     // Act Insert
-                    var id = await connection.InsertAsync(entity);
+                    var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                     // Act Query
-                    var data = (await connection.QueryAsync<StringToDateTimeClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                    var data = (await connection.QueryAsync<StringToDateTimeClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                     // Assert
                     Assert.AreEqual("1970-01-01T11:30:00.000000", DateTime.Parse(data.ColumnDateTime).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"));
@@ -2140,10 +2140,10 @@ namespace RepoDb.IntegrationTests
                 using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
                 {
                     // Act Insert
-                    var id = await connection.InsertAsync(entity);
+                    var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                     // Act Query
-                    var data = (await connection.QueryAsync<StringToDateTime2Class>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                    var data = (await connection.QueryAsync<StringToDateTime2Class>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                     // Assert
                     Assert.AreEqual("2019-03-03T15:22:10.000000", DateTime.Parse(data.ColumnDateTime2).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"));
@@ -2199,10 +2199,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<StringToUniqueIdentifierClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<StringToUniqueIdentifierClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnUniqueIdentifier, data.ColumnUniqueIdentifier);
@@ -2257,10 +2257,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<UniqueIdentifierToStringClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<UniqueIdentifierToStringClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar);
@@ -2315,10 +2315,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<BitToStringClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<BitToStringClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar);
@@ -2373,10 +2373,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<DateTimeToStringClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<DateTimeToStringClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar);
@@ -2431,10 +2431,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<IntToStringClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<IntToStringClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar);
@@ -2489,10 +2489,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<IntToBigIntClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<IntToBigIntClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnBigInt, data.ColumnBigInt);
@@ -2547,10 +2547,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<IntToSmallIntClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<IntToSmallIntClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnSmallInt, data.ColumnSmallInt);
@@ -2605,10 +2605,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<IntToDecimalClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<IntToDecimalClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnDecimal, data.ColumnDecimal);
@@ -2663,10 +2663,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<IntToFloatClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<IntToFloatClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnFloat, data.ColumnFloat);
@@ -2721,10 +2721,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<IntToRealClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<IntToRealClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnReal, data.ColumnReal);
@@ -2779,10 +2779,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<IntToBitClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<IntToBitClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnBit, data.ColumnBit);
@@ -2837,10 +2837,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<BigIntToStringClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<BigIntToStringClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar);
@@ -2895,10 +2895,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<BigIntToIntClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<BigIntToIntClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnInt, data.ColumnInt);
@@ -2953,10 +2953,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<BigIntToSmallIntClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<BigIntToSmallIntClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnSmallInt, data.ColumnSmallInt);
@@ -3011,10 +3011,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<BigIntToDecimalClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<BigIntToDecimalClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnDecimal, data.ColumnDecimal);
@@ -3069,10 +3069,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<BigIntToFloatClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<BigIntToFloatClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnFloat, data.ColumnFloat);
@@ -3127,10 +3127,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<BigIntToRealClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<BigIntToRealClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnReal, data.ColumnReal);
@@ -3185,10 +3185,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<BigIntToBitClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<BigIntToBitClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnBit, data.ColumnBit);
@@ -3243,10 +3243,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<SmallIntToStringClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<SmallIntToStringClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar);
@@ -3301,10 +3301,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<SmallIntToIntClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<SmallIntToIntClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnInt, data.ColumnInt);
@@ -3359,10 +3359,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<SmallIntToBigIntClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<SmallIntToBigIntClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnBigInt, data.ColumnBigInt);
@@ -3417,10 +3417,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<SmallIntToDecimalClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<SmallIntToDecimalClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnDecimal, data.ColumnDecimal);
@@ -3475,10 +3475,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<SmallIntToFloatClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<SmallIntToFloatClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnFloat, data.ColumnFloat);
@@ -3533,10 +3533,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<SmallIntToRealClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<SmallIntToRealClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnReal, data.ColumnReal);
@@ -3591,10 +3591,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<SmallIntToBitClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<SmallIntToBitClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual((short)1, data.ColumnBit);
@@ -3649,10 +3649,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<DecimalToStringClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<DecimalToStringClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar);
@@ -3707,10 +3707,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<DecimalToIntClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<DecimalToIntClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(12345, data.ColumnInt);
@@ -3765,10 +3765,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<DecimalToBigIntClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<DecimalToBigIntClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(12345, data.ColumnBigInt);
@@ -3823,10 +3823,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<DecimalToSmallIntClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<DecimalToSmallIntClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(12345, data.ColumnSmallInt);
@@ -3881,10 +3881,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<DecimalToFloatClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<DecimalToFloatClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnFloat, data.ColumnFloat);
@@ -3939,10 +3939,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<DecimalToRealClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<DecimalToRealClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnReal, data.ColumnReal);
@@ -3997,10 +3997,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<DecimalToBitClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<DecimalToBitClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(1, data.ColumnBit);
@@ -4055,10 +4055,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<DoubleToStringClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<DoubleToStringClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar);
@@ -4113,10 +4113,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<DoubleToDecimalClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<DoubleToDecimalClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnDecimal, data.ColumnDecimal);
@@ -4171,10 +4171,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<DoubleToBigIntClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<DoubleToBigIntClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(12346, data.ColumnBigInt);
@@ -4229,10 +4229,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<DoubleToIntClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<DoubleToIntClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(12346, data.ColumnInt);
@@ -4287,10 +4287,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<DoubleToSmallIntClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<DoubleToSmallIntClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(12346, data.ColumnInt);
@@ -4345,10 +4345,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<DoubleToFloatClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<DoubleToFloatClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnFloat, data.ColumnFloat);
@@ -4403,10 +4403,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<DoubleToRealClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<DoubleToRealClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnReal, Math.Round(data.ColumnReal.Value, 2));
@@ -4461,10 +4461,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<DoubleToBitClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<DoubleToBitClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(1, data.ColumnBit);
@@ -4519,10 +4519,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<FloatToStringClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<FloatToStringClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar);
@@ -4577,10 +4577,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<FloatToDecimalClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<FloatToDecimalClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnDecimal, data.ColumnDecimal);
@@ -4635,10 +4635,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<FloatToBigIntClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<FloatToBigIntClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(12346, data.ColumnBigInt);
@@ -4693,10 +4693,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<FloatToIntClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<FloatToIntClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(12346, data.ColumnInt);
@@ -4751,10 +4751,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<FloatToSmallIntClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<FloatToSmallIntClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(12346, data.ColumnInt);
@@ -4809,10 +4809,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<FloatToFloatClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<FloatToFloatClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnFloat, data.ColumnFloat);
@@ -4867,10 +4867,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<FloatToRealClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<FloatToRealClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnReal, Math.Round(data.ColumnReal.Value, 2));
@@ -4925,10 +4925,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<FloatToBitClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<FloatToBitClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(1, data.ColumnBit);

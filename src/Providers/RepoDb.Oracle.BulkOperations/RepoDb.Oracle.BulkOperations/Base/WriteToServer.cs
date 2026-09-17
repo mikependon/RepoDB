@@ -137,10 +137,10 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            await connection.EnsureOpenAsync(cancellationToken);
+            await connection.EnsureOpenAsync(cancellationToken).ConfigureAwait(false);
             using var reader = new DataEntityDataReader<TEntity>(entities);
             using var arrayBinder = CreateOracleBulkArrayBinder(connection, tableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
-            return await arrayBinder.WriteToServerAsync(reader, cancellationToken);
+            return await arrayBinder.WriteToServerAsync(reader, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -166,9 +166,9 @@ namespace RepoDb
             int? batchSize = null,
             CancellationToken cancellationToken = default)
         {
-            await connection.EnsureOpenAsync(cancellationToken);
+            await connection.EnsureOpenAsync(cancellationToken).ConfigureAwait(false);
             using var arrayBinder = CreateOracleBulkArrayBinder(connection, tableName, table, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
-            return await arrayBinder.WriteToServerAsync(table, rowState, cancellationToken);
+            return await arrayBinder.WriteToServerAsync(table, rowState, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -192,10 +192,10 @@ namespace RepoDb
             int? batchSize = null,
             CancellationToken cancellationToken = default)
         {
-            await connection.EnsureOpenAsync(cancellationToken);
+            await connection.EnsureOpenAsync(cancellationToken).ConfigureAwait(false);
             var countingReader = new CountingDataReader(reader);
             using var bulkCopy = CreateOracleBulkArrayBinder(connection, tableName, countingReader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
-            return await bulkCopy.WriteToServerAsync(countingReader, cancellationToken);
+            return await bulkCopy.WriteToServerAsync(countingReader, cancellationToken).ConfigureAwait(false);
         }
 
         #endregion

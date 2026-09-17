@@ -1082,7 +1082,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (0, 3)
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.ElementAt(0));
@@ -1109,7 +1109,7 @@ namespace RepoDb.IntegrationTests.Operations
                     where: (object)null,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (9, 6)
                 Helper.AssertPropertiesEquality(tables.ElementAt(9), result.ElementAt(0));
@@ -1137,7 +1137,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (4, 7)
                 Helper.AssertPropertiesEquality(tables.ElementAt(4), result.ElementAt(0));
@@ -1165,7 +1165,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (5, 2)
                 Helper.AssertPropertiesEquality(tables.ElementAt(5), result.ElementAt(0));
@@ -1193,7 +1193,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (10, 13)
                 Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
@@ -1221,7 +1221,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (9, 6)
                 Helper.AssertPropertiesEquality(tables.ElementAt(9), result.ElementAt(0));
@@ -1249,7 +1249,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (14, 17)
                 Helper.AssertPropertiesEquality(tables.ElementAt(14), result.ElementAt(0));
@@ -1277,7 +1277,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (15, 12)
                 Helper.AssertPropertiesEquality(tables.ElementAt(15), result.ElementAt(0));
@@ -1306,7 +1306,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (2)
                 Assert.AreEqual(tables.ElementAt(2).ColumnNVarChar, result.ElementAt(0).ColumnNVarChar);
@@ -1333,7 +1333,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (3, 6)
                 Helper.AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(0));
@@ -1361,7 +1361,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (3, 6)
                 Helper.AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(0));
@@ -1394,7 +1394,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (10, 13)
                 Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
@@ -1428,7 +1428,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (10, 13)
                 Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
@@ -1456,7 +1456,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (0, 3)
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.ElementAt(0));
@@ -1483,7 +1483,7 @@ namespace RepoDb.IntegrationTests.Operations
                     where: (object)null,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (9, 6)
                 Helper.AssertPropertiesEquality(tables.ElementAt(9), result.ElementAt(0));
@@ -1511,7 +1511,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (4, 7)
                 Helper.AssertPropertiesEquality(tables.ElementAt(4), result.ElementAt(0));
@@ -1539,7 +1539,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (5, 2)
                 Helper.AssertPropertiesEquality(tables.ElementAt(5), result.ElementAt(0));
@@ -1567,7 +1567,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (10, 13)
                 Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
@@ -1595,7 +1595,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (9, 6)
                 Helper.AssertPropertiesEquality(tables.ElementAt(9), result.ElementAt(0));
@@ -1623,7 +1623,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (14, 17)
                 Helper.AssertPropertiesEquality(tables.ElementAt(14), result.ElementAt(0));
@@ -1651,7 +1651,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (15, 12)
                 Helper.AssertPropertiesEquality(tables.ElementAt(15), result.ElementAt(0));
@@ -1679,7 +1679,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (2)
                 Assert.AreEqual(tables.ElementAt(2).ColumnNVarChar, result.ElementAt(0).ColumnNVarChar);
@@ -1706,7 +1706,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (3, 6)
                 Helper.AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(0));
@@ -1734,7 +1734,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (3, 6)
                 Helper.AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(0));
@@ -1767,7 +1767,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (10, 13)
                 Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
@@ -1801,7 +1801,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (10, 13)
                 Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
@@ -1827,8 +1827,8 @@ namespace RepoDb.IntegrationTests.Operations
                         commandTimeout: 0,
                         transaction: null,
                         trace: null,
-                        statementBuilder: null);
-                });
+                        statementBuilder: null).ConfigureAwait(false);
+                }).ConfigureAwait(false);
             }
         }
 
@@ -1858,7 +1858,7 @@ namespace RepoDb.IntegrationTests.Operations
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
-                    where: queryGroup);
+                    where: queryGroup).ConfigureAwait(false);
 
                 // Assert (10, 13)
                 Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
@@ -1918,7 +1918,7 @@ namespace RepoDb.IntegrationTests.Operations
                     page: 1,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
-                    where: queryGroup);
+                    where: queryGroup).ConfigureAwait(false);
 
                 // Assert (15, 12)
                 Helper.AssertPropertiesEquality(tables.ElementAt(15), result.ElementAt(0));
@@ -1980,7 +1980,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (2)
                 Helper.AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(0));
@@ -2008,7 +2008,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (3, 6)
                 Helper.AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(0));
@@ -2041,7 +2041,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (10, 13)
                 Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
@@ -2075,7 +2075,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (10, 13)
                 Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
@@ -2103,7 +2103,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (2)
                 Helper.AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(0));
@@ -2131,7 +2131,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (3, 6)
                 Helper.AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(0));
@@ -2164,7 +2164,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (10, 13)
                 Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
@@ -2198,7 +2198,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (10, 13)
                 Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
@@ -2621,7 +2621,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (0, 3)
                 Helper.AssertMembersEquality(tables.ElementAt(0), result.ElementAt(0));
@@ -2649,7 +2649,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (9, 6)
                 Helper.AssertMembersEquality(tables.ElementAt(9), result.ElementAt(0));
@@ -2677,7 +2677,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (4, 7)
                 Helper.AssertMembersEquality(tables.ElementAt(4), result.ElementAt(0));
@@ -2705,7 +2705,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (5, 2)
                 Helper.AssertMembersEquality(tables.ElementAt(5), result.ElementAt(0));
@@ -2737,7 +2737,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (10, 13)
                 Helper.AssertMembersEquality(tables.ElementAt(10), result.ElementAt(0));
@@ -2769,7 +2769,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (9, 6)
                 Helper.AssertMembersEquality(tables.ElementAt(9), result.ElementAt(0));
@@ -2801,7 +2801,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (14, 17)
                 Helper.AssertMembersEquality(tables.ElementAt(14), result.ElementAt(0));
@@ -2833,7 +2833,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (15, 12)
                 Helper.AssertMembersEquality(tables.ElementAt(15), result.ElementAt(0));
@@ -2861,7 +2861,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (2)
                 Helper.AssertMembersEquality(tables.ElementAt(2), result.ElementAt(0));
@@ -2889,7 +2889,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (3, 6)
                 Helper.AssertMembersEquality(tables.ElementAt(3), result.ElementAt(0));
@@ -2922,7 +2922,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (10, 13)
                 Helper.AssertMembersEquality(tables.ElementAt(10), result.ElementAt(0));
@@ -2956,7 +2956,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null);
+                    statementBuilder: null).ConfigureAwait(false);
 
                 // Assert (10, 13)
                 Helper.AssertMembersEquality(tables.ElementAt(10), result.ElementAt(0));
@@ -2983,8 +2983,8 @@ namespace RepoDb.IntegrationTests.Operations
                         commandTimeout: 0,
                         transaction: null,
                         trace: null,
-                        statementBuilder: null);
-                });
+                        statementBuilder: null).ConfigureAwait(false);
+                }).ConfigureAwait(false);
             }
         }
 

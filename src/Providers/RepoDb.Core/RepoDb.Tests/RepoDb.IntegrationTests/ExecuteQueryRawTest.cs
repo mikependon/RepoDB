@@ -236,7 +236,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.ExecuteQueryAsync<uint>("SELECT CONVERT(INT, 1) AS Value UNION ALL SELECT 2;")).AsList();
+                var result = (await connection.ExecuteQueryAsync<uint>("SELECT CONVERT(INT, 1) AS Value UNION ALL SELECT 2;").ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(2, result.Count);
@@ -272,7 +272,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.ExecuteQueryAsync<Gender>("SELECT 'Male' AS Value UNION ALL SELECT 'Female';")).AsList();
+                var result = (await connection.ExecuteQueryAsync<Gender>("SELECT 'Male' AS Value UNION ALL SELECT 'Female';").ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(2, result.Count);
@@ -302,7 +302,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.ExecuteQueryAsync<Gender?>("SELECT 'Male' AS Value UNION ALL SELECT 'Female';")).AsList();
+                var result = (await connection.ExecuteQueryAsync<Gender?>("SELECT 'Male' AS Value UNION ALL SELECT 'Female';").ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(2, result.Count);
@@ -332,7 +332,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.ExecuteQueryAsync<Gender?>("SELECT CONVERT(NVARCHAR, NULL) AS Value UNION ALL SELECT NULL;")).AsList();
+                var result = (await connection.ExecuteQueryAsync<Gender?>("SELECT CONVERT(NVARCHAR, NULL) AS Value UNION ALL SELECT NULL;").ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(2, result.Count);
@@ -366,7 +366,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.ExecuteQueryAsync<Gender>("SELECT 1 AS Value UNION ALL SELECT 2;")).AsList();
+                var result = (await connection.ExecuteQueryAsync<Gender>("SELECT 1 AS Value UNION ALL SELECT 2;").ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(2, result.Count);
@@ -396,7 +396,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.ExecuteQueryAsync<Gender?>("SELECT 1 AS Value UNION ALL SELECT 2;")).AsList();
+                var result = (await connection.ExecuteQueryAsync<Gender?>("SELECT 1 AS Value UNION ALL SELECT 2;").ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(2, result.Count);
@@ -426,7 +426,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.ExecuteQueryAsync<Gender?>("SELECT CONVERT(INT, NULL) AS Value UNION ALL SELECT NULL;")).AsList();
+                var result = (await connection.ExecuteQueryAsync<Gender?>("SELECT CONVERT(INT, NULL) AS Value UNION ALL SELECT NULL;").ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(2, result.Count);
@@ -464,7 +464,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.ExecuteQueryAsync<string>("SELECT 'ABC' AS Value UNION ALL SELECT 'DEF';")).AsList();
+                var result = (await connection.ExecuteQueryAsync<string>("SELECT 'ABC' AS Value UNION ALL SELECT 'DEF';").ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(2, result.Count);
@@ -493,7 +493,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.ExecuteQueryAsync<string>("SELECT CONVERT(NVARCHAR, NULL) AS Value UNION ALL SELECT NULL;")).AsList();
+                var result = (await connection.ExecuteQueryAsync<string>("SELECT CONVERT(NVARCHAR, NULL) AS Value UNION ALL SELECT NULL;").ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(2, result.Count);
@@ -531,7 +531,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = (await connection.ExecuteQueryAsync<Guid>("SELECT @Value UNION ALL SELECT @Value;",
-                    new { value })).AsList();
+                    new { value }).ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(2, result.Count);
@@ -559,7 +559,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.ExecuteQueryAsync<Guid>("SELECT CONVERT(UNIQUEIDENTIFIER, NULL) AS Value UNION ALL SELECT NULL;")).AsList();
+                var result = (await connection.ExecuteQueryAsync<Guid>("SELECT CONVERT(UNIQUEIDENTIFIER, NULL) AS Value UNION ALL SELECT NULL;").ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(2, result.Count);
@@ -590,7 +590,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.ExecuteQueryAsync<long>("SELECT CONVERT(BIGINT, 100) AS Value UNION ALL SELECT 200;")).AsList();
+                var result = (await connection.ExecuteQueryAsync<long>("SELECT CONVERT(BIGINT, 100) AS Value UNION ALL SELECT 200;").ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(2, result.Count);
@@ -619,7 +619,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.ExecuteQueryAsync<long>("SELECT CONVERT(BIGINT, NULL) AS Value UNION ALL SELECT NULL;")).AsList();
+                var result = (await connection.ExecuteQueryAsync<long>("SELECT CONVERT(BIGINT, NULL) AS Value UNION ALL SELECT NULL;").ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(2, result.Count);
@@ -657,7 +657,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = (await connection.ExecuteQueryAsync<DateTime>("SELECT @Value AS Value UNION ALL SELECT @Value;",
-                    new { value })).AsList();
+                    new { value }).ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(2, result.Count);
@@ -685,7 +685,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.ExecuteQueryAsync<DateTime>("SELECT CONVERT(DATETIME, NULL) AS Value UNION ALL SELECT NULL;")).AsList();
+                var result = (await connection.ExecuteQueryAsync<DateTime>("SELECT CONVERT(DATETIME, NULL) AS Value UNION ALL SELECT NULL;").ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(2, result.Count);
@@ -727,7 +727,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = (await connection.ExecuteQueryAsync<Guid?>("SELECT @Value UNION ALL SELECT @Value;",
-                    new { value })).AsList();
+                    new { value }).ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(2, result.Count);
@@ -755,7 +755,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.ExecuteQueryAsync<Guid?>("SELECT CONVERT(UNIQUEIDENTIFIER, NULL) AS Value UNION ALL SELECT NULL;")).AsList();
+                var result = (await connection.ExecuteQueryAsync<Guid?>("SELECT CONVERT(UNIQUEIDENTIFIER, NULL) AS Value UNION ALL SELECT NULL;").ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(2, result.Count);
@@ -786,7 +786,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.ExecuteQueryAsync<long?>("SELECT CONVERT(BIGINT, 100) AS Value UNION ALL SELECT 200;")).AsList();
+                var result = (await connection.ExecuteQueryAsync<long?>("SELECT CONVERT(BIGINT, 100) AS Value UNION ALL SELECT 200;").ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(2, result.Count);
@@ -815,7 +815,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.ExecuteQueryAsync<long?>("SELECT CONVERT(BIGINT, NULL) AS Value UNION ALL SELECT NULL;")).AsList();
+                var result = (await connection.ExecuteQueryAsync<long?>("SELECT CONVERT(BIGINT, NULL) AS Value UNION ALL SELECT NULL;").ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(2, result.Count);
@@ -856,7 +856,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = (await connection.ExecuteQueryAsync<DateTime?>("SELECT @Value1 AS Value UNION ALL SELECT @Value2;",
-                    new { value1, value2 })).AsList();
+                    new { value1, value2 }).ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(2, result.Count);
@@ -885,7 +885,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.ExecuteQueryAsync<DateTime?>("SELECT CONVERT(DATETIME, NULL) AS Value UNION ALL SELECT NULL;")).AsList();
+                var result = (await connection.ExecuteQueryAsync<DateTime?>("SELECT CONVERT(DATETIME, NULL) AS Value UNION ALL SELECT NULL;").ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(2, result.Count);
@@ -911,7 +911,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await Assert.ThrowsAsync<InvalidOperationException>(async () => (await connection.ExecuteQueryAsync<int>("SELECT 1 AS Column1, 2 AS Column2 UNION ALL SELECT 3, 4;")).AsList());
+                await Assert.ThrowsAsync<InvalidOperationException>(async () => (await connection.ExecuteQueryAsync<int>("SELECT 1 AS Column1, 2 AS Column2 UNION ALL SELECT 3, 4;").ConfigureAwait(false)).AsList()).ConfigureAwait(false);
             }
         }
 
@@ -989,7 +989,7 @@ namespace RepoDb.IntegrationTests
                     ", CONVERT(DATE, @ColumnDate) AS ColumnDate" +
                     ", CONVERT(TIME, @ColumnTime) AS ColumnTime" +
                     ", CONVERT(DATETIME, @ColumnDateTime) AS ColumnDateTime" +
-                    ", CONVERT(DATETIME2(7), @ColumnDateTime2) AS ColumnDateTime2;", param)).FirstOrDefault();
+                    ", CONVERT(DATETIME2(7), @ColumnDateTime2) AS ColumnDateTime2;", param).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(result);
@@ -1053,7 +1053,7 @@ namespace RepoDb.IntegrationTests
                 var result = (await connection.ExecuteQueryAsync<WhateverClassWithNonNullableProperties>("SELECT @Id AS Id" +
                     ", CONVERT(INT, @ColumnInt) AS ColumnInt" +
                     ", CONVERT(BIGINT, @ColumnBigInt) AS ColumnBigInt" +
-                    ", CONVERT(NVARCHAR(MAX), @ColumnNvarChar) AS ColumnNvarChar;", param)).FirstOrDefault();
+                    ", CONVERT(NVARCHAR(MAX), @ColumnNvarChar) AS ColumnNvarChar;", param).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(result);
@@ -1133,7 +1133,7 @@ namespace RepoDb.IntegrationTests
                     ", CONVERT(DATETIME, @ColumnDateTime) AS ColumnDateTime" +
                     ", CONVERT(DATETIME2(7), @ColumnDateTime2) AS ColumnDateTime2" +
                     ", CONVERT(DATETIME2(5), GETUTCDATE()) AS CurrentDate" +
-                    ", CONVERT(NVARCHAR(128), SYSTEM_USER) AS RequestorName;", param)).FirstOrDefault();
+                    ", CONVERT(NVARCHAR(128), SYSTEM_USER) AS RequestorName;", param).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(result);
@@ -1213,7 +1213,7 @@ namespace RepoDb.IntegrationTests
                     ", CONVERT(DATE, @ColumnDate) AS ColumnDate" +
                     ", CONVERT(TIME, @ColumnTime) AS ColumnTime" +
                     ", CONVERT(DATETIME, @ColumnDateTime) AS ColumnDateTime" +
-                    ", CONVERT(DATETIME2(7), @ColumnDateTime2) AS ColumnDateTime2;", param)).FirstOrDefault();
+                    ", CONVERT(DATETIME2(7), @ColumnDateTime2) AS ColumnDateTime2;", param).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(result);
@@ -1277,7 +1277,7 @@ namespace RepoDb.IntegrationTests
                 var result = (await connection.ExecuteQueryAsync<WhateverClassWithNullableProperties>("SELECT @Id AS Id" +
                     ", CONVERT(INT, @ColumnInt) AS ColumnInt" +
                     ", CONVERT(BIGINT, @ColumnBigInt) AS ColumnBigInt" +
-                    ", CONVERT(NVARCHAR(MAX), @ColumnNvarChar) AS ColumnNvarChar;", param)).FirstOrDefault();
+                    ", CONVERT(NVARCHAR(MAX), @ColumnNvarChar) AS ColumnNvarChar;", param).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(result);
@@ -1357,7 +1357,7 @@ namespace RepoDb.IntegrationTests
                     ", CONVERT(DATETIME, @ColumnDateTime) AS ColumnDateTime" +
                     ", CONVERT(DATETIME2(7), @ColumnDateTime2) AS ColumnDateTime2" +
                     ", CONVERT(DATETIME2(5), GETUTCDATE()) AS CurrentDate" +
-                    ", CONVERT(NVARCHAR(128), SYSTEM_USER) AS RequestorName;", param)).FirstOrDefault();
+                    ", CONVERT(NVARCHAR(128), SYSTEM_USER) AS RequestorName;", param).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(result);
@@ -1441,7 +1441,7 @@ namespace RepoDb.IntegrationTests
                     ", CONVERT(DATE, @ColumnDateMapped) AS ColumnDate" +
                     ", CONVERT(TIME, @ColumnTimeMapped) AS ColumnTime" +
                     ", CONVERT(DATETIME, @ColumnDateTimeMapped) AS ColumnDateTime" +
-                    ", CONVERT(DATETIME2(7), @ColumnDateTime2Mapped) AS ColumnDateTime2;", param)).FirstOrDefault();
+                    ", CONVERT(DATETIME2(7), @ColumnDateTime2Mapped) AS ColumnDateTime2;", param).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(result);
@@ -1505,7 +1505,7 @@ namespace RepoDb.IntegrationTests
                 var result = (await connection.ExecuteQueryAsync<MappedWhateverClassWithNonNullableProperties>("SELECT @IdMapped AS Id" +
                     ", CONVERT(INT, @ColumnIntMapped) AS ColumnInt" +
                     ", CONVERT(BIGINT, @ColumnBigIntMapped) AS ColumnBigInt" +
-                    ", CONVERT(NVARCHAR(MAX), @ColumnNvarCharMapped) AS ColumnNvarChar;", param)).FirstOrDefault();
+                    ", CONVERT(NVARCHAR(MAX), @ColumnNvarCharMapped) AS ColumnNvarChar;", param).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(result);
@@ -1585,7 +1585,7 @@ namespace RepoDb.IntegrationTests
                     ", CONVERT(DATETIME, @ColumnDateTimeMapped) AS ColumnDateTime" +
                     ", CONVERT(DATETIME2(7), @ColumnDateTime2Mapped) AS ColumnDateTime2" +
                     ", CONVERT(DATETIME2(5), GETUTCDATE()) AS CurrentDate" +
-                    ", CONVERT(NVARCHAR(128), SYSTEM_USER) AS RequestorName;", param)).FirstOrDefault();
+                    ", CONVERT(NVARCHAR(128), SYSTEM_USER) AS RequestorName;", param).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(result);
@@ -1665,7 +1665,7 @@ namespace RepoDb.IntegrationTests
                     ", CONVERT(DATE, @ColumnDateMapped) AS ColumnDate" +
                     ", CONVERT(TIME, @ColumnTimeMapped) AS ColumnTime" +
                     ", CONVERT(DATETIME, @ColumnDateTimeMapped) AS ColumnDateTime" +
-                    ", CONVERT(DATETIME2(7), @ColumnDateTime2Mapped) AS ColumnDateTime2;", param)).FirstOrDefault();
+                    ", CONVERT(DATETIME2(7), @ColumnDateTime2Mapped) AS ColumnDateTime2;", param).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(result);
@@ -1729,7 +1729,7 @@ namespace RepoDb.IntegrationTests
                 var result = (await connection.ExecuteQueryAsync<MappedWhateverClassWithNullableProperties>("SELECT @IdMapped AS Id" +
                     ", CONVERT(INT, @ColumnIntMapped) AS ColumnInt" +
                     ", CONVERT(BIGINT, @ColumnBigIntMapped) AS ColumnBigInt" +
-                    ", CONVERT(NVARCHAR(MAX), @ColumnNvarCharMapped) AS ColumnNvarChar;", param)).FirstOrDefault();
+                    ", CONVERT(NVARCHAR(MAX), @ColumnNvarCharMapped) AS ColumnNvarChar;", param).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(result);
@@ -1809,7 +1809,7 @@ namespace RepoDb.IntegrationTests
                     ", CONVERT(DATETIME, @ColumnDateTimeMapped) AS ColumnDateTime" +
                     ", CONVERT(DATETIME2(7), @ColumnDateTime2Mapped) AS ColumnDateTime2" +
                     ", CONVERT(DATETIME2(5), GETUTCDATE()) AS CurrentDate" +
-                    ", CONVERT(NVARCHAR(128), SYSTEM_USER) AS RequestorName;", param)).FirstOrDefault();
+                    ", CONVERT(NVARCHAR(128), SYSTEM_USER) AS RequestorName;", param).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(result);
@@ -1965,7 +1965,7 @@ namespace RepoDb.IntegrationTests
             {
                 // Act
                 var result = (await connection.ExecuteQueryAsync<int>("SELECT 1 * @Value;",
-                    new { Value = new SqlParameter("_", 100) })).FirstOrDefault();
+                    new { Value = new SqlParameter("_", 100) }).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(100, result);
@@ -1979,7 +1979,7 @@ namespace RepoDb.IntegrationTests
             {
                 // Act
                 var result = (await connection.ExecuteQueryAsync<int>("SELECT 1 * @Value;",
-                    new QueryField("Value", new SqlParameter("_", 100)))).FirstOrDefault();
+                    new QueryField("Value", new SqlParameter("_", 100))).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(100, result);
@@ -1993,7 +1993,7 @@ namespace RepoDb.IntegrationTests
             {
                 // Act
                 var result = (await connection.ExecuteQueryAsync<int>("SELECT 1 * @Value;",
-                    new QueryField("Value", new SqlParameter("_", 100)).AsEnumerable())).FirstOrDefault();
+                    new QueryField("Value", new SqlParameter("_", 100)).AsEnumerable()).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(100, result);
@@ -2007,7 +2007,7 @@ namespace RepoDb.IntegrationTests
             {
                 // Act
                 var result = (await connection.ExecuteQueryAsync<int>("SELECT 1 * @Value;",
-                    new QueryGroup(new QueryField("Value", new SqlParameter("_", 100))))).FirstOrDefault();
+                    new QueryGroup(new QueryField("Value", new SqlParameter("_", 100)))).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(100, result);
@@ -2118,7 +2118,7 @@ namespace RepoDb.IntegrationTests
                     ", CONVERT(DATE, @ColumnDate) AS ColumnDate" +
                     ", CONVERT(TIME, @ColumnTime) AS ColumnTime" +
                     ", CONVERT(DATETIME, @ColumnDateTime) AS ColumnDateTime" +
-                    ", CONVERT(DATETIME2(7), @ColumnDateTime2) AS ColumnDateTime2;", param);
+                    ", CONVERT(DATETIME2(7), @ColumnDateTime2) AS ColumnDateTime2;", param).ConfigureAwait(false);
                 var firstResult = extractor.Extract<WhateverClassWithNonNullableProperties>();
                 var secondResult = extractor.Extract<WhateverClassWithNonNullableProperties>();
 
@@ -2198,7 +2198,7 @@ namespace RepoDb.IntegrationTests
                     "SELECT @Id AS Id" +
                     ", CONVERT(INT, @ColumnInt) AS ColumnInt" +
                     ", CONVERT(BIGINT, @ColumnBigInt) AS ColumnBigInt" +
-                    ", CONVERT(NVARCHAR(MAX), @ColumnNvarChar) AS ColumnNvarChar;", param);
+                    ", CONVERT(NVARCHAR(MAX), @ColumnNvarChar) AS ColumnNvarChar;", param).ConfigureAwait(false);
                 var firstResult = extractor.Extract<WhateverClassWithNonNullableProperties>();
                 var secondResult = extractor.Extract<WhateverClassWithNonNullableProperties>();
 
@@ -2308,7 +2308,7 @@ namespace RepoDb.IntegrationTests
                     ", CONVERT(DATETIME, @ColumnDateTime) AS ColumnDateTime" +
                     ", CONVERT(DATETIME2(7), @ColumnDateTime2) AS ColumnDateTime2" +
                     ", CONVERT(DATETIME2(5), GETUTCDATE()) AS CurrentDate" +
-                    ", CONVERT(NVARCHAR(128), SYSTEM_USER) AS RequestorName;", param);
+                    ", CONVERT(NVARCHAR(128), SYSTEM_USER) AS RequestorName;", param).ConfigureAwait(false);
                 var firstResult = extractor.Extract<WhateverClassWithNonNullableProperties>();
                 var secondResult = extractor.Extract<WhateverClassWithNonNullableProperties>();
 
@@ -2414,7 +2414,7 @@ namespace RepoDb.IntegrationTests
                     ", CONVERT(DATE, @ColumnDate) AS ColumnDate" +
                     ", CONVERT(TIME, @ColumnTime) AS ColumnTime" +
                     ", CONVERT(DATETIME, @ColumnDateTime) AS ColumnDateTime" +
-                    ", CONVERT(DATETIME2(7), @ColumnDateTime2) AS ColumnDateTime2;", param);
+                    ", CONVERT(DATETIME2(7), @ColumnDateTime2) AS ColumnDateTime2;", param).ConfigureAwait(false);
                 var firstResult = extractor.Extract<WhateverClassWithNonNullableProperties>();
                 var secondResult = extractor.Extract<WhateverClassWithNonNullableProperties>();
 
@@ -2494,7 +2494,7 @@ namespace RepoDb.IntegrationTests
                     "SELECT @Id AS Id" +
                     ", CONVERT(INT, @ColumnInt) AS ColumnInt" +
                     ", CONVERT(BIGINT, @ColumnBigInt) AS ColumnBigInt" +
-                    ", CONVERT(NVARCHAR(MAX), @ColumnNvarChar) AS ColumnNvarChar;", param);
+                    ", CONVERT(NVARCHAR(MAX), @ColumnNvarChar) AS ColumnNvarChar;", param).ConfigureAwait(false);
                 var firstResult = extractor.Extract<WhateverClassWithNonNullableProperties>();
                 var secondResult = extractor.Extract<WhateverClassWithNonNullableProperties>();
 
@@ -2604,7 +2604,7 @@ namespace RepoDb.IntegrationTests
                     ", CONVERT(DATETIME, @ColumnDateTime) AS ColumnDateTime" +
                     ", CONVERT(DATETIME2(7), @ColumnDateTime2) AS ColumnDateTime2" +
                     ", CONVERT(DATETIME2(5), GETUTCDATE()) AS CurrentDate" +
-                    ", CONVERT(NVARCHAR(128), SYSTEM_USER) AS RequestorName;", param);
+                    ", CONVERT(NVARCHAR(128), SYSTEM_USER) AS RequestorName;", param).ConfigureAwait(false);
                 var firstResult = extractor.Extract<WhateverClassWithNonNullableProperties>();
                 var secondResult = extractor.Extract<WhateverClassWithNonNullableProperties>();
 
@@ -2703,9 +2703,9 @@ namespace RepoDb.IntegrationTests
             {
                 // Act
                 using (var result = await connection.ExecuteQueryMultipleAsync("SELECT 1 * @Value;",
-                    new { Value = new SqlParameter("_", 100) }))
+                    new { Value = new SqlParameter("_", 100) }).ConfigureAwait(false))
                 {
-                    var value = (await result.ExtractAsync<int>()).FirstOrDefault();
+                    var value = (await result.ExtractAsync<int>().ConfigureAwait(false)).FirstOrDefault();
 
                     // Assert
                     Assert.AreEqual(100, value);
@@ -2720,9 +2720,9 @@ namespace RepoDb.IntegrationTests
             {
                 // Act
                 using (var result = await connection.ExecuteQueryMultipleAsync("SELECT 1 * @Value;",
-                    new QueryField("Value", new SqlParameter("_", 100))))
+                    new QueryField("Value", new SqlParameter("_", 100))).ConfigureAwait(false))
                 {
-                    var value = (await result.ExtractAsync<int>()).FirstOrDefault();
+                    var value = (await result.ExtractAsync<int>().ConfigureAwait(false)).FirstOrDefault();
 
                     // Assert
                     Assert.AreEqual(100, value);
@@ -2737,9 +2737,9 @@ namespace RepoDb.IntegrationTests
             {
                 // Act
                 using (var result = await connection.ExecuteQueryMultipleAsync("SELECT 1 * @Value;",
-                    new QueryField("Value", new SqlParameter("_", 100)).AsEnumerable()))
+                    new QueryField("Value", new SqlParameter("_", 100)).AsEnumerable()).ConfigureAwait(false))
                 {
-                    var value = (await result.ExtractAsync<int>()).FirstOrDefault();
+                    var value = (await result.ExtractAsync<int>().ConfigureAwait(false)).FirstOrDefault();
 
                     // Assert
                     Assert.AreEqual(100, value);
@@ -2754,9 +2754,9 @@ namespace RepoDb.IntegrationTests
             {
                 // Act
                 using (var result = await connection.ExecuteQueryMultipleAsync("SELECT 1 * @Value;",
-                    new QueryGroup(new QueryField("Value", new SqlParameter("_", 100)))))
+                    new QueryGroup(new QueryField("Value", new SqlParameter("_", 100)))).ConfigureAwait(false))
                 {
-                    var value = (await result.ExtractAsync<int>()).FirstOrDefault();
+                    var value = (await result.ExtractAsync<int>().ConfigureAwait(false)).FirstOrDefault();
 
                     // Assert
                     Assert.AreEqual(100, value);

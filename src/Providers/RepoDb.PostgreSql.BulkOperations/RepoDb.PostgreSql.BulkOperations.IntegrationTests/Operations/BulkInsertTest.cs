@@ -2361,7 +2361,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
             
             // Act
             var result = await connection.BulkInsertAsync(tableName, entities,
-            identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
+            identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(entities.Count, result);

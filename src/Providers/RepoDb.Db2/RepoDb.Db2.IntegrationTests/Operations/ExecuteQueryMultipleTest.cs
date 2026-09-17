@@ -116,7 +116,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
 
             // Act
             using var extractor = await connection.ExecuteQueryMultipleAsync(
-                "SELECT 1 AS \"Value\" FROM SYSIBM.SYSDUMMY1; SELECT 2 AS \"Value\" FROM SYSIBM.SYSDUMMY1");
+                "SELECT 1 AS \"Value\" FROM SYSIBM.SYSDUMMY1; SELECT 2 AS \"Value\" FROM SYSIBM.SYSDUMMY1").ConfigureAwait(false);
 
             var first = extractor.Extract().Single();
             var second = extractor.Extract().Single();
@@ -136,7 +136,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             {
                 // Act
                 using var extractor = await connection.ExecuteQueryMultipleAsync(
-                    "SELECT 1 AS \"Value\" FROM SYSIBM.SYSDUMMY1; SELECT 2 AS \"Value\" FROM SYSIBM.SYSDUMMY1");
+                    "SELECT 1 AS \"Value\" FROM SYSIBM.SYSDUMMY1; SELECT 2 AS \"Value\" FROM SYSIBM.SYSDUMMY1").ConfigureAwait(false);
 
                 var first = extractor.Extract().Single();
                 var second = extractor.Extract().Single();

@@ -105,7 +105,7 @@ namespace RepoDb.Telemetry.Core
         public async Task PublishAsync(
             TelemetryItem telemetryItem,
             CancellationToken cancellationToken = default) =>
-                await PublishManyAsync(new[] { telemetryItem }, cancellationToken);
+                await PublishManyAsync(new[] { telemetryItem }, cancellationToken).ConfigureAwait(false);
 
         /// <summary>
         /// A method that is used to publish multiple telemetry items to the insights solution.
@@ -154,7 +154,7 @@ namespace RepoDb.Telemetry.Core
                 {
                     _logger?.Debug("Publishing telemetry data to {Host}.", Host);
                     var result = await _httpClient
-                        .SendAsync(request, cancellationToken);
+                        .SendAsync(request, cancellationToken).ConfigureAwait(false);
                     result.EnsureSuccessStatusCode();
                     _logger?.Information("{Count} telemetry data has been published.", telemetryItems.Count());
                 }

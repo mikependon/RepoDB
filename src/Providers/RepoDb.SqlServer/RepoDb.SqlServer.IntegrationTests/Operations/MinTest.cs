@@ -184,7 +184,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MinAsync<IdentityCompleteTable>(e => e.ColumnInt,
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
@@ -202,7 +202,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MinAsync<IdentityCompleteTable>(e => e.ColumnInt,
-                    e => ids.Contains(e.Id));
+                    e => ids.Contains(e.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
@@ -219,7 +219,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MinAsync<IdentityCompleteTable>(e => e.ColumnInt,
-                    new { tables.First().Id });
+                    new { tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
@@ -236,7 +236,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MinAsync<IdentityCompleteTable>(e => e.ColumnInt,
-                    new QueryField("Id", tables.First().Id));
+                    new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
@@ -258,7 +258,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MinAsync<IdentityCompleteTable>(e => e.ColumnInt,
-                    queryFields);
+                    queryFields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
@@ -281,7 +281,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MinAsync<IdentityCompleteTable>(e => e.ColumnInt,
-                    queryGroup);
+                    queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
@@ -299,7 +299,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync<IdentityCompleteTable>(e => e.ColumnInt,
                     (object)null,
-                    SqlServerTableHints.NoLock);
+                    SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
@@ -449,7 +449,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
@@ -467,7 +467,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
-                    new { tables.First().Id });
+                    new { tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
@@ -485,7 +485,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
-                    new QueryField("Id", tables.First().Id));
+                    new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
@@ -508,7 +508,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
-                    queryFields);
+                    queryFields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
@@ -532,7 +532,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
-                    queryGroup);
+                    queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
@@ -551,7 +551,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 var result = await connection.MinAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     (object)null,
-                    SqlServerTableHints.NoLock);
+                    SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));

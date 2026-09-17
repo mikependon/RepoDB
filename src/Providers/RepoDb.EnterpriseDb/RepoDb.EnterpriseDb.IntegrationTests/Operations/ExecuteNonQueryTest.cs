@@ -94,7 +94,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.Operations
             using (var connection = new EDBConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\";");
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\";").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -111,7 +111,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\" WHERE \"Id\" = @Id;",
-                    new { tables.Last().Id });
+                    new { tables.Last().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -127,7 +127,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.Operations
             using (var connection = new EDBConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\"; DELETE FROM \"CompleteTable\";");
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\"; DELETE FROM \"CompleteTable\";").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);

@@ -78,7 +78,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = OracleText.GetCreatePseudoTableSql(tableName, pseudoTableName, pseudoTableType, dbSetting, qualifierField);
-            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
 
             var dbSetting = connection.GetDbSetting();
             var commandText = OracleText.GetCreatePseudoTableIndexSql(pseudoTableName, qualifiers, dbSetting);
-            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -174,7 +174,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = OracleText.GetTruncatePseudoTableSql(pseudoTableName, dbSetting);
-            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -215,7 +215,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = OracleText.GetDropPseudoTableSql(pseudoTableName, dbSetting);
-            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         #endregion
@@ -264,7 +264,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = OracleText.GetAllowNullForColumnSql(pseudoTableName, columnName, dbSetting);
-            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -326,8 +326,8 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
                 ColumnName = identityField.Name.AsUnquoted(dbSetting)
             };
 
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, param: param, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
-            await reader.ReadAsync(cancellationToken);
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, param: param, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+            await reader.ReadAsync(cancellationToken).ConfigureAwait(false);
             return (reader.GetString(0), string.Equals(reader.GetString(1), "ALWAYS", StringComparison.OrdinalIgnoreCase));
         }
 
@@ -401,14 +401,14 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
             where TEntity : class
         {
             var dbSetting = connection.GetDbSetting();
-            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, trace, traceKey, transaction, cancellationToken);
+            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
             var commandText = OracleText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, sequenceName, isAlwaysGenerated, dbSetting);
             var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
 
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
             var result = 0;
 
-            while (await reader.ReadAsync(cancellationToken))
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
                 setter(entities[result], Converter.DbNullToNull(reader.GetValue(0)));
                 result++;
@@ -482,13 +482,13 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
-            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, trace, traceKey, transaction, cancellationToken);
+            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
             var commandText = OracleText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, sequenceName, isAlwaysGenerated, dbSetting);
 
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
             var result = 0;
 
-            while (await reader.ReadAsync(cancellationToken))
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
                 rows[result][identityField.Name] = Converter.DbNullToNull(reader.GetValue(0));
                 result++;
@@ -556,7 +556,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = OracleText.GetMergeFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, identityField, dbSetting);
-            return await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            return await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -634,13 +634,13 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         {
             var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
             var dbSetting = connection.GetDbSetting();
-            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, trace, traceKey, transaction, cancellationToken);
+            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
             var commandText = OracleText.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, sequenceName, isAlwaysGenerated, dbSetting);
 
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
             var result = 0;
 
-            while (await reader.ReadAsync(cancellationToken))
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
                 setter?.Invoke(entities[result], Converter.DbNullToNull(reader.GetValue(0)));
                 result++;
@@ -718,13 +718,13 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
-            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, trace, traceKey, transaction, cancellationToken);
+            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
             var commandText = OracleText.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, sequenceName, isAlwaysGenerated, dbSetting);
 
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
             var result = 0;
 
-            while (await reader.ReadAsync(cancellationToken))
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
                 rows[result][identityField.Name] = Converter.DbNullToNull(reader.GetValue(0));
                 result++;
@@ -788,7 +788,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = OracleText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, dbSetting);
-            return await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            return await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         #endregion
@@ -842,7 +842,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = OracleText.GetDeleteFromPseudoTableSql(tableName, pseudoTableName, qualifiers, dbSetting);
-            return await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            return await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         #endregion

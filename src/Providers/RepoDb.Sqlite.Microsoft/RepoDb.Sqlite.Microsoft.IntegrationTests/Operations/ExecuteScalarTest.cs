@@ -79,7 +79,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = await connection.ExecuteScalarAsync("SELECT COUNT(*) FROM [MdsCompleteTable];");
+                var result = await connection.ExecuteScalarAsync("SELECT COUNT(*) FROM [MdsCompleteTable];").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), Convert.ToInt32(result));
@@ -95,7 +95,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM [MdsCompleteTable];");
+                var result = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM [MdsCompleteTable];").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);

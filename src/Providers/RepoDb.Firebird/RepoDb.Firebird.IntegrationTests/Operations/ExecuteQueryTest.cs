@@ -82,7 +82,7 @@ namespace RepoDb.Firebird.IntegrationTests.Operations
             using (var connection = new FbConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM \"CompleteTable\"");
+                var result = await connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM \"CompleteTable\"").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -100,7 +100,7 @@ namespace RepoDb.Firebird.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM \"CompleteTable\" WHERE \"Id\" = @Id",
-                    new { tables.Last().Id });
+                    new { tables.Last().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());

@@ -87,10 +87,10 @@ namespace RepoDb.IntegrationTests.Types.Others
             using (var repository = new OthersClassRepository(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await repository.InsertAsync(entity);
+                var id = await repository.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await repository.QueryAsync(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await repository.QueryAsync(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -147,10 +147,10 @@ namespace RepoDb.IntegrationTests.Types.Others
             using (var repository = new OthersClassRepository(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await repository.InsertAsync(entity);
+                var id = await repository.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await repository.QueryAsync(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await repository.QueryAsync(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -207,10 +207,10 @@ namespace RepoDb.IntegrationTests.Types.Others
             using (var repository = new OthersMapClassRepository(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await repository.InsertAsync(entity);
+                var id = await repository.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await repository.QueryAsync(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await repository.QueryAsync(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -267,10 +267,10 @@ namespace RepoDb.IntegrationTests.Types.Others
             using (var repository = new OthersMapClassRepository(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await repository.InsertAsync(entity);
+                var id = await repository.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await repository.QueryAsync(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await repository.QueryAsync(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);

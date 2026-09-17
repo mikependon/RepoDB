@@ -158,7 +158,7 @@ namespace RepoDb.SqlServer.IntegrationTests
             {
                 // Act
                 var tables = (await connection.ExecuteQueryAsync<IdentityTable>("EXEC [sp_identity_table_type] @Table = @Table;",
-                    new { Table = dataTable }))?.AsList();
+                    new { Table = dataTable }).ConfigureAwait(false))?.AsList();
 
                 // Assert
                 Assert.AreEqual(dataTable.Rows.Count, tables.Count);
@@ -182,7 +182,7 @@ namespace RepoDb.SqlServer.IntegrationTests
             {
                 // Act
                 var result = await connection.ExecuteNonQueryAsync("EXEC [sp_identity_table_type] @Table = @Table;",
-                    new { Table = dataTable });
+                    new { Table = dataTable }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(dataTable.Rows.Count, result);

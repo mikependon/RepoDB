@@ -137,7 +137,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
-            var result = await connection.DeleteAllAsync<CompleteTable>();
+            var result = await connection.DeleteAllAsync<CompleteTable>().ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count(), result);
@@ -156,7 +156,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             try
             {
                 // Act
-                var result = await connection.DeleteAllAsync<CompleteTable>();
+                var result = await connection.DeleteAllAsync<CompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -178,7 +178,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
-            var result = await connection.DeleteAllAsync<CompleteTable>(keysToDelete);
+            var result = await connection.DeleteAllAsync<CompleteTable>(keysToDelete).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(5, result);
@@ -194,7 +194,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
-            var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>());
+            var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>()).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count(), result);
@@ -211,7 +211,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
-            var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>(), keysToDelete);
+            var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>(), keysToDelete).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(5, result);

@@ -99,7 +99,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = await connection.DeleteAllAsync<MdsCompleteTable>();
+                var result = await connection.DeleteAllAsync<MdsCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -116,7 +116,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var primaryKeys = ClassExpression.GetEntitiesPropertyValues<MdsCompleteTable, object>(tables, e => e.Id);
 
                 // Act
-                var result = await connection.DeleteAllAsync<MdsCompleteTable>(primaryKeys);
+                var result = await connection.DeleteAllAsync<MdsCompleteTable>(primaryKeys).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -211,7 +211,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>());
+                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>()).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -228,7 +228,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var primaryKeys = ClassExpression.GetEntitiesPropertyValues<MdsCompleteTable, object>(tables, e => e.Id);
 
                 // Act
-                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(), primaryKeys);
+                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(), primaryKeys).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);

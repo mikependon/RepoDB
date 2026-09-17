@@ -83,7 +83,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.AverageAllAsync<IdentityCompleteTable>(e => e.ColumnInt);
+                var result = await connection.AverageAllAsync<IdentityCompleteTable>(e => e.ColumnInt).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnInt), Convert.ToDouble(result));
@@ -100,7 +100,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.AverageAllAsync<IdentityCompleteTable>(e => e.ColumnInt,
-                    SqlServerTableHints.TabLock);
+                    SqlServerTableHints.TabLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnInt), Convert.ToDouble(result));
@@ -164,7 +164,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.AverageAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
-                    Field.Parse<IdentityCompleteTable>(e => e.ColumnInt).First());
+                    Field.Parse<IdentityCompleteTable>(e => e.ColumnInt).First()).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnInt), Convert.ToDouble(result));
@@ -182,7 +182,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 // Act
                 var result = await connection.AverageAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     Field.Parse<IdentityCompleteTable>(e => e.ColumnInt).First(),
-                    SqlServerTableHints.TabLock);
+                    SqlServerTableHints.TabLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnInt), Convert.ToDouble(result));

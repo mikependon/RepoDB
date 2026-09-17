@@ -207,10 +207,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var result = await connection.DeleteAsync<MappedCompleteTableForKey>(id);
+                var result = await connection.DeleteAsync<MappedCompleteTableForKey>(id).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -249,10 +249,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var result = await connection.ExistsAsync<MappedCompleteTableForKey>(id);
+                var result = await connection.ExistsAsync<MappedCompleteTableForKey>(id).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -291,10 +291,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var result = (await connection.QueryAsync<MappedCompleteTable>(id)).FirstOrDefault();
+                var result = (await connection.QueryAsync<MappedCompleteTable>(id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(result);
@@ -344,10 +344,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<MappedIdentityTable>(new { Id = id })).FirstOrDefault();
+                var data = (await connection.QueryAsync<MappedIdentityTable>(new { Id = id }).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -396,10 +396,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<MappedIdentityTable>(e => e.IdMapped == (long)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<MappedIdentityTable>(e => e.IdMapped == (long)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -448,10 +448,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<MappedIdentityTable>(new QueryField("Id", id))).FirstOrDefault();
+                var data = (await connection.QueryAsync<MappedIdentityTable>(new QueryField("Id", id)).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -499,10 +499,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<MappedIdentityTable>(new QueryField("Id", id).AsEnumerable())).FirstOrDefault();
+                var data = (await connection.QueryAsync<MappedIdentityTable>(new QueryField("Id", id).AsEnumerable()).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.RowGuidMapped, data.RowGuidMapped);
@@ -550,10 +550,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<MappedIdentityTable>(new QueryGroup(new QueryField("Id", id)))).FirstOrDefault();
+                var data = (await connection.QueryAsync<MappedIdentityTable>(new QueryGroup(new QueryField("Id", id))).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -615,19 +615,19 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Setup
                 entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Updated)";
 
                 // Act Update
-                var affectedRows = await connection.UpdateAsync<MappedIdentityTable>(entity, new { Id = id });
+                var affectedRows = await connection.UpdateAsync<MappedIdentityTable>(entity, new { Id = id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, affectedRows);
 
                 // Act Query
-                var data = (await connection.QueryAsync<MappedIdentityTable>(new { Id = id })).FirstOrDefault();
+                var data = (await connection.QueryAsync<MappedIdentityTable>(new { Id = id }).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -685,19 +685,19 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Setup
                 entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Updated)";
 
                 // Act Update
-                var affectedRows = await connection.UpdateAsync<MappedIdentityTable>(entity, c => c.IdMapped == (long)id);
+                var affectedRows = await connection.UpdateAsync<MappedIdentityTable>(entity, c => c.IdMapped == (long)id).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, affectedRows);
 
                 // Act Query
-                var data = (await connection.QueryAsync<MappedIdentityTable>(new { Id = id })).FirstOrDefault();
+                var data = (await connection.QueryAsync<MappedIdentityTable>(new { Id = id }).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -757,21 +757,21 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Setup
                 var field = new QueryField("Id", id);
                 entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Updated)";
 
                 // Act Update
-                var affectedRows = await connection.UpdateAsync<MappedIdentityTable>(entity, field);
+                var affectedRows = await connection.UpdateAsync<MappedIdentityTable>(entity, field).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, affectedRows);
 
                 // Act Query
                 field.Reset();
-                var data = (await connection.QueryAsync<MappedIdentityTable>(field)).FirstOrDefault();
+                var data = (await connection.QueryAsync<MappedIdentityTable>(field).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -831,21 +831,21 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Setup
                 var fields = new QueryField("Id", id).AsEnumerable();
                 entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Updated)";
 
                 // Act Update
-                var affectedRows = await connection.UpdateAsync<MappedIdentityTable>(entity, fields);
+                var affectedRows = await connection.UpdateAsync<MappedIdentityTable>(entity, fields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, affectedRows);
 
                 // Act Query
                 fields.ResetAll();
-                var data = (await connection.QueryAsync<MappedIdentityTable>(fields)).FirstOrDefault();
+                var data = (await connection.QueryAsync<MappedIdentityTable>(fields).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -905,21 +905,21 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Setup
                 var queryGroup = new QueryGroup(new QueryField("Id", id));
                 entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Updated)";
 
                 // Act Update
-                var affectedRows = await connection.UpdateAsync<MappedIdentityTable>(entity, queryGroup);
+                var affectedRows = await connection.UpdateAsync<MappedIdentityTable>(entity, queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, affectedRows);
 
                 // Act Query
                 queryGroup.Reset();
-                var data = (await connection.QueryAsync<MappedIdentityTable>(queryGroup)).FirstOrDefault();
+                var data = (await connection.QueryAsync<MappedIdentityTable>(queryGroup).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -982,20 +982,20 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Setup
                 entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Merged)";
 
                 // Act Update
                 var mergeResult = await connection.MergeAsync<MappedIdentityTable>(entity,
-                    qualifiers: Field.From(new[] { "Id" }));
+                    qualifiers: Field.From(new[] { "Id" })).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.IdMapped, mergeResult);
 
                 // Act Query
-                var data = (await connection.QueryAsync<MappedIdentityTable>(new { Id = id })).FirstOrDefault();
+                var data = (await connection.QueryAsync<MappedIdentityTable>(new { Id = id }).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -1054,10 +1054,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act InsertAll
-                var rowsInserted = await connection.InsertAllAsync(entities);
+                var rowsInserted = await connection.InsertAllAsync(entities).ConfigureAwait(false);
 
                 // Act QueryAll
-                var data = await connection.QueryAllAsync<MappedIdentityTable>();
+                var data = await connection.QueryAllAsync<MappedIdentityTable>().ConfigureAwait(false);
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -1137,7 +1137,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act InsertAll
-                var rowsInserted = await connection.InsertAllAsync(entities);
+                var rowsInserted = await connection.InsertAllAsync(entities).ConfigureAwait(false);
 
                 // Setup
                 entities.ForEach(entity =>
@@ -1152,10 +1152,10 @@ namespace RepoDb.IntegrationTests
                 });
 
                 // Act MergeAll
-                var rowsMerged = await connection.MergeAllAsync(entities);
+                var rowsMerged = await connection.MergeAllAsync(entities).ConfigureAwait(false);
 
                 // Act QueryAll
-                var data = await connection.QueryAllAsync<MappedIdentityTable>();
+                var data = await connection.QueryAllAsync<MappedIdentityTable>().ConfigureAwait(false);
 
                 // Assert333333333333
                 Assert.IsNotNull(data);
@@ -1217,10 +1217,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<MappedCompleteTable>(new { SessionId = id })).FirstOrDefault();
+                var data = (await connection.QueryAsync<MappedCompleteTable>(new { SessionId = id }).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -1267,10 +1267,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<MappedCompleteTable>(e => e.SessionIdMapped == (Guid)id)).FirstOrDefault();
+                var data = (await connection.QueryAsync<MappedCompleteTable>(e => e.SessionIdMapped == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -1317,10 +1317,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<MappedCompleteTable>(new QueryField("SessionId", id))).FirstOrDefault();
+                var data = (await connection.QueryAsync<MappedCompleteTable>(new QueryField("SessionId", id)).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -1367,10 +1367,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<MappedCompleteTable>(new QueryField("SessionId", id).AsEnumerable())).FirstOrDefault();
+                var data = (await connection.QueryAsync<MappedCompleteTable>(new QueryField("SessionId", id).AsEnumerable()).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -1417,10 +1417,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync<MappedCompleteTable>(new QueryGroup(new QueryField("SessionId", id)))).FirstOrDefault();
+                var data = (await connection.QueryAsync<MappedCompleteTable>(new QueryGroup(new QueryField("SessionId", id))).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -1480,19 +1480,19 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Setup
                 entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Updated)";
 
                 // Act Update
-                var affectedRows = await connection.UpdateAsync<MappedCompleteTable>(entity, new { SessionId = id });
+                var affectedRows = await connection.UpdateAsync<MappedCompleteTable>(entity, new { SessionId = id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, affectedRows);
 
                 // Act Query
-                var data = (await connection.QueryAsync<MappedCompleteTable>(new { SessionId = id })).FirstOrDefault();
+                var data = (await connection.QueryAsync<MappedCompleteTable>(new { SessionId = id }).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -1548,19 +1548,19 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Setup
                 entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Updated)";
 
                 // Act Update
-                var affectedRows = await connection.UpdateAsync<MappedCompleteTable>(entity, c => c.SessionIdMapped == (Guid)id);
+                var affectedRows = await connection.UpdateAsync<MappedCompleteTable>(entity, c => c.SessionIdMapped == (Guid)id).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, affectedRows);
 
                 // Act Query
-                var data = (await connection.QueryAsync<MappedCompleteTable>(new { SessionId = id })).FirstOrDefault();
+                var data = (await connection.QueryAsync<MappedCompleteTable>(new { SessionId = id }).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -1618,21 +1618,21 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Setup
                 var field = new QueryField("SessionId", id);
                 entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Updated)";
 
                 // Act Update
-                var affectedRows = await connection.UpdateAsync<MappedCompleteTable>(entity, field);
+                var affectedRows = await connection.UpdateAsync<MappedCompleteTable>(entity, field).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, affectedRows);
 
                 // Act Query
                 field.Reset();
-                var data = (await connection.QueryAsync<MappedCompleteTable>(field)).FirstOrDefault();
+                var data = (await connection.QueryAsync<MappedCompleteTable>(field).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -1690,21 +1690,21 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Setup
                 var fields = new QueryField("SessionId", id).AsEnumerable();
                 entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Updated)";
 
                 // Act Update
-                var affectedRows = await connection.UpdateAsync<MappedCompleteTable>(entity, fields);
+                var affectedRows = await connection.UpdateAsync<MappedCompleteTable>(entity, fields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, affectedRows);
 
                 // Act Query
                 fields.ResetAll();
-                var data = (await connection.QueryAsync<MappedCompleteTable>(fields)).FirstOrDefault();
+                var data = (await connection.QueryAsync<MappedCompleteTable>(fields).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -1762,21 +1762,21 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Setup
                 var queryGroup = new QueryGroup(new QueryField("SessionId", id));
                 entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Updated)";
 
                 // Act Update
-                var affectedRows = await connection.UpdateAsync<MappedCompleteTable>(entity, queryGroup);
+                var affectedRows = await connection.UpdateAsync<MappedCompleteTable>(entity, queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, affectedRows);
 
                 // Act Query
                 queryGroup.Reset();
-                var data = (await connection.QueryAsync<MappedCompleteTable>(queryGroup)).FirstOrDefault();
+                var data = (await connection.QueryAsync<MappedCompleteTable>(queryGroup).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -1837,20 +1837,20 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(entity);
+                var id = await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Setup
                 entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Merged)";
 
                 // Act Update
                 var mergeResult = await connection.MergeAsync<MappedCompleteTable>(entity,
-                    qualifiers: Field.From(new[] { "SessionId" }));
+                    qualifiers: Field.From(new[] { "SessionId" })).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.SessionIdMapped, mergeResult);
 
                 // Act Query
-                var data = (await connection.QueryAsync<MappedCompleteTable>(new { SessionId = id })).FirstOrDefault();
+                var data = (await connection.QueryAsync<MappedCompleteTable>(new { SessionId = id }).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -1907,10 +1907,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act InsertAll
-                var rowsInserted = await connection.InsertAllAsync(entities);
+                var rowsInserted = await connection.InsertAllAsync(entities).ConfigureAwait(false);
 
                 // Act QueryAll
-                var data = await connection.QueryAllAsync<MappedCompleteTable>();
+                var data = await connection.QueryAllAsync<MappedCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -1987,7 +1987,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act InsertAll
-                var rowsInserted = await connection.InsertAllAsync(entities);
+                var rowsInserted = await connection.InsertAllAsync(entities).ConfigureAwait(false);
 
                 // Setup
                 entities.ForEach(entity =>
@@ -2001,10 +2001,10 @@ namespace RepoDb.IntegrationTests
                 });
 
                 // Act MergeAll
-                var rowsMerged = await connection.MergeAllAsync(entities);
+                var rowsMerged = await connection.MergeAllAsync(entities).ConfigureAwait(false);
 
                 // Act QueryAll
-                var data = await connection.QueryAllAsync<MappedCompleteTable>();
+                var data = await connection.QueryAllAsync<MappedCompleteTable>().ConfigureAwait(false);
 
                 // Assert333333333333
                 Assert.IsNotNull(data);

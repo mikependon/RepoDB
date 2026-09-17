@@ -140,10 +140,10 @@ namespace RepoDb.EnterpriseDb.IntegrationTests
                 var entity = GetCompleteTableForJsons(1).First();
 
                 // Act
-                await connection.InsertAsync(entity);
+                await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act
-                var queryResult = (await connection.QueryAsync<CompleteTableForJson>(entity.Id)).First();
+                var queryResult = (await connection.QueryAsync<CompleteTableForJson>(entity.Id).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -159,10 +159,10 @@ namespace RepoDb.EnterpriseDb.IntegrationTests
                 var entities = GetCompleteTableForJsons(10).AsList();
 
                 // Act
-                await connection.InsertAllAsync(entities);
+                await connection.InsertAllAsync(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAllAsync<CompleteTableForJson>();
+                var queryResult = await connection.QueryAllAsync<CompleteTableForJson>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(e =>
@@ -322,10 +322,10 @@ namespace RepoDb.EnterpriseDb.IntegrationTests
                 var entity = GetCompleteTableForDateTimes(1).First();
 
                 // Act
-                await connection.InsertAsync(entity);
+                await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act
-                var queryResult = (await connection.QueryAsync<CompleteTableForDateTime>(entity.Id)).First();
+                var queryResult = (await connection.QueryAsync<CompleteTableForDateTime>(entity.Id).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -341,10 +341,10 @@ namespace RepoDb.EnterpriseDb.IntegrationTests
                 var entities = GetCompleteTableForDateTimes(10).AsList();
 
                 // Act
-                await connection.InsertAllAsync(entities);
+                await connection.InsertAllAsync(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAllAsync<CompleteTableForDateTime>();
+                var queryResult = await connection.QueryAllAsync<CompleteTableForDateTime>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(e =>
@@ -361,7 +361,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests
                 var entity = GetCompleteTableForDateTimes(1).First();
 
                 // Act
-                await connection.InsertAsync(entity);
+                await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Setup
                 DateTimeOffset startDate = DateTimeOffset.Now.Date.AddHours(-5).ToUniversalTime();
@@ -369,7 +369,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests
 
                 // Act
                 var queryResult = (await connection.QueryAsync<CompleteTableForDateTime>(e =>
-                    e.ColumnTimestampWithTimeZone >= startDate && e.ColumnTimestampWithTimeZone <= endDate)).FirstOrDefault();
+                    e.ColumnTimestampWithTimeZone >= startDate && e.ColumnTimestampWithTimeZone <= endDate).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -385,7 +385,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests
                 var entity = GetCompleteTableForDateTimes(1).First();
 
                 // Act
-                await connection.InsertAsync(entity);
+                await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Setup
                 DateTimeOffset startDate = DateTimeOffset.Now.Date.AddHours(-5).ToUniversalTime();
@@ -393,7 +393,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests
 
                 // Act
                 var queryResult = (await connection.QueryAsync<CompleteTableForDateTime>(e =>
-                    e.ColumnTimestampWithTimeZone >= startDate && e.ColumnTimestampWithTimeZone <= endDate)).FirstOrDefault();
+                    e.ColumnTimestampWithTimeZone >= startDate && e.ColumnTimestampWithTimeZone <= endDate).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -411,7 +411,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests
                 var entity = GetCompleteTableForDateTimes(1).First();
 
                 // Act
-                await connection.InsertAsync(entity);
+                await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Setup
                 DateTimeOffset startDate = DateTimeOffset.Now.Date.AddHours(-5).ToUniversalTime();
@@ -419,7 +419,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests
 
                 // Act
                 var queryResult = (await connection.QueryAsync<CompleteTableForDateTime>(e =>
-                    e.ColumnTimestampWithTimeZone >= startDate && e.ColumnTimestampWithTimeZone <= endDate)).FirstOrDefault();
+                    e.ColumnTimestampWithTimeZone >= startDate && e.ColumnTimestampWithTimeZone <= endDate).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -437,7 +437,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests
                 var entity = GetCompleteTableForDateTimes(1).First();
 
                 // Act
-                await connection.InsertAsync(entity);
+                await connection.InsertAsync(entity).ConfigureAwait(false);
 
                 // Setup
                 DateTimeOffset startDate = DateTimeOffset.Now.Date.AddHours(-5).ToUniversalTime();
@@ -445,7 +445,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests
 
                 // Act
                 var queryResult = (await connection.QueryAsync<CompleteTableForDateTime>(e =>
-                    e.ColumnTimestampWithTimeZone >= startDate && e.ColumnTimestampWithTimeZone <= endDate)).FirstOrDefault();
+                    e.ColumnTimestampWithTimeZone >= startDate && e.ColumnTimestampWithTimeZone <= endDate).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);

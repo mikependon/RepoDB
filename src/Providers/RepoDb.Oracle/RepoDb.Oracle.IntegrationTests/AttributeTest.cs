@@ -174,7 +174,7 @@ namespace RepoDb.Oracle.IntegrationTests
             using var connection = new OracleConnection(Database.ConnectionString);
 
             // Act
-            await connection.InsertAsync<OracleAttributeTable>(table);
+            await connection.InsertAsync<OracleAttributeTable>(table).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(1, connection.CountAll<OracleAttributeTable>());
@@ -195,7 +195,7 @@ namespace RepoDb.Oracle.IntegrationTests
             using var connection = new OracleConnection(Database.ConnectionString);
 
             // Act
-            await connection.InsertAllAsync<OracleAttributeTable>(tables);
+            await connection.InsertAllAsync<OracleAttributeTable>(tables).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, connection.CountAll<OracleAttributeTable>());
@@ -219,7 +219,7 @@ namespace RepoDb.Oracle.IntegrationTests
             var id = connection.Insert<OracleAttributeTable>(table);
 
             // Query
-            var queryResult = (await connection.QueryAsync<OracleAttributeTable>(id)).First();
+            var queryResult = (await connection.QueryAsync<OracleAttributeTable>(id).ConfigureAwait(false)).First();
 
             // Assert
             Helper.AssertPropertiesEquality(table, queryResult);
@@ -237,7 +237,7 @@ namespace RepoDb.Oracle.IntegrationTests
             connection.InsertAll<OracleAttributeTable>(tables);
 
             // Query
-            var queryResult = await connection.QueryAllAsync<OracleAttributeTable>();
+            var queryResult = await connection.QueryAllAsync<OracleAttributeTable>().ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, queryResult.Count());

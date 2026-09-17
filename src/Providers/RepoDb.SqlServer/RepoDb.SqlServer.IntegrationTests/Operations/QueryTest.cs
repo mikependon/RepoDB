@@ -193,7 +193,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.QueryAsync<IdentityCompleteTable>(table.Id)).First();
+                var result = (await connection.QueryAsync<IdentityCompleteTable>(table.Id).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, result);
@@ -209,7 +209,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.QueryAsync<IdentityCompleteTable>(e => e.Id == table.Id)).First();
+                var result = (await connection.QueryAsync<IdentityCompleteTable>(e => e.Id == table.Id).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, result);
@@ -225,7 +225,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.QueryAsync<IdentityCompleteTable>(new { table.Id })).First();
+                var result = (await connection.QueryAsync<IdentityCompleteTable>(new { table.Id }).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, result);
@@ -241,7 +241,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.QueryAsync<IdentityCompleteTable>(new QueryField("Id", table.Id))).First();
+                var result = (await connection.QueryAsync<IdentityCompleteTable>(new QueryField("Id", table.Id)).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, result);
@@ -262,7 +262,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.QueryAsync<IdentityCompleteTable>(queryFields)).First();
+                var result = (await connection.QueryAsync<IdentityCompleteTable>(queryFields).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, result);
@@ -284,7 +284,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.QueryAsync<IdentityCompleteTable>(queryGroup)).First();
+                var result = (await connection.QueryAsync<IdentityCompleteTable>(queryGroup).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, result);
@@ -301,7 +301,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.QueryAsync<IdentityCompleteTable>((object)null,
-                    top: 2);
+                    top: 2).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -319,7 +319,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = (await connection.QueryAsync<IdentityCompleteTable>(table.Id,
-                    hints: SqlServerTableHints.NoLock)).First();
+                    hints: SqlServerTableHints.NoLock).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, result);
@@ -475,7 +475,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(), table.Id)).First();
+                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(), table.Id).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertMembersEquality(table, result);
@@ -491,7 +491,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(), new { table.Id })).First();
+                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(), new { table.Id }).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertMembersEquality(table, result);
@@ -507,7 +507,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(), new QueryField("Id", table.Id))).First();
+                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(), new QueryField("Id", table.Id)).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertMembersEquality(table, result);
@@ -528,7 +528,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(), queryFields)).First();
+                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(), queryFields).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertMembersEquality(table, result);
@@ -550,7 +550,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(), queryGroup)).First();
+                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(), queryGroup).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertMembersEquality(table, result);
@@ -568,7 +568,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 // Act
                 var result = await connection.QueryAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     (object)null,
-                    top: 2);
+                    top: 2).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -587,7 +587,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 // Act
                 var result = (await connection.QueryAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     table.Id,
-                    hints: SqlServerTableHints.NoLock)).First();
+                    hints: SqlServerTableHints.NoLock).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertMembersEquality(table, result);

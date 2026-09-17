@@ -79,7 +79,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteScalarAsync("SELECT COUNT(*) FROM \"IdentityCompleteTable\";");
+                var result = await connection.ExecuteScalarAsync("SELECT COUNT(*) FROM \"IdentityCompleteTable\";").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
@@ -95,7 +95,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM \"IdentityCompleteTable\";");
+                var result = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM \"IdentityCompleteTable\";").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);

@@ -80,7 +80,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.Operations
             using (var connection = new EDBConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.SumAllAsync<CompleteTable>(e => e.ColumnInteger);
+                var result = await connection.SumAllAsync<CompleteTable>(e => e.ColumnInteger).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(e => e.ColumnInteger), Convert.ToInt32(result));
@@ -98,7 +98,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.Operations
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.SumAllAsync<CompleteTable>(e => e.ColumnInteger,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -157,7 +157,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.SumAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInteger).First());
+                    Field.Parse<CompleteTable>(e => e.ColumnInteger).First()).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(e => e.ColumnInteger), Convert.ToInt32(result));
@@ -176,7 +176,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.Operations
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.SumAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
                         Field.Parse<CompleteTable>(e => e.ColumnInteger).First(),
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

@@ -104,7 +104,7 @@ namespace RepoDb
                 trace: trace,
                 traceKey: traceKey,
                 transaction: transaction,
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace RepoDb
                 trace: trace,
                 traceKey: traceKey,
                 transaction: transaction,
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -201,7 +201,7 @@ namespace RepoDb
             return await connection.ExecuteQueryAsync<IdentityResult>(commandText,
                 bulkCopyTimeout,
                 transaction: transaction,
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -267,7 +267,7 @@ namespace RepoDb
                 trace: trace,
                 traceKey: traceKey,
                 transaction: transaction,
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -341,7 +341,7 @@ namespace RepoDb
                 trace: trace,
                 traceKey: traceKey,
                 transaction: transaction,
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>

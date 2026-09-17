@@ -209,7 +209,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MinAsync<CompleteTable>(e => e.ColumnInt,
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
@@ -229,7 +229,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 {
                     // Act
                     var result = await connection.MinAsync<CompleteTable>(e => e.ColumnInt,
-                        (object)null);
+                        (object)null).ConfigureAwait(false);
 
                     // Assert
                     Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
@@ -252,7 +252,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MinAsync<CompleteTable>(e => e.ColumnInt,
-                    e => ids.Contains(e.Id));
+                    e => ids.Contains(e.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Min(e => e.ColumnInt), Convert.ToInt32(result));
@@ -269,7 +269,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MinAsync<CompleteTable>(e => e.ColumnInt,
-                    new { tables.First().Id });
+                    new { tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
@@ -286,7 +286,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MinAsync<CompleteTable>(e => e.ColumnInt,
-                    new QueryField("Id", tables.First().Id));
+                    new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
@@ -308,7 +308,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MinAsync<CompleteTable>(e => e.ColumnInt,
-                    queryFields);
+                    queryFields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
@@ -331,7 +331,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MinAsync<CompleteTable>(e => e.ColumnInt,
-                    queryGroup);
+                    queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
@@ -349,7 +349,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 // Act/Assert: AreTableHintsSupported == false for Oracle - any non-null/non-whitespace
                 // "hints" argument must throw, rather than silently being ignored.
                 await Assert.ThrowsAsync<NotSupportedException>(() =>
-                    connection.MinAsync<CompleteTable>(e => e.ColumnInt, (object)null, hints: "NOLOCK"));
+                    connection.MinAsync<CompleteTable>(e => e.ColumnInt, (object)null, hints: "NOLOCK")).ConfigureAwait(false);
             }
         }
 
@@ -477,7 +477,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
@@ -495,7 +495,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
-                    new { tables.First().Id });
+                    new { tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
@@ -513,7 +513,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
-                    new QueryField("Id", tables.First().Id));
+                    new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
@@ -536,7 +536,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
-                    queryFields);
+                    queryFields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
@@ -560,7 +560,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
-                    queryGroup);
+                    queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));

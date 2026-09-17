@@ -252,7 +252,7 @@ namespace RepoDb
 
             // Before Execution
             var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
             // Actual Execution
             var result = await WriteToServerAsyncInternal(connection,
@@ -262,11 +262,11 @@ namespace RepoDb
                 bulkCopyTimeout,
                 batchSize,
                 cancellationToken,
-                transaction);
+                transaction).ConfigureAwait(false);
 
             // After Execution
             await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
 
             return result;
         }
@@ -318,7 +318,7 @@ namespace RepoDb
 
             // Before Execution
             var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
             // Actual Execution
             var result = await WriteToServerAsyncInternal(connection,
@@ -328,11 +328,11 @@ namespace RepoDb
                 mappings,
                 bulkCopyTimeout,
                 batchSize,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
 
             // After Execution
             await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
 
             return result;
         }
@@ -372,7 +372,7 @@ namespace RepoDb
 
             // Before Execution
             var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
             // Actual Execution
             var result = await WriteToServerAsyncInternal(connection,
@@ -382,11 +382,11 @@ namespace RepoDb
                 bulkCopyTimeout,
                 batchSize,
                 cancellationToken,
-                transaction);
+                transaction).ConfigureAwait(false);
 
             // After Execution
             await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
 
             return result;
         }

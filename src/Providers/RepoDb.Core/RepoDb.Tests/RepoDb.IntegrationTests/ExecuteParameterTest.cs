@@ -231,7 +231,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
-                var data = (await connection.ExecuteQueryAsync<decimal?>("select @value", new { value = (decimal?)null })).First();
+                var data = (await connection.ExecuteQueryAsync<decimal?>("select @value", new { value = (decimal?)null }).ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.IsNull(data);
@@ -260,7 +260,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit);",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -285,7 +285,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit);",
-                    (object)param);
+                    (object)param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -310,7 +310,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit);",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -335,7 +335,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit);",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -356,7 +356,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt);",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -381,7 +381,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit);",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -406,7 +406,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit);",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -613,7 +613,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit);",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -638,7 +638,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit);",
-                    (object)param);
+                    (object)param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -663,7 +663,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit);",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -688,7 +688,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit);",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -709,7 +709,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt);",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -734,7 +734,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit);",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -759,7 +759,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit);",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -991,7 +991,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit);",
-                    param))
+                    param).ConfigureAwait(false))
                 {
                     // Extract the reader
                     var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader);
@@ -1020,7 +1020,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit);",
-                    (object)param))
+                    (object)param).ConfigureAwait(false))
                 {
                     // Extract the reader
                     var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader);
@@ -1049,7 +1049,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit);",
-                    param))
+                    param).ConfigureAwait(false))
                 {
                     // Extract the reader
                     var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader);
@@ -1078,7 +1078,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit);",
-                    param))
+                    param).ConfigureAwait(false))
                 {
                     // Extract the reader
                     var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader);
@@ -1103,7 +1103,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt);",
-                    param))
+                    param).ConfigureAwait(false))
                 {
                     // Extract the reader
                     var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader);
@@ -1132,7 +1132,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit);",
-                    param))
+                    param).ConfigureAwait(false))
                 {
                     // Extract the reader
                     var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader);
@@ -1161,7 +1161,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit);",
-                    param))
+                    param).ConfigureAwait(false))
                 {
                     // Extract the reader
                     var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader);
@@ -1369,7 +1369,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit); SELECT @@ROWCOUNT;",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -1394,7 +1394,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit); SELECT @@ROWCOUNT;",
-                    (object)param);
+                    (object)param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -1419,7 +1419,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit); SELECT @@ROWCOUNT;",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -1444,7 +1444,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit); SELECT @@ROWCOUNT;",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -1465,7 +1465,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt); SELECT @@ROWCOUNT;",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -1490,7 +1490,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit); SELECT @@ROWCOUNT;",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -1515,7 +1515,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit); SELECT @@ROWCOUNT;",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -1723,7 +1723,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit);",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -1748,7 +1748,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit);",
-                    (object)param);
+                    (object)param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -1773,7 +1773,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit);",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -1798,7 +1798,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit);",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -1819,7 +1819,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt);",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -1844,7 +1844,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit);",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -1869,7 +1869,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit);",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -2074,7 +2074,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit);",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -2099,7 +2099,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit);",
-                    (object)param);
+                    (object)param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -2124,7 +2124,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit);",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -2149,7 +2149,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit);",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -2170,7 +2170,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt);",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -2195,7 +2195,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit);",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -2220,7 +2220,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit);",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -2424,7 +2424,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit); SELECT @@ROWCOUNT;",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -2449,7 +2449,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit); SELECT @@ROWCOUNT;",
-                    (object)param);
+                    (object)param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -2474,7 +2474,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit); SELECT @@ROWCOUNT;",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -2499,7 +2499,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit); SELECT @@ROWCOUNT;",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -2520,7 +2520,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt); SELECT @@ROWCOUNT;",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -2545,7 +2545,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit); SELECT @@ROWCOUNT;",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -2570,7 +2570,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt = @ColumnInt) AND (ColumnBit = @ColumnBit); SELECT @@ROWCOUNT;",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);

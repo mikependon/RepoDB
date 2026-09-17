@@ -356,7 +356,7 @@ namespace RepoDb
                 mergeCommandType: (PostgreSqlBulkImportMergeCommandType)mergeCommandType,
                 pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                 transaction: transaction,
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken).ConfigureAwait(false);
 
         #endregion
 
@@ -454,7 +454,7 @@ namespace RepoDb
                 mergeCommandType: (PostgreSqlBulkImportMergeCommandType)mergeCommandType,
                 pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                 transaction: transaction,
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken).ConfigureAwait(false);
 
         #endregion
 
@@ -500,7 +500,7 @@ namespace RepoDb
                 mergeCommandType: (PostgreSqlBulkImportMergeCommandType)mergeCommandType,
                 pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                 transaction: transaction,
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken).ConfigureAwait(false);
 
         #endregion
 

@@ -173,7 +173,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAsync<CompleteTable>((object)null);
+                var result = await connection.CountAsync<CompleteTable>((object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -190,7 +190,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAsync<CompleteTable>(e => ids.Contains(e.Id));
+                var result = await connection.CountAsync<CompleteTable>(e => ids.Contains(e.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Count(), result);
@@ -206,7 +206,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAsync<CompleteTable>(new { tables.First().Id });
+                var result = await connection.CountAsync<CompleteTable>(new { tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Count(), result);
@@ -222,7 +222,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAsync<CompleteTable>(new QueryField("Id", tables.First().Id));
+                var result = await connection.CountAsync<CompleteTable>(new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Count(), result);
@@ -243,7 +243,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAsync<CompleteTable>(queryFields);
+                var result = await connection.CountAsync<CompleteTable>(queryFields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Count(), result);
@@ -265,7 +265,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAsync<CompleteTable>(queryGroup);
+                var result = await connection.CountAsync<CompleteTable>(queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Count(), result);
@@ -283,7 +283,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.CountAsync<CompleteTable>((object)null,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -421,7 +421,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -438,7 +438,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    new { tables.First().Id });
+                    new { tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Count(), result);
@@ -455,7 +455,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    new QueryField("Id", tables.First().Id));
+                    new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Count(), result);
@@ -477,7 +477,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    queryFields);
+                    queryFields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Count(), result);
@@ -500,7 +500,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    queryGroup);
+                    queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Count(), result);
@@ -519,7 +519,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
                         (object)null,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

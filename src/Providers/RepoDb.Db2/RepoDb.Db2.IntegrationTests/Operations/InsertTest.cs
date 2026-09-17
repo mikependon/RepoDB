@@ -114,7 +114,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
-            var result = await connection.InsertAsync<CompleteTable>(table);
+            var result = await connection.InsertAsync<CompleteTable>(table).ConfigureAwait(false);
 
             // Assert
             Assert.IsTrue(System.Convert.ToInt64(result) > 0);
@@ -140,7 +140,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             try
             {
                 // Act
-                var result = await connection.InsertAsync<CompleteTable>(table);
+                var result = await connection.InsertAsync<CompleteTable>(table).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(System.Convert.ToInt64(result) > 0);
@@ -209,7 +209,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
-            var result = await connection.InsertAsync(ClassMappedNameCache.Get<CompleteTable>(), table);
+            var result = await connection.InsertAsync(ClassMappedNameCache.Get<CompleteTable>(), table).ConfigureAwait(false);
 
             // Assert
             Assert.IsTrue(System.Convert.ToInt64(result) > 0);
@@ -254,7 +254,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Act/Assert: AreTableHintsSupported = false for Db2 - BaseStatementBuilder.GuardHints
             // throws for any non-null/non-whitespace hints, regardless of operation.
             await Assert.ThrowsAsync<System.NotSupportedException>(() =>
-                connection.InsertAsync<CompleteTable>(table, hints: "NOLOCK"));
+                connection.InsertAsync<CompleteTable>(table, hints: "NOLOCK")).ConfigureAwait(false);
         }
 
         #endregion

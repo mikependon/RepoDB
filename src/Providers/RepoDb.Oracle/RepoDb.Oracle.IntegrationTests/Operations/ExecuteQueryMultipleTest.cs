@@ -107,7 +107,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
 
             // Act & Assert: async counterpart of the same known Oracle limitation.
             await Assert.ThrowsAsync<OracleException>(() =>
-                connection.ExecuteQueryMultipleAsync("SELECT * FROM \"CompleteTable\"; SELECT * FROM \"CompleteTable\""));
+                connection.ExecuteQueryMultipleAsync("SELECT * FROM \"CompleteTable\"; SELECT * FROM \"CompleteTable\"")).ConfigureAwait(false);
         }
 
         [TestMethod]
@@ -123,7 +123,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             {
                 // Act & Assert: the multi-statement limitation is independent of ConversionType.
                 await Assert.ThrowsAsync<OracleException>(() =>
-                    connection.ExecuteQueryMultipleAsync("SELECT * FROM \"CompleteTable\"; SELECT * FROM \"CompleteTable\""));
+                    connection.ExecuteQueryMultipleAsync("SELECT * FROM \"CompleteTable\"; SELECT * FROM \"CompleteTable\"")).ConfigureAwait(false);
             }
             finally
             {

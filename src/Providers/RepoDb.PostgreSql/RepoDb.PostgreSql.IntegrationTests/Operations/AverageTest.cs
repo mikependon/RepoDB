@@ -103,7 +103,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.AverageAsync<CompleteTable>(e => e.ColumnInteger,
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnInteger), Convert.ToDouble(result));
@@ -121,7 +121,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 // Act
                 var ids = new[] { tables.First().Id, tables.Last().Id };
                 var result = await connection.AverageAsync<CompleteTable>(e => e.ColumnInteger,
-                    e => ids.Contains(e.Id));
+                    e => ids.Contains(e.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Average(e => e.ColumnInteger), Convert.ToDouble(result));
@@ -140,7 +140,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.AverageAsync<CompleteTable>(e => e.ColumnInteger,
                         (object)null,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -221,7 +221,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 // Act
                 var result = await connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnInteger).First(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnInteger), Convert.ToDouble(result));
@@ -240,7 +240,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 var ids = new[] { tables.First().Id, tables.Last().Id };
                 var result = await connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnInteger).First(),
-                    new QueryField("Id", Operation.In, ids));
+                    new QueryField("Id", Operation.In, ids)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Average(e => e.ColumnInteger), Convert.ToDouble(result));
@@ -260,7 +260,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                     await connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
                         Field.Parse<CompleteTable>(e => e.ColumnInteger).First(),
                         (object)null,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
