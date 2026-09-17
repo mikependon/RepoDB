@@ -96,7 +96,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
             {
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
-                    await connection.CountAllAsync<CompleteTable>(hints: "WhatEver"));
+                    await connection.CountAllAsync<CompleteTable>(hints: "WhatEver").ConfigureAwait(false));
             }
         }
 
@@ -170,7 +170,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.CountAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false));
             }
         }
 

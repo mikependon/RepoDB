@@ -273,6 +273,11 @@ namespace RepoDb
             string traceKey = EDBTraceKeys.EDBBulkMerge,
             EDBTransaction transaction = null)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
             var returnIdentity = identityBehavior == EDBBulkImportIdentityBehavior.ReturnIdentity && identityField != null;
@@ -782,6 +787,11 @@ namespace RepoDb
             EDBTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
             var returnIdentity = identityBehavior == EDBBulkImportIdentityBehavior.ReturnIdentity && identityField != null;

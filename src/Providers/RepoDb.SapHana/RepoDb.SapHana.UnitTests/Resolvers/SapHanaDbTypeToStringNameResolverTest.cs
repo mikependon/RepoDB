@@ -33,7 +33,7 @@ namespace RepoDb.SapHana.UnitTests.Resolvers
             var result = resolver.Resolve(HanaDbType.TinyInt);
 
             // Assert
-            Assert.AreEqual("TINYINT", result);
+            Assert.AreEqual("TINYINT", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -46,7 +46,7 @@ namespace RepoDb.SapHana.UnitTests.Resolvers
             var result = resolver.Resolve(HanaDbType.SmallInt);
 
             // Assert
-            Assert.AreEqual("SMALLINT", result);
+            Assert.AreEqual("SMALLINT", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -59,7 +59,7 @@ namespace RepoDb.SapHana.UnitTests.Resolvers
             var result = resolver.Resolve(HanaDbType.Integer);
 
             // Assert
-            Assert.AreEqual("INTEGER", result);
+            Assert.AreEqual("INTEGER", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -72,7 +72,7 @@ namespace RepoDb.SapHana.UnitTests.Resolvers
             var result = resolver.Resolve(HanaDbType.BigInt);
 
             // Assert
-            Assert.AreEqual("BIGINT", result);
+            Assert.AreEqual("BIGINT", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -85,7 +85,7 @@ namespace RepoDb.SapHana.UnitTests.Resolvers
             var result = resolver.Resolve(HanaDbType.Decimal);
 
             // Assert
-            Assert.AreEqual("DECIMAL", result);
+            Assert.AreEqual("DECIMAL", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -98,7 +98,7 @@ namespace RepoDb.SapHana.UnitTests.Resolvers
             var result = resolver.Resolve(HanaDbType.SmallDecimal);
 
             // Assert
-            Assert.AreEqual("SMALLDECIMAL", result);
+            Assert.AreEqual("SMALLDECIMAL", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -111,7 +111,7 @@ namespace RepoDb.SapHana.UnitTests.Resolvers
             var result = resolver.Resolve(HanaDbType.Real);
 
             // Assert
-            Assert.AreEqual("REAL", result);
+            Assert.AreEqual("REAL", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -124,7 +124,7 @@ namespace RepoDb.SapHana.UnitTests.Resolvers
             var result = resolver.Resolve(HanaDbType.Double);
 
             // Assert
-            Assert.AreEqual("DOUBLE", result);
+            Assert.AreEqual("DOUBLE", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -137,7 +137,7 @@ namespace RepoDb.SapHana.UnitTests.Resolvers
             var result = resolver.Resolve(HanaDbType.Boolean);
 
             // Assert
-            Assert.AreEqual("BOOLEAN", result);
+            Assert.AreEqual("BOOLEAN", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -150,7 +150,7 @@ namespace RepoDb.SapHana.UnitTests.Resolvers
             var result = resolver.Resolve(HanaDbType.VarChar);
 
             // Assert
-            Assert.AreEqual("VARCHAR", result);
+            Assert.AreEqual("VARCHAR", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -163,7 +163,7 @@ namespace RepoDb.SapHana.UnitTests.Resolvers
             var result = resolver.Resolve(HanaDbType.NVarChar);
 
             // Assert
-            Assert.AreEqual("NVARCHAR", result);
+            Assert.AreEqual("NVARCHAR", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -176,7 +176,7 @@ namespace RepoDb.SapHana.UnitTests.Resolvers
             var result = resolver.Resolve(HanaDbType.Text);
 
             // Assert
-            Assert.AreEqual("TEXT", result);
+            Assert.AreEqual("TEXT", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -189,7 +189,7 @@ namespace RepoDb.SapHana.UnitTests.Resolvers
             var result = resolver.Resolve(HanaDbType.Clob);
 
             // Assert
-            Assert.AreEqual("CLOB", result);
+            Assert.AreEqual("CLOB", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -202,7 +202,7 @@ namespace RepoDb.SapHana.UnitTests.Resolvers
             var result = resolver.Resolve(HanaDbType.NClob);
 
             // Assert
-            Assert.AreEqual("NCLOB", result);
+            Assert.AreEqual("NCLOB", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -215,7 +215,7 @@ namespace RepoDb.SapHana.UnitTests.Resolvers
             var result = resolver.Resolve(HanaDbType.Date);
 
             // Assert
-            Assert.AreEqual("DATE", result);
+            Assert.AreEqual("DATE", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -228,7 +228,7 @@ namespace RepoDb.SapHana.UnitTests.Resolvers
             var result = resolver.Resolve(HanaDbType.Time);
 
             // Assert
-            Assert.AreEqual("TIME", result);
+            Assert.AreEqual("TIME", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -241,7 +241,7 @@ namespace RepoDb.SapHana.UnitTests.Resolvers
             var result = resolver.Resolve(HanaDbType.TimeStamp);
 
             // Assert
-            Assert.AreEqual("TIMESTAMP", result);
+            Assert.AreEqual("TIMESTAMP", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -254,7 +254,7 @@ namespace RepoDb.SapHana.UnitTests.Resolvers
             var result = resolver.Resolve(HanaDbType.SecondDate);
 
             // Assert
-            Assert.AreEqual("SECONDDATE", result);
+            Assert.AreEqual("SECONDDATE", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -267,7 +267,7 @@ namespace RepoDb.SapHana.UnitTests.Resolvers
             var result = resolver.Resolve(HanaDbType.Blob);
 
             // Assert
-            Assert.AreEqual("BLOB", result);
+            Assert.AreEqual("BLOB", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -280,7 +280,7 @@ namespace RepoDb.SapHana.UnitTests.Resolvers
             var result = resolver.Resolve(HanaDbType.VarBinary);
 
             // Assert
-            Assert.AreEqual("VARBINARY", result);
+            Assert.AreEqual("VARBINARY", result, System.StringComparer.Ordinal);
         }
     }
 }

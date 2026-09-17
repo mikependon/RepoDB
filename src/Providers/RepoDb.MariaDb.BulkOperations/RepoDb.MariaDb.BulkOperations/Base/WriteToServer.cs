@@ -215,9 +215,10 @@ namespace RepoDb
         /// <returns></returns>
         private static MariaDbBulkImportPseudoTableType ResolvePseudoTableType(MariaDbBulkImportPseudoTableType pseudoTableType,
             int? rowCount) =>
-            pseudoTableType == MariaDbBulkImportPseudoTableType.Auto && rowCount.GetValueOrDefault() >= MariaDbConstants.RowCountThresholdForPhysicalTable ?
-                MariaDbBulkImportPseudoTableType.Physical :
-                    MariaDbBulkImportPseudoTableType.Physical;
+            MariaDbBulkImportPseudoTableType.Physical; // TODO: Revisit the Memory
+            // pseudoTableType == MariaDbBulkImportPseudoTableType.Auto && rowCount.GetValueOrDefault() >= MariaDbConstants.RowCountThresholdForPhysicalTable ?
+            //     MariaDbBulkImportPseudoTableType.Physical :
+            //         MariaDbBulkImportPseudoTableType.Physical;
 
         /// <summary>
         /// 

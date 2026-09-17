@@ -292,6 +292,11 @@ namespace RepoDb
             string traceKey = Db2TraceKeys.Db2BulkMerge,
             DB2Transaction transaction = null)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
             var returnIdentity = identityBehavior == Db2BulkImportIdentityBehavior.ReturnIdentity && identityField != null;
@@ -826,6 +831,11 @@ namespace RepoDb
             DB2Transaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
             var returnIdentity = identityBehavior == Db2BulkImportIdentityBehavior.ReturnIdentity && identityField != null;

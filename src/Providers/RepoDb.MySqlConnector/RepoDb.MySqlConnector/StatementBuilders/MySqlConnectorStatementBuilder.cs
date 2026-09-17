@@ -75,7 +75,7 @@ namespace RepoDb.StatementBuilders
             // There should be fields
             if (fields?.Any() != true)
             {
-                throw new ArgumentException($"The list of queryable fields must not be null for '{tableName}'.", nameof(fields));
+                throw new ArgumentNullException(nameof(fields), $"The list of queryable fields must not be null for '{tableName}'.");
             }
 
             // Validate order by
@@ -262,7 +262,7 @@ namespace RepoDb.StatementBuilders
         /// <returns>A sql statement for insert operation.</returns>
         public override string CreateInsertAll(string tableName,
             IEnumerable<Field> fields = null,
-            int batchSize = 1,
+            int batchSize = Constant.DefaultBatchOperationSize,
             DbField primaryField = null,
             DbField identityField = null,
             string hints = null)
@@ -469,7 +469,7 @@ namespace RepoDb.StatementBuilders
             // Verify the fields
             if (fields?.Any() != true)
             {
-                throw new ArgumentException($"The list of fields cannot be null or empty.", nameof(fields));
+                throw new ArgumentNullException(nameof(fields), $"The list of fields cannot be null or empty.");
             }
 
             // Validate the Primary Key
@@ -537,7 +537,7 @@ namespace RepoDb.StatementBuilders
         /// <returns>A sql statement for merge operation.</returns>
         public override string CreateMergeAll(string tableName,
             IEnumerable<Field> fields,
-            IEnumerable<Field> qualifiers,
+            IEnumerable<Field> qualifiers = null,
             int batchSize = 10,
             DbField primaryField = null,
             DbField identityField = null,
@@ -552,7 +552,7 @@ namespace RepoDb.StatementBuilders
             // Verify the fields
             if (fields?.Any() != true)
             {
-                throw new ArgumentException($"The list of fields cannot be null or empty.", nameof(fields));
+                throw new ArgumentNullException(nameof(fields), $"The list of fields cannot be null or empty.");
             }
 
             // Validate the Primary Key
@@ -687,7 +687,7 @@ namespace RepoDb.StatementBuilders
             // There should be fields
             if (fields?.Any() != true)
             {
-                throw new ArgumentException($"The list of queryable fields must not be null for '{tableName}'.", nameof(fields));
+                throw new ArgumentNullException(nameof(fields), $"The list of queryable fields must not be null for '{tableName}'.");
             }
 
             // Initialize the builder
@@ -744,7 +744,7 @@ namespace RepoDb.StatementBuilders
             // There should be fields
             if (fields?.Any() != true)
             {
-                throw new ArgumentException($"The list of queryable fields must not be null for '{tableName}'.", nameof(fields));
+                throw new ArgumentNullException(nameof(fields), $"The list of queryable fields must not be null for '{tableName}'.");
             }
 
             // Validate order by

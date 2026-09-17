@@ -12,6 +12,7 @@ using RepoDb.Extensions;
 using RepoDb.Firebird.BulkOperations;
 using RepoDb.Firebird.BulkOperations.Extensions;
 using RepoDb.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -199,6 +200,11 @@ namespace RepoDb
             string traceKey = FirebirdTraceKeys.FirebirdBulkInsert,
             FbTransaction transaction = null)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
             var returnIdentity = identityBehavior == FirebirdBulkImportIdentityBehavior.ReturnIdentity && identityField != null;
@@ -524,6 +530,11 @@ namespace RepoDb
             FbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var identityField = dbFields.GetIdentity();
             var returnIdentity = identityBehavior == FirebirdBulkImportIdentityBehavior.ReturnIdentity && identityField != null;

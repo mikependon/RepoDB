@@ -210,9 +210,10 @@ namespace RepoDb
         /// <returns></returns>
         private static OracleBulkImportPseudoTableType ResolvePseudoTableType(OracleBulkImportPseudoTableType pseudoTableType,
             int? rowCount) =>
-            pseudoTableType == OracleBulkImportPseudoTableType.Auto && rowCount.GetValueOrDefault() >= OracleConstants.RowCountThresholdForPhysicalTable ?
-                OracleBulkImportPseudoTableType.Physical :
-                    OracleBulkImportPseudoTableType.Physical; // pseudoTableType; // TODO: ODP.NET Limitation, force to Physical for now
+            OracleBulkImportPseudoTableType.Physical; // TODO: Revisit the Memory
+            // pseudoTableType == OracleBulkImportPseudoTableType.Auto && rowCount.GetValueOrDefault() >= OracleConstants.RowCountThresholdForPhysicalTable ?
+            //     OracleBulkImportPseudoTableType.Physical :
+            //         OracleBulkImportPseudoTableType.Physical; // pseudoTableType; // TODO: ODP.NET Limitation, force to Physical for now
 
         /// <summary>
         ///

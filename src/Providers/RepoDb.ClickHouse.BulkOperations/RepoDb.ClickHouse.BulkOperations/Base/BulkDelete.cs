@@ -128,6 +128,11 @@ namespace RepoDb
             string traceKey = ClickHouseTraceKeys.ClickHouseBulkDelete,
             DbTransaction transaction = null)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
             var pseudoTableName = ClickHouseText.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
 
@@ -341,6 +346,11 @@ namespace RepoDb
             DbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
             var pseudoTableName = ClickHouseText.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
 

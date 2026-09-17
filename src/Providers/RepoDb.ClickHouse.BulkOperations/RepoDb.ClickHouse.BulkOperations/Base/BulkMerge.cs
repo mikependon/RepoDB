@@ -148,6 +148,11 @@ namespace RepoDb
             string traceKey = ClickHouseTraceKeys.ClickHouseBulkMerge,
             DbTransaction transaction = null)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             GuardReturnIdentity(identityBehavior);
 
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
@@ -378,6 +383,11 @@ namespace RepoDb
             DbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             GuardReturnIdentity(identityBehavior);
 
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);

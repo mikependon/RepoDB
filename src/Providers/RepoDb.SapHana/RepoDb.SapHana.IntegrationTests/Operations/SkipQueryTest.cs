@@ -243,7 +243,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                         3,
                         OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
                         (object)null,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false));
             }
         }
 
@@ -461,7 +461,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                         3,
                         OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
                         (object)null,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false));
             }
         }
 

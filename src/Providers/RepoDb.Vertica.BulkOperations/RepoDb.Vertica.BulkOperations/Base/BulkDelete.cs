@@ -12,6 +12,7 @@ using RepoDb.Extensions;
 using RepoDb.Vertica.BulkOperations;
 using RepoDb.Vertica.BulkOperations.Extensions;
 using RepoDb.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -113,6 +114,11 @@ namespace RepoDb
             string traceKey = VerticaTraceKeys.VerticaBulkDelete,
             VerticaTransaction transaction = null)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
             var pseudoTableName = VerticaText.CreatePseudoTableName("D");
@@ -294,6 +300,11 @@ namespace RepoDb
             VerticaTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
             var pseudoTableName = VerticaText.CreatePseudoTableName("D");

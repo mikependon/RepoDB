@@ -230,9 +230,10 @@ namespace RepoDb
         /// <returns></returns>
         private static Db2BulkImportPseudoTableType ResolvePseudoTableType(Db2BulkImportPseudoTableType pseudoTableType,
             int? rowCount) =>
-            pseudoTableType == Db2BulkImportPseudoTableType.Auto && rowCount.GetValueOrDefault() >= Db2Constants.RowCountThresholdForPhysicalTable ?
-                Db2BulkImportPseudoTableType.Physical :
-                    Db2BulkImportPseudoTableType.Physical;
+            Db2BulkImportPseudoTableType.Physical; // TODO: Revisit the Memory
+            // pseudoTableType == Db2BulkImportPseudoTableType.Auto && rowCount.GetValueOrDefault() >= Db2Constants.RowCountThresholdForPhysicalTable ?
+            //     Db2BulkImportPseudoTableType.Physical :
+            //         Db2BulkImportPseudoTableType.Physical;
 
         /// <summary>
         ///

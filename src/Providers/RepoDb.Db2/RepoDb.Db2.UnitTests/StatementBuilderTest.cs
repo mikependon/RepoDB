@@ -3203,7 +3203,7 @@ namespace RepoDb.Db2.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            Assert.Throws<ArgumentNullException>(() =>
+            Assert.Throws<InvalidQualifiersException>(() =>
                 statementBuilder.CreateUpdateAll(tableName: tableName,
                     fields: fields,
                     qualifiers: null,

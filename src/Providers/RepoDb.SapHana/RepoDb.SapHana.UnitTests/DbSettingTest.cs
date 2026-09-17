@@ -39,7 +39,7 @@ namespace RepoDb.SapHana.UnitTests
             var setting = DbSettingMapper.Get<HanaConnection>();
 
             // Assert
-            Assert.AreEqual("\"", setting.ClosingQuote);
+            Assert.AreEqual("\"", setting.ClosingQuote, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -99,7 +99,7 @@ namespace RepoDb.SapHana.UnitTests
             var setting = DbSettingMapper.Get<HanaConnection>();
 
             // Assert
-            Assert.AreEqual("\"", setting.OpeningQuote);
+            Assert.AreEqual("\"", setting.OpeningQuote, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -109,7 +109,7 @@ namespace RepoDb.SapHana.UnitTests
             var setting = DbSettingMapper.Get<HanaConnection>();
 
             // Assert
-            Assert.AreEqual(":", setting.ParameterPrefix);
+            Assert.AreEqual(":", setting.ParameterPrefix, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -119,7 +119,7 @@ namespace RepoDb.SapHana.UnitTests
             var setting = DbSettingMapper.Get<HanaConnection>();
 
             // Assert
-            Assert.AreEqual(":", setting.SqlTextParameterPrefix);
+            Assert.AreEqual(":", setting.SqlTextParameterPrefix, System.StringComparer.Ordinal);
         }
     }
 }

@@ -262,6 +262,11 @@ namespace RepoDb
             string traceKey = OracleTraceKeys.OracleBulkInsert,
             OracleTransaction transaction = null)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
@@ -725,6 +730,11 @@ namespace RepoDb
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();

@@ -32,7 +32,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve("smallint");
 
             // Assert
-            Assert.AreEqual("SMALLINT", result);
+            Assert.AreEqual("SMALLINT", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -45,7 +45,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve("integer");
 
             // Assert
-            Assert.AreEqual("INTEGER", result);
+            Assert.AreEqual("INTEGER", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -58,7 +58,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve("int");
 
             // Assert
-            Assert.AreEqual("INTEGER", result);
+            Assert.AreEqual("INTEGER", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -71,7 +71,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve("bigint");
 
             // Assert
-            Assert.AreEqual("BIGINT", result);
+            Assert.AreEqual("BIGINT", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -84,7 +84,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve("boolean");
 
             // Assert
-            Assert.AreEqual("BOOLEAN", result);
+            Assert.AreEqual("BOOLEAN", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -97,7 +97,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve("float");
 
             // Assert
-            Assert.AreEqual("FLOAT", result);
+            Assert.AreEqual("FLOAT", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -110,7 +110,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve("double precision");
 
             // Assert
-            Assert.AreEqual("DOUBLE PRECISION", result);
+            Assert.AreEqual("DOUBLE PRECISION", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -123,7 +123,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve("date");
 
             // Assert
-            Assert.AreEqual("DATE", result);
+            Assert.AreEqual("DATE", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -136,7 +136,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve("time");
 
             // Assert
-            Assert.AreEqual("TIME", result);
+            Assert.AreEqual("TIME", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -149,7 +149,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve("time_tz");
 
             // Assert
-            Assert.AreEqual("TIME WITH TIME ZONE", result);
+            Assert.AreEqual("TIME WITH TIME ZONE", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -162,7 +162,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve("timestamp");
 
             // Assert
-            Assert.AreEqual("TIMESTAMP", result);
+            Assert.AreEqual("TIMESTAMP", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -175,7 +175,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve("timestamp_tz");
 
             // Assert
-            Assert.AreEqual("TIMESTAMP WITH TIME ZONE", result);
+            Assert.AreEqual("TIMESTAMP WITH TIME ZONE", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -188,7 +188,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve("numeric");
 
             // Assert
-            Assert.AreEqual("NUMERIC", result);
+            Assert.AreEqual("NUMERIC", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -201,7 +201,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve("decimal");
 
             // Assert
-            Assert.AreEqual("DECIMAL", result);
+            Assert.AreEqual("DECIMAL", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -214,7 +214,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve("dec16");
 
             // Assert
-            Assert.AreEqual("DECFLOAT(16)", result);
+            Assert.AreEqual("DECFLOAT(16)", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -227,7 +227,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve("dec34");
 
             // Assert
-            Assert.AreEqual("DECFLOAT(34)", result);
+            Assert.AreEqual("DECFLOAT(34)", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -240,7 +240,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve("int128");
 
             // Assert
-            Assert.AreEqual("INT128", result);
+            Assert.AreEqual("INT128", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -253,7 +253,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve("char");
 
             // Assert
-            Assert.AreEqual("CHAR", result);
+            Assert.AreEqual("CHAR", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -266,7 +266,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve("varchar");
 
             // Assert
-            Assert.AreEqual("VARCHAR", result);
+            Assert.AreEqual("VARCHAR", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -279,7 +279,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve("binary");
 
             // Assert
-            Assert.AreEqual("BINARY", result);
+            Assert.AreEqual("BINARY", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -292,7 +292,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve("varbinary");
 
             // Assert
-            Assert.AreEqual("VARBINARY", result);
+            Assert.AreEqual("VARBINARY", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -305,7 +305,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve("uuid");
 
             // Assert
-            Assert.AreEqual("UUID", result);
+            Assert.AreEqual("UUID", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -318,7 +318,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve("some_unknown_type");
 
             // Assert
-            Assert.AreEqual("LONG VARCHAR", result);
+            Assert.AreEqual("LONG VARCHAR", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -331,7 +331,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve(null);
 
             // Assert
-            Assert.AreEqual("LONG VARCHAR", result);
+            Assert.AreEqual("LONG VARCHAR", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -344,7 +344,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve("INTEGER");
 
             // Assert
-            Assert.AreEqual("INTEGER", result);
+            Assert.AreEqual("INTEGER", result, System.StringComparer.Ordinal);
         }
     }
 }

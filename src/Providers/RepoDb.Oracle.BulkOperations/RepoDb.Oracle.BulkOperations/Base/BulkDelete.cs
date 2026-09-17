@@ -149,6 +149,11 @@ namespace RepoDb
             string traceKey = OracleTraceKeys.OracleBulkDelete,
             OracleTransaction transaction = null)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
             var pseudoTableName = OracleText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
 
@@ -378,6 +383,11 @@ namespace RepoDb
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
             var pseudoTableName = OracleText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
 

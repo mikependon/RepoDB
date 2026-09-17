@@ -42,7 +42,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "SELECT \"Id\", \"Name\" FROM \"Table\" ORDER BY \"Id\" ASC LIMIT 10";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -60,7 +60,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "SELECT \"Id\", \"Name\" FROM \"Table\" ORDER BY \"Id\" ASC LIMIT 10 OFFSET 30";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -157,7 +157,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "SELECT COUNT (*) AS \"CountValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -173,7 +173,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "SELECT COUNT (*) AS \"CountValue\" FROM \"Table\" WHERE (\"Id\" = @Id)";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -205,7 +205,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "SELECT COUNT (*) AS \"CountValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -236,7 +236,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "SELECT 1 AS \"ExistsValue\" FROM \"Table\" WHERE (\"Id\" = @Id) LIMIT 1";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -270,7 +270,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id, @Name, @Address )";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -287,7 +287,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id, @Name, @Address )";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -304,7 +304,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "INSERT INTO \"Table\" ( \"Name\", \"Address\" ) VALUES ( @Name, @Address )";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -355,7 +355,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "INSERT INTO \"Table\" ( \"Name\", \"Address\" ) VALUES ( @Name, @Address )";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -374,7 +374,7 @@ namespace RepoDb.Vertica.UnitTests
                 "( @Id, @Name, @Address ) , ( @Id_1, @Name_1, @Address_1 ) , ( @Id_2, @Name_2, @Address_2 )";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -411,7 +411,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "SELECT MAX (\"Field\") AS \"MaxValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -428,7 +428,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "SELECT MAX (\"Field\") AS \"MaxValue\" FROM \"Table\" WHERE (\"Id\" = @Id)";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -462,7 +462,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "SELECT MAX (\"Field\") AS \"MaxValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -496,7 +496,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "SELECT MIN (\"Field\") AS \"MinValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -513,7 +513,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "SELECT MIN (\"Field\") AS \"MinValue\" FROM \"Table\" WHERE (\"Id\" = @Id)";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -547,7 +547,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "SELECT MIN (\"Field\") AS \"MinValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -581,7 +581,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "SELECT SUM (\"Field\") AS \"SumValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -598,7 +598,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "SELECT SUM (\"Field\") AS \"SumValue\" FROM \"Table\" WHERE (\"Id\" = @Id)";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -632,7 +632,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "SELECT SUM (\"Field\") AS \"SumValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -668,7 +668,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "SELECT AVG (CAST(\"Field\" AS DOUBLE PRECISION)) AS \"AverageValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -687,7 +687,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "SELECT AVG (CAST(\"Field\" AS DOUBLE PRECISION)) AS \"AverageValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -706,7 +706,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "SELECT AVG (CAST(\"Field\" AS DECIMAL(18,2))) AS \"AverageValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -744,7 +744,7 @@ namespace RepoDb.Vertica.UnitTests
                 "WHERE NOT EXISTS (SELECT 1 FROM \"Table\" WHERE \"Id\" = @Id)";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -764,7 +764,7 @@ namespace RepoDb.Vertica.UnitTests
                 "WHERE NOT EXISTS (SELECT 1 FROM \"Table\" WHERE \"Id\" = @Id)";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -785,7 +785,7 @@ namespace RepoDb.Vertica.UnitTests
                 "SELECT CASE WHEN @Id IS NULL THEN LAST_INSERT_ID() ELSE @Id END AS \"Result\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -805,7 +805,7 @@ namespace RepoDb.Vertica.UnitTests
                 "WHERE NOT EXISTS (SELECT 1 FROM \"Table\" WHERE \"Name\" = @Name)";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -861,7 +861,7 @@ namespace RepoDb.Vertica.UnitTests
                 "WHERE NOT EXISTS (SELECT 1 FROM \"Table\" WHERE \"Id\" = @Id)";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -933,7 +933,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "SELECT \"Id\", \"Name\", \"Address\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -952,7 +952,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "SELECT \"Id\", \"Name\", \"Address\" FROM \"Table\" WHERE (\"Id\" = @Id AND \"Name\" = @Name)";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -971,7 +971,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "SELECT \"Id\", \"Name\", \"Address\" FROM \"Table\" LIMIT 10";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -990,7 +990,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "SELECT \"Id\", \"Name\", \"Address\" FROM \"Table\" ORDER BY \"Id\" ASC";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1009,7 +1009,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "SELECT \"Id\", \"Name\", \"Address\" FROM \"Table\" ORDER BY \"Id\" ASC, \"Name\" ASC";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1028,7 +1028,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "SELECT \"Id\", \"Name\", \"Address\" FROM \"Table\" ORDER BY \"Id\" DESC";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1066,7 +1066,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "SELECT \"Id\", \"Name\" FROM \"Table\" ORDER BY \"Id\" ASC LIMIT 10";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1084,7 +1084,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "SELECT \"Id\", \"Name\" FROM \"Table\" ORDER BY \"Id\" ASC LIMIT 10 OFFSET 30";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1183,7 +1183,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "UPDATE \"Table\" SET \"Name\" = @Name, \"Address\" = @Address WHERE (\"Id\" = @Id)";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1218,7 +1218,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "DELETE FROM \"Table\" WHERE (\"Id\" = @Id)";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1232,7 +1232,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "DELETE FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         #endregion
@@ -1251,7 +1251,7 @@ namespace RepoDb.Vertica.UnitTests
             var expected = "DELETE FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         #endregion

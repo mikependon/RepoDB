@@ -226,7 +226,7 @@ namespace RepoDb
                 // Before Execution
                 using var command = CreateTraceCommand(connection, tableName, traceKey, bulkCopyTimeout, transaction);
                 var traceResult = await Tracer
-                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
                 // Silent cancellation
                 if (traceResult?.CancellableTraceLog?.IsCancelled == true)
@@ -248,7 +248,7 @@ namespace RepoDb
                         trace,
                         traceKey,
                         transaction,
-                        cancellationToken);
+                        cancellationToken).ConfigureAwait(false);
 
                     await CreatePseudoTableAsync(connection,
                         tableName,
@@ -262,7 +262,7 @@ namespace RepoDb
                         trace,
                         traceKey,
                         transaction,
-                        cancellationToken);
+                        cancellationToken).ConfigureAwait(false);
                 }
 
                 // Create Index
@@ -279,11 +279,11 @@ namespace RepoDb
                         trace,
                         traceKey,
                         transaction,
-                        cancellationToken);
+                        cancellationToken).ConfigureAwait(false);
                 }
 
                 // Import
-                var result = await binaryImportAsync?.Invoke(pseudoTableName ?? tableName);
+                var result = await (binaryImportAsync?.Invoke(pseudoTableName ?? tableName)).ConfigureAwait(false);
 
                 // Insert (INTO)
                 if (withPseudoTable)
@@ -291,7 +291,7 @@ namespace RepoDb
                     var identityResults = (await MergeToPseudoTableWithIdentityResultsAsync(connection,
                         getMergeToPseudoCommandText,
                         bulkCopyTimeout,
-                        transaction))?.AsList();
+                        transaction).ConfigureAwait(false))?.AsList();
 
                     if (identityBehavior == PostgreSqlBulkImportIdentityBehavior.ReturnIdentity)
                     {
@@ -303,7 +303,7 @@ namespace RepoDb
 
                 // After Execution
                 await Tracer
-                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
 
                 // Return
                 return result;
@@ -318,7 +318,7 @@ namespace RepoDb
                         trace,
                         traceKey,
                         transaction,
-                        cancellationToken);
+                        cancellationToken).ConfigureAwait(false);
                 }
             }
         }
@@ -454,12 +454,12 @@ namespace RepoDb
             var hasTransaction = (transaction != null || Transaction.Current != null);
 
             // Open
-            await connection.EnsureOpenAsync(cancellationToken);
+            await connection.EnsureOpenAsync(cancellationToken).ConfigureAwait(false);
 
             // Ensure transaction
             if (hasTransaction == false)
             {
-                transaction = await connection.BeginTransactionAsync(cancellationToken);
+                transaction = await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
             }
 
             try
@@ -467,13 +467,13 @@ namespace RepoDb
                 // Execute
                 if (executeAsync != null)
                 {
-                    result = await executeAsync();
+                    result = await executeAsync().ConfigureAwait(false);
                 }
 
                 // Commit
                 if (hasTransaction == false)
                 {
-                    await transaction.CommitAsync(cancellationToken);
+                    await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
                 }
             }
             catch
@@ -481,7 +481,7 @@ namespace RepoDb
                 // Rollback
                 if (hasTransaction == false)
                 {
-                    await transaction.RollbackAsync(cancellationToken);
+                    await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
                 }
 
                 // Throw
@@ -492,7 +492,7 @@ namespace RepoDb
                 // Dispose
                 if (hasTransaction == false)
                 {
-                    await transaction.DisposeAsync();
+                    await transaction.DisposeAsync().ConfigureAwait(false);
                 }
             }
 

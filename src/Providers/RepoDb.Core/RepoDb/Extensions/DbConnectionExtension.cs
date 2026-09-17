@@ -73,6 +73,11 @@ namespace RepoDb
         /// <returns>The instance of the current connection object.</returns>
         public static IDbConnection EnsureOpen(this IDbConnection connection)
         {
+            if (connection == null)
+            {
+                throw new ArgumentNullException(nameof(connection));
+            }
+
             if (connection.State != ConnectionState.Open)
             {
                 connection.Open();
@@ -89,6 +94,11 @@ namespace RepoDb
         public static async Task<IDbConnection> EnsureOpenAsync(this IDbConnection connection,
             CancellationToken cancellationToken = default)
         {
+            if (connection == null)
+            {
+                throw new ArgumentNullException(nameof(connection));
+            }
+
             if (connection.State != ConnectionState.Open)
             {
                 await ((DbConnection)connection).OpenAsync(cancellationToken).ConfigureAwait(false);
