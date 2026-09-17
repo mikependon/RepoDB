@@ -34,8 +34,10 @@ namespace RepoDb.Extensions
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>An enumerable list of fields.</returns>
         public static string AsField(this OrderField orderField,
-            IDbSetting dbSetting) =>
-            AsField(orderField, null, dbSetting);
+            IDbSetting dbSetting)
+        {
+            return AsField(orderField, alias: null, dbSetting);
+        }
 
         /// <summary>
         /// Converts an instance of order field into an enumerable list of fields.

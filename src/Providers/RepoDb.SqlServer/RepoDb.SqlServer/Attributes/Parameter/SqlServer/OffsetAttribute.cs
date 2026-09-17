@@ -14,15 +14,13 @@ namespace RepoDb.Attributes.Parameter.SqlServer
     /// An attribute used to define a value to the <see cref="SqlParameter.Offset"/> property via an entity property
     /// before the actual execution.
     /// </summary>
-    public class OffsetAttribute : PropertyValueAttribute
+    /// <remarks>
+    /// Creates a new instance of <see cref="OffsetAttribute"/> class.
+    /// </remarks>
+    /// <param name="offset">The offset value.</param>
+    [System.AttributeUsage(System.AttributeTargets.All)]
+    public class OffsetAttribute(int offset) : PropertyValueAttribute(typeof(SqlParameter), nameof(SqlParameter.Offset), offset)
     {
-        /// <summary>
-        /// Creates a new instance of <see cref="OffsetAttribute"/> class.
-        /// </summary>
-        /// <param name="offset">The offset value.</param>
-        public OffsetAttribute(int offset)
-            : base(typeof(SqlParameter), nameof(SqlParameter.Offset), offset)
-        { }
 
         /// <summary>
         /// Gets the mapped offset value of the parameter.

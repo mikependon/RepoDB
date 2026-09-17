@@ -30,7 +30,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -38,7 +38,7 @@ namespace RepoDb
         public static long CountAll<TEntity>(this IDbConnection connection,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.CountAll,
+            string traceKey = TraceKeys.CountAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -47,7 +47,7 @@ namespace RepoDb
             return CountAllInternal<TEntity>(connection: connection,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -60,7 +60,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -68,7 +68,7 @@ namespace RepoDb
         internal static long CountAllInternal<TEntity>(this IDbConnection connection,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.CountAll,
+            string traceKey = TraceKeys.CountAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -87,7 +87,7 @@ namespace RepoDb
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace);
         }
@@ -99,7 +99,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -108,7 +108,7 @@ namespace RepoDb
         public static Task<long> CountAllAsync<TEntity>(this IDbConnection connection,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.CountAll,
+            string traceKey = TraceKeys.CountAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -118,7 +118,7 @@ namespace RepoDb
             return CountAllAsyncInternal<TEntity>(connection: connection,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -132,7 +132,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -141,7 +141,7 @@ namespace RepoDb
         internal static Task<long> CountAllAsyncInternal<TEntity>(this IDbConnection connection,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.CountAll,
+            string traceKey = TraceKeys.CountAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -161,7 +161,7 @@ namespace RepoDb
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 cancellationToken: cancellationToken);
@@ -178,7 +178,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -187,7 +187,7 @@ namespace RepoDb
             string tableName,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.CountAll,
+            string traceKey = TraceKeys.CountAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -196,7 +196,7 @@ namespace RepoDb
                 tableName: tableName,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -209,7 +209,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -218,7 +218,7 @@ namespace RepoDb
             string tableName,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.CountAll,
+            string traceKey = TraceKeys.CountAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -236,7 +236,7 @@ namespace RepoDb
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace);
         }
@@ -248,7 +248,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -258,7 +258,7 @@ namespace RepoDb
             string tableName,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.CountAll,
+            string traceKey = TraceKeys.CountAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -268,7 +268,7 @@ namespace RepoDb
                 tableName: tableName,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -282,7 +282,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -292,7 +292,7 @@ namespace RepoDb
             string tableName,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.CountAll,
+            string traceKey = TraceKeys.CountAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -311,7 +311,7 @@ namespace RepoDb
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 cancellationToken: cancellationToken);
@@ -328,7 +328,7 @@ namespace RepoDb
         /// <param name="request">The actual <see cref="CountAllRequest"/> object.</param>
         /// <param name="param">The mapped object parameters.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
@@ -336,7 +336,7 @@ namespace RepoDb
             CountAllRequest request,
             object param,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.CountAll,
+            string traceKey = TraceKeys.CountAll,
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
@@ -352,12 +352,12 @@ namespace RepoDb
                 cacheKey: null,
                 cacheItemExpiration: null,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 cache: null,
-				trace: trace,
+                trace: trace,
                 entityType: request.Type,
-                dbFields: DbFieldCache.Get(connection, request.Name, transaction, true),
+                dbFields: DbFieldCache.Get(connection, request.Name, transaction, enableValidation: true),
                 skipCommandArrayParametersCheck: true,
                 forceAutomaticConversion: false);
 
@@ -376,7 +376,7 @@ namespace RepoDb
         /// <param name="request">The actual <see cref="CountAllRequest"/> object.</param>
         /// <param name="param">The mapped object parameters.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -385,7 +385,7 @@ namespace RepoDb
             CountAllRequest request,
             object param,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.CountAll,
+            string traceKey = TraceKeys.CountAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             CancellationToken cancellationToken = default)
@@ -402,15 +402,15 @@ namespace RepoDb
                 cacheKey: null,
                 cacheItemExpiration: null,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 cache: null,
-				trace: trace,
+                trace: trace,
                 cancellationToken: cancellationToken,
                 entityType: request.Type,
-                dbFields: await DbFieldCache.GetAsync(connection, request.Name, transaction, true, cancellationToken),
+                dbFields: await DbFieldCache.GetAsync(connection, request.Name, transaction, enableValidation: true, cancellationToken).ConfigureAwait(false),
                 skipCommandArrayParametersCheck: true,
-                forceAutomaticConversion: false);
+                forceAutomaticConversion: false).ConfigureAwait(false);
 
             // Result
             return result;

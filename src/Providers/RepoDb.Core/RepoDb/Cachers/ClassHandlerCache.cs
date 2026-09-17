@@ -55,10 +55,10 @@ namespace RepoDb
 
             // Variables
             var key = GenerateHashCode(type);
-            var result = default(TClassHandler);
+            TClassHandler result;
 
             // Try get the value
-            if (cache.TryGetValue(key, out var value) == false)
+            if (!cache.TryGetValue(key, out var value))
             {
                 value = resolver.Resolve(type);
                 result = Converter.ToType<TClassHandler>(value);
@@ -119,7 +119,7 @@ namespace RepoDb
         {
             if (obj == null)
             {
-                throw new NullReferenceException($"The argument '{argument}' cannot be null.");
+                throw new ArgumentNullException(argument);
             }
         }
 

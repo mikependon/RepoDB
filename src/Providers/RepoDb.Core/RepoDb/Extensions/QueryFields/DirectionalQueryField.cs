@@ -34,11 +34,11 @@ namespace RepoDb
             ParameterDirection? direction)
             : this(fieldName,
                   Operation.Equal,
-                  null,
+value: null,
                   direction,
-                  null,
-                  null,
-                  false)
+size: null,
+dbType: null,
+prependUnderscore: false)
         { }
 
         /// <summary>
@@ -52,11 +52,11 @@ namespace RepoDb
             int? size)
             : this(fieldName,
                   Operation.Equal,
-                  null,
+value: null,
                   direction,
                   size,
-                  null,
-                  false)
+dbType: null,
+prependUnderscore: false)
         { }
 
         /// <summary>
@@ -72,11 +72,11 @@ namespace RepoDb
             DbType? dbType)
             : this(fieldName,
                   Operation.Equal,
-                  null,
+value: null,
                   direction,
                   size,
                   dbType,
-                  false)
+prependUnderscore: false)
         { }
 
         #endregion
@@ -96,9 +96,9 @@ namespace RepoDb
                   Operation.Equal,
                   value,
                   direction,
-                  null,
-                  null,
-                  false)
+size: null,
+dbType: null,
+prependUnderscore: false)
         { }
 
         /// <summary>
@@ -117,8 +117,8 @@ namespace RepoDb
                   value,
                   direction,
                   size,
-                  null,
-                  false)
+dbType: null,
+prependUnderscore: false)
         { }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace RepoDb
                   direction,
                   size,
                   dbType,
-                  false)
+prependUnderscore: false)
         { }
 
         /// <summary>
@@ -154,11 +154,11 @@ namespace RepoDb
             ParameterDirection? direction)
             : this(fieldName,
                   operation,
-                  null,
+value: null,
                   direction,
-                  null,
-                  null,
-                  false)
+size: null,
+dbType: null,
+prependUnderscore: false)
         { }
 
         /// <summary>
@@ -176,9 +176,9 @@ namespace RepoDb
                   operation,
                   value,
                   direction,
-                  null,
-                  null,
-                  false)
+size: null,
+dbType: null,
+prependUnderscore: false)
         { }
 
         /// <summary>
@@ -199,8 +199,8 @@ namespace RepoDb
                   value,
                   direction,
                   size,
-                  null,
-                  false)
+dbType: null,
+prependUnderscore: false)
         { }
 
         /// <summary>
@@ -224,7 +224,7 @@ namespace RepoDb
                   direction,
                   size,
                   dbType,
-                  false)
+prependUnderscore: false)
         { }
 
         /// <summary>
@@ -281,22 +281,22 @@ namespace RepoDb
                 return this.hashCode.Value;
             }
 
-            var hashCode = 0;
+            var computedHashCode = 0;
 
             // Get the hashcode of the base query field
-            hashCode = HashCode.Combine(hashCode, base.GetHashCode());
+            computedHashCode = HashCode.Combine(computedHashCode, base.GetHashCode());
 
             // Add the parameter direction
-            hashCode = HashCode.Combine(hashCode, Direction);
+            computedHashCode = HashCode.Combine(computedHashCode, Direction);
 
             // Add the size
             if (Size.HasValue)
             {
-                hashCode = HashCode.Combine(hashCode, Size.Value);
+                computedHashCode = HashCode.Combine(computedHashCode, Size.Value);
             }
 
             // Set and return the hashcode
-            return (this.hashCode = hashCode).Value;
+            return (this.hashCode = computedHashCode).Value;
         }
 
         /// <summary>
@@ -346,8 +346,7 @@ namespace RepoDb
         /// <param name="objB">The second <see cref="DirectionalQueryField"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
         public static bool operator !=(DirectionalQueryField objA,
-            DirectionalQueryField objB) =>
-            (objA == objB) == false;
+            DirectionalQueryField objB) => !(objA == objB);
 
         #endregion
     }

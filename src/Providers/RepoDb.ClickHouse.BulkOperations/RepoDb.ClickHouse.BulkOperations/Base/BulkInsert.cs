@@ -126,6 +126,11 @@ namespace RepoDb
             string traceKey = ClickHouseTraceKeys.ClickHouseBulkInsert,
             DbTransaction transaction = null)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             GuardReturnIdentity(identityBehavior);
 
             using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
@@ -302,6 +307,11 @@ namespace RepoDb
             DbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             GuardReturnIdentity(identityBehavior);
 
             using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);

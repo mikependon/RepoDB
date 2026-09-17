@@ -107,6 +107,11 @@ namespace RepoDb
             ITrace? trace = null,
             string? traceKey = null)
         {
+            if (reader == null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
             // Validate
             if (!reader.HasRows)
             {
@@ -266,8 +271,13 @@ namespace RepoDb
             ITrace? trace = null,
             string? traceKey = null)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             // Validate
-            if (table?.Rows.Count <= 0)
+            if (table.Rows.Count <= 0)
             {
                 return default;
             }
@@ -484,6 +494,11 @@ namespace RepoDb
             string? traceKey = null,
             CancellationToken cancellationToken = default)
         {
+            if (reader == null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
             // Validate
             if (!reader.HasRows)
             {
@@ -646,8 +661,13 @@ namespace RepoDb
             string? traceKey = null,
             CancellationToken cancellationToken = default)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             // Validate
-            if (table?.Rows.Count <= 0)
+            if (table.Rows.Count <= 0)
             {
                 return default;
             }

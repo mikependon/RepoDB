@@ -59,14 +59,14 @@ namespace RepoDb
             }
             if (cacheItem == null)
             {
-                if (_cache.TryAdd(item.Key, item) == false && throwException == true)
+                if (!_cache.TryAdd(item.Key, item) && throwException)
                 {
                     throw new Exception($"Fail to add an item into the cache for the key {item.Key}.");
                 }
             }
             else
             {
-                if (!cacheItem.IsExpired() && throwException == true)
+                if (!cacheItem.IsExpired() && throwException)
                 {
                     throw new MappingExistsException($"An existing cache for key '{item.Key}' already exists.");
                 }
@@ -89,11 +89,11 @@ namespace RepoDb
         /// <returns>A boolean value that signifies the presence of the key from the collection.</returns>
         public bool Contains(string key)
         {
-            if (_cache.TryGetValue(key, out var value) == true)
+            if (_cache.TryGetValue(key, out var value))
             {
                 if (value is IExpirable expirable)
                 {
-                    return expirable.IsExpired() == false;
+                    return !expirable.IsExpired();
                 }
             }
             return false;
@@ -129,7 +129,7 @@ namespace RepoDb
         public void Remove(string key,
             bool throwException = true)
         {
-            if (_cache.TryRemove(key, out var _) == false && throwException == true)
+            if (!_cache.TryRemove(key, out var _) && throwException)
             {
                 throw new ItemNotFoundException($"Failed to remove an item with key '{key}'.");
             }

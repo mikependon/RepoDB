@@ -44,8 +44,10 @@ namespace RepoDb
         /// <param name="attribute">The instance of <see cref="PropertyValueAttribute"/> object.</param>
         public static void Add<TEntity>(Expression<Func<TEntity, object>> expression,
             PropertyValueAttribute attribute)
-            where TEntity : class =>
-            Add<TEntity>(expression, attribute, false);
+            where TEntity : class
+        {
+            Add<TEntity>(expression, attribute, force: false);
+        }
 
         /// <summary>
         /// Property Level: Adds a mapping between a class property and an instance of <see cref="PropertyValueAttribute"/> object (via expression).
@@ -57,8 +59,10 @@ namespace RepoDb
         public static void Add<TEntity>(Expression<Func<TEntity, object>> expression,
             PropertyValueAttribute attribute,
             bool force)
-            where TEntity : class =>
+            where TEntity : class
+        {
             Add<TEntity>(expression, new[] { attribute }, force);
+        }
 
         /// <summary>
         /// Property Level: Adds a mapping between a class property and a list of <see cref="PropertyValueAttribute"/> object (via expression).
@@ -68,8 +72,10 @@ namespace RepoDb
         /// <param name="attributes">The list of <see cref="PropertyValueAttribute"/> object.</param>
         public static void Add<TEntity>(Expression<Func<TEntity, object>> expression,
             IEnumerable<PropertyValueAttribute> attributes)
-            where TEntity : class =>
-            Add<TEntity>(expression, attributes, false);
+            where TEntity : class
+        {
+            Add<TEntity>(expression, attributes, force: false);
+        }
 
         /// <summary>
         /// Property Level: Adds a mapping between a class property and a list of <see cref="PropertyValueAttribute"/> object (via expression).
@@ -81,8 +87,10 @@ namespace RepoDb
         public static void Add<TEntity>(Expression<Func<TEntity, object>> expression,
             IEnumerable<PropertyValueAttribute> attributes,
             bool force)
-            where TEntity : class =>
+            where TEntity : class
+        {
             Add(ExpressionExtension.GetProperty<TEntity>(expression), attributes, force);
+        }
 
         /// <summary>
         /// Property Level: Adds a mapping between a class property and an instance of <see cref="PropertyValueAttribute"/> object (property name).
@@ -92,8 +100,10 @@ namespace RepoDb
         /// <param name="attribute">The instance of <see cref="PropertyValueAttribute"/> object.</param>
         public static void Add<TEntity>(string propertyName,
             PropertyValueAttribute attribute)
-            where TEntity : class =>
-            Add<TEntity>(propertyName, attribute, false);
+            where TEntity : class
+        {
+            Add<TEntity>(propertyName, attribute, force: false);
+        }
 
         /// <summary>
         /// Property Level: Adds a mapping between a class property and an instance of <see cref="PropertyValueAttribute"/> object (property name).
@@ -105,8 +115,10 @@ namespace RepoDb
         public static void Add<TEntity>(string propertyName,
             PropertyValueAttribute attribute,
             bool force)
-            where TEntity : class =>
+            where TEntity : class
+        {
             Add<TEntity>(propertyName, new[] { attribute }, force);
+        }
 
         /// <summary>
         /// Property Level: Adds a mapping between a class property and a list of <see cref="PropertyValueAttribute"/> object (via property name).
@@ -116,8 +128,10 @@ namespace RepoDb
         /// <param name="attributes">The list of <see cref="PropertyValueAttribute"/> object.</param>
         public static void Add<TEntity>(string propertyName,
             IEnumerable<PropertyValueAttribute> attributes)
-            where TEntity : class =>
-            Add<TEntity>(propertyName, attributes, false);
+            where TEntity : class
+        {
+            Add<TEntity>(propertyName, attributes, force: false);
+        }
 
         /// <summary>
         /// Property Level: Adds a mapping between a class property and a list of <see cref="PropertyValueAttribute"/> object (via property name).
@@ -146,8 +160,10 @@ namespace RepoDb
         /// <param name="attribute">The instance of <see cref="PropertyValueAttribute"/> object.</param>
         public static void Add<TEntity>(Field field,
             PropertyValueAttribute attribute)
-            where TEntity : class =>
-            Add<TEntity>(field, attribute, false);
+            where TEntity : class
+        {
+            Add<TEntity>(field, attribute, force: false);
+        }
 
         /// <summary>
         /// Property Level: Adds a mapping between a class property and an instance of <see cref="PropertyValueAttribute"/> object (via <see cref="Field"/> object).
@@ -159,8 +175,10 @@ namespace RepoDb
         public static void Add<TEntity>(Field field,
             PropertyValueAttribute attribute,
             bool force)
-            where TEntity : class =>
+            where TEntity : class
+        {
             Add<TEntity>(field, new[] { attribute }, force);
+        }
 
         /// <summary>
         /// Property Level: Adds a mapping between a class property and a list of <see cref="PropertyValueAttribute"/> object (via <see cref="Field"/> object).
@@ -170,8 +188,10 @@ namespace RepoDb
         /// <param name="attributes">The list of <see cref="PropertyValueAttribute"/> object.</param>
         public static void Add<TEntity>(Field field,
             IEnumerable<PropertyValueAttribute> attributes)
-            where TEntity : class =>
-            Add<TEntity>(field, attributes, false);
+            where TEntity : class
+        {
+            Add<TEntity>(field, attributes, force: false);
+        }
 
         /// <summary>
         /// Property Level: Adds a mapping between a class property and a list of <see cref="PropertyValueAttribute"/> object (via <see cref="Field"/> object).
@@ -198,8 +218,10 @@ namespace RepoDb
         /// <param name="propertyInfo">The instance of the target <see cref="PropertyInfo"/> object.</param>
         /// <param name="attribute">The instance of <see cref="PropertyValueAttribute"/> object.</param>
         public static void Add(PropertyInfo propertyInfo,
-            PropertyValueAttribute attribute) =>
-            Add(propertyInfo, attribute, false);
+            PropertyValueAttribute attribute)
+        {
+            Add(propertyInfo, attribute, force: false);
+        }
 
         /// <summary>
         /// Property Level: Adds a mapping between a <see cref="PropertyInfo"/> object and an instance of <see cref="PropertyValueAttribute"/> object.
@@ -209,8 +231,10 @@ namespace RepoDb
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         public static void Add(PropertyInfo propertyInfo,
             PropertyValueAttribute attribute,
-            bool force) =>
+            bool force)
+        {
             Add(propertyInfo, new[] { attribute }, force);
+        }
 
         /// <summary>
         /// Property Level: Adds a mapping between a <see cref="PropertyInfo"/> object and a list of <see cref="PropertyValueAttribute"/> object.
@@ -218,8 +242,10 @@ namespace RepoDb
         /// <param name="propertyInfo">The instance of the target <see cref="PropertyInfo"/> object.</param>
         /// <param name="attributes">The list of <see cref="PropertyValueAttribute"/> object.</param>
         public static void Add(PropertyInfo propertyInfo,
-            IEnumerable<PropertyValueAttribute> attributes) =>
-            Add(propertyInfo, attributes, false);
+            IEnumerable<PropertyValueAttribute> attributes)
+        {
+            Add(propertyInfo, attributes, force: false);
+        }
 
         /// <summary>
         /// Property Level: Adds a mapping between a <see cref="PropertyInfo"/> object and a list of <see cref="PropertyValueAttribute"/> object.
@@ -229,8 +255,10 @@ namespace RepoDb
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         public static void Add(PropertyInfo propertyInfo,
             IEnumerable<PropertyValueAttribute> attributes,
-            bool force) =>
+            bool force)
+        {
             Add(propertyInfo.DeclaringType, propertyInfo, attributes, force);
+        }
 
         /// <summary>
         /// Property Level: Adds a mapping between a <see cref="PropertyInfo"/> object and an instance of <see cref="PropertyValueAttribute"/> object.
@@ -240,8 +268,10 @@ namespace RepoDb
         /// <param name="attribute">The instance of <see cref="PropertyValueAttribute"/> object.</param>
         public static void Add(Type entityType,
             PropertyInfo propertyInfo,
-            PropertyValueAttribute attribute) =>
-            Add(entityType, propertyInfo, attribute, false);
+            PropertyValueAttribute attribute)
+        {
+            Add(entityType, propertyInfo, attribute, force: false);
+        }
 
         /// <summary>
         /// Property Level: Adds a mapping between a <see cref="PropertyInfo"/> object and an instance of <see cref="PropertyValueAttribute"/> object.
@@ -253,8 +283,10 @@ namespace RepoDb
         public static void Add(Type entityType,
             PropertyInfo propertyInfo,
             PropertyValueAttribute attribute,
-            bool force) =>
+            bool force)
+        {
             Add(entityType, propertyInfo, new[] { attribute }, force);
+        }
 
         /// <summary>
         /// Property Level: Adds a mapping between a <see cref="PropertyInfo"/> object and a list of <see cref="PropertyValueAttribute"/> object.
@@ -264,8 +296,10 @@ namespace RepoDb
         /// <param name="attributes">The list of <see cref="PropertyValueAttribute"/> object.</param>
         public static void Add(Type entityType,
             PropertyInfo propertyInfo,
-            IEnumerable<PropertyValueAttribute> attributes) =>
-            Add(entityType, propertyInfo, attributes, false);
+            IEnumerable<PropertyValueAttribute> attributes)
+        {
+            Add(entityType, propertyInfo, attributes, force: false);
+        }
 
         /// <summary>
         /// Property Level: Adds a mapping between a <see cref="PropertyInfo"/> object and a list of <see cref="PropertyValueAttribute"/> object.
@@ -315,8 +349,10 @@ namespace RepoDb
         /// <param name="expression">The property expression.</param>
         /// <returns>The list of mapped <see cref="PropertyValueAttribute"/> objects.</returns>
         public static IEnumerable<PropertyValueAttribute> Get<TEntity>(Expression<Func<TEntity, object>> expression)
-            where TEntity : class =>
-            Get(typeof(TEntity), ExpressionExtension.GetProperty<TEntity>(expression));
+            where TEntity : class
+        {
+            return Get(typeof(TEntity), ExpressionExtension.GetProperty<TEntity>(expression));
+        }
 
         /// <summary>
         /// Get the list of mapped <see cref="PropertyValueAttribute"/> objects of the class property (via property name).
@@ -325,8 +361,10 @@ namespace RepoDb
         /// <param name="propertyName">The name of the target class property.</param>
         /// <returns>The list of mapped <see cref="PropertyValueAttribute"/> objects.</returns>
         public static IEnumerable<PropertyValueAttribute> Get<TEntity>(string propertyName)
-            where TEntity : class =>
-            Get(typeof(TEntity), TypeExtension.GetProperty<TEntity>(propertyName));
+            where TEntity : class
+        {
+            return Get(typeof(TEntity), TypeExtension.GetProperty<TEntity>(propertyName));
+        }
 
         /// <summary>
         /// Get the list of mapped <see cref="PropertyValueAttribute"/> objects of the class property (via <see cref="Field"/> object).
@@ -335,16 +373,20 @@ namespace RepoDb
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
         /// <returns>The list of mapped <see cref="PropertyValueAttribute"/> objects.</returns>
         public static IEnumerable<PropertyValueAttribute> Get<TEntity>(Field field)
-            where TEntity : class =>
-            Get(typeof(TEntity), TypeExtension.GetProperty<TEntity>(field.Name));
+            where TEntity : class
+        {
+            return Get(typeof(TEntity), TypeExtension.GetProperty<TEntity>(field.Name));
+        }
 
         /// <summary>
         /// Get the list of mapped <see cref="PropertyValueAttribute"/> objects of the <see cref="PropertyInfo"/> object.
         /// </summary>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
         /// <returns>The list of mapped <see cref="PropertyValueAttribute"/> objects.</returns>
-        public static IEnumerable<PropertyValueAttribute> Get(PropertyInfo propertyInfo) =>
-            Get(propertyInfo.DeclaringType, propertyInfo);
+        public static IEnumerable<PropertyValueAttribute> Get(PropertyInfo propertyInfo)
+        {
+            return Get(propertyInfo.DeclaringType, propertyInfo);
+        }
 
         /// <summary>
         /// Get the list of mapped <see cref="PropertyValueAttribute"/> objects of the <see cref="PropertyInfo"/> object.
@@ -378,8 +420,10 @@ namespace RepoDb
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <param name="expression">The property expression.</param>
         public static void Remove<TEntity>(Expression<Func<TEntity, object>> expression)
-            where TEntity : class =>
+            where TEntity : class
+        {
             Remove(typeof(TEntity), ExpressionExtension.GetProperty<TEntity>(expression));
+        }
 
         /// <summary>
         /// Removes the existing mapped <see cref="PropertyValueAttribute"/> objects of the class property (via property name).
@@ -387,8 +431,10 @@ namespace RepoDb
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <param name="propertyName">The name of the target class property.</param>
         public static void Remove<TEntity>(string propertyName)
-            where TEntity : class =>
+            where TEntity : class
+        {
             Remove(typeof(TEntity), TypeExtension.GetProperty<TEntity>(propertyName));
+        }
 
         /// <summary>
         /// Removes the existing mapped <see cref="PropertyValueAttribute"/> objects of the class property (via <see cref="Field"/> object).
@@ -396,15 +442,19 @@ namespace RepoDb
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
         public static void Remove<TEntity>(Field field)
-            where TEntity : class =>
+            where TEntity : class
+        {
             Remove(typeof(TEntity), TypeExtension.GetProperty<TEntity>(field.Name));
+        }
 
         /// <summary>
         /// Removes the existing mapped <see cref="PropertyValueAttribute"/> objects of the <see cref="PropertyInfo"/> object.
         /// </summary>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
-        public static void Remove(PropertyInfo propertyInfo) =>
+        public static void Remove(PropertyInfo propertyInfo)
+        {
             Remove(propertyInfo.DeclaringType, propertyInfo);
+        }
 
         /// <summary>
         /// Removes the existing mapped <see cref="PropertyValueAttribute"/> objects of the <see cref="PropertyInfo"/> object.
@@ -438,8 +488,10 @@ namespace RepoDb
         /// <typeparam name="TType">The target type.</typeparam>
         /// <param name="attributes">The list of <see cref="PropertyValueAttribute"/> object.</param>
         /// <remarks>The default behavior will be affected if the settings are not handled properly by the user (i.e.: setting the type <see cref="string"/> name attribute to something would affect all the objects properties with type <see cref="string"/>).</remarks>
-        public static void Add<TType>(IEnumerable<PropertyValueAttribute> attributes) =>
-            Add(typeof(TType), attributes, false);
+        public static void Add<TType>(IEnumerable<PropertyValueAttribute> attributes)
+        {
+            Add(typeof(TType), attributes, force: false);
+        }
 
         /// <summary>
         /// Type Level: Adds a mapping between a .NET CLR type and a list of <see cref="PropertyValueAttribute"/> object.
@@ -449,8 +501,10 @@ namespace RepoDb
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         /// <remarks>The default behavior will be affected if the settings are not handled properly by the user (i.e.: setting the type <see cref="string"/> name attribute to something would affect all the objects properties with type <see cref="string"/>).</remarks>
         public static void Add<TType>(IEnumerable<PropertyValueAttribute> attributes,
-            bool force) =>
+            bool force)
+        {
             Add(typeof(TType), attributes, force);
+        }
 
         /// <summary>
         /// Type Level: Adds a mapping between a .NET CLR type and a list of <see cref="PropertyValueAttribute"/> object.
@@ -459,8 +513,10 @@ namespace RepoDb
         /// <param name="attributes">The list of <see cref="PropertyValueAttribute"/> object.</param>
         /// <remarks>The default behavior will be affected if the settings are not handled properly by the user (i.e.: setting the type <see cref="string"/> name attribute to something would affect all the objects properties with type <see cref="string"/>).</remarks>
         public static void Add(Type type,
-            IEnumerable<PropertyValueAttribute> attributes) =>
-            Add(type, attributes, false);
+            IEnumerable<PropertyValueAttribute> attributes)
+        {
+            Add(type, attributes, force: false);
+        }
 
 
         /// <summary>
@@ -507,8 +563,10 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TType">The target type.</typeparam>
         /// <returns>The list of mapped <see cref="PropertyValueAttribute"/> objects.</returns>
-        public static IEnumerable<PropertyValueAttribute> Get<TType>() =>
-            Get(typeof(TType));
+        public static IEnumerable<PropertyValueAttribute> Get<TType>()
+        {
+            return Get(typeof(TType));
+        }
 
         /// <summary>
         /// Get the list of mapped <see cref="PropertyValueAttribute"/> objects of the .NET CLR type.
@@ -541,8 +599,10 @@ namespace RepoDb
         /// <summary>
         /// Clear all the existing cached mappings.
         /// </summary>
-        public static void Clear() =>
+        public static void Clear()
+        {
             maps.Clear();
+        }
 
         #endregion
 

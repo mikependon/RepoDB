@@ -132,14 +132,14 @@ namespace RepoDb.Contexts.Providers
             }
 
             // Create
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
             var request = new InsertRequest(tableName,
                 connection,
                 transaction,
                 fields,
                 hints,
                 statementBuilder);
-            var commandText = await CommandTextCache.GetInsertTextAsync(request, cancellationToken);
+            var commandText = await CommandTextCache.GetInsertTextAsync(request, cancellationToken).ConfigureAwait(false);
 
             // Call
             context = CreateInternal(entityType,
@@ -176,11 +176,10 @@ namespace RepoDb.Contexts.Providers
             var dbSetting = connection.GetDbSetting();
             var dbHelper = connection.GetDbHelper();
             var inputFields = dbFields?.GetItems()
-                .Where(dbField =>
-                    dbField.IsIdentity == false)
+                .Where(dbField => !dbField.IsIdentity)
                 .Where(dbField =>
                     fields.FirstOrDefault(field =>
-                        string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
+                        string.Equals(field.Name.AsUnquoted(trim: true, dbSetting), dbField.Name.AsUnquoted(trim: true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                 .AsList();
 
             // Variables for the entity action
@@ -204,13 +203,13 @@ namespace RepoDb.Contexts.Providers
                     .GetDataEntityDbParameterSetterCompiledFunction(entityType,
                         string.Concat(entityType.FullName, CharConstant.Period, tableName, ".Insert"),
                         inputFields?.AsList(),
-                        null,
+outputFields: null,
                         dbSetting,
                         dbHelper),
                 KeyPropertySetterFunc = keyPropertySetterFunc,
                 KeyFieldName = keyField?.Name,
                 HasIdentityKey = keyField != null &&
-                    string.Equals(keyField.Name.AsUnquoted(true, dbSetting), dbFields?.GetIdentity()?.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)
+                    string.Equals(keyField.Name.AsUnquoted(trim: true, dbSetting), dbFields?.GetIdentity()?.Name.AsUnquoted(trim: true, dbSetting), StringComparison.OrdinalIgnoreCase)
             };
         }
     }

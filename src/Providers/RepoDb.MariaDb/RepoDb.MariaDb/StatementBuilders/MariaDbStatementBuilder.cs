@@ -143,7 +143,7 @@ namespace RepoDb.StatementBuilders
             // There should be fields
             if (fields?.Any() != true)
             {
-                throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
+                throw new ArgumentNullException(nameof(fields), $"The list of queryable fields must not be null for '{tableName}'.");
             }
 
             // Validate order by
@@ -443,7 +443,7 @@ namespace RepoDb.StatementBuilders
                         .WriteText("LAST_INSERT_ID() +")
                         .WriteText($"{index}")
                         .CloseParen();
-                };
+                }
 
                 builder.End();
 
@@ -569,7 +569,7 @@ namespace RepoDb.StatementBuilders
             // Verify the fields
             if (fields?.Any() != true)
             {
-                throw new NullReferenceException($"The list of fields cannot be null or empty.");
+                throw new ArgumentNullException(nameof(fields), $"The list of fields cannot be null or empty.");
             }
 
             // Validate the Primary Key
@@ -656,7 +656,7 @@ namespace RepoDb.StatementBuilders
             // Verify the fields
             if (fields?.Any() != true)
             {
-                throw new NullReferenceException($"The list of fields cannot be null or empty.");
+                throw new ArgumentNullException(nameof(fields), $"The list of fields cannot be null or empty.");
             }
 
             // Validate the Primary Key
@@ -793,7 +793,7 @@ namespace RepoDb.StatementBuilders
             // There should be fields
             if (fields?.Any() != true)
             {
-                throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
+                throw new ArgumentNullException(nameof(fields), $"The list of queryable fields must not be null for '{tableName}'.");
             }
 
             // Initialize the builder
@@ -850,7 +850,7 @@ namespace RepoDb.StatementBuilders
             // There should be fields
             if (fields?.Any() != true)
             {
-                throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
+                throw new ArgumentNullException(nameof(fields), $"The list of queryable fields must not be null for '{tableName}'.");
             }
 
             // Validate order by

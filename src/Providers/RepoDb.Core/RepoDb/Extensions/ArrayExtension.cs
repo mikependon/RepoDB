@@ -22,8 +22,10 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="array">The array to be converted.</param>
         /// <returns>An enumerable of objects.</returns>
-        public static IEnumerable<object> AsEnumerable(this Array array) =>
-            AsEnumerable<object>(array);
+        public static IEnumerable<object> AsEnumerable(this Array array)
+        {
+            return AsEnumerable<object>(array);
+        }
 
         /// <summary>
         /// Converts an <see cref="Array"/> object into an enumerable of objects.

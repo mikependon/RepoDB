@@ -292,7 +292,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = (string)null;
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
             {
                 statementBuilder.CreateInsertAll(tableName: tableName,
                     fields: null,
@@ -310,7 +310,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "";
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
             {
                 statementBuilder.CreateInsertAll(tableName: tableName,
                     fields: null,
@@ -328,7 +328,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = " ";
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
             {
                 statementBuilder.CreateInsertAll(tableName: tableName,
                     fields: null,

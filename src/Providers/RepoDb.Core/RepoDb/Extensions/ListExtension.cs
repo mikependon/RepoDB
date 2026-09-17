@@ -32,17 +32,20 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Adds an item into the <see cref="IList{T}"/> if not null.
+        /// Adds an item into the <see cref="ICollection{T}"/> if not null.
         /// </summary>
         /// <typeparam name="T">The type of the item.</typeparam>
         /// <param name="list">The instance of the list.</param>
         /// <param name="items">The items to be evaulated and added.</param>
-        public static void AddRangeIfNotNullOrNotEmpty<T>(this List<T> list,
+        public static void AddRangeIfNotNullOrNotEmpty<T>(this ICollection<T> list,
             IEnumerable<T> items)
         {
             if (items?.Any() == true)
             {
-                list.AddRange(items);
+                foreach (var item in items)
+                {
+                    list.Add(item);
+                }
             }
         }
     }

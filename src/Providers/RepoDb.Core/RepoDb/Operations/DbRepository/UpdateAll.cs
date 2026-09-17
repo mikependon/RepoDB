@@ -31,7 +31,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public int UpdateAll<TEntity>(string tableName,
@@ -44,12 +44,12 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.UpdateAll<TEntity>(tableName: tableName,
+                return dbConnection.UpdateAll<TEntity>(tableName: tableName,
                     entities: entities,
                     batchSize: batchSize,
                     fields: fields,
@@ -63,7 +63,7 @@ namespace RepoDb
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -77,8 +77,8 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public int UpdateAll<TEntity>(string tableName,
             IEnumerable<TEntity> entities,
@@ -91,12 +91,12 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.UpdateAll<TEntity>(tableName: tableName,
+                return dbConnection.UpdateAll<TEntity>(tableName: tableName,
                     entities: entities,
                     qualifiers: qualifiers,
                     batchSize: batchSize,
@@ -111,7 +111,7 @@ namespace RepoDb
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -125,7 +125,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public int UpdateAll<TEntity>(string tableName,
@@ -139,12 +139,12 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.UpdateAll<TEntity>(tableName: tableName,
+                return dbConnection.UpdateAll<TEntity>(tableName: tableName,
                     entities: entities,
                     qualifiers: qualifiers,
                     batchSize: batchSize,
@@ -159,7 +159,7 @@ namespace RepoDb
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -171,8 +171,8 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public int UpdateAll<TEntity>(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -183,12 +183,12 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.UpdateAll<TEntity>(entities: entities,
+                return dbConnection.UpdateAll<TEntity>(entities: entities,
                     batchSize: batchSize,
                     fields: fields,
                     hints: hints,
@@ -201,7 +201,7 @@ namespace RepoDb
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -214,8 +214,8 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public int UpdateAll<TEntity>(IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
@@ -227,12 +227,12 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.UpdateAll<TEntity>(entities: entities,
+                return dbConnection.UpdateAll<TEntity>(entities: entities,
                     qualifiers: qualifiers,
                     batchSize: batchSize,
                     fields: fields,
@@ -246,7 +246,7 @@ namespace RepoDb
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -259,7 +259,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public int UpdateAll<TEntity>(IEnumerable<TEntity> entities,
@@ -272,12 +272,12 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.UpdateAll<TEntity>(entities: entities,
+                return dbConnection.UpdateAll<TEntity>(entities: entities,
                     qualifiers: qualifiers,
                     batchSize: batchSize,
                     fields: fields,
@@ -291,7 +291,7 @@ namespace RepoDb
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -308,7 +308,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
@@ -323,12 +323,12 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.UpdateAllAsync<TEntity>(tableName: tableName,
+                return await dbConnection.UpdateAllAsync(tableName: tableName,
                     entities: entities,
                     batchSize: batchSize,
                     fields: fields,
@@ -338,12 +338,12 @@ namespace RepoDb
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -357,8 +357,8 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public async Task<int> UpdateAllAsync<TEntity>(string tableName,
@@ -373,12 +373,12 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.UpdateAllAsync<TEntity>(tableName: tableName,
+                return await dbConnection.UpdateAllAsync(tableName: tableName,
                     entities: entities,
                     qualifiers: qualifiers,
                     batchSize: batchSize,
@@ -389,12 +389,12 @@ namespace RepoDb
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -408,7 +408,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
@@ -424,12 +424,12 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.UpdateAllAsync<TEntity>(tableName: tableName,
+                return await dbConnection.UpdateAllAsync(tableName: tableName,
                     entities: entities,
                     qualifiers: qualifiers,
                     batchSize: batchSize,
@@ -440,12 +440,12 @@ namespace RepoDb
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -457,8 +457,8 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public async Task<int> UpdateAllAsync<TEntity>(IEnumerable<TEntity> entities,
@@ -471,12 +471,12 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.UpdateAllAsync<TEntity>(entities: entities,
+                return await dbConnection.UpdateAllAsync(entities: entities,
                     batchSize: batchSize,
                     fields: fields,
                     hints: hints,
@@ -485,12 +485,12 @@ namespace RepoDb
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -503,8 +503,8 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public async Task<int> UpdateAllAsync<TEntity>(IEnumerable<TEntity> entities,
@@ -518,12 +518,12 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.UpdateAllAsync<TEntity>(entities: entities,
+                return await dbConnection.UpdateAllAsync(entities: entities,
                     qualifiers: qualifiers,
                     batchSize: batchSize,
                     fields: fields,
@@ -533,12 +533,12 @@ namespace RepoDb
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -551,7 +551,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
@@ -566,12 +566,12 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.UpdateAllAsync<TEntity>(entities: entities,
+                return await dbConnection.UpdateAllAsync(entities: entities,
                     qualifiers: qualifiers,
                     batchSize: batchSize,
                     fields: fields,
@@ -581,12 +581,12 @@ namespace RepoDb
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -602,7 +602,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public int UpdateAll(string tableName,
@@ -614,12 +614,12 @@ namespace RepoDb
             IDbTransaction transaction = null)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.UpdateAll(tableName: tableName,
+                return dbConnection.UpdateAll(tableName: tableName,
                     entities: entities,
                     batchSize: batchSize,
                     fields: fields,
@@ -633,7 +633,7 @@ namespace RepoDb
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -646,7 +646,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public int UpdateAll(string tableName,
@@ -659,12 +659,12 @@ namespace RepoDb
             IDbTransaction transaction = null)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.UpdateAll(tableName: tableName,
+                return dbConnection.UpdateAll(tableName: tableName,
                     entities: entities,
                     qualifier: qualifier,
                     batchSize: batchSize,
@@ -679,7 +679,7 @@ namespace RepoDb
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -692,7 +692,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public int UpdateAll(string tableName,
@@ -705,12 +705,12 @@ namespace RepoDb
             IDbTransaction transaction = null)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return connection.UpdateAll(tableName: tableName,
+                return dbConnection.UpdateAll(tableName: tableName,
                     entities: entities,
                     qualifiers: qualifiers,
                     batchSize: batchSize,
@@ -725,7 +725,7 @@ namespace RepoDb
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -741,7 +741,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
@@ -755,12 +755,12 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.UpdateAllAsync(tableName: tableName,
+                return await dbConnection.UpdateAllAsync(tableName: tableName,
                     entities: entities,
                     batchSize: batchSize,
                     fields: fields,
@@ -770,12 +770,12 @@ namespace RepoDb
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -788,7 +788,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
@@ -803,12 +803,12 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.UpdateAllAsync(tableName: tableName,
+                return await dbConnection.UpdateAllAsync(tableName: tableName,
                     entities: entities,
                     qualifier: qualifier,
                     batchSize: batchSize,
@@ -819,12 +819,12 @@ namespace RepoDb
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 
@@ -837,7 +837,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
@@ -852,12 +852,12 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
 
             try
             {
                 // Call the method
-                return await connection.UpdateAllAsync(tableName: tableName,
+                return await dbConnection.UpdateAllAsync(tableName: tableName,
                     entities: entities,
                     qualifiers: qualifiers,
                     batchSize: batchSize,
@@ -868,12 +868,12 @@ namespace RepoDb
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
+                DisposeConnectionForPerCall(dbConnection, transaction);
             }
         }
 

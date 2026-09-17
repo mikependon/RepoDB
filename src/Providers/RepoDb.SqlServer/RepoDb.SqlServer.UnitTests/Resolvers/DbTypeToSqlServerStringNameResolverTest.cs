@@ -33,7 +33,7 @@ namespace RepoDb.SqlServer.UnitTests.Resolvers
             var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
-            Assert.AreEqual("bigint", name);
+            Assert.AreEqual("bigint", name, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -46,7 +46,7 @@ namespace RepoDb.SqlServer.UnitTests.Resolvers
             var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
-            Assert.AreEqual("binary", name);
+            Assert.AreEqual("binary", name, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -59,7 +59,7 @@ namespace RepoDb.SqlServer.UnitTests.Resolvers
             var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
-            Assert.AreEqual("bit", name);
+            Assert.AreEqual("bit", name, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -72,7 +72,7 @@ namespace RepoDb.SqlServer.UnitTests.Resolvers
             var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
-            Assert.AreEqual("char", name);
+            Assert.AreEqual("char", name, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -85,7 +85,7 @@ namespace RepoDb.SqlServer.UnitTests.Resolvers
             var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
-            Assert.AreEqual("date", name);
+            Assert.AreEqual("date", name, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -98,7 +98,7 @@ namespace RepoDb.SqlServer.UnitTests.Resolvers
             var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
-            Assert.AreEqual("datetime", name);
+            Assert.AreEqual("datetime", name, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -111,7 +111,7 @@ namespace RepoDb.SqlServer.UnitTests.Resolvers
             var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
-            Assert.AreEqual("datetime2", name);
+            Assert.AreEqual("datetime2", name, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -124,7 +124,7 @@ namespace RepoDb.SqlServer.UnitTests.Resolvers
             var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
-            Assert.AreEqual("datetimeoffset", name);
+            Assert.AreEqual("datetimeoffset", name, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -137,7 +137,7 @@ namespace RepoDb.SqlServer.UnitTests.Resolvers
             var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
-            Assert.AreEqual("float", name);
+            Assert.AreEqual("float", name, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -150,7 +150,7 @@ namespace RepoDb.SqlServer.UnitTests.Resolvers
             var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
-            Assert.AreEqual("int", name);
+            Assert.AreEqual("int", name, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -163,7 +163,7 @@ namespace RepoDb.SqlServer.UnitTests.Resolvers
             var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
-            Assert.AreEqual("nchar", name);
+            Assert.AreEqual("nchar", name, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -176,7 +176,7 @@ namespace RepoDb.SqlServer.UnitTests.Resolvers
             var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
-            Assert.AreEqual("real", name);
+            Assert.AreEqual("real", name, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -189,7 +189,7 @@ namespace RepoDb.SqlServer.UnitTests.Resolvers
             var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
-            Assert.AreEqual("nvarchar", name);
+            Assert.AreEqual("nvarchar", name, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -202,7 +202,7 @@ namespace RepoDb.SqlServer.UnitTests.Resolvers
             var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
-            Assert.AreEqual("object", name);
+            Assert.AreEqual("object", name, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -215,7 +215,7 @@ namespace RepoDb.SqlServer.UnitTests.Resolvers
             var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
-            Assert.AreEqual("time", name);
+            Assert.AreEqual("time", name, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -228,7 +228,7 @@ namespace RepoDb.SqlServer.UnitTests.Resolvers
             var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
-            Assert.AreEqual("tinyint", name);
+            Assert.AreEqual("tinyint", name, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -241,7 +241,7 @@ namespace RepoDb.SqlServer.UnitTests.Resolvers
             var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
-            Assert.AreEqual("uniqueidentifier", name);
+            Assert.AreEqual("uniqueidentifier", name, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -254,7 +254,7 @@ namespace RepoDb.SqlServer.UnitTests.Resolvers
             var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
-            Assert.AreEqual("varchar", name);
+            Assert.AreEqual("varchar", name, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -267,7 +267,7 @@ namespace RepoDb.SqlServer.UnitTests.Resolvers
             var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
-            Assert.AreEqual("xml", name);
+            Assert.AreEqual("xml", name, System.StringComparer.Ordinal);
         }
     }
 }

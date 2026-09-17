@@ -9,6 +9,7 @@
 
 using System.Collections.Generic;
 using RepoDb.Extensions;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using RepoDb.Interfaces;
@@ -27,7 +28,6 @@ namespace RepoDb
         // so let's increase this to something more sensible. This should improve overall performance at the expense
         // of higher memory usage for short queries.
 
-        //TODO: Tune this value
         private const int INITIAL_STRINGBUILDER_CAPACITY = 256;
         private readonly StringBuilder stringBuilder = new(INITIAL_STRINGBUILDER_CAPACITY);
 
@@ -38,7 +38,10 @@ namespace RepoDb
         /// Returns a string that corresponds to the composed SQL Query Statement. It uses the <see cref="GetString"/>
         /// method as its underlying method call.
         /// </returns>
-        public override string ToString() => GetString();
+        public override string ToString()
+        {
+            return GetString();
+        }
 
         // Custom Methods
 
@@ -66,7 +69,10 @@ namespace RepoDb
         /// Append a space to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Space() => Append(' ');
+        public QueryBuilder Space()
+        {
+            return Append(' ');
+        }
 
         /// <summary>
         /// Appends a line terminator to the SQL Query Statement.
@@ -83,7 +89,10 @@ namespace RepoDb
         /// </summary>
         /// <param name="text">The text to be written.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder WriteText(string text) => Append(text);
+        public QueryBuilder WriteText(string text)
+        {
+            return Append(text);
+        }
 
         /// <summary>
         /// 
@@ -146,13 +155,19 @@ namespace RepoDb
         /// Appends a word DELETE word to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Delete() => Append("DELETE");
+        public QueryBuilder Delete()
+        {
+            return Append("DELETE");
+        }
 
         /// <summary>
         /// Appends a character ";" to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder End() => Append(";");
+        public QueryBuilder End()
+        {
+            return Append(";");
+        }
 
         /// <summary>
         /// Appends a word AVG to the SQL Query Statement.
@@ -160,8 +175,10 @@ namespace RepoDb
         /// <param name="field">The instance of the <see cref="Field"/> object to be used.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Average(Field field, IDbSetting dbSetting) =>
-            Average(field, dbSetting, null);
+        public QueryBuilder Average(Field field, IDbSetting dbSetting)
+        {
+            return Average(field, dbSetting, convertResolver: null);
+        }
 
         /// <summary>
         /// Appends a word AVG to the SQL Query Statement.
@@ -179,7 +196,7 @@ namespace RepoDb
                 : convertResolver.Resolve(field, dbSetting);
 
             return Append("AVG (")
-                .Append(name, false)
+                .Append(name, spaceBefore: false)
                 .Append(')');
         }
 
@@ -189,8 +206,10 @@ namespace RepoDb
         /// <param name="field">The instance of the <see cref="Field"/> object to be used.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Min(Field field, IDbSetting dbSetting) =>
-            Min(field, dbSetting, null);
+        public QueryBuilder Min(Field field, IDbSetting dbSetting)
+        {
+            return Min(field, dbSetting, convertResolver: null);
+        }
 
         /// <summary>
         /// Appends a word MIN to the SQL Query Statement.
@@ -208,7 +227,7 @@ namespace RepoDb
                 : convertResolver.Resolve(field, dbSetting);
 
             return Append("MIN (")
-                .Append(name, false)
+                .Append(name, spaceBefore: false)
                 .Append(')');
         }
 
@@ -218,8 +237,10 @@ namespace RepoDb
         /// <param name="field">The instance of the <see cref="Field"/> object to be used.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Max(Field field, IDbSetting dbSetting) =>
-            Max(field, dbSetting, null);
+        public QueryBuilder Max(Field field, IDbSetting dbSetting)
+        {
+            return Max(field, dbSetting, convertResolver: null);
+        }
 
         /// <summary>
         /// Appends a word MAX to the SQL Query Statement.
@@ -237,7 +258,7 @@ namespace RepoDb
                 : convertResolver.Resolve(field, dbSetting);
 
             return Append("MAX (")
-                .Append(name, false)
+                .Append(name, spaceBefore: false)
                 .Append(')');
         }
 
@@ -247,8 +268,10 @@ namespace RepoDb
         /// <param name="field">The instance of the <see cref="Field"/> object to be used.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Sum(Field field, IDbSetting dbSetting) =>
-            Sum(field, dbSetting, null);
+        public QueryBuilder Sum(Field field, IDbSetting dbSetting)
+        {
+            return Sum(field, dbSetting, convertResolver: null);
+        }
 
         /// <summary>
         /// Appends a word SUM to the SQL Query Statement.
@@ -266,7 +289,7 @@ namespace RepoDb
                 : convertResolver.Resolve(field, dbSetting);
 
             return Append("SUM (")
-                .Append(name, false)
+                .Append(name, spaceBefore: false)
                 .Append(')');
         }
 
@@ -282,7 +305,7 @@ namespace RepoDb
             var name = field != null ? field.Name.AsField(dbSetting) : "*";
 
             return Append("COUNT (")
-                .Append(name, false)
+                .Append(name, spaceBefore: false)
                 .Append(')');
         }
 
@@ -298,7 +321,7 @@ namespace RepoDb
             var name = field != null ? field.Name.AsField(dbSetting) : "*";
 
             return Append("COUNT_BIG (")
-                .Append(name, false)
+                .Append(name, spaceBefore: false)
                 .Append(')');
         }
 
@@ -307,9 +330,11 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The list of fields to be stringified.</param>
         /// <returns>The current instance.</returns>
-        [Obsolete]
-        public QueryBuilder FieldFrom(Field field) =>
-            FieldFrom(field, null);
+        [Obsolete("Use the equivalent with DB setting.")]
+        public QueryBuilder FieldFrom(Field field)
+        {
+            return FieldFrom(field, dbSetting: null);
+        }
 
         /// <summary>
         /// Appends a stringified fields to the SQL Query Statement.
@@ -318,7 +343,10 @@ namespace RepoDb
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
         public QueryBuilder FieldFrom(Field field,
-            IDbSetting dbSetting) => Append(field?.Name.AsField(dbSetting));
+            IDbSetting dbSetting)
+        {
+            return Append(field?.Name.AsField(dbSetting));
+        }
 
         /// <summary>
         /// Appends a stringified fields to the SQL Query Statement.
@@ -327,8 +355,10 @@ namespace RepoDb
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
         public QueryBuilder FieldsFrom<TEntity>(IDbSetting dbSetting)
-            where TEntity : class =>
-            FieldsFrom(PropertyCache.Get<TEntity>()?.AsFields(), dbSetting);
+            where TEntity : class
+        {
+            return FieldsFrom(PropertyCache.Get<TEntity>()?.AsFields(), dbSetting);
+        }
 
         /// <summary>
         /// Append a stringified fields to the SQL Query Statement.
@@ -336,8 +366,10 @@ namespace RepoDb
         /// <param name="fields">The list fields to be stringified.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder FieldsFrom(IEnumerable<Field> fields, IDbSetting dbSetting) =>
-            AppendJoin(fields?.Select(f => f.Name).AsFields(dbSetting));
+        public QueryBuilder FieldsFrom(IEnumerable<Field> fields, IDbSetting dbSetting)
+        {
+            return AppendJoin(fields?.Select(f => f.Name).AsFields(dbSetting));
+        }
 
         /// <summary>
         /// Appends a stringified fields and parameters to the SQL Query Statement.
@@ -347,8 +379,10 @@ namespace RepoDb
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
         public QueryBuilder FieldsAndParametersFrom<TEntity>(int index, IDbSetting dbSetting)
-            where TEntity : class =>
-            FieldsAndParametersFrom(FieldCache.Get<TEntity>(), index, dbSetting);
+            where TEntity : class
+        {
+            return FieldsAndParametersFrom(FieldCache.Get<TEntity>(), index, dbSetting);
+        }
 
         /// <summary>
         /// Appends a stringified fields and parameters to the SQL Query Statement.
@@ -357,8 +391,10 @@ namespace RepoDb
         /// <param name="index">The parameter index.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder FieldsAndParametersFrom(IEnumerable<Field> fields, int index, IDbSetting dbSetting) =>
-            AppendJoin(fields?.AsFieldsAndParameters(index, dbSetting));
+        public QueryBuilder FieldsAndParametersFrom(IEnumerable<Field> fields, int index, IDbSetting dbSetting)
+        {
+            return AppendJoin(fields?.AsFieldsAndParameters(index, dbSetting));
+        }
 
         /// <summary>
         /// Appends a stringified fields and parameters to the SQL Query Statement with aliases.
@@ -385,8 +421,10 @@ namespace RepoDb
         /// <param name="rightAlias">The alias to be prepended for each field in the right.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder FieldsAndAliasFieldsFrom(IEnumerable<Field> fields, string leftAlias, string rightAlias, IDbSetting dbSetting) =>
-            AppendJoin(fields?.AsFieldsAndAliasFields(leftAlias, rightAlias, dbSetting));
+        public QueryBuilder FieldsAndAliasFieldsFrom(IEnumerable<Field> fields, string leftAlias, string rightAlias, IDbSetting dbSetting)
+        {
+            return AppendJoin(fields?.AsFieldsAndAliasFields(leftAlias, rightAlias, dbSetting));
+        }
 
         /// <summary>
         /// Appends a stringified fields to the SQL Query Statement with aliases.
@@ -410,14 +448,19 @@ namespace RepoDb
         /// <param name="alias">The alias to be prepended for each field.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder AsAliasFieldsFrom(IEnumerable<Field> fields, string alias, IDbSetting dbSetting) =>
-            AppendJoin(fields?.AsAliasFields(alias, dbSetting));
+        public QueryBuilder AsAliasFieldsFrom(IEnumerable<Field> fields, string alias, IDbSetting dbSetting)
+        {
+            return AppendJoin(fields?.AsAliasFields(alias, dbSetting));
+        }
 
         /// <summary>
         /// Appends a word FROM to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder From() => Append("FROM");
+        public QueryBuilder From()
+        {
+            return Append("FROM");
+        }
 
         /// <summary>
         /// Appends a word GROUP BY and a stringified fields to the SQL Query Statement.
@@ -446,7 +489,7 @@ namespace RepoDb
             IDbSetting dbSetting)
         {
             return Append("HAVING COUNT(")
-                .Append(queryField.Field.Name, false)
+                .Append(queryField.Field.Name, spaceBefore: false)
                 .Append(')')
                 .Append(queryField.Operation.GetText())
                 .Append(',')
@@ -457,31 +500,46 @@ namespace RepoDb
         /// Appends a word INSERT to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Insert() => Append("INSERT");
+        public QueryBuilder Insert()
+        {
+            return Append("INSERT");
+        }
 
         /// <summary>
         /// Appends a word GROUP BY to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder GroupBy() => Append("GROUP BY");
+        public QueryBuilder GroupBy()
+        {
+            return Append("GROUP BY");
+        }
 
         /// <summary>
         /// Appends a word HAVING COUNT to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder HavingCount() => Append("HAVING COUNT");
+        public QueryBuilder HavingCount()
+        {
+            return Append("HAVING COUNT");
+        }
 
         /// <summary>
         /// Appends a word INTO to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Into() => Append("INTO");
+        public QueryBuilder Into()
+        {
+            return Append("INTO");
+        }
 
         /// <summary>
         /// Appends a word VALUES to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Values() => Append("VALUES");
+        public QueryBuilder Values()
+        {
+            return Append("VALUES");
+        }
 
         /// <summary>
         /// Appends a word ORDER BY and the stringified fields to the SQL Query Statement with aliases.
@@ -489,8 +547,10 @@ namespace RepoDb
         /// <param name="orderBy">The list of order fields to be stringified.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder OrderByFrom(IEnumerable<OrderField> orderBy, IDbSetting dbSetting) =>
-            OrderByFrom(orderBy, null, dbSetting);
+        public QueryBuilder OrderByFrom(IEnumerable<OrderField> orderBy, IDbSetting dbSetting)
+        {
+            return OrderByFrom(orderBy, alias: null, dbSetting);
+        }
 
         /// <summary>
         /// Appends a word ORDER BY and the stringified fields to the SQL Query Statement with aliases.
@@ -513,7 +573,10 @@ namespace RepoDb
         /// Appends a word AS to the SQL Query Statement with alias.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder As() => As(null);
+        public QueryBuilder As()
+        {
+            return As(alias: null);
+        }
 
         /// <summary>
         /// Appends a word AS to the SQL Query Statement with alias.
@@ -535,19 +598,28 @@ namespace RepoDb
         /// Appends a word WITH to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder With() => Append("WITH");
+        public QueryBuilder With()
+        {
+            return Append("WITH");
+        }
 
         /// <summary>
         /// Appends a word SET to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Set() => Append("SET");
+        public QueryBuilder Set()
+        {
+            return Append("SET");
+        }
 
         /// <summary>
         /// Appends a word JOIN to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Join() => Append("JOIN");
+        public QueryBuilder Join()
+        {
+            return Append("JOIN");
+        }
 
         /// <summary>
         /// Appends a stringified field as a joined qualifier to the SQL Query Statement with left and right aliases.
@@ -562,20 +634,28 @@ namespace RepoDb
             string leftAlias,
             string rightAlias,
             bool considerNulls,
-            IDbSetting dbSetting) =>
-            Append(field.AsJoinQualifier(leftAlias, rightAlias, considerNulls, dbSetting));
+            IDbSetting dbSetting)
+        {
+            return Append(field.AsJoinQualifier(leftAlias, rightAlias, considerNulls, dbSetting));
+        }
 
         /// <summary>
         /// Appends a word MERGE to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Merge() => Append("MERGE");
+        public QueryBuilder Merge()
+        {
+            return Append("MERGE");
+        }
 
         /// <summary>
         /// Appends a word TABLE to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Table() => Append("TABLE");
+        public QueryBuilder Table()
+        {
+            return Append("TABLE");
+        }
 
         /// <summary>
         /// Appends the mapped entity name to the SQL Query Statement.
@@ -584,8 +664,10 @@ namespace RepoDb
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
         public QueryBuilder TableNameFrom<TEntity>(IDbSetting dbSetting)
-            where TEntity : class =>
-            TableNameFrom(ClassMappedNameCache.Get<TEntity>(), dbSetting);
+            where TEntity : class
+        {
+            return TableNameFrom(ClassMappedNameCache.Get<TEntity>(), dbSetting);
+        }
 
         /// <summary>
         /// Appends the target name to the SQL Query Statement.
@@ -593,8 +675,10 @@ namespace RepoDb
         /// <param name="tableName">The name of the table.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder TableNameFrom(string tableName, IDbSetting dbSetting) =>
-            Append(tableName?.AsQuoted(true, dbSetting));
+        public QueryBuilder TableNameFrom(string tableName, IDbSetting dbSetting)
+        {
+            return Append(tableName?.AsQuoted(trim: true, dbSetting));
+        }
 
         /// <summary>
         /// Append the mapped properties name to the SQL Query Statement.
@@ -604,8 +688,10 @@ namespace RepoDb
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
         public QueryBuilder ParametersFrom<TEntity>(int index, IDbSetting dbSetting)
-            where TEntity : class =>
-            ParametersFrom(FieldCache.Get<TEntity>(), index, dbSetting);
+            where TEntity : class
+        {
+            return ParametersFrom(FieldCache.Get<TEntity>(), index, dbSetting);
+        }
 
         /// <summary>
         /// Append the stringified field parameters to the SQL Query Statement.
@@ -614,8 +700,10 @@ namespace RepoDb
         /// <param name="index">The parameter index.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder ParametersFrom(IEnumerable<Field> fields, int index, IDbSetting dbSetting) =>
-            AppendJoin(fields?.AsParameters(index, dbSetting));
+        public QueryBuilder ParametersFrom(IEnumerable<Field> fields, int index, IDbSetting dbSetting)
+        {
+            return AppendJoin(fields?.AsParameters(index, dbSetting));
+        }
 
         /// <summary>
         /// Append the stringified parameter as fields to the SQL Query Statement.
@@ -642,20 +730,28 @@ namespace RepoDb
         /// <param name="index">The parameter index.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder ParametersAsFieldsFrom(IEnumerable<Field> fields, int index, IDbSetting dbSetting) =>
-            AppendJoin(fields?.AsParametersAsFields(index, dbSetting));
+        public QueryBuilder ParametersAsFieldsFrom(IEnumerable<Field> fields, int index, IDbSetting dbSetting)
+        {
+            return AppendJoin(fields?.AsParametersAsFields(index, dbSetting));
+        }
 
         /// <summary>
         /// Appends a word SELECT to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Select() => Append("SELECT");
+        public QueryBuilder Select()
+        {
+            return Append("SELECT");
+        }
 
         /// <summary>
         /// Appends a word TOP to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Top() => Append("TOP");
+        public QueryBuilder Top()
+        {
+            return Append("TOP");
+        }
 
         /// <summary>
         /// Appends a word TOP with the number of rows to the SQL Query Statement.
@@ -667,7 +763,7 @@ namespace RepoDb
             if (rows > 0)
             {
                 return Append("TOP (")
-                    .Append(rows.ToString(), false)
+                    .Append(rows.Value.ToString(CultureInfo.InvariantCulture), spaceBefore: false)
                     .Append(')');
             }
 
@@ -678,7 +774,10 @@ namespace RepoDb
         /// Appends a word LIMIT to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Limit() => Limit(null);
+        public QueryBuilder Limit()
+        {
+            return Limit(take: null);
+        }
 
         /// <summary>
         /// Appends a word LIMIT to the SQL Query Statement.
@@ -690,7 +789,7 @@ namespace RepoDb
             if (take > 0)
             {
                 return Append("LIMIT")
-                    .Append(take.ToString());
+                    .Append(take.Value.ToString(CultureInfo.InvariantCulture));
             }
 
             return Append("LIMIT");
@@ -707,13 +806,13 @@ namespace RepoDb
             if (skip > 0)
             {
                 return Append("LIMIT")
-                    .Append(skip.ToString())
+                    .Append(skip.Value.ToString(CultureInfo.InvariantCulture))
                     .Append(',')
-                    .Append(take.ToString());
+                    .Append(take.Value.ToString(CultureInfo.InvariantCulture));
             }
 
             return Append("LIMIT")
-                .Append(take.ToString());
+                .Append(take.Value.ToString(CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -727,14 +826,14 @@ namespace RepoDb
             if (skip > 0)
             {
                 return Append("LIMIT")
-                    .Append(take.ToString())
+                    .Append(take.Value.ToString(CultureInfo.InvariantCulture))
                     .Append("OFFSET")
-                    .Append(skip.ToString());
+                    .Append(skip.Value.ToString(CultureInfo.InvariantCulture));
             }
             else
             {
                 return Append("LIMIT")
-                    .Append(take.ToString());
+                    .Append(take.Value.ToString(CultureInfo.InvariantCulture));
             }
         }
 
@@ -742,7 +841,10 @@ namespace RepoDb
         /// Appends a word OFFSET to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Offset() => Offset(null);
+        public QueryBuilder Offset()
+        {
+            return Offset(skip: null);
+        }
 
         /// <summary>
         /// Appends a word OFFSET to the SQL Query Statement.
@@ -754,7 +856,7 @@ namespace RepoDb
             if (skip > 0)
             {
                 return Append("OFFSET")
-                    .Append(skip.ToString());
+                    .Append(skip.Value.ToString(CultureInfo.InvariantCulture));
             }
 
             return Append("OFFSET");
@@ -764,25 +866,37 @@ namespace RepoDb
         /// Appends a word ORDER BY to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder OrderBy() => Append("ORDER BY");
+        public QueryBuilder OrderBy()
+        {
+            return Append("ORDER BY");
+        }
 
         /// <summary>
         /// Appends a word WHERE to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Where() => Append("WHERE");
+        public QueryBuilder Where()
+        {
+            return Append("WHERE");
+        }
 
         /// <summary>
         /// Appends a word UPDATE to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Update() => Append("UPDATE");
+        public QueryBuilder Update()
+        {
+            return Append("UPDATE");
+        }
 
         /// <summary>
         /// Appends a word USING to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Using() => Append("USING");
+        public QueryBuilder Using()
+        {
+            return Append("USING");
+        }
 
         /// <summary>
         /// Appends a word WHERE and the stringified values of the <see cref="QueryGroup"/> to the SQL Query Statement.
@@ -790,8 +904,10 @@ namespace RepoDb
         /// <param name="queryGroup">The query group to be stringified.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder WhereFrom(QueryGroup queryGroup, IDbSetting dbSetting) =>
-            WhereFrom(queryGroup, 0, dbSetting);
+        public QueryBuilder WhereFrom(QueryGroup queryGroup, IDbSetting dbSetting)
+        {
+            return WhereFrom(queryGroup, 0, dbSetting);
+        }
 
         /// <summary>
         /// Appends a word WHERE and the stringified values of the <see cref="QueryGroup"/> to the SQL Query Statement.
@@ -804,7 +920,7 @@ namespace RepoDb
             int index,
             IDbSetting dbSetting)
         {
-            if (queryGroup?.GetFields(true).IsNullOrEmpty() == false)
+            if (queryGroup?.GetFields(traverse: true).IsNullOrEmpty() == false)
             {
                 return Append("WHERE")
                     .Append(queryGroup.GetString(index, dbSetting));
@@ -827,7 +943,7 @@ namespace RepoDb
             if (fields.IsNullOrEmpty()) return this;
 
             return Append("WHERE (")
-                .AppendJoin(fields.Select(f => f.Name.AsFieldAndParameter(index, dbSetting)), " AND ", false)
+                .AppendJoin(fields.Select(f => f.Name.AsFieldAndParameter(index, dbSetting)), " AND ", spaceBefore: false)
                 .Append(')');
         }
 
@@ -835,98 +951,146 @@ namespace RepoDb
         /// Appends a word ROW_NUMBER to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder RowNumber() => Append("ROW_NUMBER()");
+        public QueryBuilder RowNumber()
+        {
+            return Append("ROW_NUMBER()");
+        }
 
         /// <summary>
         /// Appends a word OVER to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Over() => Append("OVER");
+        public QueryBuilder Over()
+        {
+            return Append("OVER");
+        }
 
         /// <summary>
         /// Appends a word AND to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder And() => Append("AND");
+        public QueryBuilder And()
+        {
+            return Append("AND");
+        }
 
         /// <summary>
         /// Appends a word OR to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Or() => Append("OR");
+        public QueryBuilder Or()
+        {
+            return Append("OR");
+        }
 
         /// <summary>
         /// Appends a character "(" to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder OpenParen() => Append("(");
+        public QueryBuilder OpenParen()
+        {
+            return Append("(");
+        }
 
         /// <summary>
         /// Appends a character ")" to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder CloseParen() => Append(")");
+        public QueryBuilder CloseParen()
+        {
+            return Append(")");
+        }
 
         /// <summary>
         /// Appends a word ON to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder On() => Append("ON");
+        public QueryBuilder On()
+        {
+            return Append("ON");
+        }
 
         /// <summary>
         /// Appends a word IN to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder In() => Append("IN");
+        public QueryBuilder In()
+        {
+            return Append("IN");
+        }
 
         /// <summary>
         /// Appends a word BETWEEN to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Between() => Append("BETWEEN");
+        public QueryBuilder Between()
+        {
+            return Append("BETWEEN");
+        }
 
         /// <summary>
         /// Appends a word WHEN to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder When() => Append("WHEN");
+        public QueryBuilder When()
+        {
+            return Append("WHEN");
+        }
 
         /// <summary>
         /// Appends a word NOT to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Not() => Append("NOT");
+        public QueryBuilder Not()
+        {
+            return Append("NOT");
+        }
 
         /// <summary>
         /// Appends a word MATCHED to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Matched() => Append("MATCHED");
+        public QueryBuilder Matched()
+        {
+            return Append("MATCHED");
+        }
 
         /// <summary>
         /// Appends a word THEN to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Then() => Append("THEN");
+        public QueryBuilder Then()
+        {
+            return Append("THEN");
+        }
 
         /// <summary>
         /// Appends a word CASE to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Case() => Append("CASE");
+        public QueryBuilder Case()
+        {
+            return Append("CASE");
+        }
 
         /// <summary>
         /// Appends a word TRUNCATE to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Truncate() => Append("TRUNCATE");
+        public QueryBuilder Truncate()
+        {
+            return Append("TRUNCATE");
+        }
 
         /// <summary>
         /// Appends the hints to the SQL Query Statement.
         /// </summary>
         /// <param name="hints">The hints to be appended.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder HintsFrom(string hints) => Append(hints);
+        public QueryBuilder HintsFrom(string hints)
+        {
+            return Append(hints);
+        }
 
         /// <summary>
         /// Appends a word MAX and the field to the SQL Query Statement, otherwise an empty string.
@@ -938,7 +1102,7 @@ namespace RepoDb
             if (field is null) return this;
 
             return Append("MAX(")
-                .Append(field.Name, false)
+                .Append(field.Name, spaceBefore: false)
                 .Append(')');
         }
 
@@ -952,7 +1116,7 @@ namespace RepoDb
             if (field is null) return this;
 
             return Append("MIN(")
-                .Append(field.Name, false)
+                .Append(field.Name, spaceBefore: false)
                 .Append(')');
         }
 
@@ -960,19 +1124,28 @@ namespace RepoDb
         /// Appends a word AVG to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Avg() => Append("AVG");
+        public QueryBuilder Avg()
+        {
+            return Append("AVG");
+        }
 
         /// <summary>
         /// Appends a word ASC to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Ascending() => Append("ASC");
+        public QueryBuilder Ascending()
+        {
+            return Append("ASC");
+        }
 
         /// <summary>
         /// Appends a word DESC to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Descending() => Append("DESC");
+        public QueryBuilder Descending()
+        {
+            return Append("DESC");
+        }
 
         /// <summary>
         /// Appends a word AVG and the field to the SQL Query Statement, otherwise an empty string.
@@ -984,7 +1157,7 @@ namespace RepoDb
             if (field is null) return this;
 
             return Append("AVG(")
-                .Append(field.Name, false)
+                .Append(field.Name, spaceBefore: false)
                 .Append(')');
         }
 
@@ -992,25 +1165,37 @@ namespace RepoDb
         /// Appends a word REPLACE to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Replace() => Append("REPLACE");
+        public QueryBuilder Replace()
+        {
+            return Append("REPLACE");
+        }
 
         /// <summary>
         /// Appends a word RETURNING to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Returning() => Append("RETURNING");
+        public QueryBuilder Returning()
+        {
+            return Append("RETURNING");
+        }
 
         /// <summary>
         /// Appends a word CONFLICT to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Conflict() => Append("CONFLICT");
+        public QueryBuilder Conflict()
+        {
+            return Append("CONFLICT");
+        }
 
         /// <summary>
         /// Appends a word ON CONFLICT to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder OnConflict() => Append("ON CONFLICT");
+        public QueryBuilder OnConflict()
+        {
+            return Append("ON CONFLICT");
+        }
 
         /// <summary>
         /// Appends a word ON CONFLICT ON (fieldname) to the SQL Query Statement.
@@ -1034,18 +1219,27 @@ namespace RepoDb
         /// Appends a word DO to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Do() => Append("DO");
+        public QueryBuilder Do()
+        {
+            return Append("DO");
+        }
 
         /// <summary>
         /// Appends a word DO NOTHING to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder DoNothing() => Append("DO NOTHING");
+        public QueryBuilder DoNothing()
+        {
+            return Append("DO NOTHING");
+        }
 
         /// <summary>
         /// Appends a word DO UPDATE to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public QueryBuilder DoUpdate() => Append("DO UPDATE");
+        public QueryBuilder DoUpdate()
+        {
+            return Append("DO UPDATE");
+        }
     }
 }

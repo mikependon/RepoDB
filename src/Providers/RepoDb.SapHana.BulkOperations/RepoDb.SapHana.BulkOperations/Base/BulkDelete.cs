@@ -128,6 +128,11 @@ namespace RepoDb
             string traceKey = SapHanaTraceKeys.SapHanaBulkDelete,
             HanaTransaction transaction = null)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
             var pseudoTableName = SapHanaText.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
 
@@ -342,6 +347,11 @@ namespace RepoDb
             HanaTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
             var pseudoTableName = SapHanaText.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
 

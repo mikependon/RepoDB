@@ -52,7 +52,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"ROWS FETCH NEXT 10 ROWS ONLY ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -79,7 +79,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"ROWS FETCH NEXT 10 ROWS ONLY ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -106,7 +106,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"OFFSET 0 " +
                 $"ROWS FETCH NEXT 10 ROWS ONLY ;";
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -132,7 +132,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"OFFSET 0 " +
                 $"ROWS FETCH NEXT 10 ROWS ONLY ;";
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -158,7 +158,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"OFFSET 0 " +
                 $"ROWS FETCH NEXT 10 ROWS ONLY ;";
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -186,7 +186,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"OFFSET 10 " +
                 $"ROWS FETCH NEXT 10 ROWS ONLY ;";
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -214,7 +214,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"OFFSET 10 " +
                 $"ROWS FETCH NEXT 10 ROWS ONLY ;";
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -226,7 +226,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateBatchQuery(tableName: tableName,
                     fields: fields,
                     page: 0,
@@ -244,7 +244,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateBatchQuery(tableName: tableName,
                     fields: fields,
                     page: 0,
@@ -262,7 +262,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateBatchQuery(tableName: tableName,
                     fields: fields,
                     page: 0,
@@ -360,7 +360,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = "SELECT COUNT_BIG (*) AS [CountValue] FROM [Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -377,7 +377,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = "SELECT COUNT_BIG (*) AS [CountValue] FROM [Table] WITH (NOLOCK) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -393,7 +393,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = "SELECT COUNT_BIG (*) AS [CountValue] FROM [dbo].[Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -409,7 +409,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = "SELECT COUNT_BIG (*) AS [CountValue] FROM [dbo].[Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         #endregion
@@ -429,7 +429,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = "SELECT COUNT_BIG (*) AS [CountValue] FROM [Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -449,7 +449,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"WHERE ([Id] = @Id) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -466,7 +466,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = "SELECT COUNT_BIG (*) AS [CountValue] FROM [Table] WITH (NOLOCK) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -488,7 +488,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"WHERE ([Id] = @Id) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -504,7 +504,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = "SELECT COUNT_BIG (*) AS [CountValue] FROM [dbo].[Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -520,7 +520,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = "SELECT COUNT_BIG (*) AS [CountValue] FROM [dbo].[Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         #endregion
@@ -534,7 +534,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
+            var identityField = new DbField("Field1", isPrimary: false, isIdentity: true, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             var actual = statementBuilder.CreateInsertAll(tableName: tableName,
@@ -554,7 +554,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"SELECT [Result] FROM @__RepoDb_OutputTable ORDER BY [Id] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -564,7 +564,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var identityField = new DbField("Field1", false, true, false, typeof(long), null, null, null, null);
+            var identityField = new DbField("Field1", isPrimary: false, isIdentity: true, isNullable: false, typeof(long), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             var actual = statementBuilder.CreateInsertAll(tableName: tableName,
@@ -584,7 +584,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"SELECT [Result] FROM @__RepoDb_OutputTable ORDER BY [Id] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -594,7 +594,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var identityField = new DbField("Field2", false, true, false, typeof(int), null, null, null, null);
+            var identityField = new DbField("Field2", isPrimary: false, isIdentity: true, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             var actual = statementBuilder.CreateInsertAll(tableName: tableName,
@@ -614,7 +614,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"SELECT [Result] FROM @__RepoDb_OutputTable ORDER BY [Id] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -624,8 +624,8 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null);
-            var identityField = new DbField("Field2", false, true, false, typeof(long), null, null, null, null);
+            var primaryField = new DbField("Field1", isPrimary: true, isIdentity: false, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
+            var identityField = new DbField("Field2", isPrimary: false, isIdentity: true, isNullable: false, typeof(long), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             var actual = statementBuilder.CreateInsertAll(tableName: tableName,
@@ -645,7 +645,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"SELECT [Result] FROM @__RepoDb_OutputTable ORDER BY [Id] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -655,7 +655,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
+            var identityField = new DbField("Field1", isPrimary: false, isIdentity: true, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             var actual = statementBuilder.CreateInsertAll(tableName: tableName,
@@ -677,7 +677,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"SELECT [Result] FROM @__RepoDb_OutputTable ORDER BY [Id] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -687,7 +687,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
+            var identityField = new DbField("Field1", isPrimary: false, isIdentity: true, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             var actual = statementBuilder.CreateInsertAll(tableName: tableName,
@@ -708,7 +708,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"SELECT [Result] FROM @__RepoDb_OutputTable ORDER BY [Id] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -718,7 +718,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
+            var identityField = new DbField("Field1", isPrimary: false, isIdentity: true, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             var actual = statementBuilder.CreateInsertAll(tableName: tableName,
@@ -741,7 +741,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"SELECT [Result] FROM @__RepoDb_OutputTable ORDER BY [Id] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         #endregion
@@ -769,7 +769,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"SELECT NULL AS [Result] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -793,7 +793,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"SELECT NULL AS [Result] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -817,7 +817,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"SELECT NULL AS [Result] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -827,7 +827,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Field1", isPrimary: true, isIdentity: false, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             var actual = statementBuilder.CreateInsert(tableName: tableName,
@@ -842,7 +842,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"SELECT CONVERT(INT, @Field1) AS [Result] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -852,7 +852,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
+            var identityField = new DbField("Field1", isPrimary: false, isIdentity: true, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             var actual = statementBuilder.CreateInsert(tableName: tableName,
@@ -867,7 +867,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Result] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -877,7 +877,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var identityField = new DbField("Field1", false, true, false, typeof(long), null, null, null, null);
+            var identityField = new DbField("Field1", isPrimary: false, isIdentity: true, isNullable: false, typeof(long), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             var actual = statementBuilder.CreateInsert(tableName: tableName,
@@ -892,7 +892,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"SELECT CONVERT(BIGINT, SCOPE_IDENTITY()) AS [Result] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -902,8 +902,8 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null);
-            var identityField = new DbField("Field2", false, true, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Field1", isPrimary: true, isIdentity: false, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
+            var identityField = new DbField("Field2", isPrimary: false, isIdentity: true, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             var actual = statementBuilder.CreateInsert(tableName: tableName,
@@ -918,7 +918,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Result] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -928,8 +928,8 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null);
-            var identityField = new DbField("Field2", false, true, false, typeof(long), null, null, null, null);
+            var primaryField = new DbField("Field1", isPrimary: true, isIdentity: false, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
+            var identityField = new DbField("Field2", isPrimary: false, isIdentity: true, isNullable: false, typeof(long), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             var actual = statementBuilder.CreateInsert(tableName: tableName,
@@ -944,7 +944,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"SELECT CONVERT(BIGINT, SCOPE_IDENTITY()) AS [Result] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -969,7 +969,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"SELECT NULL AS [Result] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         #endregion
@@ -1003,7 +1003,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"UPDATE SET T.[Field1] = S.[Field1], T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1033,7 +1033,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"UPDATE SET T.[Field1] = S.[Field1], T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1063,7 +1063,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"UPDATE SET T.[Field1] = S.[Field1], T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1074,7 +1074,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
-            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Field1", isPrimary: true, isIdentity: false, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             var actual = statementBuilder.CreateMergeAll(tableName: tableName,
@@ -1097,7 +1097,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             expected = $"DECLARE @__RepoDb_OutputTable TABLE ( [Result] INT, [__RepoDb_OrderColumn] INT ) ; {expected}";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1108,8 +1108,8 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
-            var primaryField = new DbField("Field1", true, true, false, typeof(int), null, null, null, null);
-            var identifyField = new DbField("Field1", true, true, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Field1", isPrimary: true, isIdentity: true, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
+            var identifyField = new DbField("Field1", isPrimary: true, isIdentity: true, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             var actual = statementBuilder.CreateMergeAll(tableName: tableName,
@@ -1132,7 +1132,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             expected = $"DECLARE @__RepoDb_OutputTable TABLE ( [Result] INT, [__RepoDb_OrderColumn] INT ) ; {expected}";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1143,7 +1143,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
-            var primaryField = new DbField("Id", true, true, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Id", isPrimary: true, isIdentity: true, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             var actual = statementBuilder.CreateMergeAll(tableName: tableName,
@@ -1166,7 +1166,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             expected = $"DECLARE @__RepoDb_OutputTable TABLE ( [Result] INT, [__RepoDb_OrderColumn] INT ) ; {expected}";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1177,7 +1177,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
-            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
+            var identityField = new DbField("Field1", isPrimary: false, isIdentity: true, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             var actual = statementBuilder.CreateMergeAll(tableName: tableName,
@@ -1200,7 +1200,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             expected = $"DECLARE @__RepoDb_OutputTable TABLE ( [Result] INT, [__RepoDb_OrderColumn] INT ) ; {expected}";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1211,7 +1211,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
-            var identityField = new DbField("Id", false, true, false, typeof(int), null, null, null, null);
+            var identityField = new DbField("Id", isPrimary: false, isIdentity: true, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             var actual = statementBuilder.CreateMergeAll(tableName: tableName,
@@ -1234,7 +1234,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             expected = $"DECLARE @__RepoDb_OutputTable TABLE ( [Result] INT, [__RepoDb_OrderColumn] INT ) ; {expected}";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1244,7 +1244,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var primaryField = new DbField("Field1", true, true, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Field1", isPrimary: true, isIdentity: true, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             var actual = statementBuilder.CreateMergeAll(tableName: tableName,
@@ -1267,7 +1267,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             expected = $"DECLARE @__RepoDb_OutputTable TABLE ( [Result] INT, [__RepoDb_OrderColumn] INT ) ; {expected}";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1277,8 +1277,8 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null);
-            var identityField = new DbField("Field2", false, true, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Field1", isPrimary: true, isIdentity: false, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
+            var identityField = new DbField("Field2", isPrimary: false, isIdentity: true, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             var actual = statementBuilder.CreateMergeAll(tableName: tableName,
@@ -1301,7 +1301,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             expected = $"DECLARE @__RepoDb_OutputTable TABLE ( [Result] INT, [__RepoDb_OrderColumn] INT ) ; {expected}";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1312,7 +1312,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
-            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
+            var identityField = new DbField("Field1", isPrimary: false, isIdentity: true, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             var actual = statementBuilder.CreateMergeAll(tableName: tableName,
@@ -1353,7 +1353,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"SELECT [Result], [__RepoDb_OrderColumn] FROM @__RepoDb_OutputTable ORDER BY [__RepoDb_OrderColumn] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1384,7 +1384,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"UPDATE SET T.[Field1] = S.[Field1], T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1395,7 +1395,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
-            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
+            var identityField = new DbField("Field1", isPrimary: false, isIdentity: true, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             var actual = statementBuilder.CreateMergeAll(tableName: tableName,
@@ -1437,7 +1437,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"SELECT [Result], [__RepoDb_OrderColumn] FROM @__RepoDb_OutputTable ORDER BY [__RepoDb_OrderColumn] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1502,7 +1502,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var primaryField = new DbField("Id", true, false, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Id", isPrimary: true, isIdentity: false, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             Assert.Throws<InvalidQualifiersException>(() =>
@@ -1524,7 +1524,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var qualifiers = Field.From("Field1");
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateMergeAll(tableName: tableName,
                     fields: fields,
                     qualifiers: qualifiers,
@@ -1543,7 +1543,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var qualifiers = Field.From("Field1");
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateMergeAll(tableName: tableName,
                     fields: fields,
                     qualifiers: qualifiers,
@@ -1562,7 +1562,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var qualifiers = Field.From("Field1");
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateMergeAll(tableName: tableName,
                     fields: fields,
                     qualifiers: qualifiers,
@@ -1578,7 +1578,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var primaryField = new DbField("Field1", false, false, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Field1", isPrimary: false, isIdentity: false, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             Assert.Throws<InvalidOperationException>(() =>
@@ -1598,7 +1598,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
-            var identifyField = new DbField("Field2", false, false, false, typeof(int), null, null, null, null);
+            var identifyField = new DbField("Field2", isPrimary: false, isIdentity: false, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             Assert.Throws<InvalidOperationException>(() =>
@@ -1640,7 +1640,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"UPDATE SET T.[Field1] = S.[Field1], T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1669,7 +1669,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"UPDATE SET T.[Field1] = S.[Field1], T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1698,7 +1698,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"UPDATE SET T.[Field1] = S.[Field1], T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1709,7 +1709,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
-            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Field1", isPrimary: true, isIdentity: false, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             var actual = statementBuilder.CreateMerge(tableName: tableName,
@@ -1731,7 +1731,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             expected = $"DECLARE @__RepoDb_OutputTable TABLE ( [Result] INT ) ; {expected}";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1742,8 +1742,8 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
-            var primaryField = new DbField("Field1", true, true, false, typeof(int), null, null, null, null);
-            var identifyField = new DbField("Field1", true, true, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Field1", isPrimary: true, isIdentity: true, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
+            var identifyField = new DbField("Field1", isPrimary: true, isIdentity: true, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             var actual = statementBuilder.CreateMerge(tableName: tableName,
@@ -1765,7 +1765,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             expected = $"DECLARE @__RepoDb_OutputTable TABLE ( [Result] INT ) ; {expected}";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1776,7 +1776,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
-            var primaryField = new DbField("Id", true, true, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Id", isPrimary: true, isIdentity: true, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             var actual = statementBuilder.CreateMerge(tableName: tableName,
@@ -1798,7 +1798,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             expected = $"DECLARE @__RepoDb_OutputTable TABLE ( [Result] INT ) ; {expected}";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1809,7 +1809,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
-            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
+            var identityField = new DbField("Field1", isPrimary: false, isIdentity: true, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             var actual = statementBuilder.CreateMerge(tableName: tableName,
@@ -1831,7 +1831,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             expected = $"DECLARE @__RepoDb_OutputTable TABLE ( [Result] INT ) ; {expected}";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1842,7 +1842,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
-            var identityField = new DbField("Id", false, true, false, typeof(int), null, null, null, null);
+            var identityField = new DbField("Id", isPrimary: false, isIdentity: true, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             var actual = statementBuilder.CreateMerge(tableName: tableName,
@@ -1864,7 +1864,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             expected = $"DECLARE @__RepoDb_OutputTable TABLE ( [Result] INT ) ; {expected}";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1874,7 +1874,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var primaryField = new DbField("Field1", true, true, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Field1", isPrimary: true, isIdentity: true, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             var actual = statementBuilder.CreateMerge(tableName: tableName,
@@ -1896,7 +1896,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             expected = $"DECLARE @__RepoDb_OutputTable TABLE ( [Result] INT ) ; {expected}";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1906,8 +1906,8 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null);
-            var identityField = new DbField("Field2", false, true, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Field1", isPrimary: true, isIdentity: false, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
+            var identityField = new DbField("Field2", isPrimary: false, isIdentity: true, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             var actual = statementBuilder.CreateMerge(tableName: tableName,
@@ -1929,7 +1929,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             expected = $"DECLARE @__RepoDb_OutputTable TABLE ( [Result] INT ) ; {expected}";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1959,7 +1959,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"UPDATE SET T.[Field1] = S.[Field1], T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2021,7 +2021,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var primaryField = new DbField("Id", true, false, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Id", isPrimary: true, isIdentity: false, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             Assert.Throws<InvalidQualifiersException>(() =>
@@ -2042,7 +2042,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var qualifiers = Field.From("Field1");
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateMerge(tableName: tableName,
                     fields: fields,
                     qualifiers: qualifiers,
@@ -2060,7 +2060,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var qualifiers = Field.From("Field1");
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateMerge(tableName: tableName,
                     fields: fields,
                     qualifiers: qualifiers,
@@ -2078,7 +2078,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var qualifiers = Field.From("Field1");
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateMerge(tableName: tableName,
                     fields: fields,
                     qualifiers: qualifiers,
@@ -2093,7 +2093,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var primaryField = new DbField("Field1", false, false, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Field1", isPrimary: false, isIdentity: false, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             Assert.Throws<InvalidOperationException>(() =>
@@ -2112,7 +2112,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
-            var identifyField = new DbField("Field2", false, false, false, typeof(int), null, null, null, null);
+            var identifyField = new DbField("Field2", isPrimary: false, isIdentity: false, isNullable: false, typeof(int), size: null, precision: null, scale: null, databaseType: null);
 
             // Act
             Assert.Throws<InvalidOperationException>(() =>
@@ -2155,7 +2155,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"WHERE ([RowNumber] BETWEEN 1 AND 10) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2186,7 +2186,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"WHERE ([RowNumber] BETWEEN 11 AND 20) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2218,7 +2218,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"WHERE ([RowNumber] BETWEEN 1 AND 10) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2249,7 +2249,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"WHERE ([RowNumber] BETWEEN 1 AND 10) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2280,7 +2280,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"WHERE ([RowNumber] BETWEEN 1 AND 10) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2313,7 +2313,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"WHERE ([RowNumber] BETWEEN 11 AND 20) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2346,7 +2346,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"WHERE ([RowNumber] BETWEEN 11 AND 20) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2358,7 +2358,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateSkipQuery(tableName: tableName,
                     fields: fields,
                     skip: 0,
@@ -2376,7 +2376,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateSkipQuery(tableName: tableName,
                     fields: fields,
                     skip: 0,
@@ -2394,7 +2394,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateSkipQuery(tableName: tableName,
                     fields: fields,
                     skip: 0,

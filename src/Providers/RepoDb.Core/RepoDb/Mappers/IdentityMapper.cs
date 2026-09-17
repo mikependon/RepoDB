@@ -39,8 +39,10 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         public static void Add<TEntity>(Expression<Func<TEntity, object>> expression)
-            where TEntity : class =>
-            Add<TEntity>(expression, false);
+            where TEntity : class
+        {
+            Add<TEntity>(expression, force: false);
+        }
 
         /// <summary>
         /// Adds an identity property mapping into a target class (via expression).
@@ -68,8 +70,10 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="propertyName">The name of the class property to be mapped.</param>
         public static void Add<TEntity>(string propertyName)
-            where TEntity : class =>
-            Add<TEntity>(propertyName, false);
+            where TEntity : class
+        {
+            Add<TEntity>(propertyName, force: false);
+        }
 
         /// <summary>
         /// Adds an identity property mapping into a target class (via property name).
@@ -94,8 +98,10 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         public static void Add<TEntity>(Field field)
-            where TEntity : class =>
-            Add<TEntity>(field, false);
+            where TEntity : class
+        {
+            Add<TEntity>(field, force: false);
+        }
 
         /// <summary>
         /// Adds an identity property mapping into a target class (via <see cref="Field"/> object).
@@ -122,8 +128,10 @@ namespace RepoDb
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         internal static void Add<TEntity>(ClassProperty classProperty,
             bool force)
-            where TEntity : class =>
+            where TEntity : class
+        {
             Add(typeof(TEntity), classProperty, force);
+        }
 
         /// <summary>
         /// Adds an identity property mapping into a <see cref="ClassProperty"/> object.
@@ -170,8 +178,10 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <returns>An instance of the mapped <see cref="ClassProperty"/> object.</returns>
         public static ClassProperty Get<TEntity>()
-            where TEntity : class =>
-            Get(typeof(TEntity));
+            where TEntity : class
+        {
+            return Get(typeof(TEntity));
+        }
 
         /// <summary>
         /// Get the exising mapped identity property of the target class.
@@ -202,8 +212,10 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         public static void Remove<TEntity>()
-            where TEntity : class =>
+            where TEntity : class
+        {
             Remove(typeof(TEntity));
+        }
 
         /// <summary>
         /// Removes the existing mapped identity property of the class.
@@ -228,8 +240,10 @@ namespace RepoDb
         /// <summary>
         /// Clears all the existing cached identity properties.
         /// </summary>
-        public static void Clear() =>
+        public static void Clear()
+        {
             maps.Clear();
+        }
 
         #endregion
     }

@@ -843,7 +843,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                         top1: 1,
                         hints1: "WhatEver",
                         top2: 2,
-                        hints2: "WhatEver"));
+                        hints2: "WhatEver").ConfigureAwait(false));
             }
         }
 

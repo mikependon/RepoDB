@@ -45,8 +45,10 @@ namespace RepoDb.Options
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        internal static ClassHandlerGetOptions Create(DbDataReader reader) =>
-            new ClassHandlerGetOptions(reader);
+        internal static ClassHandlerGetOptions Create(DbDataReader reader)
+        {
+            return new ClassHandlerGetOptions(reader);
+        }
 
         #endregion
     }

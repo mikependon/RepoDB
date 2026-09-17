@@ -15,6 +15,7 @@ namespace RepoDb.Attributes
     /// <summary>
     /// An attribute that is used to define a handler for the property transformation.
     /// </summary>
+    [AttributeUsage(AttributeTargets.All)]
     public class PropertyHandlerAttribute : Attribute
     {
         /// <summary>

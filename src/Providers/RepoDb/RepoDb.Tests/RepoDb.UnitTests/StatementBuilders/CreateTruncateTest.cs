@@ -87,7 +87,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = (string)null;
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateTruncate(queryBuilder: queryBuilder,
                     tableName: tableName));
         }
@@ -101,7 +101,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "";
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateTruncate(queryBuilder: queryBuilder,
                     tableName: tableName));
         }
@@ -115,7 +115,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = " ";
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateTruncate(queryBuilder: queryBuilder,
                     tableName: tableName));
         }

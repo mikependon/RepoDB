@@ -26,8 +26,9 @@ namespace RepoDb
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        private static bool IsDirect(BinaryExpression expression) =>
-            (
+        private static bool IsDirect(BinaryExpression expression)
+        {
+            return (
                 expression.Left.NodeType == ExpressionType.Constant ||
                 expression.Left.NodeType == ExpressionType.Convert ||
                 expression.Left.NodeType == ExpressionType.MemberAccess
@@ -41,6 +42,7 @@ namespace RepoDb
                 expression.Right.NodeType == ExpressionType.MemberAccess ||
                 expression.Right.NodeType == ExpressionType.NewArrayInit
             );
+        }
 
         /*
          * Expression
@@ -58,7 +60,7 @@ namespace RepoDb
             // Guard the presence of the expression
             if (expression == null)
             {
-                throw new NullReferenceException("Expression cannot be null.");
+                throw new ArgumentNullException(nameof(expression), "Expression cannot be null.");
             }
 
             // Parse the expression base on type
@@ -121,11 +123,11 @@ namespace RepoDb
             var leftQueryGroup = Parse<TEntity>(expression.Left);
 
             // IsNot
-            if (expression.Right.Type == StaticType.Boolean && expression.IsExtractable() == true)
+            if (expression.Right.Type == StaticType.Boolean && expression.IsExtractable())
             {
                 var rightValue = (bool)expression.Right.GetValue();
-                var isNot = (expression.NodeType == ExpressionType.Equal && rightValue == false) ||
-                    (expression.NodeType == ExpressionType.NotEqual && rightValue == true);
+                var isNot = (expression.NodeType == ExpressionType.Equal && !rightValue) ||
+                    (expression.NodeType == ExpressionType.NotEqual && rightValue);
                 leftQueryGroup?.SetIsNot(isNot);
             }
             else
@@ -168,10 +170,10 @@ namespace RepoDb
                 if (expression.NodeType == ExpressionType.Not)
                 {
                     // Wrap result in A NOT expression
-                    return new QueryGroup(r, true);
+                    return new QueryGroup(r, isNot: true);
                 }
                 else
-                    return new QueryGroup(r, false);
+                    return new QueryGroup(r, isNot: false);
             }
             else
             {
@@ -238,17 +240,21 @@ namespace RepoDb
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        private static Conjunction GetConjunction(BinaryExpression expression) =>
-            expression.NodeType == ExpressionType.Or || expression.NodeType == ExpressionType.OrElse ?
+        private static Conjunction GetConjunction(BinaryExpression expression)
+        {
+            return expression.NodeType == ExpressionType.Or || expression.NodeType == ExpressionType.OrElse ?
             Conjunction.Or : Conjunction.And;
+        }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        private static Conjunction GetConjunction(MethodCallExpression expression) =>
-            expression.Method.Name == "Any" ? Conjunction.Or : Conjunction.And;
+        private static Conjunction GetConjunction(MethodCallExpression expression)
+        {
+            return string.Equals(expression.Method.Name, "Any", StringComparison.Ordinal) ? Conjunction.Or : Conjunction.And;
+        }
 
         #endregion
 
@@ -277,32 +283,40 @@ namespace RepoDb
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        internal static ExpressionType? GetNodeType(LambdaExpression expression) =>
-            GetNodeType(expression.Body);
+        internal static ExpressionType? GetNodeType(LambdaExpression expression)
+        {
+            return GetNodeType(expression.Body);
+        }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        internal static ExpressionType? GetNodeType(BinaryExpression expression) =>
-            expression.NodeType;
+        internal static ExpressionType? GetNodeType(BinaryExpression expression)
+        {
+            return expression.NodeType;
+        }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        internal static ExpressionType? GetNodeType(MemberExpression expression) =>
-            expression.NodeType;
+        internal static ExpressionType? GetNodeType(MemberExpression expression)
+        {
+            return expression.NodeType;
+        }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        internal static ExpressionType? GetNodeType(MethodCallExpression expression) =>
-            expression.NodeType;
+        internal static ExpressionType? GetNodeType(MethodCallExpression expression)
+        {
+            return expression.NodeType;
+        }
 
         #endregion
     }

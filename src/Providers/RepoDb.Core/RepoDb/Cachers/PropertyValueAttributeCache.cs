@@ -95,7 +95,7 @@ namespace RepoDb
             var key = TypeExtension.GenerateHashCode(entityType, propertyInfo);
 
             // Try get the value
-            if (cache.TryGetValue(key, out var result) == false)
+            if (!cache.TryGetValue(key, out var result))
             {
                 result = new PropertyValueAttributePropertyLevelResolver().Resolve(propertyInfo);
                 cache.TryAdd(key, result);
@@ -133,7 +133,7 @@ namespace RepoDb
             var key = TypeExtension.GenerateHashCode(type);
 
             // Try get the value
-            if (cache.TryGetValue(key, out var result) == false)
+            if (!cache.TryGetValue(key, out var result))
             {
                 result = new PropertyValueAttributeTypeLevelResolver().Resolve(type);
                 cache.TryAdd(key, result);

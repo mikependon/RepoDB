@@ -100,7 +100,7 @@ namespace RepoDb.Oracle.UnitTests
             var tableName = "Table";
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateAverage(tableName: tableName, field: null));
         }
 
@@ -112,7 +112,7 @@ namespace RepoDb.Oracle.UnitTests
             var field = new Field("Field1");
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateAverage(tableName: null, field: field));
         }
 
@@ -157,7 +157,7 @@ namespace RepoDb.Oracle.UnitTests
             var tableName = "Table";
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateAverageAll(tableName: tableName, field: null));
         }
 
@@ -349,7 +349,7 @@ namespace RepoDb.Oracle.UnitTests
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateBatchQuery(tableName: null,
                     fields: fields,
                     page: 0,
@@ -367,7 +367,7 @@ namespace RepoDb.Oracle.UnitTests
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateBatchQuery(tableName: "",
                     fields: fields,
                     page: 0,
@@ -385,7 +385,7 @@ namespace RepoDb.Oracle.UnitTests
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateBatchQuery(tableName: " ",
                     fields: fields,
                     page: 0,
@@ -539,7 +539,7 @@ namespace RepoDb.Oracle.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<OracleConnection>();
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateCount(tableName: null));
         }
 
@@ -611,7 +611,7 @@ namespace RepoDb.Oracle.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<OracleConnection>();
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateCountAll(tableName: null));
         }
 
@@ -701,7 +701,7 @@ namespace RepoDb.Oracle.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<OracleConnection>();
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateDelete(tableName: null));
         }
 
@@ -712,7 +712,7 @@ namespace RepoDb.Oracle.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<OracleConnection>();
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateDelete(tableName: ""));
         }
 
@@ -723,7 +723,7 @@ namespace RepoDb.Oracle.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<OracleConnection>();
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateDelete(tableName: " "));
         }
 
@@ -795,7 +795,7 @@ namespace RepoDb.Oracle.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<OracleConnection>();
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateDeleteAll(tableName: null));
         }
 
@@ -806,7 +806,7 @@ namespace RepoDb.Oracle.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<OracleConnection>();
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateDeleteAll(tableName: ""));
         }
 
@@ -817,7 +817,7 @@ namespace RepoDb.Oracle.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<OracleConnection>();
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateDeleteAll(tableName: " "));
         }
 
@@ -918,7 +918,7 @@ namespace RepoDb.Oracle.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<OracleConnection>();
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateExists(tableName: null));
         }
 
@@ -929,7 +929,7 @@ namespace RepoDb.Oracle.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<OracleConnection>();
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateExists(tableName: ""));
         }
 
@@ -940,7 +940,7 @@ namespace RepoDb.Oracle.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<OracleConnection>();
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateExists(tableName: " "));
         }
 
@@ -1125,7 +1125,7 @@ namespace RepoDb.Oracle.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateInsert(tableName: null, fields: fields));
         }
 
@@ -1137,7 +1137,7 @@ namespace RepoDb.Oracle.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateInsert(tableName: "", fields: fields));
         }
 
@@ -1149,7 +1149,7 @@ namespace RepoDb.Oracle.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateInsert(tableName: " ", fields: fields));
         }
 
@@ -1324,7 +1324,7 @@ namespace RepoDb.Oracle.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateInsertAll(tableName: null, fields: fields, batchSize: 1));
         }
 
@@ -1401,7 +1401,7 @@ namespace RepoDb.Oracle.UnitTests
             var tableName = "Table";
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateMax(tableName: tableName, field: null));
         }
 
@@ -1413,7 +1413,7 @@ namespace RepoDb.Oracle.UnitTests
             var field = new Field("Field1");
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateMax(tableName: null, field: field));
         }
 
@@ -1445,7 +1445,7 @@ namespace RepoDb.Oracle.UnitTests
             var tableName = "Table";
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateMaxAll(tableName: tableName, field: null));
         }
 
@@ -1733,7 +1733,7 @@ namespace RepoDb.Oracle.UnitTests
             var qualifiers = Field.From("Field1");
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateMerge(tableName: null, fields: fields, qualifiers: qualifiers));
         }
 
@@ -1746,7 +1746,7 @@ namespace RepoDb.Oracle.UnitTests
             var qualifiers = Field.From("Field1");
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateMerge(tableName: "", fields: fields, qualifiers: qualifiers));
         }
 
@@ -1759,7 +1759,7 @@ namespace RepoDb.Oracle.UnitTests
             var qualifiers = Field.From("Field1");
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateMerge(tableName: " ", fields: fields, qualifiers: qualifiers));
         }
 
@@ -1929,7 +1929,7 @@ namespace RepoDb.Oracle.UnitTests
             var qualifiers = Field.From("Field1");
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateMergeAll(tableName: null,
                     fields: fields,
                     qualifiers: qualifiers,
@@ -2015,7 +2015,7 @@ namespace RepoDb.Oracle.UnitTests
             var tableName = "Table";
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateMin(tableName: tableName, field: null));
         }
 
@@ -2027,7 +2027,7 @@ namespace RepoDb.Oracle.UnitTests
             var field = new Field("Field1");
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateMin(tableName: null, field: field));
         }
 
@@ -2059,7 +2059,7 @@ namespace RepoDb.Oracle.UnitTests
             var tableName = "Table";
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateMinAll(tableName: tableName, field: null));
         }
 
@@ -2192,7 +2192,7 @@ namespace RepoDb.Oracle.UnitTests
             var tableName = "Table";
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateQuery(tableName: tableName, fields: null));
         }
 
@@ -2204,7 +2204,7 @@ namespace RepoDb.Oracle.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateQuery(tableName: null, fields: fields));
         }
 
@@ -2216,7 +2216,7 @@ namespace RepoDb.Oracle.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateQuery(tableName: "", fields: fields));
         }
 
@@ -2228,7 +2228,7 @@ namespace RepoDb.Oracle.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateQuery(tableName: " ", fields: fields));
         }
 
@@ -2374,7 +2374,7 @@ namespace RepoDb.Oracle.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateSkipQuery(tableName: null,
                     fields: fields,
                     skip: 0,
@@ -2391,7 +2391,7 @@ namespace RepoDb.Oracle.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateSkipQuery(tableName: "",
                     fields: fields,
                     skip: 0,
@@ -2408,7 +2408,7 @@ namespace RepoDb.Oracle.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateSkipQuery(tableName: " ",
                     fields: fields,
                     skip: 0,
@@ -2552,7 +2552,7 @@ namespace RepoDb.Oracle.UnitTests
             var tableName = "Table";
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateSum(tableName: tableName, field: null));
         }
 
@@ -2564,7 +2564,7 @@ namespace RepoDb.Oracle.UnitTests
             var field = new Field("Field1");
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateSum(tableName: null, field: field));
         }
 
@@ -2596,7 +2596,7 @@ namespace RepoDb.Oracle.UnitTests
             var tableName = "Table";
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateSumAll(tableName: tableName, field: null));
         }
 
@@ -2656,7 +2656,7 @@ namespace RepoDb.Oracle.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<OracleConnection>();
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateTruncate(tableName: null));
         }
 
@@ -2667,7 +2667,7 @@ namespace RepoDb.Oracle.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<OracleConnection>();
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateTruncate(tableName: ""));
         }
 
@@ -2678,7 +2678,7 @@ namespace RepoDb.Oracle.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<OracleConnection>();
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateTruncate(tableName: " "));
         }
 
@@ -2867,7 +2867,7 @@ namespace RepoDb.Oracle.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateUpdate(tableName: null, fields: fields, where: null));
         }
 
@@ -2879,7 +2879,7 @@ namespace RepoDb.Oracle.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateUpdate(tableName: "", fields: fields, where: null));
         }
 
@@ -3047,7 +3047,7 @@ namespace RepoDb.Oracle.UnitTests
             var qualifiers = Field.From("Field1");
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateUpdateAll(tableName: null,
                     fields: fields,
                     qualifiers: qualifiers,
@@ -3115,7 +3115,7 @@ namespace RepoDb.Oracle.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<InvalidQualifiersException>(() =>
                 statementBuilder.CreateUpdateAll(tableName: tableName,
                     fields: fields,
                     qualifiers: null,

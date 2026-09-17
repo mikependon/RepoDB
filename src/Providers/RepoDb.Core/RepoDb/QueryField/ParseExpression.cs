@@ -79,7 +79,7 @@ namespace RepoDb
             ExpressionType? unaryNodeType = null)
         {
             var operation = unaryNodeType == ExpressionType.Not ? Operation.NotIn : Operation.In;
-            return new QueryField(fieldName, operation, enumerable.WithType<object>().AsArray(), null, false);
+            return new QueryField(fieldName, operation, enumerable.WithType<object>().AsArray(), dbType: null, prependUnderscore: false);
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace RepoDb
                 Operation.NotEqual : Operation.Equal;
             foreach (var item in enumerable)
             {
-                yield return new QueryField(fieldName, operation, item, null, false);
+                yield return new QueryField(fieldName, operation, item, dbType: null, prependUnderscore: false);
             }
         }
 
@@ -113,7 +113,7 @@ namespace RepoDb
             ExpressionType? unaryNodeType = null)
         {
             var operation = unaryNodeType == ExpressionType.Not ? Operation.NotLike : Operation.Like;
-            return new QueryField(fieldName, operation, value, null, false);
+            return new QueryField(fieldName, operation, value, dbType: null, prependUnderscore: false);
         }
 
         /// <summary>
@@ -125,16 +125,16 @@ namespace RepoDb
         private static string ConvertToLikeableValue(string methodName,
             string value)
         {
-            if (methodName == "Contains")
+            if (string.Equals(methodName, "Contains", StringComparison.Ordinal))
             {
                 value = value.StartsWith("%", StringComparison.OrdinalIgnoreCase) ? value : string.Concat("%", value);
                 value = value.EndsWith("%", StringComparison.OrdinalIgnoreCase) ? value : string.Concat(value, "%");
             }
-            else if (methodName == "StartsWith")
+            else if (string.Equals(methodName, "StartsWith", StringComparison.Ordinal))
             {
                 value = value.EndsWith("%", StringComparison.OrdinalIgnoreCase) ? value : string.Concat(value, "%");
             }
-            else if (methodName == "EndsWith")
+            else if (string.Equals(methodName, "EndsWith", StringComparison.Ordinal))
             {
                 value = value.StartsWith("%", StringComparison.OrdinalIgnoreCase) ? value : string.Concat("%", value);
             }
@@ -155,7 +155,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Only support the following expression type
-            if (expression.IsExtractable() == false)
+            if (!expression.IsExtractable())
             {
                 throw new NotSupportedException($"Expression '{expression}' is currently not supported.");
             }
@@ -187,7 +187,7 @@ namespace RepoDb
             }
 
             // Return the value
-            return new QueryField(field, operation, value, null, false).AsEnumerable();
+            return new QueryField(field, operation, value, dbType: null, prependUnderscore: false).AsEnumerable();
         }
 
         /// <summary>
@@ -197,9 +197,11 @@ namespace RepoDb
         /// <param name="value"></param>
         /// <returns></returns>
         private static object ToEnumValue(Type enumType,
-            object value) =>
-            (value != null ?
+            object value)
+        {
+            return (value != null ?
                 ToEnumValue(enumType, Enum.GetName(enumType, value)) : null) ?? value;
+        }
 
         /// <summary>
         /// 
@@ -208,9 +210,11 @@ namespace RepoDb
         /// <param name="name"></param>
         /// <returns></returns>
         private static object ToEnumValue(Type enumType,
-            string name) =>
-            !string.IsNullOrEmpty(name) && Enum.IsDefined(enumType, name) ?
+            string name)
+        {
+            return !string.IsNullOrEmpty(name) && Enum.IsDefined(enumType, name) ?
                 Enum.Parse(enumType, name) : null;
+        }
 
         /*
          * Member
@@ -227,7 +231,7 @@ namespace RepoDb
             var operation = unaryNodeType == ExpressionType.Not ? Operation.NotEqual : Operation.Equal;
 
             // Value
-            var value = (object)null;
+            object value;
             if (expression.Type == StaticType.Boolean)
             {
                 value = true;
@@ -238,7 +242,7 @@ namespace RepoDb
             }
 
             // Return
-            return new QueryField(property.GetMappedName(), operation, value, null, false).AsEnumerable();
+            return new QueryField(property.GetMappedName(), operation, value, dbType: null, prependUnderscore: false).AsEnumerable();
         }
 
         /*
@@ -256,29 +260,29 @@ namespace RepoDb
         ExpressionType? unaryNodeType = null)
         where TEntity : class
         {
-            if (expression.Method.Name == "Equals")
+            if (string.Equals(expression.Method.Name, "Equals", StringComparison.Ordinal))
             {
                 return ParseEquals<TEntity>(expression, unaryNodeType)?.AsEnumerable();
             }
-            else if (expression.Method.Name == "CompareString")
+            else if (string.Equals(expression.Method.Name, "CompareString", StringComparison.Ordinal))
             {
                 // Usual case for VB.Net (Microsoft.VisualBasic.CompilerServices.Operators.CompareString #767)
                 return ParseCompareString<TEntity>(expression, unaryNodeType)?.AsEnumerable();
             }
-            else if (expression.Method.Name == "Contains")
+            else if (string.Equals(expression.Method.Name, "Contains", StringComparison.Ordinal))
             {
                 return ParseContains<TEntity>(expression, unaryNodeType)?.AsEnumerable();
             }
-            else if (expression.Method.Name == "StartsWith" ||
-                expression.Method.Name == "EndsWith")
+            else if (string.Equals(expression.Method.Name, "StartsWith", StringComparison.Ordinal) ||
+string.Equals(expression.Method.Name, "EndsWith", StringComparison.Ordinal))
             {
                 return ParseWith<TEntity>(expression, unaryNodeType)?.AsEnumerable();
             }
-            else if (expression.Method.Name == "All")
+            else if (string.Equals(expression.Method.Name, "All", StringComparison.Ordinal))
             {
                 return ParseAll<TEntity>(expression, unaryNodeType);
             }
-            else if (expression.Method.Name == "Any")
+            else if (string.Equals(expression.Method.Name, "Any", StringComparison.Ordinal))
             {
                 return ParseAny<TEntity>(expression, unaryNodeType)?.AsEnumerable();
             }
@@ -497,8 +501,10 @@ namespace RepoDb
         /// <param name="expression"></param>
         /// <returns></returns>
         internal static ClassProperty GetProperty<TEntity>(LambdaExpression expression)
-            where TEntity : class =>
-            GetProperty<TEntity>(expression.Body);
+            where TEntity : class
+        {
+            return GetProperty<TEntity>(expression.Body);
+        }
 
         /// <summary>
         /// 
@@ -506,8 +512,10 @@ namespace RepoDb
         /// <param name="expression"></param>
         /// <returns></returns>
         internal static ClassProperty GetProperty<TEntity>(BinaryExpression expression)
-            where TEntity : class =>
-            GetProperty<TEntity>(expression.Left) ?? GetProperty<TEntity>(expression.Right);
+            where TEntity : class
+        {
+            return GetProperty<TEntity>(expression.Left) ?? GetProperty<TEntity>(expression.Right);
+        }
 
         /// <summary>
         /// 
@@ -515,12 +523,14 @@ namespace RepoDb
         /// <param name="expression"></param>
         /// <returns></returns>
         internal static ClassProperty GetProperty<TEntity>(MethodCallExpression expression)
-            where TEntity : class =>
-            expression?.Object?.Type == StaticType.String ?
+            where TEntity : class
+        {
+            return expression?.Object?.Type == StaticType.String ?
             GetProperty<TEntity>(expression.Object.ToMember()) :
             expression?.Arguments
                 .Select(a => GetProperty<TEntity>(a))
                 .FirstOrDefault(p => p != null);
+        }
 
         /// <summary>
         /// 
@@ -528,8 +538,10 @@ namespace RepoDb
         /// <param name="expression"></param>
         /// <returns></returns>
         internal static ClassProperty GetProperty<TEntity>(MemberExpression expression)
-            where TEntity : class =>
-            expression.Member is PropertyInfo pi ? GetProperty<TEntity>(pi) : null;
+            where TEntity : class
+        {
+            return expression.Member is PropertyInfo pi ? GetProperty<TEntity>(pi) : null;
+        }
 
         /// <summary>
         /// 

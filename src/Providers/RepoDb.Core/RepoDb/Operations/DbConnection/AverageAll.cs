@@ -18,23 +18,23 @@ using System.Threading.Tasks;
 
 namespace RepoDb
 {
-    /// <averagemary>
+    /// <summary>
     /// Contains the extension methods for <see cref="IDbConnection"/> object.
-    /// </averagemary>
+    /// </summary>
     public static partial class DbConnectionExtension
     {
 
         #region AverageAll<TEntity>
 
-        /// <averagemary>
+        /// <summary>
         /// Computes the average value of the target field.
-        /// </averagemary>
+        /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -59,15 +59,15 @@ namespace RepoDb
                 statementBuilder: statementBuilder);
         }
 
-        /// <averagemary>
+        /// <summary>
         /// Computes the average value of the target field.
-        /// </averagemary>
+        /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -92,15 +92,15 @@ namespace RepoDb
                 statementBuilder: statementBuilder);
         }
 
-        /// <averagemary>
+        /// <summary>
         /// Computes the average value of the target field in an asynchronous way.
-        /// </averagemary>
+        /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -128,15 +128,15 @@ namespace RepoDb
                 cancellationToken: cancellationToken);
         }
 
-        /// <averagemary>
+        /// <summary>
         /// Computes the average value of the target field in an asynchronous way.
-        /// </averagemary>
+        /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -168,16 +168,16 @@ namespace RepoDb
 
         #region AverageAll<TEntity, TResult>
 
-        /// <averagemary>
+        /// <summary>
         /// Computes the average value of the target field.
-        /// </averagemary>
+        /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -202,16 +202,16 @@ namespace RepoDb
                 statementBuilder: statementBuilder);
         }
 
-        /// <averagemary>
+        /// <summary>
         /// Computes the average value of the target field.
-        /// </averagemary>
+        /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -236,16 +236,16 @@ namespace RepoDb
                 statementBuilder: statementBuilder);
         }
 
-        /// <averagemary>
+        /// <summary>
         /// Computes the average value of the target field.
-        /// </averagemary>
+        /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -279,16 +279,16 @@ namespace RepoDb
                 trace: trace);
         }
 
-        /// <averagemary>
+        /// <summary>
         /// Computes the average value of the target field in an asynchronous way.
-        /// </averagemary>
+        /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -316,16 +316,16 @@ namespace RepoDb
                 cancellationToken: cancellationToken);
         }
 
-        /// <averagemary>
+        /// <summary>
         /// Computes the average value of the target field in an asynchronous way.
-        /// </averagemary>
+        /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -353,16 +353,16 @@ namespace RepoDb
                 cancellationToken: cancellationToken);
         }
 
-        /// <averagemary>
+        /// <summary>
         /// Computes the average value of the target field in an asynchronous way.
-        /// </averagemary>
+        /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -403,15 +403,15 @@ namespace RepoDb
 
         #region AverageAll(TableName)
 
-        /// <averagemary>
+        /// <summary>
         /// Computes the average value of the target field.
-        /// </averagemary>
+        /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -437,15 +437,15 @@ namespace RepoDb
                 statementBuilder: statementBuilder);
         }
 
-        /// <averagemary>
+        /// <summary>
         /// Computes the average value of the target field in an asynchronous way.
-        /// </averagemary>
+        /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -478,16 +478,16 @@ namespace RepoDb
 
         #region AverageAll<TResult>(TableName)
 
-        /// <averagemary>
+        /// <summary>
         /// Computes the average value of the target field.
-        /// </averagemary>
+        /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -513,16 +513,16 @@ namespace RepoDb
                 statementBuilder: statementBuilder);
         }
 
-        /// <averagemary>
+        /// <summary>
         /// Computes the average value of the target field.
-        /// </averagemary>
+        /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -555,16 +555,16 @@ namespace RepoDb
                 trace: trace);
         }
 
-        /// <averagemary>
+        /// <summary>
         /// Computes the average value of the target field in an asynchronous way.
-        /// </averagemary>
+        /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -593,16 +593,16 @@ namespace RepoDb
                 cancellationToken: cancellationToken);
         }
 
-        /// <averagemary>
+        /// <summary>
         /// Computes the average value of the target field in an asynchronous way.
-        /// </averagemary>
+        /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -642,15 +642,15 @@ namespace RepoDb
 
         #region AverageAllInternalBase
 
-        /// <averagemary>
+        /// <summary>
         /// Computes the average value of the target field.
-        /// </averagemary>
+        /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="AverageAllRequest"/> object.</param>
         /// <param name="param">The mapped object parameters.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>The average value of the target field.</returns>
@@ -677,9 +677,9 @@ namespace RepoDb
                 traceKey: traceKey,
                 transaction: transaction,
                 cache: null,
-				trace: trace,
+                trace: trace,
                 entityType: request.Type,
-                dbFields: DbFieldCache.Get(connection, request.Name, transaction, true),
+                dbFields: DbFieldCache.Get(connection, request.Name, transaction, enableValidation: true),
                 skipCommandArrayParametersCheck: true,
                 forceAutomaticConversion: false);
 
@@ -691,15 +691,15 @@ namespace RepoDb
 
         #region AverageAllAsyncInternalBase
 
-        /// <averagemary>
+        /// <summary>
         /// Computes the average value of the target field in an asynchronous way.
-        /// </averagemary>
+        /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="AverageAllRequest"/> object.</param>
         /// <param name="param">The mapped object parameters.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -728,12 +728,12 @@ namespace RepoDb
                 traceKey: traceKey,
                 transaction: transaction,
                 cache: null,
-				trace: trace,
+                trace: trace,
                 cancellationToken: cancellationToken,
                 entityType: request.Type,
-                dbFields: await DbFieldCache.GetAsync(connection, request.Name, transaction, true, cancellationToken),
+                dbFields: await DbFieldCache.GetAsync(connection, request.Name, transaction, enableValidation: true, cancellationToken).ConfigureAwait(false),
                 skipCommandArrayParametersCheck: true,
-                forceAutomaticConversion: false);
+                forceAutomaticConversion: false).ConfigureAwait(false);
 
             // Result
             return result;

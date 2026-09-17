@@ -364,21 +364,21 @@ namespace RepoDb.UnitTests.Mappers
         public void ThrowExceptionOnIdentityMapperViaPropertyNameThatIsNull()
         {
             // Setup
-            Assert.Throws<NullReferenceException>(() => IdentityMapper.Add<IdentityMapperTestClass>(propertyName: null));
+            Assert.Throws<ArgumentNullException>(() => IdentityMapper.Add<IdentityMapperTestClass>(propertyName: null));
         }
 
         [TestMethod]
         public void ThrowExceptionOnIdentityMapperViaFieldThatIsNull()
         {
             // Setup
-            Assert.Throws<NullReferenceException>(() => IdentityMapper.Add<IdentityMapperTestClass>(field: null));
+            Assert.Throws<ArgumentNullException>(() => IdentityMapper.Add<IdentityMapperTestClass>(field: null));
         }
 
         [TestMethod]
         public void ThrowExceptionOnIdentityMapperViaExpressionThatIsNull()
         {
             // Setup
-            Assert.Throws<NullReferenceException>(() => IdentityMapper.Add<IdentityMapperTestClass>(expression: null));
+            Assert.Throws<ArgumentNullException>(() => IdentityMapper.Add<IdentityMapperTestClass>(expression: null));
         }
 
         /*
@@ -396,7 +396,7 @@ namespace RepoDb.UnitTests.Mappers
         public void ThrowExceptionOnIdentityMapperViaFieldThatIsEmpty()
         {
             // Setup
-            Assert.Throws<NullReferenceException>(() => IdentityMapper.Add<IdentityMapperTestClass>(field: new Field("")));
+            Assert.Throws<ArgumentNullException>(() => IdentityMapper.Add<IdentityMapperTestClass>(field: new Field("")));
         }
 
         /*
@@ -414,7 +414,7 @@ namespace RepoDb.UnitTests.Mappers
         public void ThrowExceptionOnIdentityMapperViaFieldThatIsEmptySpaces()
         {
             // Setup
-            Assert.Throws<NullReferenceException>(() => IdentityMapper.Add<IdentityMapperTestClass>(field: new Field("  ")));
+            Assert.Throws<ArgumentNullException>(() => IdentityMapper.Add<IdentityMapperTestClass>(field: new Field("  ")));
         }
 
         /*

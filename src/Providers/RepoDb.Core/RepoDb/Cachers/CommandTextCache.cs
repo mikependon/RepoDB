@@ -37,7 +37,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetAverageText(AverageRequest request)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateAverage(request.Name,
@@ -60,7 +60,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetAverageAllText(AverageAllRequest request)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateAverageAll(request.Name,
@@ -82,7 +82,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetBatchQueryText(BatchQueryRequest request)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var fields = GetTargetFields(request.Connection,
                     request.Name,
@@ -107,7 +107,7 @@ namespace RepoDb
         internal static async Task<string> GetBatchQueryTextAsync(BatchQueryRequest request,
             CancellationToken cancellationToken = default)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var fields = await GetTargetFieldsAsync(request.Connection,
                     request.Name,
@@ -155,7 +155,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetCountText(CountRequest request)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateCount(request.Name,
@@ -177,7 +177,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetCountAllText(CountAllRequest request)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateCountAll(request.Name,
@@ -198,7 +198,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetDeleteText(DeleteRequest request)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateDelete(request.Name,
@@ -220,7 +220,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetDeleteAllText(DeleteAllRequest request)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateDeleteAll(request.Name,
@@ -241,7 +241,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetExistsText(ExistsRequest request)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateExists(request.Name,
@@ -263,7 +263,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetInsertText(InsertRequest request)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var fields = GetTargetFields(request.Connection,
                     request.Name,
@@ -286,7 +286,7 @@ namespace RepoDb
         internal static async Task<string> GetInsertTextAsync(InsertRequest request,
             CancellationToken cancellationToken = default)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var fields = await GetTargetFieldsAsync(request.Connection,
                     request.Name,
@@ -333,7 +333,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetInsertAllText(InsertAllRequest request)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var fields = GetTargetFields(request.Connection,
                     request.Name,
@@ -356,7 +356,7 @@ namespace RepoDb
         internal static async Task<string> GetInsertAllTextAsync(InsertAllRequest request,
             CancellationToken cancellationToken = default)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var fields = await GetTargetFieldsAsync(request.Connection,
                     request.Name,
@@ -404,7 +404,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetMaxText(MaxRequest request)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateMax(request.Name,
@@ -427,7 +427,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetMaxAllText(MaxAllRequest request)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateMaxAll(request.Name,
@@ -449,7 +449,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetMergeText(MergeRequest request)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var fields = GetTargetFields(request.Connection,
                     request.Name,
@@ -472,7 +472,7 @@ namespace RepoDb
         internal static async Task<string> GetMergeTextAsync(MergeRequest request,
             CancellationToken cancellationToken = default)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var fields = await GetTargetFieldsAsync(request.Connection,
                     request.Name,
@@ -520,7 +520,7 @@ namespace RepoDb
         /// <returns>The cached command text.</returns>
         internal static string GetMergeAllText(MergeAllRequest request)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var fields = GetTargetFields(request.Connection,
                     request.Name,
@@ -543,7 +543,7 @@ namespace RepoDb
         internal static async Task<string> GetMergeAllTextAsync(MergeAllRequest request,
             CancellationToken cancellationToken = default)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var fields = await GetTargetFieldsAsync(request.Connection,
                     request.Name,
@@ -592,7 +592,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetMinText(MinRequest request)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateMin(request.Name,
@@ -615,7 +615,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetMinAllText(MinAllRequest request)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateMinAll(request.Name,
@@ -637,7 +637,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetQueryText(QueryRequest request)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var fields = GetTargetFields(request.Connection,
                     request.Name,
@@ -662,7 +662,7 @@ namespace RepoDb
         internal static async Task<string> GetQueryTextAsync(QueryRequest request,
             CancellationToken cancellationToken = default)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var fields = await GetTargetFieldsAsync(request.Connection,
                     request.Name,
@@ -709,7 +709,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetQueryAllText(QueryAllRequest request)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var fields = GetTargetFields(request.Connection,
                     request.Name,
@@ -734,7 +734,7 @@ namespace RepoDb
         internal static async Task<string> GetQueryAllTextAsync(QueryAllRequest request,
             CancellationToken cancellationToken = default)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var fields = await GetTargetFieldsAsync(request.Connection,
                     request.Name,
@@ -779,7 +779,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetQueryMultipleText(QueryMultipleRequest request)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var fields = GetTargetFields(request.Connection,
                     request.Name,
@@ -804,7 +804,7 @@ namespace RepoDb
         internal static async Task<string> GetQueryMultipleTextAsync(QueryMultipleRequest request,
             CancellationToken cancellationToken = default)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var fields = await GetTargetFieldsAsync(request.Connection,
                     request.Name,
@@ -851,7 +851,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetSkipQueryText(SkipQueryRequest request)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var fields = GetTargetFields(request.Connection,
                     request.Name,
@@ -876,7 +876,7 @@ namespace RepoDb
         internal static async Task<string> GetSkipQueryTextAsync(SkipQueryRequest request,
             CancellationToken cancellationToken = default)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var fields = await GetTargetFieldsAsync(request.Connection,
                     request.Name,
@@ -925,7 +925,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetSumText(SumRequest request)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateSum(request.Name,
@@ -948,7 +948,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetSumAllText(SumAllRequest request)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateSumAll(request.Name,
@@ -970,7 +970,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetTruncateText(TruncateRequest request)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateTruncate(request.Name);
@@ -990,7 +990,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetUpdateText(UpdateRequest request)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var fields = GetTargetFields(request.Connection,
                     request.Name,
@@ -1013,7 +1013,7 @@ namespace RepoDb
         internal static async Task<string> GetUpdateTextAsync(UpdateRequest request,
             CancellationToken cancellationToken = default)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var fields = await GetTargetFieldsAsync(request.Connection,
                     request.Name,
@@ -1061,7 +1061,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetUpdateAllText(UpdateAllRequest request)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var fields = GetTargetFields(request.Connection,
                     request.Name,
@@ -1084,7 +1084,7 @@ namespace RepoDb
         internal static async Task<string> GetUpdateAllTextAsync(UpdateAllRequest request,
             CancellationToken cancellationToken = default)
         {
-            if (cache.TryGetValue(request, out var commandText) == false)
+            if (!cache.TryGetValue(request, out var commandText))
             {
                 var fields = await GetTargetFieldsAsync(request.Connection,
                     request.Name,
@@ -1378,7 +1378,7 @@ hasDefaultValue: false);
         private static Field GetPrimaryField(Type type,
             DbFieldCollection dbFields)
         {
-            return (type != null && type.IsObjectType() == false ? PrimaryCache.Get(type) : null)?.AsField() ??
+            return (type != null && !type.IsObjectType() ? PrimaryCache.Get(type) : null)?.AsField() ??
                 dbFields?.GetPrimary()?.AsField();
         }
 
@@ -1391,7 +1391,7 @@ hasDefaultValue: false);
         private static Field GetIdentityField(Type type,
             DbFieldCollection dbFields)
         {
-            return (type != null && type.IsObjectType() == false ? IdentityCache.Get(type) : null)?.AsField() ??
+            return (type != null && !type.IsObjectType() ? IdentityCache.Get(type) : null)?.AsField() ??
                 dbFields?.GetIdentity()?.AsField();
         }
 

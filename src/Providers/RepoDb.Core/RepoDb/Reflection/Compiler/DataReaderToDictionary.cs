@@ -37,7 +37,7 @@ namespace RepoDb.Reflection
                 readerFields?.AsList());
 
             // Throw an error if there are no matching at least one
-            if (memberBindings.Any() != true)
+            if (!memberBindings.Any())
             {
                 throw new InvalidOperationException($"There are no member bindings found from the ResultSet of the data reader.");
             }

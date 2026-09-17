@@ -45,8 +45,10 @@ namespace RepoDb.Options
         /// <param name="property"></param>
         /// <returns></returns>
         internal static PropertyHandlerSetOptions Create(IDbDataParameter parameter,
-            ClassProperty property) =>
-            new PropertyHandlerSetOptions(parameter, property);
+            ClassProperty property)
+        {
+            return new PropertyHandlerSetOptions(parameter, property);
+        }
 
         #endregion
     }

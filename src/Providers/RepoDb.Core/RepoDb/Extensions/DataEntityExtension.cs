@@ -42,8 +42,10 @@ namespace RepoDb.Extensions
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <returns>The list of <see cref="ClassProperty"/> objects.</returns>
         public static IEnumerable<ClassProperty> GetProperties<TEntity>()
-            where TEntity : class =>
-            GetProperties(typeof(TEntity));
+            where TEntity : class
+        {
+            return GetProperties(typeof(TEntity));
+        }
 
         /// <summary>
         /// Gets the mapped name of the data entity from the <see cref="TableAttribute"/> object.
@@ -69,9 +71,11 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="type">The type of the data entity where to get the mapped name.</param>
         /// <returns>The mapped name for the data entity.</returns>
-        public static string GetMappedName(Type type) =>
-            type.GetCustomAttribute<MapAttribute>()?.Name ?? GetMappedName(type.GetCustomAttribute<TableAttribute>()) ??
+        public static string GetMappedName(Type type)
+        {
+            return type.GetCustomAttribute<MapAttribute>()?.Name ?? GetMappedName(type.GetCustomAttribute<TableAttribute>()) ??
                 ClassMapper.Get(type) ?? type.Name;
+        }
 
         /// <summary>
         /// Gets the mapped name of the data entity. This will return the value of <see cref="MapAttribute.Name"/> and/or <see cref="TableAttribute.Name"/> property.
@@ -79,8 +83,10 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity where to get the mapped name.</typeparam>
         /// <returns>The mapped name for the data entity.</returns>
-        public static string GetMappedName<TEntity>() =>
-            GetMappedName(typeof(TEntity));
+        public static string GetMappedName<TEntity>()
+        {
+            return GetMappedName(typeof(TEntity));
+        }
 
         /// <summary>
         /// Gets the schema portion of the passed table name.
@@ -88,8 +94,10 @@ namespace RepoDb.Extensions
         /// <param name="tableName">The name of the table.</param>
         /// <returns>The schema of the passed table name.</returns>
         [Obsolete("Use the overloaded method instead.")]
-        public static string GetSchema(string tableName) =>
-            GetSchema(tableName, null);
+        public static string GetSchema(string tableName)
+        {
+            return GetSchema(tableName, dbSetting: null);
+        }
 
         /// <summary>
         /// Gets the schema of the table name.
@@ -127,8 +135,10 @@ namespace RepoDb.Extensions
         /// <param name="tableName">The name of the table.</param>
         /// <returns>The actual table name.</returns>
         [Obsolete("Use the overloaded method instead.")]
-        public static string GetTableName(string tableName) =>
-            GetTableName(tableName, null);
+        public static string GetTableName(string tableName)
+        {
+            return GetTableName(tableName, dbSetting: null);
+        }
 
         /// <summary>
         /// Gets the actual name of the table without the schema.
@@ -167,8 +177,10 @@ namespace RepoDb.Extensions
         /// <param name="propertyName"></param>
         /// <returns></returns>
         internal static PropertyInfo GetPropertyOrThrow<TEntity>(string propertyName)
-            where TEntity : class =>
-            GetPropertyOrThrow(typeof(TEntity), propertyName);
+            where TEntity : class
+        {
+            return GetPropertyOrThrow(typeof(TEntity), propertyName);
+        }
 
         /// <summary>
         /// 
@@ -194,8 +206,10 @@ namespace RepoDb.Extensions
         /// <param name="propertyName"></param>
         /// <returns></returns>
         internal static ClassProperty GetClassPropertyOrThrow<TEntity>(string propertyName)
-            where TEntity : class =>
-            GetClassPropertyOrThrow(typeof(TEntity), propertyName);
+            where TEntity : class
+        {
+            return GetClassPropertyOrThrow(typeof(TEntity), propertyName);
+        }
 
         /// <summary>
         /// 

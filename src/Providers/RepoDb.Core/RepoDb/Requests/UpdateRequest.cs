@@ -18,7 +18,26 @@ namespace RepoDb.Requests
     /// <summary>
     /// A class that holds the value of the 'Update' operation arguments.
     /// </summary>
-    internal class UpdateRequest : BaseRequest
+    /// <remarks>
+    /// Creates a new instance of <see cref="UpdateRequest"/> object.
+    /// </remarks>
+    /// <param name="name">The name of the request.</param>
+    /// <param name="connection">The connection object.</param>
+    /// <param name="transaction">The transaction object.</param>
+    /// <param name="where">The query expression.</param>
+    /// <param name="fields">The list of the target fields.</param>
+    /// <param name="hints">The hints for the table.</param>
+    /// <param name="statementBuilder">The statement builder.</param>
+    internal class UpdateRequest(string name,
+        IDbConnection connection,
+        IDbTransaction transaction,
+        QueryGroup where = null,
+        IEnumerable<Field> fields = null,
+        string hints = null,
+        IStatementBuilder statementBuilder = null) : BaseRequest(name,
+              connection,
+              transaction,
+              statementBuilder)
     {
         private int? hashCode = null;
 
@@ -51,46 +70,19 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="UpdateRequest"/> object.
-        /// </summary>
-        /// <param name="name">The name of the request.</param>
-        /// <param name="connection">The connection object.</param>
-        /// <param name="transaction">The transaction object.</param>
-        /// <param name="where">The query expression.</param>
-        /// <param name="fields">The list of the target fields.</param>
-        /// <param name="hints">The hints for the table.</param>
-        /// <param name="statementBuilder">The statement builder.</param>
-        public UpdateRequest(string name,
-            IDbConnection connection,
-            IDbTransaction transaction,
-            QueryGroup where = null,
-            IEnumerable<Field> fields = null,
-            string hints = null,
-            IStatementBuilder statementBuilder = null)
-            : base(name,
-                  connection,
-                  transaction,
-                  statementBuilder)
-        {
-            Where = where;
-            Fields = fields?.AsList();
-            Hints = hints;
-        }
-
-        /// <summary>
         /// Gets the query expression used.
         /// </summary>
-        public QueryGroup Where { get; }
+        public QueryGroup Where { get; } = where;
 
         /// <summary>
         /// Gets the target fields.
         /// </summary>
-        public IEnumerable<Field> Fields { get; set; }
+        public IEnumerable<Field> Fields { get; set; } = fields?.AsList();
 
         /// <summary>
         /// Gets the hints for the table.
         /// </summary>
-        public string Hints { get; }
+        public string Hints { get; } = hints;
 
         #region Equality and comparers
 
@@ -107,12 +99,12 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = HashCode.Combine(base.GetHashCode(), Name, ".Update");
+            var computedHashCode = HashCode.Combine(base.GetHashCode(), Name, ".Update");
 
             // Get the properties hash codes
             if (Where != null)
             {
-                hashCode = HashCode.Combine(hashCode, Where);
+                computedHashCode = HashCode.Combine(computedHashCode, Where);
             }
 
             // Get the qualifier <see cref="Field"/> objects
@@ -120,18 +112,18 @@ namespace RepoDb.Requests
             {
                 foreach (var field in Fields)
                 {
-                    hashCode = HashCode.Combine(hashCode, field);
+                    computedHashCode = HashCode.Combine(computedHashCode, field);
                 }
             }
 
             // Add the hints
             if (!string.IsNullOrWhiteSpace(Hints))
             {
-                hashCode = HashCode.Combine(hashCode, Hints);
+                computedHashCode = HashCode.Combine(computedHashCode, Hints);
             }
 
             // Set and return the hashcode
-            return (this.hashCode = hashCode).Value;
+            return (this.hashCode = computedHashCode).Value;
         }
 
         #endregion

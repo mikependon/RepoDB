@@ -139,6 +139,11 @@ namespace RepoDb
             string traceKey = MariaDbTraceKeys.MariaDbBulkUpdate,
             MariaDbTransaction transaction = null)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             // Identify the columns
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
@@ -383,6 +388,11 @@ namespace RepoDb
             MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             // Identify the columns
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);

@@ -31,8 +31,10 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static IEnumerable<Expression> GetPropertyValueAttributeAssignmentExpressions(
             ParameterExpression dbParameterExpression,
-            ClassProperty classProperty) =>
-            GetParameterPropertyValueSetterAttributesAssignmentExpressions((Expression)dbParameterExpression, classProperty);
+            ClassProperty classProperty)
+        {
+            return GetParameterPropertyValueSetterAttributesAssignmentExpressions((Expression)dbParameterExpression, classProperty);
+        }
 
         /// <summary>
         ///
@@ -78,8 +80,10 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static Expression GetPropertyValueAttributesAssignmentExpression(
             ParameterExpression dbParameterExpression,
-            PropertyValueAttribute attribute) =>
-            GetPropertyValueAttributesAssignmentExpression((Expression)dbParameterExpression, attribute);
+            PropertyValueAttribute attribute)
+        {
+            return GetPropertyValueAttributesAssignmentExpression((Expression)dbParameterExpression, attribute);
+        }
 
         /// <summary>
         /// 
@@ -112,13 +116,14 @@ namespace RepoDb.Reflection
         /// 
         /// </summary>
         /// <returns></returns>
-        internal static MethodInfo GetPropertyValueAttributeSetValueMethod() =>
-
-            StaticType.PropertyValueAttribute.GetMethod("SetValue",
+        internal static MethodInfo GetPropertyValueAttributeSetValueMethod()
+        {
+            return StaticType.PropertyValueAttribute.GetMethod("SetValue",
                 BindingFlags.Instance | BindingFlags.NonPublic,
-                null,
+binder: null,
                 new[] { StaticType.IDbDataParameter },
-                null);
+modifiers: null);
+        }
 
         #endregion
     }

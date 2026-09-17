@@ -35,7 +35,7 @@ namespace RepoDb.SapHana.UnitTests
             var result = " Field ".AsQuoted(true, setting);
 
             // Assert
-            Assert.AreEqual("\"Field\"", result);
+            Assert.AreEqual("\"Field\"", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -48,7 +48,7 @@ namespace RepoDb.SapHana.UnitTests
             var result = " Field ".AsQuoted(setting);
 
             // Assert
-            Assert.AreEqual("\" Field \"", result);
+            Assert.AreEqual("\" Field \"", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -61,7 +61,7 @@ namespace RepoDb.SapHana.UnitTests
             var result = "\"Field\"".AsQuoted(setting);
 
             // Assert
-            Assert.AreEqual("\"Field\"", result);
+            Assert.AreEqual("\"Field\"", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -74,7 +74,7 @@ namespace RepoDb.SapHana.UnitTests
             var result = "\" Field \"".AsQuoted(setting);
 
             // Assert
-            Assert.AreEqual("\" Field \"", result);
+            Assert.AreEqual("\" Field \"", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -87,7 +87,7 @@ namespace RepoDb.SapHana.UnitTests
             var result = " \" Field \" ".AsQuoted(true, setting);
 
             // Assert
-            Assert.AreEqual("\" Field \"", result);
+            Assert.AreEqual("\" Field \"", result, System.StringComparer.Ordinal);
         }
 
         #endregion
@@ -104,7 +104,7 @@ namespace RepoDb.SapHana.UnitTests
             var result = " \" Field \" ".AsUnquoted(true, setting);
 
             // Assert
-            Assert.AreEqual("Field", result);
+            Assert.AreEqual("Field", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -117,7 +117,7 @@ namespace RepoDb.SapHana.UnitTests
             var result = "\" Field \"".AsUnquoted(setting);
 
             // Assert
-            Assert.AreEqual(" Field ", result);
+            Assert.AreEqual(" Field ", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -130,7 +130,7 @@ namespace RepoDb.SapHana.UnitTests
             var result = "Field".AsUnquoted(setting);
 
             // Assert
-            Assert.AreEqual("Field", result);
+            Assert.AreEqual("Field", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -143,7 +143,7 @@ namespace RepoDb.SapHana.UnitTests
             var result = " Field ".AsUnquoted(setting);
 
             // Assert
-            Assert.AreEqual(" Field ", result);
+            Assert.AreEqual(" Field ", result, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -156,7 +156,7 @@ namespace RepoDb.SapHana.UnitTests
             var result = " Field ".AsUnquoted(true, setting);
 
             // Assert
-            Assert.AreEqual("Field", result);
+            Assert.AreEqual("Field", result, System.StringComparer.Ordinal);
         }
 
         #endregion

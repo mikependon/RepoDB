@@ -49,7 +49,7 @@ namespace RepoDb.Contexts.Providers
                 ";",
                 hints,
                 ";",
-                where?.GetHashCode().ToString());
+                where?.GetHashCode().ToString(System.Globalization.CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace RepoDb.Contexts.Providers
             }
 
             // Create
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
             var request = new UpdateRequest(tableName,
                 connection,
                 transaction,
@@ -149,7 +149,7 @@ namespace RepoDb.Contexts.Providers
                 fields,
                 hints,
                 statementBuilder);
-            var commandText = await CommandTextCache.GetUpdateTextAsync(request, cancellationToken);
+            var commandText = await CommandTextCache.GetUpdateTextAsync(request, cancellationToken).ConfigureAwait(false);
 
             // Call
             context = CreateInternal(entityType,
@@ -189,9 +189,9 @@ namespace RepoDb.Contexts.Providers
 
             // Filter the actual properties for input fields - mirrors the SET-clause exclusions in
             inputFields = dbFields?.GetItems()
-                .Where(dbField => dbField.IsIdentity == false && dbField.IsPrimary == false)
+                .Where(dbField => !dbField.IsIdentity && !dbField.IsPrimary)
                 .Where(dbField =>
-                    fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
+                    fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(trim: true, dbSetting), dbField.Name.AsUnquoted(trim: true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                 .AsList();
 
             // Return the value
@@ -202,7 +202,7 @@ namespace RepoDb.Contexts.Providers
                 ParametersSetterFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction(entityType,
                     string.Concat(entityType.FullName, CharConstant.Period, tableName, ".Update"),
                     inputFields?.AsList(),
-                    null,
+outputFields: null,
                     dbSetting,
                     dbHelper)
             };

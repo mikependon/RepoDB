@@ -16,7 +16,22 @@ namespace RepoDb.Requests
     /// <summary>
     /// A class that holds the value of the 'CountAll' operation arguments.
     /// </summary>
-    internal class CountAllRequest : BaseRequest
+    /// <remarks>
+    /// Creates a new instance of <see cref="CountAllRequest"/> object.
+    /// </remarks>
+    /// <param name="name">The name of the request.</param>
+    /// <param name="connection">The connection object.</param>
+    /// <param name="transaction">The transaction object.</param>
+    /// <param name="hints">The hints for the table.</param>
+    /// <param name="statementBuilder">The statement builder.</param>
+    internal class CountAllRequest(string name,
+        IDbConnection connection,
+        IDbTransaction transaction,
+        string hints = null,
+        IStatementBuilder statementBuilder = null) : BaseRequest(name,
+              connection,
+              transaction,
+              statementBuilder)
     {
         private int? hashCode = null;
 
@@ -43,30 +58,9 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="CountAllRequest"/> object.
-        /// </summary>
-        /// <param name="name">The name of the request.</param>
-        /// <param name="connection">The connection object.</param>
-        /// <param name="transaction">The transaction object.</param>
-        /// <param name="hints">The hints for the table.</param>
-        /// <param name="statementBuilder">The statement builder.</param>
-        public CountAllRequest(string name,
-            IDbConnection connection,
-            IDbTransaction transaction,
-            string hints = null,
-            IStatementBuilder statementBuilder = null)
-            : base(name,
-                  connection,
-                  transaction,
-                  statementBuilder)
-        {
-            Hints = hints;
-        }
-
-        /// <summary>
         /// Gets the hints for the table.
         /// </summary>
-        public string Hints { get; }
+        public string Hints { get; } = hints;
 
         #region Equality and comparers
 
@@ -83,16 +77,16 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = HashCode.Combine(Name, ".CountAll");
+            var computedHashCode = HashCode.Combine(Name, ".CountAll");
 
             // Add the hints
             if (!string.IsNullOrWhiteSpace(Hints))
             {
-                hashCode = HashCode.Combine(hashCode, Hints);
+                computedHashCode = HashCode.Combine(computedHashCode, Hints);
             }
 
             // Set and return the hashcode
-            return (this.hashCode = hashCode).Value;
+            return (this.hashCode = computedHashCode).Value;
         }
 
         #endregion

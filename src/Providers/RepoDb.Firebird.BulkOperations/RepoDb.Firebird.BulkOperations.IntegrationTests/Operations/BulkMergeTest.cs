@@ -708,7 +708,7 @@ namespace RepoDb.Firebird.BulkOperations.IntegrationTests.Operations
         //{
         //    using (var connection = new FbConnection(Database.ConnectionString))
         //    {
-        //        Assert.Throws<NullReferenceException>(() => connection.BulkMerge((IEnumerable<BulkOperationIdentityTable>)null));
+        //        Assert.Throws<ArgumentNullException>(() => connection.BulkMerge((IEnumerable<BulkOperationIdentityTable>)null));
         //    }
         //}
 
@@ -728,7 +728,7 @@ namespace RepoDb.Firebird.BulkOperations.IntegrationTests.Operations
         {
             using (var connection = new FbConnection(Database.ConnectionString))
             {
-                Assert.Throws<NullReferenceException>(() => connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                Assert.Throws<ArgumentNullException>(() => connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     (DataTable)null));
             }
         }
@@ -4161,7 +4161,7 @@ namespace RepoDb.Firebird.BulkOperations.IntegrationTests.Operations
         {
             using (var connection = new FbConnection(Database.ConnectionString))
             {
-                Assert.Throws<NullReferenceException>(() => connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
+                Assert.Throws<ArgumentNullException>(() => connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
                     (DataTable)null));
             }
         }

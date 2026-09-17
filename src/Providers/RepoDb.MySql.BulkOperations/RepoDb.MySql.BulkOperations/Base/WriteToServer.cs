@@ -223,9 +223,10 @@ namespace RepoDb
         /// <returns></returns>
         private static MySqlBulkImportPseudoTableType ResolvePseudoTableType(MySqlBulkImportPseudoTableType pseudoTableType,
             int? rowCount) =>
-            pseudoTableType == MySqlBulkImportPseudoTableType.Auto && rowCount.GetValueOrDefault() >= MySqlConstants.RowCountThresholdForPhysicalTable ?
-                MySqlBulkImportPseudoTableType.Physical :
-                    MySqlBulkImportPseudoTableType.Physical;
+            MySqlBulkImportPseudoTableType.Physical; // TODO: Revisit the Memory
+            // pseudoTableType == MySqlBulkImportPseudoTableType.Auto && rowCount.GetValueOrDefault() >= MySqlConstants.RowCountThresholdForPhysicalTable ?
+            //     MySqlBulkImportPseudoTableType.Physical :
+            //         MySqlBulkImportPseudoTableType.Physical;
 
         /// <summary>
         /// 

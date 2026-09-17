@@ -34,7 +34,7 @@ namespace RepoDb
             // Name is required
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new NullReferenceException(name);
+                throw new ArgumentNullException(nameof(name));
             }
 
             // Set the properties
@@ -109,8 +109,10 @@ namespace RepoDb
         /// <returns>An instance of <see cref="OrderField"/> object.</returns>
         internal static OrderField Parse<TEntity>(MemberExpression expression,
             Order order = Order.Ascending)
-            where TEntity : class =>
-            new(expression.Member.GetMappedName(), order);
+            where TEntity : class
+        {
+            return new(expression.Member.GetMappedName(), order);
+        }
 
         /// <summary>
         /// Parses a property from the data entity object based on the given <see cref="BinaryExpression"/> and converts the result 
@@ -122,8 +124,10 @@ namespace RepoDb
         /// <returns>An instance of <see cref="OrderField"/> object.</returns>
         internal static OrderField Parse<TEntity>(BinaryExpression expression,
             Order order = Order.Ascending)
-            where TEntity : class =>
-            new(expression.GetName(), order);
+            where TEntity : class
+        {
+            return new(expression.GetName(), order);
+        }
 
         /// <summary>
         /// Parses a property from the data entity object based on the given <see cref="Expression"/> and converts the result 
@@ -133,8 +137,10 @@ namespace RepoDb
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>An instance of <see cref="OrderField"/> object with <see cref="Order.Ascending"/> value.</returns>
         public static OrderField Ascending<TEntity>(Expression<Func<TEntity, object>> expression)
-            where TEntity : class =>
-            Parse(expression, Order.Ascending);
+            where TEntity : class
+        {
+            return Parse(expression, Order.Ascending);
+        }
 
         /// <summary>
         /// Parses a property from the data entity object based on the given <see cref="Expression"/> and converts the result 
@@ -144,8 +150,10 @@ namespace RepoDb
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>An instance of <see cref="OrderField"/> object with <see cref="Order.Descending"/> value.</returns>
         public static OrderField Descending<TEntity>(Expression<Func<TEntity, object>> expression)
-            where TEntity : class =>
-            Parse(expression, Order.Descending);
+            where TEntity : class
+        {
+            return Parse(expression, Order.Descending);
+        }
 
         /// <summary>
         /// Parse an object properties to be used for ordering. The object can have multiple properties for ordering and each property must have
@@ -157,7 +165,7 @@ namespace RepoDb
         {
             if (obj == null)
             {
-                throw new NullReferenceException("The 'obj' must not be null.");
+                throw new ArgumentNullException(nameof(obj), "The 'obj' must not be null.");
             }
 
             var properties = TypeCache.Get(obj.GetType()).GetProperties();
@@ -241,8 +249,7 @@ namespace RepoDb
         /// <param name="objB">The second <see cref="OrderField"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
         public static bool operator !=(OrderField objA,
-            OrderField objB) =>
-            (objA == objB) == false;
+            OrderField objB) => !(objA == objB);
 
         #endregion
     }

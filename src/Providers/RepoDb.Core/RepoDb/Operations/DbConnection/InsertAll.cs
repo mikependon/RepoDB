@@ -39,7 +39,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -80,7 +80,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -121,7 +121,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -184,7 +184,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -228,7 +228,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -272,7 +272,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -338,7 +338,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -382,7 +382,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -430,7 +430,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -458,7 +458,7 @@ namespace RepoDb
             }
 
             // Validate the batch size
-            batchSize = ((dbSetting.IsInsertAllBatchable ?? dbSetting.IsMultiStatementExecutable) == true) ? Math.Min(batchSize, entities.Count()) : 1;
+            batchSize = (dbSetting.IsInsertAllBatchable ?? dbSetting.IsMultiStatementExecutable) ? Math.Min(batchSize, entities.Count()) : 1;
 
             // Get the context
             var entityType = GetEntityType<TEntity>(entities);
@@ -478,7 +478,7 @@ namespace RepoDb
                 // Ensure the connection is open
                 connection.EnsureOpen();
 
-                if (hasTransaction == false && dbSetting.IsTransactionSupported)
+                if (!hasTransaction && dbSetting.IsTransactionSupported)
                 {
                     // Create a transaction
                     transaction = connection.BeginTransaction();
@@ -520,7 +520,7 @@ namespace RepoDb
                                 .InvokeAfterExecution(traceResult, trace, result);
 
                             // Set the return value
-                            if (returnValue == null && context.HasIdentityKey && dbSetting.IsMultiStatementExecutable == false)
+                            if (returnValue == null && context.HasIdentityKey && !dbSetting.IsMultiStatementExecutable)
                             {
                                 returnValue = Converter.DbNullToNull(connection.GetDbHelper().GetScopeIdentity<object>(connection, transaction));
                             }
@@ -583,7 +583,7 @@ namespace RepoDb
                             }
 
                             // Actual Execution
-                            if (dbSetting.IsMultiStatementExecutable == false)
+                            if (!dbSetting.IsMultiStatementExecutable)
                             {
                                 var traceResult = Tracer
                                     .InvokeBeforeExecution(traceKey, trace, command);
@@ -601,7 +601,7 @@ namespace RepoDb
                                     var lastIdentity = Converter.DbNullToNull(connection.GetDbHelper().GetScopeIdentity<object>(connection, transaction));
                                     if (lastIdentity != null)
                                     {
-                                        var lastIdentityValue = Convert.ToInt64(lastIdentity);
+                                        var lastIdentityValue = Convert.ToInt64(lastIdentity, System.Globalization.CultureInfo.InvariantCulture);
                                         for (var i = 0; i < batchItems.Count; i++)
                                         {
                                             context.KeyPropertySetterFunc?.Invoke(batchItems[i], lastIdentityValue - (batchItems.Count - 1 - i));
@@ -664,7 +664,7 @@ namespace RepoDb
                     }
                 }
 
-                if (hasTransaction == false && transaction != null)
+                if (!hasTransaction && transaction != null)
                 {
                     // Commit the transaction
                     transaction.Commit();
@@ -672,7 +672,7 @@ namespace RepoDb
             }
             catch
             {
-                if (hasTransaction == false && transaction != null)
+                if (!hasTransaction && transaction != null)
                 {
                     // Rollback for any exception
                     transaction.Rollback();
@@ -681,7 +681,7 @@ namespace RepoDb
             }
             finally
             {
-                if (hasTransaction == false && transaction != null)
+                if (!hasTransaction && transaction != null)
                 {
                     // Rollback and dispose the transaction
                     transaction.Dispose();
@@ -707,7 +707,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -737,7 +737,7 @@ namespace RepoDb
             }
 
             // Validate the batch size
-            batchSize = ((dbSetting.IsInsertAllBatchable ?? dbSetting.IsMultiStatementExecutable) == true) ? Math.Min(batchSize, entities.Count()) : 1;
+            batchSize = (dbSetting.IsInsertAllBatchable ?? dbSetting.IsMultiStatementExecutable) ? Math.Min(batchSize, entities.Count()) : 1;
 
             // Get the context
             var entityType = GetEntityType<TEntity>(entities);
@@ -749,16 +749,16 @@ namespace RepoDb
                 hints,
                 transaction,
                 statementBuilder,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
             var result = 0;
             var hasTransaction = (transaction != null || Transaction.Current != null);
 
             try
             {
                 // Ensure the connection is open
-                await connection.EnsureOpenAsync(cancellationToken);
+                await connection.EnsureOpenAsync(cancellationToken).ConfigureAwait(false);
 
-                if (hasTransaction == false && dbSetting.IsTransactionSupported)
+                if (!hasTransaction && dbSetting.IsTransactionSupported)
                 {
                     // Create a transaction
                     transaction = connection.BeginTransaction();
@@ -784,7 +784,7 @@ namespace RepoDb
 
                             // Before Execution
                             var traceResult = await Tracer
-                                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+                                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
                             // Silent cancellation
                             if (traceResult?.CancellableTraceLog?.IsCancelled == true)
@@ -793,16 +793,16 @@ namespace RepoDb
                             }
 
                             // Actual Execution
-                            var returnValue = Converter.DbNullToNull(await command.ExecuteScalarAsync(cancellationToken));
+                            var returnValue = Converter.DbNullToNull(await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false));
 
                             // After Execution
                             await Tracer
-                                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+                                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
 
                             // Set the return value
-                            if (returnValue == null && context.HasIdentityKey && dbSetting.IsMultiStatementExecutable == false)
+                            if (returnValue == null && context.HasIdentityKey && !dbSetting.IsMultiStatementExecutable)
                             {
-                                returnValue = Converter.DbNullToNull(await connection.GetDbHelper().GetScopeIdentityAsync<object>(connection, transaction, cancellationToken));
+                                returnValue = Converter.DbNullToNull(await connection.GetDbHelper().GetScopeIdentityAsync<object>(connection, transaction, cancellationToken).ConfigureAwait(false));
                             }
                             if (returnValue != null)
                             {
@@ -837,7 +837,7 @@ namespace RepoDb
                                     hints,
                                     transaction,
                                     statementBuilder,
-                                    cancellationToken);
+                                    cancellationToken).ConfigureAwait(false);
 
                                 // Set the command properties
                                 command.CommandText = context.CommandText;
@@ -864,10 +864,10 @@ namespace RepoDb
                             }
 
                             // Actual Execution
-                            if (dbSetting.IsMultiStatementExecutable == false)
+                            if (!dbSetting.IsMultiStatementExecutable)
                             {
                                 var traceResult = await Tracer
-                                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+                                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
                                 // Silent cancellation
                                 if (traceResult?.CancellableTraceLog?.IsCancelled == true)
@@ -875,14 +875,14 @@ namespace RepoDb
                                     return result;
                                 }
 
-                                var affected = await command.ExecuteNonQueryAsync(cancellationToken);
+                                var affected = await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
 
                                 if (context.HasIdentityKey)
                                 {
-                                    var lastIdentity = Converter.DbNullToNull(await connection.GetDbHelper().GetScopeIdentityAsync<object>(connection, transaction, cancellationToken));
+                                    var lastIdentity = Converter.DbNullToNull(await connection.GetDbHelper().GetScopeIdentityAsync<object>(connection, transaction, cancellationToken).ConfigureAwait(false));
                                     if (lastIdentity != null)
                                     {
-                                        var lastIdentityValue = Convert.ToInt64(lastIdentity);
+                                        var lastIdentityValue = Convert.ToInt64(lastIdentity, System.Globalization.CultureInfo.InvariantCulture);
                                         for (var i = 0; i < batchItems.Count; i++)
                                         {
                                             context.KeyPropertySetterFunc?.Invoke(batchItems[i], lastIdentityValue - (batchItems.Count - 1 - i));
@@ -894,13 +894,13 @@ namespace RepoDb
 
                                 // After Execution
                                 await Tracer
-                                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+                                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
                             }
                             else if (context.KeyPropertySetterFunc == null)
                             {
                                 // Before Execution
                                 var traceResult = await Tracer
-                                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+                                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
                                 // Silent cancellation
                                 if (traceResult?.CancellableTraceLog?.IsCancelled == true)
@@ -909,24 +909,24 @@ namespace RepoDb
                                 }
 
                                 // No identity setters
-                                result += await command.ExecuteNonQueryAsync(cancellationToken);
+                                result += await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
 
                                 // After Execution
                                 await Tracer
-                                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+                                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
                             }
                             else
                             {
                                 // Before Execution
                                 var traceResult = await Tracer
-                                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+                                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
                                 // Set the identity back
-                                using var reader = await command.ExecuteReaderAsync(cancellationToken);
+                                using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
 
                                 // Get the results
                                 var position = 0;
-                                while (await reader.ReadAsync(cancellationToken))
+                                while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
                                 {
                                     var value = Converter.DbNullToNull(reader.GetValue(0));
                                     var index = batchItems.Count > 1 && reader.FieldCount > 1 ? reader.GetInt32(1) : position;
@@ -939,13 +939,13 @@ namespace RepoDb
 
                                 // After Execution
                                 await Tracer
-                                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+                                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
                             }
                         }
                     }
                 }
 
-                if (hasTransaction == false && transaction != null)
+                if (!hasTransaction && transaction != null)
                 {
                     // Commit the transaction
                     transaction.Commit();
@@ -953,7 +953,7 @@ namespace RepoDb
             }
             catch
             {
-                if (hasTransaction == false && transaction != null)
+                if (!hasTransaction && transaction != null)
                 {
                     // Rollback for any exception
                     transaction.Rollback();
@@ -962,7 +962,7 @@ namespace RepoDb
             }
             finally
             {
-                if (hasTransaction == false && transaction != null)
+                if (!hasTransaction && transaction != null)
                 {
                     // Rollback and dispose the transaction
                     transaction.Dispose();

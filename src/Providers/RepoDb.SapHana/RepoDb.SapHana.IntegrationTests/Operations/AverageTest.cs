@@ -139,7 +139,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.AverageAsync<CompleteTable>(e => e.ColumnInt,
                         (object)null,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false));
             }
         }
 
@@ -259,7 +259,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                     await connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
                         Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
                         (object)null,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false));
             }
         }
 

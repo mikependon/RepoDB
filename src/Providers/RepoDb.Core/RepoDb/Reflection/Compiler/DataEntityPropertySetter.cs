@@ -52,7 +52,7 @@ namespace RepoDb.Reflection
             }
 
             // Make sure we can write
-            if (property.CanWrite == false)
+            if (!property.CanWrite)
             {
                 return null;
             }
@@ -72,9 +72,9 @@ namespace RepoDb.Reflection
             // Property Handler
             if (TypeCache.Get(entityType).IsClassType())
             {
-                var classProperty = PropertyCache.Get(entityType, property, true);
+                var classProperty = PropertyCache.Get(entityType, property, includeMappings: true);
                 valueExpression = ConvertExpressionToPropertyHandlerSetExpression(valueExpression,
-                    null, classProperty, targetType ?? classProperty.PropertyInfo.PropertyType);
+parameterExpression: null, classProperty, targetType ?? classProperty.PropertyInfo.PropertyType);
             }
 
             // Assign the value into DataEntity.Property

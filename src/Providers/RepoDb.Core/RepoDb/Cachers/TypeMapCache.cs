@@ -56,7 +56,7 @@ namespace RepoDb
             var key = GenerateHashCode(type);
 
             // Try get the value
-            if (cache.TryGetValue(key, out var result) == false)
+            if (!cache.TryGetValue(key, out var result))
             {
                 result = new TypeMapTypeLevelResolver().Resolve(type);
                 cache.TryAdd(key, result);
@@ -134,7 +134,7 @@ namespace RepoDb
             var key = GenerateHashCode(entityType, propertyInfo);
 
             // Try get the value
-            if (cache.TryGetValue(key, out var result) == false)
+            if (!cache.TryGetValue(key, out var result))
             {
                 result = new TypeMapPropertyLevelResolver().Resolve(propertyInfo);
                 cache.TryAdd(key, result);
@@ -191,7 +191,7 @@ namespace RepoDb
         {
             if (obj == null)
             {
-                throw new NullReferenceException($"The argument '{argument}' cannot be null.");
+                throw new ArgumentNullException(argument);
             }
         }
 

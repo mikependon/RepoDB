@@ -84,7 +84,7 @@ namespace RepoDb.DbHelpers
         /// </summary>
         private HashSet<string> GetBlobTypes()
         {
-            return new()
+            return new(StringComparer.Ordinal)
             {
                 "blob",
                 "clob",
@@ -117,8 +117,8 @@ namespace RepoDb.DbHelpers
                 reader.GetBoolean(3),
                 DbTypeResolver.Resolve(columnType),
                 size,
-                reader.IsDBNull(6) ? (byte?)null : byte.Parse(reader.GetInt32(6).ToString()),
-                reader.IsDBNull(7) ? (byte?)null : byte.Parse(reader.GetInt32(7).ToString()),
+                reader.IsDBNull(6) ? (byte?)null : byte.Parse(reader.GetInt32(6).ToString(System.Globalization.CultureInfo.InvariantCulture)),
+                reader.IsDBNull(7) ? (byte?)null : byte.Parse(reader.GetInt32(7).ToString(System.Globalization.CultureInfo.InvariantCulture)),
                 reader.GetString(8),
                 reader.GetBoolean(9),
                 "HANA");
@@ -130,7 +130,7 @@ namespace RepoDb.DbHelpers
         private async Task<DbField> ReaderToDbFieldAsync(DbDataReader reader,
             CancellationToken cancellationToken = default)
         {
-            var columnType = await reader.GetFieldValueAsync<string>(4, cancellationToken);
+            var columnType = await reader.GetFieldValueAsync<string>(4, cancellationToken).ConfigureAwait(false);
             var excluded = GetBlobTypes();
             int? size;
             if (excluded.Contains(columnType.ToLowerInvariant()))
@@ -139,8 +139,8 @@ namespace RepoDb.DbHelpers
             }
             else
             {
-                size = await reader.IsDBNullAsync(5, cancellationToken) ? (int?)null :
-                    await reader.GetFieldValueAsync<int>(5, cancellationToken);
+                size = await reader.IsDBNullAsync(5, cancellationToken).ConfigureAwait(false) ? (int?)null :
+                    await reader.GetFieldValueAsync<int>(5, cancellationToken).ConfigureAwait(false);
             }
             return new DbField(await reader.GetFieldValueAsync<string>(0, cancellationToken),
                 await reader.GetFieldValueAsync<bool>(1, cancellationToken),
@@ -148,8 +148,8 @@ namespace RepoDb.DbHelpers
                 await reader.GetFieldValueAsync<bool>(3, cancellationToken),
                 DbTypeResolver.Resolve(columnType),
                 size,
-                await reader.IsDBNullAsync(6, cancellationToken) ? null : byte.Parse((await reader.GetFieldValueAsync<int>(6, cancellationToken)).ToString()),
-                await reader.IsDBNullAsync(7, cancellationToken) ? null : byte.Parse((await reader.GetFieldValueAsync<int>(7, cancellationToken)).ToString()),
+                await reader.IsDBNullAsync(6, cancellationToken).ConfigureAwait(false) ? null : byte.Parse((await reader.GetFieldValueAsync<int>(6, cancellationToken).ConfigureAwait(false)).ToString(System.Globalization.CultureInfo.InvariantCulture)),
+                await reader.IsDBNullAsync(7, cancellationToken).ConfigureAwait(false) ? null : byte.Parse((await reader.GetFieldValueAsync<int>(7, cancellationToken).ConfigureAwait(false)).ToString(System.Globalization.CultureInfo.InvariantCulture)),
                 await reader.GetFieldValueAsync<string>(8, cancellationToken),
                 await reader.GetFieldValueAsync<bool>(9, cancellationToken),
                 "HANA");
@@ -201,16 +201,16 @@ namespace RepoDb.DbHelpers
             var param = new
             {
                 TableSchema = await connection.ExecuteScalarAsync<string>("SELECT CURRENT_SCHEMA FROM DUMMY;", transaction: transaction,
-                    cancellationToken: cancellationToken),
+                    cancellationToken: cancellationToken).ConfigureAwait(false),
                 TableName = DataEntityExtension.GetTableName(tableName, m_dbSetting).AsUnquoted(m_dbSetting)
             };
 
             using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, param, transaction: transaction,
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken).ConfigureAwait(false);
 
             var dbFields = new List<DbField>();
 
-            while (await reader.ReadAsync(cancellationToken))
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
                 dbFields.Add(await ReaderToDbFieldAsync(reader, cancellationToken));
             }

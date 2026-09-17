@@ -187,7 +187,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "Table";
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
                     tableName: tableName,
                     fields: null));
@@ -203,7 +203,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
                     tableName: tableName,
                     fields: fields));
@@ -219,7 +219,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
                     tableName: tableName,
                     fields: fields));
@@ -235,7 +235,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
                     tableName: tableName,
                     fields: fields));

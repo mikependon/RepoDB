@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Sap.Data.Hana;
 using RepoDb.DbSettings;
@@ -64,7 +65,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.DbSettings
             var setting = DbSettingMapper.Get<HanaConnection>();
 
             // Assert
-            Assert.AreEqual("\"", setting.ClosingQuote);
+            Assert.AreEqual("\"", setting.ClosingQuote, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -154,7 +155,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.DbSettings
             var setting = DbSettingMapper.Get<HanaConnection>();
 
             // Assert
-            Assert.AreEqual(";", setting.MultiStatementSeparator);
+            Assert.AreEqual(";", setting.MultiStatementSeparator, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -164,7 +165,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.DbSettings
             var setting = DbSettingMapper.Get<HanaConnection>();
 
             // Assert
-            Assert.AreEqual("\"", setting.OpeningQuote);
+            Assert.AreEqual("\"", setting.OpeningQuote, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -174,7 +175,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.DbSettings
             var setting = DbSettingMapper.Get<HanaConnection>();
 
             // Assert
-            Assert.AreEqual(":", setting.ParameterPrefix);
+            Assert.AreEqual(":", setting.ParameterPrefix, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -184,7 +185,7 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.DbSettings
             var setting = DbSettingMapper.Get<HanaConnection>();
 
             // Assert
-            Assert.AreEqual(":", setting.SqlTextParameterPrefix);
+            Assert.AreEqual(":", setting.SqlTextParameterPrefix, StringComparer.Ordinal);
         }
 
         [TestMethod]

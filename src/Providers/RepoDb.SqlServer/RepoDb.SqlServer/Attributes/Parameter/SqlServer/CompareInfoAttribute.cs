@@ -15,15 +15,13 @@ namespace RepoDb.Attributes.Parameter.SqlServer
     /// An attribute used to define a value to the <see cref="SqlParameter.CompareInfo"/>
     /// property via an entity property before the actual execution.
     /// </summary>
-    public class CompareInfoAttribute : PropertyValueAttribute
+    /// <remarks>
+    /// Creates a new instance of <see cref="CompareInfoAttribute"/> class.
+    /// </remarks>
+    /// <param name="compareInfo">The value that determines how the string comparission is being defined.</param>
+    [System.AttributeUsage(System.AttributeTargets.All)]
+    public class CompareInfoAttribute(SqlCompareOptions compareInfo) : PropertyValueAttribute(typeof(SqlParameter), nameof(SqlParameter.CompareInfo), compareInfo)
     {
-        /// <summary>
-        /// Creates a new instance of <see cref="CompareInfoAttribute"/> class.
-        /// </summary>
-        /// <param name="compareInfo">The value that determines how the string comparission is being defined.</param>
-        public CompareInfoAttribute(SqlCompareOptions compareInfo)
-            : base(typeof(SqlParameter), nameof(SqlParameter.CompareInfo), compareInfo)
-        { }
 
         /// <summary>
         /// Gets the mapped value that determines how the string comparission is being defined on the parameter.

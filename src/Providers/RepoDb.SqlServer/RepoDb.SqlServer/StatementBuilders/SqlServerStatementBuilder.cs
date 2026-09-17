@@ -20,7 +20,17 @@ namespace RepoDb.StatementBuilders
     /// <summary>
     /// A class used to build a SQL Statement for SQL Server. This is the default statement builder used by the library.
     /// </summary>
-    public sealed class SqlServerStatementBuilder : BaseStatementBuilder
+    /// <remarks>
+    /// Creates a new instance of <see cref="SqlServerStatementBuilder"/> class.
+    /// </remarks>
+    /// <param name="dbSetting">The database settings object currently in used.</param>
+    /// <param name="convertFieldResolver">The resolver used when converting a field in the database layer.</param>
+    /// <param name="averageableClientTypeResolver">The resolver used to identity the type for average.</param>
+    public sealed class SqlServerStatementBuilder(IDbSetting dbSetting,
+        IResolver<Field, IDbSetting, string> convertFieldResolver = null,
+        IResolver<Type, Type> averageableClientTypeResolver = null) : BaseStatementBuilder(dbSetting,
+              (convertFieldResolver ?? new SqlServerConvertFieldResolver()),
+              (averageableClientTypeResolver ?? new ClientTypeToAverageableClientTypeResolver()))
     {
         /// <summary>
         /// Creates a new instance of <see cref="SqlServerStatementBuilder"/> object.
@@ -30,20 +40,6 @@ namespace RepoDb.StatementBuilders
             : this(dbSetting,
                 new SqlServerConvertFieldResolver(),
                 new ClientTypeToAverageableClientTypeResolver())
-        { }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="SqlServerStatementBuilder"/> class.
-        /// </summary>
-        /// <param name="dbSetting">The database settings object currently in used.</param>
-        /// <param name="convertFieldResolver">The resolver used when converting a field in the database layer.</param>
-        /// <param name="averageableClientTypeResolver">The resolver used to identity the type for average.</param>
-        public SqlServerStatementBuilder(IDbSetting dbSetting,
-            IResolver<Field, IDbSetting, string> convertFieldResolver = null,
-            IResolver<Type, Type> averageableClientTypeResolver = null)
-            : base(dbSetting,
-                  (convertFieldResolver ?? new SqlServerConvertFieldResolver()),
-                  (averageableClientTypeResolver ?? new ClientTypeToAverageableClientTypeResolver()))
         { }
 
         #region CreateBatchQuery
@@ -80,7 +76,7 @@ namespace RepoDb.StatementBuilders
             }
 
             // Validate order by
-            if (orderBy == null || orderBy.Any() != true)
+            if (orderBy == null || !orderBy.Any())
             {
                 throw new EmptyException("The argument 'orderBy' is required.");
             }
@@ -110,7 +106,7 @@ namespace RepoDb.StatementBuilders
                 .WhereFrom(where, DbSetting)
                 .OrderByFrom(orderBy, DbSetting)
                 .WriteText(string.Concat("OFFSET ", page * rowsPerBatch))
-                .WriteText(string.Concat("ROWS FETCH NEXT " + rowsPerBatch + " ROWS ONLY"))
+                .WriteText(string.Concat("ROWS FETCH NEXT ", rowsPerBatch, " ROWS ONLY"))
                 .End();
 
             // Return the query
@@ -144,7 +140,7 @@ namespace RepoDb.StatementBuilders
             // Build the query
             builder.Clear()
                 .Select()
-                .CountBig(null, DbSetting)
+                .CountBig(field: null, DbSetting)
                 .WriteText("AS [CountValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
@@ -181,7 +177,7 @@ namespace RepoDb.StatementBuilders
             // Build the query
             builder.Clear()
                 .Select()
-                .CountBig(null, DbSetting)
+                .CountBig(field: null, DbSetting)
                 .WriteText("AS [CountValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
@@ -302,7 +298,7 @@ namespace RepoDb.StatementBuilders
                 var declare = string.Concat("DECLARE @__RepoDb_OutputTable TABLE ( [Id] INT IDENTITY(1,1), [Result] ", resultType, " ) ; ");
                 var output = string.Concat("OUTPUT ", returnValue, " INTO @__RepoDb_OutputTable ( [Result] ) ");
 
-                commandText = commandText.Insert(commandText.IndexOf("SELECT"), output);
+                commandText = commandText.Insert(commandText.IndexOf("SELECT", StringComparison.Ordinal), output);
                 commandText = string.Concat(declare, commandText, " SELECT [Result] FROM @__RepoDb_OutputTable ORDER BY [Id] ;");
             }
 
@@ -352,7 +348,7 @@ namespace RepoDb.StatementBuilders
                         string.Equals(field.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == null);
 
                 // Throw an error we found any unmatches
-                if (unmatchesQualifiers.Any() == true)
+                if (unmatchesQualifiers.Any())
                 {
                     throw new InvalidQualifiersException($"The qualifiers '{unmatchesQualifiers.Select(field => field.Name).Join(", ")}' are not " +
                         $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
@@ -366,7 +362,7 @@ namespace RepoDb.StatementBuilders
                     var isPresent = fields.FirstOrDefault(f => string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
 
                     // Throw if not present
-                    if (isPresent == false)
+                    if (!isPresent)
                     {
                         throw new InvalidQualifiersException($"There are no qualifier field objects found for '{tableName}'. Ensure that the " +
                             $"primary field is present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
@@ -410,7 +406,7 @@ namespace RepoDb.StatementBuilders
                 .OpenParen()
                 .WriteText(qualifiers?
                     .Select(
-                        field => field.AsJoinQualifier("S", "T", true, DbSetting))
+                        field => field.AsJoinQualifier("S", "T", considerNulls: true, DbSetting))
                             .Join(" AND "))
                 .CloseParen()
                 // WHEN NOT MATCHED THEN INSERT VALUES
@@ -515,7 +511,7 @@ namespace RepoDb.StatementBuilders
                         string.Equals(field.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == null);
 
                 // Throw an error we found any unmatches
-                if (unmatchesQualifiers.Any() == true)
+                if (unmatchesQualifiers.Any())
                 {
                     throw new InvalidQualifiersException($"The qualifiers '{unmatchesQualifiers.Select(field => field.Name).Join(", ")}' are not " +
                         $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
@@ -529,7 +525,7 @@ namespace RepoDb.StatementBuilders
                     var isPresent = fields.FirstOrDefault(f => string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
 
                     // Throw if not present
-                    if (isPresent == false)
+                    if (!isPresent)
                     {
                         throw new InvalidQualifiersException($"There are no qualifier field objects found for '{tableName}'. Ensure that the " +
                             $"primary field is present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
@@ -592,7 +588,7 @@ namespace RepoDb.StatementBuilders
                     .OpenParen()
                     .WriteText(qualifiers?
                         .Select(
-                            field => field.AsJoinQualifier("S", "T", true, DbSetting))
+                            field => field.AsJoinQualifier("S", "T", considerNulls: true, DbSetting))
                                 .Join(" AND "))
                     .CloseParen()
                     // WHEN NOT MATCHED THEN INSERT VALUES
@@ -679,7 +675,7 @@ namespace RepoDb.StatementBuilders
             }
 
             // Validate order by
-            if (orderBy == null || orderBy.Any() != true)
+            if (orderBy == null || !orderBy.Any())
             {
                 throw new EmptyException("The argument 'orderBy' is required.");
             }

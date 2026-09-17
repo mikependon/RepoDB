@@ -21,7 +21,7 @@ namespace RepoDb.SqlServer.UnitTests.Attributes.Parameter.SqlServer
         [TestInitialize]
         public void Initialize()
         {
-            DbSettingMapper.Add<SqlConnection>(new SqlServerDbSetting(), true);
+            DbSettingMapper.Add<SqlConnection>(new SqlServerDbSetting(), force: true);
         }
 
         #region Classes

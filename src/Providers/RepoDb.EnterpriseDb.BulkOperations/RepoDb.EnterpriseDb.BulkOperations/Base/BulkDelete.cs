@@ -126,6 +126,11 @@ namespace RepoDb
             string traceKey = EDBTraceKeys.EDBBulkDelete,
             EDBTransaction transaction = null)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
             var pseudoTableName = EDBText.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
 
@@ -340,6 +345,11 @@ namespace RepoDb
             EDBTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
             var pseudoTableName = EDBText.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
 

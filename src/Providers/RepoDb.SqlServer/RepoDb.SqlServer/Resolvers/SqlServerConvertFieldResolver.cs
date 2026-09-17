@@ -17,7 +17,12 @@ namespace RepoDb.Resolvers
     /// <summary>
     /// A class used to resolve the <see cref="Field"/> name conversion for SQL Server.
     /// </summary>
-    public class SqlServerConvertFieldResolver : DbConvertFieldResolver
+    /// <remarks>
+    /// Creates a new instance of <see cref="SqlServerConvertFieldResolver"/> class.
+    /// </remarks>
+    public class SqlServerConvertFieldResolver(IResolver<Type, DbType?> dbTypeResolver,
+        IResolver<DbType, string> stringNameResolver) : DbConvertFieldResolver(dbTypeResolver,
+              stringNameResolver)
     {
         /// <summary>
         /// Creates a new instance of <see cref="SqlServerConvertFieldResolver"/> class.
@@ -25,15 +30,6 @@ namespace RepoDb.Resolvers
         public SqlServerConvertFieldResolver()
             : this(new ClientTypeToDbTypeResolver(),
                  new DbTypeToSqlServerStringNameResolver())
-        { }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="SqlServerConvertFieldResolver"/> class.
-        /// </summary>
-        public SqlServerConvertFieldResolver(IResolver<Type, DbType?> dbTypeResolver,
-            IResolver<DbType, string> stringNameResolver)
-            : base(dbTypeResolver,
-                  stringNameResolver)
         { }
 
         #region Methods
@@ -52,7 +48,7 @@ namespace RepoDb.Resolvers
                 var dbType = DbTypeResolver.Resolve(field.Type);
                 if (dbType != null)
                 {
-                    var dbTypeName = StringNameResolver.Resolve(dbType.Value).ToUpper();
+                    var dbTypeName = StringNameResolver.Resolve(dbType.Value).ToUpperInvariant();
                     var parenIndex = dbTypeName.IndexOf('(');
                     var quotedDbTypeName = parenIndex >= 0
                         ? string.Concat(dbTypeName.Substring(0, parenIndex).AsQuoted(dbSetting), dbTypeName.Substring(parenIndex))

@@ -24,29 +24,23 @@ namespace RepoDb.Extensions.QueryFields
     ///     var result = connection.Query&lt;Entity&gt;(where);
     /// </code>
     /// </example>
-    public class FunctionalQueryField : QueryField, IEquatable<FunctionalQueryField>
+    /// <remarks>
+    /// Creates a new instance of <see cref="FunctionalQueryField"/> object.
+    /// </remarks>
+    /// <param name="fieldName">The name of the field for the query expression.</param>
+    /// <param name="operation">The operation to be used for the query expression.</param>
+    /// <param name="value">The value to be used for the query expression.</param>
+    /// <param name="dbType">The database type to be used for the query expression.</param>
+    /// <param name="format">The properly constructed format of the target function to be used.</param>
+    public class FunctionalQueryField(string fieldName,
+        Operation operation,
+        object value,
+        DbType? dbType,
+        string format = null) : QueryField(fieldName, operation, value, dbType), IEquatable<FunctionalQueryField>
     {
         private int? hashCode = null;
 
         #region Constructors
-
-        /// <summary>
-        /// Creates a new instance of <see cref="FunctionalQueryField"/> object.
-        /// </summary>
-        /// <param name="fieldName">The name of the field for the query expression.</param>
-        /// <param name="operation">The operation to be used for the query expression.</param>
-        /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="dbType">The database type to be used for the query expression.</param>
-        /// <param name="format">The properly constructed format of the target function to be used.</param>
-        public FunctionalQueryField(string fieldName,
-            Operation operation,
-            object value,
-            DbType? dbType,
-            string format = null)
-            : base(fieldName, operation, value, dbType)
-        {
-            Format = format;
-        }
 
         #endregion
 
@@ -55,7 +49,7 @@ namespace RepoDb.Extensions.QueryFields
         /// <summary>
         /// Gets the properly constructed format of the target function.
         /// </summary>
-        public string Format { get; }
+        public string Format { get; } = format;
 
         #endregion
 
@@ -68,8 +62,10 @@ namespace RepoDb.Extensions.QueryFields
         /// <param name="dbSetting">The database setting currently in used.</param>
         /// <returns>The string representations of the current <see cref="QueryField"/> object using the LOWER function.</returns>
         public override string GetString(int index,
-            IDbSetting dbSetting) =>
-            base.GetString(index, Format, dbSetting);
+            IDbSetting dbSetting)
+        {
+            return base.GetString(index, Format, dbSetting);
+        }
 
         #endregion
 
@@ -89,19 +85,19 @@ namespace RepoDb.Extensions.QueryFields
             // FullName: This is to ensure that even the user has created an identical formatting 
             //  on the derived class with the existing classes, the Type.FullName could still 
             // differentiate the instances
-            var hashCode = GetType().FullName.GetHashCode();
+            var computedHashCode = StringComparer.Ordinal.GetHashCode(GetType().FullName);
 
             // Base
-            hashCode = HashCode.Combine(hashCode, base.GetHashCode());
+            computedHashCode = HashCode.Combine(computedHashCode, base.GetHashCode());
 
             // Format
             if (Format != null)
             {
-                hashCode = HashCode.Combine(hashCode, Format);
+                computedHashCode = HashCode.Combine(computedHashCode, Format);
             }
 
             // Return
-            return (this.hashCode = hashCode).Value;
+            return (this.hashCode = computedHashCode).Value;
         }
 
         /// <summary>
@@ -151,8 +147,7 @@ namespace RepoDb.Extensions.QueryFields
         /// <param name="objB">The second <see cref="FunctionalQueryField"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
         public static bool operator !=(FunctionalQueryField objA,
-            FunctionalQueryField objB) =>
-            (objA == objB) == false;
+            FunctionalQueryField objB) => !(objA == objB);
 
         #endregion
     }

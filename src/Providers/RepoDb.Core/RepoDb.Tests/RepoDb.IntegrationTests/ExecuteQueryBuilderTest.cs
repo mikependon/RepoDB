@@ -1698,7 +1698,7 @@ namespace RepoDb.IntegrationTests
                 var sql = builder.CreateMerge(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     fields: fields,
-                    qualifiers: fields.Where(f => dbFields.GetItems().FirstOrDefault(df => (df.IsPrimary || df.IsIdentity) && df.Name == f.Name) != null),
+                    qualifiers: fields.Where(f => dbFields.GetItems().FirstOrDefault(df => (df.IsPrimary || df.IsIdentity) && string.Equals(df.Name, f.Name, StringComparison.Ordinal)) != null),
                     primaryField: dbFields.GetPrimary(),
                     identityField: dbFields.GetIdentity());
 
@@ -1737,7 +1737,7 @@ namespace RepoDb.IntegrationTests
                 var sql = builder.CreateMerge(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     fields: fields,
-                    qualifiers: fields.Where(f => dbFields.GetItems().FirstOrDefault(df => (df.IsPrimary || df.IsIdentity) && df.Name == f.Name) != null),
+                    qualifiers: fields.Where(f => dbFields.GetItems().FirstOrDefault(df => (df.IsPrimary || df.IsIdentity) && string.Equals(df.Name, f.Name, StringComparison.Ordinal)) != null),
                     primaryField: dbFields.GetPrimary(),
                     identityField: dbFields.GetIdentity());
 

@@ -71,7 +71,7 @@ namespace RepoDb.SQLite.System.UnitTests
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 builder.CreateBatchQuery("Table",
                     null,
                     0,
@@ -781,7 +781,7 @@ namespace RepoDb.SQLite.System.UnitTests
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 builder.CreateSkipQuery("Table",
                     null,
                     0,

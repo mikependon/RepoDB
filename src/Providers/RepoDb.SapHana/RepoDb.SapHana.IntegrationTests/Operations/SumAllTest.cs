@@ -48,7 +48,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                 var result = connection.SumAll<CompleteTable>(e => e.ColumnInt);
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -83,7 +83,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                 var result = await connection.SumAllAsync<CompleteTable>(e => e.ColumnInt);
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -98,7 +98,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.SumAllAsync<CompleteTable>(e => e.ColumnInt,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false));
             }
         }
 
@@ -123,7 +123,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                     Field.Parse<CompleteTable>(e => e.ColumnInt).First());
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -160,7 +160,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                     Field.Parse<CompleteTable>(e => e.ColumnInt).First());
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -176,7 +176,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.SumAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
                         Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false));
             }
         }
 

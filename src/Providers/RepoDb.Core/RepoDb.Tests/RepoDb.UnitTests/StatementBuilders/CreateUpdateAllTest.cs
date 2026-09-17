@@ -283,7 +283,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var qualifiers = Field.From("Field1");
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
             {
                 statementBuilder.CreateUpdateAll(tableName: tableName,
                     fields: fields,
@@ -304,7 +304,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var qualifiers = Field.From("Field1");
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
             {
                 statementBuilder.CreateUpdateAll(tableName: tableName,
                     fields: fields,
@@ -325,7 +325,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var qualifiers = Field.From("Field1");
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
             {
                 statementBuilder.CreateUpdateAll(tableName: tableName,
                     fields: fields,
@@ -410,7 +410,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<InvalidQualifiersException>(() =>
             {
                 statementBuilder.CreateUpdateAll(tableName: tableName,
                     fields: fields,

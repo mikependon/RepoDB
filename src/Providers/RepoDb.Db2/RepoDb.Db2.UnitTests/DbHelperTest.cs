@@ -86,7 +86,7 @@ namespace RepoDb.Db2.UnitTests
 
             // Act - the method throws synchronously (not inside a Task) since it is not declared
             // with the 'async' keyword; the exception surfaces immediately upon invocation.
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 helper.GetScopeIdentity<int>(connection: null));
         }
 
@@ -100,7 +100,7 @@ namespace RepoDb.Db2.UnitTests
             // method, so the NullReferenceException is captured into the returned Task's fault
             // state rather than thrown synchronously at the point of invocation; it only surfaces
             // once the task is awaited.
-            await Assert.ThrowsAsync<NullReferenceException>(() =>
+            await Assert.ThrowsAsync<ArgumentNullException>(() =>
                 helper.GetScopeIdentityAsync<int>(connection: null));
         }
 

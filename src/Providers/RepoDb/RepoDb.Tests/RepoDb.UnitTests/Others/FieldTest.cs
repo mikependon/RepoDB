@@ -83,7 +83,7 @@ namespace RepoDb.UnitTests.Others
             var fields = new[] { " " };
 
             // Act/Assert
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 Field.From(fields).AsList());
         }
 
@@ -94,7 +94,7 @@ namespace RepoDb.UnitTests.Others
             var fields = new[] { "Field1", null, "Field3" };
 
             // Act/Assert
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 Field.From(fields).AsList());
         }
 
@@ -105,7 +105,7 @@ namespace RepoDb.UnitTests.Others
             var fields = new[] { "Field1", "", "Field3" };
 
             // Act/Assert
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 Field.From(fields).AsList());
         }
 
@@ -116,7 +116,7 @@ namespace RepoDb.UnitTests.Others
             var fields = new[] { "Field1", " ", "Field3" };
 
             // Act/Assert
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 Field.From(fields).AsList());
         }
     }

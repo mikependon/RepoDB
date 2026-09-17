@@ -57,9 +57,11 @@ namespace RepoDb.Contexts.Providers
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
         private static Field GetPrimaryAsReturnKeyField(Type entityType,
-            DbFieldCollection dbFields) =>
-            PrimaryCache.Get(entityType)?.AsField() ??
+            DbFieldCollection dbFields)
+        {
+            return PrimaryCache.Get(entityType)?.AsField() ??
                 dbFields?.GetPrimary()?.AsField();
+        }
 
         /// <summary>
         /// 
@@ -69,9 +71,11 @@ namespace RepoDb.Contexts.Providers
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
         private static Field GetIdentityAsReturnKeyField(Type entityType,
-            DbFieldCollection dbFields) =>
-            IdentityCache.Get(entityType)?.AsField() ??
+            DbFieldCollection dbFields)
+        {
+            return IdentityCache.Get(entityType)?.AsField() ??
                 dbFields?.GetIdentity()?.AsField();
+        }
 
         #endregion
     }

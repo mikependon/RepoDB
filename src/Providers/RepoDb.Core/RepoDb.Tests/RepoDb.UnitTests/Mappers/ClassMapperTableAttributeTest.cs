@@ -104,21 +104,21 @@ namespace RepoDb.UnitTests.Mappers
         public void ThrowExceptionOnClassMapperViaTableThatIsEmpty()
         {
             // Setup
-            Assert.Throws<NullReferenceException>(() => ClassMapper.Add<ClassMapperTableAttributeTestClass>(""));
+            Assert.Throws<ArgumentException>(() => ClassMapper.Add<ClassMapperTableAttributeTestClass>(""));
         }
 
         [TestMethod]
         public void ThrowExceptionOnClassMapperViaTableThatIsEmptySpaces()
         {
             // Setup
-            Assert.Throws<NullReferenceException>(() => ClassMapper.Add<ClassMapperTableAttributeTestClass>("  "));
+            Assert.Throws<ArgumentException>(() => ClassMapper.Add<ClassMapperTableAttributeTestClass>("  "));
         }
 
         [TestMethod]
         public void ThrowExceptionOnClassMapperViaTableThatIsNull()
         {
             // Setup
-            Assert.Throws<NullReferenceException>(() => ClassMapper.Add<ClassMapperTableAttributeTestClass>(null));
+            Assert.Throws<ArgumentException>(() => ClassMapper.Add<ClassMapperTableAttributeTestClass>(null));
         }
 
         /*

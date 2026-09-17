@@ -274,7 +274,7 @@ namespace RepoDb.Interfaces
         /// <returns>A sql statement for update-all operation.</returns>
         string CreateMergeAll(string tableName,
             IEnumerable<Field> fields,
-            IEnumerable<Field> qualifiers,
+            IEnumerable<Field> qualifiers = null,
             int batchSize = Constant.DefaultBatchOperationSize,
             DbField primaryField = null,
             DbField identityField = null,

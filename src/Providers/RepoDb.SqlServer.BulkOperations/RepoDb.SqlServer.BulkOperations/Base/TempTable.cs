@@ -42,7 +42,7 @@ namespace RepoDb
             if (isReturnIdentity)
             {
                 builder.WriteText(", CONVERT(INT, NULL) AS [__RepoDb_OrderColumn]");
-            };
+            }
 
             // Continuation
             builder

@@ -26,7 +26,9 @@ namespace RepoDb.Resolvers
         /// </summary>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/> to be resolved.</param>
         /// <returns>The list of associated <see cref="PropertyValueAttribute"/> objects on the property.</returns>
-        public IEnumerable<PropertyValueAttribute> Resolve(PropertyInfo propertyInfo) =>
-            propertyInfo.GetPropertyValueAttributes();
+        public IEnumerable<PropertyValueAttribute> Resolve(PropertyInfo propertyInfo)
+        {
+            return propertyInfo.GetPropertyValueAttributes();
+        }
     }
 }

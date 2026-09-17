@@ -14,6 +14,7 @@ using RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Models;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Globalization;
 using System.Linq;
 
 namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
@@ -69,11 +70,11 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
             var propertiesOfType2 = typeof(T2).GetProperties();
             propertiesOfType1.AsList().ForEach(propertyOfType1 =>
             {
-                if (propertyOfType1.Name == "Id" || propertyOfType1.Name == "IdMapped")
+                if (string.Equals(propertyOfType1.Name, "Id", StringComparison.Ordinal) || string.Equals(propertyOfType1.Name, "IdMapped", StringComparison.Ordinal))
                 {
                     return;
                 }
-                var propertyOfType2 = propertiesOfType2.FirstOrDefault(p => p.Name == propertyOfType1.Name);
+                var propertyOfType2 = propertiesOfType2.FirstOrDefault(p => string.Equals(p.Name, propertyOfType1.Name, StringComparison.Ordinal));
                 if (propertyOfType2 == null)
                 {
                     return;
@@ -139,7 +140,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
             var properties = obj.GetType().GetProperties();
             properties.AsList().ForEach(property =>
             {
-                if (property.Name == "Id")
+                if (string.Equals(property.Name, "Id", StringComparison.Ordinal))
                 {
                     return;
                 }
@@ -166,7 +167,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                         {
                             value2 = ((DateTime)value2).TimeOfDay;
                         }
-                        Assert.AreEqual(Convert.ChangeType(value1, propertyType), Convert.ChangeType(value2, propertyType),
+                        Assert.AreEqual(Convert.ChangeType(value1, propertyType, CultureInfo.InvariantCulture), Convert.ChangeType(value2, propertyType, CultureInfo.InvariantCulture),
                             $"Assert failed for '{property.Name}'. The values are '{value1}' and '{value2}'.");
                     }
                 }

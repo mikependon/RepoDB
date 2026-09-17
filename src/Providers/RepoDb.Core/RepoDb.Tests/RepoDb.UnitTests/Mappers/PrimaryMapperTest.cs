@@ -364,21 +364,21 @@ namespace RepoDb.UnitTests.Mappers
         public void ThrowExceptionOnPrimaryMapperViaPropertyNameThatIsNull()
         {
             // Setup
-            Assert.Throws<NullReferenceException>(() => PrimaryMapper.Add<PrimaryMapperTestClass>(propertyName: null));
+            Assert.Throws<ArgumentNullException>(() => PrimaryMapper.Add<PrimaryMapperTestClass>(propertyName: null));
         }
 
         [TestMethod]
         public void ThrowExceptionOnPrimaryMapperViaFieldThatIsNull()
         {
             // Setup
-            Assert.Throws<NullReferenceException>(() => PrimaryMapper.Add<PrimaryMapperTestClass>(field: null));
+            Assert.Throws<ArgumentNullException>(() => PrimaryMapper.Add<PrimaryMapperTestClass>(field: null));
         }
 
         [TestMethod]
         public void ThrowExceptionOnPrimaryMapperViaExpressionThatIsNull()
         {
             // Setup
-            Assert.Throws<NullReferenceException>(() => PrimaryMapper.Add<PrimaryMapperTestClass>(expression: null));
+            Assert.Throws<ArgumentNullException>(() => PrimaryMapper.Add<PrimaryMapperTestClass>(expression: null));
         }
 
         /*
@@ -396,7 +396,7 @@ namespace RepoDb.UnitTests.Mappers
         public void ThrowExceptionOnPrimaryMapperViaFieldThatIsEmpty()
         {
             // Setup
-            Assert.Throws<NullReferenceException>(() => PrimaryMapper.Add<PrimaryMapperTestClass>(field: new Field("")));
+            Assert.Throws<ArgumentNullException>(() => PrimaryMapper.Add<PrimaryMapperTestClass>(field: new Field("")));
         }
 
         /*
@@ -414,7 +414,7 @@ namespace RepoDb.UnitTests.Mappers
         public void ThrowExceptionOnPrimaryMapperViaFieldThatIsEmptySpaces()
         {
             // Setup
-            Assert.Throws<NullReferenceException>(() => PrimaryMapper.Add<PrimaryMapperTestClass>(field: new Field("  ")));
+            Assert.Throws<ArgumentNullException>(() => PrimaryMapper.Add<PrimaryMapperTestClass>(field: new Field("  ")));
         }
 
         /*

@@ -96,12 +96,12 @@ namespace RepoDb.IntegrationTests
             var result = default(T);
             fromType.GetProperties().AsList().ForEach(property =>
             {
-                var toProperty = toTypeProperties.FirstOrDefault(p => p.GetMappedName() == property.GetMappedName());
+                var toProperty = toTypeProperties.FirstOrDefault(p => string.Equals(p.GetMappedName(), property.GetMappedName(), StringComparison.Ordinal));
                 if (strict)
                 {
                     if (toProperty == null)
                     {
-                        throw new NullReferenceException(property.Name);
+                        throw new ArgumentNullException(property.Name);
                     }
                 }
                 if (toProperty == null)
@@ -130,11 +130,11 @@ namespace RepoDb.IntegrationTests
             var propertiesOfType2 = typeof(T2).GetProperties();
             propertiesOfType1.AsList().ForEach(propertyOfType1 =>
             {
-                if (propertyOfType1.Name == "Id")
+                if (string.Equals(propertyOfType1.Name, "Id", StringComparison.Ordinal))
                 {
                     return;
                 }
-                var propertyOfType2 = propertiesOfType2.FirstOrDefault(p => p.GetMappedName() == propertyOfType1.GetMappedName());
+                var propertyOfType2 = propertiesOfType2.FirstOrDefault(p => string.Equals(p.GetMappedName(), propertyOfType1.GetMappedName(), StringComparison.Ordinal));
                 if (propertyOfType2 == null)
                 {
                     return;
@@ -200,7 +200,7 @@ namespace RepoDb.IntegrationTests
             var properties = obj.GetType().GetProperties();
             properties.AsList().ForEach(property =>
             {
-                if (property.GetMappedName() == "Id")
+                if (string.Equals(property.GetMappedName(), "Id", StringComparison.Ordinal))
                 {
                     return;
                 }
@@ -1067,7 +1067,7 @@ namespace RepoDb.IntegrationTests
                 {
                     SessionId = Guid.NewGuid(),
                     ColumnNVarChar = (Continent)values[new Random().Next(values.Count)]
-                }); ;
+                });
             }
             return tables;
         }

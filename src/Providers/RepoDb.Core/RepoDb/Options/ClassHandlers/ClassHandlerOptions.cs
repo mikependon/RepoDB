@@ -13,10 +13,7 @@ namespace RepoDb.Options
     /// </summary>
     public abstract class ClassHandlerOptions
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        internal ClassHandlerOptions()
+        protected ClassHandlerOptions()
         { }
     }
 }

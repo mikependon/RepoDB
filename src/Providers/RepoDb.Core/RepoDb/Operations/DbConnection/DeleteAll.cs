@@ -47,7 +47,7 @@ namespace RepoDb
         /// <param name="entities">The list of data entity objects to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -64,7 +64,7 @@ namespace RepoDb
             where TEntity : class
         {
             var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction, GetEntityType<TEntity>(entities));
-            var keys = ExtractPropertyValues<TEntity, object>(entities, PropertyCache.Get(GetEntityType<TEntity>(entities), key, true)).AsList();
+            var keys = ExtractPropertyValues<TEntity, object>(entities, PropertyCache.Get(GetEntityType<TEntity>(entities), key, includeMappings: true)).AsList();
 
             return DeleteAllInternal(connection: connection,
                 tableName: tableName,
@@ -87,7 +87,7 @@ namespace RepoDb
         /// <param name="keys">The list of the keys to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -123,7 +123,7 @@ namespace RepoDb
         /// <param name="keys">The list of the keys to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -158,7 +158,7 @@ namespace RepoDb
         /// <param name="entities">The list of data entity objects to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -174,7 +174,7 @@ namespace RepoDb
             where TEntity : class
         {
             var key = GetAndGuardPrimaryKeyOrIdentityKey(GetEntityType<TEntity>(entities), connection, transaction);
-            var keys = ExtractPropertyValues<TEntity, object>(entities, PropertyCache.Get(GetEntityType<TEntity>(entities), key, true))?.AsList();
+            var keys = ExtractPropertyValues<TEntity, object>(entities, PropertyCache.Get(GetEntityType<TEntity>(entities), key, includeMappings: true))?.AsList();
 
             return DeleteAllInternal(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
@@ -196,7 +196,7 @@ namespace RepoDb
         /// <param name="keys">The list of the keys to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -230,7 +230,7 @@ namespace RepoDb
         /// <param name="keys">The list of the keys to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -263,7 +263,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -293,7 +293,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -336,7 +336,7 @@ namespace RepoDb
         /// <param name="entities">The list of data entity objects to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -354,8 +354,8 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction, GetEntityType<TEntity>(entities), cancellationToken);
-            var keys = ExtractPropertyValues<TEntity, object>(entities, PropertyCache.Get<TEntity>(key, true)).AsList();
+            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction, GetEntityType(entities), cancellationToken).ConfigureAwait(false);
+            var keys = ExtractPropertyValues<TEntity, object>(entities, PropertyCache.Get<TEntity>(key, includeMappings: true)).AsList();
 
             return await DeleteAllAsyncInternal(connection: connection,
                 tableName: tableName,
@@ -366,7 +366,7 @@ namespace RepoDb
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -379,7 +379,7 @@ namespace RepoDb
         /// <param name="keys">The list of the keys to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -418,7 +418,7 @@ namespace RepoDb
         /// <param name="keys">The list of the keys to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -456,7 +456,7 @@ namespace RepoDb
         /// <param name="entities">The list of data entity objects to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -473,8 +473,8 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(GetEntityType<TEntity>(entities), connection, transaction, cancellationToken);
-            var keys = ExtractPropertyValues<TEntity, object>(entities, PropertyCache.Get<TEntity>(key, true))?.AsList();
+            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(GetEntityType(entities), connection, transaction, cancellationToken).ConfigureAwait(false);
+            var keys = ExtractPropertyValues<TEntity, object>(entities, PropertyCache.Get<TEntity>(key, includeMappings: true))?.AsList();
 
             return await DeleteAllAsyncInternal(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
@@ -485,7 +485,7 @@ namespace RepoDb
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -497,7 +497,7 @@ namespace RepoDb
         /// <param name="keys">The list of the keys to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -534,7 +534,7 @@ namespace RepoDb
         /// <param name="keys">The list of the keys to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -570,7 +570,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -603,7 +603,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -648,7 +648,7 @@ namespace RepoDb
         /// <param name="keys">The list of the keys to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -681,7 +681,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -712,7 +712,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -750,7 +750,7 @@ namespace RepoDb
         /// <param name="keys">The list of the keys to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -786,11 +786,11 @@ namespace RepoDb
                 {
                     foreach (var keyValues in splitted)
                     {
-                        if (keyValues.Any() != true)
+                        if (!keyValues.Any())
                         {
                             break;
                         }
-                        var field = new QueryField(key.Name, Operation.In, keyValues.AsList(), null, false);
+                        var field = new QueryField(key.Name, Operation.In, keyValues.AsList(), dbType: null, prependUnderscore: false);
                         deletedRows += DeleteInternal(connection: connection,
                             tableName: tableName,
                             where: new QueryGroup(field),
@@ -835,7 +835,7 @@ namespace RepoDb
         /// <param name="keys">The list of the keys to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -871,7 +871,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -905,7 +905,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -946,7 +946,7 @@ namespace RepoDb
         /// <param name="keys">The list of the keys to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -963,7 +963,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
-            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction, cancellationToken);
+            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
             var dbSetting = connection.GetDbSetting();
             var hasImplicitTransaction = false;
             var count = keys?.AsList()?.Count;
@@ -974,7 +974,7 @@ namespace RepoDb
                 // Creates a transaction (if needed)
                 if (transaction == null && count > dbSetting.MaxParameterCount && dbSetting.IsTransactionSupported)
                 {
-                    transaction = (await connection.EnsureOpenAsync(cancellationToken)).BeginTransaction();
+                    transaction = (await connection.EnsureOpenAsync(cancellationToken).ConfigureAwait(false)).BeginTransaction();
                     hasImplicitTransaction = true;
                 }
 
@@ -984,11 +984,11 @@ namespace RepoDb
                 {
                     foreach (var keyValues in splitted)
                     {
-                        if (keyValues.Any() != true)
+                        if (!keyValues.Any())
                         {
                             break;
                         }
-                        var field = new QueryField(key.Name, Operation.In, keyValues.AsList(), null, false);
+                        var field = new QueryField(key.Name, Operation.In, keyValues.AsList(), dbType: null, prependUnderscore: false);
                         deletedRows += await DeleteAsyncInternal(connection: connection,
                             tableName: tableName,
                             where: new QueryGroup(field),
@@ -998,7 +998,7 @@ namespace RepoDb
                             transaction: transaction,
                             trace: trace,
                             statementBuilder: statementBuilder,
-                            cancellationToken: cancellationToken);
+                            cancellationToken: cancellationToken).ConfigureAwait(false);
                     }
                 }
 
@@ -1032,7 +1032,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="DeleteAllRequest"/> object.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
@@ -1047,7 +1047,7 @@ namespace RepoDb
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetDeleteAllText(request);
             var dbSetting = connection.GetDbSetting();
-            var affectedRowsFallback = dbSetting.IsAffectedRowsSupported == false ?
+            var affectedRowsFallback = !dbSetting.IsAffectedRowsSupported ?
                 (int?)connection.CountAllInternal(tableName: request.Name,
                     hints: request.Hints,
                     commandTimeout: commandTimeout,
@@ -1067,7 +1067,7 @@ namespace RepoDb
                 transaction: transaction,
                 trace: trace,
                 entityType: request.Type,
-                dbFields: DbFieldCache.Get(connection, request.Name, transaction, true),
+                dbFields: DbFieldCache.Get(connection, request.Name, transaction, enableValidation: true),
                 skipCommandArrayParametersCheck: true);
 
             // Result
@@ -1084,7 +1084,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="DeleteAllRequest"/> object.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -1101,7 +1101,7 @@ namespace RepoDb
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetDeleteAllText(request);
             var dbSetting = connection.GetDbSetting();
-            var affectedRowsFallback = dbSetting.IsAffectedRowsSupported == false ?
+            var affectedRowsFallback = !dbSetting.IsAffectedRowsSupported ?
                 (int?)await connection.CountAllAsyncInternal(tableName: request.Name,
                     hints: request.Hints,
                     commandTimeout: commandTimeout,
@@ -1109,7 +1109,7 @@ namespace RepoDb
                     transaction: transaction,
                     trace: trace,
                     statementBuilder: request.StatementBuilder,
-                    cancellationToken: cancellationToken) :
+                    cancellationToken: cancellationToken).ConfigureAwait(false) :
                 null;
 
             // Actual Execution
@@ -1123,8 +1123,8 @@ namespace RepoDb
                 trace: trace,
                 cancellationToken: cancellationToken,
                 entityType: request.Type,
-                dbFields: await DbFieldCache.GetAsync(connection, request.Name, transaction, true, cancellationToken),
-                skipCommandArrayParametersCheck: true);
+                dbFields: await DbFieldCache.GetAsync(connection, request.Name, transaction, enableValidation: true, cancellationToken).ConfigureAwait(false),
+                skipCommandArrayParametersCheck: true).ConfigureAwait(false);
 
             // Result
             return affectedRowsFallback ?? result;

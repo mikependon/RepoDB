@@ -41,15 +41,19 @@ namespace RepoDb
         /// Registers a trace object to be part of the default tracer of the library.
         /// </summary>
         /// <param name="trace">The instance of <see cref="ITrace"/> object to be assigned as the default tracer.</param>
-        public static void Register(ITrace trace) =>
+        public static void Register(ITrace trace)
+        {
             _defaultTracers.Add(trace);
+        }
 
         /// <summary>
         /// Gets the current default tracer that has been assigned globally.
         /// </summary>
         /// <returns>The list of the default <see cref="ITrace"/> objects.</returns>
-        public static IList<ITrace> GetTracers() =>
-            _defaultTracers.AsList();
+        public static IList<ITrace> GetTracers()
+        {
+            return _defaultTracers.AsList();
+        }
 
         #endregion
     }

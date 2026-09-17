@@ -13,13 +13,11 @@ namespace RepoDb.Exceptions
     /// <summary>
     /// An exception that is being thrown when the mapping is missing.
     /// </summary>
-    public class MissingMappingException : Exception
+    /// <remarks>
+    /// Creates a new instance of <see cref="MissingMappingException"/> class.
+    /// </remarks>
+    /// <param name="message">The exception message.</param>
+    public class MissingMappingException(string message) : Exception(message)
     {
-        /// <summary>
-        /// Creates a new instance of <see cref="MissingMappingException"/> class.
-        /// </summary>
-        /// <param name="message">The exception message.</param>
-        public MissingMappingException(string message)
-            : base(message) { }
     }
 }

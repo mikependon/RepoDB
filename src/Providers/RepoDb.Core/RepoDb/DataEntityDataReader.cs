@@ -41,7 +41,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entities">The list of the data entity object to be used for manipulation.</param>
         public DataEntityDataReader(IEnumerable<TEntity> entities)
-            : this(entities, null, null)
+            : this(entities, connection: null, transaction: null)
         { }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace RepoDb
         /// <param name="connection">The actual <see cref="IDbConnection"/> object used.</param>
         public DataEntityDataReader(IEnumerable<TEntity> entities,
             IDbConnection connection)
-            : this(entities, connection, null)
+            : this(entities, connection, transaction: null)
         { }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace RepoDb
         public DataEntityDataReader(IEnumerable<TEntity> entities,
             IDbConnection connection,
             IDbTransaction transaction)
-            : this(null, entities, connection, transaction)
+            : this(tableName: null, entities, connection, transaction)
         { }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IDbConnection connection,
             IDbTransaction transaction)
-            : this(tableName, entities, connection, transaction, false)
+            : this(tableName, entities, connection, transaction, hasOrderingColumn: false)
         { }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace RepoDb
         {
             if (entities == null)
             {
-                throw new NullReferenceException("The entities could not be null.");
+                throw new ArgumentNullException(nameof(entities), "The entities could not be null.");
             }
 
             // Fields
@@ -128,8 +128,10 @@ namespace RepoDb
         /// Returns an enumerator that iterates through a collection of data entity objects.
         /// </summary>
         /// <returns>The enumerator object of the current collection.</returns>
-        public override IEnumerator GetEnumerator() =>
-            Entities?.GetEnumerator();
+        public override IEnumerator GetEnumerator()
+        {
+            return Entities?.GetEnumerator();
+        }
 
         /// <summary>
         /// Gets the instance of <see cref="IDbConnection"/> in used.
@@ -386,8 +388,10 @@ namespace RepoDb
         /// </summary>
         /// <param name="i">The index of the property.</param>
         /// <returns>The property type from the property index.</returns>
-        public override Type GetFieldType(int i) =>
-            isDictionaryStringObject ? GetFieldTypeForDictionaryStringObject(i) : GetFieldTypeForEntities(i);
+        public override Type GetFieldType(int i)
+        {
+            return isDictionaryStringObject ? GetFieldTypeForDictionaryStringObject(i) : GetFieldTypeForEntities(i);
+        }
 
         /// <summary>
         ///
@@ -479,8 +483,10 @@ namespace RepoDb
         /// </summary>
         /// <param name="i">The index of the property.</param>
         /// <returns>The name from the property index.</returns>
-        public override string GetName(int i) =>
-            isDictionaryStringObject ? GetNameForDictionaryStringObject(i) : GetNameForEntities(i);
+        public override string GetName(int i)
+        {
+            return isDictionaryStringObject ? GetNameForDictionaryStringObject(i) : GetNameForEntities(i);
+        }
 
         /// <summary>
         /// 
@@ -517,8 +523,10 @@ namespace RepoDb
         /// </summary>
         /// <param name="name">The index of the property.</param>
         /// <returns>The index of the property from property name.</returns>
-        public override int GetOrdinal(string name) =>
-            isDictionaryStringObject ? GetOrdinalForDictionaryStringObject(name) : GetOrdinalForEntities(name);
+        public override int GetOrdinal(string name)
+        {
+            return isDictionaryStringObject ? GetOrdinalForDictionaryStringObject(name) : GetOrdinalForEntities(name);
+        }
 
         /// <summary>
         /// 
@@ -585,8 +593,10 @@ namespace RepoDb
         /// </summary>
         /// <param name="i">The index of the property.</param>
         /// <returns>The value from the property index.</returns>
-        public override object GetValue(int i) =>
-            isDictionaryStringObject ? GetValueForDictionaryStringObject(i) : GetValueForEntities(i);
+        public override object GetValue(int i)
+        {
+            return isDictionaryStringObject ? GetValueForDictionaryStringObject(i) : GetValueForEntities(i);
+        }
 
         /// <summary>
         /// 
@@ -635,7 +645,7 @@ namespace RepoDb
             ThrowExceptionIfNotAvailable();
             if (values == null)
             {
-                throw new NullReferenceException("The values array must not be null.");
+                throw new ArgumentNullException(nameof(values), "The values array must not be null.");
             }
             if (values.Length != FieldCount)
             {

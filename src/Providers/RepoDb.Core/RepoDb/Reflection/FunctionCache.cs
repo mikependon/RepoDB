@@ -60,8 +60,10 @@ namespace RepoDb
         /// <returns></returns>
         internal static Func<DbDataReader, TResult> GetDataReaderToTypeCompiledFunction<TResult>(DbDataReader reader,
             DbFieldCollection dbFields = null,
-            IDbSetting dbSetting = null) =>
-            DataReaderToTypeCache<TResult>.Get(reader, dbFields, dbSetting);
+            IDbSetting dbSetting = null)
+        {
+            return DataReaderToTypeCache<TResult>.Get(reader, dbFields, dbSetting);
+        }
 
         #region DataReaderToTypeCache
 
@@ -93,8 +95,10 @@ namespace RepoDb
             /// </summary>
             /// <param name="reader"></param>
             /// <returns></returns>
-            private static long GetKey(DbDataReader reader) =>
-                HashCode.Combine(GetReaderFieldsHashCode(reader), typeof(TResult).GetHashCode(), GlobalConfiguration.Options.ConversionType);
+            private static long GetKey(DbDataReader reader)
+            {
+                return HashCode.Combine(GetReaderFieldsHashCode(reader), typeof(TResult).GetHashCode(), GlobalConfiguration.Options.ConversionType);
+            }
         }
 
         #endregion
@@ -112,8 +116,10 @@ namespace RepoDb
         /// <returns></returns>
         internal static Func<DbDataReader, dynamic> GetDataReaderToExpandoObjectCompileFunction(DbDataReader reader,
             DbFieldCollection dbFields = null,
-            IDbSetting dbSetting = null) =>
-            DataReaderToExpandoObjectCache.Get(reader, dbFields, dbSetting);
+            IDbSetting dbSetting = null)
+        {
+            return DataReaderToExpandoObjectCache.Get(reader, dbFields, dbSetting);
+        }
 
         #region DataReaderToExpandoObjectCache
 
@@ -136,7 +142,7 @@ namespace RepoDb
                 IDbSetting dbSetting = null)
             {
                 var key = GetKey(reader);
-                if (cache.TryGetValue(key, out var result) == false)
+                if (!cache.TryGetValue(key, out var result))
                 {
                     result = FunctionFactory.CompileDataReaderToExpandoObject(reader, dbFields, dbSetting);
                     cache.TryAdd(key, result);
@@ -149,8 +155,10 @@ namespace RepoDb
             /// </summary>
             /// <param name="reader"></param>
             /// <returns></returns>
-            private static long GetKey(DbDataReader reader) =>
-                HashCode.Combine(GetReaderFieldsHashCode(reader), GlobalConfiguration.Options.ConversionType);
+            private static long GetKey(DbDataReader reader)
+            {
+                return HashCode.Combine(GetReaderFieldsHashCode(reader), GlobalConfiguration.Options.ConversionType);
+            }
         }
 
         #endregion
@@ -174,13 +182,15 @@ namespace RepoDb
             IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
             IDbSetting dbSetting = null,
-            IDbHelper dbHelper = null) =>
-            DataEntityDbParameterSetterCache.Get(entityType,
+            IDbHelper dbHelper = null)
+        {
+            return DataEntityDbParameterSetterCache.Get(entityType,
                 cacheKey,
                 inputFields,
                 outputFields,
                 dbSetting,
                 dbHelper);
+        }
 
         #region DataEntityDbParameterSetterCache
 
@@ -209,7 +219,7 @@ namespace RepoDb
                 IDbHelper dbHelper = null)
             {
                 var key = GetKey(entityType, cacheKey, inputFields, outputFields);
-                if (cache.TryGetValue(key, out var func) == false)
+                if (!cache.TryGetValue(key, out var func))
                 {
                     if (TypeCache.Get(entityType).IsDictionaryStringObject())
                     {
@@ -236,7 +246,7 @@ namespace RepoDb
                 IEnumerable<DbField> inputFields,
                 IEnumerable<DbField> outputFields)
             {
-                var key = HashCode.Combine((long)entityType.GetHashCode(), cacheKey.GetHashCode(), GlobalConfiguration.Options.ConversionType);
+                var key = HashCode.Combine((long)entityType.GetHashCode(), StringComparer.Ordinal.GetHashCode(cacheKey), GlobalConfiguration.Options.ConversionType);
                 if (inputFields != null)
                 {
                     foreach (var field in inputFields)
@@ -278,8 +288,10 @@ namespace RepoDb
             IEnumerable<DbField> outputFields,
             int batchSize,
             IDbSetting dbSetting = null,
-            IDbHelper dbHelper = null) =>
-            DataEntityListDbParameterSetterCache.Get(entityType, cacheKey, inputFields, outputFields, batchSize, dbSetting, dbHelper);
+            IDbHelper dbHelper = null)
+        {
+            return DataEntityListDbParameterSetterCache.Get(entityType, cacheKey, inputFields, outputFields, batchSize, dbSetting, dbHelper);
+        }
 
         #region DataEntityListDbParameterSetterCache
 
@@ -310,7 +322,7 @@ namespace RepoDb
                 IDbHelper dbHelper = null)
             {
                 var key = GetKey(entityType, cacheKey, inputFields, outputFields, batchSize);
-                if (cache.TryGetValue(key, out var func) == false)
+                if (!cache.TryGetValue(key, out var func))
                 {
                     if (TypeCache.Get(entityType).IsDictionaryStringObject())
                     {
@@ -349,7 +361,7 @@ namespace RepoDb
                 IEnumerable<DbField> outputFields,
                 int batchSize)
             {
-                var key = HashCode.Combine((long)entityType.GetHashCode(), batchSize.GetHashCode(), cacheKey?.GetHashCode(), GlobalConfiguration.Options.ConversionType);
+                var key = HashCode.Combine((long)entityType.GetHashCode(), batchSize.GetHashCode(), cacheKey != null ? StringComparer.Ordinal.GetHashCode(cacheKey) : (int?)null, GlobalConfiguration.Options.ConversionType);
 
                 if (inputFields?.Any() == true)
                 {
@@ -388,8 +400,10 @@ namespace RepoDb
             string parameterName,
             int index,
             IDbSetting dbSetting = null)
-            where TEntity : class =>
-            DbCommandToPropertyCache<TEntity>.Get(field, parameterName, index, dbSetting);
+            where TEntity : class
+        {
+            return DbCommandToPropertyCache<TEntity>.Get(field, parameterName, index, dbSetting);
+        }
 
         #region DbCommandToPropertyCache
 
@@ -415,8 +429,8 @@ namespace RepoDb
                 int index,
                 IDbSetting dbSetting = null)
             {
-                var key = HashCode.Combine((long)typeof(TEntity).GetHashCode(), field.GetHashCode(), parameterName.GetHashCode(), index.GetHashCode(), GlobalConfiguration.Options.ConversionType);
-                if (cache.TryGetValue(key, out var func) == false)
+                var key = HashCode.Combine((long)typeof(TEntity).GetHashCode(), field.GetHashCode(), StringComparer.Ordinal.GetHashCode(parameterName), index.GetHashCode(), GlobalConfiguration.Options.ConversionType);
+                if (!cache.TryGetValue(key, out var func))
                 {
                     func = FunctionFactory.CompileDbCommandToProperty<TEntity>(field, parameterName, index, dbSetting);
                     cache.TryAdd(key, func);
@@ -438,8 +452,10 @@ namespace RepoDb
         /// <param name="field"></param>
         /// <returns></returns>
         internal static Action<object, object> GetDataEntityPropertySetterCompiledFunction(Type entityType,
-            Field field) =>
-            DataEntityPropertySetterCache.Get(entityType, field);
+            Field field)
+        {
+            return DataEntityPropertySetterCache.Get(entityType, field);
+        }
 
         #region DataEntityPropertySetterCache
 
@@ -460,7 +476,7 @@ namespace RepoDb
                 Field field)
             {
                 var key = HashCode.Combine(type.GetHashCode(), field.GetHashCode(), GlobalConfiguration.Options.ConversionType);
-                if (cache.TryGetValue(key, out var func) == false)
+                if (!cache.TryGetValue(key, out var func))
                 {
                     if (TypeCache.Get(type).IsDictionaryStringObject())
                     {
@@ -491,8 +507,10 @@ namespace RepoDb
         /// <returns></returns>
         internal static Action<DbCommand, object> GetPlainTypeToDbParametersCompiledFunction(Type paramType,
             Type entityType,
-            DbFieldCollection dbFields = null) =>
-            PlainTypeToDbParametersCompiledFunctionCache.Get(paramType, entityType, dbFields);
+            DbFieldCollection dbFields = null)
+        {
+            return PlainTypeToDbParametersCompiledFunctionCache.Get(paramType, entityType, dbFields);
+        }
 
         #region PlainTypeToDbParametersCompiledFunctionCache
 
@@ -519,7 +537,7 @@ namespace RepoDb
                     return null;
                 }
                 var key = HashCode.Combine(paramType.GetHashCode(), (entityType?.GetHashCode() ?? 0), GlobalConfiguration.Options.ConversionType);
-                if (cache.TryGetValue(key, out var func) == false)
+                if (!cache.TryGetValue(key, out var func))
                 {
                     if (paramType.IsPlainType())
                     {

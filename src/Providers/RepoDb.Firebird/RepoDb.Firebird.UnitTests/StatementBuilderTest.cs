@@ -70,7 +70,7 @@ namespace RepoDb.Firebird.UnitTests
             var builder = StatementBuilderMapper.Get<FbConnection>();
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 builder.CreateBatchQuery("Table",
                     null,
                     0,
@@ -1096,7 +1096,7 @@ namespace RepoDb.Firebird.UnitTests
             var builder = StatementBuilderMapper.Get<FbConnection>();
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 builder.CreateSkipQuery("Table",
                     null,
                     0,

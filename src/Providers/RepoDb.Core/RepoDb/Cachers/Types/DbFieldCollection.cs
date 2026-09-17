@@ -40,7 +40,7 @@ public class DbFieldCollection
         this.dbSetting = dbSetting;
         this.dbFields = dbFields
             .AsList()
-            .GroupBy(f => f.Name.AsUnquoted(true, dbSetting), StringComparer.OrdinalIgnoreCase)
+            .GroupBy(f => f.Name.AsUnquoted(trim: true, dbSetting), StringComparer.OrdinalIgnoreCase)
             .Select(f => f.Last())
             .ToList();
         lazyPrimary = new Lazy<DbField>(GetPrimaryDbField);
@@ -49,36 +49,51 @@ public class DbFieldCollection
         lazyMapByUnquotedName = new Lazy<FrozenDictionary<string, DbField>>(GetDbFieldsMappedByUnquotedName);
         lazyFields = new Lazy<IEnumerable<Field>>(GetDbFieldsAsFields);
     }
-    
+
     /// <summary>
     /// Gets a value whether the current column definition is a primary column definition.
     /// </summary>
     /// <returns>A primary column definition.</returns>
-    public DbField GetPrimary() => lazyPrimary.Value;
+    public DbField GetPrimary()
+    {
+        return lazyPrimary.Value;
+    }
 
     /// <summary>
     /// Gets a value whether the current column definition is a identity column definition.
     /// </summary>
     /// <returns>A identity column definition.</returns>
-    public DbField GetIdentity() => lazyIdentity.Value;
+    public DbField GetIdentity()
+    {
+        return lazyIdentity.Value;
+    }
 
     /// <summary>
     /// Gets a column definitions of the table.
     /// </summary>
     /// <returns>A column definitions of the table.</returns>
-    public IEnumerable<DbField> GetItems() => dbFields;
+    public IEnumerable<DbField> GetItems()
+    {
+        return dbFields;
+    }
 
     /// <summary>
     /// Get the list of <see cref="DbField" /> objects converted into an <see cref="IReadOnlyList{T}" /> of <see cref="Field" /> objects.
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<Field> GetAsFields() => lazyFields.Value;
+    public IEnumerable<Field> GetAsFields()
+    {
+        return lazyFields.Value;
+    }
 
     /// <summary>
     /// Gets a value indicating whether the current column definitions of the table is empty.
     /// </summary>
     /// <returns>A value indicating whether the column definitions of the table is empty.</returns>
-    public bool IsEmpty() => dbFields.Count == 0;
+    public bool IsEmpty()
+    {
+        return dbFields.Count == 0;
+    }
 
     /// <summary>
     /// Gets column definition of the table based on the name of the database field.
@@ -104,15 +119,28 @@ public class DbFieldCollection
         return dbField;
     }
 
-    private FrozenDictionary<string, DbField> GetDbFieldsMappedByName() => 
-        dbFields.ToFrozenDictionary(df => df.Name, df => df, StringComparer.OrdinalIgnoreCase);
+    private FrozenDictionary<string, DbField> GetDbFieldsMappedByName()
+    {
+        return dbFields.ToFrozenDictionary(df => df.Name, df => df, StringComparer.OrdinalIgnoreCase);
+    }
 
-    private FrozenDictionary<string, DbField> GetDbFieldsMappedByUnquotedName() =>
-        dbFields.ToFrozenDictionary(df => df.Name.AsUnquoted(true, dbSetting), df => df, StringComparer.OrdinalIgnoreCase);
+    private FrozenDictionary<string, DbField> GetDbFieldsMappedByUnquotedName()
+    {
+        return dbFields.ToFrozenDictionary(df => df.Name.AsUnquoted(trim: true, dbSetting), df => df, StringComparer.OrdinalIgnoreCase);
+    }
 
-    private DbField GetPrimaryDbField() => dbFields.FirstOrDefault(df => df.IsPrimary);
+    private DbField GetPrimaryDbField()
+    {
+        return dbFields.FirstOrDefault(df => df.IsPrimary);
+    }
 
-    private DbField GetIdentityDbField() => dbFields.FirstOrDefault(df => df.IsIdentity);
+    private DbField GetIdentityDbField()
+    {
+        return dbFields.FirstOrDefault(df => df.IsIdentity);
+    }
 
-    private IEnumerable<Field> GetDbFieldsAsFields() => dbFields.AsFields();
+    private IEnumerable<Field> GetDbFieldsAsFields()
+    {
+        return dbFields.AsFields();
+    }
 }

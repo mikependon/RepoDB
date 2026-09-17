@@ -16,20 +16,13 @@ namespace RepoDb.DbSettings
     /// <summary>
     /// A base class to be used when implementing an <see cref="IDbSetting"/>-based object to support a specific RDBMS data provider.
     /// </summary>
-    public abstract class BaseDbSetting : IDbSetting
+    public abstract class BaseDbSetting : IDbSetting, IEquatable<BaseDbSetting>
     {
         #region Privates
 
         private int? hashCode = null;
 
-        #endregion
-
-        #region Constructor
-
-        /// <summary>
-        /// Creates a new instance of <see cref="BaseDbSetting"/> class.
-        /// </summary>
-        public BaseDbSetting()
+        protected BaseDbSetting()
         {
             AreTableHintsSupported = true;
             ClosingQuote = "]";
@@ -177,13 +170,10 @@ namespace RepoDb.DbSettings
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
         {
-            if (this.hashCode != null)
+            if (hashCode != null)
             {
-                return this.hashCode.Value;
+                return hashCode.Value;
             }
-
-            // Use the non nullable for perf purposes
-            var hashCode = 0;
 
             // AreTableHintsSupported
             hashCode = HashCode.Combine(hashCode, AreTableHintsSupported);
@@ -258,7 +248,7 @@ namespace RepoDb.DbSettings
             }
 
             // Set and return the hashcode
-            return (this.hashCode = hashCode).Value;
+            return hashCode.Value;
         }
 
         /// <summary>
@@ -308,8 +298,7 @@ namespace RepoDb.DbSettings
         /// <param name="objB">The second <see cref="BaseDbSetting"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
         public static bool operator !=(BaseDbSetting objA,
-            BaseDbSetting objB) =>
-            (objA == objB) == false;
+            BaseDbSetting objB) => !(objA == objB);
 
         #endregion
     }

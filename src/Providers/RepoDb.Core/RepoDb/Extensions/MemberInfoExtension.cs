@@ -22,8 +22,10 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="member">The member where to retrieve a name.</param>
         /// <returns>The name of the <see cref="MemberInfo"/>.</returns>
-        internal static string GetMappedName(this MemberInfo member) => 
-            member is PropertyInfo memberInfo ? PropertyMappedNameCache.Get(memberInfo) : member.Name;
+        internal static string GetMappedName(this MemberInfo member)
+        {
+            return member is PropertyInfo memberInfo ? PropertyMappedNameCache.Get(memberInfo) : member.Name;
+        }
 
         /// <summary>
         /// Gets a value from the current instance of <see cref="MemberInfo"/> object.
@@ -66,15 +68,17 @@ namespace RepoDb.Extensions
         }
 
         #region Identification and Conversion
-        
+
         /// <summary>
         /// Converts the current instance of <see cref="MemberInfo"/> object into <see cref="PropertyInfo"/> object.
         /// </summary>
         /// <param name="member">The instance of the <see cref="MemberInfo"/> object.</param>
         /// <returns>A converted instance of <see cref="PropertyInfo"/> object.</returns>
-        public static PropertyInfo ToPropertyInfo(this MemberInfo member) =>
-            (PropertyInfo)member;
-        
+        public static PropertyInfo ToPropertyInfo(this MemberInfo member)
+        {
+            return (PropertyInfo)member;
+        }
+
         #endregion
 
         #region Helpers

@@ -48,36 +48,54 @@ namespace RepoDb
         /// An array of PropertyInfo objects representing all public properties of the current Type.
         /// -or- An empty array of type PropertyInfo, if the current Type does not have public properties.
         /// </returns>
-        public PropertyInfo[] GetProperties() => lazyGetProperties.Value;
+        public PropertyInfo[] GetProperties()
+        {
+            return lazyGetProperties.Value;
+        }
 
         /// <summary>
         /// Returns the underlying type of the current type. If there is no underlying type, this will return the current type.
         /// </summary>
         /// <returns>The underlying type or the current type.</returns>
-        public Type GetUnderlyingType() => lazyGetUnderlyingType.Value;
+        public Type GetUnderlyingType()
+        {
+            return lazyGetUnderlyingType.Value;
+        }
 
         /// <summary>
         /// Checks whether the current type is an anonymous type.
         /// </summary>
         /// <returns>Returns true if the current type is an anonymous class.</returns>
-        public bool IsAnonymousType() => lazyIsAnonymousType.Value;
+        public bool IsAnonymousType()
+        {
+            return lazyIsAnonymousType.Value;
+        }
 
         /// <summary>
         /// Checks whether the current type is a class.
         /// </summary>
         /// <returns>Returns true if the current type is a class.</returns>
-        public bool IsClassType() => lazyIsClassType.Value;
+        public bool IsClassType()
+        {
+            return lazyIsClassType.Value;
+        }
 
         /// <summary>
         /// Checks whether the current type is of type <see cref="IDictionary{TKey, TValue}"/> (with string/object key-value-pair).
         /// </summary>
         /// <returns>Returns true if the current type is of type <see cref="IDictionary{TKey, TValue}"/> (with string/object key-value-pair).</returns>
-        public bool IsDictionaryStringObject() => lazyIsDictionaryStringObject.Value;
+        public bool IsDictionaryStringObject()
+        {
+            return lazyIsDictionaryStringObject.Value;
+        }
 
         /// <summary>
         /// Checks whether the current type is wrapped within a <see cref="Nullable{T}"/> object.
         /// </summary>
         /// <returns>Returns true if the current type is wrapped within a <see cref="Nullable{T}"/> object.</returns>
-        public bool IsNullable() => lazyIsNullable.Value;
+        public bool IsNullable()
+        {
+            return lazyIsNullable.Value;
+        }
     }
 }

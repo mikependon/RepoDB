@@ -14,15 +14,13 @@ namespace RepoDb.Attributes.Parameter.SqlServer
     /// An attribute used to define a value to the <see cref="SqlParameter.XmlSchemaCollectionOwningSchema"/>
     /// property via an entity property before the actual execution.
     /// </summary>
-    public class XmlSchemaCollectionOwningSchemaAttribute : PropertyValueAttribute
+    /// <remarks>
+    /// Creates a new instance of <see cref="XmlSchemaCollectionOwningSchemaAttribute"/> class.
+    /// </remarks>
+    /// <param name="owningSchema">The value of the owning relational schema.</param>
+    [System.AttributeUsage(System.AttributeTargets.All)]
+    public class XmlSchemaCollectionOwningSchemaAttribute(string owningSchema) : PropertyValueAttribute(typeof(SqlParameter), nameof(SqlParameter.XmlSchemaCollectionOwningSchema), owningSchema)
     {
-        /// <summary>
-        /// Creates a new instance of <see cref="XmlSchemaCollectionOwningSchemaAttribute"/> class.
-        /// </summary>
-        /// <param name="owningSchema">The value of the owning relational schema.</param>
-        public XmlSchemaCollectionOwningSchemaAttribute(string owningSchema)
-            : base(typeof(SqlParameter), nameof(SqlParameter.XmlSchemaCollectionOwningSchema), owningSchema)
-        { }
 
         /// <summary>
         /// Gets the mapped value of the owning relation schema of the parameter.

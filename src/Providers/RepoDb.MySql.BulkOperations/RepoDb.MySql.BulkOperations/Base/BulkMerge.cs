@@ -274,6 +274,11 @@ namespace RepoDb
             string traceKey = MySqlTraceKeys.MySqlBulkMerge,
             MySqlTransaction transaction = null)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
             var returnIdentity = identityBehavior == MySqlBulkImportIdentityBehavior.ReturnIdentity && identityField != null;
@@ -785,6 +790,11 @@ namespace RepoDb
             MySqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
             var returnIdentity = identityBehavior == MySqlBulkImportIdentityBehavior.ReturnIdentity && identityField != null;

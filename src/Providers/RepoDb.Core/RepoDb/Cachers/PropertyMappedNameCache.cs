@@ -64,6 +64,11 @@ namespace RepoDb
         public static string Get<TEntity>(Field field)
             where TEntity : class
         {
+            if (field == null)
+            {
+                throw new ArgumentNullException(nameof(field));
+            }
+
             return Get<TEntity>(TypeExtension.GetProperty<TEntity>(field.Name));
         }
 
@@ -105,7 +110,7 @@ namespace RepoDb
             var key = GenerateHashCode(entityType, propertyInfo);
 
             // Try get the value
-            if (cache.TryGetValue(key, out var result) == false)
+            if (!cache.TryGetValue(key, out var result))
             {
                 result = resolver.Resolve(propertyInfo, entityType);
                 cache.TryAdd(key, result);
@@ -150,7 +155,7 @@ namespace RepoDb
         {
             if (obj == null)
             {
-                throw new NullReferenceException($"The argument '{argument}' cannot be null.");
+                throw new ArgumentNullException(argument);
             }
         }
 

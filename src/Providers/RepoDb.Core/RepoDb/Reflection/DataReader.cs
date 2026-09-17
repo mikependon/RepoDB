@@ -70,7 +70,7 @@ namespace RepoDb.Reflection
                 dbFields,
                 dbSetting);
             
-            while (await reader.ReadAsync(cancellationToken))
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
                 yield return func(reader);
             }
@@ -126,7 +126,7 @@ namespace RepoDb.Reflection
                 dbFields,
                 dbSetting);
             
-            while (await reader.ReadAsync(cancellationToken))
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
                 yield return func(reader);
             }

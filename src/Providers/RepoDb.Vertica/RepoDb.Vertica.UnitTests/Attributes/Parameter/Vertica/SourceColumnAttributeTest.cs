@@ -51,7 +51,7 @@ namespace RepoDb.Vertica.UnitTests.Attributes.Parameter.Vertica
 
             // Assert
             var parameter = (VerticaParameter)command.Parameters["@ColumnName"];
-            Assert.AreEqual("MappedColumnName", parameter.SourceColumn);
+            Assert.AreEqual("MappedColumnName", parameter.SourceColumn, System.StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -73,7 +73,7 @@ namespace RepoDb.Vertica.UnitTests.Attributes.Parameter.Vertica
 
             // Assert
             var parameter = (VerticaParameter)command.Parameters["@ColumnName"];
-            Assert.AreEqual("MappedColumnName", parameter.SourceColumn);
+            Assert.AreEqual("MappedColumnName", parameter.SourceColumn, System.StringComparer.Ordinal);
         }
     }
 }

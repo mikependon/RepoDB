@@ -26,7 +26,7 @@ namespace RepoDb.Resolvers
         {
             if (type == null)
             {
-                throw new NullReferenceException("The type must not be null.");
+                throw new ArgumentNullException(nameof(type), "The type must not be null.");
             }
 
             if (type == typeof(Boolean))

@@ -45,7 +45,7 @@ namespace RepoDb.UnitTests.Others
             Assert.AreEqual(4, queryFields.Count());
             properties.ForEach(p =>
             {
-                var queryField = queryFields.FirstOrDefault(qf => qf.Field.Name == p.Name);
+                var queryField = queryFields.FirstOrDefault(qf => string.Equals(qf.Field.Name, p.Name, System.StringComparison.Ordinal));
                 Assert.IsNotNull(queryField);
                 Assert.AreEqual(p.PropertyType, queryField.Field.Type);
             });
@@ -106,7 +106,7 @@ namespace RepoDb.UnitTests.Others
             Assert.AreEqual(4, fields.Count());
             properties.ForEach(p =>
             {
-                var field = fields.FirstOrDefault(f => f.Name == p.Name);
+                var field = fields.FirstOrDefault(f => string.Equals(f.Name, p.Name, System.StringComparison.Ordinal));
                 Assert.IsNotNull(field);
                 Assert.AreEqual(p.PropertyType, field.Type);
             });
@@ -124,7 +124,7 @@ namespace RepoDb.UnitTests.Others
             Assert.AreEqual(4, fields.Count());
             properties.ForEach(p =>
             {
-                var field = fields.FirstOrDefault(f => f.Name == p.Name);
+                var field = fields.FirstOrDefault(f => string.Equals(f.Name, p.Name, System.StringComparison.Ordinal));
                 Assert.IsNotNull(field);
                 Assert.AreEqual(p.PropertyType, field.Type);
             });

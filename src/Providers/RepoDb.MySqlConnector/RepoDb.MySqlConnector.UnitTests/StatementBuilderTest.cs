@@ -71,7 +71,7 @@ namespace RepoDb.MySql.UnitTests
             var builder = StatementBuilderMapper.Get<MySqlConnection>();
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 builder.CreateBatchQuery("Table",
                     null,
                     0,
@@ -999,7 +999,7 @@ namespace RepoDb.MySql.UnitTests
             var builder = StatementBuilderMapper.Get<MySqlConnection>();
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 builder.CreateSkipQuery("Table",
                     null,
                     0,

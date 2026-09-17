@@ -46,8 +46,10 @@ namespace RepoDb.Extensions
         public static IDbDataParameter CreateParameter(this IDbCommand command,
             string name,
             object value,
-            DbType? dbType) =>
-            CreateParameter(command, name, value, dbType, null);
+            DbType? dbType)
+        {
+            return CreateParameter(command, name, value, dbType, parameterDirection: null);
+        }
 
         /// <summary>
         /// Creates a parameter for a command object.
@@ -108,7 +110,7 @@ namespace RepoDb.Extensions
         /// <param name="parameter"></param>
         private static void EnsureTableValueParameter(IDbDataParameter parameter)
         {
-            if (parameter == null || parameter.Value is DataTable table == false)
+            if (parameter == null || !(parameter.Value is DataTable table))
             {
                 return;
             }
@@ -161,13 +163,13 @@ namespace RepoDb.Extensions
             {
                 command.Parameters.Add(
                     command.CreateParameter(
-                        commandArrayParameter.ParameterName.AsParameterName(dbSetting), null, dbType));
+                        commandArrayParameter.ParameterName.AsParameterName(dbSetting), value: null, dbType));
             }
             else
             {
                 for (var i = 0; i < values.Length; i++)
                 {
-                    var name = string.Concat(commandArrayParameter.ParameterName, i.ToString()).AsParameterName(dbSetting);
+                    var name = string.Concat(commandArrayParameter.ParameterName, i.ToString(System.Globalization.CultureInfo.InvariantCulture)).AsParameterName(dbSetting);
                     var value = values[i];
                     dbType ??= value?.GetType().GetDbType();
                     command.Parameters.Add(
@@ -182,8 +184,10 @@ namespace RepoDb.Extensions
         /// <param name="command">The command object to be used.</param>
         /// <param name="param">The object to be used when creating the parameters.</param>
         public static void CreateParameters(this IDbCommand command,
-            object param) =>
+            object param)
+        {
             CreateParameters(command, param, param?.GetType());
+        }
 
         /// <summary>
         /// Creates a parameter from object by mapping the property from the target entity type.
@@ -193,8 +197,10 @@ namespace RepoDb.Extensions
         /// <param name="entityType">The type of the data entity.</param>
         public static void CreateParameters(this IDbCommand command,
             object param,
-            Type entityType) =>
-            CreateParameters(command, param, null, entityType, null);
+            Type entityType)
+        {
+            CreateParameters(command, param, propertiesToSkip: null, entityType, dbFields: null);
+        }
 
         /// <summary>
         ///
@@ -452,7 +458,7 @@ namespace RepoDb.Extensions
             // Skip
             if (propertiesToSkip != null)
             {
-                paramClassProperties = paramClassProperties?.Where(p => propertiesToSkip.Contains(p.PropertyInfo.Name) == false);
+                paramClassProperties = paramClassProperties?.Where(p => !propertiesToSkip.Contains(p.PropertyInfo.Name));
             }
 
             // Iterate
@@ -474,9 +480,9 @@ namespace RepoDb.Extensions
                         dbField?.Size,
                         (entityClassProperty ?? paramClassProperty),
                         dbField,
-                        null,
-                        null,
-                        null);
+                        parameterDirection: null,
+                        dbType: null,
+                        fallbackType: null);
                 command.Parameters.Add(parameter);
             }
         }
@@ -515,7 +521,7 @@ namespace RepoDb.Extensions
                 {
                     value = commandParameter.Value;
                     dbField ??= GetDbField(commandParameter.Field.Name, dbFields);
-                    classProperty = PropertyCache.Get(commandParameter.MappedToType, commandParameter.Field.Name, true);
+                    classProperty = PropertyCache.Get(commandParameter.MappedToType, commandParameter.Field.Name, includeMappings: true);
                 }
                 var parameter = CreateParameterIf(kvp.Key, value) ??
                     CreateParameter(command,
@@ -524,9 +530,9 @@ namespace RepoDb.Extensions
                         dbField?.Size,
                         classProperty,
                         dbField,
-                        null,
-                        null,
-                        null);
+                        parameterDirection: null,
+                        dbType: null,
+                        fallbackType: null);
                 command.Parameters.Add(parameter);
             }
         }
@@ -588,7 +594,7 @@ namespace RepoDb.Extensions
             {
                 return;
             }
-            CreateParameters(command, queryGroup.GetFields(true), propertiesToSkip, entityType, dbFields);
+            CreateParameters(command, queryGroup.GetFields(traverse: true), propertiesToSkip, entityType, dbFields);
         }
 
         /// <summary>
@@ -629,7 +635,7 @@ namespace RepoDb.Extensions
                 }
                 else
                 {
-                    CreateParameters(command, queryField, null, entityType, dbFields);
+                    CreateParameters(command, queryField, propertiesToSkip: null, entityType, dbFields);
                 }
             }
         }
@@ -664,7 +670,7 @@ namespace RepoDb.Extensions
             // Variables
             var dbField = GetDbField(fieldName, dbFields);
             var value = queryField.Parameter.Value;
-            var classProperty = PropertyCache.Get(entityType, queryField.Field, true);
+            var classProperty = PropertyCache.Get(entityType, queryField.Field, includeMappings: true);
             var (direction, fallbackType, size) = queryField is DirectionalQueryField n ?
                 (
                     n.Direction,
@@ -707,16 +713,16 @@ namespace RepoDb.Extensions
             {
                 for (var i = 0; i < values.Count; i++)
                 {
-                    var name = string.Concat(queryField.Parameter.Name, "_In_", i.ToString());
+                    var name = string.Concat(queryField.Parameter.Name, "_In_", i.ToString(System.Globalization.CultureInfo.InvariantCulture));
                     var parameter = CreateParameter(command,
                         name,
                         values[i],
                         dbField?.Size,
-                        null,
+                        classProperty: null,
                         dbField,
-                        null,
+                        parameterDirection: null,
                         queryField.Parameter.DbType,
-                        null);
+                        fallbackType: null);
                     command.Parameters.Add(parameter);
                 }
             }
@@ -742,10 +748,10 @@ namespace RepoDb.Extensions
                     string.Concat(queryField.Parameter.Name, "_Left"),
                     values[0],
                     dbField?.Size,
-                    null, dbField,
-                    null,
+                    classProperty: null, dbField,
+                    parameterDirection: null,
                     queryField.Parameter.DbType,
-                    null);
+                    fallbackType: null);
                 command.Parameters.Add(leftParameter);
 
                 // Right
@@ -753,11 +759,11 @@ namespace RepoDb.Extensions
                     string.Concat(queryField.Parameter.Name, "_Right"),
                     values[1],
                     dbField?.Size,
-                    null,
+                    classProperty: null,
                     dbField,
-                    null,
+                    parameterDirection: null,
                     queryField.Parameter.DbType,
-                    null);
+                    fallbackType: null);
                 command.Parameters.Add(rightParameter);
             }
             else
@@ -799,9 +805,11 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="dbField"></param>
         /// <returns></returns>
-        private static bool IsPostgreSqlUserDefined(DbField dbField) =>
-            string.Equals(dbField?.DatabaseType, "USER-DEFINED", StringComparison.OrdinalIgnoreCase) &&
+        private static bool IsPostgreSqlUserDefined(DbField dbField)
+        {
+            return string.Equals(dbField?.DatabaseType, "USER-DEFINED", StringComparison.OrdinalIgnoreCase) &&
             string.Equals(dbField?.Provider, "PGSQL", StringComparison.OrdinalIgnoreCase);
+        }
 
         /// <summary>
         ///
@@ -809,9 +817,11 @@ namespace RepoDb.Extensions
         /// <param name="size"></param>
         /// <param name="dbField"></param>
         private static int GetSize(int? size,
-            DbField dbField) =>
-            size.HasValue ? size.Value :
+            DbField dbField)
+        {
+            return size.HasValue ? size.Value :
                  dbField?.Size.HasValue == true ? dbField.Size.Value : default;
+        }
 
         /// <summary>
         ///
@@ -820,8 +830,10 @@ namespace RepoDb.Extensions
         /// <param name="fallbackType"></param>
         /// <returns></returns>
         private static IEnumerable<PropertyValueAttribute> GetPropertyValueAttributes(ClassProperty classProperty,
-            Type fallbackType) =>
-            classProperty?.GetPropertyValueAttributes() ?? fallbackType?.GetPropertyValueAttributes();
+            Type fallbackType)
+        {
+            return classProperty?.GetPropertyValueAttributes() ?? fallbackType?.GetPropertyValueAttributes();
+        }
 
         /// <summary>
         ///
@@ -894,13 +906,15 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="dbField"></param>
         /// <returns></returns>
-        private static bool IsAutomaticConversion(DbField dbField) =>
-            (
+        private static bool IsAutomaticConversion(DbField dbField)
+        {
+            return (
                 GlobalConfiguration.Options.ConversionType == ConversionType.Automatic ||
                 dbField?.IsPrimary == true ||
                 dbField?.IsIdentity == true
             ) &&
             dbField?.Type != null;
+        }
 
         /// <summary>
         ///
@@ -961,7 +975,7 @@ namespace RepoDb.Extensions
 #endif
             else
             {
-                return (value != DBNull.Value) ? Convert.ChangeType(value, targetType) : Activator.CreateInstance(targetType);
+                return (value != DBNull.Value) ? Convert.ChangeType(value, targetType, System.Globalization.CultureInfo.InvariantCulture) : Activator.CreateInstance(targetType);
             }
         }
 
@@ -986,12 +1000,16 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        private static object AutomaticConvertGuidToString(object value) =>
-            value?.ToString();
+        private static object AutomaticConvertGuidToString(object value)
+        {
+            return value?.ToString();
+        }
 
 #if NET6_0_OR_GREATER
-        private static object AutomaticConvertDateOnlyToDateTime(object value) =>
-            (value is DateOnly dateOnly ? dateOnly.ToDateTime(default(TimeOnly)) : null);
+        private static object AutomaticConvertDateOnlyToDateTime(object value)
+        {
+            return (value is DateOnly dateOnly ? dateOnly.ToDateTime(default(TimeOnly)) : null);
+        }
 #endif
         #endregion
     }

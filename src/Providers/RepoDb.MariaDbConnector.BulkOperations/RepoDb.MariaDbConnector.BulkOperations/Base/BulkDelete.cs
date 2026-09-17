@@ -126,6 +126,11 @@ namespace RepoDb
             string traceKey = MariaDbTraceKeys.MariaDbBulkDelete,
             MariaDbTransaction transaction = null)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
             var pseudoTableName = MariaDbText.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
 
@@ -340,6 +345,11 @@ namespace RepoDb
             MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
             var pseudoTableName = MariaDbText.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
 

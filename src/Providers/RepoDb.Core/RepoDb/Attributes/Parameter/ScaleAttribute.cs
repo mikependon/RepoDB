@@ -14,15 +14,13 @@ namespace RepoDb.Attributes.Parameter
     /// An attribute that is being used to define a value to the <see cref="DbParameter.Scale"/>
     /// property via a class property mapping.
     /// </summary>
-    public class ScaleAttribute : PropertyValueAttribute
+    /// <remarks>
+    /// Creates a new instance of <see cref="ScaleAttribute"/> class.
+    /// </remarks>
+    /// <param name="scale">The scale of the parameter.</param>
+    [System.AttributeUsage(System.AttributeTargets.All)]
+    public class ScaleAttribute(byte scale) : PropertyValueAttribute(typeof(DbParameter), nameof(DbParameter.Scale), scale)
     {
-        /// <summary>
-        /// Creates a new instance of <see cref="ScaleAttribute"/> class.
-        /// </summary>
-        /// <param name="scale">The scale of the parameter.</param>
-        public ScaleAttribute(byte scale)
-            : base(typeof(DbParameter), nameof(DbParameter.Scale), scale)
-        { }
 
         /// <summary>
         /// Gets the mapped scale value of the parameter.

@@ -709,7 +709,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.SetupAsyncInsert(connection);
 
-                Assert.Throws<NullReferenceException>(() => connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                Assert.Throws<ArgumentNullException>(() => connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     (DataTable)null));
             }
         }
@@ -4214,7 +4214,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.SetupAsyncInsert(connection);
 
-                Assert.Throws<NullReferenceException>(() => connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
+                Assert.Throws<ArgumentNullException>(() => connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
                     (DataTable)null));
             }
         }

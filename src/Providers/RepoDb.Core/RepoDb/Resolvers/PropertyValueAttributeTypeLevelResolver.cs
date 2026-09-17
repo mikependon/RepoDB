@@ -24,7 +24,9 @@ namespace RepoDb.Resolvers
         /// </summary>
         /// <param name="type">The target type.</param>
         /// <returns>The list of associated <see cref="PropertyValueAttribute"/> objects on the property.</returns>
-        public IEnumerable<PropertyValueAttribute> Resolve(Type type) =>
-            type.GetPropertyValueAttributes();
+        public IEnumerable<PropertyValueAttribute> Resolve(Type type)
+        {
+            return type.GetPropertyValueAttributes();
+        }
     }
 }

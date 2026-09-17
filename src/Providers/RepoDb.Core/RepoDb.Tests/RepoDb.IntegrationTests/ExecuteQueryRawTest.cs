@@ -2638,7 +2638,6 @@ namespace RepoDb.IntegrationTests
                     // Assert
                     Assert.AreEqual(100, value);
                 }
-                ;
             }
         }
 
@@ -2656,7 +2655,6 @@ namespace RepoDb.IntegrationTests
                     // Assert
                     Assert.AreEqual(100, value);
                 }
-                ;
             }
         }
 
@@ -2674,7 +2672,6 @@ namespace RepoDb.IntegrationTests
                     // Assert
                     Assert.AreEqual(100, value);
                 }
-                ;
             }
         }
 
@@ -2692,7 +2689,6 @@ namespace RepoDb.IntegrationTests
                     // Assert
                     Assert.AreEqual(100, value);
                 }
-                ;
             }
         }
 
@@ -2714,7 +2710,6 @@ namespace RepoDb.IntegrationTests
                     // Assert
                     Assert.AreEqual(100, value);
                 }
-                ;
             }
         }
 
@@ -2732,7 +2727,6 @@ namespace RepoDb.IntegrationTests
                     // Assert
                     Assert.AreEqual(100, value);
                 }
-                ;
             }
         }
 
@@ -2750,7 +2744,6 @@ namespace RepoDb.IntegrationTests
                     // Assert
                     Assert.AreEqual(100, value);
                 }
-                ;
             }
         }
 
@@ -2768,7 +2761,6 @@ namespace RepoDb.IntegrationTests
                     // Assert
                     Assert.AreEqual(100, value);
                 }
-                ;
             }
         }
 

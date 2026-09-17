@@ -326,7 +326,7 @@ namespace RepoDb.UnitTests.Mappers
         {
             // Setup
             var stringPropertyHandler = new StringPropertyHandler();
-            Assert.Throws<NullReferenceException>(() => PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>((string)null, stringPropertyHandler));
+            Assert.Throws<ArgumentNullException>(() => PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>((string)null, stringPropertyHandler));
         }
 
         [TestMethod]
@@ -334,7 +334,7 @@ namespace RepoDb.UnitTests.Mappers
         {
             // Setup
             var stringPropertyHandler = new StringPropertyHandler();
-            Assert.Throws<NullReferenceException>(() => PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>((Field)null, stringPropertyHandler));
+            Assert.Throws<ArgumentNullException>(() => PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>((Field)null, stringPropertyHandler));
         }
 
         [TestMethod]
@@ -342,7 +342,7 @@ namespace RepoDb.UnitTests.Mappers
         {
             // Setup
             var stringPropertyHandler = new StringPropertyHandler();
-            Assert.Throws<NullReferenceException>(() => PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>(expression: null, propertyHandler: stringPropertyHandler));
+            Assert.Throws<ArgumentNullException>(() => PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>(expression: null, propertyHandler: stringPropertyHandler));
         }
 
         /*
@@ -373,21 +373,21 @@ namespace RepoDb.UnitTests.Mappers
         public void ThrowExceptionOnPropertyTypeHandlerMapperViaPropertyNameWithNullPropertyHandler()
         {
             // Setup
-            Assert.Throws<NullReferenceException>(() => PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>("ColumnString", null));
+            Assert.Throws<ArgumentNullException>(() => PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>("ColumnString", null));
         }
 
         [TestMethod]
         public void ThrowExceptionOnPropertyTypeHandlerMapperViaFieldWithNullPropertyHandler()
         {
             // Setup
-            Assert.Throws<NullReferenceException>(() => PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>(new Field("ColumnString"), null));
+            Assert.Throws<ArgumentNullException>(() => PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>(new Field("ColumnString"), null));
         }
 
         [TestMethod]
         public void ThrowExceptionOnPropertyTypeHandlerMapperViaExpressionWithNullPropertyHandler()
         {
             // Setup
-            Assert.Throws<NullReferenceException>(() => PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>(e => e.ColumnString, null));
+            Assert.Throws<ArgumentNullException>(() => PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>(e => e.ColumnString, null));
         }
 
         #endregion

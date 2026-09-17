@@ -66,9 +66,11 @@ namespace RepoDb.Reflection
         /// <param name="classProperty"></param>
         /// <returns></returns>
         internal static Expression CreatePropertyHandlerGetOptionsExpression(Expression readerExpression,
-            ClassProperty classProperty) =>
-            CreatePropertyHandlerGetOptionsExpression(readerExpression,
+            ClassProperty classProperty)
+        {
+            return CreatePropertyHandlerGetOptionsExpression(readerExpression,
                 classProperty == null ? null : Expression.Constant(classProperty));
+        }
 
         /// <summary>
         /// 
@@ -98,9 +100,11 @@ namespace RepoDb.Reflection
         /// <param name="classProperty"></param>
         /// <returns></returns>
         internal static Expression CreatePropertyHandlerSetOptionsExpression(Expression parameterExpression,
-            ClassProperty classProperty) =>
-            CreatePropertyHandlerSetOptionsExpression(parameterExpression,
+            ClassProperty classProperty)
+        {
+            return CreatePropertyHandlerSetOptionsExpression(parameterExpression,
                 classProperty == null ? null : Expression.Constant(classProperty));
+        }
 
         /// <summary>
         /// 

@@ -54,7 +54,7 @@ namespace RepoDb.UnitTests.Attributes
         {
             // Act
             var actual = PropertyCache.Get<TypeMapAttributeTestClass>()
-                .First(p => p.PropertyInfo.Name == "ColumnDateTime");
+                .First(p => string.Equals(p.PropertyInfo.Name, "ColumnDateTime", StringComparison.Ordinal));
             var result = actual.GetDbType();
             var expected = DbType.DateTime2;
 

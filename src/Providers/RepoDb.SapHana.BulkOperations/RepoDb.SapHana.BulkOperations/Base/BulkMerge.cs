@@ -275,6 +275,11 @@ namespace RepoDb
             string traceKey = SapHanaTraceKeys.SapHanaBulkMerge,
             HanaTransaction transaction = null)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
             var returnIdentity = identityBehavior == SapHanaBulkImportIdentityBehavior.ReturnIdentity && identityField != null;
@@ -786,6 +791,11 @@ namespace RepoDb
             HanaTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            if (table == null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
             var returnIdentity = identityBehavior == SapHanaBulkImportIdentityBehavior.ReturnIdentity && identityField != null;

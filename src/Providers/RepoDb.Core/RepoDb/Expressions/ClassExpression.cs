@@ -88,8 +88,10 @@ namespace RepoDb
         /// <returns>The values of the property of the data entities.</returns>
         internal static IEnumerable<TResult> GetEntitiesPropertyValues<TEntity, TResult>(IEnumerable<TEntity> entities,
             ClassProperty property)
-            where TEntity : class =>
-            GetPropertyValuesCache<TEntity, TResult>.Do(entities, property);
+            where TEntity : class
+        {
+            return GetPropertyValuesCache<TEntity, TResult>.Do(entities, property);
+        }
 
         /// <summary>
         /// 
@@ -135,7 +137,7 @@ namespace RepoDb
                 // Check the presence
                 if (property == null)
                 {
-                    throw new NullReferenceException("Property");
+                    throw new ArgumentNullException(nameof(property));
                 }
 
                 // Check the type (polymorphism)
@@ -161,7 +163,7 @@ namespace RepoDb
                 var key = property.GetHashCode();
 
                 // Get from the cache
-                if (cache.TryGetValue(key, out var func) == false)
+                if (!cache.TryGetValue(key, out var func))
                 {
                     func = GetFunc(property);
                 }
@@ -187,8 +189,10 @@ namespace RepoDb
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <returns>The properties of the class.</returns>
         public static IEnumerable<ClassProperty> GetProperties<TEntity>()
-            where TEntity : class =>
-            GetPropertiesCache<TEntity>.Do();
+            where TEntity : class
+        {
+            return GetPropertiesCache<TEntity>.Do();
+        }
 
         /// <summary>
         /// 

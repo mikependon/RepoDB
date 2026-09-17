@@ -10,6 +10,7 @@ namespace System.Runtime.CompilerServices
 {
 #if !NET
     // Required to allow init properties in netstandard
+    [AttributeUsage(AttributeTargets.All)]
     internal sealed class IsExternalInit : Attribute
     {
     }

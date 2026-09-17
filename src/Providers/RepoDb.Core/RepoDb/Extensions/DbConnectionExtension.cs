@@ -73,6 +73,11 @@ namespace RepoDb
         /// <returns>The instance of the current connection object.</returns>
         public static IDbConnection EnsureOpen(this IDbConnection connection)
         {
+            if (connection == null)
+            {
+                throw new ArgumentNullException(nameof(connection));
+            }
+
             if (connection.State != ConnectionState.Open)
             {
                 connection.Open();
@@ -89,9 +94,14 @@ namespace RepoDb
         public static async Task<IDbConnection> EnsureOpenAsync(this IDbConnection connection,
             CancellationToken cancellationToken = default)
         {
+            if (connection == null)
+            {
+                throw new ArgumentNullException(nameof(connection));
+            }
+
             if (connection.State != ConnectionState.Open)
             {
-                await ((DbConnection)connection).OpenAsync(cancellationToken);
+                await ((DbConnection)connection).OpenAsync(cancellationToken).ConfigureAwait(false);
             }
             return connection;
         }
@@ -161,10 +171,10 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
-		/// <param name="trace"></param>
+        /// <param name="trace"></param>
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
@@ -185,7 +195,7 @@ namespace RepoDb
             // Get Cache
             if (cache != null && cacheKey != null)
             {
-                var item = cache.Get<IEnumerable<dynamic>>(cacheKey, false);
+                var item = cache.Get<IEnumerable<dynamic>>(cacheKey, throwException: false);
                 if (item != null)
                 {
                     return item.Value;
@@ -194,7 +204,7 @@ namespace RepoDb
 
             // DB Fields
             var dbFields = !string.IsNullOrWhiteSpace(tableName) ?
-                DbFieldCache.Get(connection, tableName, transaction, false) : null;
+                DbFieldCache.Get(connection, tableName, transaction, enableValidation: false) : null;
 
             // Execute the actual method
             using var command = CreateDbCommandForExecution(connection: connection,
@@ -232,7 +242,7 @@ namespace RepoDb
                 // Set Cache
                 if (cache != null && cacheKey != null)
                 {
-                    cache.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
+                    cache.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false);
                 }
             }
 
@@ -311,10 +321,10 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
-		/// <param name="trace"></param>
+        /// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
@@ -337,7 +347,7 @@ namespace RepoDb
             // Get Cache
             if (cache != null && cacheKey != null)
             {
-                var item = await cache.GetAsync<IEnumerable<dynamic>>(cacheKey, false, cancellationToken);
+                var item = await cache.GetAsync<IEnumerable<dynamic>>(cacheKey, throwException: false, cancellationToken).ConfigureAwait(false);
                 if (item != null)
                 {
                     return item.Value;
@@ -346,7 +356,7 @@ namespace RepoDb
 
             // DB Fields
             var dbFields = !string.IsNullOrWhiteSpace(tableName) ?
-                await DbFieldCache.GetAsync(connection, tableName, transaction, false, cancellationToken) : null;
+                await DbFieldCache.GetAsync(connection, tableName, transaction, enableValidation: false, cancellationToken).ConfigureAwait(false) : null;
 
             // Execute the actual method
             using var command = await CreateDbCommandForExecutionAsync(connection: connection,
@@ -358,14 +368,14 @@ namespace RepoDb
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: dbFields,
-                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck).ConfigureAwait(false);
 
             // Variables
             IEnumerable<dynamic> result = null;
 
             // Before Execution
             var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
             // Silent cancellation
             if (traceResult?.CancellableTraceLog?.IsCancelled == true)
@@ -374,19 +384,19 @@ namespace RepoDb
             }
 
             // Execute
-            using (var reader = await command.ExecuteReaderAsync(cancellationToken))
+            using (var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
             {
                 result = await DataReader.ToEnumerableAsync(reader, dbFields, connection.GetDbSetting(), cancellationToken)
-                    .ToListAsync(cancellationToken);
+                    .ToListAsync(cancellationToken).ConfigureAwait(false);
 
                 // After Execution
                 await Tracer
-                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
 
                 // Set Cache
                 if (cache != null && cacheKey != null)
                 {
-                    await cache.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false, cancellationToken);
+                    await cache.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false, cancellationToken).ConfigureAwait(false);
                 }
             }
 
@@ -464,10 +474,10 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
-		/// <param name="trace"></param>
+        /// <param name="trace"></param>
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
@@ -488,7 +498,7 @@ namespace RepoDb
             // Get Cache
             if (cache != null && cacheKey != null)
             {
-                var item = cache.Get<IEnumerable<TResult>>(cacheKey, false);
+                var item = cache.Get<IEnumerable<TResult>>(cacheKey, throwException: false);
                 if (item != null)
                 {
                     return item.Value;
@@ -544,10 +554,10 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
-		/// <param name="trace"></param>
+        /// <param name="trace"></param>
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
@@ -568,7 +578,7 @@ namespace RepoDb
             // Get Cache
             if (cache != null && cacheKey != null)
             {
-                var item = cache.Get<IEnumerable<TResult>>(cacheKey, false);
+                var item = cache.Get<IEnumerable<TResult>>(cacheKey, throwException: false);
                 if (item != null)
                 {
                     return item.Value;
@@ -593,7 +603,7 @@ namespace RepoDb
             // Set Cache
             if (cache != null && cacheKey != null)
             {
-                cache.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
+                cache.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false);
             }
 
             // Set the output parameters
@@ -614,10 +624,10 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
-		/// <param name="trace"></param>
+        /// <param name="trace"></param>
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
@@ -638,7 +648,7 @@ namespace RepoDb
             // Get Cache
             if (cache != null && cacheKey != null)
             {
-                var item = cache.Get<IEnumerable<TResult>>(cacheKey, false);
+                var item = cache.Get<IEnumerable<TResult>>(cacheKey, throwException: false);
                 if (item != null)
                 {
                     return item.Value;
@@ -647,7 +657,7 @@ namespace RepoDb
 
             // DB Fields
             var dbFields = !string.IsNullOrWhiteSpace(tableName) ?
-                DbFieldCache.Get(connection, tableName, transaction, false) : null;
+                DbFieldCache.Get(connection, tableName, transaction, enableValidation: false) : null;
 
             // Execute the actual method
             using var command = CreateDbCommandForExecution(connection: connection,
@@ -685,7 +695,7 @@ namespace RepoDb
                 // Set Cache
                 if (cache != null && cacheKey != null)
                 {
-                    cache.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
+                    cache.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false);
                 }
             }
 
@@ -766,11 +776,11 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="cache"></param>
-		/// <param name="trace"></param>
+        /// <param name="trace"></param>
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
@@ -792,7 +802,7 @@ namespace RepoDb
             // Get Cache
             if (cache != null && cacheKey != null)
             {
-                var item = await cache.GetAsync<IEnumerable<TResult>>(cacheKey, false, cancellationToken);
+                var item = await cache.GetAsync<IEnumerable<TResult>>(cacheKey, throwException: false, cancellationToken).ConfigureAwait(false);
                 if (item != null)
                 {
                     return item.Value;
@@ -818,7 +828,7 @@ namespace RepoDb
                    trace: trace,
                    cancellationToken: cancellationToken,
                    tableName: tableName,
-                   skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+                   skipCommandArrayParametersCheck: skipCommandArrayParametersCheck).ConfigureAwait(false);
             }
             else
             {
@@ -835,7 +845,7 @@ namespace RepoDb
                    trace: trace,
                    cancellationToken: cancellationToken,
                    tableName: tableName,
-                   skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+                   skipCommandArrayParametersCheck: skipCommandArrayParametersCheck).ConfigureAwait(false);
             }
         }
 
@@ -850,11 +860,11 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="cache"></param>
-		/// <param name="trace"></param>
+        /// <param name="trace"></param>
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
@@ -876,7 +886,7 @@ namespace RepoDb
             // Get Cache
             if (cache != null && cacheKey != null)
             {
-                var item = await cache.GetAsync<IEnumerable<TResult>>(cacheKey, false, cancellationToken);
+                var item = await cache.GetAsync<IEnumerable<TResult>>(cacheKey, throwException: false, cancellationToken).ConfigureAwait(false);
                 if (item != null)
                 {
                     return item.Value;
@@ -897,12 +907,12 @@ namespace RepoDb
                 cache: null,
                 cancellationToken: cancellationToken,
                 tableName: tableName,
-                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck)).WithType<TResult>();
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck).ConfigureAwait(false)).WithType<TResult>();
 
             // Set Cache
             if (cache != null && cacheKey != null)
             {
-                await cache.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false, cancellationToken);
+                await cache.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false, cancellationToken).ConfigureAwait(false);
             }
 
             // Set the output parameters
@@ -923,10 +933,10 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
-		/// <param name="trace"></param>
+        /// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
@@ -949,7 +959,7 @@ namespace RepoDb
             // Get Cache
             if (cache != null && cacheKey != null)
             {
-                var item = await cache.GetAsync<IEnumerable<TResult>>(cacheKey, false, cancellationToken);
+                var item = await cache.GetAsync<IEnumerable<TResult>>(cacheKey, throwException: false, cancellationToken).ConfigureAwait(false);
                 if (item != null)
                 {
                     return item.Value;
@@ -958,7 +968,7 @@ namespace RepoDb
 
             // DB Fields
             var dbFields = !string.IsNullOrWhiteSpace(tableName) ?
-                await DbFieldCache.GetAsync(connection, tableName, transaction, false, cancellationToken) : null;
+                await DbFieldCache.GetAsync(connection, tableName, transaction, enableValidation: false, cancellationToken).ConfigureAwait(false) : null;
 
             // Execute the actual method
             using var command = await CreateDbCommandForExecutionAsync(connection: connection,
@@ -970,13 +980,13 @@ namespace RepoDb
                 cancellationToken: cancellationToken,
                 entityType: typeof(TResult),
                 dbFields: dbFields,
-                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck).ConfigureAwait(false);
 
             IEnumerable<TResult> result = null;
 
             // Before Execution
             var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
             // Silent cancellation
             if (traceResult?.CancellableTraceLog?.IsCancelled == true)
@@ -985,19 +995,19 @@ namespace RepoDb
             }
 
             // Execute
-            using (var reader = await command.ExecuteReaderAsync(cancellationToken))
+            using (var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
             {
                 result = await DataReader.ToEnumerableAsync<TResult>(reader, dbFields, connection.GetDbSetting(), cancellationToken)
-                    .ToListAsync(cancellationToken);
+                    .ToListAsync(cancellationToken).ConfigureAwait(false);
 
                 // After Execution
                 await Tracer
-                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
 
                 // Set Cache
                 if (cache != null && cacheKey != null)
                 {
-                    await cache.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false, cancellationToken);
+                    await cache.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false, cancellationToken).ConfigureAwait(false);
                 }
             }
 
@@ -1043,8 +1053,9 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
-            ITrace trace = null) =>
-            ExecuteQueryMultipleInternal(connection,
+            ITrace trace = null)
+        {
+            return ExecuteQueryMultipleInternal(connection,
                 commandText,
                 param,
                 commandType,
@@ -1055,7 +1066,8 @@ namespace RepoDb
                 transaction,
                 cache,
                 trace,
-                false);
+isDisposeConnection: false);
+        }
 
         /// <summary>
         /// 
@@ -1067,10 +1079,10 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
-		/// <param name="trace"></param>
+        /// <param name="trace"></param>
         /// <param name="isDisposeConnection"></param>
         /// <returns></returns>
         internal static QueryMultipleExtractor ExecuteQueryMultipleInternal(this IDbConnection connection,
@@ -1152,8 +1164,9 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
-            CancellationToken cancellationToken = default) =>
-            ExecuteQueryMultipleAsyncInternal(connection,
+            CancellationToken cancellationToken = default)
+        {
+            return ExecuteQueryMultipleAsyncInternal(connection,
                 commandText,
                 param,
                 commandType,
@@ -1164,8 +1177,9 @@ namespace RepoDb
                 transaction,
                 cache,
                 trace,
-                false,
+isDisposeConnection: false,
                 cancellationToken);
+        }
 
         /// <summary>
         /// 
@@ -1177,10 +1191,10 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
-		/// <param name="trace"></param>
+        /// <param name="trace"></param>
         /// <param name="isDisposeConnection"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
@@ -1215,7 +1229,7 @@ namespace RepoDb
                     cancellationToken: cancellationToken,
                     entityType: null,
                     dbFields: null,
-                    skipCommandArrayParametersCheck: false);
+                    skipCommandArrayParametersCheck: false).ConfigureAwait(false);
             }
 
             // Return
@@ -1279,7 +1293,7 @@ namespace RepoDb
         /// <param name="param"></param>
         /// <param name="commandType"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="trace"></param>
         /// <param name="entityType"></param>
@@ -1409,7 +1423,7 @@ namespace RepoDb
         /// <param name="param"></param>
         /// <param name="commandType"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
@@ -1443,7 +1457,7 @@ namespace RepoDb
                 cancellationToken: cancellationToken,
                 entityType: entityType,
                 dbFields: dbFields,
-                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck).ConfigureAwait(false);
             var hasError = false;
 
             // Ensure the DbCommand disposal
@@ -1454,12 +1468,12 @@ namespace RepoDb
                 // A hacky solution for other operations (i.e.: QueryMultipleAsync)
                 if (beforeExecutionCallbackAsync != null)
                 {
-                    traceResult = await beforeExecutionCallbackAsync(command, cancellationToken);
+                    traceResult = await beforeExecutionCallbackAsync(command, cancellationToken).ConfigureAwait(false);
                 }
 
                 // Before Execution
                 traceResult ??= await Tracer
-                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
                 // Silent cancellation
                 if (traceResult?.CancellableTraceLog?.IsCancelled == true)
@@ -1468,11 +1482,11 @@ namespace RepoDb
                 }
 
                 // Execute
-                var reader = await command.ExecuteReaderAsync(cancellationToken);
+                var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
 
                 // After Execution
                 await Tracer
-                    .InvokeAfterExecutionAsync(traceResult, trace, reader, cancellationToken);
+                    .InvokeAfterExecutionAsync(traceResult, trace, reader, cancellationToken).ConfigureAwait(false);
 
                 // Set the output parameters
                 SetOutputParameters(param);
@@ -1544,7 +1558,7 @@ namespace RepoDb
         /// <param name="param"></param>
         /// <param name="commandType"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="trace"></param>
         /// <param name="entityType"></param>
@@ -1650,7 +1664,7 @@ namespace RepoDb
         /// <param name="param"></param>
         /// <param name="commandType"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
@@ -1680,11 +1694,11 @@ namespace RepoDb
                 cancellationToken: cancellationToken,
                 entityType: entityType,
                 dbFields: dbFields,
-                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck).ConfigureAwait(false);
 
             // Before Execution
             var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
             // Silent cancellation
             if (traceResult?.CancellableTraceLog?.IsCancelled == true)
@@ -1693,11 +1707,11 @@ namespace RepoDb
             }
 
             // Execution
-            var result = await command.ExecuteNonQueryAsync(cancellationToken);
+            var result = await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
 
             // After Execution
             await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
 
             // Set the output parameters
             SetOutputParameters(param);
@@ -1886,10 +1900,10 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
-		/// <param name="trace"></param>
+        /// <param name="trace"></param>
         /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
@@ -1914,7 +1928,7 @@ namespace RepoDb
             // Get Cache
             if (cache != null && cacheKey != null)
             {
-                var item = cache.Get<TResult>(cacheKey, false);
+                var item = cache.Get<TResult>(cacheKey, throwException: false);
                 if (item != null)
                 {
                     return item.Value;
@@ -1951,7 +1965,7 @@ namespace RepoDb
             // Set Cache
             if (cache != null && cacheKey != null)
             {
-                cache.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
+                cache.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false);
             }
 
             // Set the output parameters
@@ -2031,10 +2045,10 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
-		/// <param name="trace"></param>
+        /// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
@@ -2060,7 +2074,7 @@ namespace RepoDb
             // Get Cache
             if (cache != null && cacheKey != null)
             {
-                var item = await cache.GetAsync<TResult>(cacheKey, false, cancellationToken);
+                var item = await cache.GetAsync<TResult>(cacheKey, throwException: false, cancellationToken).ConfigureAwait(false);
                 if (item != null)
                 {
                     return item.Value;
@@ -2076,11 +2090,11 @@ namespace RepoDb
                 cancellationToken: cancellationToken,
                 entityType: entityType,
                 dbFields: dbFields,
-                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck).ConfigureAwait(false);
 
             // Before Execution
             var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
             // Silent cancellation
             if (traceResult?.CancellableTraceLog?.IsCancelled == true)
@@ -2089,16 +2103,16 @@ namespace RepoDb
             }
 
             // Execution
-            var result = Converter.ToType<TResult>(await command.ExecuteScalarAsync(cancellationToken), forceAutomaticConversion);
+            var result = Converter.ToType<TResult>(await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false), forceAutomaticConversion);
 
             // After Execution
             await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
 
             // Set Cache
             if (cache != null && cacheKey != null)
             {
-                await cache.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false, cancellationToken);
+                await cache.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false, cancellationToken).ConfigureAwait(false);
             }
 
             // Set the output parameters
@@ -2122,7 +2136,7 @@ namespace RepoDb
             // Check the connection
             if (connection == null)
             {
-                throw new NullReferenceException("The connection object cannot be null.");
+                throw new ArgumentNullException(nameof(connection), "The connection object cannot be null.");
             }
 
             // Get the setting
@@ -2148,7 +2162,7 @@ namespace RepoDb
             // Check the connection
             if (connection == null)
             {
-                throw new NullReferenceException("The connection object cannot be null.");
+                throw new ArgumentNullException(nameof(connection), "The connection object cannot be null.");
             }
 
             // Get the setting
@@ -2174,7 +2188,7 @@ namespace RepoDb
             // Check the connection
             if (connection == null)
             {
-                throw new NullReferenceException("The connection object cannot be null.");
+                throw new ArgumentNullException(nameof(connection), "The connection object cannot be null.");
             }
 
             // Get the setting
@@ -2231,8 +2245,10 @@ namespace RepoDb
         ///
         /// </summary>
         /// <param name="queryGroup"></param>
-        internal static void SetOutputParameters(QueryGroup queryGroup) =>
-            SetOutputParameters(queryGroup.GetFields(true));
+        internal static void SetOutputParameters(QueryGroup queryGroup)
+        {
+            SetOutputParameters(queryGroup.GetFields(traverse: true));
+        }
 
         /// <summary>
         ///
@@ -2303,9 +2319,11 @@ namespace RepoDb
         /// <returns></returns>
         internal static Field GetAndGuardPrimaryKeyOrIdentityKey(Type entityType,
             IDbConnection connection,
-            IDbTransaction transaction) =>
-            GetAndGuardPrimaryKeyOrIdentityKey(connection, ClassMappedNameCache.Get(entityType),
+            IDbTransaction transaction)
+        {
+            return GetAndGuardPrimaryKeyOrIdentityKey(connection, ClassMappedNameCache.Get(entityType),
                 transaction, entityType);
+        }
 
         /// <summary>
         ///
@@ -2352,9 +2370,11 @@ namespace RepoDb
         internal static Task<Field> GetAndGuardPrimaryKeyOrIdentityKeyAsync(Type entityType,
             IDbConnection connection,
             IDbTransaction transaction,
-            CancellationToken cancellationToken = default) =>
-            GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, ClassMappedNameCache.Get(entityType),
+            CancellationToken cancellationToken = default)
+        {
+            return GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, ClassMappedNameCache.Get(entityType),
                 transaction, entityType, cancellationToken);
+        }
 
         /// <summary>
         ///
@@ -2371,7 +2391,7 @@ namespace RepoDb
             Type entityType,
             CancellationToken cancellationToken = default)
         {
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
             var property = GetAndGuardPrimaryKeyOrIdentityKey(entityType, dbFields) ?? GetPrimaryOrIdentityKey(entityType);
             return GetAndGuardPrimaryKeyOrIdentityKey(tableName, property);
         }
@@ -2389,7 +2409,7 @@ namespace RepoDb
             IDbTransaction transaction,
             CancellationToken cancellationToken = default)
         {
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
             var dbField = dbFields?.GetPrimary() ?? dbFields?.GetIdentity();
             return GetAndGuardPrimaryKeyOrIdentityKey(tableName, dbField);
         }
@@ -2401,8 +2421,10 @@ namespace RepoDb
         /// <param name="dbField"></param>
         /// <returns></returns>
         internal static DbField GetAndGuardPrimaryKeyOrIdentityKey(string tableName,
-            DbField dbField) =>
-            dbField ?? throw GetKeyFieldNotFoundException(tableName);
+            DbField dbField)
+        {
+            return dbField ?? throw GetKeyFieldNotFoundException(tableName);
+        }
 
         /// <summary>
         ///
@@ -2411,8 +2433,10 @@ namespace RepoDb
         /// <param name="field"></param>
         /// <returns></returns>
         internal static Field GetAndGuardPrimaryKeyOrIdentityKey(string tableName,
-            Field field) =>
-            field ?? throw GetKeyFieldNotFoundException(tableName);
+            Field field)
+        {
+            return field ?? throw GetKeyFieldNotFoundException(tableName);
+        }
 
         /// <summary>
         ///
@@ -2421,11 +2445,13 @@ namespace RepoDb
         /// <param name="dbFields"></param>
         /// <returns></returns>
         internal static Field GetAndGuardPrimaryKeyOrIdentityKey(Type entityType,
-            DbFieldCollection dbFields) =>
-            entityType == null ? null :
+            DbFieldCollection dbFields)
+        {
+            return entityType == null ? null :
                 TypeCache.Get(entityType).IsDictionaryStringObject() ?
                 GetAndGuardPrimaryKeyOrIdentityKeyForDictionaryStringObject(entityType, dbFields) :
                 GetAndGuardPrimaryKeyOrIdentityKeyForEntity(entityType, dbFields);
+        }
 
         /// <summary>
         /// 
@@ -2497,16 +2523,20 @@ namespace RepoDb
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        internal static KeyFieldNotFoundException GetKeyFieldNotFoundException(string context) =>
-            new KeyFieldNotFoundException($"No primary key found at the '{context}'.");
+        internal static KeyFieldNotFoundException GetKeyFieldNotFoundException(string context)
+        {
+            return new KeyFieldNotFoundException($"No primary key found at the '{context}'.");
+        }
 
         /// <summary>
         ///
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        internal static KeyFieldNotFoundException GetKeyFieldNotFoundException(Type type) =>
-            new KeyFieldNotFoundException($"No primary key found at the target table and also to the given '{type.FullName}' object.");
+        internal static KeyFieldNotFoundException GetKeyFieldNotFoundException(Type type)
+        {
+            return new KeyFieldNotFoundException($"No primary key found at the target table and also to the given '{type.FullName}' object.");
+        }
 
         #endregion
 
@@ -2576,12 +2606,12 @@ namespace RepoDb
                 var cachedType = TypeCache.Get(whatType);
                 if (cachedType.IsClassType() || cachedType.IsAnonymousType())
                 {
-                    var field = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction, whatType, cancellationToken);
+                    var field = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction, whatType, cancellationToken).ConfigureAwait(false);
                     queryGroup = WhatToQueryGroup<T>(field, what);
                 }
                 else
                 {
-                    var dbField = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction, cancellationToken);
+                    var dbField = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
                     queryGroup = WhatToQueryGroup<T>(dbField, what);
                 }
             }
@@ -2600,7 +2630,7 @@ namespace RepoDb
             T what,
             IEnumerable<DbField> dbFields)
         {
-            var key = dbFields?.FirstOrDefault(p => p.IsPrimary == true) ?? dbFields?.FirstOrDefault(p => p.IsIdentity == true);
+            var key = dbFields?.FirstOrDefault(p => p.IsPrimary) ?? dbFields?.FirstOrDefault(p => p.IsIdentity);
             if (key == null)
             {
                 throw new KeyFieldNotFoundException($"No primary key and identity key found at the table '{tableName}'.");
@@ -2661,7 +2691,7 @@ namespace RepoDb
             {
                 return queryGroup;
             }
-            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(entityType, connection, transaction, cancellationToken);
+            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(entityType, connection, transaction, cancellationToken).ConfigureAwait(false);
             return WhatToQueryGroup(key, what);
         }
 
@@ -2710,7 +2740,7 @@ namespace RepoDb
             }
             if (TypeCache.Get(type).IsClassType())
             {
-                var classProperty = PropertyCache.Get(typeof(T), field, true);
+                var classProperty = PropertyCache.Get(typeof(T), field, includeMappings: true);
                 return new QueryGroup(classProperty?.PropertyInfo.AsQueryField(what));
             }
             else
@@ -2748,7 +2778,7 @@ namespace RepoDb
                 var type = TypeCache.Get(typeof(T)).GetUnderlyingType();
                 if (TypeCache.Get(type).IsAnonymousType() || type == StaticType.Object)
                 {
-                    return QueryGroup.Parse(what, false);
+                    return QueryGroup.Parse(what, throwException: false);
                 }
             }
             return null;
@@ -2772,7 +2802,7 @@ namespace RepoDb
             var type = obj.GetType();
             if (TypeCache.Get(type).IsClassType())
             {
-                return QueryGroup.Parse(obj, true);
+                return QueryGroup.Parse(obj, throwException: true);
             }
             else
             {
@@ -2859,7 +2889,7 @@ namespace RepoDb
         {
             var type = entity?.GetType() ?? typeof(TEntity);
             return TypeCache.Get(type).IsDictionaryStringObject() ? ToQueryGroup(field, (IDictionary<string, object>)entity) :
-                ToQueryGroup(PropertyCache.Get<TEntity>(field, true) ?? PropertyCache.Get(type, field, true), entity);
+                ToQueryGroup(PropertyCache.Get<TEntity>(field, includeMappings: true) ?? PropertyCache.Get(type, field, includeMappings: true), entity);
         }
 
         /// <summary>
@@ -2871,8 +2901,10 @@ namespace RepoDb
         /// <returns></returns>
         internal static QueryGroup ToQueryGroup<TEntity>(ClassProperty property,
             TEntity entity)
-            where TEntity : class =>
-            ToQueryGroup(property.PropertyInfo.AsQueryField(entity));
+            where TEntity : class
+        {
+            return ToQueryGroup(property.PropertyInfo.AsQueryField(entity));
+        }
 
         /// <summary>
         ///
@@ -2909,8 +2941,10 @@ namespace RepoDb
         /// </summary>
         /// <param name="entityType"></param>
         /// <returns></returns>
-        internal static Field GetPrimaryOrIdentityKey(Type entityType) =>
-            entityType != null ? (PrimaryCache.Get(entityType) ?? IdentityCache.Get(entityType))?.AsField() : null;
+        internal static Field GetPrimaryOrIdentityKey(Type entityType)
+        {
+            return entityType != null ? (PrimaryCache.Get(entityType) ?? IdentityCache.Get(entityType))?.AsField() : null;
+        }
 
         /// <summary>
         ///
@@ -2922,9 +2956,9 @@ namespace RepoDb
         {
             if (entities == null)
             {
-                throw new NullReferenceException("The entities must not be null.");
+                throw new ArgumentNullException(nameof(entities), "The entities must not be null.");
             }
-            if (entities.Any() == false)
+            if (!entities.Any())
             {
                 throw new EmptyException("The entities must not be empty.");
             }
@@ -2954,8 +2988,10 @@ namespace RepoDb
         internal static void WhereToCommandParameters(DbCommand command,
             QueryGroup where,
             Type entityType,
-            DbFieldCollection dbFields) =>
-            DbCommandExtension.CreateParameters(command, where, null, entityType, dbFields);
+            DbFieldCollection dbFields)
+        {
+            DbCommandExtension.CreateParameters(command, where, propertiesToSkip: null, entityType, dbFields);
+        }
 
         /// <summary>
         ///
@@ -3006,7 +3042,7 @@ namespace RepoDb
                 }
             }
 
-            if (queryFields.Any() != true)
+            if (!queryFields.Any())
             {
                 throw new MissingFieldsException();
             }
@@ -3024,8 +3060,10 @@ namespace RepoDb
         /// <returns></returns>
         internal static IEnumerable<TResult> ExtractPropertyValues<TEntity, TResult>(IEnumerable<TEntity> entities,
             ClassProperty property)
-            where TEntity : class =>
-            ClassExpression.GetEntitiesPropertyValues<TEntity, TResult>(entities, property);
+            where TEntity : class
+        {
+            return ClassExpression.GetEntitiesPropertyValues<TEntity, TResult>(entities, property);
+        }
 
         /// <summary>
         ///
@@ -3037,7 +3075,7 @@ namespace RepoDb
             where TEntity : class
         {
             var typeOfEntity = entity?.GetType() ?? typeof(TEntity);
-            return TypeCache.Get(typeOfEntity).IsClassType() == false ? Field.Parse(entity) : FieldCache.Get(typeOfEntity);
+            return !TypeCache.Get(typeOfEntity).IsClassType() ? Field.Parse(entity) : FieldCache.Get(typeOfEntity);
         }
 
         /// <summary>
@@ -3047,8 +3085,10 @@ namespace RepoDb
         /// <param name="fields"></param>
         /// <returns></returns>
         internal static IEnumerable<Field> GetQualifiedFields<TEntity>(IEnumerable<Field> fields)
-            where TEntity : class =>
-            (fields ?? (TypeCache.Get(typeof(TEntity)).IsDictionaryStringObject() == false ? FieldCache.Get<TEntity>() : null)).AsList();
+            where TEntity : class
+        {
+            return (fields ?? (!TypeCache.Get(typeof(TEntity)).IsDictionaryStringObject() ? FieldCache.Get<TEntity>() : null)).AsList();
+        }
 
         /// <summary>
         ///
@@ -3059,8 +3099,10 @@ namespace RepoDb
         /// <returns></returns>
         internal static IEnumerable<Field> GetQualifiedFields<TEntity>(IEnumerable<Field> fields,
             TEntity entity)
-            where TEntity : class =>
-            (fields ?? GetQualifiedFields(entity)).AsList();
+            where TEntity : class
+        {
+            return (fields ?? GetQualifiedFields(entity)).AsList();
+        }
 
         /// <summary>
         ///
@@ -3089,7 +3131,7 @@ namespace RepoDb
 
             // Get the variables needed
             var parameters = values.Select((_, index) =>
-                string.Concat(parameterName, index.ToString()).AsParameter(dbSetting));
+                string.Concat(parameterName, index.ToString(System.Globalization.CultureInfo.InvariantCulture)).AsParameter(dbSetting));
 
             // Replace the target parameter
             return commandText.Replace(parameterName.AsParameter(dbSetting), parameters.Join(", "));
@@ -3167,7 +3209,7 @@ namespace RepoDb
             ValidateTransactionConnectionObject(connection, transaction);
 
             // Open
-            await connection.EnsureOpenAsync(cancellationToken);
+            await connection.EnsureOpenAsync(cancellationToken).ConfigureAwait(false);
 
             // Call
             return CreateDbCommandForExecutionInternal(connection: connection,
@@ -3222,7 +3264,7 @@ namespace RepoDb
 
             // ArrayParameters
             var commandArrayParametersText = (CommandArrayParametersText)null;
-            if (param != null && skipCommandArrayParametersCheck == false)
+            if (param != null && !skipCommandArrayParametersCheck)
             {
                 commandArrayParametersText = GetCommandArrayParametersText(commandText,
                    param,
@@ -3329,7 +3371,7 @@ namespace RepoDb
                 var propertyHandler = PropertyHandlerCache.Get<object>(property.DeclaringType, property);
                 if (propertyHandler != null ||
                     property.PropertyType == StaticType.String ||
-                    StaticType.IEnumerable.IsAssignableFrom(property.PropertyType) == false)
+!StaticType.IEnumerable.IsAssignableFrom(property.PropertyType))
                 {
                     continue;
                 }
@@ -3524,7 +3566,6 @@ namespace RepoDb
                 {
                     commandArrayParametersText = new CommandArrayParametersText()
                     {
-                        // TODO: First element from the array?
                         DbType = queryField.Parameter.DbType
                     };
                 }
@@ -3558,8 +3599,10 @@ namespace RepoDb
         /// <returns></returns>
         private static CommandArrayParametersText GetCommandArrayParametersText(string commandText,
             QueryGroup queryGroup,
-            IDbSetting dbSetting) =>
-            GetCommandArrayParametersText(commandText, queryGroup.GetFields(true), dbSetting);
+            IDbSetting dbSetting)
+        {
+            return GetCommandArrayParametersText(commandText, queryGroup.GetFields(traverse: true), dbSetting);
+        }
 
         /// <summary>
         ///
@@ -3576,7 +3619,7 @@ namespace RepoDb
             if (value == null ||
                 propertyHandler != null ||
                 value is string ||
-                value is IEnumerable values == false)
+!(value is IEnumerable values))
             {
                 return null;
             }
@@ -3605,7 +3648,7 @@ namespace RepoDb
 
             // Items
             var items = values.WithType<object>();
-            if (items.Any() != true)
+            if (!items.Any())
             {
                 var parameter = parameterName.AsParameter(dbSetting);
                 return commandText.Replace(parameter, string.Concat("(SELECT ", parameter, " WHERE 1 = 0)"));
@@ -3613,7 +3656,7 @@ namespace RepoDb
 
             // Get the variables needed
             var parameters = items.Select((_, index) =>
-                string.Concat(parameterName, index.ToString()).AsParameter(dbSetting));
+                string.Concat(parameterName, index.ToString(System.Globalization.CultureInfo.InvariantCulture)).AsParameter(dbSetting));
 
             // Replace the target parameter
             return commandText.Replace(parameterName.AsParameter(dbSetting), parameters.Join(", "));
@@ -3659,8 +3702,10 @@ namespace RepoDb
         /// <param name="entities"></param>
         /// <returns></returns>
         internal static string GetMappedName<TEntity>(IEnumerable<TEntity> entities)
-            where TEntity : class =>
-            GetMappedName<TEntity>(entities?.FirstOrDefault());
+            where TEntity : class
+        {
+            return GetMappedName<TEntity>(entities?.FirstOrDefault());
+        }
 
         /// <summary>
         /// 
@@ -3669,8 +3714,10 @@ namespace RepoDb
         /// <param name="entity"></param>
         /// <returns></returns>
         internal static string GetMappedName<TEntity>(TEntity entity)
-            where TEntity : class =>
-            entity != null ? ClassMappedNameCache.Get(entity.GetType()) : ClassMappedNameCache.Get<TEntity>();
+            where TEntity : class
+        {
+            return entity != null ? ClassMappedNameCache.Get(entity.GetType()) : ClassMappedNameCache.Get<TEntity>();
+        }
 
         /// <summary>
         /// 
@@ -3679,8 +3726,10 @@ namespace RepoDb
         /// <param name="entities"></param>
         /// <returns></returns>
         internal static Type GetEntityType<TEntity>(IEnumerable<TEntity> entities)
-            where TEntity : class =>
-            GetEntityType<TEntity>(entities?.FirstOrDefault());
+            where TEntity : class
+        {
+            return GetEntityType<TEntity>(entities?.FirstOrDefault());
+        }
 
         /// <summary>
         /// 
@@ -3689,8 +3738,10 @@ namespace RepoDb
         /// <param name="entity"></param>
         /// <returns></returns>
         internal static Type GetEntityType<TEntity>(TEntity entity)
-            where TEntity : class =>
-            entity?.GetType() ?? typeof(TEntity);
+            where TEntity : class
+        {
+            return entity?.GetType() ?? typeof(TEntity);
+        }
 
 
         /// <summary>

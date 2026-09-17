@@ -495,9 +495,10 @@ namespace RepoDb
         /// <returns></returns>
         private static SapHanaBulkImportPseudoTableType ResolvePseudoTableType(SapHanaBulkImportPseudoTableType pseudoTableType,
             int? rowCount) =>
-            pseudoTableType == SapHanaBulkImportPseudoTableType.Auto && rowCount.GetValueOrDefault() >= SapHanaConstants.RowCountThresholdForPhysicalTable ?
-                SapHanaBulkImportPseudoTableType.Physical :
-                    SapHanaBulkImportPseudoTableType.Physical;
+            SapHanaBulkImportPseudoTableType.Physical; // TODO: Revisit the Memory
+            // pseudoTableType == SapHanaBulkImportPseudoTableType.Auto && rowCount.GetValueOrDefault() >= SapHanaConstants.RowCountThresholdForPhysicalTable ?
+            //     SapHanaBulkImportPseudoTableType.Physical :
+            //         SapHanaBulkImportPseudoTableType.Physical;
 
         /// <summary>
         ///

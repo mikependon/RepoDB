@@ -38,8 +38,10 @@ namespace RepoDb
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <param name="name">The name of the database object (ie: Table, View).</param>
         public static void Add<TEntity>(string name)
-            where TEntity : class =>
+            where TEntity : class
+        {
             Add(typeof(TEntity), name);
+        }
 
         /// <summary>
         /// Adds a mapping between a .NET CLR type and a database object (i.e.: Table, View).
@@ -49,8 +51,10 @@ namespace RepoDb
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         public static void Add<TEntity>(string name,
             bool force)
-            where TEntity : class =>
+            where TEntity : class
+        {
             Add(typeof(TEntity), name, force);
+        }
 
         /// <summary>
         /// Adds a mapping between a .NET CLR type and a database object (i.e.: Table, View).
@@ -58,8 +62,10 @@ namespace RepoDb
         /// <param name="type">The target type.</param>
         /// <param name="name">The name of the database object (ie: Table, View).</param>
         public static void Add(Type type,
-            string name) =>
-            Add(type, name, false);
+            string name)
+        {
+            Add(type, name, force: false);
+        }
 
         /// <summary>
         /// Adds a mapping between a .NET CLR type and a database object (i.e.: Table, View).
@@ -105,8 +111,10 @@ namespace RepoDb
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <returns>The mapped name of the class.</returns>
         public static string Get<TEntity>()
-            where TEntity : class =>
-            Get(typeof(TEntity));
+            where TEntity : class
+        {
+            return Get(typeof(TEntity));
+        }
 
         /// <summary>
         /// Get the existing mapped database object of the .NET CLR type.
@@ -133,8 +141,10 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The target type.</typeparam>
         public static void Remove<TEntity>()
-            where TEntity : class =>
+            where TEntity : class
+        {
             Remove(typeof(TEntity));
+        }
 
         /// <summary>
         /// Remove the exising mapped database object on the .NET CLR type.
@@ -155,8 +165,10 @@ namespace RepoDb
         /// <summary>
         /// Clears all the existing cached objects.
         /// </summary>
-        public static void Clear() =>
+        public static void Clear()
+        {
             maps.Clear();
+        }
 
         #endregion
     }

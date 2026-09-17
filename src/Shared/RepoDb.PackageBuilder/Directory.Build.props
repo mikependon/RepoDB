@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
   <PropertyGroup>
     <Authors>Michael Camara Pendon and Open-Source Software Contributors</Authors>
     <Company>RepoDb</Company>
@@ -20,7 +21,6 @@
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
   </PropertyGroup>
   <Target Name="SetGenerateBeforeBuild" BeforeTargets="Build">
-    <!-- IsPackable is set in project files, so delay evaluating this -->
     <PropertyGroup>
       <GenerateDocumentationFile Condition="'$(IsPackable)' != 'false'">true</GenerateDocumentationFile>
     </PropertyGroup>

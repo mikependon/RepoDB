@@ -16,7 +16,20 @@ namespace RepoDb.Requests
     /// <summary>
     /// A class that holds the value of the 'Truncate' operation arguments.
     /// </summary>
-    internal class TruncateRequest : BaseRequest
+    /// <remarks>
+    /// Creates a new instance of <see cref="TruncateRequest"/> object.
+    /// </remarks>
+    /// <param name="name">The name of the request.</param>
+    /// <param name="connection">The connection object.</param>
+    /// <param name="transaction">The transaction object.</param>
+    /// <param name="statementBuilder">The statement builder.</param>
+    internal class TruncateRequest(string name,
+        IDbConnection connection,
+        IDbTransaction transaction,
+        IStatementBuilder statementBuilder = null) : BaseRequest(name,
+              connection,
+              transaction,
+              statementBuilder)
     {
         private int? hashCode = null;
 
@@ -39,23 +52,6 @@ namespace RepoDb.Requests
             Type = type;
         }
 
-        /// <summary>
-        /// Creates a new instance of <see cref="TruncateRequest"/> object.
-        /// </summary>
-        /// <param name="name">The name of the request.</param>
-        /// <param name="connection">The connection object.</param>
-        /// <param name="transaction">The transaction object.</param>
-        /// <param name="statementBuilder">The statement builder.</param>
-        public TruncateRequest(string name,
-            IDbConnection connection,
-            IDbTransaction transaction,
-            IStatementBuilder statementBuilder = null)
-            : base(name,
-                  connection,
-                  transaction,
-                  statementBuilder)
-        { }
-
         #region Equality and comparers
 
         /// <summary>
@@ -71,10 +67,10 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = HashCode.Combine(base.GetHashCode(), Name, ".Truncate");
+            var computedHashCode = HashCode.Combine(base.GetHashCode(), Name, ".Truncate");
 
             // Set and return the hashcode
-            return (this.hashCode = hashCode).Value;
+            return (this.hashCode = computedHashCode).Value;
         }
         
         #endregion

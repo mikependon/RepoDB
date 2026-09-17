@@ -15,15 +15,13 @@ namespace RepoDb.Attributes.Parameter
     /// An attribute that is being used to define a value to the <see cref="DbParameter.Direction"/>
     /// property via a class property mapping.
     /// </summary>
-    public class DirectionAttribute : PropertyValueAttribute
+    /// <remarks>
+    /// Creates a new instance of <see cref="DirectionAttribute"/> class.
+    /// </remarks>
+    /// <param name="direction">The value that indicates the direction of the parameter.</param>
+    [System.AttributeUsage(System.AttributeTargets.All)]
+    public class DirectionAttribute(ParameterDirection direction) : PropertyValueAttribute(typeof(DbParameter), nameof(DbParameter.Direction), direction)
     {
-        /// <summary>
-        /// Creates a new instance of <see cref="DirectionAttribute"/> class.
-        /// </summary>
-        /// <param name="direction">The value that indicates the direction of the parameter.</param>
-        public DirectionAttribute(ParameterDirection direction)
-            : base(typeof(DbParameter), nameof(DbParameter.Direction), direction)
-        { }
 
         /// <summary>
         /// Gets the mapped value that indicates whether the parameter is input, output, bidirectional 

@@ -14,15 +14,13 @@ namespace RepoDb.Attributes.Parameter.SqlServer
     /// An attribute used to define a value to the <see cref="SqlParameter.XmlSchemaCollectionName"/>
     /// property via an entity property before the actual execution.
     /// </summary>
-    public class XmlSchemaCollectionNameAttribute : PropertyValueAttribute
+    /// <remarks>
+    /// Creates a new instance of <see cref="XmlSchemaCollectionNameAttribute"/> class.
+    /// </remarks>
+    /// <param name="collectionName">The value of the schema collection.</param>
+    [System.AttributeUsage(System.AttributeTargets.All)]
+    public class XmlSchemaCollectionNameAttribute(string collectionName) : PropertyValueAttribute(typeof(SqlParameter), nameof(SqlParameter.XmlSchemaCollectionName), collectionName)
     {
-        /// <summary>
-        /// Creates a new instance of <see cref="XmlSchemaCollectionNameAttribute"/> class.
-        /// </summary>
-        /// <param name="collectionName">The value of the schema collection.</param>
-        public XmlSchemaCollectionNameAttribute(string collectionName)
-            : base(typeof(SqlParameter), nameof(SqlParameter.XmlSchemaCollectionName), collectionName)
-        { }
 
         /// <summary>
         /// Gets the mapped value of the schema collection of the parameter.

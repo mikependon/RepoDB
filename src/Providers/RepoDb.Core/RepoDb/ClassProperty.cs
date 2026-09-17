@@ -43,16 +43,16 @@ namespace RepoDb
             declaringType = parentType;
             PropertyInfo = property;
 
-            typeMapAttribute = new Lazy<TypeMapAttribute>(() => PropertyInfo.GetCustomAttribute<TypeMapAttribute>(), true);
-            propertyHandlerAttribute = new Lazy<PropertyHandlerAttribute>(() => PropertyInfo.GetCustomAttribute<PropertyHandlerAttribute>(), true);
-            dbType = new Lazy<DbType?>(() => PropertyInfo.GetDbType(), true);
-            propertyValueAttributes = new Lazy<IEnumerable<PropertyValueAttribute>>(() => PropertyInfo.GetPropertyValueAttributes(GetDeclaringType()), true);
+            typeMapAttribute = new Lazy<TypeMapAttribute>(() => PropertyInfo.GetCustomAttribute<TypeMapAttribute>(), isThreadSafe: true);
+            propertyHandlerAttribute = new Lazy<PropertyHandlerAttribute>(() => PropertyInfo.GetCustomAttribute<PropertyHandlerAttribute>(), isThreadSafe: true);
+            dbType = new Lazy<DbType?>(() => PropertyInfo.GetDbType(), isThreadSafe: true);
+            propertyValueAttributes = new Lazy<IEnumerable<PropertyValueAttribute>>(() => PropertyInfo.GetPropertyValueAttributes(GetDeclaringType()), isThreadSafe: true);
             propertyValueAttribute = new Lazy<PropertyValueAttribute>(() =>
             {
                 return (PropertyInfo.GetCustomAttribute<DbTypeAttribute>() ?? PropertyInfo.GetCustomAttribute<TypeMapAttribute>()) ??
                        (GetPropertyValueAttributes()
                            .LastOrDefault(e => string.Equals(nameof(IDbDataParameter.ParameterName), e.PropertyName, StringComparison.OrdinalIgnoreCase)));
-            }, true);
+            }, isThreadSafe: true);
         }
 
         #region Properties
@@ -75,17 +75,21 @@ namespace RepoDb
         /// Returns the string that represent the current <see cref="ClassProperty"/> object.
         /// </summary>
         /// <returns>The unquoted name.</returns>
-        public override string ToString() =>
-            string.Concat("ClassProperty :: Name = ", GetMappedName(), " (", PropertyInfo.PropertyType.FullName, "), ",
+        public override string ToString()
+        {
+            return string.Concat("ClassProperty :: Name = ", GetMappedName(), " (", PropertyInfo.PropertyType.FullName, "), ",
                 "DeclaringType = ", GetDeclaringType().FullName);
+        }
 
         /// <summary>
         /// Gets the declaring parent type of the current property info. If the class inherits an interface, then this will return 
         /// the derived class type instead (if there is), otherwise the <see cref="PropertyInfo.DeclaringType"/> property.
         /// </summary>
         /// <returns>The declaring type.</returns>
-        public Type GetDeclaringType() =>
-            (declaringType ?? PropertyInfo.DeclaringType);
+        public Type GetDeclaringType()
+        {
+            return (declaringType ?? PropertyInfo.DeclaringType);
+        }
 
         /*
          * AsField
@@ -254,8 +258,10 @@ namespace RepoDb
         /// Gets the mapped property handler object for the current property.
         /// </summary>
         /// <returns>The mapped property handler object.</returns>
-        public object GetPropertyHandler() =>
-            GetPropertyHandler<object>();
+        public object GetPropertyHandler()
+        {
+            return GetPropertyHandler<object>();
+        }
 
         /// <summary>
         /// Gets the mapped property handler object for the current property.
@@ -277,8 +283,10 @@ namespace RepoDb
         /// Gets the mapped-name for the current property.
         /// </summary>
         /// <returns>The mapped-name value.</returns>
-        public string GetMappedName() =>
-            mappedName ??= PropertyMappedNameCache.Get(GetDeclaringType(), PropertyInfo);
+        public string GetMappedName()
+        {
+            return mappedName ??= PropertyMappedNameCache.Get(GetDeclaringType(), PropertyInfo);
+        }
 
         /*
          * PropertyHandlerAttributes
@@ -302,8 +310,10 @@ namespace RepoDb
         /// Returns the hashcode of the <see cref="PropertyInfo"/> object of this instance.
         /// </summary>
         /// <returns>The hash code value.</returns>
-        public override int GetHashCode() =>
-            HashCode.Combine(GetDeclaringType(), PropertyInfo.GenerateCustomizedHashCode(GetDeclaringType()));
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(GetDeclaringType(), PropertyInfo.GenerateCustomizedHashCode(GetDeclaringType()));
+        }
 
         /// <summary>
         /// Compare the current instance to the other object instance.
@@ -324,9 +334,10 @@ namespace RepoDb
         /// </summary>
         /// <param name="other">The object to be compared.</param>
         /// <returns>True if the two instance is the same.</returns>
-        public bool Equals(ClassProperty other) =>
-            PropertyInfo.Equals(other.PropertyInfo);
-
+        public bool Equals(ClassProperty other)
+        {
+            return PropertyInfo.Equals(other.PropertyInfo);
+        }
 
         /// <summary>
         /// Compares the equality of the two <see cref="ClassProperty"/> objects.
@@ -351,8 +362,7 @@ namespace RepoDb
         /// <param name="objB">The second <see cref="ClassProperty"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
         public static bool operator !=(ClassProperty objA,
-            ClassProperty objB) =>
-            (objA == objB) == false;
+            ClassProperty objB) => !(objA == objB);
 
         #endregion
     }

@@ -218,9 +218,10 @@ namespace RepoDb
         /// <returns></returns>
         private static ClickHouseBulkImportPseudoTableType ResolvePseudoTableType(ClickHouseBulkImportPseudoTableType pseudoTableType,
             int? rowCount) =>
-            pseudoTableType == ClickHouseBulkImportPseudoTableType.Auto && rowCount.GetValueOrDefault() >= ClickHouseConstants.RowCountThresholdForPhysicalTable ?
-                ClickHouseBulkImportPseudoTableType.Physical :
-                    ClickHouseBulkImportPseudoTableType.Physical;
+            ClickHouseBulkImportPseudoTableType.Physical; // TODO: Revisit the Memory
+            // pseudoTableType == ClickHouseBulkImportPseudoTableType.Auto && rowCount.GetValueOrDefault() >= ClickHouseConstants.RowCountThresholdForPhysicalTable ?
+            //     ClickHouseBulkImportPseudoTableType.Physical :
+            //         ClickHouseBulkImportPseudoTableType.Physical;
 
         /// <summary>
         /// 

@@ -18,7 +18,30 @@ namespace RepoDb.Requests
     /// <summary>
     /// A class that holds the value of the 'Query' operation arguments.
     /// </summary>
-    internal class QueryRequest : BaseRequest
+    /// <remarks>
+    /// Creates a new instance of <see cref="QueryRequest"/> object.
+    /// </remarks>
+    /// <param name="name">The name of the request.</param>
+    /// <param name="connection">The connection object.</param>
+    /// <param name="transaction">The transaction object.</param>
+    /// <param name="fields">The list of the target fields.</param>
+    /// <param name="where">The query expression.</param>
+    /// <param name="orderBy">The list of order fields.</param>
+    /// <param name="top">The filter for the rows.</param>
+    /// <param name="hints">The hints for the table.</param>
+    /// <param name="statementBuilder">The statement builder.</param>
+    internal class QueryRequest(string name,
+        IDbConnection connection,
+        IDbTransaction transaction,
+        IEnumerable<Field> fields = null,
+        QueryGroup where = null,
+        IEnumerable<OrderField> orderBy = null,
+        int? top = null,
+        string hints = null,
+        IStatementBuilder statementBuilder = null) : BaseRequest(name,
+              connection,
+              transaction,
+              statementBuilder)
     {
         private int? hashCode = null;
 
@@ -57,62 +80,29 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="QueryRequest"/> object.
-        /// </summary>
-        /// <param name="name">The name of the request.</param>
-        /// <param name="connection">The connection object.</param>
-        /// <param name="transaction">The transaction object.</param>
-        /// <param name="fields">The list of the target fields.</param>
-        /// <param name="where">The query expression.</param>
-        /// <param name="orderBy">The list of order fields.</param>
-        /// <param name="top">The filter for the rows.</param>
-        /// <param name="hints">The hints for the table.</param>
-        /// <param name="statementBuilder">The statement builder.</param>
-        public QueryRequest(string name,
-            IDbConnection connection,
-            IDbTransaction transaction,
-            IEnumerable<Field> fields = null,
-            QueryGroup where = null,
-            IEnumerable<OrderField> orderBy = null,
-            int? top = null,
-            string hints = null,
-            IStatementBuilder statementBuilder = null)
-            : base(name,
-                  connection,
-                  transaction,
-                  statementBuilder)
-        {
-            Fields = fields?.AsList();
-            Where = where;
-            OrderBy = orderBy?.AsList();
-            Top = top;
-            Hints = hints;
-        }
-
-        /// <summary>
         /// Gets the list of the target fields.
         /// </summary>
-        public IEnumerable<Field> Fields { get; set; }
+        public IEnumerable<Field> Fields { get; set; } = fields?.AsList();
 
         /// <summary>
         /// Gets the query expression used.
         /// </summary>
-        public QueryGroup Where { get; }
+        public QueryGroup Where { get; } = where;
 
         /// <summary>
         /// Gets the list of the order fields.
         /// </summary>
-        public IEnumerable<OrderField> OrderBy { get; }
+        public IEnumerable<OrderField> OrderBy { get; } = orderBy?.AsList();
 
         /// <summary>
         /// Gets the filter for the rows.
         /// </summary>
-        public int? Top { get; }
+        public int? Top { get; } = top;
 
         /// <summary>
         /// Gets the hints for the table.
         /// </summary>
-        public string Hints { get; }
+        public string Hints { get; } = hints;
 
         #region Equality and comparers
 
@@ -129,21 +119,21 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = HashCode.Combine(base.GetHashCode(), Name, ".Query");
+            var computedHashCode = HashCode.Combine(base.GetHashCode(), Name, ".Query");
 
             // Get the qualifier <see cref="Field"/> objects
             if (Fields != null)
             {
                 foreach (var field in Fields)
                 {
-                    hashCode = HashCode.Combine(hashCode, field);
+                    computedHashCode = HashCode.Combine(computedHashCode, field);
                 }
             }
 
             // Add the expression
             if (Where != null)
             {
-                hashCode = HashCode.Combine(hashCode, Where);
+                computedHashCode = HashCode.Combine(computedHashCode, Where);
             }
 
             // Add the order fields
@@ -151,24 +141,24 @@ namespace RepoDb.Requests
             {
                 foreach (var orderField in OrderBy)
                 {
-                    hashCode = HashCode.Combine(hashCode, orderField);
+                    computedHashCode = HashCode.Combine(computedHashCode, orderField);
                 }
             }
 
             // Add the filter
             if (Top != null)
             {
-                hashCode = HashCode.Combine(hashCode, Top);
+                computedHashCode = HashCode.Combine(computedHashCode, Top);
             }
 
             // Add the hints
             if (!string.IsNullOrWhiteSpace(Hints))
             {
-                hashCode = HashCode.Combine(hashCode, Hints);
+                computedHashCode = HashCode.Combine(computedHashCode, Hints);
             }
 
             // Set and return the hashcode
-            return (this.hashCode = hashCode).Value;
+            return (this.hashCode = computedHashCode).Value;
         }
 
         #endregion

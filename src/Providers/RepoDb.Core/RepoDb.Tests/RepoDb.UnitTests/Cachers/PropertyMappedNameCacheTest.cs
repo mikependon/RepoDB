@@ -58,7 +58,7 @@ namespace RepoDb.UnitTests.Cachers
         {
             // Act
             var property = PropertyCache.Get<PropertyMappedNameCacheTestClass>()
-                .First(p => p.PropertyInfo.Name == "PropertyString");
+                .First(p => string.Equals(p.PropertyInfo.Name, "PropertyString", StringComparison.Ordinal));
             var expected = "PropertyName";
 
             // Assert
@@ -69,7 +69,7 @@ namespace RepoDb.UnitTests.Cachers
         public void ThrowExcpetionOnPropertyMappingCacheIfThePropertyIsNull()
         {
             // Setup
-            Assert.Throws<NullReferenceException>(() => PropertyMappedNameCache.Get<PropertyMappedNameCacheTestClass>((Field)null));
+            Assert.Throws<ArgumentNullException>(() => PropertyMappedNameCache.Get<PropertyMappedNameCacheTestClass>((Field)null));
         }
 
         #endregion

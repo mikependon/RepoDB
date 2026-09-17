@@ -18,7 +18,28 @@ namespace RepoDb.Requests
     /// <summary>
     /// A class that holds the value of the 'UpdateAll' operation arguments.
     /// </summary>
-    internal class UpdateAllRequest : BaseRequest
+    /// <remarks>
+    /// Creates a new instance of <see cref="UpdateAllRequest"/> object.
+    /// </remarks>
+    /// <param name="name">The name of the request.</param>
+    /// <param name="connection">The connection object.</param>
+    /// <param name="transaction">The transaction object.</param>
+    /// <param name="fields">The list of the target fields.</param>
+    /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
+    /// <param name="batchSize">The batch size of the update operation.</param>
+    /// <param name="hints">The hints for the table.</param>
+    /// <param name="statementBuilder">The statement builder.</param>
+    internal class UpdateAllRequest(string name,
+        IDbConnection connection,
+        IDbTransaction transaction,
+        IEnumerable<Field> fields = null,
+        IEnumerable<Field> qualifiers = null,
+        int batchSize = Constant.DefaultBatchOperationSize,
+        string hints = null,
+        IStatementBuilder statementBuilder = null) : BaseRequest(name,
+            connection,
+            transaction,
+            statementBuilder)
     {
         private int? hashCode = null;
 
@@ -54,54 +75,24 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="UpdateAllRequest"/> object.
-        /// </summary>
-        /// <param name="name">The name of the request.</param>
-        /// <param name="connection">The connection object.</param>
-        /// <param name="transaction">The transaction object.</param>
-        /// <param name="fields">The list of the target fields.</param>
-        /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
-        /// <param name="batchSize">The batch size of the update operation.</param>
-        /// <param name="hints">The hints for the table.</param>
-        /// <param name="statementBuilder">The statement builder.</param>
-        public UpdateAllRequest(string name,
-            IDbConnection connection,
-            IDbTransaction transaction,
-            IEnumerable<Field> fields = null,
-            IEnumerable<Field> qualifiers = null,
-            int batchSize = Constant.DefaultBatchOperationSize,
-            string hints = null,
-            IStatementBuilder statementBuilder = null)
-            : base(name,
-                connection,
-                transaction,
-                statementBuilder)
-        {
-            Fields = fields?.AsList();
-            Qualifiers = qualifiers?.AsList();
-            BatchSize = batchSize;
-            Hints = hints;
-        }
-
-        /// <summary>
         /// Gets the target fields.
         /// </summary>
-        public IEnumerable<Field> Fields { get; set; }
+        public IEnumerable<Field> Fields { get; set; } = fields?.AsList();
 
         /// <summary>
         /// Gets the qualifiers fields.
         /// </summary>
-        public IEnumerable<Field> Qualifiers { get; set; }
+        public IEnumerable<Field> Qualifiers { get; set; } = qualifiers?.AsList();
 
         /// <summary>
         /// Gets the size batch of the update operation.
         /// </summary>
-        public int BatchSize { get; set; }
+        public int BatchSize { get; set; } = batchSize;
 
         /// <summary>
         /// Gets the hints for the table.
         /// </summary>
-        public string Hints { get; }
+        public string Hints { get; } = hints;
 
         #region Equality and comparers
 
@@ -118,14 +109,14 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = HashCode.Combine(base.GetHashCode(), Name, ".UpdateAll");
+            var computedHashCode = HashCode.Combine(base.GetHashCode(), Name, ".UpdateAll");
 
             // Get the fields
             if (Fields != null)
             {
                 foreach (var field in Fields)
                 {
-                    hashCode = HashCode.Combine(hashCode, field);
+                    computedHashCode = HashCode.Combine(computedHashCode, field);
                 }
             }
 
@@ -134,24 +125,24 @@ namespace RepoDb.Requests
             {
                 foreach (var field in Qualifiers)
                 {
-                    hashCode = HashCode.Combine(hashCode, field);
+                    computedHashCode = HashCode.Combine(computedHashCode, field);
                 }
             }
 
             // Get the batch size
             if (BatchSize > 0)
             {
-                hashCode = HashCode.Combine(hashCode, BatchSize);
+                computedHashCode = HashCode.Combine(computedHashCode, BatchSize);
             }
 
             // Add the hints
             if (!string.IsNullOrWhiteSpace(Hints))
             {
-                hashCode = HashCode.Combine(hashCode, Hints);
+                computedHashCode = HashCode.Combine(computedHashCode, Hints);
             }
 
             // Set and return the hashcode
-            return (this.hashCode = hashCode).Value;
+            return (this.hashCode = computedHashCode).Value;
         }
 
         #endregion
