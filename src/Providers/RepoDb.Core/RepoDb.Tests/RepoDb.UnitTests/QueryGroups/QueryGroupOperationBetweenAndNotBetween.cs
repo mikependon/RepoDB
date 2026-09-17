@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.Interfaces;
@@ -30,7 +31,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] BETWEEN @Field1_Left AND @Field1_Right)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -48,7 +49,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] BETWEEN @Field1_Left AND @Field1_Right AND [Field2] BETWEEN @Field2_Left AND @Field2_Right)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -66,7 +67,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] BETWEEN @Field1_Left AND @Field1_Right AND [Field1] BETWEEN @Field1_1_Left AND @Field1_1_Right)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -85,7 +86,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] BETWEEN @Field1_Left AND @Field1_Right OR [Field1] BETWEEN @Field1_1_Left AND @Field1_1_Right)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         #endregion
@@ -103,7 +104,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] NOT BETWEEN @Field1_Left AND @Field1_Right)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -121,7 +122,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] NOT BETWEEN @Field1_Left AND @Field1_Right AND [Field2] NOT BETWEEN @Field2_Left AND @Field2_Right)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -139,7 +140,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] NOT BETWEEN @Field1_Left AND @Field1_Right AND [Field1] NOT BETWEEN @Field1_1_Left AND @Field1_1_Right)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -158,7 +159,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] NOT BETWEEN @Field1_Left AND @Field1_Right OR [Field1] NOT BETWEEN @Field1_1_Left AND @Field1_1_Right)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         #endregion

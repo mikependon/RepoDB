@@ -51,7 +51,7 @@ namespace RepoDb.UnitTests.Cachers
             var expected = "ClassMappedNameCacheTestClass";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -62,7 +62,7 @@ namespace RepoDb.UnitTests.Cachers
             var expected = "[dbo].[Person]";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -76,7 +76,7 @@ namespace RepoDb.UnitTests.Cachers
             var expected = "[dbo].[Person]";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -90,7 +90,7 @@ namespace RepoDb.UnitTests.Cachers
             var expected = "[dbo].[Person]";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]

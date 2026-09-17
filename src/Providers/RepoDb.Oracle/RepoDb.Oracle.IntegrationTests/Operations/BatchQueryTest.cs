@@ -207,7 +207,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 var result = await connection.BatchQueryAsync<CompleteTable>(0,
                     3,
                     OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
@@ -231,7 +231,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                     var result = await connection.BatchQueryAsync<CompleteTable>(0,
                         3,
                         OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
-                        (object)null);
+                        (object)null).ConfigureAwait(false);
 
                     // Assert
                     Assert.AreEqual(3, result.Count());
@@ -257,7 +257,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 var result = await connection.BatchQueryAsync<CompleteTable>(0,
                     3,
                     OrderField.Descending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
@@ -278,7 +278,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 var result = await connection.BatchQueryAsync<CompleteTable>(2,
                     3,
                     OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
@@ -299,7 +299,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 var result = await connection.BatchQueryAsync<CompleteTable>(2,
                     3,
                     OrderField.Descending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
@@ -321,7 +321,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 var result = await connection.BatchQueryAsync<CompleteTable>(0,
                     2,
                     OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    e => last5Ids.Contains(e.Id));
+                    e => last5Ids.Contains(e.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -343,7 +343,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                         3,
                         OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
                         where: (object)null,
-                        hints: "NOLOCK"));
+                        hints: "NOLOCK")).ConfigureAwait(false);
             }
         }
 

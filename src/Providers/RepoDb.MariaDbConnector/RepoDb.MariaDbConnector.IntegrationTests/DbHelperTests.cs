@@ -88,7 +88,7 @@ namespace RepoDb.MariaDb.IntegrationTests
 
                 // Assert
                 Assert.IsNotNull(primary);
-                Assert.AreEqual("Id", primary.Name);
+                Assert.AreEqual("Id", primary.Name, StringComparer.Ordinal);
             }
         }
 
@@ -106,7 +106,7 @@ namespace RepoDb.MariaDb.IntegrationTests
 
                 // Assert
                 Assert.IsNotNull(primary);
-                Assert.AreEqual("Id", primary.Name);
+                Assert.AreEqual("Id", primary.Name, StringComparer.Ordinal);
             }
         }
 
@@ -123,7 +123,7 @@ namespace RepoDb.MariaDb.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null);
+                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null).ConfigureAwait(false);
 
                 // Assert
                 using (var reader = connection.ExecuteReader(@"SELECT COLUMN_NAME AS ColumnName
@@ -161,12 +161,12 @@ namespace RepoDb.MariaDb.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null);
+                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null).ConfigureAwait(false);
                 var primary = fields.FirstOrDefault(f => f.IsPrimary == true);
 
                 // Assert
                 Assert.IsNotNull(primary);
-                Assert.AreEqual("Id", primary.Name);
+                Assert.AreEqual("Id", primary.Name, StringComparer.Ordinal);
             }
         }
 
@@ -179,12 +179,12 @@ namespace RepoDb.MariaDb.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null);
+                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null).ConfigureAwait(false);
                 var primary = fields.FirstOrDefault(f => f.IsIdentity == true);
 
                 // Assert
                 Assert.IsNotNull(primary);
-                Assert.AreEqual("Id", primary.Name);
+                Assert.AreEqual("Id", primary.Name, StringComparer.Ordinal);
             }
         }
 
@@ -241,7 +241,7 @@ namespace RepoDb.MariaDb.IntegrationTests
                 Assert.IsTrue(table.Id > 0);
 
                 // Act
-                var result = await helper.GetScopeIdentityAsync<long>(connection, null);
+                var result = await helper.GetScopeIdentityAsync<long>(connection, null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(insertResult, result);

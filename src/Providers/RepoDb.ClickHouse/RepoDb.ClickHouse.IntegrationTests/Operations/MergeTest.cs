@@ -136,7 +136,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MergeAsync<CompleteTable>(table);
+                var result = await connection.MergeAsync<CompleteTable>(table).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsNull(result);
@@ -162,7 +162,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = await connection.MergeAsync<CompleteTable>(table);
+                var result = await connection.MergeAsync<CompleteTable>(table).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsNull(result);
@@ -187,7 +187,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MergeAsync<CompleteTable>(table,
-                    qualifiers: qualifiers);
+                    qualifiers: qualifiers).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsNull(result);
@@ -405,7 +405,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    table);
+                    table).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsNull(result);
@@ -429,7 +429,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    table);
+                    table).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsNull(result);
@@ -456,7 +456,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    table);
+                    table).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsNull(result);
@@ -478,7 +478,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    entity);
+                    entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsNull(result);
@@ -504,7 +504,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     table,
-                    qualifiers: qualifiers);
+                    qualifiers: qualifiers).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsNull(result);
@@ -522,7 +522,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    (object)table);
+                    (object)table).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsNull(result);
@@ -549,7 +549,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    table);
+                    table).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsNull(result);
@@ -575,7 +575,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     table,
-                    qualifiers: qualifiers);
+                    qualifiers: qualifiers).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsNull(result);

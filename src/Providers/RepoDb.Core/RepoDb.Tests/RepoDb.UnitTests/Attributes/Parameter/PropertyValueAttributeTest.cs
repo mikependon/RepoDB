@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes.Parameter;
 using RepoDb.Extensions;
@@ -74,7 +75,7 @@ namespace RepoDb.UnitTests.Attributes.Parameter
 
                     // Assert
                     var parameter = command.Parameters["@ColumnName"];
-                    Assert.AreEqual("ValueOfTag", ((CustomDbParameter)parameter).Tag);
+                    Assert.AreEqual("ValueOfTag", ((CustomDbParameter)parameter).Tag, StringComparer.Ordinal);
                 }
             }
         }
@@ -98,7 +99,7 @@ namespace RepoDb.UnitTests.Attributes.Parameter
 
                     // Assert
                     var parameter = command.Parameters["@ColumnName"];
-                    Assert.AreEqual("ValueOfTag", ((CustomDbParameter)parameter).Tag);
+                    Assert.AreEqual("ValueOfTag", ((CustomDbParameter)parameter).Tag, StringComparer.Ordinal);
                 }
             }
         }
@@ -123,7 +124,7 @@ namespace RepoDb.UnitTests.Attributes.Parameter
 
                     // Assert
                     var parameter = command.Parameters["@ColumnName"];
-                    Assert.AreEqual("ValueOfTag", ((CustomDbParameter)parameter).Tag);
+                    Assert.AreEqual("ValueOfTag", ((CustomDbParameter)parameter).Tag, StringComparer.Ordinal);
                 }
             }
         }
@@ -148,7 +149,7 @@ namespace RepoDb.UnitTests.Attributes.Parameter
 
                     // Assert
                     var parameter = command.Parameters["@ColumnName"];
-                    Assert.AreEqual("ValueOfTag", ((CustomDbParameter)parameter).Tag);
+                    Assert.AreEqual("ValueOfTag", ((CustomDbParameter)parameter).Tag, StringComparer.Ordinal);
                 }
             }
         }

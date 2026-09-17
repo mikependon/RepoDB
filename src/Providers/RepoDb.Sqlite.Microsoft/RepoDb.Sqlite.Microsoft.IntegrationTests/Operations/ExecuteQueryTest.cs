@@ -84,7 +84,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = await connection.ExecuteQueryAsync<MdsCompleteTable>("SELECT * FROM [MdsCompleteTable];");
+                var result = await connection.ExecuteQueryAsync<MdsCompleteTable>("SELECT * FROM [MdsCompleteTable];").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -102,7 +102,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<MdsCompleteTable>("SELECT * FROM [MdsCompleteTable] WHERE Id = @Id;",
-                    new { tables.Last().Id });
+                    new { tables.Last().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());

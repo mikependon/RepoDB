@@ -79,7 +79,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = await connection.UpdateAllAsync<CompleteTable>(tables);
+                var result = await connection.UpdateAllAsync<CompleteTable>(tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -171,7 +171,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = await connection.UpdateAllAsync(ClassMappedNameCache.Get<CompleteTable>(), tables);
+                var result = await connection.UpdateAllAsync(ClassMappedNameCache.Get<CompleteTable>(), tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -199,7 +199,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.UpdateAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(10, result);

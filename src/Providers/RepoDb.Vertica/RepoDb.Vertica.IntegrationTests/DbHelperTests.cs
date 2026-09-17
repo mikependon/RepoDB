@@ -121,7 +121,7 @@ namespace RepoDb.Vertica.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null);
+                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null).ConfigureAwait(false);
 
                 // Assert
                 using (var reader = connection.ExecuteReader(@"SELECT column_name AS ColumnName
@@ -157,7 +157,7 @@ namespace RepoDb.Vertica.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null);
+                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null).ConfigureAwait(false);
                 var primary = fields.FirstOrDefault(f => f.IsPrimary == true);
 
                 // Assert
@@ -175,7 +175,7 @@ namespace RepoDb.Vertica.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null);
+                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null).ConfigureAwait(false);
                 var primary = fields.FirstOrDefault(f => f.IsIdentity == true);
 
                 // Assert
@@ -226,17 +226,17 @@ namespace RepoDb.Vertica.IntegrationTests
                 var table = Helper.CreateCompleteTables(1).First();
 
                 // Act
-                await connection.InsertAsync<CompleteTable>(table);
+                await connection.InsertAsync<CompleteTable>(table).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(1, await connection.CountAllAsync<CompleteTable>());
+                Assert.AreEqual(1, await connection.CountAllAsync<CompleteTable>().ConfigureAwait(false));
 
                 // Act & Assert - Vertica has no RETURNING clause, so RepoDb reads the generated IDENTITY
                 // value back via LAST_INSERT_ID() (see VerticaDbHelper.GetScopeIdentityAsync) as a
                 // separate query; connection.InsertAsync above already used it internally to populate
                 // table.Id, and it remains valid (same session, no intervening insert) to query again
                 // directly here.
-                Assert.AreEqual(table.Id, await helper.GetScopeIdentityAsync<long>(connection, null));
+                Assert.AreEqual(table.Id, await helper.GetScopeIdentityAsync<long>(connection, null).ConfigureAwait(false));
             }
         }
 

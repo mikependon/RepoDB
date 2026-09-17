@@ -140,7 +140,7 @@ namespace RepoDb
             DB2Transaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            await repository.BulkUpdateAsync(ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+            await repository.BulkUpdateAsync(ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
 
         /// <summary>
         /// Updates existing rows in the database in bulk in an asynchronous way, matched by the defined
@@ -180,7 +180,7 @@ namespace RepoDb
 
             try
             {
-                return await connection.BulkUpdateAsync(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, qualifiers != null ? Field.Parse(qualifiers) : null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+                return await connection.BulkUpdateAsync(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, qualifiers != null ? Field.Parse(qualifiers) : null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
             }
             finally
             {

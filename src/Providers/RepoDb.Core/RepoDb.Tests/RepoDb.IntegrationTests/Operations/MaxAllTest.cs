@@ -207,7 +207,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.MaxAllAsync<IdentityTable>(e => e.ColumnInt);
+                var result = await connection.MaxAllAsync<IdentityTable>(e => e.ColumnInt).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Max(t => t.ColumnInt), Convert.ToInt32(result));
@@ -227,7 +227,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MaxAllAsync<IdentityTable>(e => e.ColumnInt,
-                    hints: SqlServerTableHints.NoLock);
+                    hints: SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Max(t => t.ColumnInt), Convert.ToInt32(result));
@@ -246,7 +246,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.MaxAllAsync<IdentityTable, int?>(e => e.ColumnInt);
+                var result = await connection.MaxAllAsync<IdentityTable, int?>(e => e.ColumnInt).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Max(t => t.ColumnInt), result);
@@ -266,7 +266,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MaxAllAsync<IdentityTable, int?>(e => e.ColumnInt,
-                    hints: SqlServerTableHints.NoLock);
+                    hints: SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Max(t => t.ColumnInt), result);
@@ -285,7 +285,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.MaxAllAsync<IdentityTable, double?>(e => e.ColumnFloat);
+                var result = await connection.MaxAllAsync<IdentityTable, double?>(e => e.ColumnFloat).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Max(t => t.ColumnFloat), result);
@@ -305,7 +305,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MaxAllAsync<IdentityTable, double?>(e => e.ColumnFloat,
-                    hints: SqlServerTableHints.NoLock);
+                    hints: SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Max(t => t.ColumnFloat), result);
@@ -324,7 +324,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.MaxAllAsync<IdentityTable, DateTime?>(e => e.ColumnDateTime);
+                var result = await connection.MaxAllAsync<IdentityTable, DateTime?>(e => e.ColumnDateTime).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Max(t => t.ColumnDateTime), result);
@@ -344,7 +344,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MaxAllAsync<IdentityTable, DateTime?>(e => e.ColumnDateTime,
-                    hints: SqlServerTableHints.NoLock);
+                    hints: SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Max(t => t.ColumnDateTime), result);
@@ -536,7 +536,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MaxAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    new Field("ColumnInt"));
+                    new Field("ColumnInt")).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Max(t => t.ColumnInt), Convert.ToInt32(result));
@@ -557,7 +557,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.MaxAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    hints: SqlServerTableHints.NoLock);
+                    hints: SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Max(t => t.ColumnInt), Convert.ToInt32(result));
@@ -577,7 +577,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MaxAllAsync<int?>(ClassMappedNameCache.Get<IdentityTable>(),
-                    new Field("ColumnInt"));
+                    new Field("ColumnInt")).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Max(t => t.ColumnInt), result);
@@ -598,7 +598,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.MaxAllAsync<int?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    hints: SqlServerTableHints.NoLock);
+                    hints: SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Max(t => t.ColumnInt), result);
@@ -618,7 +618,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MaxAllAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
-                    new Field("ColumnFloat"));
+                    new Field("ColumnFloat")).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Max(t => t.ColumnFloat), result);
@@ -639,7 +639,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.MaxAllAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnFloat"),
-                    hints: SqlServerTableHints.NoLock);
+                    hints: SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Max(t => t.ColumnFloat), result);
@@ -659,7 +659,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MaxAllAsync<DateTime?>(ClassMappedNameCache.Get<IdentityTable>(),
-                    new Field("ColumnDateTime"));
+                    new Field("ColumnDateTime")).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Max(t => t.ColumnDateTime), result);
@@ -680,7 +680,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.MaxAllAsync<DateTime?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnDateTime"),
-                    hints: SqlServerTableHints.NoLock);
+                    hints: SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Max(t => t.ColumnDateTime), result);

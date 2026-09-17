@@ -35,19 +35,15 @@ namespace RepoDb.Telemetry.Core
         private readonly Action<Exception> _errorCallback;
         private readonly ILogger _logger;
 
-        #endregion
-
-        #region Constructors
-
         /// <summary>
         /// Initializes a new instance of the <see cref="TelemetryPublisherRepository"/> class.
         /// </summary>
-        /// <param name="host">The host to where to publish the telemetry data.</param>
-        /// <param name="apiKey">The API key to be used for authentication. Leave this to empty if not provided in the collector API.</param>"
-        /// <param name="errorCallback">The callback function to call in the case of any exception.</param>
-        /// <param name="logger">The logger instance to use when logging messages or events.</param>
-        /// <param name="certificateValidationCallback">An optional callback used to validate the server certificate presented by the collector API when publishing over HTTPS. Leave this to null to use the default .NET certificate validation.</param>
-        public TelemetryPublisherRepository(
+        /// <param name="host">The host of the telemetry collector API.</param>
+        /// <param name="apiKey">The API key for authentication.</param>
+        /// <param name="errorCallback">The callback to invoke when an error occurs.</param>
+        /// <param name="logger">The logger to use for logging.</param>
+        /// <param name="certificateValidationCallback">The callback to validate SSL certificates.</param>
+        protected TelemetryPublisherRepository(
             string host = "http://localhost:5000",
             string apiKey = null,
             Action<Exception> errorCallback = null,
@@ -58,12 +54,14 @@ namespace RepoDb.Telemetry.Core
             _apiKey = apiKey;
             _errorCallback = errorCallback;
             _logger = logger;
+#pragma warning disable MA0039 // Do not write your own certificate validation method
             _httpClient = certificateValidationCallback == null
                 ? _defaultHttpClient
                 : new HttpClient(new HttpClientHandler
                 {
                     ServerCertificateCustomValidationCallback = certificateValidationCallback
                 });
+#pragma warning restore MA0039 // Do not write your own certificate validation method
         }
 
         #endregion
@@ -105,7 +103,7 @@ namespace RepoDb.Telemetry.Core
         public async Task PublishAsync(
             TelemetryItem telemetryItem,
             CancellationToken cancellationToken = default) =>
-                await PublishManyAsync(new[] { telemetryItem }, cancellationToken);
+                await PublishManyAsync(new[] { telemetryItem }, cancellationToken).ConfigureAwait(false);
 
         /// <summary>
         /// A method that is used to publish multiple telemetry items to the insights solution.
@@ -154,7 +152,7 @@ namespace RepoDb.Telemetry.Core
                 {
                     _logger?.Debug("Publishing telemetry data to {Host}.", Host);
                     var result = await _httpClient
-                        .SendAsync(request, cancellationToken);
+                        .SendAsync(request, cancellationToken).ConfigureAwait(false);
                     result.EnsureSuccessStatusCode();
                     _logger?.Information("{Count} telemetry data has been published.", telemetryItems.Count());
                 }

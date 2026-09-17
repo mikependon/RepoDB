@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Telemetry.Core;
 using RepoDb.Telemetry.Default;
@@ -36,7 +37,7 @@ namespace RepoDb.Telemetry.Default.UnitTests.Models
             var expected = "Default";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -51,7 +52,7 @@ namespace RepoDb.Telemetry.Default.UnitTests.Models
             var expected = "MyApplication";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
     }
 }

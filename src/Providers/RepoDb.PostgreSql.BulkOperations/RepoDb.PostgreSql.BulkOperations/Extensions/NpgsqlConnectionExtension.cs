@@ -300,7 +300,7 @@ namespace RepoDb
                 identityBehavior,
                 dbSetting);
 
-            var importer = await connection.BeginBinaryImportAsync(copyCommand, cancellationToken);
+            var importer = await connection.BeginBinaryImportAsync(copyCommand, cancellationToken).ConfigureAwait(false);
 
             // Timeout
             if (bulkCopyTimeout.HasValue)
@@ -339,12 +339,12 @@ namespace RepoDb
             var enumerator = entities.GetEnumerator();
 
             return await BinaryImportWriteAsync(importer,
-                async () => await Task.FromResult(enumerator.MoveNext()),
-                async () => await Task.FromResult(enumerator.Current),
-                async (entity) => await func(importer, entity, cancellationToken),
+                async () => await Task.FromResult(enumerator.MoveNext()).ConfigureAwait(false),
+                async () => await Task.FromResult(enumerator.Current).ConfigureAwait(false),
+                async (entity) => await func(importer, entity, cancellationToken).ConfigureAwait(false),
                 identityBehavior,
                 cancellationToken,
-                startIndex);
+                startIndex).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -367,19 +367,19 @@ namespace RepoDb
             var enumerator = dictionaries.GetEnumerator();
 
             return await BinaryImportWriteAsync(importer,
-                async () => await Task.FromResult(enumerator.MoveNext()),
-                async () => await Task.FromResult(enumerator.Current),
+                async () => await Task.FromResult(enumerator.MoveNext()).ConfigureAwait(false),
+                async () => await Task.FromResult(enumerator.Current).ConfigureAwait(false),
                 async (dictionary) =>
                 {
                     foreach (var mapping in mappings)
                     {
                         await BinaryImportWriteAsync(importer, dictionary[mapping.SourceColumn],
-                            mapping.NpgsqlDbType, cancellationToken);
+                            mapping.NpgsqlDbType, cancellationToken).ConfigureAwait(false);
                     }
                 },
                 identityBehavior,
                 cancellationToken,
-                startIndex);
+                startIndex).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -401,19 +401,19 @@ namespace RepoDb
             var enumerator = rows.GetEnumerator();
 
             return await BinaryImportWriteAsync(importer,
-                async () => await Task.FromResult(enumerator.MoveNext()),
-                async () => await Task.FromResult(enumerator.Current),
+                async () => await Task.FromResult(enumerator.MoveNext()).ConfigureAwait(false),
+                async () => await Task.FromResult(enumerator.Current).ConfigureAwait(false),
                 async (row) =>
                 {
                     foreach (var mapping in mappings)
                     {
                         var data = GetDataRowColumnData(row, mapping.SourceColumn, mapping.NpgsqlDbType);
-                        await BinaryImportWriteAsync(importer, data, mapping.NpgsqlDbType, cancellationToken);
+                        await BinaryImportWriteAsync(importer, data, mapping.NpgsqlDbType, cancellationToken).ConfigureAwait(false);
                     }
                 },
                 identityBehavior,
                 cancellationToken,
-                startIndex);
+                startIndex).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -431,18 +431,18 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             return await BinaryImportWriteAsync(importer,
-                async () => await (reader is DbDataReader r ? r.ReadAsync(cancellationToken) : Task.FromResult(reader.Read())),
-                async () => await Task.FromResult(reader),
+                async () => await (reader is DbDataReader r ? r.ReadAsync(cancellationToken) : Task.FromResult(reader.Read())).ConfigureAwait(false),
+                async () => await Task.FromResult(reader).ConfigureAwait(false),
                 async (current) =>
                 {
                     foreach (var mapping in mappings)
                     {
                         await BinaryImportWriteAsync(importer, current[mapping.SourceColumn],
-                            mapping.NpgsqlDbType, cancellationToken);
+                            mapping.NpgsqlDbType, cancellationToken).ConfigureAwait(false);
                     }
                 },
                 identityBehavior,
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -469,18 +469,18 @@ namespace RepoDb
         {
             var result = startIndex;
 
-            while (await moveNextAsync())
+            while (await moveNextAsync().ConfigureAwait(false))
             {
-                await importer.StartRowAsync(cancellationToken);
+                await importer.StartRowAsync(cancellationToken).ConfigureAwait(false);
 
                 await EnsureCustomizedOrderColumnAsync(importer, identityBehavior, result,
-                    cancellationToken);
-                await writeAsync(await getCurrentAsync());
+                    cancellationToken).ConfigureAwait(false);
+                await writeAsync(await getCurrentAsync().ConfigureAwait(false)).ConfigureAwait(false);
 
                 result++;
             }
 
-            await importer.CompleteAsync(cancellationToken);
+            await importer.CompleteAsync(cancellationToken).ConfigureAwait(false);
             return result;
         }
 
@@ -499,17 +499,17 @@ namespace RepoDb
         {
             if (data == null)
             {
-                await importer.WriteNullAsync(cancellationToken);
+                await importer.WriteNullAsync(cancellationToken).ConfigureAwait(false);
             }
             else
             {
                 if (npgsqlDbType != null)
                 {
-                    await importer.WriteAsync(data, npgsqlDbType.Value, cancellationToken);
+                    await importer.WriteAsync(data, npgsqlDbType.Value, cancellationToken).ConfigureAwait(false);
                 }
                 else
                 {
-                    await importer.WriteAsync(data, cancellationToken);
+                    await importer.WriteAsync(data, cancellationToken).ConfigureAwait(false);
                 }
             }
         }
@@ -528,7 +528,7 @@ namespace RepoDb
         {
             if (identityBehavior == PostgreSqlBulkImportIdentityBehavior.ReturnIdentity)
             {
-                await importer.WriteAsync(index, NpgsqlDbType.Integer, cancellationToken);
+                await importer.WriteAsync(index, NpgsqlDbType.Integer, cancellationToken).ConfigureAwait(false);
             }
 
         }

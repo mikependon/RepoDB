@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.Extensions.QueryFields;
@@ -23,10 +24,10 @@ namespace RepoDb.UnitTests.Extensions.QueryFields
             var functionalQueryField = new RightQueryField("FieldName", Operation.NotEqual, "Value");
 
             // Assert
-            Assert.AreEqual("FieldName", functionalQueryField.Field.Name);
+            Assert.AreEqual("FieldName", functionalQueryField.Field.Name, StringComparer.Ordinal);
             Assert.AreEqual(Operation.NotEqual, functionalQueryField.Operation);
             Assert.AreEqual("Value", functionalQueryField.Parameter.Value);
-            Assert.AreEqual("RIGHT({0}, 5)", functionalQueryField.Format);
+            Assert.AreEqual("RIGHT({0}, 5)", functionalQueryField.Format, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -39,7 +40,7 @@ namespace RepoDb.UnitTests.Extensions.QueryFields
             var text = functionalQueryField.GetString(0, new CustomDbSetting());
 
             // Assert
-            Assert.AreEqual("RIGHT([FieldName], 5) = @FieldName", text);
+            Assert.AreEqual("RIGHT([FieldName], 5) = @FieldName", text, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -52,7 +53,7 @@ namespace RepoDb.UnitTests.Extensions.QueryFields
             var text = functionalQueryField.GetString(0, new CustomDbSetting());
 
             // Assert
-            Assert.AreEqual("RIGHT([FieldName], 5) = @FieldName", text);
+            Assert.AreEqual("RIGHT([FieldName], 5) = @FieldName", text, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -65,7 +66,7 @@ namespace RepoDb.UnitTests.Extensions.QueryFields
             var text = functionalQueryField.GetString(1, new CustomDbSetting());
 
             // Assert
-            Assert.AreEqual("RIGHT([FieldName], 5) = @FieldName_1", text);
+            Assert.AreEqual("RIGHT([FieldName], 5) = @FieldName_1", text, StringComparer.Ordinal);
         }
     }
 }

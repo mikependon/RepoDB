@@ -101,7 +101,7 @@ namespace RepoDb.Db2.UnitTests
             // state rather than thrown synchronously at the point of invocation; it only surfaces
             // once the task is awaited.
             await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                helper.GetScopeIdentityAsync<int>(connection: null));
+                helper.GetScopeIdentityAsync<int>(connection: null)).ConfigureAwait(false);
         }
 
         #endregion

@@ -173,7 +173,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAsync<AttributeTable>(table);
+                await connection.InsertAsync<AttributeTable>(table).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<AttributeTable>());
@@ -195,7 +195,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<AttributeTable>(tables);
+                await connection.InsertAllAsync<AttributeTable>(tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<AttributeTable>());
@@ -220,7 +220,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 var id = connection.Insert<AttributeTable>(table);
 
                 // Query
-                var queryResult = (await connection.QueryAsync<AttributeTable>(id)).First();
+                var queryResult = (await connection.QueryAsync<AttributeTable>(id).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult);
@@ -239,7 +239,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 connection.InsertAll<AttributeTable>(tables);
 
                 // Query
-                var queryResult = await connection.QueryAllAsync<AttributeTable>();
+                var queryResult = await connection.QueryAllAsync<AttributeTable>().ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());

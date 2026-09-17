@@ -175,7 +175,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.QueryAsync<SharedIdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -200,7 +200,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = (await connection.QueryAsync<SharedIdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
-                    e => e.ColumnDecimal == tables.Last().ColumnDecimal)).FirstOrDefault();
+                    e => e.ColumnDecimal == tables.Last().ColumnDecimal).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.Last(), result);
@@ -220,7 +220,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = (await connection.QueryAsync<SharedIdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
-                    new { tables.Last().Id })).FirstOrDefault();
+                    new { tables.Last().Id }).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.Last(), result);
@@ -240,7 +240,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = (await connection.QueryAsync<SharedIdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
-                    (new QueryField("Id", tables.Last().Id)).AsEnumerable())).FirstOrDefault();
+                    (new QueryField("Id", tables.Last().Id)).AsEnumerable()).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.Last(), result);
@@ -268,7 +268,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.QueryAsync<SharedIdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryGroup);
+                    queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -423,7 +423,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.QueryAsync<SharedIdentityTable>(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -448,7 +448,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = (await connection.QueryAsync<SharedIdentityTable>(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    e => e.ColumnDecimal == tables.Last().ColumnDecimal)).FirstOrDefault();
+                    e => e.ColumnDecimal == tables.Last().ColumnDecimal).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.Last(), result);
@@ -468,7 +468,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = (await connection.QueryAsync<SharedIdentityTable>(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    new { tables.Last().Id })).FirstOrDefault();
+                    new { tables.Last().Id }).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.Last(), result);
@@ -488,7 +488,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = (await connection.QueryAsync<SharedIdentityTable>(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (new QueryField("Id", tables.Last().Id)).AsEnumerable())).FirstOrDefault();
+                    (new QueryField("Id", tables.Last().Id)).AsEnumerable()).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.Last(), result);
@@ -516,7 +516,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.QueryAsync<SharedIdentityTable>(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    queryGroup);
+                    queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -580,7 +580,7 @@ namespace RepoDb.IntegrationTests
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.QueryAllAsync<SharedIdentityTable>(ClassMappedNameCache.Get<IdentityTable>());
+                var result = await connection.QueryAllAsync<SharedIdentityTable>(ClassMappedNameCache.Get<IdentityTable>()).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -640,7 +640,7 @@ namespace RepoDb.IntegrationTests
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.QueryAllAsync<SharedIdentityTable>(ClassMappedNameCache.Get<NonIdentityTable>());
+                var result = await connection.QueryAllAsync<SharedIdentityTable>(ClassMappedNameCache.Get<NonIdentityTable>()).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());

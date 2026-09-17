@@ -174,7 +174,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = await connection.CountAsync<MdsCompleteTable>((object)null);
+                var result = await connection.CountAsync<MdsCompleteTable>((object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -191,7 +191,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var ids = new[] { tables.First().Id, tables.Last().Id };
 
                 // Act
-                var result = await connection.CountAsync<MdsCompleteTable>(e => ids.Contains(e.Id));
+                var result = await connection.CountAsync<MdsCompleteTable>(e => ids.Contains(e.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Count(), result);
@@ -207,7 +207,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = await connection.CountAsync<MdsCompleteTable>(new { tables.First().Id });
+                var result = await connection.CountAsync<MdsCompleteTable>(new { tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Count(), result);
@@ -223,7 +223,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = await connection.CountAsync<MdsCompleteTable>(new QueryField("Id", tables.First().Id));
+                var result = await connection.CountAsync<MdsCompleteTable>(new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Count(), result);
@@ -244,7 +244,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 };
 
                 // Act
-                var result = await connection.CountAsync<MdsCompleteTable>(queryFields);
+                var result = await connection.CountAsync<MdsCompleteTable>(queryFields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Count(), result);
@@ -266,7 +266,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var queryGroup = new QueryGroup(queryFields);
 
                 // Act
-                var result = await connection.CountAsync<MdsCompleteTable>(queryGroup);
+                var result = await connection.CountAsync<MdsCompleteTable>(queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Count(), result);
@@ -284,7 +284,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.CountAsync<MdsCompleteTable>((object)null,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -422,7 +422,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 
                 // Act
                 var result = await connection.CountAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -439,7 +439,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 
                 // Act
                 var result = await connection.CountAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    new { tables.First().Id });
+                    new { tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Count(), result);
@@ -456,7 +456,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 
                 // Act
                 var result = await connection.CountAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    new QueryField("Id", tables.First().Id));
+                    new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Count(), result);
@@ -478,7 +478,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 
                 // Act
                 var result = await connection.CountAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    queryFields);
+                    queryFields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Count(), result);
@@ -501,7 +501,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 
                 // Act
                 var result = await connection.CountAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    queryGroup);
+                    queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Count(), result);
@@ -520,7 +520,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.CountAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
                         (object)null,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

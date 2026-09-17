@@ -126,15 +126,15 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAsync<IdentityTable>(entity);
+                await connection.InsertAsync<IdentityTable>(entity).ConfigureAwait(false);
 
                 // Act
                 var deleteResult = await connection.DeleteAsync<ImmutableIdentityTable>(
-                    ToImmutableIdentityTable(entity));
+                    ToImmutableIdentityTable(entity)).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(deleteResult == 1);
-                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>());
+                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>().ConfigureAwait(false));
             }
         }
 
@@ -167,14 +167,14 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAsync<IdentityTable>(entity);
+                await connection.InsertAsync<IdentityTable>(entity).ConfigureAwait(false);
 
                 // Act
-                var deleteResult = await connection.DeleteAsync<ImmutableIdentityTable>(entity.Id);
+                var deleteResult = await connection.DeleteAsync<ImmutableIdentityTable>(entity.Id).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(deleteResult == 1);
-                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>());
+                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>().ConfigureAwait(false));
             }
         }
 
@@ -212,7 +212,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertResult = await connection.InsertAsync<ImmutableIdentityTable, long>(entity);
+                var insertResult = await connection.InsertAsync<ImmutableIdentityTable, long>(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(insertResult > 0);
@@ -259,11 +259,11 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync<ImmutableIdentityTable>(entities);
+                var insertAllResult = await connection.InsertAllAsync<ImmutableIdentityTable>(entities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, insertAllResult);
-                Assert.AreEqual(entities.Count, await connection.CountAllAsync<ImmutableIdentityTable>());
+                Assert.AreEqual(entities.Count, await connection.CountAllAsync<ImmutableIdentityTable>().ConfigureAwait(false));
 
                 // The ID could not be set back to the entities, so it should be 0
 
@@ -313,11 +313,11 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeResult = await connection.MergeAsync<ImmutableIdentityTable, long>(entity);
+                var mergeResult = await connection.MergeAsync<ImmutableIdentityTable, long>(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(mergeResult > 0);
-                Assert.AreEqual(1, await connection.CountAllAsync<ImmutableIdentityTable>());
+                Assert.AreEqual(1, await connection.CountAllAsync<ImmutableIdentityTable>().ConfigureAwait(false));
 
                 // The ID could not be set back to the entities, so it should be 0
 
@@ -325,7 +325,7 @@ namespace RepoDb.IntegrationTests
                 Assert.IsTrue(entity.Id == 0);
 
                 // Act
-                var queryResult = (await connection.QueryAsync<ImmutableIdentityTable>(mergeResult)).FirstOrDefault();
+                var queryResult = (await connection.QueryAsync<ImmutableIdentityTable>(mergeResult).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -380,7 +380,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertResult = await connection.InsertAsync<IdentityTable, long>(entity);
+                var insertResult = await connection.InsertAsync<IdentityTable, long>(entity).ConfigureAwait(false);
 
                 // Setup
                 var newEntity = new ImmutableIdentityTable(insertResult,
@@ -394,7 +394,7 @@ namespace RepoDb.IntegrationTests
                     entity.ColumnNVarChar);
 
                 // Act
-                var mergeResult = await connection.MergeAsync<ImmutableIdentityTable, long>(newEntity);
+                var mergeResult = await connection.MergeAsync<ImmutableIdentityTable, long>(newEntity).ConfigureAwait(false);
 
                 // The ID could not be set back to the entities, so it should be 0
 
@@ -403,7 +403,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(insertResult, mergeResult);
 
                 // Act
-                var queryResult = (await connection.QueryAsync<ImmutableIdentityTable>(newEntity.Id)).FirstOrDefault();
+                var queryResult = (await connection.QueryAsync<ImmutableIdentityTable>(newEntity.Id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(newEntity, queryResult);
@@ -453,11 +453,11 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeAllRequest = await connection.MergeAllAsync<ImmutableIdentityTable>(entities);
+                var mergeAllRequest = await connection.MergeAllAsync<ImmutableIdentityTable>(entities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, mergeAllRequest);
-                Assert.AreEqual(entities.Count, await connection.CountAllAsync<IdentityTable>());
+                Assert.AreEqual(entities.Count, await connection.CountAllAsync<IdentityTable>().ConfigureAwait(false));
 
                 // The ID could not be set back to the entities, so it should be 0
 
@@ -465,7 +465,7 @@ namespace RepoDb.IntegrationTests
                 Assert.IsTrue(entities.All(e => e.Id == 0));
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<ImmutableIdentityTable>()).AsList();
+                var queryResult = (await connection.QueryAllAsync<ImmutableIdentityTable>().ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -522,7 +522,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync<IdentityTable>(entities);
+                var insertAllResult = await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Setup
                 var newEntities = entities.Select(entity => new ImmutableIdentityTable(entity.Id,
@@ -536,14 +536,14 @@ namespace RepoDb.IntegrationTests
                     entity.ColumnNVarChar)).AsList();
 
                 // Act
-                var mergeAllResult = await connection.MergeAllAsync<ImmutableIdentityTable>(newEntities);
+                var mergeAllResult = await connection.MergeAllAsync<ImmutableIdentityTable>(newEntities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, mergeAllResult);
-                Assert.AreEqual(entities.Count, await connection.CountAllAsync<ImmutableIdentityTable>());
+                Assert.AreEqual(entities.Count, await connection.CountAllAsync<ImmutableIdentityTable>().ConfigureAwait(false));
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<ImmutableIdentityTable>()).AsList();
+                var queryResult = (await connection.QueryAllAsync<ImmutableIdentityTable>().ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -584,10 +584,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertResult = await connection.InsertAsync<IdentityTable, long>(entity);
+                var insertResult = await connection.InsertAsync<IdentityTable, long>(entity).ConfigureAwait(false);
 
                 // Act
-                var queryResult = (await connection.QueryAsync<ImmutableIdentityTable>(insertResult)).FirstOrDefault();
+                var queryResult = (await connection.QueryAsync<ImmutableIdentityTable>(insertResult).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -644,7 +644,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAsync<IdentityTable, long>(entity);
+                await connection.InsertAsync<IdentityTable, long>(entity).ConfigureAwait(false);
 
                 // Setup
                 var newEntity = new ImmutableIdentityTable(entity.Id,
@@ -658,13 +658,13 @@ namespace RepoDb.IntegrationTests
                     entity.ColumnNVarChar);
 
                 // Act
-                var updateResult = await connection.UpdateAsync<ImmutableIdentityTable>(newEntity);
+                var updateResult = await connection.UpdateAsync<ImmutableIdentityTable>(newEntity).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(updateResult > 0);
 
                 // Act
-                var queryResult = (await connection.QueryAsync<IdentityTable>(newEntity.Id)).FirstOrDefault();
+                var queryResult = (await connection.QueryAsync<IdentityTable>(newEntity.Id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(queryResult);
@@ -718,7 +718,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAsync<IdentityTable>(entity);
+                await connection.InsertAsync<IdentityTable>(entity).ConfigureAwait(false);
 
                 // Setup
                 var newEntity = new ImmutableIdentityTable(entity.Id,
@@ -732,13 +732,13 @@ namespace RepoDb.IntegrationTests
                     entity.ColumnNVarChar);
 
                 // Act
-                var updateResult = await connection.UpdateAsync<ImmutableIdentityTable>(newEntity, newEntity.Id);
+                var updateResult = await connection.UpdateAsync<ImmutableIdentityTable>(newEntity, newEntity.Id).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(updateResult > 0);
 
                 // Act
-                var queryResult = (await connection.QueryAsync<ImmutableIdentityTable>(newEntity.Id)).FirstOrDefault();
+                var queryResult = (await connection.QueryAsync<ImmutableIdentityTable>(newEntity.Id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(queryResult);
@@ -797,7 +797,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Setup
                 var newEntities = entities.Select(entity => new ImmutableIdentityTable(entity.Id,
@@ -811,13 +811,13 @@ namespace RepoDb.IntegrationTests
                     entity.ColumnNVarChar)).AsList();
 
                 // Act
-                var updateAllResult = await connection.UpdateAllAsync<ImmutableIdentityTable>(newEntities);
+                var updateAllResult = await connection.UpdateAllAsync<ImmutableIdentityTable>(newEntities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, updateAllResult);
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<ImmutableIdentityTable>()).AsList();
+                var queryResult = (await connection.QueryAllAsync<ImmutableIdentityTable>().ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -864,15 +864,15 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAsync<IdentityTable>(entity);
+                await connection.InsertAsync<IdentityTable>(entity).ConfigureAwait(false);
 
                 // Act
                 var deleteResult = await connection.DeleteAsync<ImmutableWithFewerCtorArgumentsIdentityTable>(
-                    ToImmutableWithFewerCtorArgumentsIdentityTable(entity));
+                    ToImmutableWithFewerCtorArgumentsIdentityTable(entity)).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(deleteResult == 1);
-                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>());
+                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>().ConfigureAwait(false));
             }
         }
 
@@ -905,14 +905,14 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAsync<IdentityTable>(entity);
+                await connection.InsertAsync<IdentityTable>(entity).ConfigureAwait(false);
 
                 // Act
-                var deleteResult = await connection.DeleteAsync<ImmutableWithFewerCtorArgumentsIdentityTable>(entity.Id);
+                var deleteResult = await connection.DeleteAsync<ImmutableWithFewerCtorArgumentsIdentityTable>(entity.Id).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(deleteResult == 1);
-                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>());
+                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>().ConfigureAwait(false));
             }
         }
 
@@ -950,7 +950,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertResult = await connection.InsertAsync<ImmutableWithFewerCtorArgumentsIdentityTable, long>(entity);
+                var insertResult = await connection.InsertAsync<ImmutableWithFewerCtorArgumentsIdentityTable, long>(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(insertResult > 0);
@@ -997,11 +997,11 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync<ImmutableWithFewerCtorArgumentsIdentityTable>(entities);
+                var insertAllResult = await connection.InsertAllAsync<ImmutableWithFewerCtorArgumentsIdentityTable>(entities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, insertAllResult);
-                Assert.AreEqual(entities.Count, await connection.CountAllAsync<ImmutableWithFewerCtorArgumentsIdentityTable>());
+                Assert.AreEqual(entities.Count, await connection.CountAllAsync<ImmutableWithFewerCtorArgumentsIdentityTable>().ConfigureAwait(false));
 
                 // The ID could not be set back to the entities, so it should be 0
 
@@ -1051,11 +1051,11 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeResult = await connection.MergeAsync<ImmutableWithFewerCtorArgumentsIdentityTable, long>(entity);
+                var mergeResult = await connection.MergeAsync<ImmutableWithFewerCtorArgumentsIdentityTable, long>(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(mergeResult > 0);
-                Assert.AreEqual(1, await connection.CountAllAsync<ImmutableWithFewerCtorArgumentsIdentityTable>());
+                Assert.AreEqual(1, await connection.CountAllAsync<ImmutableWithFewerCtorArgumentsIdentityTable>().ConfigureAwait(false));
 
                 // The ID could not be set back to the entities, so it should be 0
 
@@ -1063,7 +1063,7 @@ namespace RepoDb.IntegrationTests
                 Assert.IsTrue(entity.Id == 0);
 
                 // Act
-                var queryResult = (await connection.QueryAsync<ImmutableWithFewerCtorArgumentsIdentityTable>(mergeResult)).FirstOrDefault();
+                var queryResult = (await connection.QueryAsync<ImmutableWithFewerCtorArgumentsIdentityTable>(mergeResult).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1120,7 +1120,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertResult = await connection.InsertAsync<IdentityTable, long>(entity);
+                var insertResult = await connection.InsertAsync<IdentityTable, long>(entity).ConfigureAwait(false);
 
                 // Setup
                 var newEntity = new ImmutableWithFewerCtorArgumentsIdentityTable(insertResult,
@@ -1136,7 +1136,7 @@ namespace RepoDb.IntegrationTests
                 };
 
                 // Act
-                var mergeResult = await connection.MergeAsync<ImmutableWithFewerCtorArgumentsIdentityTable, long>(newEntity);
+                var mergeResult = await connection.MergeAsync<ImmutableWithFewerCtorArgumentsIdentityTable, long>(newEntity).ConfigureAwait(false);
 
                 // The ID could not be set back to the entities, so it should be 0
 
@@ -1145,7 +1145,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(insertResult, mergeResult);
 
                 // Act
-                var queryResult = (await connection.QueryAsync<ImmutableWithFewerCtorArgumentsIdentityTable>(newEntity.Id)).FirstOrDefault();
+                var queryResult = (await connection.QueryAsync<ImmutableWithFewerCtorArgumentsIdentityTable>(newEntity.Id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(newEntity, queryResult);
@@ -1195,11 +1195,11 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeAllRequest = await connection.MergeAllAsync<ImmutableWithFewerCtorArgumentsIdentityTable>(entities);
+                var mergeAllRequest = await connection.MergeAllAsync<ImmutableWithFewerCtorArgumentsIdentityTable>(entities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, mergeAllRequest);
-                Assert.AreEqual(entities.Count, await connection.CountAllAsync<IdentityTable>());
+                Assert.AreEqual(entities.Count, await connection.CountAllAsync<IdentityTable>().ConfigureAwait(false));
 
                 // The ID could not be set back to the entities, so it should be 0
 
@@ -1207,7 +1207,7 @@ namespace RepoDb.IntegrationTests
                 Assert.IsTrue(entities.All(e => e.Id == 0));
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<ImmutableWithFewerCtorArgumentsIdentityTable>()).AsList();
+                var queryResult = (await connection.QueryAllAsync<ImmutableWithFewerCtorArgumentsIdentityTable>().ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -1266,7 +1266,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync<IdentityTable>(entities);
+                var insertAllResult = await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Setup
                 var newEntities = entities.Select(entity => new ImmutableWithFewerCtorArgumentsIdentityTable(entity.Id,
@@ -1282,14 +1282,14 @@ namespace RepoDb.IntegrationTests
                 }).AsList();
 
                 // Act
-                var mergeAllResult = await connection.MergeAllAsync<ImmutableWithFewerCtorArgumentsIdentityTable>(newEntities);
+                var mergeAllResult = await connection.MergeAllAsync<ImmutableWithFewerCtorArgumentsIdentityTable>(newEntities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, mergeAllResult);
-                Assert.AreEqual(entities.Count, await connection.CountAllAsync<ImmutableWithFewerCtorArgumentsIdentityTable>());
+                Assert.AreEqual(entities.Count, await connection.CountAllAsync<ImmutableWithFewerCtorArgumentsIdentityTable>().ConfigureAwait(false));
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<ImmutableWithFewerCtorArgumentsIdentityTable>()).AsList();
+                var queryResult = (await connection.QueryAllAsync<ImmutableWithFewerCtorArgumentsIdentityTable>().ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -1330,10 +1330,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertResult = await connection.InsertAsync<IdentityTable, long>(entity);
+                var insertResult = await connection.InsertAsync<IdentityTable, long>(entity).ConfigureAwait(false);
 
                 // Act
-                var queryResult = (await connection.QueryAsync<ImmutableWithFewerCtorArgumentsIdentityTable>(insertResult)).FirstOrDefault();
+                var queryResult = (await connection.QueryAsync<ImmutableWithFewerCtorArgumentsIdentityTable>(insertResult).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1392,7 +1392,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAsync<IdentityTable, long>(entity);
+                await connection.InsertAsync<IdentityTable, long>(entity).ConfigureAwait(false);
 
                 // Setup
                 var newEntity = new ImmutableWithFewerCtorArgumentsIdentityTable(entity.Id,
@@ -1408,13 +1408,13 @@ namespace RepoDb.IntegrationTests
                 };
 
                 // Act
-                var updateResult = await connection.UpdateAsync<ImmutableWithFewerCtorArgumentsIdentityTable>(newEntity);
+                var updateResult = await connection.UpdateAsync<ImmutableWithFewerCtorArgumentsIdentityTable>(newEntity).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(updateResult > 0);
 
                 // Act
-                var queryResult = (await connection.QueryAsync<ImmutableWithFewerCtorArgumentsIdentityTable>(newEntity.Id)).FirstOrDefault();
+                var queryResult = (await connection.QueryAsync<ImmutableWithFewerCtorArgumentsIdentityTable>(newEntity.Id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(queryResult);
@@ -1470,7 +1470,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAsync<IdentityTable>(entity);
+                await connection.InsertAsync<IdentityTable>(entity).ConfigureAwait(false);
 
                 // Setup
                 var newEntity = new ImmutableWithFewerCtorArgumentsIdentityTable(entity.Id,
@@ -1486,13 +1486,13 @@ namespace RepoDb.IntegrationTests
                 };
 
                 // Act
-                var updateResult = await connection.UpdateAsync<ImmutableWithFewerCtorArgumentsIdentityTable>(newEntity, newEntity.Id);
+                var updateResult = await connection.UpdateAsync<ImmutableWithFewerCtorArgumentsIdentityTable>(newEntity, newEntity.Id).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(updateResult > 0);
 
                 // Act
-                var queryResult = (await connection.QueryAsync<ImmutableWithFewerCtorArgumentsIdentityTable>(newEntity.Id)).FirstOrDefault();
+                var queryResult = (await connection.QueryAsync<ImmutableWithFewerCtorArgumentsIdentityTable>(newEntity.Id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(queryResult);
@@ -1553,7 +1553,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Setup
                 var newEntities = entities.Select(entity => new ImmutableWithFewerCtorArgumentsIdentityTable(entity.Id,
@@ -1569,13 +1569,13 @@ namespace RepoDb.IntegrationTests
                 }).AsList();
 
                 // Act
-                var updateAllResult = await connection.UpdateAllAsync<ImmutableWithFewerCtorArgumentsIdentityTable>(newEntities);
+                var updateAllResult = await connection.UpdateAllAsync<ImmutableWithFewerCtorArgumentsIdentityTable>(newEntities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, updateAllResult);
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<ImmutableWithFewerCtorArgumentsIdentityTable>()).AsList();
+                var queryResult = (await connection.QueryAllAsync<ImmutableWithFewerCtorArgumentsIdentityTable>().ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -1622,15 +1622,15 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAsync<IdentityTable>(entity);
+                await connection.InsertAsync<IdentityTable>(entity).ConfigureAwait(false);
 
                 // Act
                 var deleteResult = await connection.DeleteAsync<ImmutableWithWritablePropertiesIdentityTable>(
-                    ToImmutableWithWritablePropertiesIdentityTable(entity));
+                    ToImmutableWithWritablePropertiesIdentityTable(entity)).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(deleteResult == 1);
-                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>());
+                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>().ConfigureAwait(false));
             }
         }
 
@@ -1663,14 +1663,14 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAsync<IdentityTable>(entity);
+                await connection.InsertAsync<IdentityTable>(entity).ConfigureAwait(false);
 
                 // Act
-                var deleteResult = await connection.DeleteAsync<ImmutableWithWritablePropertiesIdentityTable>(entity.Id);
+                var deleteResult = await connection.DeleteAsync<ImmutableWithWritablePropertiesIdentityTable>(entity.Id).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(deleteResult == 1);
-                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>());
+                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>().ConfigureAwait(false));
             }
         }
 
@@ -1704,7 +1704,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertResult = await connection.InsertAsync<ImmutableWithWritablePropertiesIdentityTable, long>(entity);
+                var insertResult = await connection.InsertAsync<ImmutableWithWritablePropertiesIdentityTable, long>(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(insertResult > 0);
@@ -1745,11 +1745,11 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync<ImmutableWithWritablePropertiesIdentityTable>(entities);
+                var insertAllResult = await connection.InsertAllAsync<ImmutableWithWritablePropertiesIdentityTable>(entities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, insertAllResult);
-                Assert.AreEqual(entities.Count, await connection.CountAllAsync<ImmutableWithWritablePropertiesIdentityTable>());
+                Assert.AreEqual(entities.Count, await connection.CountAllAsync<ImmutableWithWritablePropertiesIdentityTable>().ConfigureAwait(false));
 
                 // Assert
                 Assert.IsTrue(entities.All(e => e.Id > 0));
@@ -1795,17 +1795,17 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeResult = await connection.MergeAsync<ImmutableWithWritablePropertiesIdentityTable, long>(entity);
+                var mergeResult = await connection.MergeAsync<ImmutableWithWritablePropertiesIdentityTable, long>(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(mergeResult > 0);
-                Assert.AreEqual(1, await connection.CountAllAsync<ImmutableWithWritablePropertiesIdentityTable>());
+                Assert.AreEqual(1, await connection.CountAllAsync<ImmutableWithWritablePropertiesIdentityTable>().ConfigureAwait(false));
 
                 // Assert
                 Assert.IsTrue(entity.Id == 1);
 
                 // Act
-                var queryResult = (await connection.QueryAsync<ImmutableWithWritablePropertiesIdentityTable>(mergeResult)).FirstOrDefault();
+                var queryResult = (await connection.QueryAsync<ImmutableWithWritablePropertiesIdentityTable>(mergeResult).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1871,7 +1871,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertResult = await connection.InsertAsync<IdentityTable, long>(entity);
+                var insertResult = await connection.InsertAsync<IdentityTable, long>(entity).ConfigureAwait(false);
 
                 // Setup
                 var newEntity = new ImmutableWithWritablePropertiesIdentityTable(0,
@@ -1896,7 +1896,7 @@ namespace RepoDb.IntegrationTests
                 };
 
                 // Act
-                var mergeResult = await connection.MergeAsync<ImmutableWithWritablePropertiesIdentityTable, long>(newEntity);
+                var mergeResult = await connection.MergeAsync<ImmutableWithWritablePropertiesIdentityTable, long>(newEntity).ConfigureAwait(false);
 
                 // The ID could not be set back to the entities, so it should be 0
 
@@ -1905,7 +1905,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(insertResult, mergeResult);
 
                 // Act
-                var queryResult = (await connection.QueryAsync<ImmutableWithWritablePropertiesIdentityTable>(newEntity.Id)).FirstOrDefault();
+                var queryResult = (await connection.QueryAsync<ImmutableWithWritablePropertiesIdentityTable>(newEntity.Id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(newEntity, queryResult);
@@ -1953,17 +1953,17 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeAllRequest = await connection.MergeAllAsync<ImmutableWithWritablePropertiesIdentityTable>(entities);
+                var mergeAllRequest = await connection.MergeAllAsync<ImmutableWithWritablePropertiesIdentityTable>(entities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, mergeAllRequest);
-                Assert.AreEqual(entities.Count, await connection.CountAllAsync<IdentityTable>());
+                Assert.AreEqual(entities.Count, await connection.CountAllAsync<IdentityTable>().ConfigureAwait(false));
 
                 // Assert
                 Assert.IsTrue(entities.All(e => e.Id > 0));
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<ImmutableWithWritablePropertiesIdentityTable>()).AsList();
+                var queryResult = (await connection.QueryAllAsync<ImmutableWithWritablePropertiesIdentityTable>().ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -2031,7 +2031,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync<IdentityTable>(entities);
+                var insertAllResult = await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Setup
                 var newEntities = entities.Select(entity => new ImmutableWithWritablePropertiesIdentityTable(0,
@@ -2056,14 +2056,14 @@ namespace RepoDb.IntegrationTests
                 }).AsList();
 
                 // Act
-                var mergeAllResult = await connection.MergeAllAsync<ImmutableWithWritablePropertiesIdentityTable>(newEntities);
+                var mergeAllResult = await connection.MergeAllAsync<ImmutableWithWritablePropertiesIdentityTable>(newEntities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, mergeAllResult);
-                Assert.AreEqual(entities.Count, await connection.CountAllAsync<ImmutableWithWritablePropertiesIdentityTable>());
+                Assert.AreEqual(entities.Count, await connection.CountAllAsync<ImmutableWithWritablePropertiesIdentityTable>().ConfigureAwait(false));
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<ImmutableWithWritablePropertiesIdentityTable>()).AsList();
+                var queryResult = (await connection.QueryAllAsync<ImmutableWithWritablePropertiesIdentityTable>().ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -2104,10 +2104,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertResult = await connection.InsertAsync<IdentityTable, long>(entity);
+                var insertResult = await connection.InsertAsync<IdentityTable, long>(entity).ConfigureAwait(false);
 
                 // Act
-                var queryResult = (await connection.QueryAsync<ImmutableWithWritablePropertiesIdentityTable>(insertResult)).FirstOrDefault();
+                var queryResult = (await connection.QueryAsync<ImmutableWithWritablePropertiesIdentityTable>(insertResult).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -2175,7 +2175,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAsync<IdentityTable, long>(entity);
+                await connection.InsertAsync<IdentityTable, long>(entity).ConfigureAwait(false);
 
                 // Setup
                 var newEntity = new ImmutableWithWritablePropertiesIdentityTable(0,
@@ -2200,13 +2200,13 @@ namespace RepoDb.IntegrationTests
                 };
 
                 // Act
-                var updateResult = await connection.UpdateAsync<ImmutableWithWritablePropertiesIdentityTable>(newEntity);
+                var updateResult = await connection.UpdateAsync<ImmutableWithWritablePropertiesIdentityTable>(newEntity).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(updateResult > 0);
 
                 // Act
-                var queryResult = (await connection.QueryAsync<ImmutableWithWritablePropertiesIdentityTable>(newEntity.Id)).FirstOrDefault();
+                var queryResult = (await connection.QueryAsync<ImmutableWithWritablePropertiesIdentityTable>(newEntity.Id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(queryResult);
@@ -2271,7 +2271,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAsync<IdentityTable>(entity);
+                await connection.InsertAsync<IdentityTable>(entity).ConfigureAwait(false);
 
                 // Setup
                 var newEntity = new ImmutableWithWritablePropertiesIdentityTable(0,
@@ -2296,13 +2296,13 @@ namespace RepoDb.IntegrationTests
                 };
 
                 // Act
-                var updateResult = await connection.UpdateAsync<ImmutableWithWritablePropertiesIdentityTable>(newEntity, newEntity.Id);
+                var updateResult = await connection.UpdateAsync<ImmutableWithWritablePropertiesIdentityTable>(newEntity, newEntity.Id).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(updateResult > 0);
 
                 // Act
-                var queryResult = (await connection.QueryAsync<IdentityTable>(newEntity.Id)).FirstOrDefault();
+                var queryResult = (await connection.QueryAsync<IdentityTable>(newEntity.Id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(queryResult);
@@ -2372,7 +2372,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Setup
                 var newEntities = entities.Select(entity => new ImmutableWithWritablePropertiesIdentityTable(0,
@@ -2397,13 +2397,13 @@ namespace RepoDb.IntegrationTests
                 }).AsList();
 
                 // Act
-                var updateAllResult = await connection.UpdateAllAsync<ImmutableWithWritablePropertiesIdentityTable>(newEntities);
+                var updateAllResult = await connection.UpdateAllAsync<ImmutableWithWritablePropertiesIdentityTable>(newEntities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, updateAllResult);
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<ImmutableWithWritablePropertiesIdentityTable>()).AsList();
+                var queryResult = (await connection.QueryAllAsync<ImmutableWithWritablePropertiesIdentityTable>().ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -2450,15 +2450,15 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAsync<IdentityTable>(entity);
+                await connection.InsertAsync<IdentityTable>(entity).ConfigureAwait(false);
 
                 // Act
                 var deleteResult = await connection.DeleteAsync<MappedPropertiesImmutableIdentityTable>(
-                    ToMappedPropertiesImmutableIdentityTable(entity));
+                    ToMappedPropertiesImmutableIdentityTable(entity)).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(deleteResult == 1);
-                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>());
+                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>().ConfigureAwait(false));
             }
         }
 
@@ -2491,14 +2491,14 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAsync<IdentityTable>(entity);
+                await connection.InsertAsync<IdentityTable>(entity).ConfigureAwait(false);
 
                 // Act
-                var deleteResult = await connection.DeleteAsync<MappedPropertiesImmutableIdentityTable>(entity.Id);
+                var deleteResult = await connection.DeleteAsync<MappedPropertiesImmutableIdentityTable>(entity.Id).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(deleteResult == 1);
-                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>());
+                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>().ConfigureAwait(false));
             }
         }
 
@@ -2531,7 +2531,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertResult = await connection.InsertAsync<MappedPropertiesImmutableIdentityTable, long>(entity);
+                var insertResult = await connection.InsertAsync<MappedPropertiesImmutableIdentityTable, long>(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(insertResult > 0);
@@ -2568,11 +2568,11 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync<MappedPropertiesImmutableIdentityTable>(entities);
+                var insertAllResult = await connection.InsertAllAsync<MappedPropertiesImmutableIdentityTable>(entities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, insertAllResult);
-                Assert.AreEqual(entities.Count, await connection.CountAllAsync<MappedPropertiesImmutableIdentityTable>());
+                Assert.AreEqual(entities.Count, await connection.CountAllAsync<MappedPropertiesImmutableIdentityTable>().ConfigureAwait(false));
             }
         }
 
@@ -2612,14 +2612,14 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeResult = await connection.MergeAsync<MappedPropertiesImmutableIdentityTable, long>(entity);
+                var mergeResult = await connection.MergeAsync<MappedPropertiesImmutableIdentityTable, long>(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(mergeResult > 0);
-                Assert.AreEqual(1, await connection.CountAllAsync<MappedPropertiesImmutableIdentityTable>());
+                Assert.AreEqual(1, await connection.CountAllAsync<MappedPropertiesImmutableIdentityTable>().ConfigureAwait(false));
 
                 // Act
-                var queryResult = (await connection.QueryAsync<MappedPropertiesImmutableIdentityTable>(mergeResult)).FirstOrDefault();
+                var queryResult = (await connection.QueryAsync<MappedPropertiesImmutableIdentityTable>(mergeResult).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -2674,7 +2674,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertResult = await connection.InsertAsync<IdentityTable, long>(entity);
+                var insertResult = await connection.InsertAsync<IdentityTable, long>(entity).ConfigureAwait(false);
 
                 // Setup
                 var newEntity = new MappedPropertiesImmutableIdentityTable(entity.Id,
@@ -2688,7 +2688,7 @@ namespace RepoDb.IntegrationTests
                     entity.ColumnNVarChar);
 
                 // Act
-                var mergeResult = await connection.MergeAsync<MappedPropertiesImmutableIdentityTable, long>(newEntity);
+                var mergeResult = await connection.MergeAsync<MappedPropertiesImmutableIdentityTable, long>(newEntity).ConfigureAwait(false);
 
                 // The ID could not be set back to the entities, so it should be 0
 
@@ -2697,7 +2697,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(insertResult, mergeResult);
 
                 // Act
-                var queryResult = (await connection.QueryAsync<MappedPropertiesImmutableIdentityTable>(newEntity.Id)).FirstOrDefault();
+                var queryResult = (await connection.QueryAsync<MappedPropertiesImmutableIdentityTable>(newEntity.Id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(newEntity, queryResult);
@@ -2742,14 +2742,14 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var mergeAllRequest = await connection.MergeAllAsync<MappedPropertiesImmutableIdentityTable>(entities);
+                var mergeAllRequest = await connection.MergeAllAsync<MappedPropertiesImmutableIdentityTable>(entities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, mergeAllRequest);
-                Assert.AreEqual(entities.Count, await connection.CountAllAsync<MappedPropertiesImmutableIdentityTable>());
+                Assert.AreEqual(entities.Count, await connection.CountAllAsync<MappedPropertiesImmutableIdentityTable>().ConfigureAwait(false));
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<MappedPropertiesImmutableIdentityTable>()).AsList();
+                var queryResult = (await connection.QueryAllAsync<MappedPropertiesImmutableIdentityTable>().ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -2806,7 +2806,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync<IdentityTable>(entities);
+                var insertAllResult = await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Setup
                 var newEntities = entities.Select(entity => new MappedPropertiesImmutableIdentityTable(entity.Id,
@@ -2820,14 +2820,14 @@ namespace RepoDb.IntegrationTests
                     entity.ColumnNVarChar)).AsList();
 
                 // Act
-                var mergeAllResult = await connection.MergeAllAsync<MappedPropertiesImmutableIdentityTable>(newEntities);
+                var mergeAllResult = await connection.MergeAllAsync<MappedPropertiesImmutableIdentityTable>(newEntities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, mergeAllResult);
-                Assert.AreEqual(entities.Count, await connection.CountAllAsync<MappedPropertiesImmutableIdentityTable>());
+                Assert.AreEqual(entities.Count, await connection.CountAllAsync<MappedPropertiesImmutableIdentityTable>().ConfigureAwait(false));
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<MappedPropertiesImmutableIdentityTable>()).AsList();
+                var queryResult = (await connection.QueryAllAsync<MappedPropertiesImmutableIdentityTable>().ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -2868,10 +2868,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertResult = await connection.InsertAsync<IdentityTable, long>(entity);
+                var insertResult = await connection.InsertAsync<IdentityTable, long>(entity).ConfigureAwait(false);
 
                 // Act
-                var queryResult = (await connection.QueryAsync<MappedPropertiesImmutableIdentityTable>(insertResult)).FirstOrDefault();
+                var queryResult = (await connection.QueryAsync<MappedPropertiesImmutableIdentityTable>(insertResult).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -2928,7 +2928,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAsync<IdentityTable, long>(entity);
+                await connection.InsertAsync<IdentityTable, long>(entity).ConfigureAwait(false);
 
                 // Setup
                 var newEntity = new MappedPropertiesImmutableIdentityTable(entity.Id,
@@ -2942,13 +2942,13 @@ namespace RepoDb.IntegrationTests
                     entity.ColumnNVarChar);
 
                 // Act
-                var updateResult = await connection.UpdateAsync<MappedPropertiesImmutableIdentityTable>(newEntity);
+                var updateResult = await connection.UpdateAsync<MappedPropertiesImmutableIdentityTable>(newEntity).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(updateResult > 0);
 
                 // Act
-                var queryResult = (await connection.QueryAsync<MappedPropertiesImmutableIdentityTable>(newEntity.Id)).FirstOrDefault();
+                var queryResult = (await connection.QueryAsync<MappedPropertiesImmutableIdentityTable>(newEntity.Id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(queryResult);
@@ -3002,7 +3002,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAsync<IdentityTable>(entity);
+                await connection.InsertAsync<IdentityTable>(entity).ConfigureAwait(false);
 
                 // Setup
                 var newEntity = new MappedPropertiesImmutableIdentityTable(entity.Id,
@@ -3016,13 +3016,13 @@ namespace RepoDb.IntegrationTests
                     entity.ColumnNVarChar);
 
                 // Act
-                var updateResult = await connection.UpdateAsync<MappedPropertiesImmutableIdentityTable>(newEntity, newEntity.Id);
+                var updateResult = await connection.UpdateAsync<MappedPropertiesImmutableIdentityTable>(newEntity, newEntity.Id).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(updateResult > 0);
 
                 // Act
-                var queryResult = (await connection.QueryAsync<MappedPropertiesImmutableIdentityTable>(newEntity.Id)).FirstOrDefault();
+                var queryResult = (await connection.QueryAsync<MappedPropertiesImmutableIdentityTable>(newEntity.Id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(queryResult);
@@ -3081,7 +3081,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Setup
                 var newEntities = entities.Select(entity => new MappedPropertiesImmutableIdentityTable(entity.Id,
@@ -3095,13 +3095,13 @@ namespace RepoDb.IntegrationTests
                     entity.ColumnNVarChar)).AsList();
 
                 // Act
-                var updateAllResult = await connection.UpdateAllAsync<MappedPropertiesImmutableIdentityTable>(newEntities);
+                var updateAllResult = await connection.UpdateAllAsync<MappedPropertiesImmutableIdentityTable>(newEntities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, updateAllResult);
 
                 // Act
-                var queryResult = (await connection.QueryAllAsync<MappedPropertiesImmutableIdentityTable>()).AsList();
+                var queryResult = (await connection.QueryAllAsync<MappedPropertiesImmutableIdentityTable>().ConfigureAwait(false)).AsList();
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -3159,7 +3159,7 @@ namespace RepoDb.IntegrationTests
                 var sql = "SELECT 1 AS [Id], @Value AS [Value];";
 
                 // Act
-                var queryResult = (await connection.ExecuteQueryAsync<ImmutableWithMatchedCtorArguments>(sql, param)).FirstOrDefault();
+                var queryResult = (await connection.ExecuteQueryAsync<ImmutableWithMatchedCtorArguments>(sql, param).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(1, queryResult.Id);
@@ -3215,7 +3215,7 @@ namespace RepoDb.IntegrationTests
                 var sql = "SELECT 1 AS [Id], @Value AS [Value];";
 
                 // Act
-                var queryResult = (await connection.ExecuteQueryAsync<ImmutableWithMatchedCtorArgumentsFromMultipleCtors>(sql, param)).FirstOrDefault();
+                var queryResult = (await connection.ExecuteQueryAsync<ImmutableWithMatchedCtorArgumentsFromMultipleCtors>(sql, param).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(1, queryResult.Id);
@@ -3270,7 +3270,7 @@ namespace RepoDb.IntegrationTests
                 var sql = "SELECT 1 AS [Id], @Value AS [Value];";
 
                 // Act
-                await Assert.ThrowsAsync<MissingMemberException>(async () => await connection.ExecuteQueryAsync<ImmutableWithUnmatchedCtorArgumentsFromMultipleCtors>(sql, param));
+                await Assert.ThrowsAsync<MissingMemberException>(async () => await connection.ExecuteQueryAsync<ImmutableWithUnmatchedCtorArgumentsFromMultipleCtors>(sql, param).ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

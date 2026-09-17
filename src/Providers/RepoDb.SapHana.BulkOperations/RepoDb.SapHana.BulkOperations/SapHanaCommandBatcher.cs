@@ -362,32 +362,32 @@ namespace RepoDb.SapHana.BulkOperations
             var parameters = AddParameters(command, mappings);
             var pendingRows = 0;
             
-            await command.PrepareAsync(cancellationToken);
+            await command.PrepareAsync(cancellationToken).ConfigureAwait(false);
 
             try
             {
-                while (dbReader != null ? await dbReader.ReadAsync(cancellationToken) : reader.Read())
+                while (dbReader != null ? await dbReader.ReadAsync(cancellationToken).ConfigureAwait(false) : reader.Read())
                 {
                     for (var i = 0; i < sourceOrdinals.Length; i++)
                     {
                         parameters[i].Value = NormalizeParameterValue(reader.GetValue(sourceOrdinals[i]));
                     }
-                    affectedRows += await command.ExecuteNonQueryAsync(cancellationToken);
+                    affectedRows += await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
                     pendingRows++;
 
                     if (pendingRows >= effectiveBatchSize)
                     {
-                        await command.DisposeAsync();
+                        await command.DisposeAsync().ConfigureAwait(false);
                         command = CreateCommand(commandText);
                         parameters = AddParameters(command, mappings);
-                        await command.PrepareAsync(cancellationToken);
+                        await command.PrepareAsync(cancellationToken).ConfigureAwait(false);
                         pendingRows = 0;
                     }
                 }
             }
             finally
             {
-                await command.DisposeAsync();
+                await command.DisposeAsync().ConfigureAwait(false);
             }
 
             return affectedRows;
@@ -420,7 +420,7 @@ namespace RepoDb.SapHana.BulkOperations
                 var count = Math.Min(effectiveBatchSize, rows.Length - offset);
                 await using var command = CreateCommand(commandText);
                 var parameters = AddParameters(command, mappings);
-                await command.PrepareAsync(cancellationToken);
+                await command.PrepareAsync(cancellationToken).ConfigureAwait(false);
 
                 for (var rowIndex = 0; rowIndex < count; rowIndex++)
                 {
@@ -429,7 +429,7 @@ namespace RepoDb.SapHana.BulkOperations
                     {
                         parameters[i].Value = NormalizeParameterValue(row[mappings[i].SourceColumn]);
                     }
-                    affectedRows += await command.ExecuteNonQueryAsync(cancellationToken);
+                    affectedRows += await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
                 }
             }
 

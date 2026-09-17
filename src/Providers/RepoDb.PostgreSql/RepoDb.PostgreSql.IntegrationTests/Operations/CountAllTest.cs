@@ -80,7 +80,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAllAsync<CompleteTable>();
+                var result = await connection.CountAllAsync<CompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -97,7 +97,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
-                    await connection.CountAllAsync<CompleteTable>(hints: "WhatEver"));
+                    await connection.CountAllAsync<CompleteTable>(hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -153,7 +153,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAllAsync(ClassMappedNameCache.Get<CompleteTable>());
+                var result = await connection.CountAllAsync(ClassMappedNameCache.Get<CompleteTable>()).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -171,7 +171,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.CountAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

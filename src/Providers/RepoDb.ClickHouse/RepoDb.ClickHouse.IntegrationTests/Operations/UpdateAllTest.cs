@@ -80,7 +80,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = await connection.UpdateAllAsync<CompleteTable>(tables);
+                var result = await connection.UpdateAllAsync<CompleteTable>(tables).ConfigureAwait(false);
 
                 // ClickHouse's ALTER TABLE ... UPDATE mutation reports no meaningful affected-row
                 // count via ExecuteNonQuery (it is queued, not applied synchronously) - wait for it instead.
@@ -175,7 +175,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = await connection.UpdateAllAsync(ClassMappedNameCache.Get<CompleteTable>(), tables);
+                var result = await connection.UpdateAllAsync(ClassMappedNameCache.Get<CompleteTable>(), tables).ConfigureAwait(false);
 
                 // ClickHouse's ALTER TABLE ... UPDATE mutation reports no meaningful affected-row
                 // count via ExecuteNonQuery (it is queued, not applied synchronously) - wait for it instead.
@@ -204,7 +204,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.UpdateAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // ClickHouse's ALTER TABLE ... UPDATE mutation reports no meaningful affected-row
                 // count via ExecuteNonQuery (it is queued, not applied synchronously) - wait for it instead.

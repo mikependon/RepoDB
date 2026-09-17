@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Extensions;
 using RepoDb.UnitTests.CustomObjects;
@@ -33,7 +34,7 @@ namespace RepoDb.UnitTests.Extensions
             var schema = DataEntityExtension.GetSchema("SchemaName.TableName", dbSetting);
 
             // Assert
-            Assert.AreEqual("SchemaName", schema);
+            Assert.AreEqual("SchemaName", schema, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -46,7 +47,7 @@ namespace RepoDb.UnitTests.Extensions
             var schema = DataEntityExtension.GetSchema("[SchemaName].[TableName]", dbSetting);
 
             // Assert
-            Assert.AreEqual("[SchemaName]", schema);
+            Assert.AreEqual("[SchemaName]", schema, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -59,7 +60,7 @@ namespace RepoDb.UnitTests.Extensions
             var schema = DataEntityExtension.GetSchema("Schema Name.TableName", dbSetting);
 
             // Assert
-            Assert.AreEqual("Schema Name", schema);
+            Assert.AreEqual("Schema Name", schema, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -72,7 +73,7 @@ namespace RepoDb.UnitTests.Extensions
             var schema = DataEntityExtension.GetSchema("[Schema.Name].[TableName]", dbSetting);
 
             // Assert
-            Assert.AreEqual("[Schema.Name]", schema);
+            Assert.AreEqual("[Schema.Name]", schema, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -85,7 +86,7 @@ namespace RepoDb.UnitTests.Extensions
             var schema = DataEntityExtension.GetSchema("[Schema Name].[TableName]", dbSetting);
 
             // Assert
-            Assert.AreEqual("[Schema Name]", schema);
+            Assert.AreEqual("[Schema Name]", schema, StringComparer.Ordinal);
         }
 
         #endregion
@@ -102,7 +103,7 @@ namespace RepoDb.UnitTests.Extensions
             var schema = DataEntityExtension.GetTableName("TableName", dbSetting);
 
             // Assert
-            Assert.AreEqual("TableName", schema);
+            Assert.AreEqual("TableName", schema, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -115,7 +116,7 @@ namespace RepoDb.UnitTests.Extensions
             var schema = DataEntityExtension.GetTableName("[TableName]", dbSetting);
 
             // Assert
-            Assert.AreEqual("[TableName]", schema);
+            Assert.AreEqual("[TableName]", schema, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -128,7 +129,7 @@ namespace RepoDb.UnitTests.Extensions
             var schema = DataEntityExtension.GetTableName("Table Name", dbSetting);
 
             // Assert
-            Assert.AreEqual("Table Name", schema);
+            Assert.AreEqual("Table Name", schema, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -141,7 +142,7 @@ namespace RepoDb.UnitTests.Extensions
             var schema = DataEntityExtension.GetTableName("[Table.Name]", dbSetting);
 
             // Assert
-            Assert.AreEqual("[Table.Name]", schema);
+            Assert.AreEqual("[Table.Name]", schema, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -154,7 +155,7 @@ namespace RepoDb.UnitTests.Extensions
             var schema = DataEntityExtension.GetTableName("[Table Name]", dbSetting);
 
             // Assert
-            Assert.AreEqual("[Table Name]", schema);
+            Assert.AreEqual("[Table Name]", schema, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -167,7 +168,7 @@ namespace RepoDb.UnitTests.Extensions
             var schema = DataEntityExtension.GetTableName("SchemaName.TableName", dbSetting);
 
             // Assert
-            Assert.AreEqual("TableName", schema);
+            Assert.AreEqual("TableName", schema, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -180,7 +181,7 @@ namespace RepoDb.UnitTests.Extensions
             var schema = DataEntityExtension.GetTableName("SchemaName.Table Name", dbSetting);
 
             // Assert
-            Assert.AreEqual("Table Name", schema);
+            Assert.AreEqual("Table Name", schema, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -193,7 +194,7 @@ namespace RepoDb.UnitTests.Extensions
             var schema = DataEntityExtension.GetTableName("[SchemaName].[TableName]", dbSetting);
 
             // Assert
-            Assert.AreEqual("[TableName]", schema);
+            Assert.AreEqual("[TableName]", schema, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -206,7 +207,7 @@ namespace RepoDb.UnitTests.Extensions
             var schema = DataEntityExtension.GetTableName("[SchemaName].[Table.Name]", dbSetting);
 
             // Assert
-            Assert.AreEqual("[Table.Name]", schema);
+            Assert.AreEqual("[Table.Name]", schema, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -219,7 +220,7 @@ namespace RepoDb.UnitTests.Extensions
             var schema = DataEntityExtension.GetTableName("[SchemaName].[Table Name]", dbSetting);
 
             // Assert
-            Assert.AreEqual("[Table Name]", schema);
+            Assert.AreEqual("[Table Name]", schema, StringComparer.Ordinal);
         }
 
         #endregion

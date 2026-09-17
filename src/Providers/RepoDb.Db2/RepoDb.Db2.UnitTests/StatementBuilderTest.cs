@@ -40,7 +40,7 @@ namespace RepoDb.Db2.UnitTests
             var expected = "SELECT AVG (CAST(\"Field1\" AS DOUBLE)) AS \"AverageValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -60,7 +60,7 @@ namespace RepoDb.Db2.UnitTests
                 $"WHERE (\"Id\" = :Id)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -76,7 +76,7 @@ namespace RepoDb.Db2.UnitTests
             var expected = "SELECT AVG (CAST(\"Field1\" AS DOUBLE)) AS \"AverageValue\" FROM \"SCHEMA\".\"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -133,7 +133,7 @@ namespace RepoDb.Db2.UnitTests
             var expected = "SELECT AVG (CAST(\"Field1\" AS DOUBLE)) AS \"AverageValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -189,7 +189,7 @@ namespace RepoDb.Db2.UnitTests
                 $"ROWS FETCH NEXT 10 ROWS ONLY";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -216,7 +216,7 @@ namespace RepoDb.Db2.UnitTests
                 $"ROWS FETCH NEXT 10 ROWS ONLY";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -263,7 +263,7 @@ namespace RepoDb.Db2.UnitTests
                 $"ROWS FETCH NEXT 10 ROWS ONLY";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -290,7 +290,7 @@ namespace RepoDb.Db2.UnitTests
                 $"ROWS FETCH NEXT 10 ROWS ONLY";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -317,7 +317,7 @@ namespace RepoDb.Db2.UnitTests
                 $"ROWS FETCH NEXT 10 ROWS ONLY";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -468,7 +468,7 @@ namespace RepoDb.Db2.UnitTests
             var expected = "SELECT COUNT (*) AS \"CountValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -487,7 +487,7 @@ namespace RepoDb.Db2.UnitTests
                 $"WHERE (\"Id\" = :Id)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -502,7 +502,7 @@ namespace RepoDb.Db2.UnitTests
             var expected = "SELECT COUNT (*) AS \"CountValue\" FROM \"SCHEMA\".\"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -517,7 +517,7 @@ namespace RepoDb.Db2.UnitTests
             var expected = "SELECT COUNT (*) AS \"CountValue\" FROM \"SCHEMA\".\"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -559,7 +559,7 @@ namespace RepoDb.Db2.UnitTests
             var expected = "SELECT COUNT (*) AS \"CountValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -574,7 +574,7 @@ namespace RepoDb.Db2.UnitTests
             var expected = "SELECT COUNT (*) AS \"CountValue\" FROM \"SCHEMA\".\"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -589,7 +589,7 @@ namespace RepoDb.Db2.UnitTests
             var expected = "SELECT COUNT (*) AS \"CountValue\" FROM \"SCHEMA\".\"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -631,7 +631,7 @@ namespace RepoDb.Db2.UnitTests
             var expected = "DELETE FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -649,7 +649,7 @@ namespace RepoDb.Db2.UnitTests
                 $"WHERE (\"Id\" = :Id)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -664,7 +664,7 @@ namespace RepoDb.Db2.UnitTests
             var expected = "DELETE FROM \"SCHEMA\".\"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -679,7 +679,7 @@ namespace RepoDb.Db2.UnitTests
             var expected = "DELETE FROM \"SCHEMA\".\"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -743,7 +743,7 @@ namespace RepoDb.Db2.UnitTests
             var expected = "DELETE FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -758,7 +758,7 @@ namespace RepoDb.Db2.UnitTests
             var expected = "DELETE FROM \"SCHEMA\".\"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -773,7 +773,7 @@ namespace RepoDb.Db2.UnitTests
             var expected = "DELETE FROM \"SCHEMA\".\"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -842,7 +842,7 @@ namespace RepoDb.Db2.UnitTests
                 $"FETCH FIRST 1 ROWS ONLY";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -860,7 +860,7 @@ namespace RepoDb.Db2.UnitTests
                 $"FETCH FIRST 1 ROWS ONLY";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -878,7 +878,7 @@ namespace RepoDb.Db2.UnitTests
                 $"FETCH FIRST 1 ROWS ONLY";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -896,7 +896,7 @@ namespace RepoDb.Db2.UnitTests
                 $"FETCH FIRST 1 ROWS ONLY";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -968,7 +968,7 @@ namespace RepoDb.Db2.UnitTests
                 $"( :Field1, :Field2, :Field3 )";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -991,7 +991,7 @@ namespace RepoDb.Db2.UnitTests
                 $")";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1017,7 +1017,7 @@ namespace RepoDb.Db2.UnitTests
                 $")";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1040,7 +1040,7 @@ namespace RepoDb.Db2.UnitTests
                 $"( :Field1, :Field2, :Field3 )";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1063,7 +1063,7 @@ namespace RepoDb.Db2.UnitTests
                 $"( :Field1, :Field2, :Field3 )";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1086,7 +1086,7 @@ namespace RepoDb.Db2.UnitTests
                 $")";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1209,7 +1209,7 @@ namespace RepoDb.Db2.UnitTests
                 $")";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1235,7 +1235,7 @@ namespace RepoDb.Db2.UnitTests
                 $"( :Field1_1, :Field2_1, :Field3_1 )";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1262,7 +1262,7 @@ namespace RepoDb.Db2.UnitTests
                 $")";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1286,7 +1286,7 @@ namespace RepoDb.Db2.UnitTests
                 $"( :Field1, :Field2, :Field3 )";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1310,7 +1310,7 @@ namespace RepoDb.Db2.UnitTests
                 $")";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1370,7 +1370,7 @@ namespace RepoDb.Db2.UnitTests
             var expected = "SELECT MAX (\"Field1\") AS \"MaxValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1390,7 +1390,7 @@ namespace RepoDb.Db2.UnitTests
                 $"WHERE (\"Id\" = :Id)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1447,7 +1447,7 @@ namespace RepoDb.Db2.UnitTests
             var expected = "SELECT MAX (\"Field1\") AS \"MaxValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1492,7 +1492,7 @@ namespace RepoDb.Db2.UnitTests
                 $"VALUES ( S.\"Field1\", S.\"Field2\", S.\"Field3\" )";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1538,7 +1538,7 @@ namespace RepoDb.Db2.UnitTests
                 $"VALUES ( S.\"Field1\", S.\"Field2\", S.\"Field3\" )";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1567,7 +1567,7 @@ namespace RepoDb.Db2.UnitTests
                 $"VALUES ( S.\"Field1\", S.\"Field2\", S.\"Field3\" )";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1605,7 +1605,7 @@ namespace RepoDb.Db2.UnitTests
                 $"FROM SYSIBM.SYSDUMMY1";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1641,7 +1641,7 @@ namespace RepoDb.Db2.UnitTests
                 $"FROM SYSIBM.SYSDUMMY1";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1679,7 +1679,7 @@ namespace RepoDb.Db2.UnitTests
                 $"FROM SYSIBM.SYSDUMMY1";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1711,7 +1711,7 @@ namespace RepoDb.Db2.UnitTests
                 $"FROM SYSIBM.SYSDUMMY1";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1856,7 +1856,7 @@ namespace RepoDb.Db2.UnitTests
                 $"VALUES ( S.\"Field1\", S.\"Field2\", S.\"Field3\" )";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1895,7 +1895,7 @@ namespace RepoDb.Db2.UnitTests
                 $"ORDER BY \"__RepoDb_OrderColumn\"";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1945,7 +1945,7 @@ namespace RepoDb.Db2.UnitTests
                 $"VALUES ( S.\"Field1\", S.\"Field2\", S.\"Field3\" )";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1978,7 +1978,7 @@ namespace RepoDb.Db2.UnitTests
                 $"FROM SYSIBM.SYSDUMMY1";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2050,7 +2050,7 @@ namespace RepoDb.Db2.UnitTests
             var expected = "SELECT MIN (\"Field1\") AS \"MinValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2070,7 +2070,7 @@ namespace RepoDb.Db2.UnitTests
                 $"WHERE (\"Id\" = :Id)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2127,7 +2127,7 @@ namespace RepoDb.Db2.UnitTests
             var expected = "SELECT MIN (\"Field1\") AS \"MinValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2159,7 +2159,7 @@ namespace RepoDb.Db2.UnitTests
             var expected = "SELECT \"Field1\", \"Field2\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2175,7 +2175,7 @@ namespace RepoDb.Db2.UnitTests
             var expected = "SELECT \"Field1\", \"Field2\" FROM \"Table\" FETCH FIRST 10 ROWS ONLY";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2195,7 +2195,7 @@ namespace RepoDb.Db2.UnitTests
                 $"WHERE (\"Field1\" <> :Field1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2215,7 +2215,7 @@ namespace RepoDb.Db2.UnitTests
                 $"ORDER BY \"Field1\" ASC";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2231,7 +2231,7 @@ namespace RepoDb.Db2.UnitTests
             var expected = "SELECT \"Field1\", \"Field2\" FROM \"SCHEMA\".\"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2247,7 +2247,7 @@ namespace RepoDb.Db2.UnitTests
             var expected = "SELECT \"Field1\", \"Field2\" FROM \"SCHEMA\".\"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2339,7 +2339,7 @@ namespace RepoDb.Db2.UnitTests
                 $"ROWS FETCH NEXT 10 ROWS ONLY";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2368,7 +2368,7 @@ namespace RepoDb.Db2.UnitTests
                 $"ROWS FETCH NEXT 10 ROWS ONLY";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2395,7 +2395,7 @@ namespace RepoDb.Db2.UnitTests
                 $"ROWS FETCH NEXT 10 ROWS ONLY";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2422,7 +2422,7 @@ namespace RepoDb.Db2.UnitTests
                 $"ROWS FETCH NEXT 10 ROWS ONLY";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2587,7 +2587,7 @@ namespace RepoDb.Db2.UnitTests
             var expected = "SELECT SUM (\"Field1\") AS \"SumValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2607,7 +2607,7 @@ namespace RepoDb.Db2.UnitTests
                 $"WHERE (\"Id\" = :Id)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2664,7 +2664,7 @@ namespace RepoDb.Db2.UnitTests
             var expected = "SELECT SUM (\"Field1\") AS \"SumValue\" FROM \"Table\"";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2695,7 +2695,7 @@ namespace RepoDb.Db2.UnitTests
             var expected = "TRUNCATE TABLE \"Table\" IMMEDIATE";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2710,7 +2710,7 @@ namespace RepoDb.Db2.UnitTests
             var expected = "TRUNCATE TABLE \"SCHEMA\".\"Table\" IMMEDIATE";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2725,7 +2725,7 @@ namespace RepoDb.Db2.UnitTests
             var expected = "TRUNCATE TABLE \"SCHEMA\".\"Table\" IMMEDIATE";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2791,7 +2791,7 @@ namespace RepoDb.Db2.UnitTests
                 $"WHERE (\"Id\" = :m_Id)";
 
             // Assert - the bind variable is ":m_Id" (a letter-first, Db2-legal identifier).
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2818,7 +2818,7 @@ namespace RepoDb.Db2.UnitTests
                 $"WHERE (\"m_Id\" = :m_Id)";
 
             // Assert - not ":m_m_Id".
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2836,7 +2836,7 @@ namespace RepoDb.Db2.UnitTests
                 $"SET \"Field1\" = :Field1, \"Field2\" = :Field2, \"Field3\" = :Field3";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2854,7 +2854,7 @@ namespace RepoDb.Db2.UnitTests
                 $"SET \"Field1\" = :Field1, \"Field2\" = :Field2";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2872,7 +2872,7 @@ namespace RepoDb.Db2.UnitTests
                 $"SET \"Field1\" = :Field1, \"Field2\" = :Field2";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2895,7 +2895,7 @@ namespace RepoDb.Db2.UnitTests
                 $"SET \"Field2\" = :Field2, \"Field3\" = :Field3";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -2918,7 +2918,7 @@ namespace RepoDb.Db2.UnitTests
                 $"SET \"Field2\" = :Field2, \"Field3\" = :Field3";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -3007,7 +3007,7 @@ namespace RepoDb.Db2.UnitTests
                 $"WHERE (\"Field1\" = :Field1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -3033,7 +3033,7 @@ namespace RepoDb.Db2.UnitTests
                 $"WHERE (\"Field1\" = :Field1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -3056,7 +3056,7 @@ namespace RepoDb.Db2.UnitTests
                 $"WHERE (\"Field1\" = :Field1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -3079,7 +3079,7 @@ namespace RepoDb.Db2.UnitTests
                 $"WHERE (\"Field1\" = :Field1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -3123,7 +3123,7 @@ namespace RepoDb.Db2.UnitTests
                 $"UPDATE \"Table\" SET \"Field2\" = :Field2_1, \"Field3\" = :Field3_1 WHERE (\"Field1\" = :Field1_1)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]

@@ -131,7 +131,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             using var connection = new OracleConnection(Database.ConnectionString);
 
             // Act
-            var result = await connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM \"CompleteTable\"");
+            var result = await connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM \"CompleteTable\"").ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, result.Count());
@@ -150,7 +150,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             try
             {
                 // Act
-                var result = await connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM \"CompleteTable\"");
+                var result = await connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM \"CompleteTable\"").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -172,7 +172,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
 
             // Act
             var result = await connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM \"CompleteTable\" WHERE \"Id\" = :Id",
-                new { tables.Last().Id });
+                new { tables.Last().Id }).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(1, result.Count());
@@ -188,7 +188,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             using var connection = new OracleConnection(Database.ConnectionString);
 
             // Act
-            var result = await connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM \"CompleteTable\" ORDER BY \"Id\" FETCH FIRST 5 ROWS ONLY");
+            var result = await connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM \"CompleteTable\" ORDER BY \"Id\" FETCH FIRST 5 ROWS ONLY").ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(5, result.Count());
@@ -200,7 +200,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             using var connection = new OracleConnection(Database.ConnectionString);
 
             // Act
-            var result = await connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM \"CompleteTable\"");
+            var result = await connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM \"CompleteTable\"").ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(0, result.Count());

@@ -149,7 +149,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"IdentityCompleteTable\";"))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"IdentityCompleteTable\";").ConfigureAwait(false))
                 {
                     while (reader.Read())
                     {
@@ -177,7 +177,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"IdentityCompleteTable\"; SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"IdentityCompleteTable\";"))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"IdentityCompleteTable\"; SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"IdentityCompleteTable\";").ConfigureAwait(false))
                 {
                     do
                     {
@@ -208,7 +208,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM \"IdentityCompleteTable\";"))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM \"IdentityCompleteTable\";").ConfigureAwait(false))
                 {
                     // Act
                     var result = DataReader.ToEnumerable<IdentityCompleteTable>((DbDataReader)reader).AsList();
@@ -228,7 +228,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM \"IdentityCompleteTable\";"))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM \"IdentityCompleteTable\";").ConfigureAwait(false))
                 {
                     // Act
                     var result = DataReader.ToEnumerable((DbDataReader)reader).AsList();

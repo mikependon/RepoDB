@@ -118,16 +118,16 @@ namespace RepoDb.DbHelpers
         private async Task<DbField> ReaderToDbFieldAsync(DbDataReader reader,
             CancellationToken cancellationToken = default)
         {
-            return new DbField(await reader.GetFieldValueAsync<string>(0, cancellationToken),
-                !await reader.IsDBNullAsync(1, cancellationToken) && Convert.ToInt32(await reader.GetFieldValueAsync<decimal>(1, cancellationToken)) == 1,
-                !await reader.IsDBNullAsync(2, cancellationToken) && Convert.ToInt32(await reader.GetFieldValueAsync<decimal>(2, cancellationToken)) == 1,
-                !await reader.IsDBNullAsync(3, cancellationToken) && Convert.ToInt32(await reader.GetFieldValueAsync<decimal>(3, cancellationToken)) == 1,
-                await reader.IsDBNullAsync(4, cancellationToken) ? DbTypeResolver.Resolve("varchar2") : DbTypeResolver.Resolve(await reader.GetFieldValueAsync<string>(4, cancellationToken)),
-                await reader.IsDBNullAsync(5, cancellationToken) ? 0 : Convert.ToInt32(await reader.GetFieldValueAsync<decimal>(5, cancellationToken)),
-                await reader.IsDBNullAsync(6, cancellationToken) ? (byte?)0 : Convert.ToByte(await reader.GetFieldValueAsync<decimal>(6, cancellationToken)),
-                await reader.IsDBNullAsync(7, cancellationToken) ? (byte?)0 : Convert.ToByte(await reader.GetFieldValueAsync<decimal>(7, cancellationToken)),
-                await reader.IsDBNullAsync(4, cancellationToken) ? "varchar2" : await reader.GetFieldValueAsync<string>(4, cancellationToken),
-                !await reader.IsDBNullAsync(8, cancellationToken) && Convert.ToInt32(await reader.GetFieldValueAsync<decimal>(8, cancellationToken)) == 1,
+            return new DbField(await reader.GetFieldValueAsync<string>(0, cancellationToken).ConfigureAwait(false),
+                !await reader.IsDBNullAsync(1, cancellationToken).ConfigureAwait(false) && Convert.ToInt32(await reader.GetFieldValueAsync<decimal>(1, cancellationToken).ConfigureAwait(false)) == 1,
+                !await reader.IsDBNullAsync(2, cancellationToken).ConfigureAwait(false) && Convert.ToInt32(await reader.GetFieldValueAsync<decimal>(2, cancellationToken).ConfigureAwait(false)) == 1,
+                !await reader.IsDBNullAsync(3, cancellationToken).ConfigureAwait(false) && Convert.ToInt32(await reader.GetFieldValueAsync<decimal>(3, cancellationToken).ConfigureAwait(false)) == 1,
+                await reader.IsDBNullAsync(4, cancellationToken).ConfigureAwait(false) ? DbTypeResolver.Resolve("varchar2") : DbTypeResolver.Resolve(await reader.GetFieldValueAsync<string>(4, cancellationToken).ConfigureAwait(false)),
+                await reader.IsDBNullAsync(5, cancellationToken).ConfigureAwait(false) ? 0 : Convert.ToInt32(await reader.GetFieldValueAsync<decimal>(5, cancellationToken).ConfigureAwait(false)),
+                await reader.IsDBNullAsync(6, cancellationToken).ConfigureAwait(false) ? (byte?)0 : Convert.ToByte(await reader.GetFieldValueAsync<decimal>(6, cancellationToken).ConfigureAwait(false)),
+                await reader.IsDBNullAsync(7, cancellationToken).ConfigureAwait(false) ? (byte?)0 : Convert.ToByte(await reader.GetFieldValueAsync<decimal>(7, cancellationToken).ConfigureAwait(false)),
+                await reader.IsDBNullAsync(4, cancellationToken).ConfigureAwait(false) ? "varchar2" : await reader.GetFieldValueAsync<string>(4, cancellationToken).ConfigureAwait(false),
+                !await reader.IsDBNullAsync(8, cancellationToken).ConfigureAwait(false) && Convert.ToInt32(await reader.GetFieldValueAsync<decimal>(8, cancellationToken).ConfigureAwait(false)) == 1,
                 "ORACLE");
         }
 
@@ -196,14 +196,14 @@ namespace RepoDb.DbHelpers
 
             // Iterate and extract
             using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, param,
-                transaction: transaction, cancellationToken: cancellationToken);
+                transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
 
             var dbFields = new List<DbField>();
 
             // Iterate the list of the fields
-            while (await reader.ReadAsync(cancellationToken))
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
-                dbFields.Add(await ReaderToDbFieldAsync(reader, cancellationToken));
+                dbFields.Add(await ReaderToDbFieldAsync(reader, cancellationToken).ConfigureAwait(false));
             }
 
             // Return the list of fields

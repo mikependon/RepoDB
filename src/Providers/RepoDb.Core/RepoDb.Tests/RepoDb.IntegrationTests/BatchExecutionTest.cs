@@ -43,11 +43,11 @@ namespace RepoDb.SqlServer.IntegrationTests
                     {
                         var identityTables = Helper.CreateIdentityTables(i);
                         connection.InsertAll(identityTables);
-                        await connection.InsertAllAsync(identityTables);
+                        await connection.InsertAllAsync(identityTables).ConfigureAwait(false);
                         connection.UpdateAll(identityTables);
-                        await connection.UpdateAllAsync(identityTables);
+                        await connection.UpdateAllAsync(identityTables).ConfigureAwait(false);
                         connection.MergeAll(identityTables);
-                        await connection.MergeAllAsync(identityTables);
+                        await connection.MergeAllAsync(identityTables).ConfigureAwait(false);
                     }
                     catch
                     {
@@ -100,7 +100,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                         var identityTables = Helper.CreateIdentityTables(i);
                         connection.InsertAll(identityTables);
                         connection.UpdateAll(identityTables);
-                        await connection.UpdateAllAsync(identityTables);
+                        await connection.UpdateAllAsync(identityTables).ConfigureAwait(false);
                     }
                     catch
                     {
@@ -149,7 +149,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                     {
                         var identityTables = Helper.CreateIdentityTables(i);
                         connection.MergeAll(identityTables);
-                        await connection.MergeAllAsync(identityTables);
+                        await connection.MergeAllAsync(identityTables).ConfigureAwait(false);
                     }
                     catch
                     {
@@ -198,7 +198,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                         var identityTables = Helper.CreateIdentityTables(i);
                         connection.InsertAll(identityTables);
                         connection.MergeAll(identityTables);
-                        await connection.MergeAllAsync(identityTables);
+                        await connection.MergeAllAsync(identityTables).ConfigureAwait(false);
                     }
                     catch
                     {

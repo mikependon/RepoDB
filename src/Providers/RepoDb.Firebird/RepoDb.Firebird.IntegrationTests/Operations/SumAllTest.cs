@@ -80,7 +80,7 @@ namespace RepoDb.Firebird.IntegrationTests.Operations
             using (var connection = new FbConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.SumAllAsync<CompleteTable>(e => e.ColumnInt);
+                var result = await connection.SumAllAsync<CompleteTable>(e => e.ColumnInt).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
@@ -98,7 +98,7 @@ namespace RepoDb.Firebird.IntegrationTests.Operations
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.SumAllAsync<CompleteTable>(e => e.ColumnInt,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -157,7 +157,7 @@ namespace RepoDb.Firebird.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.SumAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt).First());
+                    Field.Parse<CompleteTable>(e => e.ColumnInt).First()).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
@@ -176,7 +176,7 @@ namespace RepoDb.Firebird.IntegrationTests.Operations
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.SumAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
                         Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

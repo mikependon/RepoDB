@@ -99,10 +99,10 @@ namespace RepoDb.IntegrationTests.Types.Dates
             using (var repository = new DatesClassRepository(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await repository.InsertAsync(entity);
+                var id = await repository.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await repository.QueryAsync(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await repository.QueryAsync(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -167,10 +167,10 @@ namespace RepoDb.IntegrationTests.Types.Dates
             using (var repository = new DatesClassRepository(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await repository.InsertAsync(entity);
+                var id = await repository.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await repository.QueryAsync(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await repository.QueryAsync(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -239,10 +239,10 @@ namespace RepoDb.IntegrationTests.Types.Dates
             using (var repository = new DatesMapClassRepository(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await repository.InsertAsync(entity);
+                var id = await repository.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await repository.QueryAsync(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await repository.QueryAsync(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -307,10 +307,10 @@ namespace RepoDb.IntegrationTests.Types.Dates
             using (var repository = new DatesMapClassRepository(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await repository.InsertAsync(entity);
+                var id = await repository.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await repository.QueryAsync(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await repository.QueryAsync(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);

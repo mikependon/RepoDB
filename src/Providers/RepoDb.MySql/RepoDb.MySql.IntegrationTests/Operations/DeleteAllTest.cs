@@ -99,7 +99,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAllAsync<CompleteTable>();
+                var result = await connection.DeleteAllAsync<CompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -116,7 +116,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act
-                var result = await connection.DeleteAllAsync<CompleteTable>(primaryKeys);
+                var result = await connection.DeleteAllAsync<CompleteTable>(primaryKeys).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -133,7 +133,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act
-                var result = await connection.DeleteAllAsync<CompleteTable>(primaryKeys);
+                var result = await connection.DeleteAllAsync<CompleteTable>(primaryKeys).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -211,7 +211,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>());
+                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>()).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -228,7 +228,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act
-                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>(), primaryKeys);
+                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>(), primaryKeys).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -245,7 +245,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act
-                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>(), primaryKeys);
+                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>(), primaryKeys).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);

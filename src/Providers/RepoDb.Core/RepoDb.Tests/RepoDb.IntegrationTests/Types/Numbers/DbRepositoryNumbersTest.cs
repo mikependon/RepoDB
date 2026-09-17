@@ -97,10 +97,10 @@ namespace RepoDb.IntegrationTests.Types.Numbers
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await repository.InsertAsync(entity);
+                var id = await repository.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await repository.QueryAsync<NumbersClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await repository.QueryAsync<NumbersClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -181,10 +181,10 @@ namespace RepoDb.IntegrationTests.Types.Numbers
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await repository.InsertAsync(entity);
+                var id = await repository.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await repository.QueryAsync<NumbersClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await repository.QueryAsync<NumbersClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -265,10 +265,10 @@ namespace RepoDb.IntegrationTests.Types.Numbers
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await repository.InsertAsync(entity);
+                var id = await repository.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await repository.QueryAsync<NumbersMappedClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await repository.QueryAsync<NumbersMappedClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -349,10 +349,10 @@ namespace RepoDb.IntegrationTests.Types.Numbers
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await repository.InsertAsync(entity);
+                var id = await repository.InsertAsync(entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await repository.QueryAsync<NumbersMappedClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+                var data = (await repository.QueryAsync<NumbersMappedClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -613,10 +613,10 @@ namespace RepoDb.IntegrationTests.Types.Numbers
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await repository.InsertAsync(ClassMappedNameCache.Get<NumbersClass>(), entity);
+                var id = await repository.InsertAsync(ClassMappedNameCache.Get<NumbersClass>(), entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await repository.QueryAsync(ClassMappedNameCache.Get<NumbersClass>(), new { SessionId = (Guid)id })).FirstOrDefault();
+                var data = (await repository.QueryAsync(ClassMappedNameCache.Get<NumbersClass>(), new { SessionId = (Guid)id }).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -697,10 +697,10 @@ namespace RepoDb.IntegrationTests.Types.Numbers
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await repository.InsertAsync(ClassMappedNameCache.Get<NumbersClass>(), entity);
+                var id = await repository.InsertAsync(ClassMappedNameCache.Get<NumbersClass>(), entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await repository.QueryAsync(ClassMappedNameCache.Get<NumbersClass>(), new { SessionId = (Guid)id })).FirstOrDefault();
+                var data = (await repository.QueryAsync(ClassMappedNameCache.Get<NumbersClass>(), new { SessionId = (Guid)id }).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);

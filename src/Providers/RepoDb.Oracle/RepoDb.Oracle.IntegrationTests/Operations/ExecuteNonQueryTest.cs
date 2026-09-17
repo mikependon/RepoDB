@@ -129,7 +129,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             using var connection = new OracleConnection(Database.ConnectionString);
 
             // Act
-            var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\"");
+            var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\"").ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, result);
@@ -148,7 +148,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             try
             {
                 // Act
-                var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\"");
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\"").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -170,7 +170,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
 
             // Act
             var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\" WHERE \"Id\" = :Id",
-                new { tables.Last().Id });
+                new { tables.Last().Id }).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(1, result);
@@ -187,7 +187,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
 
             // Act
             var result = await connection.ExecuteNonQueryAsync("UPDATE \"CompleteTable\" SET \"ColumnVarchar\" = :ColumnVarchar WHERE \"Id\" = :Id",
-                new { ColumnVarchar = "Updated", tables.Last().Id });
+                new { ColumnVarchar = "Updated", tables.Last().Id }).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(1, result);

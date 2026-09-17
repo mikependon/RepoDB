@@ -189,7 +189,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAsync<CompleteTable>((object)null);
+                var result = await connection.DeleteAsync<CompleteTable>((object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -205,7 +205,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAsync<CompleteTable>(tables.First().Id);
+                var result = await connection.DeleteAsync<CompleteTable>(tables.First().Id).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -221,7 +221,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAsync<CompleteTable>(tables.First());
+                var result = await connection.DeleteAsync<CompleteTable>(tables.First()).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -237,7 +237,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAsync<CompleteTable>(e => e.Id == tables.First().Id);
+                var result = await connection.DeleteAsync<CompleteTable>(e => e.Id == tables.First().Id).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -253,7 +253,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAsync<CompleteTable>(new { Id = tables.First().Id });
+                var result = await connection.DeleteAsync<CompleteTable>(new { Id = tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -269,7 +269,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAsync<CompleteTable>(new QueryField("Id", tables.First().Id));
+                var result = await connection.DeleteAsync<CompleteTable>(new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -290,7 +290,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAsync<CompleteTable>(queryFields);
+                var result = await connection.DeleteAsync<CompleteTable>(queryFields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(8, result);
@@ -312,7 +312,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAsync<CompleteTable>(queryGroup);
+                var result = await connection.DeleteAsync<CompleteTable>(queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(8, result);
@@ -447,7 +447,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), (object)null);
+                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -463,7 +463,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAsync<CompleteTable>(tables.First().Id);
+                var result = await connection.DeleteAsync<CompleteTable>(tables.First().Id).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -479,7 +479,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), new { Id = tables.First().Id });
+                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), new { Id = tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -495,7 +495,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), new QueryField("Id", tables.First().Id));
+                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -516,7 +516,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), queryFields);
+                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), queryFields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(8, result);
@@ -538,7 +538,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), queryGroup);
+                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(8, result);

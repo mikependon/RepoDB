@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
 using RepoDb.Attributes.Parameter.ClickHouse;
@@ -55,7 +56,7 @@ namespace RepoDb.ClickHouse.UnitTests.Attributes
                     // Assert - bare "ColumnName", not "@ColumnName": ClickHouseDbSetting.ParameterPrefix is
                     // string.Empty, so the real DbParameter.ParameterName carries no prefix.
                     var parameter = (ClickHouseDbParameter)command.Parameters["ColumnName"];
-                    Assert.AreEqual("UUID", parameter.ClickHouseType);
+                    Assert.AreEqual("UUID", parameter.ClickHouseType, StringComparer.Ordinal);
                 }
             }
         }
@@ -80,7 +81,7 @@ namespace RepoDb.ClickHouse.UnitTests.Attributes
 
                     // Assert
                     var parameter = (ClickHouseDbParameter)command.Parameters["ColumnName"];
-                    Assert.AreEqual("UUID", parameter.ClickHouseType);
+                    Assert.AreEqual("UUID", parameter.ClickHouseType, StringComparer.Ordinal);
                 }
             }
         }

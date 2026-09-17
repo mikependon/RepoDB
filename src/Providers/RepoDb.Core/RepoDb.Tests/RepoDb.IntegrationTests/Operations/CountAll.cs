@@ -87,7 +87,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.CountAllAsync<IdentityTable>();
+                var result = await connection.CountAllAsync<IdentityTable>().ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -106,7 +106,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.CountAllAsync<IdentityTable>(hints: SqlServerTableHints.NoLock);
+                var result = await connection.CountAllAsync<IdentityTable>(hints: SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -172,7 +172,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.CountAllAsync(ClassMappedNameCache.Get<IdentityTable>());
+                var result = await connection.CountAllAsync(ClassMappedNameCache.Get<IdentityTable>()).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -192,7 +192,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.CountAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    hints: SqlServerTableHints.NoLock);
+                    hints: SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);

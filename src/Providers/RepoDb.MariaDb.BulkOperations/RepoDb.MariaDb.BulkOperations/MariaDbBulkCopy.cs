@@ -96,7 +96,7 @@ namespace RepoDb.MariaDb.BulkOperations
                         WriteRow(writer, ordinal => reader.IsDBNull(ordinal) ? null : reader.GetValue(ordinal));
                     }
                 }
-                return await LoadAsync(filePath, cancellationToken);
+                return await LoadAsync(filePath, cancellationToken).ConfigureAwait(false);
             }
             finally
             {
@@ -132,7 +132,7 @@ namespace RepoDb.MariaDb.BulkOperations
                         WriteRow(writer, ordinal => ordinal < columnCount && ordinal < row.Table.Columns.Count && !row.IsNull(ordinal) ? row[ordinal] : null);
                     }
                 }
-                return await LoadAsync(filePath, cancellationToken);
+                return await LoadAsync(filePath, cancellationToken).ConfigureAwait(false);
             }
             finally
             {
@@ -247,7 +247,7 @@ namespace RepoDb.MariaDb.BulkOperations
             }
 
             cancellationToken.ThrowIfCancellationRequested();
-            return await bulkLoader.LoadAsync();
+            return await bulkLoader.LoadAsync().ConfigureAwait(false);
         }
 
         /// <summary>

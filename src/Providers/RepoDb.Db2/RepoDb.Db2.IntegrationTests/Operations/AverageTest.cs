@@ -212,7 +212,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.AverageAsync<CompleteTable>(e => e.ColumnSmallInt,
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnSmallInt), Convert.ToDouble(result));
@@ -232,7 +232,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 {
                     // Act
                     var result = await connection.AverageAsync<CompleteTable>(e => e.ColumnSmallInt,
-                        (object)null);
+                        (object)null).ConfigureAwait(false);
 
                     // Assert
                     Assert.AreEqual(tables.Average(e => e.ColumnSmallInt), Convert.ToDouble(result));
@@ -255,7 +255,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.AverageAsync<CompleteTable>(e => e.ColumnSmallInt,
-                    e => ids.Contains(e.Id));
+                    e => ids.Contains(e.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Average(e => e.ColumnSmallInt), Convert.ToDouble(result));
@@ -272,7 +272,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.AverageAsync<CompleteTable>(e => e.ColumnSmallInt,
-                    new { tables.First().Id });
+                    new { tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Average(e => e.ColumnSmallInt), Convert.ToDouble(result));
@@ -289,7 +289,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.AverageAsync<CompleteTable>(e => e.ColumnSmallInt,
-                    new QueryField("Id", tables.First().Id));
+                    new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Average(e => e.ColumnSmallInt), Convert.ToDouble(result));
@@ -311,7 +311,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.AverageAsync<CompleteTable>(e => e.ColumnSmallInt,
-                    queryFields);
+                    queryFields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Average(e => e.ColumnSmallInt), Convert.ToDouble(result));
@@ -334,7 +334,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.AverageAsync<CompleteTable>(e => e.ColumnSmallInt,
-                    queryGroup);
+                    queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Average(e => e.ColumnSmallInt), Convert.ToDouble(result));
@@ -352,7 +352,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 // Act/Assert: AreTableHintsSupported == false for Db2 - any non-null/non-whitespace
                 // "hints" argument must throw, rather than silently being ignored.
                 await Assert.ThrowsAsync<NotSupportedException>(() =>
-                    connection.AverageAsync<CompleteTable>(e => e.ColumnSmallInt, (object)null, hints: "NOLOCK"));
+                    connection.AverageAsync<CompleteTable>(e => e.ColumnSmallInt, (object)null, hints: "NOLOCK")).ConfigureAwait(false);
             }
         }
 
@@ -480,7 +480,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 // Act
                 var result = await connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnSmallInt).First(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnSmallInt), Convert.ToDouble(result));
@@ -498,7 +498,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 // Act
                 var result = await connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnSmallInt).First(),
-                    new { tables.First().Id });
+                    new { tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Average(e => e.ColumnSmallInt), Convert.ToDouble(result));
@@ -516,7 +516,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 // Act
                 var result = await connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnSmallInt).First(),
-                    new QueryField("Id", tables.First().Id));
+                    new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Average(e => e.ColumnSmallInt), Convert.ToDouble(result));
@@ -539,7 +539,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 // Act
                 var result = await connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnSmallInt).First(),
-                    queryFields);
+                    queryFields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Average(e => e.ColumnSmallInt), Convert.ToDouble(result));
@@ -563,7 +563,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 // Act
                 var result = await connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnSmallInt).First(),
-                    queryGroup);
+                    queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Average(e => e.ColumnSmallInt), Convert.ToDouble(result));

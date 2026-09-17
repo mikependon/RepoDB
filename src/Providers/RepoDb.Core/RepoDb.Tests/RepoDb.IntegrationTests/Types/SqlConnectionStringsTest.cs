@@ -61,12 +61,12 @@ namespace RepoDb.IntegrationTests.Types.Strings
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.AreEqual(entity.ColumnChar, data.ColumnChar.Trim());
-                Assert.AreEqual(entity.ColumnNChar, data.ColumnNChar.Trim());
-                Assert.AreEqual(entity.ColumnNText, data.ColumnNText);
-                Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar);
-                Assert.AreEqual(entity.ColumnText, data.ColumnText);
-                Assert.AreEqual(entity.ColumnVarChar, data.ColumnVarChar);
+                Assert.AreEqual(entity.ColumnChar, data.ColumnChar.Trim(), StringComparer.Ordinal);
+                Assert.AreEqual(entity.ColumnNChar, data.ColumnNChar.Trim(), StringComparer.Ordinal);
+                Assert.AreEqual(entity.ColumnNText, data.ColumnNText, StringComparer.Ordinal);
+                Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar, StringComparer.Ordinal);
+                Assert.AreEqual(entity.ColumnText, data.ColumnText, StringComparer.Ordinal);
+                Assert.AreEqual(entity.ColumnVarChar, data.ColumnVarChar, StringComparer.Ordinal);
             }
         }
 
@@ -130,12 +130,12 @@ namespace RepoDb.IntegrationTests.Types.Strings
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.AreEqual(entity.ColumnCharMapped, data.ColumnCharMapped.Trim());
-                Assert.AreEqual(entity.ColumnNCharMapped, data.ColumnNCharMapped.Trim());
-                Assert.AreEqual(entity.ColumnNTextMapped, data.ColumnNTextMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
-                Assert.AreEqual(entity.ColumnTextMapped, data.ColumnTextMapped);
-                Assert.AreEqual(entity.ColumnVarCharMapped, data.ColumnVarCharMapped);
+                Assert.AreEqual(entity.ColumnCharMapped, data.ColumnCharMapped.Trim(), StringComparer.Ordinal);
+                Assert.AreEqual(entity.ColumnNCharMapped, data.ColumnNCharMapped.Trim(), StringComparer.Ordinal);
+                Assert.AreEqual(entity.ColumnNTextMapped, data.ColumnNTextMapped, StringComparer.Ordinal);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
+                Assert.AreEqual(entity.ColumnTextMapped, data.ColumnTextMapped, StringComparer.Ordinal);
+                Assert.AreEqual(entity.ColumnVarCharMapped, data.ColumnVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -193,20 +193,20 @@ namespace RepoDb.IntegrationTests.Types.Strings
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
-                var id = await insertResult;
+                var id = await insertResult.ConfigureAwait(false);
 
                 // Act Query
-                var queryResult = await connection.QueryAsync<StringsClass>(e => e.SessionId == (Guid)id);
+                var queryResult = await connection.QueryAsync<StringsClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false);
                 var data = queryResult.FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.AreEqual(entity.ColumnChar, data.ColumnChar.Trim());
-                Assert.AreEqual(entity.ColumnNChar, data.ColumnNChar.Trim());
-                Assert.AreEqual(entity.ColumnNText, data.ColumnNText);
-                Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar);
-                Assert.AreEqual(entity.ColumnText, data.ColumnText);
-                Assert.AreEqual(entity.ColumnVarChar, data.ColumnVarChar);
+                Assert.AreEqual(entity.ColumnChar, data.ColumnChar.Trim(), StringComparer.Ordinal);
+                Assert.AreEqual(entity.ColumnNChar, data.ColumnNChar.Trim(), StringComparer.Ordinal);
+                Assert.AreEqual(entity.ColumnNText, data.ColumnNText, StringComparer.Ordinal);
+                Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar, StringComparer.Ordinal);
+                Assert.AreEqual(entity.ColumnText, data.ColumnText, StringComparer.Ordinal);
+                Assert.AreEqual(entity.ColumnVarChar, data.ColumnVarChar, StringComparer.Ordinal);
             }
         }
 
@@ -229,10 +229,10 @@ namespace RepoDb.IntegrationTests.Types.Strings
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
-                var id = await insertResult;
+                var id = await insertResult.ConfigureAwait(false);
 
                 // Act Query
-                var queryResult = await connection.QueryAsync<StringsClass>(e => e.SessionId == (Guid)id);
+                var queryResult = await connection.QueryAsync<StringsClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false);
                 var data = queryResult.FirstOrDefault();
 
                 // Assert
@@ -266,20 +266,20 @@ namespace RepoDb.IntegrationTests.Types.Strings
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
-                var id = await insertResult;
+                var id = await insertResult.ConfigureAwait(false);
 
                 // Act Query
-                var queryResult = await connection.QueryAsync<StringsMapClass>(e => e.SessionId == (Guid)id);
+                var queryResult = await connection.QueryAsync<StringsMapClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false);
                 var data = queryResult.FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.AreEqual(entity.ColumnCharMapped, data.ColumnCharMapped.Trim());
-                Assert.AreEqual(entity.ColumnNCharMapped, data.ColumnNCharMapped.Trim());
-                Assert.AreEqual(entity.ColumnNTextMapped, data.ColumnNTextMapped);
-                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
-                Assert.AreEqual(entity.ColumnTextMapped, data.ColumnTextMapped);
-                Assert.AreEqual(entity.ColumnVarCharMapped, data.ColumnVarCharMapped);
+                Assert.AreEqual(entity.ColumnCharMapped, data.ColumnCharMapped.Trim(), StringComparer.Ordinal);
+                Assert.AreEqual(entity.ColumnNCharMapped, data.ColumnNCharMapped.Trim(), StringComparer.Ordinal);
+                Assert.AreEqual(entity.ColumnNTextMapped, data.ColumnNTextMapped, StringComparer.Ordinal);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped, StringComparer.Ordinal);
+                Assert.AreEqual(entity.ColumnTextMapped, data.ColumnTextMapped, StringComparer.Ordinal);
+                Assert.AreEqual(entity.ColumnVarCharMapped, data.ColumnVarCharMapped, StringComparer.Ordinal);
             }
         }
 
@@ -302,10 +302,10 @@ namespace RepoDb.IntegrationTests.Types.Strings
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
-                var id = await insertResult;
+                var id = await insertResult.ConfigureAwait(false);
 
                 // Act Query
-                var queryResult = await connection.QueryAsync<StringsMapClass>(e => e.SessionId == (Guid)id);
+                var queryResult = await connection.QueryAsync<StringsMapClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false);
                 var data = queryResult.FirstOrDefault();
 
                 // Assert
@@ -377,10 +377,10 @@ namespace RepoDb.IntegrationTests.Types.Strings
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(ClassMappedNameCache.Get<StringsClass>(), entity);
+                var id = await connection.InsertAsync(ClassMappedNameCache.Get<StringsClass>(), entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync(ClassMappedNameCache.Get<StringsClass>(), new { SessionId = (Guid)id })).FirstOrDefault();
+                var data = (await connection.QueryAsync(ClassMappedNameCache.Get<StringsClass>(), new { SessionId = (Guid)id }).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -445,10 +445,10 @@ namespace RepoDb.IntegrationTests.Types.Strings
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
-                var id = await connection.InsertAsync(ClassMappedNameCache.Get<StringsClass>(), entity);
+                var id = await connection.InsertAsync(ClassMappedNameCache.Get<StringsClass>(), entity).ConfigureAwait(false);
 
                 // Act Query
-                var data = (await connection.QueryAsync(ClassMappedNameCache.Get<StringsClass>(), new { SessionId = (Guid)id })).FirstOrDefault();
+                var data = (await connection.QueryAsync(ClassMappedNameCache.Get<StringsClass>(), new { SessionId = (Guid)id }).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -481,10 +481,10 @@ namespace RepoDb.IntegrationTests.Types.Strings
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(ClassMappedNameCache.Get<StringsClass>(), entity);
-                var id = await insertResult;
+                var id = await insertResult.ConfigureAwait(false);
 
                 // Act Query
-                var queryResult = await connection.QueryAsync(ClassMappedNameCache.Get<StringsClass>(), new { SessionId = (Guid)id });
+                var queryResult = await connection.QueryAsync(ClassMappedNameCache.Get<StringsClass>(), new { SessionId = (Guid)id }).ConfigureAwait(false);
                 var data = queryResult.FirstOrDefault();
 
                 // Assert
@@ -553,10 +553,10 @@ namespace RepoDb.IntegrationTests.Types.Strings
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(ClassMappedNameCache.Get<StringsClass>(), entity);
-                var id = await insertResult;
+                var id = await insertResult.ConfigureAwait(false);
 
                 // Act Query
-                var queryResult = await connection.QueryAsync(ClassMappedNameCache.Get<StringsClass>(), new { SessionId = (Guid)id });
+                var queryResult = await connection.QueryAsync(ClassMappedNameCache.Get<StringsClass>(), new { SessionId = (Guid)id }).ConfigureAwait(false);
                 var data = queryResult.FirstOrDefault();
 
                 // Assert

@@ -65,7 +65,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.TruncateAsync<IdentityCompleteTable>();
+                var result = await connection.TruncateAsync<IdentityCompleteTable>().ConfigureAwait(false);
                 var countResult = connection.CountAll<IdentityCompleteTable>();
 
                 // Assert
@@ -111,7 +111,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.TruncateAsync(ClassMappedNameCache.Get<IdentityCompleteTable>());
+                var result = await connection.TruncateAsync(ClassMappedNameCache.Get<IdentityCompleteTable>()).ConfigureAwait(false);
                 var countResult = connection.CountAll<IdentityCompleteTable>();
 
                 // Assert

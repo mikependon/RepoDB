@@ -41,10 +41,10 @@ namespace RepoDb.Benchmarks.ClickHouse.RepoDb
         [Benchmark]
         public async Task BulkInsertAllAsync()
         {
-            await using var connection = await GetConnection().EnsureOpenAsync() as ClickHouseConnection;
+            await using var connection = await GetConnection().EnsureOpenAsync().ConfigureAwait(false) as ClickHouseConnection;
 
             var persons = GetPersons(Rows);
-            await connection.BulkInsertAsync(persons);
+            await connection.BulkInsertAsync(persons).ConfigureAwait(false);
         }
 
         // ClickHouse has no identity/auto-increment mechanism, so Id is always assigned explicitly.

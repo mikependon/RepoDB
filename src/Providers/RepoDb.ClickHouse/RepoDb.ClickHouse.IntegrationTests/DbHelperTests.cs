@@ -91,7 +91,7 @@ namespace RepoDb.ClickHouse.IntegrationTests
 
                 // Assert
                 Assert.IsNotNull(primary);
-                Assert.AreEqual("Id", primary.Name);
+                Assert.AreEqual("Id", primary.Name, StringComparer.Ordinal);
             }
         }
 
@@ -124,7 +124,7 @@ namespace RepoDb.ClickHouse.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null);
+                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null).ConfigureAwait(false);
 
                 // Assert
                 using (var reader = connection.ExecuteReader($@"SELECT name AS ColumnName
@@ -162,12 +162,12 @@ namespace RepoDb.ClickHouse.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null);
+                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null).ConfigureAwait(false);
                 var primary = fields.FirstOrDefault(f => f.IsPrimary == true);
 
                 // Assert
                 Assert.IsNotNull(primary);
-                Assert.AreEqual("Id", primary.Name);
+                Assert.AreEqual("Id", primary.Name, StringComparer.Ordinal);
             }
         }
 
@@ -180,7 +180,7 @@ namespace RepoDb.ClickHouse.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null);
+                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsFalse(fields.Any(f => f.IsIdentity == true));
@@ -223,7 +223,7 @@ namespace RepoDb.ClickHouse.IntegrationTests
 
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(() =>
-                    helper.GetScopeIdentityAsync<long>(connection, null));
+                    helper.GetScopeIdentityAsync<long>(connection, null)).ConfigureAwait(false);
             }
         }
 

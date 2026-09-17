@@ -99,7 +99,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAllAsync<IdentityCompleteTable>();
+                var result = await connection.DeleteAllAsync<IdentityCompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -116,7 +116,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act
-                var result = await connection.DeleteAllAsync<IdentityCompleteTable>(primaryKeys);
+                var result = await connection.DeleteAllAsync<IdentityCompleteTable>(primaryKeys).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -133,7 +133,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act
-                var result = await connection.DeleteAllAsync<IdentityCompleteTable>(primaryKeys);
+                var result = await connection.DeleteAllAsync<IdentityCompleteTable>(primaryKeys).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -211,7 +211,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>());
+                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>()).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -228,7 +228,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act
-                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(), primaryKeys);
+                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(), primaryKeys).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -245,7 +245,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act
-                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(), primaryKeys);
+                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(), primaryKeys).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);

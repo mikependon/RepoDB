@@ -81,7 +81,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.AverageAllAsync<CompleteTable>(e => e.ColumnInteger);
+                var result = await connection.AverageAllAsync<CompleteTable>(e => e.ColumnInteger).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnInteger), Convert.ToDouble(result));
@@ -99,7 +99,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.AverageAllAsync<CompleteTable>(e => e.ColumnInteger,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -158,7 +158,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.AverageAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInteger).First());
+                    Field.Parse<CompleteTable>(e => e.ColumnInteger).First()).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnInteger), Convert.ToDouble(result));
@@ -177,7 +177,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.AverageAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
                         Field.Parse<CompleteTable>(e => e.ColumnInteger).First(),
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

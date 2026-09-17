@@ -209,7 +209,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.SumAsync<CompleteTable>(e => e.ColumnSmallInt,
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(e => e.ColumnSmallInt), Convert.ToInt32(result));
@@ -229,7 +229,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 {
                     // Act
                     var result = await connection.SumAsync<CompleteTable>(e => e.ColumnSmallInt,
-                        (object)null);
+                        (object)null).ConfigureAwait(false);
 
                     // Assert
                     Assert.AreEqual(tables.Sum(e => e.ColumnSmallInt), Convert.ToInt32(result));
@@ -252,7 +252,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.SumAsync<CompleteTable>(e => e.ColumnSmallInt,
-                    e => ids.Contains(e.Id));
+                    e => ids.Contains(e.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Sum(e => e.ColumnSmallInt), Convert.ToInt32(result));
@@ -269,7 +269,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.SumAsync<CompleteTable>(e => e.ColumnSmallInt,
-                    new { tables.First().Id });
+                    new { tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Sum(e => e.ColumnSmallInt), Convert.ToInt32(result));
@@ -286,7 +286,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.SumAsync<CompleteTable>(e => e.ColumnSmallInt,
-                    new QueryField("Id", tables.First().Id));
+                    new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Sum(e => e.ColumnSmallInt), Convert.ToInt32(result));
@@ -308,7 +308,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.SumAsync<CompleteTable>(e => e.ColumnSmallInt,
-                    queryFields);
+                    queryFields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Sum(e => e.ColumnSmallInt), Convert.ToInt32(result));
@@ -331,7 +331,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.SumAsync<CompleteTable>(e => e.ColumnSmallInt,
-                    queryGroup);
+                    queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Sum(e => e.ColumnSmallInt), Convert.ToInt32(result));
@@ -349,7 +349,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 // Act/Assert: AreTableHintsSupported == false for Oracle - any non-null/non-whitespace
                 // "hints" argument must throw, rather than silently being ignored.
                 await Assert.ThrowsAsync<NotSupportedException>(() =>
-                    connection.SumAsync<CompleteTable>(e => e.ColumnSmallInt, (object)null, hints: "NOLOCK"));
+                    connection.SumAsync<CompleteTable>(e => e.ColumnSmallInt, (object)null, hints: "NOLOCK")).ConfigureAwait(false);
             }
         }
 
@@ -477,7 +477,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 // Act
                 var result = await connection.SumAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnSmallInt", typeof(short)),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(e => e.ColumnSmallInt), Convert.ToInt32(result));
@@ -495,7 +495,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 // Act
                 var result = await connection.SumAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnSmallInt", typeof(short)),
-                    new { tables.First().Id });
+                    new { tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Sum(e => e.ColumnSmallInt), Convert.ToInt32(result));
@@ -513,7 +513,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 // Act
                 var result = await connection.SumAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnSmallInt", typeof(short)),
-                    new QueryField("Id", tables.First().Id));
+                    new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Sum(e => e.ColumnSmallInt), Convert.ToInt32(result));
@@ -536,7 +536,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 // Act
                 var result = await connection.SumAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnSmallInt", typeof(short)),
-                    queryFields);
+                    queryFields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Sum(e => e.ColumnSmallInt), Convert.ToInt32(result));
@@ -560,7 +560,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 // Act
                 var result = await connection.SumAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnSmallInt", typeof(short)),
-                    queryGroup);
+                    queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Sum(e => e.ColumnSmallInt), Convert.ToInt32(result));

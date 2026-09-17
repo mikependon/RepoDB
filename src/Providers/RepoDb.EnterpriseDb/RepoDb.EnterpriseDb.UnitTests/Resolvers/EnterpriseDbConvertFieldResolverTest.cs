@@ -36,7 +36,7 @@ namespace RepoDb.EnterpriseDb.UnitTests.Resolvers
             var result = resolver.Resolve(field, setting);
 
             // Assert
-            Assert.AreEqual("CAST(\"Field\" AS INTEGER)", result);
+            Assert.AreEqual("CAST(\"Field\" AS INTEGER)", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -51,7 +51,7 @@ namespace RepoDb.EnterpriseDb.UnitTests.Resolvers
             var result = resolver.Resolve(field, setting);
 
             // Assert
-            Assert.AreEqual("CAST(\"Field\" AS BIGINT)", result);
+            Assert.AreEqual("CAST(\"Field\" AS BIGINT)", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -66,7 +66,7 @@ namespace RepoDb.EnterpriseDb.UnitTests.Resolvers
             var result = resolver.Resolve(field, setting);
 
             // Assert
-            Assert.AreEqual("CAST(\"Field\" AS SMALLINT)", result);
+            Assert.AreEqual("CAST(\"Field\" AS SMALLINT)", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -81,7 +81,7 @@ namespace RepoDb.EnterpriseDb.UnitTests.Resolvers
             var result = resolver.Resolve(field, setting);
 
             // Assert
-            Assert.AreEqual("CAST(\"Field\" AS TIMESTAMP)", result);
+            Assert.AreEqual("CAST(\"Field\" AS TIMESTAMP)", result, StringComparer.Ordinal);
         }
         
         [TestMethod]
@@ -96,7 +96,7 @@ namespace RepoDb.EnterpriseDb.UnitTests.Resolvers
             var result = resolver.Resolve(field, setting);
 
             // Assert
-            Assert.AreEqual("CAST(\"Field\" AS TIMESTAMPTZ)", result);
+            Assert.AreEqual("CAST(\"Field\" AS TIMESTAMPTZ)", result, StringComparer.Ordinal);
         }
 
 
@@ -112,7 +112,7 @@ namespace RepoDb.EnterpriseDb.UnitTests.Resolvers
             var result = resolver.Resolve(field, setting);
 
             // Assert
-            Assert.AreEqual("CAST(\"Field\" AS TEXT)", result);
+            Assert.AreEqual("CAST(\"Field\" AS TEXT)", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -127,7 +127,7 @@ namespace RepoDb.EnterpriseDb.UnitTests.Resolvers
             var result = resolver.Resolve(field, setting);
 
             // Assert
-            Assert.AreEqual("CAST(\"Field\" AS BYTEA)", result);
+            Assert.AreEqual("CAST(\"Field\" AS BYTEA)", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -142,7 +142,7 @@ namespace RepoDb.EnterpriseDb.UnitTests.Resolvers
             var result = resolver.Resolve(field, setting);
 
             // Assert
-            Assert.AreEqual("CAST(\"Field\" AS NUMERIC)", result);
+            Assert.AreEqual("CAST(\"Field\" AS NUMERIC)", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -157,7 +157,7 @@ namespace RepoDb.EnterpriseDb.UnitTests.Resolvers
             var result = resolver.Resolve(field, setting);
 
             // Assert
-            Assert.AreEqual("CAST(\"Field\" AS REAL)", result);
+            Assert.AreEqual("CAST(\"Field\" AS REAL)", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -172,7 +172,7 @@ namespace RepoDb.EnterpriseDb.UnitTests.Resolvers
             var result = resolver.Resolve(field, setting);
 
             // Assert
-            Assert.AreEqual("CAST(\"Field\" AS INTERVAL)", result);
+            Assert.AreEqual("CAST(\"Field\" AS INTERVAL)", result, StringComparer.Ordinal);
         }
 #if NET6_0_OR_GREATER
         [TestMethod]
@@ -187,7 +187,7 @@ namespace RepoDb.EnterpriseDb.UnitTests.Resolvers
             var result = resolver.Resolve(field, setting);
 
             // Assert
-            Assert.AreEqual("CAST(\"Field\" AS DATE)", result);
+            Assert.AreEqual("CAST(\"Field\" AS DATE)", result, StringComparer.Ordinal);
         }
         [TestMethod]
         public void TestSqLiteConvertFieldResolverForTime()
@@ -201,7 +201,7 @@ namespace RepoDb.EnterpriseDb.UnitTests.Resolvers
             var result = resolver.Resolve(field, setting);
 
             // Assert
-            Assert.AreEqual("CAST(\"Field\" AS INTERVAL)", result);
+            Assert.AreEqual("CAST(\"Field\" AS INTERVAL)", result, StringComparer.Ordinal);
         }
 #endif
 

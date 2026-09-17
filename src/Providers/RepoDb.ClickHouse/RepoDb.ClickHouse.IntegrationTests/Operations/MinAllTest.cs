@@ -80,7 +80,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MinAllAsync<CompleteTable>(e => e.ColumnInt);
+                var result = await connection.MinAllAsync<CompleteTable>(e => e.ColumnInt).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
@@ -98,7 +98,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.MinAllAsync<CompleteTable>(e => e.ColumnInt,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -157,7 +157,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MinAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt).First());
+                    Field.Parse<CompleteTable>(e => e.ColumnInt).First()).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
@@ -176,7 +176,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.MinAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
                         Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

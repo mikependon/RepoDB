@@ -105,7 +105,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             using (var connection = new OracleConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MaxAllAsync<CompleteTable>(e => e.ColumnInt);
+                var result = await connection.MaxAllAsync<CompleteTable>(e => e.ColumnInt).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result));
@@ -124,7 +124,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 try
                 {
                     // Act
-                    var result = await connection.MaxAllAsync<CompleteTable>(e => e.ColumnInt);
+                    var result = await connection.MaxAllAsync<CompleteTable>(e => e.ColumnInt).ConfigureAwait(false);
 
                     // Assert
                     Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result));
@@ -147,7 +147,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 // Act/Assert: AreTableHintsSupported == false for Oracle - any non-null/non-whitespace
                 // "hints" argument must throw, rather than silently being ignored.
                 await Assert.ThrowsAsync<NotSupportedException>(() =>
-                    connection.MaxAllAsync<CompleteTable>(e => e.ColumnInt, hints: "NOLOCK"));
+                    connection.MaxAllAsync<CompleteTable>(e => e.ColumnInt, hints: "NOLOCK")).ConfigureAwait(false);
             }
         }
 
@@ -190,7 +190,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MaxAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    new Field("ColumnInt", typeof(int)));
+                    new Field("ColumnInt", typeof(int))).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result));

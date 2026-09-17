@@ -78,7 +78,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteScalarAsync("SELECT COUNT(*) FROM `CompleteTable`;");
+                var result = await connection.ExecuteScalarAsync("SELECT COUNT(*) FROM `CompleteTable`;").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), Convert.ToInt32(result));
@@ -94,7 +94,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM `CompleteTable`;");
+                var result = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM `CompleteTable`;").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);

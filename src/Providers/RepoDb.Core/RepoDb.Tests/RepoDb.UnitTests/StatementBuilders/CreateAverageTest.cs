@@ -49,7 +49,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "SELECT AVG ([Value]) AS [AverageValue] FROM [Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -71,7 +71,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"WHERE ([Id] = @Id) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -90,7 +90,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "SELECT AVG ([Value]) AS [AverageValue] FROM [Table] WITH (NOLOCK) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -114,7 +114,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"WHERE ([Id] = @Id) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -132,7 +132,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "SELECT AVG ([Value]) AS [AverageValue] FROM [dbo].[Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -150,7 +150,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "SELECT AVG ([Value]) AS [AverageValue] FROM [dbo].[Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -168,7 +168,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "SELECT AVG ([Value]) AS [AverageValue] FROM [dbo].[Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -186,7 +186,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "SELECT AVG (CONVERT([FLOAT], [Value])) AS [AverageValue] FROM [dbo].[Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -204,7 +204,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "SELECT AVG (CONVERT([NVARCHAR], [Value])) AS [AverageValue] FROM [dbo].[Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]

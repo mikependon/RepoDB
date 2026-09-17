@@ -93,7 +93,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var ids = tables.Select(e => e.Id).AsList();
 
                 // Act
-                var result = await connection.QueryAsync<MdsNonIdentityCompleteTable>(e => ids.Contains(e.Id));
+                var result = await connection.QueryAsync<MdsNonIdentityCompleteTable>(e => ids.Contains(e.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -111,7 +111,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsNonIdentityCompleteTables(10, connection).AsList();
 
                 // Act
-                var result = await connection.QueryAsync<MdsNonIdentityCompleteTable>(e => Enumerable.Empty<Guid>().Contains(e.Id));
+                var result = await connection.QueryAsync<MdsNonIdentityCompleteTable>(e => Enumerable.Empty<Guid>().Contains(e.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(0, result.Count());

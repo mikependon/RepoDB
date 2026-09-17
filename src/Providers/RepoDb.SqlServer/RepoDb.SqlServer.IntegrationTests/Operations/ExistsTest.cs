@@ -176,7 +176,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExistsAsync<IdentityCompleteTable>((object)null);
+                var result = await connection.ExistsAsync<IdentityCompleteTable>((object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -193,7 +193,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExistsAsync<IdentityCompleteTable>(e => ids.Contains(e.Id));
+                var result = await connection.ExistsAsync<IdentityCompleteTable>(e => ids.Contains(e.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -209,7 +209,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExistsAsync<IdentityCompleteTable>(new { tables.First().Id });
+                var result = await connection.ExistsAsync<IdentityCompleteTable>(new { tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -225,7 +225,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExistsAsync<IdentityCompleteTable>(new QueryField("Id", tables.First().Id));
+                var result = await connection.ExistsAsync<IdentityCompleteTable>(new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -246,7 +246,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExistsAsync<IdentityCompleteTable>(queryFields);
+                var result = await connection.ExistsAsync<IdentityCompleteTable>(queryFields).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -268,7 +268,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExistsAsync<IdentityCompleteTable>(queryGroup);
+                var result = await connection.ExistsAsync<IdentityCompleteTable>(queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -285,7 +285,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.ExistsAsync<IdentityCompleteTable>((object)null,
-                    SqlServerTableHints.NoLock);
+                    SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -428,7 +428,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.ExistsAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -445,7 +445,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.ExistsAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
-                    new { tables.First().Id });
+                    new { tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -462,7 +462,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.ExistsAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
-                    new QueryField("Id", tables.First().Id));
+                    new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -484,7 +484,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.ExistsAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
-                    queryFields);
+                    queryFields).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -507,7 +507,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.ExistsAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
-                    queryGroup);
+                    queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -525,7 +525,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 // Act
                 var result = await connection.ExistsAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     (object)null,
-                    SqlServerTableHints.NoLock);
+                    SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);

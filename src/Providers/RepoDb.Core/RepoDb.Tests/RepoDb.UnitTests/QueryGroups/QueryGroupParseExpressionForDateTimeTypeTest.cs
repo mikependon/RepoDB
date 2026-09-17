@@ -23,7 +23,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyDateTime] = @PropertyDateTime)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -37,7 +37,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyDateTime] = @PropertyDateTime)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -54,7 +54,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyDateTime] = @PropertyDateTime)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -65,7 +65,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyDateTime] = @PropertyDateTime)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -79,7 +79,7 @@ namespace RepoDb.UnitTests
             var expected = "([PropertyDateTime] = @PropertyDateTime)";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
     }
 }

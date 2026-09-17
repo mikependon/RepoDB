@@ -117,7 +117,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
-            var queryResult = await connection.QueryAllAsync<CompleteTable>();
+            var queryResult = await connection.QueryAllAsync<CompleteTable>().ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, queryResult.Count());
@@ -136,7 +136,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             try
             {
                 // Act
-                var queryResult = await connection.QueryAllAsync<CompleteTable>();
+                var queryResult = await connection.QueryAllAsync<CompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
@@ -157,7 +157,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
-            var queryResult = await connection.QueryAllAsync<CompleteTable>(ClassMappedNameCache.Get<CompleteTable>());
+            var queryResult = await connection.QueryAllAsync<CompleteTable>(ClassMappedNameCache.Get<CompleteTable>()).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, queryResult.Count());
@@ -174,7 +174,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
 
             // Act/Assert: Db2DbSetting.AreTableHintsSupported is false - any non-null/non-whitespace
             // "hints" argument must throw rather than silently being ignored.
-            await Assert.ThrowsAsync<System.NotSupportedException>(() => connection.QueryAllAsync<CompleteTable>(hints: "NOLOCK"));
+            await Assert.ThrowsAsync<System.NotSupportedException>(() => connection.QueryAllAsync<CompleteTable>(hints: "NOLOCK")).ConfigureAwait(false);
         }
 
         #endregion

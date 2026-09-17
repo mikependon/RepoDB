@@ -486,7 +486,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 var result = await connection.QueryMultipleAsync<IdentityCompleteTable, IdentityCompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
                     top1: 1,
-                    top2: 2);
+                    top2: 2).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -508,7 +508,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 var result = await connection.QueryMultipleAsync<IdentityCompleteTable, IdentityCompleteTable>(e => e.Id == tables[0].Id,
                     e => e.Id == tables[1].Id,
                     top1: 1,
-                    top2: 1);
+                    top2: 1).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -532,7 +532,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     e => e.Id > 0,
                     top1: 1,
                     top2: 2,
-                    top3: 3);
+                    top3: 3).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -558,7 +558,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     e => e.Id == tables[2].Id,
                     top1: 1,
                     top2: 1,
-                    top3: 1);
+                    top3: 1).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -586,7 +586,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     top1: 1,
                     top2: 2,
                     top3: 3,
-                    top4: 4);
+                    top4: 4).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -616,7 +616,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     top1: 1,
                     top2: 1,
                     top3: 1,
-                    top4: 1);
+                    top4: 1).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -648,7 +648,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     top2: 2,
                     top3: 3,
                     top4: 4,
-                    top5: 5);
+                    top5: 5).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -682,7 +682,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     top2: 1,
                     top3: 1,
                     top4: 1,
-                    top5: 1);
+                    top5: 1).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -718,7 +718,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     top3: 3,
                     top4: 4,
                     top5: 5,
-                    top6: 6);
+                    top6: 6).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -756,7 +756,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     top3: 1,
                     top4: 1,
                     top5: 1,
-                    top6: 1);
+                    top6: 1).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -796,7 +796,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     top4: 4,
                     top5: 5,
                     top6: 6,
-                    top7: 7);
+                    top7: 7).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -838,7 +838,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     top4: 1,
                     top5: 1,
                     top6: 1,
-                    top7: 1);
+                    top7: 1).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -872,7 +872,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     top1: 1,
                     top2: 2,
                     hints1: SqlServerTableHints.NoLock,
-                    hints2: SqlServerTableHints.NoLock);
+                    hints2: SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -896,7 +896,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     top1: 1,
                     top2: 1,
                     hints1: SqlServerTableHints.NoLock,
-                    hints2: SqlServerTableHints.NoLock);
+                    hints2: SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());

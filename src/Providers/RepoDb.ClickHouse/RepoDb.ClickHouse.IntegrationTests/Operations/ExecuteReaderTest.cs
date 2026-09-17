@@ -117,7 +117,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = await connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`;"))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`;").ConfigureAwait(false))
                 {
                     while (reader.Read())
                     {
@@ -145,7 +145,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM `CompleteTable`;"))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM `CompleteTable`;").ConfigureAwait(false))
                 {
                     // Act
                     var result = DataReader.ToEnumerable<CompleteTable>((DbDataReader)reader).AsList();
@@ -165,7 +165,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM `CompleteTable`;"))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM `CompleteTable`;").ConfigureAwait(false))
                 {
                     // Act
                     var result = DataReader.ToEnumerable((DbDataReader)reader).AsList();

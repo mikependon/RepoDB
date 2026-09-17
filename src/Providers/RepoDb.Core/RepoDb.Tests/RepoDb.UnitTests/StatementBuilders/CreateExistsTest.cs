@@ -44,7 +44,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "SELECT TOP (1) 1 AS [ExistsValue] FROM [Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -64,7 +64,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"WHERE ([Id] = @Id) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -81,7 +81,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "SELECT TOP (1) 1 AS [ExistsValue] FROM [Table] WITH (NOLOCK) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -103,7 +103,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"WHERE ([Id] = @Id) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -119,7 +119,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "SELECT TOP (1) 1 AS [ExistsValue] FROM [dbo].[Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -135,7 +135,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "SELECT TOP (1) 1 AS [ExistsValue] FROM [dbo].[Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]

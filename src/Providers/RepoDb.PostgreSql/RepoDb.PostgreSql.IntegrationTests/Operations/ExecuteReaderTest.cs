@@ -150,7 +150,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInteger\", \"ColumnDate\" FROM \"CompleteTable\";"))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInteger\", \"ColumnDate\" FROM \"CompleteTable\";").ConfigureAwait(false))
                 {
                     while (reader.Read())
                     {
@@ -178,7 +178,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInteger\", \"ColumnDate\" FROM \"CompleteTable\"; SELECT \"Id\", \"ColumnInteger\", \"ColumnDate\" FROM \"CompleteTable\";"))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInteger\", \"ColumnDate\" FROM \"CompleteTable\"; SELECT \"Id\", \"ColumnInteger\", \"ColumnDate\" FROM \"CompleteTable\";").ConfigureAwait(false))
                 {
                     do
                     {
@@ -209,7 +209,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM \"CompleteTable\";"))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM \"CompleteTable\";").ConfigureAwait(false))
                 {
                     // Act
                     var result = DataReader.ToEnumerable<CompleteTable>((DbDataReader)reader).AsList();
@@ -229,7 +229,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM \"CompleteTable\";"))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM \"CompleteTable\";").ConfigureAwait(false))
                 {
                     // Act
                     var result = DataReader.ToEnumerable((DbDataReader)reader).AsList();

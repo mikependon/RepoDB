@@ -84,7 +84,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var result = await connection.ExecuteQueryAsync<SdsCompleteTable>("SELECT * FROM [SdsCompleteTable];");
+                var result = await connection.ExecuteQueryAsync<SdsCompleteTable>("SELECT * FROM [SdsCompleteTable];").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -102,7 +102,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<SdsCompleteTable>("SELECT * FROM [SdsCompleteTable] WHERE Id = @Id;",
-                    new { tables.Last().Id });
+                    new { tables.Last().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());

@@ -150,7 +150,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                using (var reader = await connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM [SdsCompleteTable];"))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM [SdsCompleteTable];").ConfigureAwait(false))
                 {
                     while (reader.Read())
                     {
@@ -178,7 +178,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                using (var reader = await connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM [SdsCompleteTable]; SELECT Id, ColumnInt, ColumnDateTime FROM [SdsCompleteTable];"))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM [SdsCompleteTable]; SELECT Id, ColumnInt, ColumnDateTime FROM [SdsCompleteTable];").ConfigureAwait(false))
                 {
                     do
                     {
@@ -209,7 +209,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [SdsCompleteTable];"))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [SdsCompleteTable];").ConfigureAwait(false))
                 {
                     // Act
                     var result = DataReader.ToEnumerable<SdsCompleteTable>((DbDataReader)reader).AsList();
@@ -229,7 +229,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [SdsCompleteTable];"))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [SdsCompleteTable];").ConfigureAwait(false))
                 {
                     // Act
                     var result = DataReader.ToEnumerable((DbDataReader)reader).AsList();

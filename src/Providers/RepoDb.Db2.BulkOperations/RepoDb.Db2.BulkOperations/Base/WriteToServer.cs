@@ -152,10 +152,10 @@ namespace RepoDb
             Field excludeField = null)
             where TEntity : class
         {
-            await connection.EnsureOpenAsync(cancellationToken);
+            await connection.EnsureOpenAsync(cancellationToken).ConfigureAwait(false);
             using var reader = new DataEntityDataReader<TEntity>(entities);
             using var arrayBinder = CreateDb2BulkArrayBinder(connection, tableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, transaction, excludeField);
-            return await arrayBinder.WriteToServerAsync(reader, cancellationToken);
+            return await arrayBinder.WriteToServerAsync(reader, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -183,9 +183,9 @@ namespace RepoDb
             CancellationToken cancellationToken = default,
             Field excludeField = null)
         {
-            await connection.EnsureOpenAsync(cancellationToken);
+            await connection.EnsureOpenAsync(cancellationToken).ConfigureAwait(false);
             using var arrayBinder = CreateDb2BulkArrayBinder(connection, tableName, table, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, excludeField);
-            return await arrayBinder.WriteToServerAsync(table, rowState, cancellationToken);
+            return await arrayBinder.WriteToServerAsync(table, rowState, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -213,9 +213,9 @@ namespace RepoDb
             DB2Transaction transaction = null,
             Field excludeField = null)
         {
-            await connection.EnsureOpenAsync(cancellationToken);
+            await connection.EnsureOpenAsync(cancellationToken).ConfigureAwait(false);
             using var arrayBinder = CreateDb2BulkArrayBinder(connection, tableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, transaction, excludeField);
-            return await arrayBinder.WriteToServerAsync(reader, cancellationToken);
+            return await arrayBinder.WriteToServerAsync(reader, cancellationToken).ConfigureAwait(false);
         }
 
         #endregion

@@ -300,7 +300,7 @@ namespace RepoDb
                 identityBehavior: identityBehavior == BulkImportIdentityBehavior.ReturnIdentity ? PostgreSqlBulkImportIdentityBehavior.ReturnIdentity : PostgreSqlBulkImportIdentityBehavior.KeepIdentity,
                 pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                 transaction: transaction,
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken).ConfigureAwait(false);
 
         #endregion
 
@@ -382,7 +382,7 @@ namespace RepoDb
                 identityBehavior: identityBehavior == BulkImportIdentityBehavior.ReturnIdentity ? PostgreSqlBulkImportIdentityBehavior.ReturnIdentity : PostgreSqlBulkImportIdentityBehavior.KeepIdentity,
                 pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                 transaction: transaction,
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken).ConfigureAwait(false);
 
         #endregion
 
@@ -420,7 +420,7 @@ namespace RepoDb
                 identityBehavior: identityBehavior == BulkImportIdentityBehavior.ReturnIdentity ? PostgreSqlBulkImportIdentityBehavior.ReturnIdentity : PostgreSqlBulkImportIdentityBehavior.KeepIdentity,
                 pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                 transaction: transaction,
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken).ConfigureAwait(false);
 
         #endregion
 

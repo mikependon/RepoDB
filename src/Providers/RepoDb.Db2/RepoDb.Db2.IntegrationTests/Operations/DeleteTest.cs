@@ -203,7 +203,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
-            var result = await connection.DeleteAsync<CompleteTable>((object)null);
+            var result = await connection.DeleteAsync<CompleteTable>((object)null).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count(), result);
@@ -221,7 +221,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             try
             {
                 // Act
-                var result = await connection.DeleteAsync<CompleteTable>((object)null);
+                var result = await connection.DeleteAsync<CompleteTable>((object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -241,7 +241,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
-            var result = await connection.DeleteAsync<CompleteTable>(tables.First().Id);
+            var result = await connection.DeleteAsync<CompleteTable>(tables.First().Id).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(1, result);
@@ -256,7 +256,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
-            var result = await connection.DeleteAsync<CompleteTable>(tables.First());
+            var result = await connection.DeleteAsync<CompleteTable>(tables.First()).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(1, result);
@@ -271,7 +271,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
-            var result = await connection.DeleteAsync<CompleteTable>(e => e.Id == tables.First().Id);
+            var result = await connection.DeleteAsync<CompleteTable>(e => e.Id == tables.First().Id).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(1, result);
@@ -286,7 +286,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
-            var result = await connection.DeleteAsync<CompleteTable>(new { Id = tables.First().Id });
+            var result = await connection.DeleteAsync<CompleteTable>(new { Id = tables.First().Id }).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(1, result);
@@ -301,7 +301,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
-            var result = await connection.DeleteAsync<CompleteTable>(new QueryField("Id", tables.First().Id));
+            var result = await connection.DeleteAsync<CompleteTable>(new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(1, result);
@@ -321,7 +321,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
-            var result = await connection.DeleteAsync<CompleteTable>(queryFields);
+            var result = await connection.DeleteAsync<CompleteTable>(queryFields).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(8, result);
@@ -342,7 +342,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
-            var result = await connection.DeleteAsync<CompleteTable>(queryGroup);
+            var result = await connection.DeleteAsync<CompleteTable>(queryGroup).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(8, result);
@@ -470,7 +470,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
-            var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), (object)null);
+            var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), (object)null).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count(), result);
@@ -485,7 +485,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
-            var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), tables.First().Id);
+            var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), tables.First().Id).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(1, result);
@@ -500,7 +500,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
-            var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), new { Id = tables.First().Id });
+            var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), new { Id = tables.First().Id }).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(1, result);
@@ -515,7 +515,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
-            var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), new QueryField("Id", tables.First().Id));
+            var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(1, result);
@@ -535,7 +535,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
-            var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), queryFields);
+            var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), queryFields).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(8, result);
@@ -556,7 +556,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
-            var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), queryGroup);
+            var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), queryGroup).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(8, result);
@@ -593,7 +593,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Act/Assert: AreTableHintsSupported = false for Db2 - BaseStatementBuilder.GuardHints
             // throws for any non-null/non-whitespace hints, regardless of operation.
             await Assert.ThrowsAsync<System.NotSupportedException>(() =>
-                connection.DeleteAsync<CompleteTable>(tables.First().Id, hints: "NOLOCK"));
+                connection.DeleteAsync<CompleteTable>(tables.First().Id, hints: "NOLOCK")).ConfigureAwait(false);
         }
 
         #endregion

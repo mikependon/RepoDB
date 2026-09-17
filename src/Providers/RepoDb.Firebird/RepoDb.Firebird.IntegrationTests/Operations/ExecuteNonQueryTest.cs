@@ -93,7 +93,7 @@ namespace RepoDb.Firebird.IntegrationTests.Operations
             using (var connection = new FbConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\"");
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\"").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -110,7 +110,7 @@ namespace RepoDb.Firebird.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\" WHERE \"Id\" = @Id",
-                    new { tables.Last().Id });
+                    new { tables.Last().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -127,7 +127,7 @@ namespace RepoDb.Firebird.IntegrationTests.Operations
             {
                 // Act & Assert - async counterpart of the same known Firebird limitation.
                 await Assert.ThrowsAsync<FbException>(() =>
-                    connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\"; DELETE FROM \"CompleteTable\""));
+                    connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\"; DELETE FROM \"CompleteTable\"")).ConfigureAwait(false);
             }
         }
 

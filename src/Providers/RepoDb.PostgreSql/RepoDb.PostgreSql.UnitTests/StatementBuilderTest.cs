@@ -43,7 +43,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var expected = "SELECT \"Id\", \"Name\" FROM \"Table\" ORDER BY \"Id\" ASC LIMIT 10 ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -61,7 +61,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var expected = "SELECT \"Id\", \"Name\" FROM \"Table\" ORDER BY \"Id\" ASC LIMIT 10 OFFSET 30 ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -158,7 +158,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var expected = "SELECT COUNT (*) AS \"CountValue\" FROM \"Table\" ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -174,7 +174,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var expected = "SELECT COUNT (*) AS \"CountValue\" FROM \"Table\" WHERE (\"Id\" = @Id) ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -206,7 +206,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var expected = "SELECT COUNT (*) AS \"CountValue\" FROM \"Table\" ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -237,7 +237,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var expected = "SELECT 1 AS \"ExistsValue\" FROM \"Table\" WHERE (\"Id\" = @Id) LIMIT 1 ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         #endregion
@@ -258,7 +258,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id, @Name, @Address ) RETURNING NULL AS \"Result\" ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -275,7 +275,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id, @Name, @Address ) RETURNING CAST(\"Id\" AS INTEGER) AS \"Result\" ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -292,7 +292,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var expected = "INSERT INTO \"Table\" ( \"Name\", \"Address\" ) VALUES ( @Name, @Address ) RETURNING CAST(\"Id\" AS INTEGER) AS \"Result\" ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -333,7 +333,7 @@ namespace RepoDb.PostgreSql.UnitTests
                 "( @Id_2, @Name_2, @Address_2 ) ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -356,7 +356,7 @@ namespace RepoDb.PostgreSql.UnitTests
                 "RETURNING CAST(\"Id\" AS INTEGER) AS \"Result\" ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -379,7 +379,7 @@ namespace RepoDb.PostgreSql.UnitTests
                 "RETURNING CAST(\"Id\" AS INTEGER) AS \"Result\" ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -416,7 +416,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var expected = "SELECT MAX (\"Field\") AS \"MaxValue\" FROM \"Table\" ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -433,7 +433,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var expected = "SELECT MAX (\"Field\") AS \"MaxValue\" FROM \"Table\" WHERE (\"Id\" = @Id) ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -467,7 +467,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var expected = "SELECT MAX (\"Field\") AS \"MaxValue\" FROM \"Table\" ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -501,7 +501,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var expected = "SELECT MIN (\"Field\") AS \"MinValue\" FROM \"Table\" ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -518,7 +518,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var expected = "SELECT MIN (\"Field\") AS \"MinValue\" FROM \"Table\" WHERE (\"Id\" = @Id) ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -552,7 +552,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var expected = "SELECT MIN (\"Field\") AS \"MinValue\" FROM \"Table\" ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -589,7 +589,7 @@ namespace RepoDb.PostgreSql.UnitTests
                 "UPDATE SET \"Name\" = @Name, \"Address\" = @Address RETURNING CAST(\"Id\" AS INTEGER) AS \"Result\" ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -609,7 +609,7 @@ namespace RepoDb.PostgreSql.UnitTests
                 "UPDATE SET \"Name\" = @Name, \"Address\" = @Address RETURNING CAST(\"Id\" AS INTEGER) AS \"Result\" ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -627,7 +627,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) OVERRIDING SYSTEM VALUE VALUES ( @Id, @Name, @Address ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = @Name, \"Address\" = @Address RETURNING CAST(\"Id\" AS INTEGER) AS \"Result\" ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -698,7 +698,7 @@ namespace RepoDb.PostgreSql.UnitTests
                 "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id_2, @Name_2, @Address_2 ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = @Name_2, \"Address\" = @Address_2 RETURNING CAST(\"Id\" AS INTEGER) AS \"Result\", @__RepoDb_OrderColumn_2 AS \"OrderColumn\" ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -719,7 +719,7 @@ namespace RepoDb.PostgreSql.UnitTests
                 "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id_2, @Name_2, @Address_2 ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = @Name_2, \"Address\" = @Address_2 RETURNING CAST(\"Id\" AS INTEGER) AS \"Result\", @__RepoDb_OrderColumn_2 AS \"OrderColumn\" ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -740,7 +740,7 @@ namespace RepoDb.PostgreSql.UnitTests
                 "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) OVERRIDING SYSTEM VALUE VALUES ( @Id_2, @Name_2, @Address_2 ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = @Name_2, \"Address\" = @Address_2 RETURNING CAST(\"Id\" AS INTEGER) AS \"Result\", @__RepoDb_OrderColumn_2 AS \"OrderColumn\" ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -812,7 +812,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var expected = "SELECT \"Id\", \"Name\", \"Address\" FROM \"Table\" ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -831,7 +831,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var expected = "SELECT \"Id\", \"Name\", \"Address\" FROM \"Table\" WHERE (\"Id\" = @Id AND \"Name\" = @Name) ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -850,7 +850,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var expected = "SELECT \"Id\", \"Name\", \"Address\" FROM \"Table\" LIMIT 10 ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -869,7 +869,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var expected = "SELECT \"Id\", \"Name\", \"Address\" FROM \"Table\" ORDER BY \"Id\" ASC ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -888,7 +888,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var expected = "SELECT \"Id\", \"Name\", \"Address\" FROM \"Table\" ORDER BY \"Id\" ASC, \"Name\" ASC ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -907,7 +907,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var expected = "SELECT \"Id\", \"Name\", \"Address\" FROM \"Table\" ORDER BY \"Id\" DESC ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -926,7 +926,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var expected = "SELECT \"Id\", \"Name\", \"Address\" FROM \"Table\" ORDER BY \"Id\" DESC, \"Name\" DESC ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -945,7 +945,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var expected = "SELECT \"Id\", \"Name\", \"Address\" FROM \"Table\" ORDER BY \"Id\" ASC, \"Name\" DESC ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -983,7 +983,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var expected = "SELECT \"Id\", \"Name\" FROM \"Table\" ORDER BY \"Id\" ASC LIMIT 10 ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1001,7 +1001,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var expected = "SELECT \"Id\", \"Name\" FROM \"Table\" ORDER BY \"Id\" ASC LIMIT 10 OFFSET 30 ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1099,7 +1099,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var expected = "SELECT SUM (\"Field\") AS \"SumValue\" FROM \"Table\" ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1116,7 +1116,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var expected = "SELECT SUM (\"Field\") AS \"SumValue\" FROM \"Table\" WHERE (\"Id\" = @Id) ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -1150,7 +1150,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var expected = "SELECT SUM (\"Field\") AS \"SumValue\" FROM \"Table\" ;";
 
             // Assert
-            Assert.AreEqual(expected, query);
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
         }
 
         [TestMethod]

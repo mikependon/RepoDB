@@ -186,7 +186,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             using var connection = new OracleConnection(Database.ConnectionString);
 
             // Act
-            var result = await connection.MergeAllAsync<CompleteTable>(tables);
+            var result = await connection.MergeAllAsync<CompleteTable>(tables).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, result);
@@ -194,7 +194,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             Assert.IsTrue(tables.All(table => table.Id > 0));
 
             // Act
-            var queryResult = await connection.QueryAllAsync<CompleteTable>();
+            var queryResult = await connection.QueryAllAsync<CompleteTable>().ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, queryResult.Count());
@@ -213,7 +213,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             try
             {
                 // Act
-                var result = await connection.MergeAllAsync<CompleteTable>(tables);
+                var result = await connection.MergeAllAsync<CompleteTable>(tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -221,7 +221,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 Assert.IsTrue(tables.All(table => table.Id > 0));
 
                 // Act
-                var queryResult = await connection.QueryAllAsync<CompleteTable>();
+                var queryResult = await connection.QueryAllAsync<CompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
@@ -245,14 +245,14 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             tables.ForEach(table => table.ColumnVarchar = $"Merged-{table.Id}");
 
             // Act
-            var result = await connection.MergeAllAsync<CompleteTable>(tables);
+            var result = await connection.MergeAllAsync<CompleteTable>(tables).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, result);
             Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
 
             // Act
-            var queryResult = await connection.QueryAllAsync<CompleteTable>();
+            var queryResult = await connection.QueryAllAsync<CompleteTable>().ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, queryResult.Count());
@@ -275,14 +275,14 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             tables.ForEach(table => table.ColumnVarchar = $"Merged-{table.Id}");
 
             // Act
-            var result = await connection.MergeAllAsync<CompleteTable>(tables, qualifiers);
+            var result = await connection.MergeAllAsync<CompleteTable>(tables, qualifiers).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, result);
             Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
 
             // Act
-            var queryResult = await connection.QueryAllAsync<CompleteTable>();
+            var queryResult = await connection.QueryAllAsync<CompleteTable>().ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, queryResult.Count());
@@ -298,14 +298,14 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             using var connection = new OracleConnection(Database.ConnectionString);
 
             // Act
-            var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(), tables);
+            var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(), tables).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, result);
             Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
 
             // Act
-            var queryResult = await connection.QueryAllAsync<CompleteTable>();
+            var queryResult = await connection.QueryAllAsync<CompleteTable>().ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, queryResult.Count());

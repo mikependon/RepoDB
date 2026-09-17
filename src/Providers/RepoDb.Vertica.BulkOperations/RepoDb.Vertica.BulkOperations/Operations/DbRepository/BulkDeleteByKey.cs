@@ -121,7 +121,7 @@ namespace RepoDb
             VerticaTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            await repository.BulkDeleteByKeyAsync(ClassMappedNameCache.Get<TEntity>(), primaryKeys, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+            await repository.BulkDeleteByKeyAsync(ClassMappedNameCache.Get<TEntity>(), primaryKeys, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
 
         /// <summary>
         /// Deletes existing rows from the database in bulk in an asynchronous way, targeting the given
@@ -155,7 +155,7 @@ namespace RepoDb
 
             try
             {
-                return await connection.BulkDeleteByKeyAsync(tableName, primaryKeys, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+                return await connection.BulkDeleteByKeyAsync(tableName, primaryKeys, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
             }
             finally
             {

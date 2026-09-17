@@ -7,6 +7,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.Extensions;
@@ -26,7 +27,7 @@ namespace RepoDb.UnitTests.Enumerations
             var text = operation.GetText();
 
             // Assert
-            Assert.AreEqual("ASC", text);
+            Assert.AreEqual("ASC", text, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -39,7 +40,7 @@ namespace RepoDb.UnitTests.Enumerations
             var text = operation.GetText();
 
             // Assert
-            Assert.AreEqual("DESC", text);
+            Assert.AreEqual("DESC", text, StringComparer.Ordinal);
         }
     }
 }

@@ -103,7 +103,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 
                 // Act
                 var result = await connection.AverageAsync<MdsCompleteTable>(e => e.ColumnInt,
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnInt), result);
@@ -121,7 +121,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 // Act
                 var ids = new[] { tables.First().Id, tables.Last().Id };
                 var result = await connection.AverageAsync<MdsCompleteTable>(e => e.ColumnInt,
-                    e => ids.Contains(e.Id));
+                    e => ids.Contains(e.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Average(e => e.ColumnInt), result);
@@ -140,7 +140,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.AverageAsync<MdsCompleteTable>(e => e.ColumnInt,
                         (object)null,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -221,7 +221,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 // Act
                 var result = await connection.AverageAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
                     Field.Parse<MdsCompleteTable>(e => e.ColumnInt).First(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnInt), result);
@@ -240,7 +240,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var ids = new[] { tables.First().Id, tables.Last().Id };
                 var result = await connection.AverageAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
                     Field.Parse<MdsCompleteTable>(e => e.ColumnInt).First(),
-                    new QueryField("Id", Operation.In, ids));
+                    new QueryField("Id", Operation.In, ids)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Average(e => e.ColumnInt), result);
@@ -260,7 +260,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                     await connection.AverageAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
                         Field.Parse<MdsCompleteTable>(e => e.ColumnInt).First(),
                         (object)null,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

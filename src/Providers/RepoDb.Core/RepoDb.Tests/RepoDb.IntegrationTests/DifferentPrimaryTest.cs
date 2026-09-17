@@ -62,13 +62,13 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertResult = await connection.InsertAsync<IdentityTableWithDifferentPrimary, long>(entity);
+                var insertResult = await connection.InsertAsync<IdentityTableWithDifferentPrimary, long>(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entity.Id, insertResult);
                 Assert.IsTrue(insertResult > 0);
                 Assert.IsTrue(entity.Id > 0);
-                Assert.AreEqual(1, await connection.CountAllAsync<IdentityTableWithDifferentPrimary>());
+                Assert.AreEqual(1, await connection.CountAllAsync<IdentityTableWithDifferentPrimary>().ConfigureAwait(false));
             }
         }
 
@@ -111,14 +111,14 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var insertAllResult = await connection.InsertAllAsync<IdentityTableWithDifferentPrimary>(entities);
+                var insertAllResult = await connection.InsertAllAsync<IdentityTableWithDifferentPrimary>(entities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, insertAllResult);
-                Assert.AreEqual(entities.Count, await connection.CountAllAsync<IdentityTableWithDifferentPrimary>());
+                Assert.AreEqual(entities.Count, await connection.CountAllAsync<IdentityTableWithDifferentPrimary>().ConfigureAwait(false));
 
                 // Act
-                var queryResult = await connection.QueryAllAsync<IdentityTableWithDifferentPrimary>();
+                var queryResult = await connection.QueryAllAsync<IdentityTableWithDifferentPrimary>().ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -161,14 +161,14 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAsync<IdentityTableWithDifferentPrimary>(entity);
+                await connection.InsertAsync<IdentityTableWithDifferentPrimary>(entity).ConfigureAwait(false);
 
                 // Act
-                var deleteResult = await connection.DeleteAsync<IdentityTableWithDifferentPrimary>(entity);
+                var deleteResult = await connection.DeleteAsync<IdentityTableWithDifferentPrimary>(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(deleteResult > 0);
-                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTableWithDifferentPrimary>());
+                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTableWithDifferentPrimary>().ConfigureAwait(false));
             }
         }
 
@@ -201,14 +201,14 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAsync<IdentityTableWithDifferentPrimary>(entity);
+                await connection.InsertAsync<IdentityTableWithDifferentPrimary>(entity).ConfigureAwait(false);
 
                 // Act
-                var deleteResult = await connection.DeleteAsync<IdentityTableWithDifferentPrimary>(entity.RowGuid);
+                var deleteResult = await connection.DeleteAsync<IdentityTableWithDifferentPrimary>(entity.RowGuid).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(deleteResult > 0);
-                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTableWithDifferentPrimary>());
+                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTableWithDifferentPrimary>().ConfigureAwait(false));
             }
         }
 
@@ -245,10 +245,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAsync<IdentityTableWithDifferentPrimary, long>(entity);
+                await connection.InsertAsync<IdentityTableWithDifferentPrimary, long>(entity).ConfigureAwait(false);
 
                 // Act
-                var queryResult = (await connection.QueryAsync<IdentityTableWithDifferentPrimary>(entity.RowGuid)).FirstOrDefault();
+                var queryResult = (await connection.QueryAsync<IdentityTableWithDifferentPrimary>(entity.RowGuid).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(queryResult);
@@ -299,20 +299,20 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAsync<IdentityTableWithDifferentPrimary, long>(entity);
+                await connection.InsertAsync<IdentityTableWithDifferentPrimary, long>(entity).ConfigureAwait(false);
 
                 // Setup
                 entity.ColumnBit = false;
                 entity.ColumnDateTime2 = DateTime.UtcNow;
 
                 // Act
-                var updateResult = await connection.UpdateAsync<IdentityTableWithDifferentPrimary>(entity);
+                var updateResult = await connection.UpdateAsync<IdentityTableWithDifferentPrimary>(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(updateResult > 0);
 
                 // Act
-                var data = (await connection.QueryAsync<IdentityTableWithDifferentPrimary>(entity.RowGuid)).FirstOrDefault();
+                var data = (await connection.QueryAsync<IdentityTableWithDifferentPrimary>(entity.RowGuid).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -359,20 +359,20 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAsync<IdentityTableWithDifferentPrimary, long>(entity);
+                await connection.InsertAsync<IdentityTableWithDifferentPrimary, long>(entity).ConfigureAwait(false);
 
                 // Setup
                 entity.ColumnBit = false;
                 entity.ColumnDateTime2 = DateTime.UtcNow;
 
                 // Act
-                var updateResult = await connection.UpdateAsync<IdentityTableWithDifferentPrimary>(entity, entity.RowGuid);
+                var updateResult = await connection.UpdateAsync<IdentityTableWithDifferentPrimary>(entity, entity.RowGuid).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(updateResult > 0);
 
                 // Act
-                var data = (await connection.QueryAsync<IdentityTableWithDifferentPrimary>(entity.RowGuid)).FirstOrDefault();
+                var data = (await connection.QueryAsync<IdentityTableWithDifferentPrimary>(entity.RowGuid).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -428,7 +428,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<IdentityTableWithDifferentPrimary>(entities);
+                await connection.InsertAllAsync<IdentityTableWithDifferentPrimary>(entities).ConfigureAwait(false);
 
                 // Setup
                 entities.ForEach(entity =>
@@ -438,13 +438,13 @@ namespace RepoDb.IntegrationTests
                 });
 
                 // Act
-                var updateAllResult = await connection.UpdateAllAsync<IdentityTableWithDifferentPrimary>(entities);
+                var updateAllResult = await connection.UpdateAllAsync<IdentityTableWithDifferentPrimary>(entities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, updateAllResult);
 
                 // Act
-                var queryResult = await connection.QueryAllAsync<IdentityTableWithDifferentPrimary>();
+                var queryResult = await connection.QueryAllAsync<IdentityTableWithDifferentPrimary>().ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());

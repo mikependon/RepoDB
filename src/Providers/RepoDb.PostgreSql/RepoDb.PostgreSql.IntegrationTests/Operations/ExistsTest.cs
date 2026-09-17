@@ -174,7 +174,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExistsAsync<CompleteTable>((object)null);
+                var result = await connection.ExistsAsync<CompleteTable>((object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -191,7 +191,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExistsAsync<CompleteTable>(e => ids.Contains(e.Id));
+                var result = await connection.ExistsAsync<CompleteTable>(e => ids.Contains(e.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -207,7 +207,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExistsAsync<CompleteTable>(new { tables.First().Id });
+                var result = await connection.ExistsAsync<CompleteTable>(new { tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -223,7 +223,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExistsAsync<CompleteTable>(new QueryField("Id", tables.First().Id));
+                var result = await connection.ExistsAsync<CompleteTable>(new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -244,7 +244,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExistsAsync<CompleteTable>(queryFields);
+                var result = await connection.ExistsAsync<CompleteTable>(queryFields).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -266,7 +266,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExistsAsync<CompleteTable>(queryGroup);
+                var result = await connection.ExistsAsync<CompleteTable>(queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -284,7 +284,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.ExistsAsync<CompleteTable>((object)null,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -422,7 +422,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -439,7 +439,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    new { tables.First().Id });
+                    new { tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -456,7 +456,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    new QueryField("Id", tables.First().Id));
+                    new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -478,7 +478,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    queryFields);
+                    queryFields).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -501,7 +501,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    queryGroup);
+                    queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -520,7 +520,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
                         (object)null,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

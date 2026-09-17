@@ -71,10 +71,10 @@ namespace RepoDb.IntegrationTests
                 var field = new QueryField(nameof(IdentityTable.Id), Operation.Between, new[] { 4, 6 });
 
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(field);
+                var queryResult = await connection.QueryAsync<IdentityTable>(field).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(3, queryResult.Count());
@@ -121,10 +121,10 @@ namespace RepoDb.IntegrationTests
                 var field = new QueryField(nameof(IdentityTable.Id), Operation.NotBetween, new[] { 4, 6 });
 
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(field);
+                var queryResult = await connection.QueryAsync<IdentityTable>(field).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(7, queryResult.Count());
@@ -169,10 +169,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(item => (new long[] { 4, 5 }).Contains(item.Id));
+                var queryResult = await connection.QueryAsync<IdentityTable>(item => (new long[] { 4, 5 }).Contains(item.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(2, queryResult.Count());
@@ -208,10 +208,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(item => (new long[] { }).Contains(item.Id));
+                var queryResult = await connection.QueryAsync<IdentityTable>(item => (new long[] { }).Contains(item.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(0, queryResult.Count());
@@ -249,10 +249,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(item => values.Contains(item.Id));
+                var queryResult = await connection.QueryAsync<IdentityTable>(item => values.Contains(item.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(2, queryResult.Count());
@@ -293,10 +293,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(item => (new List<long>() { 4, 5 }).Contains(item.Id));
+                var queryResult = await connection.QueryAsync<IdentityTable>(item => (new List<long>() { 4, 5 }).Contains(item.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(2, queryResult.Count());
@@ -332,10 +332,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(item => (new List<long>()).Contains(item.Id));
+                var queryResult = await connection.QueryAsync<IdentityTable>(item => (new List<long>()).Contains(item.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(0, queryResult.Count());
@@ -373,10 +373,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(item => values.Contains(item.Id));
+                var queryResult = await connection.QueryAsync<IdentityTable>(item => values.Contains(item.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(2, queryResult.Count());
@@ -417,10 +417,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(item => item.ColumnNVarChar.Contains("NVARCHAR2"));
+                var queryResult = await connection.QueryAsync<IdentityTable>(item => item.ColumnNVarChar.Contains("NVARCHAR2")).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, queryResult.Count());
@@ -461,10 +461,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(item => item.ColumnNVarChar.StartsWith("NVar"));
+                var queryResult = await connection.QueryAsync<IdentityTable>(item => item.ColumnNVarChar.StartsWith("NVar")).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(10, queryResult.Count());
@@ -505,10 +505,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(item => item.ColumnNVarChar.EndsWith("CHAR1"));
+                var queryResult = await connection.QueryAsync<IdentityTable>(item => item.ColumnNVarChar.EndsWith("CHAR1")).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, queryResult.Count());
@@ -553,10 +553,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(item => (new long[] { 4, 5 }).Contains(item.Id) == false);
+                var queryResult = await connection.QueryAsync<IdentityTable>(item => (new long[] { 4, 5 }).Contains(item.Id) == false).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(8, queryResult.Count());
@@ -593,10 +593,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(item => !(new long[] { 4, 5 }).Contains(item.Id));
+                var queryResult = await connection.QueryAsync<IdentityTable>(item => !(new long[] { 4, 5 }).Contains(item.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(8, queryResult.Count());
@@ -635,10 +635,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(item => values.Contains(item.Id) == false);
+                var queryResult = await connection.QueryAsync<IdentityTable>(item => values.Contains(item.Id) == false).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(8, queryResult.Count());
@@ -677,10 +677,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(item => !values.Contains(item.Id));
+                var queryResult = await connection.QueryAsync<IdentityTable>(item => !values.Contains(item.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(8, queryResult.Count());
@@ -721,10 +721,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(item => (new List<long>() { 4, 5 }).Contains(item.Id) == false);
+                var queryResult = await connection.QueryAsync<IdentityTable>(item => (new List<long>() { 4, 5 }).Contains(item.Id) == false).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(8, queryResult.Count());
@@ -761,10 +761,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(item => !(new List<long>() { 4, 5 }).Contains(item.Id));
+                var queryResult = await connection.QueryAsync<IdentityTable>(item => !(new List<long>() { 4, 5 }).Contains(item.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(8, queryResult.Count());
@@ -803,10 +803,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(item => values.Contains(item.Id) == false);
+                var queryResult = await connection.QueryAsync<IdentityTable>(item => values.Contains(item.Id) == false).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(8, queryResult.Count());
@@ -845,10 +845,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(item => !values.Contains(item.Id));
+                var queryResult = await connection.QueryAsync<IdentityTable>(item => !values.Contains(item.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(8, queryResult.Count());
@@ -889,10 +889,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(item => item.ColumnNVarChar.Contains("NVARCHAR2") == false);
+                var queryResult = await connection.QueryAsync<IdentityTable>(item => item.ColumnNVarChar.Contains("NVARCHAR2") == false).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(9, queryResult.Count());
@@ -929,10 +929,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(item => !item.ColumnNVarChar.Contains("NVARCHAR2"));
+                var queryResult = await connection.QueryAsync<IdentityTable>(item => !item.ColumnNVarChar.Contains("NVARCHAR2")).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(9, queryResult.Count());
@@ -973,10 +973,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(item => item.ColumnNVarChar.StartsWith("NVar") == false);
+                var queryResult = await connection.QueryAsync<IdentityTable>(item => item.ColumnNVarChar.StartsWith("NVar") == false).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(0, queryResult.Count());
@@ -1013,10 +1013,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(item => !item.ColumnNVarChar.StartsWith("NVar"));
+                var queryResult = await connection.QueryAsync<IdentityTable>(item => !item.ColumnNVarChar.StartsWith("NVar")).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(0, queryResult.Count());
@@ -1057,10 +1057,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(item => item.ColumnNVarChar.EndsWith("CHAR1") == false);
+                var queryResult = await connection.QueryAsync<IdentityTable>(item => item.ColumnNVarChar.EndsWith("CHAR1") == false).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(9, queryResult.Count());
@@ -1097,10 +1097,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(item => !item.ColumnNVarChar.EndsWith("CHAR1"));
+                var queryResult = await connection.QueryAsync<IdentityTable>(item => !item.ColumnNVarChar.EndsWith("CHAR1")).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(9, queryResult.Count());
@@ -1151,10 +1151,10 @@ namespace RepoDb.IntegrationTests
                 var field = new QueryField(nameof(IdentityTable.Id), Operation.In, new[] { 4, 7 });
 
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(field);
+                var queryResult = await connection.QueryAsync<IdentityTable>(field).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(2, queryResult.Count());
@@ -1199,10 +1199,10 @@ namespace RepoDb.IntegrationTests
                 var field = new QueryField(nameof(IdentityTable.Id), Operation.In, value);
 
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(field);
+                var queryResult = await connection.QueryAsync<IdentityTable>(field).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(2, queryResult.Count());
@@ -1249,10 +1249,10 @@ namespace RepoDb.IntegrationTests
                 var field = new QueryField(nameof(IdentityTable.Id), Operation.NotIn, new[] { 4, 7 });
 
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(field);
+                var queryResult = await connection.QueryAsync<IdentityTable>(field).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(8, queryResult.Count());
@@ -1297,10 +1297,10 @@ namespace RepoDb.IntegrationTests
                 var field = new QueryField(nameof(IdentityTable.Id), Operation.NotIn, value);
 
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(field);
+                var queryResult = await connection.QueryAsync<IdentityTable>(field).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(8, queryResult.Count());
@@ -1347,10 +1347,10 @@ namespace RepoDb.IntegrationTests
                 var field = new QueryField(nameof(IdentityTable.ColumnNVarChar), Operation.Like, "NVARCHAR1%"); // Matching: NVARCHAR1, NVARCHAR10
 
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(field);
+                var queryResult = await connection.QueryAsync<IdentityTable>(field).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(2, queryResult.Count());
@@ -1397,10 +1397,10 @@ namespace RepoDb.IntegrationTests
                 var field = new QueryField(nameof(IdentityTable.ColumnNVarChar), Operation.NotLike, "NVARCHAR1%"); // Not Matching: NVARCHAR1, NVARCHAR10
 
                 // Act
-                await connection.InsertAllAsync<IdentityTable>(entities);
+                await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(field);
+                var queryResult = await connection.QueryAsync<IdentityTable>(field).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(8, queryResult.Count());

@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 
@@ -26,7 +27,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] IN (@Field1_In_0, @Field1_In_1, @Field1_In_2))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -44,7 +45,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] IN (@Field1_In_0, @Field1_In_1, @Field1_In_2) AND [Field2] IN (@Field2_In_0, @Field2_In_1, @Field2_In_2))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -62,7 +63,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] IN (@Field1_In_0, @Field1_In_1, @Field1_In_2) AND [Field1] IN (@Field1_1_In_0, @Field1_1_In_1, @Field1_1_In_2))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -81,7 +82,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] IN (@Field1_In_0, @Field1_In_1, @Field1_In_2) OR [Field1] IN (@Field1_1_In_0, @Field1_1_In_1, @Field1_1_In_2))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         #endregion
@@ -99,7 +100,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] NOT IN (@Field1_In_0, @Field1_In_1, @Field1_In_2))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -117,7 +118,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] NOT IN (@Field1_In_0, @Field1_In_1, @Field1_In_2) AND [Field2] NOT IN (@Field2_In_0, @Field2_In_1, @Field2_In_2))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -135,7 +136,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] NOT IN (@Field1_In_0, @Field1_In_1, @Field1_In_2) AND [Field1] NOT IN (@Field1_1_In_0, @Field1_1_In_1, @Field1_1_In_2))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -154,7 +155,7 @@ namespace RepoDb.UnitTests
             var expected = "([Field1] NOT IN (@Field1_In_0, @Field1_In_1, @Field1_In_2) OR [Field1] NOT IN (@Field1_1_In_0, @Field1_1_In_1, @Field1_1_In_2))";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         #endregion

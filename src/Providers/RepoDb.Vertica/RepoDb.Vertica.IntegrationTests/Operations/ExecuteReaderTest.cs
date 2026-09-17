@@ -166,7 +166,7 @@ namespace RepoDb.Vertica.IntegrationTests.Operations
             using (var connection = new VerticaConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInt\", \"ColumnDateTime\" FROM \"CompleteTable\""))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInt\", \"ColumnDateTime\" FROM \"CompleteTable\"").ConfigureAwait(false))
                 {
                     while (reader.Read())
                     {
@@ -194,7 +194,7 @@ namespace RepoDb.Vertica.IntegrationTests.Operations
             using (var connection = new VerticaConnection(Database.ConnectionString))
             {
                 // Act - async counterpart of TestVerticaConnectionExecuteReaderMultiStatementText.
-                using (var reader = await connection.ExecuteReaderAsync("SELECT \"Id\" FROM \"CompleteTable\"; SELECT \"Id\" FROM \"CompleteTable\""))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT \"Id\" FROM \"CompleteTable\"; SELECT \"Id\" FROM \"CompleteTable\"").ConfigureAwait(false))
                 {
                     var count1 = 0;
                     while (reader.Read())
@@ -230,7 +230,7 @@ namespace RepoDb.Vertica.IntegrationTests.Operations
                 await Assert.ThrowsAsync<VerticaException>(() =>
                     connection.ExecuteReaderAsync(
                         "SELECT \"Id\" FROM \"CompleteTable\" WHERE \"Id\" = @Id; SELECT \"Id\" FROM \"CompleteTable\" WHERE \"Id\" = @Id",
-                        new { Id = id }));
+                        new { Id = id })).ConfigureAwait(false);
             }
         }
 
@@ -243,7 +243,7 @@ namespace RepoDb.Vertica.IntegrationTests.Operations
             using (var connection = new VerticaConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM \"CompleteTable\""))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM \"CompleteTable\"").ConfigureAwait(false))
                 {
                     // Act
                     var result = DataReader.ToEnumerable<CompleteTable>((DbDataReader)reader).AsList();
@@ -263,7 +263,7 @@ namespace RepoDb.Vertica.IntegrationTests.Operations
             using (var connection = new VerticaConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM \"CompleteTable\""))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM \"CompleteTable\"").ConfigureAwait(false))
                 {
                     // Act
                     var result = DataReader.ToEnumerable((DbDataReader)reader).AsList();

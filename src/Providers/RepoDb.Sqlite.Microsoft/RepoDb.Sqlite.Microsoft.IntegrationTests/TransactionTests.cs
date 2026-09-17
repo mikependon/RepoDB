@@ -7,6 +7,7 @@
 
 #endregion
 
+using System;
 using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
@@ -95,7 +96,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.BatchQueryAsync<MdsCompleteTable>(0, 10, OrderField.Parse(new { Id = Order.Ascending }), it => it.Id != 0, transaction: transaction);
+                    await connection.BatchQueryAsync<MdsCompleteTable>(0, 10, OrderField.Parse(new { Id = Order.Ascending }), it => it.Id != 0, transaction: transaction).ConfigureAwait(false);
                 }
             }
         }
@@ -141,7 +142,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.CountAsync<MdsCompleteTable>(it => it.Id != 0, transaction: transaction);
+                    await connection.CountAsync<MdsCompleteTable>(it => it.Id != 0, transaction: transaction).ConfigureAwait(false);
                 }
             }
         }
@@ -187,7 +188,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.CountAllAsync<MdsCompleteTable>(transaction: transaction);
+                    await connection.CountAllAsync<MdsCompleteTable>(transaction: transaction).ConfigureAwait(false);
                 }
             }
         }
@@ -280,7 +281,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.DeleteAsync<MdsCompleteTable>(entity, transaction: transaction);
+                    await connection.DeleteAsync<MdsCompleteTable>(entity, transaction: transaction).ConfigureAwait(false);
 
                     // Act
                     transaction.Commit();
@@ -309,7 +310,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.DeleteAsync<MdsCompleteTable>(entity, transaction: transaction);
+                    await connection.DeleteAsync<MdsCompleteTable>(entity, transaction: transaction).ConfigureAwait(false);
 
                     // Act
                     transaction.Rollback();
@@ -408,7 +409,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.DeleteAllAsync<MdsCompleteTable>(transaction: transaction);
+                    await connection.DeleteAllAsync<MdsCompleteTable>(transaction: transaction).ConfigureAwait(false);
 
                     // Act
                     transaction.Commit();
@@ -437,7 +438,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.DeleteAllAsync<MdsCompleteTable>(transaction: transaction);
+                    await connection.DeleteAllAsync<MdsCompleteTable>(transaction: transaction).ConfigureAwait(false);
 
                     // Act
                     transaction.Rollback();
@@ -527,7 +528,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.InsertAsync<MdsCompleteTable>(entity, transaction: transaction);
+                    await connection.InsertAsync<MdsCompleteTable>(entity, transaction: transaction).ConfigureAwait(false);
 
                     // Act
                     transaction.Commit();
@@ -553,7 +554,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.InsertAsync<MdsCompleteTable>(entity, transaction: transaction);
+                    await connection.InsertAsync<MdsCompleteTable>(entity, transaction: transaction).ConfigureAwait(false);
 
                     // Act
                     transaction.Rollback();
@@ -643,7 +644,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.InsertAllAsync<MdsCompleteTable>(entities, transaction: transaction);
+                    await connection.InsertAllAsync<MdsCompleteTable>(entities, transaction: transaction).ConfigureAwait(false);
 
                     // Act
                     transaction.Commit();
@@ -669,7 +670,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.InsertAllAsync<MdsCompleteTable>(entities, transaction: transaction);
+                    await connection.InsertAllAsync<MdsCompleteTable>(entities, transaction: transaction).ConfigureAwait(false);
 
                     // Act
                     transaction.Rollback();
@@ -759,7 +760,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 var transaction = connection.EnsureOpen().BeginTransaction();
 
                 // Act
-                await connection.MergeAsync<MdsCompleteTable>(entity, transaction: transaction);
+                await connection.MergeAsync<MdsCompleteTable>(entity, transaction: transaction).ConfigureAwait(false);
 
                 // Act
                 transaction.Commit();
@@ -784,7 +785,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 var transaction = connection.EnsureOpen().BeginTransaction();
 
                 // Act
-                await connection.MergeAsync<MdsCompleteTable>(entity, transaction: transaction);
+                await connection.MergeAsync<MdsCompleteTable>(entity, transaction: transaction).ConfigureAwait(false);
 
                 // Act
                 transaction.Rollback();
@@ -873,7 +874,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.MergeAllAsync<MdsCompleteTable>(entities, transaction: transaction);
+                    await connection.MergeAllAsync<MdsCompleteTable>(entities, transaction: transaction).ConfigureAwait(false);
 
                     // Act
                     transaction.Commit();
@@ -899,7 +900,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.MergeAllAsync<MdsCompleteTable>(entities, transaction: transaction);
+                    await connection.MergeAllAsync<MdsCompleteTable>(entities, transaction: transaction).ConfigureAwait(false);
 
                     // Act
                     transaction.Rollback();
@@ -951,7 +952,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.QueryAsync<MdsCompleteTable>(it => it.Id != 0, transaction: transaction);
+                    await connection.QueryAsync<MdsCompleteTable>(it => it.Id != 0, transaction: transaction).ConfigureAwait(false);
                 }
             }
         }
@@ -997,7 +998,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.QueryAllAsync<MdsCompleteTable>(transaction: transaction);
+                    await connection.QueryAllAsync<MdsCompleteTable>(transaction: transaction).ConfigureAwait(false);
                 }
             }
         }
@@ -1157,7 +1158,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                     // Act
                     await connection.QueryMultipleAsync<MdsCompleteTable, MdsCompleteTable>(it => it.Id != 0,
                         it => it.Id != 0,
-                        transaction: transaction);
+                        transaction: transaction).ConfigureAwait(false);
                 }
             }
         }
@@ -1177,7 +1178,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                     await connection.QueryMultipleAsync<MdsCompleteTable, MdsCompleteTable, MdsCompleteTable>(it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
-                        transaction: transaction);
+                        transaction: transaction).ConfigureAwait(false);
                 }
             }
         }
@@ -1198,7 +1199,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
-                        transaction: transaction);
+                        transaction: transaction).ConfigureAwait(false);
                 }
             }
         }
@@ -1220,7 +1221,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
-                        transaction: transaction);
+                        transaction: transaction).ConfigureAwait(false);
                 }
             }
         }
@@ -1243,7 +1244,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
-                        transaction: transaction);
+                        transaction: transaction).ConfigureAwait(false);
                 }
             }
         }
@@ -1267,7 +1268,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
-                        transaction: transaction);
+                        transaction: transaction).ConfigureAwait(false);
                 }
             }
         }
@@ -1361,7 +1362,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 var queryResult = connection.Query<MdsCompleteTable>(entity.Id);
 
                 // Assert
-                Assert.AreEqual("false", queryResult.First().ColumnBoolean);
+                Assert.AreEqual("false", queryResult.First().ColumnBoolean, StringComparer.Ordinal);
             }
         }
 
@@ -1395,7 +1396,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 var queryResult = connection.Query<MdsCompleteTable>(entity.Id);
 
                 // Assert
-                Assert.AreEqual("true", queryResult.First().ColumnBoolean);
+                Assert.AreEqual("true", queryResult.First().ColumnBoolean, StringComparer.Ordinal);
             }
         }
 
@@ -1423,7 +1424,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                     entity.ColumnBoolean = "false";
 
                     // Act
-                    await connection.UpdateAsync<MdsCompleteTable>(entity, transaction: transaction);
+                    await connection.UpdateAsync<MdsCompleteTable>(entity, transaction: transaction).ConfigureAwait(false);
 
                     // Act
                     transaction.Commit();
@@ -1433,7 +1434,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 var queryResult = connection.Query<MdsCompleteTable>(entity.Id);
 
                 // Assert
-                Assert.AreEqual("false", queryResult.First().ColumnBoolean);
+                Assert.AreEqual("false", queryResult.First().ColumnBoolean, StringComparer.Ordinal);
             }
         }
 
@@ -1457,7 +1458,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                     entity.ColumnBoolean = "false";
 
                     // Act
-                    await connection.UpdateAsync<MdsCompleteTable>(entity, transaction: transaction);
+                    await connection.UpdateAsync<MdsCompleteTable>(entity, transaction: transaction).ConfigureAwait(false);
 
                     // Act
                     transaction.Rollback();
@@ -1467,7 +1468,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 var queryResult = connection.Query<MdsCompleteTable>(entity.Id);
 
                 // Assert
-                Assert.AreEqual("true", queryResult.First().ColumnBoolean);
+                Assert.AreEqual("true", queryResult.First().ColumnBoolean, StringComparer.Ordinal);
             }
         }
 
@@ -1509,7 +1510,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 var queryResult = connection.QueryAll<MdsCompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Assert.AreEqual("false", queryResult.First(item => item.Id == entity.Id).ColumnBoolean));
+                entities.ForEach(entity => Assert.AreEqual("false", queryResult.First(item => item.Id == entity.Id).ColumnBoolean, StringComparer.Ordinal));
             }
         }
 
@@ -1543,7 +1544,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 var queryResult = connection.QueryAll<MdsCompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Assert.AreEqual("true", queryResult.First(item => item.Id == entity.Id).ColumnBoolean));
+                entities.ForEach(entity => Assert.AreEqual("true", queryResult.First(item => item.Id == entity.Id).ColumnBoolean, StringComparer.Ordinal));
             }
         }
 
@@ -1571,7 +1572,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                     entities.ForEach(entity => entity.ColumnBoolean = "false");
 
                     // Act
-                    await connection.UpdateAllAsync<MdsCompleteTable>(entities, transaction: transaction);
+                    await connection.UpdateAllAsync<MdsCompleteTable>(entities, transaction: transaction).ConfigureAwait(false);
 
                     // Act
                     transaction.Commit();
@@ -1581,7 +1582,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 var queryResult = connection.QueryAll<MdsCompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Assert.AreEqual("false", queryResult.First(item => item.Id == entity.Id).ColumnBoolean));
+                entities.ForEach(entity => Assert.AreEqual("false", queryResult.First(item => item.Id == entity.Id).ColumnBoolean, StringComparer.Ordinal));
             }
         }
 
@@ -1605,7 +1606,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                     entities.ForEach(entity => entity.ColumnBoolean = "false");
 
                     // Act
-                    await connection.UpdateAllAsync<MdsCompleteTable>(entities, transaction: transaction);
+                    await connection.UpdateAllAsync<MdsCompleteTable>(entities, transaction: transaction).ConfigureAwait(false);
 
                     // Act
                     transaction.Rollback();
@@ -1615,7 +1616,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 var queryResult = connection.QueryAll<MdsCompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Assert.AreEqual("true", queryResult.First(item => item.Id == entity.Id).ColumnBoolean));
+                entities.ForEach(entity => Assert.AreEqual("true", queryResult.First(item => item.Id == entity.Id).ColumnBoolean, StringComparer.Ordinal));
             }
         }
 
@@ -1668,7 +1669,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                     Database.CreateMdsCompleteTable(connection);
 
                     // Act
-                    await connection.InsertAllAsync<MdsCompleteTable>(entities);
+                    await connection.InsertAllAsync<MdsCompleteTable>(entities).ConfigureAwait(false);
 
                     // Assert
                     Assert.AreEqual(entities.Count, connection.CountAll<MdsCompleteTable>());
@@ -1722,7 +1723,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                     Database.CreateMdsCompleteTable(connection);
 
                     // Act
-                    await connection.MergeAllAsync<MdsCompleteTable>(entities);
+                    await connection.MergeAllAsync<MdsCompleteTable>(entities).ConfigureAwait(false);
 
                     // Assert
                     Assert.AreEqual(entities.Count, connection.CountAll<MdsCompleteTable>());
@@ -1763,7 +1764,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                     var queryResult = connection.QueryAll<MdsCompleteTable>();
 
                     // Assert
-                    entities.ForEach(entity => Assert.AreEqual("false", queryResult.First(item => item.Id == entity.Id).ColumnBoolean));
+                    entities.ForEach(entity => Assert.AreEqual("false", queryResult.First(item => item.Id == entity.Id).ColumnBoolean, StringComparer.Ordinal));
                 }
 
                 // Complete
@@ -1791,13 +1792,13 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                     entities.ForEach(entity => entity.ColumnBoolean = "false");
 
                     // Act
-                    await connection.UpdateAllAsync<MdsCompleteTable>(entities);
+                    await connection.UpdateAllAsync<MdsCompleteTable>(entities).ConfigureAwait(false);
 
                     // Act
                     var queryResult = connection.QueryAll<MdsCompleteTable>();
 
                     // Assert
-                    entities.ForEach(entity => Assert.AreEqual("false", queryResult.First(item => item.Id == entity.Id).ColumnBoolean));
+                    entities.ForEach(entity => Assert.AreEqual("false", queryResult.First(item => item.Id == entity.Id).ColumnBoolean, StringComparer.Ordinal));
                 }
 
                 // Complete

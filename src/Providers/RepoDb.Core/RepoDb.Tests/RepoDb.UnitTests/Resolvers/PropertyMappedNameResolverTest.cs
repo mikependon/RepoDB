@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
 using RepoDb.Resolvers;
@@ -58,7 +59,7 @@ namespace RepoDb.UnitTests.Resolvers
             var expected = "Id";
 
             // Assert
-            Assert.AreEqual(expected, result);
+            Assert.AreEqual(expected, result, StringComparer.Ordinal);
         }
 
         /*
@@ -76,7 +77,7 @@ namespace RepoDb.UnitTests.Resolvers
             var expected = "[PrimaryId]";
 
             // Assert
-            Assert.AreEqual(expected, result);
+            Assert.AreEqual(expected, result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -90,7 +91,7 @@ namespace RepoDb.UnitTests.Resolvers
             var expected = "[PrimaryId]";
 
             // Assert
-            Assert.AreEqual(expected, result);
+            Assert.AreEqual(expected, result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -104,7 +105,7 @@ namespace RepoDb.UnitTests.Resolvers
             var expected = "[MapId]";
 
             // Assert
-            Assert.AreEqual(expected, result);
+            Assert.AreEqual(expected, result, StringComparer.Ordinal);
         }
 
         /*
@@ -125,7 +126,7 @@ namespace RepoDb.UnitTests.Resolvers
             var expected = "[PrimaryId]";
 
             // Assert
-            Assert.AreEqual(expected, result);
+            Assert.AreEqual(expected, result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -142,7 +143,7 @@ namespace RepoDb.UnitTests.Resolvers
             var expected = "[PrimaryId]";
 
             // Assert
-            Assert.AreEqual(expected, result);
+            Assert.AreEqual(expected, result, StringComparer.Ordinal);
         }
     }
 }

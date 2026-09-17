@@ -77,7 +77,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = MariaDbText.GetCreatePseudoTableSql(tableName, pseudoTableName, pseudoTableType, dbSetting, qualifierField);
-            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
 
             var dbSetting = connection.GetDbSetting();
             var commandText = MariaDbText.GetCreatePseudoTableIndexSql(pseudoTableName, qualifiers, dbSetting);
-            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = MariaDbText.GetTruncatePseudoTableSql(pseudoTableName, dbSetting);
-            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = MariaDbText.GetDropPseudoTableSql(pseudoTableName, dbSetting);
-            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         #endregion
@@ -269,7 +269,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = MariaDbText.GetAllowNullForColumnSql(pseudoTableName, columnName, dbSetting);
-            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -319,8 +319,8 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
             var dbSetting = connection.GetDbSetting();
             var commandText = MariaDbText.GetIdentitySequenceMetadataSql(tableName, identityField, dbSetting);
 
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
-            await reader.ReadAsync(cancellationToken);
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+            await reader.ReadAsync(cancellationToken).ConfigureAwait(false);
             return (reader.GetString(0), string.Equals(reader.GetString(1), "ALWAYS", StringComparison.OrdinalIgnoreCase));
         }
 
@@ -394,14 +394,14 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
             where TEntity : class
         {
             var dbSetting = connection.GetDbSetting();
-            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, trace, traceKey, transaction, cancellationToken);
+            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
             var commandText = MariaDbText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, sequenceName, isAlwaysGenerated, dbSetting);
             var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
 
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
             var result = 0;
 
-            while (await reader.ReadAsync(cancellationToken))
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
                 setter(entities[result], Converter.DbNullToNull(reader.GetValue(0)));
                 result++;
@@ -475,13 +475,13 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
-            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, trace, traceKey, transaction, cancellationToken);
+            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
             var commandText = MariaDbText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, sequenceName, isAlwaysGenerated, dbSetting);
 
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
             var result = 0;
 
-            while (await reader.ReadAsync(cancellationToken))
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
                 rows[result][identityField.Name] = Converter.DbNullToNull(reader.GetValue(0));
                 result++;
@@ -549,7 +549,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = MariaDbText.GetMergeFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, identityField, dbSetting);
-            return await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            return await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -627,13 +627,13 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         {
             var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
             var dbSetting = connection.GetDbSetting();
-            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, trace, traceKey, transaction, cancellationToken);
+            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
             var commandText = MariaDbText.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, sequenceName, isAlwaysGenerated, dbSetting);
 
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
             var result = 0;
 
-            while (await reader.ReadAsync(cancellationToken))
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
                 setter?.Invoke(entities[result], Converter.DbNullToNull(reader.GetValue(0)));
                 result++;
@@ -711,13 +711,13 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
-            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, trace, traceKey, transaction, cancellationToken);
+            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
             var commandText = MariaDbText.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, sequenceName, isAlwaysGenerated, dbSetting);
 
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
             var result = 0;
 
-            while (await reader.ReadAsync(cancellationToken))
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
                 rows[result][identityField.Name] = Converter.DbNullToNull(reader.GetValue(0));
                 result++;
@@ -781,7 +781,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = MariaDbText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, dbSetting);
-            return await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            return await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         #endregion
@@ -835,7 +835,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = MariaDbText.GetDeleteFromPseudoTableSql(tableName, pseudoTableName, qualifiers, dbSetting);
-            return await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            return await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         #endregion

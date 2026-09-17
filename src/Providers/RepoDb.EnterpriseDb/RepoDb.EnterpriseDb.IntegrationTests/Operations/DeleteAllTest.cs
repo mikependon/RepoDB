@@ -98,7 +98,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.Operations
             using (var connection = new EDBConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAllAsync<CompleteTable>();
+                var result = await connection.DeleteAllAsync<CompleteTable>().ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -115,7 +115,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.Operations
             using (var connection = new EDBConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act
-                var result = await connection.DeleteAllAsync<CompleteTable>(primaryKeys);
+                var result = await connection.DeleteAllAsync<CompleteTable>(primaryKeys).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -132,7 +132,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.Operations
             using (var connection = new EDBConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act
-                var result = await connection.DeleteAllAsync<CompleteTable>(primaryKeys);
+                var result = await connection.DeleteAllAsync<CompleteTable>(primaryKeys).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -210,7 +210,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.Operations
             using (var connection = new EDBConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>());
+                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>()).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -227,7 +227,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.Operations
             using (var connection = new EDBConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act
-                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>(), primaryKeys);
+                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>(), primaryKeys).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -244,7 +244,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.Operations
             using (var connection = new EDBConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act
-                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>(), primaryKeys);
+                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>(), primaryKeys).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);

@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FirebirdSql.Data.FirebirdClient;
 using RepoDb.Attributes.Parameter.Firebird;
@@ -51,7 +52,7 @@ namespace RepoDb.Firebird.UnitTests.Attributes.Parameter.Firebird
 
             // Assert
             var parameter = (FbParameter)command.Parameters["@ColumnName"];
-            Assert.AreEqual("MappedColumnName", parameter.SourceColumn);
+            Assert.AreEqual("MappedColumnName", parameter.SourceColumn, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -73,7 +74,7 @@ namespace RepoDb.Firebird.UnitTests.Attributes.Parameter.Firebird
 
             // Assert
             var parameter = (FbParameter)command.Parameters["@ColumnName"];
-            Assert.AreEqual("MappedColumnName", parameter.SourceColumn);
+            Assert.AreEqual("MappedColumnName", parameter.SourceColumn, StringComparer.Ordinal);
         }
     }
 }

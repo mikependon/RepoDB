@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Connector.MariaDbConnector;
 using RepoDb.Resolvers;
@@ -33,7 +34,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.TinyInt);
 
             // Assert
-            Assert.AreEqual("TINYINT", result);
+            Assert.AreEqual("TINYINT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -46,7 +47,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.SmallInt);
 
             // Assert
-            Assert.AreEqual("SMALLINT", result);
+            Assert.AreEqual("SMALLINT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -59,7 +60,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.MediumInt);
 
             // Assert
-            Assert.AreEqual("MEDIUMINT", result);
+            Assert.AreEqual("MEDIUMINT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -72,7 +73,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.Int);
 
             // Assert
-            Assert.AreEqual("INT", result);
+            Assert.AreEqual("INT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -85,7 +86,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.BigInt);
 
             // Assert
-            Assert.AreEqual("BIGINT", result);
+            Assert.AreEqual("BIGINT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -98,7 +99,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.Decimal);
 
             // Assert
-            Assert.AreEqual("DECIMAL", result);
+            Assert.AreEqual("DECIMAL", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -111,7 +112,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.Float);
 
             // Assert
-            Assert.AreEqual("FLOAT", result);
+            Assert.AreEqual("FLOAT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -124,7 +125,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.Double);
 
             // Assert
-            Assert.AreEqual("DOUBLE", result);
+            Assert.AreEqual("DOUBLE", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -137,7 +138,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.Bit);
 
             // Assert
-            Assert.AreEqual("BIT", result);
+            Assert.AreEqual("BIT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -150,7 +151,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.Char);
 
             // Assert
-            Assert.AreEqual("CHAR", result);
+            Assert.AreEqual("CHAR", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -163,7 +164,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.VarChar);
 
             // Assert
-            Assert.AreEqual("VARCHAR", result);
+            Assert.AreEqual("VARCHAR", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -176,7 +177,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.TinyText);
 
             // Assert
-            Assert.AreEqual("TINYTEXT", result);
+            Assert.AreEqual("TINYTEXT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -189,7 +190,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.Text);
 
             // Assert
-            Assert.AreEqual("TEXT", result);
+            Assert.AreEqual("TEXT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -202,7 +203,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.Enum);
 
             // Assert
-            Assert.AreEqual("TEXT", result);
+            Assert.AreEqual("TEXT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -215,7 +216,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.Set);
 
             // Assert
-            Assert.AreEqual("TEXT", result);
+            Assert.AreEqual("TEXT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -228,7 +229,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.MediumText);
 
             // Assert
-            Assert.AreEqual("MEDIUMTEXT", result);
+            Assert.AreEqual("MEDIUMTEXT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -241,7 +242,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.LongText);
 
             // Assert
-            Assert.AreEqual("LONGTEXT", result);
+            Assert.AreEqual("LONGTEXT", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -254,7 +255,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.Binary);
 
             // Assert
-            Assert.AreEqual("BINARY", result);
+            Assert.AreEqual("BINARY", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -267,7 +268,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.VarBinary);
 
             // Assert
-            Assert.AreEqual("VARBINARY", result);
+            Assert.AreEqual("VARBINARY", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -280,7 +281,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.TinyBlob);
 
             // Assert
-            Assert.AreEqual("TINYBLOB", result);
+            Assert.AreEqual("TINYBLOB", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -293,7 +294,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.Blob);
 
             // Assert
-            Assert.AreEqual("BLOB", result);
+            Assert.AreEqual("BLOB", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -306,7 +307,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.MediumBlob);
 
             // Assert
-            Assert.AreEqual("MEDIUMBLOB", result);
+            Assert.AreEqual("MEDIUMBLOB", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -319,7 +320,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.LongBlob);
 
             // Assert
-            Assert.AreEqual("LONGBLOB", result);
+            Assert.AreEqual("LONGBLOB", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -332,7 +333,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.Date);
 
             // Assert
-            Assert.AreEqual("DATE", result);
+            Assert.AreEqual("DATE", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -345,7 +346,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.Time);
 
             // Assert
-            Assert.AreEqual("TIME", result);
+            Assert.AreEqual("TIME", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -358,7 +359,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.DateTime);
 
             // Assert
-            Assert.AreEqual("DATETIME", result);
+            Assert.AreEqual("DATETIME", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -371,7 +372,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.Timestamp);
 
             // Assert
-            Assert.AreEqual("TIMESTAMP", result);
+            Assert.AreEqual("TIMESTAMP", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -384,7 +385,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.Year);
 
             // Assert
-            Assert.AreEqual("YEAR", result);
+            Assert.AreEqual("YEAR", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -397,7 +398,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.Json);
 
             // Assert
-            Assert.AreEqual("JSON", result);
+            Assert.AreEqual("JSON", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -410,7 +411,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.Geometry);
 
             // Assert
-            Assert.AreEqual("GEOMETRY", result);
+            Assert.AreEqual("GEOMETRY", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -423,7 +424,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.Point);
 
             // Assert
-            Assert.AreEqual("GEOMETRY", result);
+            Assert.AreEqual("GEOMETRY", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -436,7 +437,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.LineString);
 
             // Assert
-            Assert.AreEqual("GEOMETRY", result);
+            Assert.AreEqual("GEOMETRY", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -449,7 +450,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.Polygon);
 
             // Assert
-            Assert.AreEqual("GEOMETRY", result);
+            Assert.AreEqual("GEOMETRY", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -462,7 +463,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.MultiPoint);
 
             // Assert
-            Assert.AreEqual("GEOMETRY", result);
+            Assert.AreEqual("GEOMETRY", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -475,7 +476,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.MultiLineString);
 
             // Assert
-            Assert.AreEqual("GEOMETRY", result);
+            Assert.AreEqual("GEOMETRY", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -488,7 +489,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.MultiPolygon);
 
             // Assert
-            Assert.AreEqual("GEOMETRY", result);
+            Assert.AreEqual("GEOMETRY", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -501,7 +502,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
             var result = resolver.Resolve(MariaDbType.GeometryCollection);
 
             // Assert
-            Assert.AreEqual("GEOMETRY", result);
+            Assert.AreEqual("GEOMETRY", result, StringComparer.Ordinal);
         }
     }
 }

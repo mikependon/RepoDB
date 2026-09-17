@@ -116,16 +116,16 @@ namespace RepoDb.DbHelpers
         private async Task<DbField> ReaderToDbFieldAsync(DbDataReader reader,
             CancellationToken cancellationToken = default)
         {
-            return new DbField(await reader.GetFieldValueAsync<string>(0, cancellationToken),
-                !await reader.IsDBNullAsync(1, cancellationToken) && await reader.GetFieldValueAsync<bool>(1, cancellationToken),
-                !await reader.IsDBNullAsync(2, cancellationToken) && await reader.GetFieldValueAsync<bool>(2, cancellationToken),
-                !await reader.IsDBNullAsync(3, cancellationToken) && await reader.GetFieldValueAsync<bool>(3, cancellationToken),
-                await reader.IsDBNullAsync(4, cancellationToken) ? DbTypeResolver.Resolve("text") : DbTypeResolver.Resolve(await reader.GetFieldValueAsync<string>(4, cancellationToken)),
+            return new DbField(await reader.GetFieldValueAsync<string>(0, cancellationToken).ConfigureAwait(false),
+                !await reader.IsDBNullAsync(1, cancellationToken).ConfigureAwait(false) && await reader.GetFieldValueAsync<bool>(1, cancellationToken).ConfigureAwait(false),
+                !await reader.IsDBNullAsync(2, cancellationToken).ConfigureAwait(false) && await reader.GetFieldValueAsync<bool>(2, cancellationToken).ConfigureAwait(false),
+                !await reader.IsDBNullAsync(3, cancellationToken).ConfigureAwait(false) && await reader.GetFieldValueAsync<bool>(3, cancellationToken).ConfigureAwait(false),
+                await reader.IsDBNullAsync(4, cancellationToken).ConfigureAwait(false) ? DbTypeResolver.Resolve("text") : DbTypeResolver.Resolve(await reader.GetFieldValueAsync<string>(4, cancellationToken).ConfigureAwait(false)),
                 null,
                 null,
                 null,
-                await reader.IsDBNullAsync(4, cancellationToken) ? "text" : reader.GetString(4),
-                !await reader.IsDBNullAsync(5, cancellationToken) && await reader.GetFieldValueAsync<bool>(5, cancellationToken),
+                await reader.IsDBNullAsync(4, cancellationToken).ConfigureAwait(false) ? "text" : reader.GetString(4),
+                !await reader.IsDBNullAsync(5, cancellationToken).ConfigureAwait(false) && await reader.GetFieldValueAsync<bool>(5, cancellationToken).ConfigureAwait(false),
                 "PGSQL");
         }
 
@@ -160,14 +160,14 @@ namespace RepoDb.DbHelpers
         {
             try
             {
-                return await func(connection);
+                return await func(connection).ConfigureAwait(false);
             }
             catch (Exception ex) when (IsOperationInProgressException(ex))
             {
                 Debug.WriteLine($"{ex.GetType().Name} occurred. Retrying the operation on a new connection.");
                 await using var newConnection = (DbConnection)Activator.CreateInstance(connection.GetType(), connection.ConnectionString);
-                await newConnection.OpenAsync();
-                return await func(newConnection);
+                await newConnection.OpenAsync().ConfigureAwait(false);
+                return await func(newConnection).ConfigureAwait(false);
             }
         }
 
@@ -243,14 +243,14 @@ namespace RepoDb.DbHelpers
 
             // Iterate and extract
             using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, param, transaction: transaction,
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken).ConfigureAwait(false);
 
             var dbFields = new List<DbField>();
 
             // Iterate the list of the fields
-            while (await reader.ReadAsync(cancellationToken))
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
-                dbFields.Add(await ReaderToDbFieldAsync(reader, cancellationToken));
+                dbFields.Add(await ReaderToDbFieldAsync(reader, cancellationToken).ConfigureAwait(false));
             }
 
             // Return the list of fields

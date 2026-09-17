@@ -37,7 +37,7 @@ namespace RepoDb.Telemetry.Default.UnitTests.Options
             var expected = "MyApplication";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -49,7 +49,7 @@ namespace RepoDb.Telemetry.Default.UnitTests.Options
             var expected = "Default";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -61,7 +61,7 @@ namespace RepoDb.Telemetry.Default.UnitTests.Options
             var expected = "http://localhost:5000";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -88,7 +88,7 @@ namespace RepoDb.Telemetry.Default.UnitTests.Options
             var expected = "12345";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
     }
 }

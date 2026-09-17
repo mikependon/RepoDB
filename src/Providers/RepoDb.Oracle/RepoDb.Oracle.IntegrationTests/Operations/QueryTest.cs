@@ -198,7 +198,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             using var connection = new OracleConnection(Database.ConnectionString);
 
             // Act
-            var result = (await connection.QueryAsync<CompleteTable>(table.Id)).First();
+            var result = (await connection.QueryAsync<CompleteTable>(table.Id).ConfigureAwait(false)).First();
 
             // Assert
             Helper.AssertPropertiesEquality(table, result);
@@ -216,7 +216,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             try
             {
                 // Act
-                var result = (await connection.QueryAsync<CompleteTable>(table.Id)).First();
+                var result = (await connection.QueryAsync<CompleteTable>(table.Id).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, result);
@@ -236,7 +236,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             using var connection = new OracleConnection(Database.ConnectionString);
 
             // Act
-            var result = (await connection.QueryAsync<CompleteTable>(e => e.Id == table.Id)).First();
+            var result = (await connection.QueryAsync<CompleteTable>(e => e.Id == table.Id).ConfigureAwait(false)).First();
 
             // Assert
             Helper.AssertPropertiesEquality(table, result);
@@ -251,7 +251,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             using var connection = new OracleConnection(Database.ConnectionString);
 
             // Act
-            var result = (await connection.QueryAsync<CompleteTable>(new { table.Id })).First();
+            var result = (await connection.QueryAsync<CompleteTable>(new { table.Id }).ConfigureAwait(false)).First();
 
             // Assert
             Helper.AssertPropertiesEquality(table, result);
@@ -266,7 +266,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             using var connection = new OracleConnection(Database.ConnectionString);
 
             // Act
-            var result = (await connection.QueryAsync<CompleteTable>(new QueryField("Id", table.Id))).First();
+            var result = (await connection.QueryAsync<CompleteTable>(new QueryField("Id", table.Id)).ConfigureAwait(false)).First();
 
             // Assert
             Helper.AssertPropertiesEquality(table, result);
@@ -286,7 +286,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             using var connection = new OracleConnection(Database.ConnectionString);
 
             // Act
-            var result = (await connection.QueryAsync<CompleteTable>(queryFields)).First();
+            var result = (await connection.QueryAsync<CompleteTable>(queryFields).ConfigureAwait(false)).First();
 
             // Assert
             Helper.AssertPropertiesEquality(table, result);
@@ -307,7 +307,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             using var connection = new OracleConnection(Database.ConnectionString);
 
             // Act
-            var result = (await connection.QueryAsync<CompleteTable>(queryGroup)).First();
+            var result = (await connection.QueryAsync<CompleteTable>(queryGroup).ConfigureAwait(false)).First();
 
             // Assert
             Helper.AssertPropertiesEquality(table, result);
@@ -323,7 +323,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
 
             // Act
             var result = await connection.QueryAsync<CompleteTable>((object)null,
-                top: 2);
+                top: 2).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(2, result.Count());
@@ -364,7 +364,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             // Act/Assert: AreTableHintsSupported = false for Oracle - BaseStatementBuilder.GuardHints
             // throws for any non-null/non-whitespace hints, regardless of operation.
             await Assert.ThrowsAsync<System.NotSupportedException>(() =>
-                connection.QueryAsync<CompleteTable>((object)null, hints: "NOLOCK"));
+                connection.QueryAsync<CompleteTable>((object)null, hints: "NOLOCK")).ConfigureAwait(false);
         }
 
         #endregion

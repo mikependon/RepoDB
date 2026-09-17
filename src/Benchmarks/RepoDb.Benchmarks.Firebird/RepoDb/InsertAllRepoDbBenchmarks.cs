@@ -41,10 +41,10 @@ namespace RepoDb.Benchmarks.Firebird.RepoDb
         [Benchmark]
         public async Task BulkInsertAllAsync()
         {
-            await using var connection = await GetConnection().EnsureOpenAsync() as FbConnection;
+            await using var connection = await GetConnection().EnsureOpenAsync().ConfigureAwait(false) as FbConnection;
 
             var persons = GetPersons(Rows);
-            await connection.BulkInsertAsync(persons);
+            await connection.BulkInsertAsync(persons).ConfigureAwait(false);
         }
 
         private static IEnumerable<Person> GetPersons(int count)

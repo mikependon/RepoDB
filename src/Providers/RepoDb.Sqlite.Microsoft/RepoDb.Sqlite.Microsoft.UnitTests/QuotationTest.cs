@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Extensions;
@@ -37,7 +38,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var result = " Field ".AsQuoted(true, setting);
 
             // Assert
-            Assert.AreEqual("[Field]", result);
+            Assert.AreEqual("[Field]", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -50,7 +51,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var result = " Field ".AsQuoted(setting);
 
             // Assert
-            Assert.AreEqual("[ Field ]", result);
+            Assert.AreEqual("[ Field ]", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -63,7 +64,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var result = "[Field]".AsQuoted(setting);
 
             // Assert
-            Assert.AreEqual("[Field]", result);
+            Assert.AreEqual("[Field]", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -76,7 +77,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var result = "[ Field ]".AsQuoted(setting);
 
             // Assert
-            Assert.AreEqual("[ Field ]", result);
+            Assert.AreEqual("[ Field ]", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -89,7 +90,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var result = " [ Field ] ".AsQuoted(true, setting);
 
             // Assert
-            Assert.AreEqual("[ Field ]", result);
+            Assert.AreEqual("[ Field ]", result, StringComparer.Ordinal);
         }
 
         #endregion
@@ -106,7 +107,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var result = " [ Field ] ".AsUnquoted(true, setting);
 
             // Assert
-            Assert.AreEqual("Field", result);
+            Assert.AreEqual("Field", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -119,7 +120,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var result = "[ Field ]".AsUnquoted(setting);
 
             // Assert
-            Assert.AreEqual(" Field ", result);
+            Assert.AreEqual(" Field ", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -132,7 +133,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var result = "Field".AsUnquoted(setting);
 
             // Assert
-            Assert.AreEqual("Field", result);
+            Assert.AreEqual("Field", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -145,7 +146,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var result = " Field ".AsUnquoted(setting);
 
             // Assert
-            Assert.AreEqual(" Field ", result);
+            Assert.AreEqual(" Field ", result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -158,7 +159,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var result = " Field ".AsUnquoted(true, setting);
 
             // Assert
-            Assert.AreEqual("Field", result);
+            Assert.AreEqual("Field", result, StringComparer.Ordinal);
         }
 
         #endregion

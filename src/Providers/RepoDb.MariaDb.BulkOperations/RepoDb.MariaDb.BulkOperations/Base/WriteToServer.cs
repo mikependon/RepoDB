@@ -140,10 +140,10 @@ namespace RepoDb
             Field excludeField = null)
             where TEntity : class
         {
-            await connection.EnsureOpenAsync(cancellationToken);
+            await connection.EnsureOpenAsync(cancellationToken).ConfigureAwait(false);
             using var reader = new DataEntityDataReader<TEntity>(entities);
             var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, reader, mappings, bulkCopyTimeout, transaction, excludeField);
-            return await bulkCopy.WriteToServerAsync(filteredReader, cancellationToken);
+            return await bulkCopy.WriteToServerAsync(filteredReader, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -169,10 +169,10 @@ namespace RepoDb
             CancellationToken cancellationToken = default,
             Field excludeField = null)
         {
-            await connection.EnsureOpenAsync(cancellationToken);
+            await connection.EnsureOpenAsync(cancellationToken).ConfigureAwait(false);
             var bulkCopy = CreateBulkCopyForDataTable(connection, tableName, table, mappings, bulkCopyTimeout, excludeField);
             var rows = GetDataRows(table, rowState)?.ToArray();
-            return await bulkCopy.WriteToServerAsync(rows, table.Columns.Count, cancellationToken);
+            return await bulkCopy.WriteToServerAsync(rows, table.Columns.Count, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -198,9 +198,9 @@ namespace RepoDb
             MariaDbTransaction transaction = null,
             Field excludeField = null)
         {
-            await connection.EnsureOpenAsync(cancellationToken);
+            await connection.EnsureOpenAsync(cancellationToken).ConfigureAwait(false);
             var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, reader, mappings, bulkCopyTimeout, transaction, excludeField);
-            return await bulkCopy.WriteToServerAsync(filteredReader, cancellationToken);
+            return await bulkCopy.WriteToServerAsync(filteredReader, cancellationToken).ConfigureAwait(false);
         }
 
         #endregion

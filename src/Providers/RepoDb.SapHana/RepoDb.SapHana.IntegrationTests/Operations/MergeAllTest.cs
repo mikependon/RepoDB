@@ -220,7 +220,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
             using (var connection = new HanaConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MergeAllAsync<CompleteTable>(tables);
+                var result = await connection.MergeAllAsync<CompleteTable>(tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
@@ -247,7 +247,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = await connection.MergeAllAsync<CompleteTable>(tables);
+                var result = await connection.MergeAllAsync<CompleteTable>(tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
@@ -279,7 +279,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MergeAllAsync<CompleteTable>(tables,
-                    qualifiers);
+                    qualifiers).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
@@ -303,7 +303,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
             using (var connection = new HanaConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MergeAllAsync<NonIdentityCompleteTable>(tables);
+                var result = await connection.MergeAllAsync<NonIdentityCompleteTable>(tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
@@ -330,7 +330,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
 
                 // Act
-                var result = await connection.MergeAllAsync<NonIdentityCompleteTable>(tables);
+                var result = await connection.MergeAllAsync<NonIdentityCompleteTable>(tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
@@ -361,7 +361,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MergeAllAsync<NonIdentityCompleteTable>(tables,
-                    qualifiers);
+                    qualifiers).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
@@ -791,7 +791,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
@@ -815,7 +815,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
@@ -844,7 +844,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
@@ -872,7 +872,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, connection.CountAll<CompleteTable>());
@@ -905,7 +905,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                 // Act
                 var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     tables,
-                    qualifiers);
+                    qualifiers).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
@@ -929,7 +929,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
@@ -956,7 +956,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
@@ -988,7 +988,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                 // Act
                 var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     tables,
-                    qualifiers);
+                    qualifiers).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
@@ -1012,7 +1012,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
@@ -1039,7 +1039,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
@@ -1071,7 +1071,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                 // Act
                 var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
                     tables,
-                    qualifiers);
+                    qualifiers).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
@@ -1095,7 +1095,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
@@ -1122,7 +1122,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
@@ -1154,7 +1154,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                 // Act
                 var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
                     tables,
-                    qualifiers);
+                    qualifiers).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());

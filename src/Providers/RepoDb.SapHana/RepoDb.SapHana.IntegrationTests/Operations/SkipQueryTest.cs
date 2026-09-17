@@ -157,7 +157,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                     0,
                     3,
                     OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.ElementAt(0));
@@ -178,7 +178,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                     0,
                     3,
                     OrderField.Descending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(9), result.ElementAt(0));
@@ -199,7 +199,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                     6,
                     3,
                     OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(6), result.ElementAt(0));
@@ -220,7 +220,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                     6,
                     3,
                     OrderField.Descending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(0));
@@ -243,7 +243,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                         3,
                         OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
                         (object)null,
-                        hints: "WhatEver").ConfigureAwait(false));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -375,7 +375,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                     0,
                     3,
                     OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertMembersEquality(tables.ElementAt(0), result.ElementAt(0));
@@ -396,7 +396,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                     0,
                     3,
                     OrderField.Descending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertMembersEquality(tables.ElementAt(9), result.ElementAt(0));
@@ -417,7 +417,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                     6,
                     3,
                     OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertMembersEquality(tables.ElementAt(6), result.ElementAt(0));
@@ -438,7 +438,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                     6,
                     3,
                     OrderField.Descending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertMembersEquality(tables.ElementAt(3), result.ElementAt(0));
@@ -461,7 +461,7 @@ namespace RepoDb.SapHana.IntegrationTests.Operations
                         3,
                         OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
                         (object)null,
-                        hints: "WhatEver").ConfigureAwait(false));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

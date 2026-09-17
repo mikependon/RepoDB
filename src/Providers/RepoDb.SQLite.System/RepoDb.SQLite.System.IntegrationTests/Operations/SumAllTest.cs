@@ -81,7 +81,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var result = await connection.SumAllAsync<SdsCompleteTable>(e => e.ColumnInt);
+                var result = await connection.SumAllAsync<SdsCompleteTable>(e => e.ColumnInt).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
@@ -99,7 +99,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.SumAllAsync<SdsCompleteTable>(e => e.ColumnInt,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -158,7 +158,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
 
                 // Act
                 var result = await connection.SumAllAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
-                    Field.Parse<SdsCompleteTable>(e => e.ColumnInt).First());
+                    Field.Parse<SdsCompleteTable>(e => e.ColumnInt).First()).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
@@ -177,7 +177,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.SumAllAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
                         Field.Parse<SdsCompleteTable>(e => e.ColumnInt).First(),
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

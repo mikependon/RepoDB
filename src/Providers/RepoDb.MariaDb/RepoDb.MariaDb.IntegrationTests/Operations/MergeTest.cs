@@ -128,7 +128,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
             using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MergeAsync<CompleteTable, int>(table);
+                var result = await connection.MergeAsync<CompleteTable, int>(table).ConfigureAwait(false);
                 var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
@@ -150,7 +150,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = await connection.MergeAsync<CompleteTable>(table);
+                var result = await connection.MergeAsync<CompleteTable>(table).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -183,7 +183,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MergeAsync<CompleteTable>(table,
-                    qualifiers: qualifiers);
+                    qualifiers: qualifiers).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -432,7 +432,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MergeAsync<int>(ClassMappedNameCache.Get<CompleteTable>(),
-                    table);
+                    table).ConfigureAwait(false);
                 var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
@@ -452,7 +452,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    table);
+                    table).ConfigureAwait(false);
                 var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
@@ -475,7 +475,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    table);
+                    table).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -503,7 +503,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MergeAsync<long>(ClassMappedNameCache.Get<CompleteTable>(),
-                    entity);
+                    entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -536,7 +536,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     table,
-                    qualifiers: qualifiers);
+                    qualifiers: qualifiers).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -560,7 +560,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    (object)table);
+                    (object)table).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -587,7 +587,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    table);
+                    table).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -619,7 +619,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     table,
-                    qualifiers: qualifiers);
+                    qualifiers: qualifiers).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());

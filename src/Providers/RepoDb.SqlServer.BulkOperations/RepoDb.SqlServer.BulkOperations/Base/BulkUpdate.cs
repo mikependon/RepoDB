@@ -453,7 +453,7 @@ namespace RepoDb
                 transaction,
                 trace,
                 traceKey,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -503,20 +503,20 @@ namespace RepoDb
 
             // Before Execution
             var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
             // Variables
             var dbSetting = connection.GetDbSetting();
             var hasTransaction = transaction != null;
             int result;
 
-            transaction = await CreateOrValidateCurrentTransactionAsync(connection, transaction, cancellationToken);
+            transaction = await CreateOrValidateCurrentTransactionAsync(connection, transaction, cancellationToken).ConfigureAwait(false);
             var tempTableName = CreateBulkUpdateTempTableName(tableName, pseudoTableType == SqlServerBulkImportPseudoTableType.Physical, dbSetting);
 
             try
             {
                 // Get the DB Fields
-                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken);
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken).ConfigureAwait(false);
 
                 // Variables needed
                 var readerFields = Enumerable.Range(0, reader.FieldCount)
@@ -570,7 +570,7 @@ namespace RepoDb
                 }
 
                 // Create the temporary table and its qualifier index (index must exist before the data load)
-                await CreateTemporaryTableWithIndexAsync(connection, tableName, tempTableName, fields, qualifiers, dbSetting, false, transaction, trace, cancellationToken);
+                await CreateTemporaryTableWithIndexAsync(connection, tableName, tempTableName, fields, qualifiers, dbSetting, false, transaction, trace, cancellationToken).ConfigureAwait(false);
 
                 // WriteToServer
                 await WriteToServerAsyncInternal(connection,
@@ -581,7 +581,7 @@ namespace RepoDb
                     bulkCopyTimeout,
                     batchSize,
                     transaction,
-                    cancellationToken);
+                    cancellationToken).ConfigureAwait(false);
 
                 // Update the actual update
                 var sql = GetBulkUpdateSqlText(tableName,
@@ -592,11 +592,11 @@ namespace RepoDb
                     identityDbField?.AsField(),
                     hints,
                     dbSetting);
-                result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkUpdate, cancellationToken: cancellationToken);
+                result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkUpdate, cancellationToken: cancellationToken).ConfigureAwait(false);
 
                 // Drop the table after used
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken);
+                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false);
 
                 CommitTransaction(transaction, hasTransaction);
             }
@@ -612,7 +612,7 @@ namespace RepoDb
 
             // After Execution
             await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
 
             // Return the result
             return result;
@@ -667,20 +667,20 @@ namespace RepoDb
 
             // Before Execution
             var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
             // Variables
             var dbSetting = connection.GetDbSetting();
             var hasTransaction = transaction != null;
             int result;
 
-            transaction = await CreateOrValidateCurrentTransactionAsync(connection, transaction, cancellationToken);
+            transaction = await CreateOrValidateCurrentTransactionAsync(connection, transaction, cancellationToken).ConfigureAwait(false);
             var tempTableName = CreateBulkUpdateTempTableName(tableName, pseudoTableType == SqlServerBulkImportPseudoTableType.Physical, dbSetting);
 
             try
             {
                 // Get the DB Fields
-                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken);
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken).ConfigureAwait(false);
 
                 // Variables needed
                 var tableFields = Enumerable.Range(0, table.Columns.Count)
@@ -734,7 +734,7 @@ namespace RepoDb
                 }
 
                 // Create the temporary table and its qualifier index (index must exist before the data load)
-                await CreateTemporaryTableWithIndexAsync(connection, tableName, tempTableName, fields, qualifiers, dbSetting, false, transaction, trace, cancellationToken);
+                await CreateTemporaryTableWithIndexAsync(connection, tableName, tempTableName, fields, qualifiers, dbSetting, false, transaction, trace, cancellationToken).ConfigureAwait(false);
 
                 // WriteToServer
                 await WriteToServerAsyncInternal(connection,
@@ -747,7 +747,7 @@ namespace RepoDb
                     batchSize,
                     false,
                     transaction,
-                    cancellationToken);
+                    cancellationToken).ConfigureAwait(false);
 
                 // Update the actual update
                 var sql = GetBulkUpdateSqlText(tableName,
@@ -758,11 +758,11 @@ namespace RepoDb
                     identityDbField?.AsField(),
                     hints,
                     dbSetting);
-                result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkUpdate, cancellationToken: cancellationToken);
+                result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkUpdate, cancellationToken: cancellationToken).ConfigureAwait(false);
 
                 // Drop the table after used
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken);
+                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false);
 
                 CommitTransaction(transaction, hasTransaction);
             }
@@ -778,7 +778,7 @@ namespace RepoDb
 
             // After Execution
             await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
 
             // Return the result
             return result;

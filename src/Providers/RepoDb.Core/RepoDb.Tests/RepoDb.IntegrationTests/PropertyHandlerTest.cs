@@ -176,7 +176,7 @@ namespace RepoDb.IntegrationTests
                 {
                     return null;
                 }
-                return new Dictionary<string, string>() { { "MyKey", input } };
+                return new Dictionary<string, string>(StringComparer.Ordinal) { { "MyKey", input } };
             }
 
             public string Set(IDictionary<string, string> input, PropertyHandlerSetOptions options)
@@ -442,7 +442,7 @@ namespace RepoDb.IntegrationTests
             return new CompleteTableWithPropertyHandlerForDictionary
             {
                 SessionId = Guid.NewGuid(),
-                ColumnNVarChar = new Dictionary<string, string>() { { "MyKey", $"Value-{Guid.NewGuid()}" } }
+                ColumnNVarChar = new Dictionary<string, string>(StringComparer.Ordinal) { { "MyKey", $"Value-{Guid.NewGuid()}" } }
             };
         }
 
@@ -453,7 +453,7 @@ namespace RepoDb.IntegrationTests
                 yield return new CompleteTableWithPropertyHandlerForDictionary
                 {
                     SessionId = Guid.NewGuid(),
-                    ColumnNVarChar = new Dictionary<string, string>() { { $"Key-{i}", $"Value-{Guid.NewGuid()}" } }
+                    ColumnNVarChar = new Dictionary<string, string>(StringComparer.Ordinal) { { $"Key-{i}", $"Value-{Guid.NewGuid()}" } }
                 };
             }
         }
@@ -503,10 +503,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<EntityModelForIntToStringType, long>(model);
+                var id = await connection.InsertAsync<EntityModelForIntToStringType, long>(model).ConfigureAwait(false);
 
                 // Act
-                var result = (await connection.QueryAsync<EntityModelForIntToStringType>(e => e.IntAsString == model.IntAsString)).FirstOrDefault();
+                var result = (await connection.QueryAsync<EntityModelForIntToStringType>(e => e.IntAsString == model.IntAsString).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(result);
@@ -550,10 +550,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync(models);
+                await connection.InsertAllAsync(models).ConfigureAwait(false);
 
                 // Act
-                var result = await connection.QueryAllAsync<EntityModelForClass>();
+                var result = await connection.QueryAllAsync<EntityModelForClass>().ConfigureAwait(false);
 
                 // Assert
                 models.ForEach(e =>
@@ -598,11 +598,11 @@ namespace RepoDb.IntegrationTests
                 // Act
                 foreach (var item in models)
                 {
-                    await connection.InsertAsync(item);
+                    await connection.InsertAsync(item).ConfigureAwait(false);
                 }
 
                 // Act
-                var result = await connection.QueryAllAsync<EntityModelForClass>();
+                var result = await connection.QueryAllAsync<EntityModelForClass>().ConfigureAwait(false);
 
                 // Assert
                 models.ForEach(e =>
@@ -645,10 +645,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync(models);
+                await connection.InsertAllAsync(models).ConfigureAwait(false);
 
                 // Act
-                var result = await connection.QueryAllAsync<EntityModelForClass>();
+                var result = await connection.QueryAllAsync<EntityModelForClass>().ConfigureAwait(false);
 
                 // Assert
                 models.ForEach(e =>
@@ -693,11 +693,11 @@ namespace RepoDb.IntegrationTests
                 // Act
                 foreach (var item in models)
                 {
-                    await connection.InsertAsync(item);
+                    await connection.InsertAsync(item).ConfigureAwait(false);
                 }
 
                 // Act
-                var result = await connection.QueryAllAsync<EntityModelForClass>();
+                var result = await connection.QueryAllAsync<EntityModelForClass>().ConfigureAwait(false);
 
                 // Assert
                 models.ForEach(e =>
@@ -744,10 +744,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync(models);
+                await connection.InsertAllAsync(models).ConfigureAwait(false);
 
                 // Act
-                var result = await connection.QueryAllAsync<ImmutableEntityModelForClass>();
+                var result = await connection.QueryAllAsync<ImmutableEntityModelForClass>().ConfigureAwait(false);
 
                 // Assert
                 models.ForEach(e =>
@@ -792,11 +792,11 @@ namespace RepoDb.IntegrationTests
                 // Act
                 foreach (var item in models)
                 {
-                    await connection.InsertAsync(item);
+                    await connection.InsertAsync(item).ConfigureAwait(false);
                 }
 
                 // Act
-                var result = await connection.QueryAllAsync<ImmutableEntityModelForClass>();
+                var result = await connection.QueryAllAsync<ImmutableEntityModelForClass>().ConfigureAwait(false);
 
                 // Assert
                 models.ForEach(e =>
@@ -839,10 +839,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync(models);
+                await connection.InsertAllAsync(models).ConfigureAwait(false);
 
                 // Act
-                var result = await connection.QueryAllAsync<ImmutableEntityModelForClass>();
+                var result = await connection.QueryAllAsync<ImmutableEntityModelForClass>().ConfigureAwait(false);
 
                 // Assert
                 models.ForEach(e =>
@@ -887,11 +887,11 @@ namespace RepoDb.IntegrationTests
                 // Act
                 foreach (var item in models)
                 {
-                    await connection.InsertAsync(item);
+                    await connection.InsertAsync(item).ConfigureAwait(false);
                 }
 
                 // Act
-                var result = await connection.QueryAllAsync<ImmutableEntityModelForClass>();
+                var result = await connection.QueryAllAsync<ImmutableEntityModelForClass>().ConfigureAwait(false);
 
                 // Assert
                 models.ForEach(e =>
@@ -941,10 +941,10 @@ namespace RepoDb.IntegrationTests
                     "(SessionId, ColumnNVarChar) " +
                     "VALUES " +
                     "(@SessionId, @ColumnNVarChar); " +
-                    "SELECT CONVERT(UNIQUEIDENTIFIER, @SessionId);", entity);
+                    "SELECT CONVERT(UNIQUEIDENTIFIER, @SessionId);", entity).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(1, await connection.CountAllAsync<CompleteTableWithPropertyHandlerForDictionary>());
+                Assert.AreEqual(1, await connection.CountAllAsync<CompleteTableWithPropertyHandlerForDictionary>().ConfigureAwait(false));
                 Assert.AreNotEqual(id, Guid.Empty);
                 Assert.AreEqual(entity.SessionId, id);
             }
@@ -986,10 +986,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync(models);
+                await connection.InsertAllAsync(models).ConfigureAwait(false);
 
                 // Act
-                var result = await connection.QueryAllAsync<EntityModelForIntToStringType>();
+                var result = await connection.QueryAllAsync<EntityModelForIntToStringType>().ConfigureAwait(false);
 
                 // Assert
                 models.ForEach(e =>
@@ -1034,11 +1034,11 @@ namespace RepoDb.IntegrationTests
                 // Act
                 foreach (var item in models)
                 {
-                    await connection.InsertAsync(item);
+                    await connection.InsertAsync(item).ConfigureAwait(false);
                 }
 
                 // Act
-                var result = await connection.QueryAllAsync<EntityModelForIntToStringType>();
+                var result = await connection.QueryAllAsync<EntityModelForIntToStringType>().ConfigureAwait(false);
 
                 // Assert
                 models.ForEach(e =>
@@ -1081,10 +1081,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync(models);
+                await connection.InsertAllAsync(models).ConfigureAwait(false);
 
                 // Act
-                var result = await connection.QueryAllAsync<EntityModelForIntToStringType>();
+                var result = await connection.QueryAllAsync<EntityModelForIntToStringType>().ConfigureAwait(false);
 
                 // Assert
                 models.ForEach(e =>
@@ -1129,11 +1129,11 @@ namespace RepoDb.IntegrationTests
                 // Act
                 foreach (var item in models)
                 {
-                    await connection.InsertAsync(item);
+                    await connection.InsertAsync(item).ConfigureAwait(false);
                 }
 
                 // Act
-                var result = await connection.QueryAllAsync<EntityModelForIntToStringType>();
+                var result = await connection.QueryAllAsync<EntityModelForIntToStringType>().ConfigureAwait(false);
 
                 // Assert
                 models.ForEach(e =>
@@ -1186,10 +1186,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync(models);
+                await connection.InsertAllAsync(models).ConfigureAwait(false);
 
                 // Act
-                var result = await connection.QueryAllAsync<EntityModelForNumberPropertiesToLongType>();
+                var result = await connection.QueryAllAsync<EntityModelForNumberPropertiesToLongType>().ConfigureAwait(false);
 
                 // Assert
                 models.ForEach(e =>
@@ -1240,11 +1240,11 @@ namespace RepoDb.IntegrationTests
                 // Act
                 foreach (var item in models)
                 {
-                    await connection.InsertAsync(item);
+                    await connection.InsertAsync(item).ConfigureAwait(false);
                 }
 
                 // Act
-                var result = await connection.QueryAllAsync<EntityModelForNumberPropertiesToLongType>();
+                var result = await connection.QueryAllAsync<EntityModelForNumberPropertiesToLongType>().ConfigureAwait(false);
 
                 // Assert
                 models.ForEach(e =>
@@ -1293,10 +1293,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync(models);
+                await connection.InsertAllAsync(models).ConfigureAwait(false);
 
                 // Act
-                var result = await connection.QueryAllAsync<EntityModelForNumberPropertiesToLongType>();
+                var result = await connection.QueryAllAsync<EntityModelForNumberPropertiesToLongType>().ConfigureAwait(false);
 
                 // Assert
                 models.ForEach(e =>
@@ -1347,11 +1347,11 @@ namespace RepoDb.IntegrationTests
                 // Act
                 foreach (var item in models)
                 {
-                    await connection.InsertAsync(item);
+                    await connection.InsertAsync(item).ConfigureAwait(false);
                 }
 
                 // Act
-                var result = await connection.QueryAllAsync<EntityModelForNumberPropertiesToLongType>();
+                var result = await connection.QueryAllAsync<EntityModelForNumberPropertiesToLongType>().ConfigureAwait(false);
 
                 // Assert
                 models.ForEach(e =>
@@ -1404,10 +1404,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync(models);
+                await connection.InsertAllAsync(models).ConfigureAwait(false);
 
                 // Act
-                var result = await connection.QueryAllAsync<EntityModelForDateTimeKind>();
+                var result = await connection.QueryAllAsync<EntityModelForDateTimeKind>().ConfigureAwait(false);
 
                 // Assert
                 models.ForEach(e =>
@@ -1458,11 +1458,11 @@ namespace RepoDb.IntegrationTests
                 // Act
                 foreach (var item in models)
                 {
-                    await connection.InsertAsync(item);
+                    await connection.InsertAsync(item).ConfigureAwait(false);
                 }
 
                 // Act
-                var result = await connection.QueryAllAsync<EntityModelForDateTimeKind>();
+                var result = await connection.QueryAllAsync<EntityModelForDateTimeKind>().ConfigureAwait(false);
 
                 // Assert
                 models.ForEach(e =>
@@ -1511,10 +1511,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync(models);
+                await connection.InsertAllAsync(models).ConfigureAwait(false);
 
                 // Act
-                var result = await connection.QueryAllAsync<EntityModelForDateTimeKind>();
+                var result = await connection.QueryAllAsync<EntityModelForDateTimeKind>().ConfigureAwait(false);
 
                 // Assert
                 models.ForEach(e =>
@@ -1565,11 +1565,11 @@ namespace RepoDb.IntegrationTests
                 // Act
                 foreach (var item in models)
                 {
-                    await connection.InsertAsync(item);
+                    await connection.InsertAsync(item).ConfigureAwait(false);
                 }
 
                 // Act
-                var result = await connection.QueryAllAsync<EntityModelForDateTimeKind>();
+                var result = await connection.QueryAllAsync<EntityModelForDateTimeKind>().ConfigureAwait(false);
 
                 // Assert
                 models.ForEach(e =>
@@ -1618,10 +1618,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync("[dbo].[PropertyHandler]", models);
+                await connection.InsertAllAsync("[dbo].[PropertyHandler]", models).ConfigureAwait(false);
 
                 // Act
-                var result = await connection.QueryAllAsync<EntityModelForDateTimeKind>();
+                var result = await connection.QueryAllAsync<EntityModelForDateTimeKind>().ConfigureAwait(false);
 
                 // Assert
                 models.ForEach(e =>
@@ -1672,11 +1672,11 @@ namespace RepoDb.IntegrationTests
                 // Act
                 foreach (var item in models)
                 {
-                    await connection.InsertAsync<int>("[dbo].[PropertyHandler]", (object)item);
+                    await connection.InsertAsync<int>("[dbo].[PropertyHandler]", (object)item).ConfigureAwait(false);
                 }
 
                 // Act
-                var result = await connection.QueryAllAsync<EntityModelForDateTimeKind>();
+                var result = await connection.QueryAllAsync<EntityModelForDateTimeKind>().ConfigureAwait(false);
 
                 // Assert
                 models.ForEach(e =>
@@ -1723,10 +1723,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync(models);
+                await connection.InsertAllAsync(models).ConfigureAwait(false);
 
                 // Act
-                var result = await connection.QueryAllAsync<CompleteTableWithPropertyHandlerForTimeSpan>();
+                var result = await connection.QueryAllAsync<CompleteTableWithPropertyHandlerForTimeSpan>().ConfigureAwait(false);
 
                 // Assert
                 models.ForEach(e =>
@@ -1771,11 +1771,11 @@ namespace RepoDb.IntegrationTests
                 // Act
                 foreach (var item in models)
                 {
-                    await connection.InsertAsync(item);
+                    await connection.InsertAsync(item).ConfigureAwait(false);
                 }
 
                 // Act
-                var result = await connection.QueryAllAsync<CompleteTableWithPropertyHandlerForTimeSpan>();
+                var result = await connection.QueryAllAsync<CompleteTableWithPropertyHandlerForTimeSpan>().ConfigureAwait(false);
 
                 // Assert
                 models.ForEach(e =>

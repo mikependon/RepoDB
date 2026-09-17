@@ -197,7 +197,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAsync<CompleteTable>((object)null);
+                var result = await connection.CountAsync<CompleteTable>((object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -216,7 +216,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 try
                 {
                     // Act
-                    var result = await connection.CountAsync<CompleteTable>((object)null);
+                    var result = await connection.CountAsync<CompleteTable>((object)null).ConfigureAwait(false);
 
                     // Assert
                     Assert.AreEqual(tables.Count(), result);
@@ -238,7 +238,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAsync<CompleteTable>(e => ids.Contains(e.Id));
+                var result = await connection.CountAsync<CompleteTable>(e => ids.Contains(e.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Count(), result);
@@ -254,7 +254,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAsync<CompleteTable>(new { tables.First().Id });
+                var result = await connection.CountAsync<CompleteTable>(new { tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Count(), result);
@@ -270,7 +270,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAsync<CompleteTable>(new QueryField("Id", tables.First().Id));
+                var result = await connection.CountAsync<CompleteTable>(new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Count(), result);
@@ -291,7 +291,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAsync<CompleteTable>(queryFields);
+                var result = await connection.CountAsync<CompleteTable>(queryFields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Count(), result);
@@ -313,7 +313,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAsync<CompleteTable>(queryGroup);
+                var result = await connection.CountAsync<CompleteTable>(queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Count(), result);
@@ -331,7 +331,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 // Act/Assert: AreTableHintsSupported == false for Db2 - any non-null/non-whitespace
                 // "hints" argument must throw, rather than silently being ignored.
                 await Assert.ThrowsAsync<NotSupportedException>(() =>
-                    connection.CountAsync<CompleteTable>((object)null, hints: "NOLOCK"));
+                    connection.CountAsync<CompleteTable>((object)null, hints: "NOLOCK")).ConfigureAwait(false);
             }
         }
 
@@ -453,7 +453,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -470,7 +470,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    new { tables.First().Id });
+                    new { tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Count(), result);
@@ -487,7 +487,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    new QueryField("Id", tables.First().Id));
+                    new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Count(), result);
@@ -509,7 +509,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    queryFields);
+                    queryFields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Count(), result);
@@ -532,7 +532,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    queryGroup);
+                    queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Count(), result);

@@ -364,7 +364,7 @@ namespace RepoDb
             var entityType = entities?.First()?.GetType() ?? typeof(TEntity); // Solving the anonymous types
             var isDictionary = TypeCache.Get(entityType).IsDictionaryStringObject();
             var dbSetting = connection.GetDbSetting();
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
             var pseudoTableName = tableName;
 
             return await PseudoBasedBinaryImportAsync(connection,
@@ -410,7 +410,7 @@ namespace RepoDb
                         identityBehavior,
                         dbSetting,
                         transaction,
-                        cancellationToken),
+                        cancellationToken).ConfigureAwait(false),
 
                 // getMergeToPseudoCommandText
                 () =>
@@ -433,7 +433,7 @@ namespace RepoDb
                 trace,
                 traceKey,
                 transaction,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
         }
 
         #endregion
@@ -475,7 +475,7 @@ namespace RepoDb
             }
 
             var dbSetting = connection.GetDbSetting();
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
             var pseudoTableName = tableName;
 
             return await PseudoBasedBinaryImportAsync(connection,
@@ -516,7 +516,7 @@ namespace RepoDb
                         identityBehavior,
                         dbSetting,
                         transaction,
-                        cancellationToken),
+                        cancellationToken).ConfigureAwait(false),
 
                 // getMergeToPseudoCommandText
                 () =>
@@ -539,7 +539,7 @@ namespace RepoDb
                 trace,
                 traceKey,
                 transaction: transaction,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
         }
 
         #endregion
@@ -572,7 +572,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
             var pseudoTableName = tableName;
             var includeIdentity = identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
             var isPrimaryAnIdentity = IsPrimaryAnIdentity(dbFields);
@@ -608,7 +608,7 @@ namespace RepoDb
                         identityBehavior,
                         dbSetting,
                         transaction,
-                        cancellationToken),
+                        cancellationToken).ConfigureAwait(false),
 
                 // getMergeToPseudoCommandText
                 () =>
@@ -630,7 +630,7 @@ namespace RepoDb
                 trace,
                 traceKey,
                 transaction: transaction,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
         }
 
         #endregion

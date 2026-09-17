@@ -190,7 +190,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.QueryAsync<CompleteTable>(table.Id)).First();
+                var result = (await connection.QueryAsync<CompleteTable>(table.Id).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, result);
@@ -206,7 +206,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.QueryAsync<CompleteTable>(e => e.Id == table.Id)).First();
+                var result = (await connection.QueryAsync<CompleteTable>(e => e.Id == table.Id).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, result);
@@ -222,7 +222,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.QueryAsync<CompleteTable>(new { table.Id })).First();
+                var result = (await connection.QueryAsync<CompleteTable>(new { table.Id }).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, result);
@@ -238,7 +238,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.QueryAsync<CompleteTable>(new QueryField("Id", table.Id))).First();
+                var result = (await connection.QueryAsync<CompleteTable>(new QueryField("Id", table.Id)).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, result);
@@ -259,7 +259,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.QueryAsync<CompleteTable>(queryFields)).First();
+                var result = (await connection.QueryAsync<CompleteTable>(queryFields).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, result);
@@ -281,7 +281,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.QueryAsync<CompleteTable>(queryGroup)).First();
+                var result = (await connection.QueryAsync<CompleteTable>(queryGroup).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, result);
@@ -298,7 +298,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.QueryAsync<CompleteTable>((object)null,
-                    top: 2);
+                    top: 2).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -317,7 +317,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.QueryAsync<CompleteTable>((object)null,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -468,7 +468,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(), table.Id)).First();
+                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(), table.Id).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertMembersEquality(table, result);
@@ -484,7 +484,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(), new { table.Id })).First();
+                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(), new { table.Id }).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertMembersEquality(table, result);
@@ -500,7 +500,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(), new QueryField("Id", table.Id))).First();
+                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(), new QueryField("Id", table.Id)).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertMembersEquality(table, result);
@@ -521,7 +521,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(), queryFields)).First();
+                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(), queryFields).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertMembersEquality(table, result);
@@ -543,7 +543,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
-                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(), queryGroup)).First();
+                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(), queryGroup).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertMembersEquality(table, result);
@@ -561,7 +561,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
                 // Act
                 var result = await connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     (object)null,
-                    top: 2);
+                    top: 2).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -581,7 +581,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
                         (object)null,
-                        hints: "WhatEver"));
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

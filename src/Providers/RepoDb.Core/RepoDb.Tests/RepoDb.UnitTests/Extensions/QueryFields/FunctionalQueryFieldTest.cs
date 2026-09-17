@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.Extensions.QueryFields;
@@ -23,10 +24,10 @@ namespace RepoDb.UnitTests.Extensions.QueryFields
             var functionalQueryField = new FunctionalQueryField("FieldName", Operation.NotEqual, "Value", null, "FUNC({0})");
 
             // Assert
-            Assert.AreEqual("FieldName", functionalQueryField.Field.Name);
+            Assert.AreEqual("FieldName", functionalQueryField.Field.Name, StringComparer.Ordinal);
             Assert.AreEqual(Operation.NotEqual, functionalQueryField.Operation);
             Assert.AreEqual("Value", functionalQueryField.Parameter.Value);
-            Assert.AreEqual("FUNC({0})", functionalQueryField.Format);
+            Assert.AreEqual("FUNC({0})", functionalQueryField.Format, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -39,7 +40,7 @@ namespace RepoDb.UnitTests.Extensions.QueryFields
             var text = functionalQueryField.GetString(0, new CustomDbSetting());
 
             // Assert
-            Assert.AreEqual("FUNC([FieldName]) = @FieldName", text);
+            Assert.AreEqual("FUNC([FieldName]) = @FieldName", text, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -52,7 +53,7 @@ namespace RepoDb.UnitTests.Extensions.QueryFields
             var text = functionalQueryField.GetString(0, new CustomDbSetting());
 
             // Assert
-            Assert.AreEqual("FUNC([FieldName]) = @FieldName", text);
+            Assert.AreEqual("FUNC([FieldName]) = @FieldName", text, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -65,7 +66,7 @@ namespace RepoDb.UnitTests.Extensions.QueryFields
             var text = functionalQueryField.GetString(1, new CustomDbSetting());
 
             // Assert
-            Assert.AreEqual("FUNC([FieldName]) = @FieldName_1", text);
+            Assert.AreEqual("FUNC([FieldName]) = @FieldName_1", text, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -78,7 +79,7 @@ namespace RepoDb.UnitTests.Extensions.QueryFields
             var text = functionalQueryField.GetString(0, new CustomDbSetting());
 
             // Assert
-            Assert.AreEqual("FUNC1([FieldName]) = @Value AND FUNC2([FieldName]) = @FieldName", text);
+            Assert.AreEqual("FUNC1([FieldName]) = @Value AND FUNC2([FieldName]) = @FieldName", text, StringComparer.Ordinal);
         }
     }
 }

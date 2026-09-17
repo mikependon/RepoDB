@@ -105,7 +105,7 @@ namespace RepoDb
 
             try
             {
-                return await connection.BulkDeleteByKeyAsync(tableName, primaryKeys, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+                return await connection.BulkDeleteByKeyAsync(tableName, primaryKeys, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
             }
             finally
             {

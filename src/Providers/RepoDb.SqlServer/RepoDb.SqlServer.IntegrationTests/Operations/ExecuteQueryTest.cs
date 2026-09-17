@@ -83,7 +83,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteQueryAsync<IdentityCompleteTable>("SELECT * FROM \"IdentityCompleteTable\";");
+                var result = await connection.ExecuteQueryAsync<IdentityCompleteTable>("SELECT * FROM \"IdentityCompleteTable\";").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -101,7 +101,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityCompleteTable>("SELECT * FROM \"IdentityCompleteTable\" WHERE \"Id\" = @Id;",
-                    new { tables.Last().Id });
+                    new { tables.Last().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());

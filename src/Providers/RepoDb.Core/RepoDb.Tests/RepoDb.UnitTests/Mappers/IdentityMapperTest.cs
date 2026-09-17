@@ -75,7 +75,7 @@ namespace RepoDb.UnitTests.Mappers
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
-            Assert.AreEqual(expected, actual?.GetMappedName());
+            Assert.AreEqual(expected, actual?.GetMappedName(), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -90,7 +90,7 @@ namespace RepoDb.UnitTests.Mappers
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
-            Assert.AreEqual(expected, actual?.GetMappedName());
+            Assert.AreEqual(expected, actual?.GetMappedName(), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -105,7 +105,7 @@ namespace RepoDb.UnitTests.Mappers
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
-            Assert.AreEqual(expected, actual?.GetMappedName());
+            Assert.AreEqual(expected, actual?.GetMappedName(), StringComparer.Ordinal);
         }
 
         /*
@@ -124,7 +124,7 @@ namespace RepoDb.UnitTests.Mappers
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
-            Assert.AreEqual(expected, actual?.GetMappedName());
+            Assert.AreEqual(expected, actual?.GetMappedName(), StringComparer.Ordinal);
 
             // Act
             actual = IdentityCache.Get<IdentityMapperTestWithAttributeClass>();
@@ -132,7 +132,7 @@ namespace RepoDb.UnitTests.Mappers
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
-            Assert.AreEqual(expected, actual?.GetMappedName());
+            Assert.AreEqual(expected, actual?.GetMappedName(), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -147,7 +147,7 @@ namespace RepoDb.UnitTests.Mappers
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
-            Assert.AreEqual(expected, actual?.GetMappedName());
+            Assert.AreEqual(expected, actual?.GetMappedName(), StringComparer.Ordinal);
 
             // Act
             actual = IdentityCache.Get<IdentityMapperTestWithAttributeClass>();
@@ -155,7 +155,7 @@ namespace RepoDb.UnitTests.Mappers
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
-            Assert.AreEqual(expected, actual?.GetMappedName());
+            Assert.AreEqual(expected, actual?.GetMappedName(), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -170,7 +170,7 @@ namespace RepoDb.UnitTests.Mappers
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
-            Assert.AreEqual(expected, actual?.GetMappedName());
+            Assert.AreEqual(expected, actual?.GetMappedName(), StringComparer.Ordinal);
 
             // Act
             actual = IdentityCache.Get<IdentityMapperTestWithAttributeClass>();
@@ -178,7 +178,7 @@ namespace RepoDb.UnitTests.Mappers
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
-            Assert.AreEqual(expected, actual?.GetMappedName());
+            Assert.AreEqual(expected, actual?.GetMappedName(), StringComparer.Ordinal);
         }
 
         /*
@@ -198,7 +198,7 @@ namespace RepoDb.UnitTests.Mappers
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
-            Assert.AreEqual(expected, actual?.GetMappedName());
+            Assert.AreEqual(expected, actual?.GetMappedName(), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -214,7 +214,7 @@ namespace RepoDb.UnitTests.Mappers
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
-            Assert.AreEqual(expected, actual?.GetMappedName());
+            Assert.AreEqual(expected, actual?.GetMappedName(), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -230,7 +230,7 @@ namespace RepoDb.UnitTests.Mappers
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
-            Assert.AreEqual(expected, actual?.GetMappedName());
+            Assert.AreEqual(expected, actual?.GetMappedName(), StringComparer.Ordinal);
         }
 
         /*
@@ -279,7 +279,7 @@ namespace RepoDb.UnitTests.Mappers
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
-            Assert.AreEqual(expected, actual?.GetMappedName());
+            Assert.AreEqual(expected, actual?.GetMappedName(), StringComparer.Ordinal);
 
             // Derived 2
 
@@ -292,7 +292,7 @@ namespace RepoDb.UnitTests.Mappers
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
-            Assert.AreEqual(expected, actual?.GetMappedName());
+            Assert.AreEqual(expected, actual?.GetMappedName(), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -309,7 +309,7 @@ namespace RepoDb.UnitTests.Mappers
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
-            Assert.AreEqual(expected, actual?.GetMappedName());
+            Assert.AreEqual(expected, actual?.GetMappedName(), StringComparer.Ordinal);
 
             // Derived 2
 
@@ -322,7 +322,7 @@ namespace RepoDb.UnitTests.Mappers
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
-            Assert.AreEqual(expected, actual?.GetMappedName());
+            Assert.AreEqual(expected, actual?.GetMappedName(), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -339,7 +339,7 @@ namespace RepoDb.UnitTests.Mappers
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
-            Assert.AreEqual(expected, actual?.GetMappedName());
+            Assert.AreEqual(expected, actual?.GetMappedName(), StringComparer.Ordinal);
 
             // Derived 2
 
@@ -352,7 +352,7 @@ namespace RepoDb.UnitTests.Mappers
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
-            Assert.AreEqual(expected, actual?.GetMappedName());
+            Assert.AreEqual(expected, actual?.GetMappedName(), StringComparer.Ordinal);
 
         }
 

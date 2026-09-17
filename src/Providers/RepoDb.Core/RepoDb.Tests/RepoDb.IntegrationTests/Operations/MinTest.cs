@@ -581,7 +581,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MinAsync<IdentityTable>(e => e.ColumnInt,
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Min(t => t.ColumnInt), Convert.ToInt32(result));
@@ -601,7 +601,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MinAsync<IdentityTable>(e => e.ColumnInt,
-                    item => item.ColumnInt > 5 && item.ColumnInt <= 8);
+                    item => item.ColumnInt > 5 && item.ColumnInt <= 8).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Min(t => t.ColumnInt), Convert.ToInt32(result));
@@ -621,7 +621,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MinAsync<IdentityTable>(e => e.ColumnInt,
-                    new { ColumnInt = 1 });
+                    new { ColumnInt = 1 }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Min(t => t.ColumnInt), Convert.ToInt32(result));
@@ -642,7 +642,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MinAsync<IdentityTable>(e => e.ColumnInt,
-                    field);
+                    field).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Min(t => t.ColumnInt), Convert.ToInt32(result));
@@ -667,7 +667,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MinAsync<IdentityTable>(e => e.ColumnInt,
-                    fields);
+                    fields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Min(t => t.ColumnInt), Convert.ToInt32(result));
@@ -693,7 +693,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MinAsync<IdentityTable>(e => e.ColumnInt,
-                    queryGroup);
+                    queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Min(t => t.ColumnInt), Convert.ToInt32(result));
@@ -713,7 +713,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MinAsync<IdentityTable, int?>(e => e.ColumnInt,
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Min(t => t.ColumnInt), result);
@@ -733,7 +733,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MinAsync<IdentityTable, int?>(e => e.ColumnInt,
-                    item => item.ColumnInt > 5 && item.ColumnInt <= 8);
+                    item => item.ColumnInt > 5 && item.ColumnInt <= 8).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Min(t => t.ColumnInt), result);
@@ -753,7 +753,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MinAsync<IdentityTable, int?>(e => e.ColumnInt,
-                    new { ColumnInt = 1 });
+                    new { ColumnInt = 1 }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Min(t => t.ColumnInt), result);
@@ -774,7 +774,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MinAsync<IdentityTable, int?>(e => e.ColumnInt,
-                    field);
+                    field).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Min(t => t.ColumnInt), result);
@@ -799,7 +799,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MinAsync<IdentityTable, int?>(e => e.ColumnInt,
-                    fields);
+                    fields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Min(t => t.ColumnInt), result);
@@ -825,7 +825,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MinAsync<IdentityTable, int?>(e => e.ColumnInt,
-                    queryGroup);
+                    queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Min(t => t.ColumnInt), result);
@@ -845,7 +845,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MinAsync<IdentityTable, DateTime?>(e => e.ColumnDateTime,
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Min(t => t.ColumnDateTime), result);
@@ -865,7 +865,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MinAsync<IdentityTable, DateTime?>(e => e.ColumnDateTime,
-                    item => item.ColumnDateTime > Helper.EpocDate.AddDays(5) && item.ColumnDateTime <= Helper.EpocDate.AddDays(8));
+                    item => item.ColumnDateTime > Helper.EpocDate.AddDays(5) && item.ColumnDateTime <= Helper.EpocDate.AddDays(8)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnDateTime > Helper.EpocDate.AddDays(5) && t.ColumnDateTime <= Helper.EpocDate.AddDays(8)).Min(t => t.ColumnDateTime), result);
@@ -885,7 +885,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MinAsync<IdentityTable, DateTime?>(e => e.ColumnDateTime,
-                    new { ColumnDateTime = Helper.EpocDate.AddDays(1) });
+                    new { ColumnDateTime = Helper.EpocDate.AddDays(1) }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnDateTime == Helper.EpocDate.AddDays(1)).Min(t => t.ColumnDateTime), result);
@@ -906,7 +906,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MinAsync<IdentityTable, DateTime?>(e => e.ColumnDateTime,
-                    field);
+                    field).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnDateTime > Helper.EpocDate.AddDays(5)).Min(t => t.ColumnDateTime), result);
@@ -931,7 +931,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MinAsync<IdentityTable, DateTime?>(e => e.ColumnDateTime,
-                    fields);
+                    fields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnDateTime > Helper.EpocDate.AddDays(5) && t.ColumnDateTime <= Helper.EpocDate.AddDays(8)).Min(t => t.ColumnDateTime), result);
@@ -957,7 +957,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MinAsync<IdentityTable, DateTime?>(e => e.ColumnDateTime,
-                    queryGroup);
+                    queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnDateTime > Helper.EpocDate.AddDays(5) && t.ColumnDateTime <= Helper.EpocDate.AddDays(8)).Min(t => t.ColumnDateTime), result);
@@ -977,7 +977,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MinAsync<IdentityTable, double?>(e => e.ColumnFloat,
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Min(t => t.ColumnFloat), result);
@@ -997,7 +997,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MinAsync<IdentityTable, double?>(e => e.ColumnFloat,
-                    item => item.ColumnFloat > 5d && item.ColumnFloat <= 8d);
+                    item => item.ColumnFloat > 5d && item.ColumnFloat <= 8d).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d && t.ColumnFloat <= 8d).Min(t => t.ColumnFloat), result);
@@ -1017,7 +1017,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MinAsync<IdentityTable, double?>(e => e.ColumnFloat,
-                    new { ColumnFloat = 1d });
+                    new { ColumnFloat = 1d }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnFloat == 1d).Min(t => t.ColumnFloat), result);
@@ -1038,7 +1038,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MinAsync<IdentityTable, double?>(e => e.ColumnFloat,
-                    field);
+                    field).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d).Min(t => t.ColumnFloat), result);
@@ -1063,7 +1063,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MinAsync<IdentityTable, double?>(e => e.ColumnFloat,
-                    fields);
+                    fields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d && t.ColumnFloat <= 8d).Min(t => t.ColumnFloat), result);
@@ -1089,7 +1089,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.MinAsync<IdentityTable, double?>(e => e.ColumnFloat,
-                    queryGroup);
+                    queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d && t.ColumnFloat <= 8d).Min(t => t.ColumnFloat), result);
@@ -1586,7 +1586,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Min(t => t.ColumnInt), Convert.ToInt32(result));
@@ -1607,7 +1607,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    new { ColumnInt = 1 });
+                    new { ColumnInt = 1 }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Min(t => t.ColumnInt), Convert.ToInt32(result));
@@ -1629,7 +1629,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    field);
+                    field).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Min(t => t.ColumnInt), Convert.ToInt32(result));
@@ -1655,7 +1655,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    fields);
+                    fields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Min(t => t.ColumnInt), Convert.ToInt32(result));
@@ -1682,7 +1682,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    queryGroup);
+                    queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Min(t => t.ColumnInt), Convert.ToInt32(result));
@@ -1703,7 +1703,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync<int?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Min(t => t.ColumnInt), result);
@@ -1724,7 +1724,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync<int?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    new { ColumnInt = 1 });
+                    new { ColumnInt = 1 }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Min(t => t.ColumnInt), result);
@@ -1746,7 +1746,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync<int?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    field);
+                    field).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Min(t => t.ColumnInt), result);
@@ -1772,7 +1772,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync<int?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    fields);
+                    fields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Min(t => t.ColumnInt), result);
@@ -1799,7 +1799,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync<int?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    queryGroup);
+                    queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Min(t => t.ColumnInt), result);
@@ -1820,7 +1820,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync<DateTime?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnDateTime"),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Min(t => t.ColumnDateTime), result);
@@ -1841,7 +1841,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync<DateTime?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnDateTime"),
-                    new { ColumnDateTime = Helper.EpocDate.AddDays(1) });
+                    new { ColumnDateTime = Helper.EpocDate.AddDays(1) }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnDateTime == Helper.EpocDate.AddDays(1)).Min(t => t.ColumnDateTime), result);
@@ -1863,7 +1863,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync<DateTime?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnDateTime"),
-                    field);
+                    field).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnDateTime > Helper.EpocDate.AddDays(5)).Min(t => t.ColumnDateTime), result);
@@ -1889,7 +1889,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync<DateTime?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnDateTime"),
-                    fields);
+                    fields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnDateTime > Helper.EpocDate.AddDays(5) && t.ColumnDateTime <= Helper.EpocDate.AddDays(8)).Min(t => t.ColumnDateTime), result);
@@ -1916,7 +1916,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync<DateTime?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnDateTime"),
-                    queryGroup);
+                    queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnDateTime > Helper.EpocDate.AddDays(5) && t.ColumnDateTime <= Helper.EpocDate.AddDays(8)).Min(t => t.ColumnDateTime), result);
@@ -1937,7 +1937,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnFloat"),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Min(t => t.ColumnFloat), result);
@@ -1958,7 +1958,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnFloat"),
-                    new { ColumnFloat = 1d });
+                    new { ColumnFloat = 1d }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnFloat == 1d).Min(t => t.ColumnFloat), result);
@@ -1980,7 +1980,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnFloat"),
-                    field);
+                    field).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d).Min(t => t.ColumnFloat), result);
@@ -2006,7 +2006,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnFloat"),
-                    fields);
+                    fields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d && t.ColumnFloat <= 8d).Min(t => t.ColumnFloat), result);
@@ -2033,7 +2033,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = await connection.MinAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnFloat"),
-                    queryGroup);
+                    queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d && t.ColumnFloat <= 8d).Min(t => t.ColumnFloat), result);

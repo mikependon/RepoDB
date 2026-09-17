@@ -27,10 +27,10 @@ namespace RepoDb.Telemetry.Core
 
         private static readonly object _syncLock = new object();
         private static bool _isPublishing = false;
+        private readonly Timer _timer;
         private IDictionary<Guid, Tuple<CancellableTraceLog, TelemetryItem>> _beforeTraceLogs;
         private IDictionary<Guid, Tuple<DateTime, TimeSpan, object>> _afterTraceLogs;
-        private readonly Timer _timer;
-        private readonly IPublisherRepository _publisherRepository;
+        private IPublisherRepository _publisherRepository;
 
         // The assembly that hosts/consumes the library (i.e. the client application), falling back to the
         // immediate caller if an entry assembly cannot be resolved (e.g. some test hosts or plugin scenarios).
@@ -40,17 +40,13 @@ namespace RepoDb.Telemetry.Core
         // does not change during the lifetime of the process.
         private static readonly string _client = GetClientMachineName();
 
-        #endregion
-
-        #region Constructors
-
         /// <summary>
-        /// Create an instance of <see cref="TelemetryTrace"/> class.
+        /// Initializes a new instance of the <see cref="TelemetryTrace"/> class.
         /// </summary>
-        /// <param name="option">The option object that contains the information about the telemetry emitting.</param>
-        /// <param name="errorCallback">The callback function to trigger when any error occurs.</param>
-        /// <param name="logger">The instance of logger to use to where to log the internal events.</param>
-        public TelemetryTrace(
+        /// <param name="option">The telemetry option.</param>
+        /// <param name="errorCallback">The callback to invoke when an error occurs.</param>
+        /// <param name="logger">The logger to use for logging.</param>
+        protected TelemetryTrace(
             TelemetryOption option,
             Action<Exception> errorCallback = null,
             ILogger logger = null)
@@ -61,7 +57,6 @@ namespace RepoDb.Telemetry.Core
             _beforeTraceLogs = new Dictionary<Guid, Tuple<CancellableTraceLog, TelemetryItem>>();
             _afterTraceLogs = new Dictionary<Guid, Tuple<DateTime, TimeSpan, object>>();
             _timer = new Timer(callback: Callback);
-            _publisherRepository = GetPublisherRepository();
         }
 
         #endregion
@@ -182,13 +177,26 @@ namespace RepoDb.Telemetry.Core
                 }
                 if (items.Count > 0)
                 {
-                    _publisherRepository.PublishMany(items);
+                    EnsurePublisherRepository().PublishMany(items);
                 }
             }
             finally
             {
                 _isPublishing = false;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        private IPublisherRepository EnsurePublisherRepository()
+        {
+            if (_publisherRepository == null)
+            {
+                _publisherRepository = GetPublisherRepository();
+            }
+            return _publisherRepository;
         }
 
         /// <summary>

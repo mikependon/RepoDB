@@ -174,7 +174,7 @@ namespace RepoDb.Db2.IntegrationTests
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
-            await connection.InsertAsync<Db2AttributeTable>(table);
+            await connection.InsertAsync<Db2AttributeTable>(table).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(1, connection.CountAll<Db2AttributeTable>());
@@ -195,7 +195,7 @@ namespace RepoDb.Db2.IntegrationTests
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
-            await connection.InsertAllAsync<Db2AttributeTable>(tables);
+            await connection.InsertAllAsync<Db2AttributeTable>(tables).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, connection.CountAll<Db2AttributeTable>());
@@ -219,7 +219,7 @@ namespace RepoDb.Db2.IntegrationTests
             var id = connection.Insert<Db2AttributeTable>(table);
 
             // Query
-            var queryResult = (await connection.QueryAsync<Db2AttributeTable>(id)).First();
+            var queryResult = (await connection.QueryAsync<Db2AttributeTable>(id).ConfigureAwait(false)).First();
 
             // Assert
             Helper.AssertPropertiesEquality(table, queryResult);
@@ -237,7 +237,7 @@ namespace RepoDb.Db2.IntegrationTests
             connection.InsertAll<Db2AttributeTable>(tables);
 
             // Query
-            var queryResult = await connection.QueryAllAsync<Db2AttributeTable>();
+            var queryResult = await connection.QueryAllAsync<Db2AttributeTable>().ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, queryResult.Count());

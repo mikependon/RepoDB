@@ -497,7 +497,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
                     top1: 1,
-                    top2: 2);
+                    top2: 2).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -522,7 +522,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                     var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable>(e => e.Id > 0,
                         e => e.Id > 0,
                         top1: 1,
-                        top2: 2);
+                        top2: 2).ConfigureAwait(false);
 
                     // Assert
                     Assert.AreEqual(1, result.Item1.Count());
@@ -551,7 +551,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                     e => e.Id > 0,
                     top1: 1,
                     top2: 2,
-                    top3: 3);
+                    top3: 3).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -579,7 +579,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                     top1: 1,
                     top2: 2,
                     top3: 3,
-                    top4: 4);
+                    top4: 4).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -611,7 +611,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                     top2: 2,
                     top3: 3,
                     top4: 4,
-                    top5: 5);
+                    top5: 5).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -647,7 +647,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                     top3: 3,
                     top4: 4,
                     top5: 5,
-                    top6: 6);
+                    top6: 6).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -687,7 +687,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                     top4: 4,
                     top5: 5,
                     top6: 6,
-                    top7: 7);
+                    top7: 7).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -717,7 +717,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable>(e => e.Id == tables[0].Id,
-                    e => e.Id == tables[1].Id);
+                    e => e.Id == tables[1].Id).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -738,7 +738,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 // Act
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable>(e => e.Id == tables[0].Id,
                     e => e.Id == tables[1].Id,
-                    e => e.Id == tables[2].Id);
+                    e => e.Id == tables[2].Id).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -762,7 +762,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id == tables[0].Id,
                     e => e.Id == tables[1].Id,
                     e => e.Id == tables[2].Id,
-                    e => e.Id == tables[3].Id);
+                    e => e.Id == tables[3].Id).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -789,7 +789,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                     e => e.Id == tables[1].Id,
                     e => e.Id == tables[2].Id,
                     e => e.Id == tables[3].Id,
-                    e => e.Id == tables[4].Id);
+                    e => e.Id == tables[4].Id).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -819,7 +819,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                     e => e.Id == tables[2].Id,
                     e => e.Id == tables[3].Id,
                     e => e.Id == tables[4].Id,
-                    e => e.Id == tables[5].Id);
+                    e => e.Id == tables[5].Id).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -852,7 +852,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                     e => e.Id == tables[3].Id,
                     e => e.Id == tables[4].Id,
                     e => e.Id == tables[5].Id,
-                    e => e.Id == tables[6].Id);
+                    e => e.Id == tables[6].Id).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -884,7 +884,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable>(e => firstHalfIds.Contains(e.Id),
-                    e => secondHalfIds.Contains(e.Id));
+                    e => secondHalfIds.Contains(e.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(5, result.Item1.Count());
@@ -909,7 +909,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                         top1: 1,
                         top2: 2,
                         hints1: "NOLOCK",
-                        hints2: "NOLOCK"));
+                        hints2: "NOLOCK")).ConfigureAwait(false);
             }
         }
 

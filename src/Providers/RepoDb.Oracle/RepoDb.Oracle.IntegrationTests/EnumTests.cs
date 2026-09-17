@@ -308,10 +308,10 @@ namespace RepoDb.Oracle.IntegrationTests
             person.ColumnVarchar = null;
 
             // Act
-            var id = await connection.InsertAsync(person);
+            var id = await connection.InsertAsync(person).ConfigureAwait(false);
 
             // Query
-            var queryResult = (await connection.QueryAsync<PersonWithText>(id)).First();
+            var queryResult = (await connection.QueryAsync<PersonWithText>(id).ConfigureAwait(false)).First();
 
             // Assert
             Assert.IsNull(queryResult.ColumnVarchar);
@@ -326,10 +326,10 @@ namespace RepoDb.Oracle.IntegrationTests
             var person = GetPersonWithText(1).First();
 
             // Act
-            var id = await connection.InsertAsync(person);
+            var id = await connection.InsertAsync(person).ConfigureAwait(false);
 
             // Query
-            var queryResult = (await connection.QueryAsync<PersonWithText>(id)).First();
+            var queryResult = (await connection.QueryAsync<PersonWithText>(id).ConfigureAwait(false)).First();
 
             // Assert
             Assert.AreEqual(person.ColumnVarchar, queryResult.ColumnVarchar);
@@ -344,10 +344,10 @@ namespace RepoDb.Oracle.IntegrationTests
             var people = GetPersonWithText(10).AsList();
 
             // Act
-            await connection.InsertAllAsync(people);
+            await connection.InsertAllAsync(people).ConfigureAwait(false);
 
             // Query
-            var queryResult = (await connection.QueryAllAsync<PersonWithText>()).AsList();
+            var queryResult = (await connection.QueryAllAsync<PersonWithText>().ConfigureAwait(false)).AsList();
 
             // Assert
             people.ForEach(p =>
@@ -367,10 +367,10 @@ namespace RepoDb.Oracle.IntegrationTests
             person.ColumnNumber = null;
 
             // Act
-            var id = await connection.InsertAsync(person);
+            var id = await connection.InsertAsync(person).ConfigureAwait(false);
 
             // Query
-            var queryResult = (await connection.QueryAsync<PersonWithInteger>(id)).First();
+            var queryResult = (await connection.QueryAsync<PersonWithInteger>(id).ConfigureAwait(false)).First();
 
             // Assert
             Assert.IsNull(queryResult.ColumnNumber);
@@ -385,10 +385,10 @@ namespace RepoDb.Oracle.IntegrationTests
             var person = GetPersonWithInteger(1).First();
 
             // Act
-            var id = await connection.InsertAsync(person);
+            var id = await connection.InsertAsync(person).ConfigureAwait(false);
 
             // Query
-            var queryResult = (await connection.QueryAsync<PersonWithInteger>(id)).First();
+            var queryResult = (await connection.QueryAsync<PersonWithInteger>(id).ConfigureAwait(false)).First();
 
             // Assert
             Assert.AreEqual(person.ColumnNumber, queryResult.ColumnNumber);
@@ -403,10 +403,10 @@ namespace RepoDb.Oracle.IntegrationTests
             var people = GetPersonWithInteger(10).AsList();
 
             // Act
-            await connection.InsertAllAsync(people);
+            await connection.InsertAllAsync(people).ConfigureAwait(false);
 
             // Query
-            var queryResult = (await connection.QueryAllAsync<PersonWithInteger>()).AsList();
+            var queryResult = (await connection.QueryAllAsync<PersonWithInteger>().ConfigureAwait(false)).AsList();
 
             // Assert
             people.ForEach(p =>
@@ -425,10 +425,10 @@ namespace RepoDb.Oracle.IntegrationTests
             var person = GetPersonWithTextAsInteger(1).First();
 
             // Act
-            var id = await connection.InsertAsync(person);
+            var id = await connection.InsertAsync(person).ConfigureAwait(false);
 
             // Query
-            var queryResult = (await connection.QueryAsync<PersonWithTextAsInteger>(id)).First();
+            var queryResult = (await connection.QueryAsync<PersonWithTextAsInteger>(id).ConfigureAwait(false)).First();
 
             // Assert
             Assert.AreEqual(person.ColumnVarchar, queryResult.ColumnVarchar);
@@ -443,10 +443,10 @@ namespace RepoDb.Oracle.IntegrationTests
             var people = GetPersonWithTextAsInteger(10).AsList();
 
             // Act
-            await connection.InsertAllAsync(people);
+            await connection.InsertAllAsync(people).ConfigureAwait(false);
 
             // Query
-            var queryResult = (await connection.QueryAllAsync<PersonWithTextAsInteger>()).AsList();
+            var queryResult = (await connection.QueryAllAsync<PersonWithTextAsInteger>().ConfigureAwait(false)).AsList();
 
             // Assert
             people.ForEach(p =>

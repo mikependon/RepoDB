@@ -88,7 +88,7 @@ namespace RepoDb
             CancellationToken cancellationToken)
         {
             var sql = GetCreateTemporaryTableSqlText(tableName, tempTableName, fields, dbSetting, isReturnIdentity);
-            await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         #endregion
@@ -153,7 +153,7 @@ namespace RepoDb
             CancellationToken cancellationToken)
         {
             var sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName, qualifiers, dbSetting);
-            await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         #endregion
@@ -193,8 +193,8 @@ namespace RepoDb
             ITrace trace,
             CancellationToken cancellationToken)
         {
-            await CreateTemporaryTableAsync(connection, tableName, tempTableName, fields, dbSetting, isReturnIdentity, transaction, trace, cancellationToken);
-            await CreateTemporaryTableClusteredIndexAsync(connection, tempTableName, qualifiers, dbSetting, transaction, trace, cancellationToken);
+            await CreateTemporaryTableAsync(connection, tableName, tempTableName, fields, dbSetting, isReturnIdentity, transaction, trace, cancellationToken).ConfigureAwait(false);
+            await CreateTemporaryTableClusteredIndexAsync(connection, tempTableName, qualifiers, dbSetting, transaction, trace, cancellationToken).ConfigureAwait(false);
         }
 
         #endregion
@@ -229,7 +229,7 @@ namespace RepoDb
             CancellationToken cancellationToken)
         {
             var sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-            await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         #endregion

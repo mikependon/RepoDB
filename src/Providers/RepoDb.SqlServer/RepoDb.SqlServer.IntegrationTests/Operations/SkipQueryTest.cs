@@ -160,7 +160,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     0,
                     3,
                     OrderField.Ascending<IdentityCompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.ElementAt(0));
@@ -181,7 +181,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     0,
                     3,
                     OrderField.Descending<IdentityCompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(9), result.ElementAt(0));
@@ -202,7 +202,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     6,
                     3,
                     OrderField.Ascending<IdentityCompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(6), result.ElementAt(0));
@@ -223,7 +223,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     6,
                     3,
                     OrderField.Descending<IdentityCompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(0));
@@ -245,7 +245,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     rowsPerBatch: 3,
                     orderBy: OrderField.Ascending<IdentityCompleteTable>(c => c.Id).AsEnumerable(),
                     where: (object)null,
-                    hints: SqlServerTableHints.NoLock);
+                    hints: SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.ElementAt(0));
@@ -384,7 +384,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     0,
                     3,
                     OrderField.Ascending<IdentityCompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertMembersEquality(tables.ElementAt(0), result.ElementAt(0));
@@ -405,7 +405,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     0,
                     3,
                     OrderField.Descending<IdentityCompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertMembersEquality(tables.ElementAt(9), result.ElementAt(0));
@@ -426,7 +426,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     6,
                     3,
                     OrderField.Ascending<IdentityCompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertMembersEquality(tables.ElementAt(6), result.ElementAt(0));
@@ -447,7 +447,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     6,
                     3,
                     OrderField.Descending<IdentityCompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertMembersEquality(tables.ElementAt(3), result.ElementAt(0));
@@ -469,7 +469,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     3,
                     OrderField.Ascending<IdentityCompleteTable>(c => c.Id).AsEnumerable(),
                     where: (object)null,
-                    hints: SqlServerTableHints.NoLock);
+                    hints: SqlServerTableHints.NoLock).ConfigureAwait(false);
 
                 // Assert
                 Helper.AssertMembersEquality(tables.ElementAt(0), result.ElementAt(0));

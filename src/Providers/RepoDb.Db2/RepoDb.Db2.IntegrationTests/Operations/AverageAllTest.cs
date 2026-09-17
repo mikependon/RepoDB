@@ -109,7 +109,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.AverageAllAsync<CompleteTable>(e => e.ColumnSmallInt);
+                var result = await connection.AverageAllAsync<CompleteTable>(e => e.ColumnSmallInt).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnSmallInt), Convert.ToDouble(result));
@@ -128,7 +128,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 try
                 {
                     // Act
-                    var result = await connection.AverageAllAsync<CompleteTable>(e => e.ColumnSmallInt);
+                    var result = await connection.AverageAllAsync<CompleteTable>(e => e.ColumnSmallInt).ConfigureAwait(false);
 
                     // Assert
                     Assert.AreEqual(tables.Average(e => e.ColumnSmallInt), Convert.ToDouble(result));
@@ -151,7 +151,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 // Act/Assert: AreTableHintsSupported == false for Db2 - any non-null/non-whitespace
                 // "hints" argument must throw, rather than silently being ignored.
                 await Assert.ThrowsAsync<NotSupportedException>(() =>
-                    connection.AverageAllAsync<CompleteTable>(e => e.ColumnSmallInt, hints: "NOLOCK"));
+                    connection.AverageAllAsync<CompleteTable>(e => e.ColumnSmallInt, hints: "NOLOCK")).ConfigureAwait(false);
             }
         }
 
@@ -194,7 +194,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.AverageAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnSmallInt).First());
+                    Field.Parse<CompleteTable>(e => e.ColumnSmallInt).First()).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnSmallInt), Convert.ToDouble(result));

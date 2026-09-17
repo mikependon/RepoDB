@@ -90,7 +90,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             using (var connection = new OracleConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.TruncateAsync<CompleteTable>();
+                var result = await connection.TruncateAsync<CompleteTable>().ConfigureAwait(false);
                 var countResult = connection.CountAll<CompleteTable>();
 
                 // Assert
@@ -110,7 +110,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 try
                 {
                     // Act
-                    var result = await connection.TruncateAsync<CompleteTable>();
+                    var result = await connection.TruncateAsync<CompleteTable>().ConfigureAwait(false);
                     var countResult = connection.CountAll<CompleteTable>();
 
                     // Assert
@@ -161,7 +161,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             using (var connection = new OracleConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.TruncateAsync(ClassMappedNameCache.Get<CompleteTable>());
+                var result = await connection.TruncateAsync(ClassMappedNameCache.Get<CompleteTable>()).ConfigureAwait(false);
                 var countResult = connection.CountAll<CompleteTable>();
 
                 // Assert

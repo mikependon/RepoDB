@@ -60,7 +60,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                         // Assert
                         Assert.IsNotNull(table);
                         Assert.AreEqual(columnInt, table.ColumnInt);
-                        Assert.AreEqual(columnDateTime, table.ColumnDateTime);
+                        Assert.AreEqual(columnDateTime, table.ColumnDateTime, StringComparer.Ordinal);
                     }
                 }
             }
@@ -90,7 +90,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                             // Assert
                             Assert.IsNotNull(table);
                             Assert.AreEqual(columnInt, table.ColumnInt);
-                            Assert.AreEqual(columnDateTime, table.ColumnDateTime);
+                            Assert.AreEqual(columnDateTime, table.ColumnDateTime, StringComparer.Ordinal);
                         }
                     } while (reader.NextResult());
                 }
@@ -150,7 +150,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                using (var reader = await connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM [MdsCompleteTable];"))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM [MdsCompleteTable];").ConfigureAwait(false))
                 {
                     while (reader.Read())
                     {
@@ -163,7 +163,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                         // Assert
                         Assert.IsNotNull(table);
                         Assert.AreEqual(columnInt, table.ColumnInt);
-                        Assert.AreEqual(columnDateTime, table.ColumnDateTime);
+                        Assert.AreEqual(columnDateTime, table.ColumnDateTime, StringComparer.Ordinal);
                     }
                 }
             }
@@ -178,7 +178,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                using (var reader = await connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM [MdsCompleteTable]; SELECT Id, ColumnInt, ColumnDateTime FROM [MdsCompleteTable];"))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM [MdsCompleteTable]; SELECT Id, ColumnInt, ColumnDateTime FROM [MdsCompleteTable];").ConfigureAwait(false))
                 {
                     do
                     {
@@ -193,7 +193,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                             // Assert
                             Assert.IsNotNull(table);
                             Assert.AreEqual(columnInt, table.ColumnInt);
-                            Assert.AreEqual(columnDateTime, table.ColumnDateTime);
+                            Assert.AreEqual(columnDateTime, table.ColumnDateTime, StringComparer.Ordinal);
                         }
                     } while (reader.NextResult());
                 }
@@ -209,7 +209,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [MdsCompleteTable];"))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [MdsCompleteTable];").ConfigureAwait(false))
                 {
                     // Act
                     var result = DataReader.ToEnumerable<MdsCompleteTable>((DbDataReader)reader).AsList();
@@ -229,7 +229,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                using (var reader = await connection.ExecuteReaderAsync("SELECT *, 'MDS' AS MDS FROM [MdsCompleteTable];"))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT *, 'MDS' AS MDS FROM [MdsCompleteTable];").ConfigureAwait(false))
                 {
                     // Act
                     var result = DataReader.ToEnumerable((DbDataReader)reader).AsList();

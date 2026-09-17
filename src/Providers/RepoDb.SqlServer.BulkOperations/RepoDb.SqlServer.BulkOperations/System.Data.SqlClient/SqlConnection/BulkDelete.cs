@@ -425,7 +425,7 @@ namespace RepoDb
                 batchSize: batchSize,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                 transaction: transaction,
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -472,7 +472,7 @@ namespace RepoDb
                 batchSize: batchSize,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                 transaction: transaction,
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>

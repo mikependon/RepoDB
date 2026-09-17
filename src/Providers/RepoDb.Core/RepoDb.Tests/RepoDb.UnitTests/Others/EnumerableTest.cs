@@ -51,7 +51,7 @@ namespace RepoDb.UnitTests
                 var sourceEntity = source.ElementAt(i);
                 var targetEntity = source.ElementAt(i);
                 Assert.AreEqual(sourceEntity.Id, targetEntity.Id);
-                Assert.AreEqual(sourceEntity.Property1, targetEntity.Property1);
+                Assert.AreEqual(sourceEntity.Property1, targetEntity.Property1, StringComparer.Ordinal);
             }
         }
 

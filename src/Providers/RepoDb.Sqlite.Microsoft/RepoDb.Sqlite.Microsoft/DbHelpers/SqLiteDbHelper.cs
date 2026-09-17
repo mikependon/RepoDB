@@ -96,16 +96,16 @@ namespace RepoDb.DbHelpers
             string identityFieldName,
             CancellationToken cancellationToken = default)
         {
-            return new DbField(await reader.GetFieldValueAsync<string>(1, cancellationToken),
-                !await reader.IsDBNullAsync(5, cancellationToken) && Convert.ToBoolean(await reader.GetFieldValueAsync<long>(5, cancellationToken)),
-                string.Equals(await reader.GetFieldValueAsync<string>(1, cancellationToken), identityFieldName, StringComparison.OrdinalIgnoreCase),
-                await reader.IsDBNullAsync(3, cancellationToken) || Convert.ToBoolean(await reader.GetFieldValueAsync<long>(3, cancellationToken)) == false,
-                await reader.IsDBNullAsync(2, cancellationToken) ? DbTypeResolver.Resolve("text") : DbTypeResolver.Resolve(await reader.GetFieldValueAsync<string>(2, cancellationToken)),
+            return new DbField(await reader.GetFieldValueAsync<string>(1, cancellationToken).ConfigureAwait(false),
+                !await reader.IsDBNullAsync(5, cancellationToken).ConfigureAwait(false) && Convert.ToBoolean(await reader.GetFieldValueAsync<long>(5, cancellationToken).ConfigureAwait(false)),
+                string.Equals(await reader.GetFieldValueAsync<string>(1, cancellationToken).ConfigureAwait(false), identityFieldName, StringComparison.OrdinalIgnoreCase),
+                await reader.IsDBNullAsync(3, cancellationToken).ConfigureAwait(false) || Convert.ToBoolean(await reader.GetFieldValueAsync<long>(3, cancellationToken).ConfigureAwait(false)) == false,
+                await reader.IsDBNullAsync(2, cancellationToken).ConfigureAwait(false) ? DbTypeResolver.Resolve("text") : DbTypeResolver.Resolve(await reader.GetFieldValueAsync<string>(2, cancellationToken).ConfigureAwait(false)),
                 null,
                 null,
                 null,
                 null,
-                !await reader.IsDBNullAsync(4, cancellationToken),
+                !await reader.IsDBNullAsync(4, cancellationToken).ConfigureAwait(false),
                 "MSSQLITE");
         }
 
@@ -154,7 +154,7 @@ namespace RepoDb.DbHelpers
             var sql = await connection.ExecuteScalarAsync<string>(commandText: commandText,
                 param: new { TableName = DataEntityExtension.GetTableName(tableName, DbSetting).AsUnquoted(DbSetting) },
                 transaction: transaction,
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken).ConfigureAwait(false);
 
             // Return
             return GetIdentityFieldNameInternal(sql)?
@@ -290,15 +290,15 @@ namespace RepoDb.DbHelpers
             var commandText = GetCommandText(tableName);
 
             // Iterate and extract
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
 
             var dbFields = new List<DbField>();
-            var identity = await GetIdentityFieldNameAsync(connection, tableName, transaction, cancellationToken);
+            var identity = await GetIdentityFieldNameAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
 
             // Iterate the list of the fields
-            while (await reader.ReadAsync(cancellationToken))
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
-                dbFields.Add(await ReaderToDbFieldAsync(reader, identity, cancellationToken));
+                dbFields.Add(await ReaderToDbFieldAsync(reader, identity, cancellationToken).ConfigureAwait(false));
             }
 
             // Return the list of fields

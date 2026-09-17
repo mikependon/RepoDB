@@ -47,7 +47,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "SELECT [Field1], [Field2], [Field3] FROM [Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -64,7 +64,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "SELECT [Field1], [Field2], [Field3] FROM [dbo].[Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -81,7 +81,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "SELECT [Field1], [Field2], [Field3] FROM [dbo].[Table] ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -103,7 +103,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"ORDER BY [Field1] ASC, [Field2] DESC ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -122,7 +122,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = "SELECT [Field1], [Field2], [Field3] FROM [Table] WITH (NOLOCK) ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -146,7 +146,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"ORDER BY [Field1] ASC, [Field2] DESC ;";
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]

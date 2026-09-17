@@ -428,7 +428,7 @@ namespace RepoDb
                     isReturnIdentity: isReturnIdentity,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
@@ -491,7 +491,7 @@ namespace RepoDb
                     isReturnIdentity: isReturnIdentity,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
@@ -548,7 +548,7 @@ namespace RepoDb
                     batchSize: batchSize,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
@@ -610,7 +610,7 @@ namespace RepoDb
                     batchSize: batchSize,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
@@ -673,7 +673,7 @@ namespace RepoDb
                     isReturnIdentity: isReturnIdentity,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {
@@ -737,7 +737,7 @@ namespace RepoDb
                     isReturnIdentity: isReturnIdentity,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             finally
             {

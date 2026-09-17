@@ -82,7 +82,7 @@ namespace RepoDb.DbHelpers
         /// <returns></returns>
         private HashSet<string> GetBlobTypes()
         {
-            return new()
+            return new(StringComparer.Ordinal)
             {
                 "blob",
                 "blobasarray",
@@ -136,7 +136,7 @@ namespace RepoDb.DbHelpers
         private async Task<DbField> ReaderToDbFieldAsync(DbDataReader reader,
             CancellationToken cancellationToken = default)
         {
-            var columnType = await reader.GetFieldValueAsync<string>(4, cancellationToken);
+            var columnType = await reader.GetFieldValueAsync<string>(4, cancellationToken).ConfigureAwait(false);
             var excluded = GetBlobTypes();
             var size = (int?)null;
             if (excluded.Contains(columnType.ToLowerInvariant()))
@@ -145,19 +145,19 @@ namespace RepoDb.DbHelpers
             }
             else
             {
-                size = await reader.IsDBNullAsync(5, cancellationToken) ? (int?)null :
-                    Convert.ToInt32(await reader.GetFieldValueAsync<long>(5, cancellationToken));
+                size = await reader.IsDBNullAsync(5, cancellationToken).ConfigureAwait(false) ? (int?)null :
+                    Convert.ToInt32(await reader.GetFieldValueAsync<long>(5, cancellationToken).ConfigureAwait(false));
             }
-            return new DbField(await reader.GetFieldValueAsync<string>(0, cancellationToken),
-                Convert.ToBoolean(await reader.GetFieldValueAsync<int>(1, cancellationToken)),
-                Convert.ToBoolean(await reader.GetFieldValueAsync<int>(2, cancellationToken)),
-                Convert.ToBoolean(await reader.GetFieldValueAsync<int>(1, cancellationToken)),
+            return new DbField(await reader.GetFieldValueAsync<string>(0, cancellationToken).ConfigureAwait(false),
+                Convert.ToBoolean(await reader.GetFieldValueAsync<int>(1, cancellationToken).ConfigureAwait(false)),
+                Convert.ToBoolean(await reader.GetFieldValueAsync<int>(2, cancellationToken).ConfigureAwait(false)),
+                Convert.ToBoolean(await reader.GetFieldValueAsync<int>(1, cancellationToken).ConfigureAwait(false)),
                 DbTypeResolver.Resolve(columnType),
                 size,
-                await reader.IsDBNullAsync(6, cancellationToken) ? (byte?)null : byte.Parse((await reader.GetFieldValueAsync<ulong>(6, cancellationToken)).ToString()),
-                await reader.IsDBNullAsync(7, cancellationToken) ? (byte?)null : byte.Parse((await reader.GetFieldValueAsync<ulong>(7, cancellationToken)).ToString()),
-                await reader.GetFieldValueAsync<string>(8, cancellationToken),
-                Convert.ToBoolean(await reader.GetFieldValueAsync<int>(1, cancellationToken)),
+                await reader.IsDBNullAsync(6, cancellationToken).ConfigureAwait(false) ? (byte?)null : byte.Parse((await reader.GetFieldValueAsync<ulong>(6, cancellationToken).ConfigureAwait(false)).ToString()),
+                await reader.IsDBNullAsync(7, cancellationToken).ConfigureAwait(false) ? (byte?)null : byte.Parse((await reader.GetFieldValueAsync<ulong>(7, cancellationToken).ConfigureAwait(false)).ToString()),
+                await reader.GetFieldValueAsync<string>(8, cancellationToken).ConfigureAwait(false),
+                Convert.ToBoolean(await reader.GetFieldValueAsync<int>(1, cancellationToken).ConfigureAwait(false)),
                 "MYSQL");
         }
 
@@ -226,12 +226,12 @@ namespace RepoDb.DbHelpers
 
             // Iterate and extract
             using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, param, transaction: transaction,
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken).ConfigureAwait(false);
 
             var dbFields = new List<DbField>();
 
             // Iterate the list of the fields
-            while (await reader.ReadAsync(cancellationToken))
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
                 // The 'ReaderToDbFieldAsync' is having a bad behavior on different versions
                 // of MySQL for this driver (from Oracle). Also, the 'CAST' and 'CONVERT' is

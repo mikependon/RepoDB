@@ -99,7 +99,7 @@ namespace RepoDb.EnterpriseDb.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = EDBText.GetCreatePseudoTableSql(tableName, pseudoTableName, pseudoTableType, dbSetting, qualifierField);
-            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace RepoDb.EnterpriseDb.BulkOperations.Extensions
 
             var dbSetting = connection.GetDbSetting();
             var commandText = EDBText.GetCreatePseudoTableIndexSql(pseudoTableName, qualifiers, dbSetting);
-            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -195,7 +195,7 @@ namespace RepoDb.EnterpriseDb.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = EDBText.GetTruncatePseudoTableSql(pseudoTableName, dbSetting);
-            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -236,7 +236,7 @@ namespace RepoDb.EnterpriseDb.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = EDBText.GetDropPseudoTableSql(pseudoTableName, dbSetting);
-            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         #endregion
@@ -315,10 +315,10 @@ namespace RepoDb.EnterpriseDb.BulkOperations.Extensions
             var commandText = EDBText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, dbSetting);
             var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
 
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
             var result = 0;
 
-            while (await reader.ReadAsync(cancellationToken))
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
                 setter(entities[result], Converter.DbNullToNull(reader.GetValue(0)));
                 result++;
@@ -393,10 +393,10 @@ namespace RepoDb.EnterpriseDb.BulkOperations.Extensions
             var dbSetting = connection.GetDbSetting();
             var commandText = EDBText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, dbSetting);
 
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
             var result = 0;
 
-            while (await reader.ReadAsync(cancellationToken))
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
                 SetIdentityValue(rows[result], identityField.Name, Converter.DbNullToNull(reader.GetValue(0)));
                 result++;
@@ -464,7 +464,7 @@ namespace RepoDb.EnterpriseDb.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = EDBText.GetMergeFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, identityField, dbSetting);
-            return await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            return await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -547,18 +547,18 @@ namespace RepoDb.EnterpriseDb.BulkOperations.Extensions
             var dbSetting = connection.GetDbSetting();
             var commandText = EDBText.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, dbSetting);
 
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
             var result = 0;
 
             do
             {
-                while (await reader.ReadAsync(cancellationToken))
+                while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
                 {
                     setter?.Invoke(entities[result], Converter.DbNullToNull(reader.GetValue(0)));
                     result++;
                 }
             }
-            while (await reader.NextResultAsync(cancellationToken));
+            while (await reader.NextResultAsync(cancellationToken).ConfigureAwait(false));
 
             return result;
         }
@@ -637,18 +637,18 @@ namespace RepoDb.EnterpriseDb.BulkOperations.Extensions
             var dbSetting = connection.GetDbSetting();
             var commandText = EDBText.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, dbSetting);
 
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
             var result = 0;
 
             do
             {
-                while (await reader.ReadAsync(cancellationToken))
+                while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
                 {
                     SetIdentityValue(rows[result], identityField.Name, Converter.DbNullToNull(reader.GetValue(0)));
                     result++;
                 }
             }
-            while (await reader.NextResultAsync(cancellationToken));
+            while (await reader.NextResultAsync(cancellationToken).ConfigureAwait(false));
 
             return result;
         }
@@ -712,7 +712,7 @@ namespace RepoDb.EnterpriseDb.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = EDBText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, identityField, dbSetting);
-            return await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            return await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         #endregion
@@ -766,7 +766,7 @@ namespace RepoDb.EnterpriseDb.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = EDBText.GetDeleteFromPseudoTableSql(tableName, pseudoTableName, qualifiers, dbSetting);
-            return await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            return await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         #endregion

@@ -62,8 +62,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var rowsInserted = await connection.InsertAllAsync<DottedTable>(entities);
-                var deleteResult = await connection.DeleteAsync<DottedTable>(last.Id);
+                var rowsInserted = await connection.InsertAllAsync<DottedTable>(entities).ConfigureAwait(false);
+                var deleteResult = await connection.DeleteAsync<DottedTable>(last.Id).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, deleteResult);
@@ -98,8 +98,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var rowsInserted = await connection.InsertAllAsync<DottedTable>(entities);
-                var deleteResult = await connection.DeleteAsync<DottedTable>(e => e.SessionId == last.SessionId);
+                var rowsInserted = await connection.InsertAllAsync<DottedTable>(entities).ConfigureAwait(false);
+                var deleteResult = await connection.DeleteAsync<DottedTable>(e => e.SessionId == last.SessionId).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, deleteResult);
@@ -137,12 +137,12 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                long? id = await connection.InsertAsync<DottedTable, long>(entity);
+                long? id = await connection.InsertAsync<DottedTable, long>(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsNotNull(id);
                 Assert.IsTrue(id > 0);
-                Assert.AreEqual(1, await connection.CountAllAsync<DottedTable>());
+                Assert.AreEqual(1, await connection.CountAllAsync<DottedTable>().ConfigureAwait(false));
             }
         }
 
@@ -176,11 +176,11 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var rowsInserted = await connection.InsertAllAsync<DottedTable>(entities);
+                var rowsInserted = await connection.InsertAllAsync<DottedTable>(entities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, rowsInserted);
-                Assert.AreEqual(entities.Count, await connection.CountAllAsync<DottedTable>());
+                Assert.AreEqual(entities.Count, await connection.CountAllAsync<DottedTable>().ConfigureAwait(false));
             }
         }
 
@@ -227,12 +227,12 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                long? id = await connection.MergeAsync<DottedTable, long>(entity);
+                long? id = await connection.MergeAsync<DottedTable, long>(entity).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsNotNull(id);
                 Assert.IsTrue(id > 0);
-                Assert.AreEqual(1, await connection.CountAllAsync<DottedTable>());
+                Assert.AreEqual(1, await connection.CountAllAsync<DottedTable>().ConfigureAwait(false));
 
                 // Setup
                 entity.ColumnDateTime2 = DateTime.UtcNow;
@@ -240,8 +240,8 @@ namespace RepoDb.IntegrationTests
                 entity.ColumnNVarChar = Guid.NewGuid().ToString();
 
                 // Act
-                id = await connection.MergeAsync<DottedTable, long>(entity);
-                var queryResult = (await connection.QueryAsync<DottedTable>(id)).First();
+                id = await connection.MergeAsync<DottedTable, long>(entity).ConfigureAwait(false);
+                var queryResult = (await connection.QueryAsync<DottedTable>(id).ConfigureAwait(false)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -298,11 +298,11 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var rowsAffected = await connection.MergeAllAsync<DottedTable>(entities);
+                var rowsAffected = await connection.MergeAllAsync<DottedTable>(entities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, rowsAffected);
-                Assert.AreEqual(entities.Count, await connection.CountAllAsync<DottedTable>());
+                Assert.AreEqual(entities.Count, await connection.CountAllAsync<DottedTable>().ConfigureAwait(false));
 
                 // Setup
                 entities.ForEach(entity =>
@@ -313,13 +313,13 @@ namespace RepoDb.IntegrationTests
                 });
 
                 // Act
-                rowsAffected = await connection.MergeAllAsync<DottedTable>(entities);
+                rowsAffected = await connection.MergeAllAsync<DottedTable>(entities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, rowsAffected);
 
                 // Act
-                var queryAllResult = await connection.QueryAllAsync<DottedTable>();
+                var queryAllResult = await connection.QueryAllAsync<DottedTable>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryAllResult.First(item => item.Id == entity.Id)));
@@ -359,8 +359,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var rowsInserted = await connection.InsertAllAsync<DottedTable>(entities);
-                var queryResult = (await connection.QueryAsync<DottedTable>(last.Id)).FirstOrDefault();
+                var rowsInserted = await connection.InsertAllAsync<DottedTable>(entities).ConfigureAwait(false);
+                var queryResult = (await connection.QueryAsync<DottedTable>(last.Id).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(queryResult);
@@ -397,8 +397,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var rowsInserted = await connection.InsertAllAsync<DottedTable>(entities);
-                var queryResult = (await connection.QueryAsync<DottedTable>(e => e.SessionId == last.SessionId)).FirstOrDefault();
+                var rowsInserted = await connection.InsertAllAsync<DottedTable>(entities).ConfigureAwait(false);
+                var queryResult = (await connection.QueryAsync<DottedTable>(e => e.SessionId == last.SessionId).ConfigureAwait(false)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(queryResult);
@@ -437,8 +437,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var rowsInserted = await connection.InsertAllAsync<DottedTable>(entities);
-                var queryAllResult = await connection.QueryAllAsync<DottedTable>();
+                var rowsInserted = await connection.InsertAllAsync<DottedTable>(entities).ConfigureAwait(false);
+                var queryAllResult = await connection.QueryAllAsync<DottedTable>().ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryAllResult.Count());
@@ -485,7 +485,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync<DottedTable, long>(entity);
+                var id = await connection.InsertAsync<DottedTable, long>(entity).ConfigureAwait(false);
 
                 // Setup
                 entity.ColumnDateTime2 = DateTime.UtcNow;
@@ -493,8 +493,8 @@ namespace RepoDb.IntegrationTests
                 entity.ColumnNVarChar = Guid.NewGuid().ToString();
 
                 // Act
-                var updateReuslt = await connection.UpdateAsync<DottedTable>(entity);
-                var queryResult = (await connection.QueryAsync<DottedTable>(id)).First();
+                var updateReuslt = await connection.UpdateAsync<DottedTable>(entity).ConfigureAwait(false);
+                var queryResult = (await connection.QueryAsync<DottedTable>(id).ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual(1, updateReuslt);
@@ -548,7 +548,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var rowsAffected = await connection.InsertAllAsync<DottedTable>(entities);
+                var rowsAffected = await connection.InsertAllAsync<DottedTable>(entities).ConfigureAwait(false);
 
                 // Setup
                 entities.ForEach(entity =>
@@ -559,13 +559,13 @@ namespace RepoDb.IntegrationTests
                 });
 
                 // Act
-                rowsAffected = await connection.UpdateAllAsync<DottedTable>(entities);
+                rowsAffected = await connection.UpdateAllAsync<DottedTable>(entities).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(entities.Count, rowsAffected);
 
                 // Act
-                var queryAllResult = await connection.QueryAllAsync<DottedTable>();
+                var queryAllResult = await connection.QueryAllAsync<DottedTable>().ConfigureAwait(false);
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryAllResult.First(item => item.Id == entity.Id)));

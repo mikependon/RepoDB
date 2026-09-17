@@ -95,7 +95,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"IdentityCompleteTable\";");
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"IdentityCompleteTable\";").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -112,7 +112,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"IdentityCompleteTable\" WHERE \"Id\" = @Id;",
-                    new { tables.Last().Id });
+                    new { tables.Last().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -128,7 +128,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"IdentityCompleteTable\"; DELETE FROM \"IdentityCompleteTable\";");
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"IdentityCompleteTable\"; DELETE FROM \"IdentityCompleteTable\";").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);

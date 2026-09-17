@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.DbSettings;
 using RepoDb.Resolvers;
@@ -29,7 +30,7 @@ namespace RepoDb.UnitTests.Resolvers
             var expected = "[Id]";
 
             // Assert
-            Assert.AreEqual(expected, result);
+            Assert.AreEqual(expected, result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -44,7 +45,7 @@ namespace RepoDb.UnitTests.Resolvers
             var expected = "CAST([Id] AS [NVARCHAR])";
 
             // Assert
-            Assert.AreEqual(expected, result);
+            Assert.AreEqual(expected, result, StringComparer.Ordinal);
         }
     }
 }

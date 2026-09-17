@@ -156,7 +156,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync(tables);
+                await connection.InsertAllAsync(tables).ConfigureAwait(false);
 
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
@@ -166,7 +166,7 @@ namespace RepoDb.IntegrationTests
                 var result = await connection.BatchQueryAsync<ClassHandlerIdentityTable>(page: 0,
                     rowsPerBatch: 10,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
-                    where: (object)null);
+                    where: (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, handler.GetMethodCallCount);
@@ -221,14 +221,14 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync(tables);
+                await connection.InsertAllAsync(tables).ConfigureAwait(false);
 
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
                 handler.Reset();
 
                 // Act
-                var result = await connection.ExecuteQueryAsync<ClassHandlerIdentityTable>("SELECT * FROM [sc].[IdentityTable];");
+                var result = await connection.ExecuteQueryAsync<ClassHandlerIdentityTable>("SELECT * FROM [sc].[IdentityTable];").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, handler.GetMethodCallCount);
@@ -278,7 +278,7 @@ namespace RepoDb.IntegrationTests
                 handler.Reset();
 
                 // Act
-                var id = await connection.MergeAsync(table);
+                var id = await connection.MergeAsync(table).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, handler.SetMethodCallCount);
@@ -320,7 +320,7 @@ namespace RepoDb.IntegrationTests
                 // Act
                 foreach (var table in tables)
                 {
-                    await connection.MergeAsync(table);
+                    await connection.MergeAsync(table).ConfigureAwait(false);
                 }
 
                 // Assert
@@ -365,7 +365,7 @@ namespace RepoDb.IntegrationTests
                 handler.Reset();
 
                 // Act
-                await connection.MergeAllAsync(tables);
+                await connection.MergeAllAsync(tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, handler.SetMethodCallCount);
@@ -409,7 +409,7 @@ namespace RepoDb.IntegrationTests
                 handler.Reset();
 
                 // Act
-                var id = await connection.InsertAsync(table);
+                var id = await connection.InsertAsync(table).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, handler.SetMethodCallCount);
@@ -451,7 +451,7 @@ namespace RepoDb.IntegrationTests
                 // Act
                 foreach (var table in tables)
                 {
-                    await connection.InsertAsync(table);
+                    await connection.InsertAsync(table).ConfigureAwait(false);
                 }
 
                 // Assert
@@ -496,7 +496,7 @@ namespace RepoDb.IntegrationTests
                 handler.Reset();
 
                 // Act
-                await connection.InsertAllAsync(tables);
+                await connection.InsertAllAsync(tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, handler.SetMethodCallCount);
@@ -540,14 +540,14 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = await connection.InsertAsync(table);
+                var id = await connection.InsertAsync(table).ConfigureAwait(false);
 
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
                 handler.Reset();
 
                 // Act
-                var result = (await connection.QueryAsync<ClassHandlerIdentityTable>(id)).First();
+                var result = (await connection.QueryAsync<ClassHandlerIdentityTable>(id).ConfigureAwait(false)).First();
 
                 // Assert
                 Assert.AreEqual(1, handler.GetMethodCallCount);
@@ -597,14 +597,14 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync(tables);
+                await connection.InsertAllAsync(tables).ConfigureAwait(false);
 
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
                 handler.Reset();
 
                 // Act
-                var result = await connection.QueryAllAsync<ClassHandlerIdentityTable>();
+                var result = await connection.QueryAllAsync<ClassHandlerIdentityTable>().ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, handler.GetMethodCallCount);
@@ -653,14 +653,14 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAsync(table);
+                await connection.InsertAsync(table).ConfigureAwait(false);
 
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
                 handler.Reset();
 
                 // Act
-                await connection.UpdateAsync(table);
+                await connection.UpdateAsync(table).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, handler.SetMethodCallCount);
@@ -699,7 +699,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync(tables);
+                await connection.InsertAllAsync(tables).ConfigureAwait(false);
 
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
@@ -708,7 +708,7 @@ namespace RepoDb.IntegrationTests
                 // Act
                 foreach (var table in tables)
                 {
-                    await connection.UpdateAsync(table);
+                    await connection.UpdateAsync(table).ConfigureAwait(false);
                 }
 
                 // Assert
@@ -752,14 +752,14 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync(tables);
+                await connection.InsertAllAsync(tables).ConfigureAwait(false);
 
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
                 handler.Reset();
 
                 // Act
-                await connection.UpdateAllAsync(tables);
+                await connection.UpdateAllAsync(tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, handler.SetMethodCallCount);

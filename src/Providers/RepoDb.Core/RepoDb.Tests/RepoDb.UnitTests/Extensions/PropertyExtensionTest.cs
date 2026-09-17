@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes.Parameter;
 using RepoDb.Extensions;
@@ -84,7 +85,7 @@ namespace RepoDb.UnitTests.Extensions
 
             // Assert
             Assert.IsNotNull(attribute);
-            Assert.AreEqual("ColumnString", attribute.Name);
+            Assert.AreEqual("ColumnString", attribute.Name, StringComparer.Ordinal);
         }
     }
 }

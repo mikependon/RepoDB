@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Extensions;
 using System.Linq;
@@ -65,7 +66,7 @@ namespace RepoDb.UnitTests.Others
             var queryField = queryFields.First();
 
             // Assert
-            Assert.AreEqual("PrimaryId", queryField.Field.Name);
+            Assert.AreEqual("PrimaryId", queryField.Field.Name, StringComparer.Ordinal);
             Assert.AreEqual(typeof(int), queryField.Field.Type);
         }
 
@@ -137,7 +138,7 @@ namespace RepoDb.UnitTests.Others
             var field = Field.Parse<DerivedClass>(e => e.PrimaryId)?.FirstOrDefault();
 
             // Assert
-            Assert.AreEqual("PrimaryId", field?.Name);
+            Assert.AreEqual("PrimaryId", field?.Name, StringComparer.Ordinal);
             Assert.AreEqual(typeof(int), field?.Type);
         }
 

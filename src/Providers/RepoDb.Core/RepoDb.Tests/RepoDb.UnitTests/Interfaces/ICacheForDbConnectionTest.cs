@@ -341,7 +341,7 @@ namespace RepoDb.UnitTests.Interfaces
                 commandTimeout: null,
                 transaction: null,
                 cache: cache.Object,
-                trace: null);
+                trace: null).ConfigureAwait(false);
 
             // Assert
             cache.Verify(c => c.GetAsync<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
@@ -373,7 +373,7 @@ namespace RepoDb.UnitTests.Interfaces
                 commandTimeout: null,
                 transaction: null,
                 cache: cache.Object,
-                trace: null);
+                trace: null).ConfigureAwait(false);
 
             // Assert
             cache.Verify(c => c.GetAsync<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
@@ -405,7 +405,7 @@ namespace RepoDb.UnitTests.Interfaces
                 commandTimeout: null,
                 transaction: null,
                 cache: cache.Object,
-                trace: null);
+                trace: null).ConfigureAwait(false);
 
             // Assert
             cache.Verify(c => c.GetAsync<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
@@ -437,7 +437,7 @@ namespace RepoDb.UnitTests.Interfaces
                 commandTimeout: null,
                 transaction: null,
                 cache: cache.Object,
-                trace: null);
+                trace: null).ConfigureAwait(false);
 
             // Assert
             cache.Verify(c => c.GetAsync<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
@@ -469,7 +469,7 @@ namespace RepoDb.UnitTests.Interfaces
                 commandTimeout: null,
                 transaction: null,
                 cache: cache.Object,
-                trace: null);
+                trace: null).ConfigureAwait(false);
 
             // Assert
             cache.Verify(c => c.GetAsync<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
@@ -501,7 +501,7 @@ namespace RepoDb.UnitTests.Interfaces
                 commandTimeout: null,
                 transaction: null,
                 cache: cache.Object,
-                trace: null);
+                trace: null).ConfigureAwait(false);
 
             // Assert
             cache.Verify(c => c.GetAsync<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
@@ -535,7 +535,7 @@ namespace RepoDb.UnitTests.Interfaces
                 commandTimeout: null,
                 transaction: null,
                 cache: cache.Object,
-                trace: null);
+                trace: null).ConfigureAwait(false);
 
             // Assert
             cache.Verify(c => c.GetAsync<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
@@ -565,7 +565,7 @@ namespace RepoDb.UnitTests.Interfaces
                 commandTimeout: null,
                 transaction: null,
                 cache: cache.Object,
-                trace: null);
+                trace: null).ConfigureAwait(false);
 
             // Assert
             cache.Verify(c => c.GetAsync<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
@@ -595,7 +595,7 @@ namespace RepoDb.UnitTests.Interfaces
                 commandTimeout: null,
                 transaction: null,
                 cache: cache.Object,
-                trace: null);
+                trace: null).ConfigureAwait(false);
 
             // Assert
             cache.Verify(c => c.GetAsync<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),

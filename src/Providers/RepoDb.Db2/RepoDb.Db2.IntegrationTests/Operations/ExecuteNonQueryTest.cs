@@ -159,7 +159,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
-            var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\"");
+            var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\"").ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count, result);
@@ -178,7 +178,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             try
             {
                 // Act
-                var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\"");
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\"").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -200,7 +200,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
 
             // Act
             var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\" WHERE \"Id\" = :Id",
-                new { tables.Last().Id });
+                new { tables.Last().Id }).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(1, result);
@@ -217,7 +217,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
 
             // Act
             var result = await connection.ExecuteNonQueryAsync("UPDATE \"CompleteTable\" SET \"ColumnVarchar\" = :ColumnVarchar WHERE \"Id\" = :Id",
-                new { ColumnVarchar = "Updated", tables.Last().Id });
+                new { ColumnVarchar = "Updated", tables.Last().Id }).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(1, result);
@@ -236,7 +236,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // version above and the class-level remarks for what this is investigating.
             var result = await connection.ExecuteNonQueryAsync(
                 $"DELETE FROM \"CompleteTable\" WHERE \"Id\" = {idsToDelete[0]}; " +
-                $"DELETE FROM \"CompleteTable\" WHERE \"Id\" = {idsToDelete[1]}");
+                $"DELETE FROM \"CompleteTable\" WHERE \"Id\" = {idsToDelete[1]}").ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(tables.Count - 2, connection.CountAll<CompleteTable>());

@@ -191,14 +191,14 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync(tables);
+                await connection.InsertAllAsync(tables).ConfigureAwait(false);
 
                 // Act
-                var result = await connection.DeleteAsync<IdentityTable>((object)null);
+                var result = await connection.DeleteAsync<IdentityTable>((object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(10, result);
-                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>());
+                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>().ConfigureAwait(false));
             }
         }
 
@@ -231,14 +231,14 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync(tables);
+                await connection.InsertAllAsync(tables).ConfigureAwait(false);
 
                 // Act
-                var result = await connection.DeleteAsync<IdentityTable>(Enumerable.Empty<QueryField>());
+                var result = await connection.DeleteAsync<IdentityTable>(Enumerable.Empty<QueryField>()).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(10, result);
-                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>());
+                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>().ConfigureAwait(false));
             }
         }
 
@@ -409,17 +409,17 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync(tables);
+                await connection.InsertAllAsync(tables).ConfigureAwait(false);
 
                 // Assert
                 foreach (var table in tables)
                 {
-                    var result = await connection.DeleteAsync<IdentityTable>(table, hints: SqlServerTableHints.TabLock);
+                    var result = await connection.DeleteAsync<IdentityTable>(table, hints: SqlServerTableHints.TabLock).ConfigureAwait(false);
                     Assert.AreEqual(1, result);
                 }
 
                 // Assert
-                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>());
+                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>().ConfigureAwait(false));
             }
         }
 
@@ -441,7 +441,7 @@ namespace RepoDb.IntegrationTests.Operations
                 foreach (var item in tables)
                 {
                     // Act
-                    var result = await connection.DeleteAsync<IdentityTable>(item.Id);
+                    var result = await connection.DeleteAsync<IdentityTable>(item.Id).ConfigureAwait(false);
 
                     // Assert
                     Assert.AreEqual(1, result);
@@ -466,7 +466,7 @@ namespace RepoDb.IntegrationTests.Operations
                 foreach (var item in tables)
                 {
                     // Act
-                    var result = await connection.DeleteAsync<IdentityTable>((object)item.Id);
+                    var result = await connection.DeleteAsync<IdentityTable>((object)item.Id).ConfigureAwait(false);
 
                     // Assert
                     Assert.AreEqual(1, result);
@@ -491,7 +491,7 @@ namespace RepoDb.IntegrationTests.Operations
                 foreach (var item in tables)
                 {
                     // Act
-                    var result = await connection.DeleteAsync<IdentityTable, long>(item.Id);
+                    var result = await connection.DeleteAsync<IdentityTable, long>(item.Id).ConfigureAwait(false);
 
                     // Assert
                     Assert.AreEqual(1, result);
@@ -516,7 +516,7 @@ namespace RepoDb.IntegrationTests.Operations
                 foreach (var item in tables)
                 {
                     // Act
-                    var result = await connection.DeleteAsync<IdentityTable, object>(item.Id);
+                    var result = await connection.DeleteAsync<IdentityTable, object>(item.Id).ConfigureAwait(false);
 
                     // Assert
                     Assert.AreEqual(1, result);
@@ -542,7 +542,7 @@ namespace RepoDb.IntegrationTests.Operations
                 foreach (var item in tables)
                 {
                     // Act
-                    var result = await connection.DeleteAsync<IdentityTable>(item);
+                    var result = await connection.DeleteAsync<IdentityTable>(item).ConfigureAwait(false);
 
                     // Assert
                     Assert.AreEqual(1, result);
@@ -582,14 +582,14 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync(tables);
+                await connection.InsertAllAsync(tables).ConfigureAwait(false);
 
                 // Act
-                var result = await connection.DeleteAsync<IdentityTable>((object)null);
+                var result = await connection.DeleteAsync<IdentityTable>((object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(10, result);
-                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>());
+                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>().ConfigureAwait(false));
             }
         }
 
@@ -622,14 +622,14 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync(tables);
+                await connection.InsertAllAsync(tables).ConfigureAwait(false);
 
                 // Act
-                var result = await connection.DeleteAsync<IdentityTable>(Enumerable.Empty<QueryField>());
+                var result = await connection.DeleteAsync<IdentityTable>(Enumerable.Empty<QueryField>()).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(10, result);
-                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>());
+                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>().ConfigureAwait(false));
             }
         }
 
@@ -646,7 +646,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.DeleteAsync<IdentityTable>(last.Id);
+                var result = await connection.DeleteAsync<IdentityTable>(last.Id).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -666,7 +666,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.DeleteAsync<IdentityTable>(new { ColumnInt = 6 });
+                var result = await connection.DeleteAsync<IdentityTable>(new { ColumnInt = 6 }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -687,7 +687,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.DeleteAsync<IdentityTable>(c => c.ColumnInt == last.Id);
+                var result = await connection.DeleteAsync<IdentityTable>(c => c.ColumnInt == last.Id).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -708,7 +708,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.DeleteAsync<IdentityTable>(field);
+                var result = await connection.DeleteAsync<IdentityTable>(field).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -733,7 +733,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.DeleteAsync<IdentityTable>(fields);
+                var result = await connection.DeleteAsync<IdentityTable>(fields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(4, result);
@@ -759,7 +759,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = await connection.DeleteAsync<IdentityTable>(queryGroup);
+                var result = await connection.DeleteAsync<IdentityTable>(queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(4, result);
@@ -782,7 +782,7 @@ namespace RepoDb.IntegrationTests.Operations
                 foreach (var item in tables)
                 {
                     // Act
-                    var result = await connection.DeleteAsync<IdentityTable>(item, hints: SqlServerTableHints.TabLock);
+                    var result = await connection.DeleteAsync<IdentityTable>(item, hints: SqlServerTableHints.TabLock).ConfigureAwait(false);
 
                     // Assert
                     Assert.AreEqual(1, result);
@@ -916,15 +916,15 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync(tables);
+                await connection.InsertAllAsync(tables).ConfigureAwait(false);
 
                 // Act
                 var result = await connection.DeleteAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(10, result);
-                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>());
+                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>().ConfigureAwait(false));
             }
         }
 
@@ -1054,16 +1054,16 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync(tables);
+                await connection.InsertAllAsync(tables).ConfigureAwait(false);
 
                 // Act
                 var result = await connection.DeleteAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     (object)null,
-                    hints: SqlServerTableHints.TabLock);
+                    hints: SqlServerTableHints.TabLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(10, result);
-                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>());
+                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>().ConfigureAwait(false));
             }
         }
 
@@ -1093,7 +1093,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.DeleteAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    (object)tables.First().Id);
+                    (object)tables.First().Id).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -1114,7 +1114,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.DeleteAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    tables.First().Id);
+                    tables.First().Id).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -1135,7 +1135,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.DeleteAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    tables.First());
+                    tables.First()).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -1173,15 +1173,15 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync(tables);
+                await connection.InsertAllAsync(tables).ConfigureAwait(false);
 
                 // Act
                 var result = await connection.DeleteAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(10, result);
-                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>());
+                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>().ConfigureAwait(false));
             }
         }
 
@@ -1198,7 +1198,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.DeleteAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    new { ColumnInt = 6 });
+                    new { ColumnInt = 6 }).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -1220,7 +1220,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.DeleteAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    field);
+                    field).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -1246,7 +1246,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.DeleteAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    fields);
+                    fields).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(4, result);
@@ -1273,7 +1273,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.DeleteAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryGroup);
+                    queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(4, result);
@@ -1312,16 +1312,16 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.InsertAllAsync(tables);
+                await connection.InsertAllAsync(tables).ConfigureAwait(false);
 
                 // Act
                 var result = await connection.DeleteAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     (object)null,
-                    hints: SqlServerTableHints.TabLock);
+                    hints: SqlServerTableHints.TabLock).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(10, result);
-                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>());
+                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>().ConfigureAwait(false));
             }
         }
 
@@ -1330,7 +1330,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             await using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                await Assert.ThrowsAsync<KeyFieldNotFoundException>(async () => await connection.DeleteAsync(ClassMappedNameCache.Get<NonKeyedTable>(), 1));
+                await Assert.ThrowsAsync<KeyFieldNotFoundException>(async () => await connection.DeleteAsync(ClassMappedNameCache.Get<NonKeyedTable>(), 1).ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

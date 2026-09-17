@@ -135,7 +135,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new Dictionary<string, object>
+            var param = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 {"Values", values }
             };
@@ -259,7 +259,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
@@ -289,7 +289,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    (object)param);
+                    (object)param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
@@ -319,7 +319,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
@@ -337,7 +337,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new Dictionary<string, object>
+            var param = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 {"Values", values }
             };
@@ -349,7 +349,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
@@ -376,7 +376,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
@@ -403,7 +403,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
@@ -430,7 +430,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
@@ -524,7 +524,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new Dictionary<string, object>
+            var param = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 {"Values", values }
             };
@@ -628,7 +628,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result);
@@ -653,7 +653,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    (object)param);
+                    (object)param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result);
@@ -678,7 +678,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result);
@@ -691,7 +691,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new Dictionary<string, object>
+            var param = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 {"Values", values }
             };
@@ -703,7 +703,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result);
@@ -725,7 +725,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result);
@@ -747,7 +747,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result);
@@ -769,7 +769,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result);
@@ -885,7 +885,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new Dictionary<string, object>
+            var param = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 {"Values", values }
             };
@@ -1025,7 +1025,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    param))
+                    param).ConfigureAwait(false))
                 {
                     // Extract the reader
                     var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader);
@@ -1059,7 +1059,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    (object)param))
+                    (object)param).ConfigureAwait(false))
                 {
                     // Extract the reader
                     var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader);
@@ -1093,7 +1093,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    param))
+                    param).ConfigureAwait(false))
                 {
                     // Extract the reader
                     var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader);
@@ -1115,7 +1115,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new Dictionary<string, object>
+            var param = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 {"Values", values }
             };
@@ -1127,7 +1127,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    param))
+                    param).ConfigureAwait(false))
                 {
                     // Extract the reader
                     var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader);
@@ -1158,7 +1158,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    param))
+                    param).ConfigureAwait(false))
                 {
                     // Extract the reader
                     var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader);
@@ -1189,7 +1189,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    param))
+                    param).ConfigureAwait(false))
                 {
                     // Extract the reader
                     var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader);
@@ -1220,7 +1220,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    param))
+                    param).ConfigureAwait(false))
                 {
                     // Extract the reader
                     var result = DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader);
@@ -1318,7 +1318,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new Dictionary<string, object>
+            var param = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 {"Values", values }
             };
@@ -1422,7 +1422,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result);
@@ -1447,7 +1447,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
-                    (object)param);
+                    (object)param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result);
@@ -1472,7 +1472,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result);
@@ -1485,7 +1485,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new Dictionary<string, object>
+            var param = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 {"Values", values }
             };
@@ -1497,7 +1497,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result);
@@ -1519,7 +1519,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result);
@@ -1541,7 +1541,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result);
@@ -1563,7 +1563,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result);
@@ -1671,7 +1671,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new Dictionary<string, object>
+            var param = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 {"Values", values }
             };
@@ -1795,7 +1795,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
@@ -1825,7 +1825,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    (object)param);
+                    (object)param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
@@ -1855,7 +1855,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
@@ -1873,7 +1873,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new Dictionary<string, object>
+            var param = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 {"Values", values }
             };
@@ -1885,7 +1885,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
@@ -1912,7 +1912,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
@@ -1939,7 +1939,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
@@ -1966,7 +1966,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result.Count());
@@ -2060,7 +2060,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new Dictionary<string, object>
+            var param = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 {"Values", values }
             };
@@ -2164,7 +2164,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result);
@@ -2189,7 +2189,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    (object)param);
+                    (object)param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result);
@@ -2214,7 +2214,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result);
@@ -2227,7 +2227,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new Dictionary<string, object>
+            var param = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 {"Values", values }
             };
@@ -2239,7 +2239,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result);
@@ -2261,7 +2261,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result);
@@ -2283,7 +2283,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result);
@@ -2305,7 +2305,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result);
@@ -2394,7 +2394,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new Dictionary<string, object>
+            var param = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 {"Values", values }
             };
@@ -2498,7 +2498,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result);
@@ -2523,7 +2523,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
-                    (object)param);
+                    (object)param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result);
@@ -2548,7 +2548,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result);
@@ -2561,7 +2561,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var values = new int?[] { 1, 3, 4, 8 };
-            var param = new Dictionary<string, object>
+            var param = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 {"Values", values }
             };
@@ -2573,7 +2573,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result);
@@ -2595,7 +2595,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result);
@@ -2617,7 +2617,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result);
@@ -2639,7 +2639,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
-                    param);
+                    param).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(values.Count(), result);

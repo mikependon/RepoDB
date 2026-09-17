@@ -707,7 +707,7 @@ namespace RepoDb
                 batchSize,
                 identityBehavior,
                 transaction,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
 
         /// <summary>
         /// Non-obsolete equivalent of the deprecated <see cref="BinaryImportAsync{TEntity}(NpgsqlConnection, string, IEnumerable{TEntity}, IEnumerable{PostgreSqlBulkInsertMapItem}, int?, int?, PostgreSqlBulkImportIdentityBehavior, NpgsqlTransaction, CancellationToken)"/> -
@@ -742,13 +742,13 @@ namespace RepoDb
                 tableName,
                 entities,
                 mappings,
-                await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken),
+                await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false),
                 bulkCopyTimeout,
                 batchSize,
                 identityBehavior,
                 connection.GetDbSetting(),
                 transaction,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -817,7 +817,7 @@ namespace RepoDb
                         bulkCopyTimeout,
                         identityBehavior,
                         dbSetting,
-                        cancellationToken))
+                        cancellationToken).ConfigureAwait(false))
                     {
                         if (isDictionary)
                         {
@@ -826,7 +826,7 @@ namespace RepoDb
                                 mappings,
                                 identityBehavior,
                                 cancellationToken,
-                                result);
+                                result).ConfigureAwait(false);
                         }
                         else
                         {
@@ -837,7 +837,7 @@ namespace RepoDb
                                 entityType,
                                 identityBehavior,
                                 cancellationToken,
-                                result);
+                                result).ConfigureAwait(false);
                         }
                     }
                 }
@@ -846,7 +846,7 @@ namespace RepoDb
             }
 
             // Transactional
-            return await TransactionalExecuteAsync<int>(connection, executeAsync, transaction, cancellationToken);
+            return await TransactionalExecuteAsync<int>(connection, executeAsync, transaction, cancellationToken).ConfigureAwait(false);
         }
 
         #endregion
@@ -957,7 +957,7 @@ namespace RepoDb
                 batchSize,
                 identityBehavior,
                 transaction,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
 
         /// <summary>
         /// Non-obsolete equivalent of the deprecated <see cref="BinaryImportAsync(NpgsqlConnection, string, DataTable, DataRowState?, IEnumerable{PostgreSqlBulkInsertMapItem}, int?, int?, PostgreSqlBulkImportIdentityBehavior, NpgsqlTransaction, CancellationToken)"/> -
@@ -993,13 +993,13 @@ namespace RepoDb
                 table,
                 rowState,
                 mappings,
-                await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken),
+                await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false),
                 bulkCopyTimeout,
                 batchSize,
                 identityBehavior,
                 connection.GetDbSetting(),
                 transaction,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1060,14 +1060,14 @@ namespace RepoDb
                         bulkCopyTimeout,
                         identityBehavior,
                         dbSetting,
-                        cancellationToken))
+                        cancellationToken).ConfigureAwait(false))
                     {
                         result = await BinaryImportAsync(importer,
                             batch,
                             mappings,
                             identityBehavior,
                             cancellationToken,
-                            result);
+                            result).ConfigureAwait(false);
                     }
                 }
 
@@ -1075,7 +1075,7 @@ namespace RepoDb
             }
 
             // Transactional
-            return await TransactionalExecuteAsync(connection, executeAsync, transaction, cancellationToken);
+            return await TransactionalExecuteAsync(connection, executeAsync, transaction, cancellationToken).ConfigureAwait(false);
         }
 
         #endregion
@@ -1111,7 +1111,7 @@ namespace RepoDb
                 bulkCopyTimeout,
                 identityBehavior,
                 transaction,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
 
         /// <summary>
         /// Non-obsolete equivalent of the deprecated <see cref="BinaryImportAsync(NpgsqlConnection, string, IDataReader, IEnumerable{PostgreSqlBulkInsertMapItem}, int?, PostgreSqlBulkImportIdentityBehavior, NpgsqlTransaction, CancellationToken)"/> -
@@ -1139,12 +1139,12 @@ namespace RepoDb
                 tableName,
                 reader,
                 mappings,
-                await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken),
+                await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false),
                 bulkCopyTimeout,
                 identityBehavior,
                 connection.GetDbSetting(),
                 transaction,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
 
         /// <summary>
         ///
@@ -1194,20 +1194,20 @@ namespace RepoDb
                     bulkCopyTimeout,
                     identityBehavior,
                     dbSetting,
-                    cancellationToken))
+                    cancellationToken).ConfigureAwait(false))
                 {
                     result += await BinaryImportAsync(importer,
                         reader,
                         mappings,
                         identityBehavior,
-                        cancellationToken);
+                        cancellationToken).ConfigureAwait(false);
                 }
 
                 return result;
             }
 
             // Transactional
-            return await TransactionalExecuteAsync(connection, execute, transaction, cancellationToken);
+            return await TransactionalExecuteAsync(connection, execute, transaction, cancellationToken).ConfigureAwait(false);
         }
 
         #endregion

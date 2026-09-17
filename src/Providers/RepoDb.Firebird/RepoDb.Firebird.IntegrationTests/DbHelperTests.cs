@@ -86,7 +86,7 @@ namespace RepoDb.Firebird.IntegrationTests
 
                 // Assert
                 Assert.IsNotNull(primary);
-                Assert.AreEqual("Id", primary.Name);
+                Assert.AreEqual("Id", primary.Name, StringComparer.Ordinal);
             }
         }
 
@@ -104,7 +104,7 @@ namespace RepoDb.Firebird.IntegrationTests
 
                 // Assert
                 Assert.IsNotNull(primary);
-                Assert.AreEqual("Id", primary.Name);
+                Assert.AreEqual("Id", primary.Name, StringComparer.Ordinal);
             }
         }
 
@@ -121,7 +121,7 @@ namespace RepoDb.Firebird.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null);
+                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null).ConfigureAwait(false);
 
                 // Assert
                 using (var reader = connection.ExecuteReader(@"SELECT TRIM(RDB$FIELD_NAME) AS ColumnName
@@ -157,12 +157,12 @@ namespace RepoDb.Firebird.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null);
+                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null).ConfigureAwait(false);
                 var primary = fields.FirstOrDefault(f => f.IsPrimary == true);
 
                 // Assert
                 Assert.IsNotNull(primary);
-                Assert.AreEqual("Id", primary.Name);
+                Assert.AreEqual("Id", primary.Name, StringComparer.Ordinal);
             }
         }
 
@@ -175,12 +175,12 @@ namespace RepoDb.Firebird.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null);
+                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null).ConfigureAwait(false);
                 var primary = fields.FirstOrDefault(f => f.IsIdentity == true);
 
                 // Assert
                 Assert.IsNotNull(primary);
-                Assert.AreEqual("Id", primary.Name);
+                Assert.AreEqual("Id", primary.Name, StringComparer.Ordinal);
             }
         }
 
@@ -240,7 +240,7 @@ namespace RepoDb.Firebird.IntegrationTests
                 // Firebird has no session-wide "last identity" concept (see FirebirdDbHelper.GetScopeIdentityAsync),
                 // so the helper deliberately throws instead of returning a (meaningless) value.
                 await Assert.ThrowsAsync<NotSupportedException>(() =>
-                    helper.GetScopeIdentityAsync<long>(connection, null));
+                    helper.GetScopeIdentityAsync<long>(connection, null)).ConfigureAwait(false);
             }
         }
 

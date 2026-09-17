@@ -214,7 +214,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExistsAsync<CompleteTable>((object)null);
+                var result = await connection.ExistsAsync<CompleteTable>((object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -233,7 +233,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 try
                 {
                     // Act
-                    var result = await connection.ExistsAsync<CompleteTable>((object)null);
+                    var result = await connection.ExistsAsync<CompleteTable>((object)null).ConfigureAwait(false);
 
                     // Assert
                     Assert.IsTrue(result);
@@ -255,7 +255,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExistsAsync<CompleteTable>(e => ids.Contains(e.Id));
+                var result = await connection.ExistsAsync<CompleteTable>(e => ids.Contains(e.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -272,7 +272,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExistsAsync<CompleteTable>(e => e.Id == missingId);
+                var result = await connection.ExistsAsync<CompleteTable>(e => e.Id == missingId).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsFalse(result);
@@ -288,7 +288,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExistsAsync<CompleteTable>(new { tables.First().Id });
+                var result = await connection.ExistsAsync<CompleteTable>(new { tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -304,7 +304,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExistsAsync<CompleteTable>(new QueryField("Id", tables.First().Id));
+                var result = await connection.ExistsAsync<CompleteTable>(new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -325,7 +325,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExistsAsync<CompleteTable>(queryFields);
+                var result = await connection.ExistsAsync<CompleteTable>(queryFields).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -347,7 +347,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExistsAsync<CompleteTable>(queryGroup);
+                var result = await connection.ExistsAsync<CompleteTable>(queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -365,7 +365,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 // Act/Assert: AreTableHintsSupported == false for Db2 - any non-null/non-whitespace
                 // "hints" argument must throw, rather than silently being ignored.
                 await Assert.ThrowsAsync<NotSupportedException>(() =>
-                    connection.ExistsAsync<CompleteTable>((object)null, hints: "NOLOCK"));
+                    connection.ExistsAsync<CompleteTable>((object)null, hints: "NOLOCK")).ConfigureAwait(false);
             }
         }
 
@@ -487,7 +487,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    (object)null);
+                    (object)null).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -504,7 +504,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    new { tables.First().Id });
+                    new { tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -521,7 +521,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    new QueryField("Id", tables.First().Id));
+                    new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -543,7 +543,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    queryFields);
+                    queryFields).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -566,7 +566,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             {
                 // Act
                 var result = await connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    queryGroup);
+                    queryGroup).ConfigureAwait(false);
 
                 // Assert
                 Assert.IsTrue(result);

@@ -64,7 +64,7 @@ namespace RepoDb.UnitTests.Others
 
             // Assert
             Assert.AreEqual(3, parsed.Count());
-            Assert.IsTrue(parsed.All(field => fields.Contains(field.Name)));
+            Assert.IsTrue(parsed.All(field => fields.Contains(field.Name, StringComparer.Ordinal)));
         }
 
         [TestMethod]

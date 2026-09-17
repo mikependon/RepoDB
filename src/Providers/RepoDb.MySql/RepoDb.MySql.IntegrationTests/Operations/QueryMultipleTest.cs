@@ -457,7 +457,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
                     top1: 1,
-                    top2: 2);
+                    top2: 2).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -479,7 +479,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable>(e => e.Id == tables[0].Id,
                     e => e.Id == tables[1].Id,
                     top1: 1,
-                    top2: 1);
+                    top2: 1).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -503,7 +503,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     e => e.Id > 0,
                     top1: 1,
                     top2: 2,
-                    top3: 3);
+                    top3: 3).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -529,7 +529,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     e => e.Id == tables[2].Id,
                     top1: 1,
                     top2: 1,
-                    top3: 1);
+                    top3: 1).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -557,7 +557,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     top1: 1,
                     top2: 2,
                     top3: 3,
-                    top4: 4);
+                    top4: 4).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -587,7 +587,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     top1: 1,
                     top2: 1,
                     top3: 1,
-                    top4: 1);
+                    top4: 1).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -619,7 +619,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     top2: 2,
                     top3: 3,
                     top4: 4,
-                    top5: 5);
+                    top5: 5).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -653,7 +653,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     top2: 1,
                     top3: 1,
                     top4: 1,
-                    top5: 1);
+                    top5: 1).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -689,7 +689,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     top3: 3,
                     top4: 4,
                     top5: 5,
-                    top6: 6);
+                    top6: 6).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -727,7 +727,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     top3: 1,
                     top4: 1,
                     top5: 1,
-                    top6: 1);
+                    top6: 1).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -767,7 +767,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     top4: 4,
                     top5: 5,
                     top6: 6,
-                    top7: 7);
+                    top7: 7).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -809,7 +809,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     top4: 1,
                     top5: 1,
                     top6: 1,
-                    top7: 1);
+                    top7: 1).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -844,7 +844,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                         top1: 1,
                         hints1: "WhatEver",
                         top2: 2,
-                        hints2: "WhatEver"));
+                        hints2: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

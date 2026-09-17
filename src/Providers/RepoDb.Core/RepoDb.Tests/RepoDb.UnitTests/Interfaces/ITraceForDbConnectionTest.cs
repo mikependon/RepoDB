@@ -138,7 +138,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.AverageAsync<TraceEntity>(trace: trace.Object,
                 field: e => e.Id,
-                where: (object)null);
+                where: (object)null).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -156,7 +156,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.AverageAsync<TraceEntity>(trace: trace.Object,
                 field: e => e.Id,
-                where: (object)null);
+                where: (object)null).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -175,7 +175,7 @@ namespace RepoDb.UnitTests.Interfaces
             await connection.AverageAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -194,7 +194,7 @@ namespace RepoDb.UnitTests.Interfaces
             await connection.AverageAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -289,7 +289,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             await connection.AverageAllAsync<TraceEntity>(trace: trace.Object,
-                field: e => e.Id);
+                field: e => e.Id).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -306,7 +306,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             await connection.AverageAllAsync<TraceEntity>(trace: trace.Object,
-                field: e => e.Id);
+                field: e => e.Id).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -324,7 +324,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.AverageAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -342,7 +342,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.AverageAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -412,7 +412,7 @@ namespace RepoDb.UnitTests.Interfaces
                 10,
                 OrderField.Ascending<TraceEntity>(t => t.Id).AsEnumerable(),
                 where: (QueryGroup)null,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -432,7 +432,7 @@ namespace RepoDb.UnitTests.Interfaces
                 10,
                 OrderField.Ascending<TraceEntity>(t => t.Id).AsEnumerable(),
                 where: (QueryGroup)null,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -603,7 +603,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             await connection.CountAsync<TraceEntity>(trace: trace.Object,
-                where: (object)null);
+                where: (object)null).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -620,7 +620,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             await connection.CountAsync<TraceEntity>(trace: trace.Object,
-                where: (object)null);
+                where: (object)null).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -638,7 +638,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.CountAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 where: (object)null,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -656,7 +656,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.CountAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 where: (object)null,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -746,7 +746,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new TraceDbConnection();
 
             // Act
-            await connection.CountAllAsync<TraceEntity>(trace: trace.Object);
+            await connection.CountAllAsync<TraceEntity>(trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -762,7 +762,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new TraceDbConnection();
 
             // Act
-            await connection.CountAllAsync<TraceEntity>(trace: trace.Object);
+            await connection.CountAllAsync<TraceEntity>(trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -779,7 +779,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             await connection.CountAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -796,7 +796,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             await connection.CountAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -897,7 +897,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             await connection.DeleteAsync<TraceEntity>(0,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -914,7 +914,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             await connection.DeleteAsync<TraceEntity>(0,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -935,7 +935,7 @@ namespace RepoDb.UnitTests.Interfaces
                 {
                     Id = 1
                 },
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -956,7 +956,7 @@ namespace RepoDb.UnitTests.Interfaces
                 {
                     Id = 1
                 },
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -1046,7 +1046,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new TraceDbConnection();
 
             // Act
-            await connection.DeleteAllAsync<TraceEntity>(trace: trace.Object);
+            await connection.DeleteAllAsync<TraceEntity>(trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -1062,7 +1062,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new TraceDbConnection();
 
             // Act
-            await connection.DeleteAllAsync<TraceEntity>(trace: trace.Object);
+            await connection.DeleteAllAsync<TraceEntity>(trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -1079,7 +1079,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             await connection.DeleteAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -1096,7 +1096,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             await connection.DeleteAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -1191,7 +1191,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             await connection.ExistsAsync<TraceEntity>(trace: trace.Object,
-                what: (object)null);
+                what: (object)null).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -1208,7 +1208,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             await connection.ExistsAsync<TraceEntity>(trace: trace.Object,
-                what: (object)null);
+                what: (object)null).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -1226,7 +1226,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.ExistsAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 what: (object)null,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -1244,7 +1244,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.ExistsAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 what: (object)null,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -1342,7 +1342,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.InsertAsync<TraceEntity>(
                 new TraceEntity { Name = "Name" },
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -1360,7 +1360,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.InsertAsync<TraceEntity>(
                 new TraceEntity { Name = "Name" },
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -1378,7 +1378,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.InsertAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new { Name = "Name" },
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -1396,7 +1396,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.InsertAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new { Name = "Name" },
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -1493,7 +1493,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             await connection.InsertAllAsync<TraceEntity>(new[] { new TraceEntity { Name = "Name" } },
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -1510,7 +1510,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             await connection.InsertAllAsync<TraceEntity>(new[] { new TraceEntity { Name = "Name" } },
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -1529,7 +1529,7 @@ namespace RepoDb.UnitTests.Interfaces
             await connection.InsertAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Name = "Name" } },
                 fields: Field.From("Name"),
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -1548,7 +1548,7 @@ namespace RepoDb.UnitTests.Interfaces
             await connection.InsertAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Name = "Name" } },
                 fields: Field.From("Name"),
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -1648,7 +1648,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.MaxAsync<TraceEntity>(trace: trace.Object,
                 field: e => e.Id,
-                where: (object)null);
+                where: (object)null).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -1666,7 +1666,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.MaxAsync<TraceEntity>(trace: trace.Object,
                 field: e => e.Id,
-                where: (object)null);
+                where: (object)null).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -1685,7 +1685,7 @@ namespace RepoDb.UnitTests.Interfaces
             await connection.MaxAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -1704,7 +1704,7 @@ namespace RepoDb.UnitTests.Interfaces
             await connection.MaxAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -1799,7 +1799,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             await connection.MaxAllAsync<TraceEntity>(trace: trace.Object,
-                field: e => e.Id);
+                field: e => e.Id).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -1816,7 +1816,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             await connection.MaxAllAsync<TraceEntity>(trace: trace.Object,
-                field: e => e.Id);
+                field: e => e.Id).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -1834,7 +1834,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.MaxAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -1852,7 +1852,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.MaxAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -1950,7 +1950,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.MergeAsync<TraceEntity>(
                 new TraceEntity { Id = 1, Name = "Name" },
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -1968,7 +1968,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.MergeAsync<TraceEntity>(
                 new TraceEntity { Id = 1, Name = "Name" },
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -1986,7 +1986,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.MergeAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new { Id = 1, Name = "Name" },
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -2004,7 +2004,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.MergeAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new { Id = 1, Name = "Name" },
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -2102,7 +2102,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.MergeAllAsync<TraceEntity>(
                 new[] { new TraceEntity { Id = 1, Name = "Name" } },
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -2120,7 +2120,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.MergeAllAsync<TraceEntity>(
                 new[] { new TraceEntity { Id = 1, Name = "Name" } },
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -2138,7 +2138,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.MergeAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Id = 1, Name = "Name" } },
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -2156,7 +2156,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.MergeAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Id = 1, Name = "Name" } },
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -2256,7 +2256,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.MinAsync<TraceEntity>(trace: trace.Object,
                 field: e => e.Id,
-                where: (object)null);
+                where: (object)null).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -2274,7 +2274,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.MinAsync<TraceEntity>(trace: trace.Object,
                 field: e => e.Id,
-                where: (object)null);
+                where: (object)null).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -2293,7 +2293,7 @@ namespace RepoDb.UnitTests.Interfaces
             await connection.MinAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -2312,7 +2312,7 @@ namespace RepoDb.UnitTests.Interfaces
             await connection.MinAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -2407,7 +2407,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             await connection.MinAllAsync<TraceEntity>(trace: trace.Object,
-                field: e => e.Id);
+                field: e => e.Id).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -2424,7 +2424,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             await connection.MinAllAsync<TraceEntity>(trace: trace.Object,
-                field: e => e.Id);
+                field: e => e.Id).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -2442,7 +2442,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.MinAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -2460,7 +2460,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.MinAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -2521,7 +2521,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             await connection.QueryAsync<TraceEntity>(te => te.Id == 1,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -2538,7 +2538,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             await connection.QueryAsync<TraceEntity>(te => te.Id == 1,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -2596,7 +2596,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new TraceDbConnection();
 
             // Act
-            await connection.QueryAllAsync<TraceEntity>(trace: trace.Object);
+            await connection.QueryAllAsync<TraceEntity>(trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -2612,7 +2612,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new TraceDbConnection();
 
             // Act
-            await connection.QueryAllAsync<TraceEntity>(trace: trace.Object);
+            await connection.QueryAllAsync<TraceEntity>(trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -2923,7 +2923,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.QueryMultipleAsync<TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -2941,7 +2941,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.QueryMultipleAsync<TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -2964,7 +2964,7 @@ namespace RepoDb.UnitTests.Interfaces
             await connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -2983,7 +2983,7 @@ namespace RepoDb.UnitTests.Interfaces
             await connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -3008,7 +3008,7 @@ namespace RepoDb.UnitTests.Interfaces
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -3028,7 +3028,7 @@ namespace RepoDb.UnitTests.Interfaces
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -3055,7 +3055,7 @@ namespace RepoDb.UnitTests.Interfaces
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -3076,7 +3076,7 @@ namespace RepoDb.UnitTests.Interfaces
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -3105,7 +3105,7 @@ namespace RepoDb.UnitTests.Interfaces
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -3127,7 +3127,7 @@ namespace RepoDb.UnitTests.Interfaces
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -3158,7 +3158,7 @@ namespace RepoDb.UnitTests.Interfaces
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -3181,7 +3181,7 @@ namespace RepoDb.UnitTests.Interfaces
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -3288,7 +3288,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.SumAsync<TraceEntity>(trace: trace.Object,
                 field: e => e.Id,
-                where: (object)null);
+                where: (object)null).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -3306,7 +3306,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.SumAsync<TraceEntity>(trace: trace.Object,
                 field: e => e.Id,
-                where: (object)null);
+                where: (object)null).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -3325,7 +3325,7 @@ namespace RepoDb.UnitTests.Interfaces
             await connection.SumAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -3344,7 +3344,7 @@ namespace RepoDb.UnitTests.Interfaces
             await connection.SumAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -3439,7 +3439,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             await connection.SumAllAsync<TraceEntity>(trace: trace.Object,
-                field: e => e.Id);
+                field: e => e.Id).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -3456,7 +3456,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             await connection.SumAllAsync<TraceEntity>(trace: trace.Object,
-                field: e => e.Id);
+                field: e => e.Id).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -3474,7 +3474,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.SumAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -3492,7 +3492,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.SumAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -3582,7 +3582,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new TraceDbConnection();
 
             // Act
-            await connection.TruncateAsync<TraceEntity>(trace: trace.Object);
+            await connection.TruncateAsync<TraceEntity>(trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -3598,7 +3598,7 @@ namespace RepoDb.UnitTests.Interfaces
             var connection = new TraceDbConnection();
 
             // Act
-            await connection.TruncateAsync<TraceEntity>(trace: trace.Object);
+            await connection.TruncateAsync<TraceEntity>(trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -3615,7 +3615,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             await connection.TruncateAsync(ClassMappedNameCache.Get<TraceEntity>(),
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -3632,7 +3632,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             await connection.TruncateAsync(ClassMappedNameCache.Get<TraceEntity>(),
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -3759,7 +3759,7 @@ namespace RepoDb.UnitTests.Interfaces
                     Name = "Name"
                 },
                 what: 1,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -3782,7 +3782,7 @@ namespace RepoDb.UnitTests.Interfaces
                     Name = "Name"
                 },
                 what: 1,
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -3807,7 +3807,7 @@ namespace RepoDb.UnitTests.Interfaces
                 {
                     Id = 1
                 },
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -3832,7 +3832,7 @@ namespace RepoDb.UnitTests.Interfaces
                 {
                     Id = 1
                 },
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -3930,7 +3930,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.UpdateAllAsync<TraceEntity>(
                 new[] { new TraceEntity { Id = 1, Name = "Name" } },
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -3948,7 +3948,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.UpdateAllAsync<TraceEntity>(
                 new[] { new TraceEntity { Id = 1, Name = "Name" } },
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -3966,7 +3966,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.UpdateAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Id = 1, Name = "Name" } },
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>
@@ -3984,7 +3984,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             await connection.UpdateAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Id = 1, Name = "Name" } },
-                trace: trace.Object);
+                trace: trace.Object).ConfigureAwait(false);
 
             // Assert
             trace.Verify(t =>

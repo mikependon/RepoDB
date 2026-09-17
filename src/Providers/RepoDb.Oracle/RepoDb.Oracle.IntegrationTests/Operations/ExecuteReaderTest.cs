@@ -156,7 +156,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             using var connection = new OracleConnection(Database.ConnectionString);
 
             // Act
-            using var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\"");
+            using var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\"").ConfigureAwait(false);
             while (reader.Read())
             {
                 // Act
@@ -184,7 +184,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             try
             {
                 // Act
-                using var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\"");
+                using var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\"").ConfigureAwait(false);
                 while (reader.Read())
                 {
                     // Act
@@ -214,7 +214,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             using var connection = new OracleConnection(Database.ConnectionString);
 
             // Act
-            using var reader = await connection.ExecuteReaderAsync("SELECT * FROM \"CompleteTable\"");
+            using var reader = await connection.ExecuteReaderAsync("SELECT * FROM \"CompleteTable\"").ConfigureAwait(false);
             var result = DataReader.ToEnumerable<CompleteTable>((DbDataReader)reader).ToList();
 
             // Assert
@@ -231,7 +231,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             using var connection = new OracleConnection(Database.ConnectionString);
 
             // Act
-            using var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnVarchar\", \"ColumnInt\" FROM \"CompleteTable\"");
+            using var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnVarchar\", \"ColumnInt\" FROM \"CompleteTable\"").ConfigureAwait(false);
             var result = DataReader.ToEnumerable((DbDataReader)reader).ToList();
 
             // Assert

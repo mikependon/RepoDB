@@ -72,7 +72,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var task = connection.TruncateAsync<IdentityTable>();
-                await task;
+                await task.ConfigureAwait(false);
 
                 // Act
                 var result = connection.CountAll<IdentityTable>();
@@ -125,7 +125,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var task = connection.TruncateAsync(ClassMappedNameCache.Get<IdentityTable>());
-                await task;
+                await task.ConfigureAwait(false);
 
                 // Act
                 var result = connection.CountAll<IdentityTable>();

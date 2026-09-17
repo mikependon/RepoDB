@@ -75,7 +75,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 tables.AsList().ForEach(table => Helper.UpdateSdsCompleteTableProperties(table));
 
                 // Act
-                var result = await connection.UpdateAllAsync<SdsCompleteTable>(tables);
+                var result = await connection.UpdateAllAsync<SdsCompleteTable>(tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -160,7 +160,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 tables.AsList().ForEach(table => Helper.UpdateSdsCompleteTableProperties(table));
 
                 // Act
-                var result = await connection.UpdateAllAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), tables);
+                var result = await connection.UpdateAllAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -185,7 +185,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
 
                 // Act
                 var result = await connection.UpdateAllAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
-                    tables);
+                    tables).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(10, result);

@@ -329,7 +329,7 @@ namespace RepoDb
                 transaction: transaction,
                 trace: trace,
                 traceKey: traceKey,
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -382,7 +382,7 @@ namespace RepoDb
                 transaction: transaction,
                 trace: trace,
                 traceKey: traceKey,
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         #endregion
