@@ -60,6 +60,11 @@ namespace RepoDb
         public const string ExecuteQuery = "ExecuteQuery";
 
         /// <summary>
+        /// The trace key for the 'ExecuteQueryFirst' operation.
+        /// </summary>
+        public const string ExecuteQueryFirst = "ExecuteQueryFirst";
+
+        /// <summary>
         /// The trace key for the 'ExecuteQueryMultiple' operation.
         /// </summary>
         public const string ExecuteQueryMultiple = "ExecuteQueryMultiple";
