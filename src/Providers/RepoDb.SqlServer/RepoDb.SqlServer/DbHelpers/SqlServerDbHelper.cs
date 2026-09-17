@@ -102,6 +102,49 @@ namespace RepoDb.DbHelpers
         }
 
         /// <summary>
+        /// Gets the command text used to extract the fields of a local (<c>#</c>) or global (<c>##</c>) temporary table.
+        /// </summary>
+        /// <returns></returns>
+        private string GetTempTableCommandText()
+        {
+            return @"
+                SELECT C.name AS ColumnName
+                    , CONVERT(BIT, COALESCE(TC.is_primary, 0)) AS IsPrimary
+                    , CONVERT(BIT, C.is_identity) AS IsIdentity
+                    , CONVERT(BIT, C.is_nullable) AS IsNullable
+                    , TP.name AS DataType
+                    , CONVERT(INT, C.max_length) AS Size
+                    , CONVERT(TINYINT, C.precision) AS Precision
+                    , CONVERT(TINYINT, C.scale) AS Scale
+                    , CONVERT(BIT, IIF(C.default_object_id <> 0, 1, 0)) AS DefaultValue
+                FROM tempdb.sys.columns C
+                INNER JOIN tempdb.sys.types TP
+                    ON TP.user_type_id = C.user_type_id
+                OUTER APPLY
+                (
+                    SELECT 1 AS is_primary
+                    FROM tempdb.sys.index_columns IC
+                    INNER JOIN tempdb.sys.indexes I
+                        ON I.object_id = IC.object_id
+                        AND I.index_id = IC.index_id
+                        AND I.is_primary_key = 1
+                    WHERE IC.object_id = C.object_id
+                        AND IC.column_id = C.column_id
+                ) TC
+                WHERE C.object_id = OBJECT_ID(N'tempdb..' + @TableName)
+                ORDER BY C.column_id;";
+        }
+
+        /// <summary>
+        /// Checks whether the given (already unquoted) table name refers to a local (<c>#</c>) or global (<c>##</c>)
+        /// temporary table.
+        /// </summary>
+        /// <param name="unquotedTableName">The unquoted table name.</param>
+        /// <returns><c>true</c> if the table name refers to a temporary table.</returns>
+        private static bool IsTempTable(string unquotedTableName) =>
+            !string.IsNullOrEmpty(unquotedTableName) && unquotedTableName[0] == '#';
+
+        /// <summary>
         ///
         /// </summary>
         /// <param name="reader"></param>
@@ -161,13 +204,17 @@ namespace RepoDb.DbHelpers
             IDbTransaction transaction = null)
         {
             // Variables
-            var commandText = GetCommandText();
             var setting = connection.GetDbSetting();
-            var param = new
-            {
-                Schema = DataEntityExtension.GetSchema(tableName, setting).AsUnquoted(setting),
-                TableName = DataEntityExtension.GetTableName(tableName, setting).AsUnquoted(setting)
-            };
+            var unquotedTableName = DataEntityExtension.GetTableName(tableName, setting).AsUnquoted(setting);
+            var isTempTable = IsTempTable(unquotedTableName);
+            var commandText = isTempTable ? GetTempTableCommandText() : GetCommandText();
+            object param = isTempTable
+                ? new { TableName = unquotedTableName }
+                : new
+                {
+                    Schema = DataEntityExtension.GetSchema(tableName, setting).AsUnquoted(setting),
+                    TableName = unquotedTableName
+                };
 
             // Iterate and extract
             using var reader = (DbDataReader)connection.ExecuteReader(commandText, param, transaction: transaction);
@@ -198,13 +245,17 @@ namespace RepoDb.DbHelpers
             CancellationToken cancellationToken = default)
         {
             // Variables
-            var commandText = GetCommandText();
             var setting = connection.GetDbSetting();
-            var param = new
-            {
-                Schema = DataEntityExtension.GetSchema(tableName, setting).AsUnquoted(setting),
-                TableName = DataEntityExtension.GetTableName(tableName, setting).AsUnquoted(setting)
-            };
+            var unquotedTableName = DataEntityExtension.GetTableName(tableName, setting).AsUnquoted(setting);
+            var isTempTable = IsTempTable(unquotedTableName);
+            var commandText = isTempTable ? GetTempTableCommandText() : GetCommandText();
+            object param = isTempTable
+                ? new { TableName = unquotedTableName }
+                : new
+                {
+                    Schema = DataEntityExtension.GetSchema(tableName, setting).AsUnquoted(setting),
+                    TableName = unquotedTableName
+                };
 
             // Iterate and extract
             using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, param,
