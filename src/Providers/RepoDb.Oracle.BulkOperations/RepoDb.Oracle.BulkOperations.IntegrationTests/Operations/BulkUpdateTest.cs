@@ -491,7 +491,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
         {
             using (var connection = new OracleConnection(Database.ConnectionString))
             {
-                Assert.Throws<NullReferenceException>(() => connection.BulkUpdate((IEnumerable<BulkOperationIdentityTable>)null));
+                Assert.Throws<ArgumentNullException>(() => connection.BulkUpdate((IEnumerable<BulkOperationIdentityTable>)null));
             }
         }
 
@@ -511,7 +511,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
         {
             using (var connection = new OracleConnection(Database.ConnectionString))
             {
-                Assert.Throws<NullReferenceException>(() => connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                Assert.Throws<ArgumentNullException>(() => connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     (DataTable)null));
             }
         }
@@ -2758,7 +2758,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
         {
             using (var connection = new OracleConnection(Database.ConnectionString))
             {
-                Assert.Throws<NullReferenceException>(() => connection.BulkUpdate((IEnumerable<BulkOperationNonIdentityTable>)null));
+                Assert.Throws<ArgumentNullException>(() => connection.BulkUpdate((IEnumerable<BulkOperationNonIdentityTable>)null));
             }
         }
 
@@ -2767,7 +2767,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
         {
             using (var connection = new OracleConnection(Database.ConnectionString))
             {
-                Assert.Throws<NullReferenceException>(() => connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
+                Assert.Throws<ArgumentNullException>(() => connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
                     (DataTable)null));
             }
         }

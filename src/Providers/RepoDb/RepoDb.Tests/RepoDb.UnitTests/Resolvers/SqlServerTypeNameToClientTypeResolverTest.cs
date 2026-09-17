@@ -469,7 +469,7 @@ namespace RepoDb.UnitTests.Resolvers
         public void ThrowOnExceptionTestSqlServerTypeNameToClientTypeResolverIfDbTypeNameIsNull()
         {
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 m_resolver.Resolve(null));
         }
     }

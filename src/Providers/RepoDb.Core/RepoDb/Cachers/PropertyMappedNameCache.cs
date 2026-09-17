@@ -64,6 +64,11 @@ namespace RepoDb
         public static string Get<TEntity>(Field field)
             where TEntity : class
         {
+            if (field == null)
+            {
+                throw new ArgumentNullException(nameof(field));
+            }
+
             return Get<TEntity>(TypeExtension.GetProperty<TEntity>(field.Name));
         }
 

@@ -249,7 +249,7 @@ namespace RepoDb.UnitTests.Mappers
         public void ThrowExceptionOnPropertyMapperViaColumnAttributeViaExpressionThatIsNull()
         {
             // Setup
-            Assert.Throws<NullReferenceException>(() => PropertyMapper.Add<PropertyMapperColumnAttributeClass>(expression: null, columnName: "PropertyText"));
+            Assert.Throws<ArgumentNullException>(() => PropertyMapper.Add<PropertyMapperColumnAttributeClass>(expression: null, columnName: "PropertyText"));
         }
 
         /*

@@ -110,7 +110,7 @@ namespace RepoDb.StatementBuilders
             // There should be fields
             if (fields?.Any() != true)
             {
-                throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
+                throw new ArgumentException($"The list of queryable fields must not be null for '{tableName}'.", nameof(fields));
             }
 
             // Initialize the builder
@@ -165,7 +165,7 @@ namespace RepoDb.StatementBuilders
             // There should be fields
             if (fields?.Any() != true)
             {
-                throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
+                throw new ArgumentException($"The list of queryable fields must not be null for '{tableName}'.", nameof(fields));
             }
 
             // Validate order by
@@ -237,7 +237,7 @@ namespace RepoDb.StatementBuilders
             // There should be fields
             if (fields?.Any() != true)
             {
-                throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
+                throw new ArgumentException($"The list of queryable fields must not be null for '{tableName}'.", nameof(fields));
             }
 
             // Validate order by

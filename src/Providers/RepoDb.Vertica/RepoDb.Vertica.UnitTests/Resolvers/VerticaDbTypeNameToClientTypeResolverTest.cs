@@ -316,7 +316,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var resolver = new VerticaDbTypeNameToClientTypeResolver();
 
             // Act
-            Assert.Throws<NullReferenceException>(() => resolver.Resolve(null));
+            Assert.Throws<ArgumentNullException>(() => resolver.Resolve(null));
         }
     }
 }

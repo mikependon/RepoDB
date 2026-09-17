@@ -165,7 +165,7 @@ namespace RepoDb.SapHana.UnitTests.Resolvers
             var resolver = new SapHanaDbTypeNameToClientTypeResolver();
 
             // Act
-            Assert.Throws<NullReferenceException>(() => resolver.Resolve(null));
+            Assert.Throws<ArgumentNullException>(() => resolver.Resolve(null));
         }
     }
 }

@@ -101,7 +101,7 @@ namespace RepoDb.IntegrationTests
                 {
                     if (toProperty == null)
                     {
-                        throw new NullReferenceException(property.Name);
+                        throw new ArgumentNullException(property.Name);
                     }
                 }
                 if (toProperty == null)

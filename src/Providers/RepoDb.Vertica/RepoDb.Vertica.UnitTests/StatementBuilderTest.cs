@@ -70,7 +70,7 @@ namespace RepoDb.Vertica.UnitTests
             var builder = StatementBuilderMapper.Get<VerticaConnection>();
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 builder.CreateBatchQuery("Table",
                     null,
                     0,
@@ -1094,7 +1094,7 @@ namespace RepoDb.Vertica.UnitTests
             var builder = StatementBuilderMapper.Get<VerticaConnection>();
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 builder.CreateSkipQuery("Table",
                     null,
                     0,

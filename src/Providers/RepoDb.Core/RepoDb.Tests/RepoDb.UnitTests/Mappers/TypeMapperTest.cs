@@ -292,7 +292,7 @@ namespace RepoDb.UnitTests.Mappers
         public void ThrowExceptionOnTypeMapperViaExpressionThatIsNull()
         {
             // Setup
-            Assert.Throws<NullReferenceException>(() => TypeMapper.Add<TypeMapperTestClass>(expression: null, dbType: null));
+            Assert.Throws<ArgumentNullException>(() => TypeMapper.Add<TypeMapperTestClass>(expression: null, dbType: null));
         }
 
         /*

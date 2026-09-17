@@ -26,7 +26,7 @@ namespace RepoDb.Resolvers
         {
             if (dbTypeName == null)
             {
-                throw new NullReferenceException("The DB Type name must not be null.");
+                throw new ArgumentNullException(nameof(dbTypeName), "The DB Type name must not be null.");
             }
             /*
             Verified directly against VerticaDataReader.GetSchemaTable() - Vertica has no distinct storage

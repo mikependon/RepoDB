@@ -145,7 +145,7 @@ namespace RepoDb.UnitTests.Trace
             {
                 if (log == null)
                 {
-                    throw new NullReferenceException(nameof(log));
+                    throw new ArgumentNullException(nameof(log));
                 }
                 if (string.IsNullOrEmpty(log.Key))
                 {
@@ -169,7 +169,7 @@ namespace RepoDb.UnitTests.Trace
             {
                 if (log == null)
                 {
-                    throw new NullReferenceException(nameof(log));
+                    throw new ArgumentNullException(nameof(log));
                 }
                 if (log.SessionId == Guid.Empty)
                 {

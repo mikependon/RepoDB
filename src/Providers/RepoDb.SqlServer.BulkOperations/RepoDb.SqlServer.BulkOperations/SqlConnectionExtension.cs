@@ -332,7 +332,7 @@ namespace RepoDb
         {
             if (reader == null)
             {
-                throw new NullReferenceException("The reader must not be null.");
+                throw new ArgumentNullException(nameof(reader), "The reader must not be null.");
             }
             if (reader.HasRows == false)
             {
@@ -348,7 +348,7 @@ namespace RepoDb
         {
             if (dataTable == null)
             {
-                throw new NullReferenceException("The data table must not be null.");
+                throw new ArgumentNullException(nameof(dataTable), "The data table must not be null.");
             }
             if (dataTable.Rows.Count <= 0)
             {
@@ -366,7 +366,7 @@ namespace RepoDb
         {
             if (entities == null)
             {
-                throw new NullReferenceException("The entities must not be null.");
+                throw new ArgumentNullException(nameof(entities), "The entities must not be null.");
             }
             if (entities.Any() == false)
             {

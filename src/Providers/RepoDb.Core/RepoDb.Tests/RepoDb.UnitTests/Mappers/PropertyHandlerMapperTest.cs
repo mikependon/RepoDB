@@ -342,7 +342,7 @@ namespace RepoDb.UnitTests.Mappers
         {
             // Setup
             var stringPropertyHandler = new StringPropertyHandler();
-            Assert.Throws<NullReferenceException>(() => PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>(expression: null, propertyHandler: stringPropertyHandler));
+            Assert.Throws<ArgumentNullException>(() => PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>(expression: null, propertyHandler: stringPropertyHandler));
         }
 
         /*

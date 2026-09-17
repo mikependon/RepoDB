@@ -409,7 +409,7 @@ namespace RepoDb.Vertica.BulkOperations.IntegrationTests.Operations
         {
             using (var connection = new VerticaConnection(Database.ConnectionString))
             {
-                Assert.Throws<NullReferenceException>(() => connection.BulkDelete((IEnumerable<BulkOperationIdentityTable>)null));
+                Assert.Throws<ArgumentNullException>(() => connection.BulkDelete((IEnumerable<BulkOperationIdentityTable>)null));
             }
         }
 
@@ -427,7 +427,7 @@ namespace RepoDb.Vertica.BulkOperations.IntegrationTests.Operations
         {
             using (var connection = new VerticaConnection(Database.ConnectionString))
             {
-                Assert.Throws<NullReferenceException>(() => connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                Assert.Throws<ArgumentNullException>(() => connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     (DataTable)null));
             }
         }
@@ -2541,7 +2541,7 @@ namespace RepoDb.Vertica.BulkOperations.IntegrationTests.Operations
         {
             using (var connection = new VerticaConnection(Database.ConnectionString))
             {
-                Assert.Throws<NullReferenceException>(() => connection.BulkDelete((IEnumerable<BulkOperationNonIdentityTable>)null));
+                Assert.Throws<ArgumentNullException>(() => connection.BulkDelete((IEnumerable<BulkOperationNonIdentityTable>)null));
             }
         }
 
@@ -2550,7 +2550,7 @@ namespace RepoDb.Vertica.BulkOperations.IntegrationTests.Operations
         {
             using (var connection = new VerticaConnection(Database.ConnectionString))
             {
-                Assert.Throws<NullReferenceException>(() => connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
+                Assert.Throws<ArgumentNullException>(() => connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
                     (DataTable)null));
             }
         }

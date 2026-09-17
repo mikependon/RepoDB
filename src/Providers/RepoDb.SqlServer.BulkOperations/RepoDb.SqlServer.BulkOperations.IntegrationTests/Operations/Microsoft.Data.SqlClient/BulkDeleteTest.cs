@@ -561,7 +561,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                Assert.Throws<NullReferenceException>(() => connection.BulkDelete((IEnumerable<BulkOperationIdentityTable>)null));
+                Assert.Throws<ArgumentNullException>(() => connection.BulkDelete((IEnumerable<BulkOperationIdentityTable>)null));
             }
         }
 
@@ -579,7 +579,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                Assert.Throws<NullReferenceException>(() => connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                Assert.Throws<ArgumentNullException>(() => connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     (DbDataReader)null));
             }
         }
@@ -589,7 +589,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                Assert.Throws<NullReferenceException>(() => connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                Assert.Throws<ArgumentNullException>(() => connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     (DataTable)null));
             }
         }

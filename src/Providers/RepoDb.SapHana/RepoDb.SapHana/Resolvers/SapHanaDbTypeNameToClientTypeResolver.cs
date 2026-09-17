@@ -25,7 +25,7 @@ namespace RepoDb.Resolvers
         {
             if (dbTypeName == null)
             {
-                throw new NullReferenceException("The DB Type name must not be null.");
+                throw new ArgumentNullException(nameof(dbTypeName), "The DB Type name must not be null.");
             }
             /*
             HANA SYS.TABLE_COLUMNS.DATA_TYPE_NAME values (non-exhaustive):

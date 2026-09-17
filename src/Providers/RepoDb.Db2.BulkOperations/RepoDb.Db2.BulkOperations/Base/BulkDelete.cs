@@ -530,7 +530,7 @@ namespace RepoDb
         {
             if (entities == null)
             {
-                throw new NullReferenceException("The entities could not be null.");
+                throw new ArgumentNullException(nameof(entities), "The entities could not be null.");
             }
 
             var entityType = typeof(TEntity) == typeof(object)

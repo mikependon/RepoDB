@@ -70,7 +70,7 @@ namespace RepoDb.ClickHouse.UnitTests
             var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 builder.CreateBatchQuery("Table",
                     null,
                     0,

@@ -548,6 +548,11 @@ string.Equals(expression.Method.Name, "EndsWith", StringComparison.Ordinal))
         internal static PropertyInfo GetProperty<T>(Expression<Func<T, object>> expression)
             where T : class
         {
+            if (expression == null)
+            {
+                throw new ArgumentNullException(nameof(expression));
+            }
+
             return expression.Body switch
             {
                 UnaryExpression unaryExpression => GetProperty<T>(unaryExpression),

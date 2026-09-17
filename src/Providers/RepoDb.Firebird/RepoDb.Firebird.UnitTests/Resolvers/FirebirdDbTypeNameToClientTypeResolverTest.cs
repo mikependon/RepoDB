@@ -329,7 +329,7 @@ namespace RepoDb.Firebird.UnitTests.Resolvers
             var resolver = new FirebirdDbTypeNameToClientTypeResolver();
 
             // Act
-            Assert.Throws<NullReferenceException>(() => resolver.Resolve(null));
+            Assert.Throws<ArgumentNullException>(() => resolver.Resolve(null));
         }
     }
 }

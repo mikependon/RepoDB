@@ -448,7 +448,7 @@ namespace RepoDb.EnterpriseDb.BulkOperations.IntegrationTests.Operations
         {
             using (var connection = new EDBConnection(Database.ConnectionString))
             {
-                Assert.Throws<NullReferenceException>(() => connection.BulkInsert((IEnumerable<BulkOperationIdentityTable>)null));
+                Assert.Throws<ArgumentNullException>(() => connection.BulkInsert((IEnumerable<BulkOperationIdentityTable>)null));
             }
         }
 
@@ -2814,7 +2814,7 @@ namespace RepoDb.EnterpriseDb.BulkOperations.IntegrationTests.Operations
         {
             using (var connection = new EDBConnection(Database.ConnectionString))
             {
-                Assert.Throws<NullReferenceException>(() => connection.BulkInsert((IEnumerable<BulkOperationNonIdentityTable>)null));
+                Assert.Throws<ArgumentNullException>(() => connection.BulkInsert((IEnumerable<BulkOperationNonIdentityTable>)null));
             }
         }
 

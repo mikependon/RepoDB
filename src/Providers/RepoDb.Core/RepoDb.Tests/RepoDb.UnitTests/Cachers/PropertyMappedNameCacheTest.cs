@@ -69,7 +69,7 @@ namespace RepoDb.UnitTests.Cachers
         public void ThrowExcpetionOnPropertyMappingCacheIfThePropertyIsNull()
         {
             // Setup
-            Assert.Throws<NullReferenceException>(() => PropertyMappedNameCache.Get<PropertyMappedNameCacheTestClass>((Field)null));
+            Assert.Throws<ArgumentNullException>(() => PropertyMappedNameCache.Get<PropertyMappedNameCacheTestClass>((Field)null));
         }
 
         #endregion

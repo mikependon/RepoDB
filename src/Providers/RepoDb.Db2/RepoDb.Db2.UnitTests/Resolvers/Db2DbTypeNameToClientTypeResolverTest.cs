@@ -224,7 +224,7 @@ namespace RepoDb.Db2.UnitTests.Resolvers
         [TestMethod]
         public void ThrowExceptionOnDb2DbTypeNameToClientTypeResolverIfTheDbTypeIsNull()
         {
-            Assert.Throws<NullReferenceException>(() => m_resolver.Resolve(null));
+            Assert.Throws<ArgumentNullException>(() => m_resolver.Resolve(null));
         }
     }
 }

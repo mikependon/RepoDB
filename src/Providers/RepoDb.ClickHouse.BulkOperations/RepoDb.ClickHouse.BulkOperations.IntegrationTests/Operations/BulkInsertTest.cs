@@ -520,7 +520,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.SetupAsyncInsert(connection);
 
-                Assert.Throws<NullReferenceException>(() => connection.BulkInsert((IEnumerable<BulkOperationIdentityTable>)null));
+                Assert.Throws<ArgumentNullException>(() => connection.BulkInsert((IEnumerable<BulkOperationIdentityTable>)null));
             }
         }
 
@@ -541,7 +541,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.SetupAsyncInsert(connection);
 
-                Assert.Throws<NullReferenceException>(() => connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                Assert.Throws<ArgumentNullException>(() => connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     (DataTable)null));
             }
         }
@@ -2709,7 +2709,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.SetupAsyncInsert(connection);
 
-                Assert.Throws<NullReferenceException>(() => connection.BulkInsert((IEnumerable<BulkOperationNonIdentityTable>)null));
+                Assert.Throws<ArgumentNullException>(() => connection.BulkInsert((IEnumerable<BulkOperationNonIdentityTable>)null));
             }
         }
 
@@ -2721,7 +2721,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.SetupAsyncInsert(connection);
 
-                Assert.Throws<NullReferenceException>(() => connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
+                Assert.Throws<ArgumentNullException>(() => connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
                     (DataTable)null));
             }
         }

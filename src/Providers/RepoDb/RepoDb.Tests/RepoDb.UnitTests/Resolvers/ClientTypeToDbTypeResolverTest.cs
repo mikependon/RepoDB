@@ -249,7 +249,7 @@ namespace RepoDb.UnitTests.Resolvers
         public void ThrowOnExceptionClientTypeToDbTypeResolverIfTypeIsNull()
         {
             // Act
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 m_resolver.Resolve(null));
         }
     }
