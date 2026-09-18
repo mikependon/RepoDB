@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using RepoDb.Exceptions;
 using RepoDb.Interfaces;
 using System.Threading.Tasks;
 using RepoDb.Enumerations;
@@ -549,6 +550,454 @@ namespace RepoDb
             {
                 // Call the method
                 return await dbConnection.ExecuteQueryAsync<TEntity>(commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: cacheItemExpiration ?? CacheItemExpiration,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    cache: Cache,
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(dbConnection, transaction);
+            }
+        }
+
+        #endregion
+
+        #region ExecuteQueryFirst(Dynamics)
+
+        /// <summary>
+        /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// converts the first row of the result back to a dynamic object.
+        /// </summary>
+        /// <param name="commandText">The command text to be used.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>
+        /// A dynamic object containing the converted result of the first row returned by the underlying <see cref="IDataReader"/> object.
+        /// </returns>
+        /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
+        public dynamic ExecuteQueryFirst(string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            string cacheKey = null,
+            int? cacheItemExpiration = null,
+            IDbTransaction transaction = null)
+        {
+            // Create a connection
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return dbConnection.ExecuteQueryFirst(commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: cacheItemExpiration ?? CacheItemExpiration,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    cache: Cache);
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(dbConnection, transaction);
+            }
+        }
+
+        #endregion
+
+        #region ExecuteQueryFirstAsync(Dynamics)
+
+        /// <summary>
+        /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// converts the first row of the result back to a dynamic object.
+        /// </summary>
+        /// <param name="commandText">The command text to be used.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>
+        /// A dynamic object containing the converted result of the first row returned by the underlying <see cref="IDataReader"/> object.
+        /// </returns>
+        /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
+        public async Task<dynamic> ExecuteQueryFirstAsync(string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            string cacheKey = null,
+            int? cacheItemExpiration = null,
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            // Create a connection
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await dbConnection.ExecuteQueryFirstAsync(commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: cacheItemExpiration ?? CacheItemExpiration,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    cache: Cache,
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(dbConnection, transaction);
+            }
+        }
+
+        #endregion
+
+        #region ExecuteQueryFirst
+
+        /// <summary>
+        /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// converts the first row of the result back to an instance of the target data entity object.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="commandText">The command text to be used.</param>
+        /// <param name="param">
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
+        /// </param>
+        /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>
+        /// An instance of the target data entity object containing the converted result of the first row returned by the underlying <see cref="IDataReader"/> object.
+        /// </returns>
+        /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
+        public TEntity ExecuteQueryFirst<TEntity>(string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            string cacheKey = null,
+            int? cacheItemExpiration = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return dbConnection.ExecuteQueryFirst<TEntity>(commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: cacheItemExpiration ?? CacheItemExpiration,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    cache: Cache);
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(dbConnection, transaction);
+            }
+        }
+
+        #endregion
+
+        #region ExecuteQueryFirstAsync
+
+        /// <summary>
+        /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// converts the first row of the result back to an instance of the target data entity object.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="commandText">The command text to be used.</param>
+        /// <param name="param">
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
+        /// </param>
+        /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>
+        /// An instance of the target data entity object containing the converted result of the first row returned by the underlying <see cref="IDataReader"/> object.
+        /// </returns>
+        /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
+        public async Task<TEntity> ExecuteQueryFirstAsync<TEntity>(string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            string cacheKey = null,
+            int? cacheItemExpiration = null,
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+            where TEntity : class
+        {
+            // Create a connection
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await dbConnection.ExecuteQueryFirstAsync<TEntity>(commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: cacheItemExpiration ?? CacheItemExpiration,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    cache: Cache,
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(dbConnection, transaction);
+            }
+        }
+
+        #endregion
+
+        #region ExecuteQuerySingle(Dynamics)
+
+        /// <summary>
+        /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// converts the single row of the result back to a dynamic object.
+        /// </summary>
+        /// <param name="commandText">The command text to be used.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>
+        /// A dynamic object containing the converted result of the single row returned by the underlying <see cref="IDataReader"/> object.
+        /// </returns>
+        /// <remarks>
+        /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
+        /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
+        /// </remarks>
+        public dynamic ExecuteQuerySingle(string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            string cacheKey = null,
+            int? cacheItemExpiration = null,
+            IDbTransaction transaction = null)
+        {
+            // Create a connection
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return dbConnection.ExecuteQuerySingle(commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: cacheItemExpiration ?? CacheItemExpiration,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    cache: Cache);
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(dbConnection, transaction);
+            }
+        }
+
+        #endregion
+
+        #region ExecuteQuerySingleAsync(Dynamics)
+
+        /// <summary>
+        /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// converts the single row of the result back to a dynamic object.
+        /// </summary>
+        /// <param name="commandText">The command text to be used.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>
+        /// A dynamic object containing the converted result of the single row returned by the underlying <see cref="IDataReader"/> object.
+        /// </returns>
+        /// <remarks>
+        /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
+        /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
+        /// </remarks>
+        public async Task<dynamic> ExecuteQuerySingleAsync(string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            string cacheKey = null,
+            int? cacheItemExpiration = null,
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            // Create a connection
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await dbConnection.ExecuteQuerySingleAsync(commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: cacheItemExpiration ?? CacheItemExpiration,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    cache: Cache,
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(dbConnection, transaction);
+            }
+        }
+
+        #endregion
+
+        #region ExecuteQuerySingle
+
+        /// <summary>
+        /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// converts the single row of the result back to an instance of the target data entity object.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="commandText">The command text to be used.</param>
+        /// <param name="param">
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
+        /// </param>
+        /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>
+        /// An instance of the target data entity object containing the converted result of the single row returned by the underlying <see cref="IDataReader"/> object.
+        /// </returns>
+        /// <remarks>
+        /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
+        /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
+        /// </remarks>
+        public TEntity ExecuteQuerySingle<TEntity>(string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            string cacheKey = null,
+            int? cacheItemExpiration = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return dbConnection.ExecuteQuerySingle<TEntity>(commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: cacheItemExpiration ?? CacheItemExpiration,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    cache: Cache);
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(dbConnection, transaction);
+            }
+        }
+
+        #endregion
+
+        #region ExecuteQuerySingleAsync
+
+        /// <summary>
+        /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// converts the single row of the result back to an instance of the target data entity object.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="commandText">The command text to be used.</param>
+        /// <param name="param">
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
+        /// </param>
+        /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>
+        /// An instance of the target data entity object containing the converted result of the single row returned by the underlying <see cref="IDataReader"/> object.
+        /// </returns>
+        /// <remarks>
+        /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
+        /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
+        /// </remarks>
+        public async Task<TEntity> ExecuteQuerySingleAsync<TEntity>(string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            string cacheKey = null,
+            int? cacheItemExpiration = null,
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+            where TEntity : class
+        {
+            // Create a connection
+            var dbConnection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await dbConnection.ExecuteQuerySingleAsync<TEntity>(commandText: commandText,
                     param: param,
                     commandType: commandType,
                     cacheKey: cacheKey,
