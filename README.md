@@ -75,6 +75,7 @@ While raw SQL execution methods work with **any** ADO.NET-compatible provider:
 - [ExecuteQuery](http://repodb.net/operation/executequery)
 - [ExecuteQueryFirst](http://repodb.net/operation/executequeryfirst)
 - [ExecuteQueryMultiple](http://repodb.net/operation/executequerymultiple)
+- [ExecuteQuerySingle](http://repodb.net/operation/executequerysingle)
 - [ExecuteReader](http://repodb.net/operation/executereader)
 - [ExecuteScalar](http://repodb.net/operation/executescalar)
 
