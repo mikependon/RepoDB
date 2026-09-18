@@ -53,7 +53,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -83,7 +83,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -113,7 +113,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -143,7 +143,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -170,7 +170,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -197,7 +197,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -224,7 +224,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -255,7 +255,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -285,7 +285,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -315,7 +315,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -345,7 +345,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -372,7 +372,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -399,7 +399,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -426,7 +426,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -457,7 +457,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = connection.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -482,7 +482,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = connection.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -507,7 +507,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = connection.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -532,7 +532,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = connection.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -554,7 +554,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = connection.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -576,7 +576,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = connection.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -598,7 +598,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = connection.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -624,7 +624,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -649,7 +649,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -674,7 +674,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -699,7 +699,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -721,7 +721,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -743,7 +743,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -765,7 +765,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -791,7 +791,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 using (var reader = connection.ExecuteReader("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -825,7 +825,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 using (var reader = connection.ExecuteReader("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -859,7 +859,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 using (var reader = connection.ExecuteReader("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -893,7 +893,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 using (var reader = connection.ExecuteReader("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -924,7 +924,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 using (var reader = connection.ExecuteReader("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -955,7 +955,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 using (var reader = connection.ExecuteReader("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -986,7 +986,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 using (var reader = connection.ExecuteReader("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -1021,7 +1021,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -1055,7 +1055,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -1089,7 +1089,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -1123,7 +1123,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -1154,7 +1154,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -1185,7 +1185,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -1216,7 +1216,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -1251,7 +1251,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = connection.ExecuteScalar<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
@@ -1276,7 +1276,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = connection.ExecuteScalar<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
@@ -1301,7 +1301,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = connection.ExecuteScalar<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
@@ -1326,7 +1326,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = connection.ExecuteScalar<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
@@ -1348,7 +1348,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = connection.ExecuteScalar<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
@@ -1370,7 +1370,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = connection.ExecuteScalar<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
@@ -1392,7 +1392,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = connection.ExecuteScalar<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
@@ -1418,7 +1418,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await connection.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
@@ -1443,7 +1443,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await connection.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
@@ -1468,7 +1468,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await connection.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
@@ -1493,7 +1493,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await connection.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
@@ -1515,7 +1515,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await connection.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
@@ -1537,7 +1537,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await connection.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
@@ -1559,7 +1559,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await connection.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
@@ -1589,7 +1589,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -1619,7 +1619,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -1649,7 +1649,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -1679,7 +1679,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -1706,7 +1706,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -1733,7 +1733,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -1760,7 +1760,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -1791,7 +1791,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -1821,7 +1821,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -1851,7 +1851,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -1881,7 +1881,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -1908,7 +1908,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -1935,7 +1935,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -1962,7 +1962,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -1993,7 +1993,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = repository.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -2018,7 +2018,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = repository.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -2043,7 +2043,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = repository.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -2068,7 +2068,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = repository.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -2090,7 +2090,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = repository.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -2112,7 +2112,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = repository.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -2134,7 +2134,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = repository.ExecuteNonQuery("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -2160,7 +2160,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await repository.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -2185,7 +2185,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await repository.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -2210,7 +2210,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await repository.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -2235,7 +2235,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await repository.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -2257,7 +2257,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await repository.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -2279,7 +2279,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await repository.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -2301,7 +2301,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await repository.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
@@ -2327,7 +2327,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = repository.ExecuteScalar<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
@@ -2352,7 +2352,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = repository.ExecuteScalar<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
@@ -2377,7 +2377,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = repository.ExecuteScalar<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
@@ -2402,7 +2402,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = repository.ExecuteScalar<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
@@ -2424,7 +2424,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = repository.ExecuteScalar<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
@@ -2446,7 +2446,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = repository.ExecuteScalar<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
@@ -2468,7 +2468,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = repository.ExecuteScalar<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
@@ -2494,7 +2494,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await repository.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
@@ -2519,7 +2519,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await repository.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
@@ -2544,7 +2544,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await repository.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
@@ -2569,7 +2569,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await repository.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
@@ -2591,7 +2591,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await repository.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
@@ -2613,7 +2613,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await repository.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",
@@ -2635,7 +2635,7 @@ namespace RepoDb.IntegrationTests
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
-                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item), System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var result = await repository.ExecuteScalarAsync<int>("DELETE FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values)); SELECT @@ROWCOUNT;",

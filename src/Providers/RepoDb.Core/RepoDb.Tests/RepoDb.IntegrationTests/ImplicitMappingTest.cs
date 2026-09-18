@@ -110,8 +110,8 @@ namespace RepoDb.IntegrationTests
                 SessionIdMapped = Guid.NewGuid(),
                 ColumnBigIntMapped = long.MaxValue,
                 ColumnBitMapped = true,
-                ColumnDateTime2Mapped = DateTime.Parse("1970-01-01 1:25:00.44569"),
-                ColumnDateTimeMapped = DateTime.Parse("1970-01-01 10:30:30"),
+                ColumnDateTime2Mapped = DateTime.Parse("1970-01-01 1:25:00.44569", System.Globalization.CultureInfo.InvariantCulture),
+                ColumnDateTimeMapped = DateTime.Parse("1970-01-01 10:30:30", System.Globalization.CultureInfo.InvariantCulture),
                 ColumnIntMapped = int.MaxValue,
                 ColumnNVarCharMapped = Helper.GetAssemblyDescription()
             };
@@ -127,8 +127,8 @@ namespace RepoDb.IntegrationTests
                     SessionIdMapped = Guid.NewGuid(),
                     ColumnBigIntMapped = long.MaxValue,
                     ColumnBitMapped = true,
-                    ColumnDateTime2Mapped = DateTime.Parse("1970-01-01 1:25:00.44569").AddMonths(random.Next(100)),
-                    ColumnDateTimeMapped = DateTime.Parse("1970-01-01 10:30:30").AddMonths(random.Next(100)),
+                    ColumnDateTime2Mapped = DateTime.Parse("1970-01-01 1:25:00.44569", System.Globalization.CultureInfo.InvariantCulture).AddMonths(random.Next(100)),
+                    ColumnDateTimeMapped = DateTime.Parse("1970-01-01 10:30:30", System.Globalization.CultureInfo.InvariantCulture).AddMonths(random.Next(100)),
                     ColumnIntMapped = int.MaxValue,
                     ColumnNVarCharMapped = Helper.GetAssemblyDescription()
                 };
@@ -142,8 +142,8 @@ namespace RepoDb.IntegrationTests
                 RowGuidMapped = Guid.NewGuid(),
                 ColumnFloatMapped = double.MaxValue,
                 ColumnBitMapped = true,
-                ColumnDateTime2Mapped = DateTime.Parse("1970-01-01 1:25:00.44569"),
-                ColumnDateTimeMapped = DateTime.Parse("1970-01-01 10:30:30"),
+                ColumnDateTime2Mapped = DateTime.Parse("1970-01-01 1:25:00.44569", System.Globalization.CultureInfo.InvariantCulture),
+                ColumnDateTimeMapped = DateTime.Parse("1970-01-01 10:30:30", System.Globalization.CultureInfo.InvariantCulture),
                 ColumnIntMapped = int.MaxValue,
                 ColumnNVarCharMapped = Helper.GetAssemblyDescription()
             };
@@ -159,8 +159,8 @@ namespace RepoDb.IntegrationTests
                     RowGuidMapped = Guid.NewGuid(),
                     ColumnFloatMapped = double.MaxValue,
                     ColumnBitMapped = true,
-                    ColumnDateTime2Mapped = DateTime.Parse("1970-01-01 1:25:00.44569"),
-                    ColumnDateTimeMapped = DateTime.Parse("1970-01-01 10:30:30"),
+                    ColumnDateTime2Mapped = DateTime.Parse("1970-01-01 1:25:00.44569", System.Globalization.CultureInfo.InvariantCulture),
+                    ColumnDateTimeMapped = DateTime.Parse("1970-01-01 10:30:30", System.Globalization.CultureInfo.InvariantCulture),
                     ColumnIntMapped = int.MaxValue,
                     ColumnNVarCharMapped = Helper.GetAssemblyDescription()
                 };

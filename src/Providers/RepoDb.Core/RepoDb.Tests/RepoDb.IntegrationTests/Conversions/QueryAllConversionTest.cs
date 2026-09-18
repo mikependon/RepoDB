@@ -56,7 +56,7 @@ namespace RepoDb.IntegrationTests.Conversions
                 foreach (var table in tables)
                 {
                     var match = result.First(r => r.Id == table.Id);
-                    Assert.AreEqual(table.ColumnInt.ToString(), match.ColumnInt, StringComparer.Ordinal);
+                    Assert.AreEqual(table.ColumnInt.GetValueOrDefault().ToString(System.Globalization.CultureInfo.InvariantCulture), match.ColumnInt, StringComparer.Ordinal);
                 }
 
                 // Reset
@@ -105,7 +105,7 @@ namespace RepoDb.IntegrationTests.Conversions
                 foreach (var table in tables)
                 {
                     var match = result.First(r => r.Id == table.Id);
-                    Assert.AreEqual(table.ColumnInt.ToString(), match.ColumnInt, StringComparer.Ordinal);
+                    Assert.AreEqual(table.ColumnInt.GetValueOrDefault().ToString(System.Globalization.CultureInfo.InvariantCulture), match.ColumnInt, StringComparer.Ordinal);
                 }
 
                 // Reset

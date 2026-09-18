@@ -70,7 +70,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable];",
@@ -98,7 +98,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = connection.ExecuteQuery("SELECT * FROM [sc].[IdentityTable];",
@@ -126,7 +126,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = connection.ExecuteQuery<ExpandoObject>("SELECT * FROM [sc].[IdentityTable];",
@@ -154,7 +154,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = connection.ExecuteQuery<IDictionary<string, object>>("SELECT * FROM [sc].[IdentityTable];",
@@ -186,7 +186,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable];",
@@ -214,7 +214,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = await connection.ExecuteQueryAsync("SELECT * FROM [sc].[IdentityTable];",
@@ -242,7 +242,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<ExpandoObject>("SELECT * FROM [sc].[IdentityTable];",
@@ -270,7 +270,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<IDictionary<string, object>>("SELECT * FROM [sc].[IdentityTable];",
@@ -358,7 +358,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = connection.Query<IdentityTable>(what: (object)null,
@@ -394,7 +394,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = connection.Query<IdentityTable>(where: (QueryGroup)null,
@@ -429,7 +429,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = connection.Query<IdentityTable>(where: (IEnumerable<QueryField>)null,
@@ -463,7 +463,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = connection.Query<IdentityTable>(where: (Expression<Func<IdentityTable, bool>>)null,
@@ -497,7 +497,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = connection.Query<IdentityTable>(where: (QueryGroup)null,
@@ -535,7 +535,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
@@ -572,7 +572,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
@@ -608,7 +608,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
@@ -643,7 +643,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(await connection.InsertAsync(entity).ConfigureAwait(false));
+                entity.Id = Convert.ToInt32(await connection.InsertAsync(entity).ConfigureAwait(false), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = await connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
@@ -678,7 +678,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
@@ -717,7 +717,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = connection.Query<ExpandoObject>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -754,7 +754,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = connection.Query<ExpandoObject>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -790,7 +790,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = connection.Query<ExpandoObject>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -825,7 +825,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = connection.Query<ExpandoObject>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -864,7 +864,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = connection.Query<IDictionary<string, object>>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -901,7 +901,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = connection.Query<IDictionary<string, object>>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -937,7 +937,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = connection.Query<IDictionary<string, object>>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -972,7 +972,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = connection.Query<IDictionary<string, object>>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -1015,7 +1015,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = await connection.QueryAsync<IdentityTable>(what: (object)null,
@@ -1051,7 +1051,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = await connection.QueryAsync<IdentityTable>(where: (QueryField)null,
@@ -1085,7 +1085,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = await connection.QueryAsync<IdentityTable>(where: (IEnumerable<QueryField>)null,
@@ -1119,7 +1119,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = await connection.QueryAsync<IdentityTable>(where: (Expression<Func<IdentityTable, bool>>)null,
@@ -1153,7 +1153,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = await connection.QueryAsync<IdentityTable>(where: (QueryGroup)null,
@@ -1191,7 +1191,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = await connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
@@ -1228,7 +1228,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = await connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
@@ -1264,7 +1264,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
@@ -1299,7 +1299,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(await connection.InsertAsync(entity).ConfigureAwait(false));
+                entity.Id = Convert.ToInt32(await connection.InsertAsync(entity).ConfigureAwait(false), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = await connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
@@ -1334,7 +1334,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = await connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
@@ -1373,7 +1373,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = await connection.QueryAsync<ExpandoObject>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -1410,7 +1410,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = await connection.QueryAsync<ExpandoObject>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -1446,7 +1446,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = await connection.QueryAsync<ExpandoObject>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -1481,7 +1481,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = await connection.QueryAsync<ExpandoObject>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -1520,7 +1520,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = await connection.QueryAsync<IDictionary<string, object>>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -1557,7 +1557,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = await connection.QueryAsync<IDictionary<string, object>>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -1593,7 +1593,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = await connection.QueryAsync<IDictionary<string, object>>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -1628,7 +1628,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = await connection.QueryAsync<IDictionary<string, object>>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -1669,7 +1669,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>(orderBy: null,
@@ -1702,7 +1702,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = connection.QueryAll(ClassMappedNameCache.Get<IdentityTable>(),
@@ -1736,7 +1736,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = connection.QueryAll<ExpandoObject>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -1770,7 +1770,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = connection.QueryAll<IDictionary<string, object>>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -1808,7 +1808,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = await connection.QueryAllAsync<IdentityTable>(orderBy: null,
@@ -1841,7 +1841,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = await connection.QueryAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
@@ -1875,7 +1875,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = await connection.QueryAllAsync<ExpandoObject>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -1909,7 +1909,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
 
                 // Act
                 var result = await connection.QueryAllAsync<IDictionary<string, object>>(ClassMappedNameCache.Get<IdentityTable>(),

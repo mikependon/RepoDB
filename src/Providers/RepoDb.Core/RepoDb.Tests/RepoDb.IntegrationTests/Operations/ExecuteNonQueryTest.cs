@@ -333,7 +333,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(1000, userId.GetValue<int>());
                 Assert.AreEqual("ServerName", serverName.GetValue<string>(), StringComparer.Ordinal);
-                Assert.AreEqual(DateTime.Parse("1970-01-01 23:59:59.999"), dateTimeUtc.GetValue<DateTime>());
+                Assert.AreEqual(DateTime.Parse("1970-01-01 23:59:59.999", System.Globalization.CultureInfo.InvariantCulture), dateTimeUtc.GetValue<DateTime>());
             }
         }
 
@@ -361,7 +361,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(1000, userId.GetValue<int>());
                 Assert.AreEqual("ServerName", serverName.GetValue<string>(), StringComparer.Ordinal);
-                Assert.AreEqual(DateTime.Parse("1970-01-01 23:59:59.999"), dateTimeUtc.GetValue<DateTime>());
+                Assert.AreEqual(DateTime.Parse("1970-01-01 23:59:59.999", System.Globalization.CultureInfo.InvariantCulture), dateTimeUtc.GetValue<DateTime>());
             }
         }
 

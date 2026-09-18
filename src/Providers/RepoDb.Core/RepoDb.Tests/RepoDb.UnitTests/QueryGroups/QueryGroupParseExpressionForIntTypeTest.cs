@@ -110,7 +110,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionWithIntMethodClass()
         {
             // Act
-            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == Convert.ToInt32("1000")).GetString(m_dbSetting);
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == Convert.ToInt32("1000", System.Globalization.CultureInfo.InvariantCulture)).GetString(m_dbSetting);
             var expected = "([PropertyInt] = @PropertyInt)";
 
             // Assert

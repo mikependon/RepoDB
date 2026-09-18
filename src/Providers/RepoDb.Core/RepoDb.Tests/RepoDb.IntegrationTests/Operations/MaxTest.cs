@@ -52,7 +52,7 @@ namespace RepoDb.IntegrationTests.Operations
                     (object)null);
 
                 // Assert
-                Assert.AreEqual(tables.Max(t => t.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Max(t => t.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -72,7 +72,7 @@ namespace RepoDb.IntegrationTests.Operations
                     item => item.ColumnInt > 5 && item.ColumnInt <= 8);
 
                 // Assert
-                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Max(t => t.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Max(t => t.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -92,7 +92,7 @@ namespace RepoDb.IntegrationTests.Operations
                     new { ColumnInt = 1 });
 
                 // Assert
-                Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Max(t => t.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Max(t => t.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -113,7 +113,7 @@ namespace RepoDb.IntegrationTests.Operations
                     field);
 
                 // Assert
-                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Max(t => t.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Max(t => t.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -138,7 +138,7 @@ namespace RepoDb.IntegrationTests.Operations
                     fields);
 
                 // Assert
-                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Max(t => t.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Max(t => t.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -164,7 +164,7 @@ namespace RepoDb.IntegrationTests.Operations
                     queryGroup);
 
                 // Assert
-                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Max(t => t.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Max(t => t.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -320,7 +320,7 @@ namespace RepoDb.IntegrationTests.Operations
                     (object)null).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Max(t => t.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Max(t => t.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -340,7 +340,7 @@ namespace RepoDb.IntegrationTests.Operations
                     item => item.ColumnInt > 5 && item.ColumnInt <= 8).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Max(t => t.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Max(t => t.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -360,7 +360,7 @@ namespace RepoDb.IntegrationTests.Operations
                     new { ColumnInt = 1 }).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Max(t => t.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Max(t => t.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -381,7 +381,7 @@ namespace RepoDb.IntegrationTests.Operations
                     field).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Max(t => t.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Max(t => t.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -406,7 +406,7 @@ namespace RepoDb.IntegrationTests.Operations
                     fields).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Max(t => t.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Max(t => t.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -432,7 +432,7 @@ namespace RepoDb.IntegrationTests.Operations
                     queryGroup).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Max(t => t.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Max(t => t.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -589,7 +589,7 @@ namespace RepoDb.IntegrationTests.Operations
                     (object)null);
 
                 // Assert
-                Assert.AreEqual(tables.Max(t => t.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Max(t => t.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -610,7 +610,7 @@ namespace RepoDb.IntegrationTests.Operations
                     new { ColumnInt = 1 });
 
                 // Assert
-                Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Max(t => t.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Max(t => t.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -632,7 +632,7 @@ namespace RepoDb.IntegrationTests.Operations
                     field);
 
                 // Assert
-                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Max(t => t.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Max(t => t.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -658,7 +658,7 @@ namespace RepoDb.IntegrationTests.Operations
                     fields);
 
                 // Assert
-                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Max(t => t.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Max(t => t.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -685,7 +685,7 @@ namespace RepoDb.IntegrationTests.Operations
                     queryGroup);
 
                 // Assert
-                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Max(t => t.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Max(t => t.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -827,7 +827,7 @@ namespace RepoDb.IntegrationTests.Operations
                     (object)null).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Max(t => t.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Max(t => t.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -848,7 +848,7 @@ namespace RepoDb.IntegrationTests.Operations
                     new { ColumnInt = 1 }).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Max(t => t.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Max(t => t.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -870,7 +870,7 @@ namespace RepoDb.IntegrationTests.Operations
                     field).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Max(t => t.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Max(t => t.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -896,7 +896,7 @@ namespace RepoDb.IntegrationTests.Operations
                     fields).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Max(t => t.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Max(t => t.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -923,7 +923,7 @@ namespace RepoDb.IntegrationTests.Operations
                     queryGroup).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Max(t => t.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Max(t => t.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 

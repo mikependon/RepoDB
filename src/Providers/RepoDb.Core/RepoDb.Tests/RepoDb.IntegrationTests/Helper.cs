@@ -227,7 +227,7 @@ namespace RepoDb.IntegrationTests
                         {
                             value2 = ((DateTime)value2).TimeOfDay;
                         }
-                        Assert.AreEqual(Convert.ChangeType(value1, propertyType), Convert.ChangeType(value2, propertyType),
+                        Assert.AreEqual(Convert.ChangeType(value1, propertyType, System.Globalization.CultureInfo.InvariantCulture), Convert.ChangeType(value2, propertyType, System.Globalization.CultureInfo.InvariantCulture),
                             $"Assert failed for '{property.Name}'. The values are '{value1}' and '{value2}'.");
                     }
                 }

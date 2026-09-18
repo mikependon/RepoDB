@@ -518,7 +518,7 @@ namespace RepoDb.IntegrationTests
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var values = new long[0];
+            var values = Array.Empty<long>();
             var where = new QueryGroup(new QueryField("Id", Operation.NotBetween, values));
             var fields = FieldCache.Get<IdentityTable>();
 
@@ -544,7 +544,7 @@ namespace RepoDb.IntegrationTests
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var values = new long[0];
+            var values = Array.Empty<long>();
             var where = new QueryGroup(new QueryField("Id", Operation.NotBetween, values));
             var fields = FieldCache.Get<IdentityTable>();
 

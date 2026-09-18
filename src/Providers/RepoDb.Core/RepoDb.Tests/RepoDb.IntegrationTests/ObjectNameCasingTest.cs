@@ -56,8 +56,8 @@ namespace RepoDb.IntegrationTests
                 SESSIONID = Guid.NewGuid(),
                 COLUMNBIGINT = long.MaxValue,
                 COLUMNBIT = true,
-                COLUMNDATETIME2 = DateTime.Parse("1970-01-01 1:25:00.44569"),
-                COLUMNDATETIME = DateTime.Parse("1970-01-01 10:30:30"),
+                COLUMNDATETIME2 = DateTime.Parse("1970-01-01 1:25:00.44569", System.Globalization.CultureInfo.InvariantCulture),
+                COLUMNDATETIME = DateTime.Parse("1970-01-01 10:30:30", System.Globalization.CultureInfo.InvariantCulture),
                 COLUMNINT = int.MaxValue,
                 COLUMNNVARCHAR = Helper.GetAssemblyDescription()
             };
@@ -90,8 +90,8 @@ namespace RepoDb.IntegrationTests
                 SESSIONID = Guid.NewGuid(),
                 COLUMNBIGINT = long.MaxValue,
                 COLUMNBIT = true,
-                COLUMNDATETIME2 = DateTime.Parse("1970-01-01 1:25:00.44569"),
-                COLUMNDATETIME = DateTime.Parse("1970-01-01 10:30:30"),
+                COLUMNDATETIME2 = DateTime.Parse("1970-01-01 1:25:00.44569", System.Globalization.CultureInfo.InvariantCulture),
+                COLUMNDATETIME = DateTime.Parse("1970-01-01 10:30:30", System.Globalization.CultureInfo.InvariantCulture),
                 COLUMNINT = int.MaxValue,
                 COLUMNNVARCHAR = Helper.GetAssemblyDescription()
             };
@@ -124,8 +124,8 @@ namespace RepoDb.IntegrationTests
                 SESSIONID = Guid.NewGuid(),
                 COLUMNBIGINT = long.MaxValue,
                 COLUMNBIT = true,
-                COLUMNDATETIME2 = DateTime.Parse("1970-01-01 1:25:00.44569"),
-                COLUMNDATETIME = DateTime.Parse("1970-01-01 10:30:30"),
+                COLUMNDATETIME2 = DateTime.Parse("1970-01-01 1:25:00.44569", System.Globalization.CultureInfo.InvariantCulture),
+                COLUMNDATETIME = DateTime.Parse("1970-01-01 10:30:30", System.Globalization.CultureInfo.InvariantCulture),
                 COLUMNINT = int.MaxValue,
                 COLUMNNVARCHAR = Helper.GetAssemblyDescription()
             };
@@ -158,8 +158,8 @@ namespace RepoDb.IntegrationTests
                 SESSIONID = Guid.NewGuid(),
                 COLUMNBIGINT = long.MaxValue,
                 COLUMNBIT = true,
-                COLUMNDATETIME2 = DateTime.Parse("1970-01-01 1:25:00.44569"),
-                COLUMNDATETIME = DateTime.Parse("1970-01-01 10:30:30"),
+                COLUMNDATETIME2 = DateTime.Parse("1970-01-01 1:25:00.44569", System.Globalization.CultureInfo.InvariantCulture),
+                COLUMNDATETIME = DateTime.Parse("1970-01-01 10:30:30", System.Globalization.CultureInfo.InvariantCulture),
                 COLUMNINT = int.MaxValue,
                 COLUMNNVARCHAR = Helper.GetAssemblyDescription()
             };
@@ -215,8 +215,8 @@ namespace RepoDb.IntegrationTests
                 SessionId = Guid.NewGuid(),
                 ColumnBigIntMapped = long.MaxValue,
                 ColumnBitMapped = true,
-                ColumnDateTime2Mapped = DateTime.Parse("1970-01-01 1:25:00.44569"),
-                ColumnDateTimeMapped = DateTime.Parse("1970-01-01 10:30:30"),
+                ColumnDateTime2Mapped = DateTime.Parse("1970-01-01 1:25:00.44569", System.Globalization.CultureInfo.InvariantCulture),
+                ColumnDateTimeMapped = DateTime.Parse("1970-01-01 10:30:30", System.Globalization.CultureInfo.InvariantCulture),
                 ColumnIntMapped = int.MaxValue,
                 ColumnNVarCharMapped = Helper.GetAssemblyDescription()
             };
@@ -249,8 +249,8 @@ namespace RepoDb.IntegrationTests
                 SessionId = Guid.NewGuid(),
                 ColumnBigIntMapped = long.MaxValue,
                 ColumnBitMapped = true,
-                ColumnDateTime2Mapped = DateTime.Parse("1970-01-01 1:25:00.44569"),
-                ColumnDateTimeMapped = DateTime.Parse("1970-01-01 10:30:30"),
+                ColumnDateTime2Mapped = DateTime.Parse("1970-01-01 1:25:00.44569", System.Globalization.CultureInfo.InvariantCulture),
+                ColumnDateTimeMapped = DateTime.Parse("1970-01-01 10:30:30", System.Globalization.CultureInfo.InvariantCulture),
                 ColumnIntMapped = int.MaxValue,
                 ColumnNVarCharMapped = Helper.GetAssemblyDescription()
             };
@@ -283,8 +283,8 @@ namespace RepoDb.IntegrationTests
                 SessionId = Guid.NewGuid(),
                 ColumnBigIntMapped = long.MaxValue,
                 ColumnBitMapped = true,
-                ColumnDateTime2Mapped = DateTime.Parse("1970-01-01 1:25:00.44569"),
-                ColumnDateTimeMapped = DateTime.Parse("1970-01-01 10:30:30"),
+                ColumnDateTime2Mapped = DateTime.Parse("1970-01-01 1:25:00.44569", System.Globalization.CultureInfo.InvariantCulture),
+                ColumnDateTimeMapped = DateTime.Parse("1970-01-01 10:30:30", System.Globalization.CultureInfo.InvariantCulture),
                 ColumnIntMapped = int.MaxValue,
                 ColumnNVarCharMapped = Helper.GetAssemblyDescription()
             };
@@ -317,8 +317,8 @@ namespace RepoDb.IntegrationTests
                 SessionId = Guid.NewGuid(),
                 ColumnBigIntMapped = long.MaxValue,
                 ColumnBitMapped = true,
-                ColumnDateTime2Mapped = DateTime.Parse("1970-01-01 1:25:00.44569"),
-                ColumnDateTimeMapped = DateTime.Parse("1970-01-01 10:30:30"),
+                ColumnDateTime2Mapped = DateTime.Parse("1970-01-01 1:25:00.44569", System.Globalization.CultureInfo.InvariantCulture),
+                ColumnDateTimeMapped = DateTime.Parse("1970-01-01 10:30:30", System.Globalization.CultureInfo.InvariantCulture),
                 ColumnIntMapped = int.MaxValue,
                 ColumnNVarCharMapped = Helper.GetAssemblyDescription()
             };
@@ -355,8 +355,8 @@ namespace RepoDb.IntegrationTests
                 SESSIONID = Guid.NewGuid(),
                 COLUMNBIGINT = long.MaxValue,
                 COLUMNBIT = true,
-                COLUMNDATETIME2 = DateTime.Parse("1970-01-01 1:25:00.44569"),
-                COLUMNDATETIME = DateTime.Parse("1970-01-01 10:30:30"),
+                COLUMNDATETIME2 = DateTime.Parse("1970-01-01 1:25:00.44569", System.Globalization.CultureInfo.InvariantCulture),
+                COLUMNDATETIME = DateTime.Parse("1970-01-01 10:30:30", System.Globalization.CultureInfo.InvariantCulture),
                 COLUMNINT = int.MaxValue,
                 COLUMNNVARCHAR = Helper.GetAssemblyDescription()
             };
@@ -384,8 +384,8 @@ namespace RepoDb.IntegrationTests
                     SESSIONID = entity.SESSIONID,
                     COLUMNBIGINT = long.MinValue,
                     COLUMNBIT = true,
-                    COLUMNDATETIME2 = DateTime.Parse("1970-01-02 1:25:00.44569"),
-                    COLUMNDATETIME = DateTime.Parse("1970-01-02 10:30:30"),
+                    COLUMNDATETIME2 = DateTime.Parse("1970-01-02 1:25:00.44569", System.Globalization.CultureInfo.InvariantCulture),
+                    COLUMNDATETIME = DateTime.Parse("1970-01-02 10:30:30", System.Globalization.CultureInfo.InvariantCulture),
                     COLUMNINT = int.MinValue,
                     COLUMNNVARCHAR = $"{Helper.GetAssemblyDescription()}-Updated"
                 };
@@ -425,8 +425,8 @@ namespace RepoDb.IntegrationTests
                 SESSIONID = Guid.NewGuid(),
                 COLUMNBIGINT = long.MaxValue,
                 COLUMNBIT = true,
-                COLUMNDATETIME2 = DateTime.Parse("1970-01-01 1:25:00.44569"),
-                COLUMNDATETIME = DateTime.Parse("1970-01-01 10:30:30"),
+                COLUMNDATETIME2 = DateTime.Parse("1970-01-01 1:25:00.44569", System.Globalization.CultureInfo.InvariantCulture),
+                COLUMNDATETIME = DateTime.Parse("1970-01-01 10:30:30", System.Globalization.CultureInfo.InvariantCulture),
                 COLUMNINT = int.MaxValue,
                 COLUMNNVARCHAR = Helper.GetAssemblyDescription()
             };
@@ -454,8 +454,8 @@ namespace RepoDb.IntegrationTests
                     SESSIONID = entity.SESSIONID,
                     COLUMNBIGINT = long.MinValue,
                     COLUMNBIT = true,
-                    COLUMNDATETIME2 = DateTime.Parse("1970-01-02 1:25:00.44569"),
-                    COLUMNDATETIME = DateTime.Parse("1970-01-02 10:30:30"),
+                    COLUMNDATETIME2 = DateTime.Parse("1970-01-02 1:25:00.44569", System.Globalization.CultureInfo.InvariantCulture),
+                    COLUMNDATETIME = DateTime.Parse("1970-01-02 10:30:30", System.Globalization.CultureInfo.InvariantCulture),
                     COLUMNINT = int.MinValue,
                     COLUMNNVARCHAR = $"{Helper.GetAssemblyDescription()}-Updated"
                 };
@@ -495,8 +495,8 @@ namespace RepoDb.IntegrationTests
                 SESSIONID = Guid.NewGuid(),
                 COLUMNBIGINT = long.MaxValue,
                 COLUMNBIT = true,
-                COLUMNDATETIME2 = DateTime.Parse("1970-01-01 1:25:00.44569"),
-                COLUMNDATETIME = DateTime.Parse("1970-01-01 10:30:30"),
+                COLUMNDATETIME2 = DateTime.Parse("1970-01-01 1:25:00.44569", System.Globalization.CultureInfo.InvariantCulture),
+                COLUMNDATETIME = DateTime.Parse("1970-01-01 10:30:30", System.Globalization.CultureInfo.InvariantCulture),
                 COLUMNINT = int.MaxValue,
                 COLUMNNVARCHAR = Helper.GetAssemblyDescription()
             };
@@ -526,8 +526,8 @@ namespace RepoDb.IntegrationTests
                     SESSIONID = entity.SESSIONID,
                     COLUMNBIGINT = long.MinValue,
                     COLUMNBIT = true,
-                    COLUMNDATETIME2 = DateTime.Parse("1970-01-02 1:25:00.44569"),
-                    COLUMNDATETIME = DateTime.Parse("1970-01-02 10:30:30"),
+                    COLUMNDATETIME2 = DateTime.Parse("1970-01-02 1:25:00.44569", System.Globalization.CultureInfo.InvariantCulture),
+                    COLUMNDATETIME = DateTime.Parse("1970-01-02 10:30:30", System.Globalization.CultureInfo.InvariantCulture),
                     COLUMNINT = int.MinValue,
                     COLUMNNVARCHAR = $"{Helper.GetAssemblyDescription()}-Updated"
                 };
@@ -569,8 +569,8 @@ namespace RepoDb.IntegrationTests
                 SESSIONID = Guid.NewGuid(),
                 COLUMNBIGINT = long.MaxValue,
                 COLUMNBIT = true,
-                COLUMNDATETIME2 = DateTime.Parse("1970-01-01 1:25:00.44569"),
-                COLUMNDATETIME = DateTime.Parse("1970-01-01 10:30:30"),
+                COLUMNDATETIME2 = DateTime.Parse("1970-01-01 1:25:00.44569", System.Globalization.CultureInfo.InvariantCulture),
+                COLUMNDATETIME = DateTime.Parse("1970-01-01 10:30:30", System.Globalization.CultureInfo.InvariantCulture),
                 COLUMNINT = int.MaxValue,
                 COLUMNNVARCHAR = Helper.GetAssemblyDescription()
             };
@@ -600,8 +600,8 @@ namespace RepoDb.IntegrationTests
                     SESSIONID = entity.SESSIONID,
                     COLUMNBIGINT = long.MinValue,
                     COLUMNBIT = true,
-                    COLUMNDATETIME2 = DateTime.Parse("1970-01-02 1:25:00.44569"),
-                    COLUMNDATETIME = DateTime.Parse("1970-01-02 10:30:30"),
+                    COLUMNDATETIME2 = DateTime.Parse("1970-01-02 1:25:00.44569", System.Globalization.CultureInfo.InvariantCulture),
+                    COLUMNDATETIME = DateTime.Parse("1970-01-02 10:30:30", System.Globalization.CultureInfo.InvariantCulture),
                     COLUMNINT = int.MinValue,
                     COLUMNNVARCHAR = $"{Helper.GetAssemblyDescription()}-Updated"
                 };

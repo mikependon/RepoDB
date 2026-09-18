@@ -190,7 +190,7 @@ namespace RepoDb.IntegrationTests
                 var data = connection.ExecuteQuery<DateTime>("SELECT '1970-01-01' AS Value;").First();
 
                 // Assert
-                Assert.AreEqual(DateTime.Parse("1970-01-01"), data);
+                Assert.AreEqual(DateTime.Parse("1970-01-01", System.Globalization.CultureInfo.InvariantCulture), data);
             }
         }
 
@@ -203,7 +203,7 @@ namespace RepoDb.IntegrationTests
                 var data = (await connection.ExecuteQueryAsync<DateTime>("SELECT '1970-01-01' AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
-                Assert.AreEqual(DateTime.Parse("1970-01-01"), data);
+                Assert.AreEqual(DateTime.Parse("1970-01-01", System.Globalization.CultureInfo.InvariantCulture), data);
             }
         }
 
@@ -634,7 +634,7 @@ namespace RepoDb.IntegrationTests
                 var data = connection.ExecuteQuery<DateTime>("SELECT CONVERT(DATETIME2(5), '1970-01-01') AS Value;").First();
 
                 // Assert
-                Assert.AreEqual(DateTime.Parse("1970-01-01"), data);
+                Assert.AreEqual(DateTime.Parse("1970-01-01", System.Globalization.CultureInfo.InvariantCulture), data);
             }
         }
 
@@ -647,7 +647,7 @@ namespace RepoDb.IntegrationTests
                 var data = (await connection.ExecuteQueryAsync<DateTime>("SELECT CONVERT(DATETIME2(5), '1970-01-01') AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
-                Assert.AreEqual(DateTime.Parse("1970-01-01"), data);
+                Assert.AreEqual(DateTime.Parse("1970-01-01", System.Globalization.CultureInfo.InvariantCulture), data);
             }
         }
 
@@ -662,7 +662,7 @@ namespace RepoDb.IntegrationTests
                     var data = connection.ExecuteQuery<string>("SELECT CONVERT(DATETIME2(5), '1970-01-01') AS Value;").First();
 
                     // Assert
-                    Assert.AreEqual("1970-01-01T00:00:00.000000", DateTime.Parse(data).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"), StringComparer.Ordinal);
+                    Assert.AreEqual("1970-01-01T00:00:00.000000", DateTime.Parse(data, System.Globalization.CultureInfo.InvariantCulture).ToString("yyyy-MM-ddTHH:mm:ss.ffffff", System.Globalization.CultureInfo.InvariantCulture), StringComparer.Ordinal);
                 }
             }
         }
@@ -678,7 +678,7 @@ namespace RepoDb.IntegrationTests
                     var data = (await connection.ExecuteQueryAsync<string>("SELECT CONVERT(DATETIME2(5), '1970-01-01') AS Value;").ConfigureAwait(false)).First();
 
                     // Assert
-                    Assert.AreEqual("1970-01-01T00:00:00.000000", DateTime.Parse(data).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"), StringComparer.Ordinal);
+                    Assert.AreEqual("1970-01-01T00:00:00.000000", DateTime.Parse(data, System.Globalization.CultureInfo.InvariantCulture).ToString("yyyy-MM-ddTHH:mm:ss.ffffff", System.Globalization.CultureInfo.InvariantCulture), StringComparer.Ordinal);
                 }
             }
         }
@@ -1992,7 +1992,7 @@ namespace RepoDb.IntegrationTests
                     var data = connection.Query<StringToDateClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                     // Assert
-                    Assert.AreEqual("1970-01-01T00:00:00.000000", DateTime.Parse(data.ColumnDate).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"), StringComparer.Ordinal);
+                    Assert.AreEqual("1970-01-01T00:00:00.000000", DateTime.Parse(data.ColumnDate, System.Globalization.CultureInfo.InvariantCulture).ToString("yyyy-MM-ddTHH:mm:ss.ffffff", System.Globalization.CultureInfo.InvariantCulture), StringComparer.Ordinal);
                 }
             }
         }
@@ -2018,7 +2018,7 @@ namespace RepoDb.IntegrationTests
                     var data = (await connection.QueryAsync<StringToDateClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                     // Assert
-                    Assert.AreEqual("1970-01-01T00:00:00.000000", DateTime.Parse(data.ColumnDate).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"), StringComparer.Ordinal);
+                    Assert.AreEqual("1970-01-01T00:00:00.000000", DateTime.Parse(data.ColumnDate, System.Globalization.CultureInfo.InvariantCulture).ToString("yyyy-MM-ddTHH:mm:ss.ffffff", System.Globalization.CultureInfo.InvariantCulture), StringComparer.Ordinal);
                 }
             }
         }
@@ -2056,7 +2056,7 @@ namespace RepoDb.IntegrationTests
                     var data = connection.Query<StringToDateTimeClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                     // Assert
-                    Assert.AreEqual("1970-01-01T11:30:00.000000", DateTime.Parse(data.ColumnDateTime).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"), StringComparer.Ordinal);
+                    Assert.AreEqual("1970-01-01T11:30:00.000000", DateTime.Parse(data.ColumnDateTime, System.Globalization.CultureInfo.InvariantCulture).ToString("yyyy-MM-ddTHH:mm:ss.ffffff", System.Globalization.CultureInfo.InvariantCulture), StringComparer.Ordinal);
                 }
             }
         }
@@ -2082,7 +2082,7 @@ namespace RepoDb.IntegrationTests
                     var data = (await connection.QueryAsync<StringToDateTimeClass>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                     // Assert
-                    Assert.AreEqual("1970-01-01T11:30:00.000000", DateTime.Parse(data.ColumnDateTime).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"), StringComparer.Ordinal);
+                    Assert.AreEqual("1970-01-01T11:30:00.000000", DateTime.Parse(data.ColumnDateTime, System.Globalization.CultureInfo.InvariantCulture).ToString("yyyy-MM-ddTHH:mm:ss.ffffff", System.Globalization.CultureInfo.InvariantCulture), StringComparer.Ordinal);
                 }
             }
         }
@@ -2120,7 +2120,7 @@ namespace RepoDb.IntegrationTests
                     var data = connection.Query<StringToDateTime2Class>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                     // Assert
-                    Assert.AreEqual("2019-03-03T15:22:10.000000", DateTime.Parse(data.ColumnDateTime2).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"), StringComparer.Ordinal);
+                    Assert.AreEqual("2019-03-03T15:22:10.000000", DateTime.Parse(data.ColumnDateTime2, System.Globalization.CultureInfo.InvariantCulture).ToString("yyyy-MM-ddTHH:mm:ss.ffffff", System.Globalization.CultureInfo.InvariantCulture), StringComparer.Ordinal);
                 }
             }
         }
@@ -2146,7 +2146,7 @@ namespace RepoDb.IntegrationTests
                     var data = (await connection.QueryAsync<StringToDateTime2Class>(e => e.SessionId == (Guid)id).ConfigureAwait(false)).FirstOrDefault();
 
                     // Assert
-                    Assert.AreEqual("2019-03-03T15:22:10.000000", DateTime.Parse(data.ColumnDateTime2).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"), StringComparer.Ordinal);
+                    Assert.AreEqual("2019-03-03T15:22:10.000000", DateTime.Parse(data.ColumnDateTime2, System.Globalization.CultureInfo.InvariantCulture).ToString("yyyy-MM-ddTHH:mm:ss.ffffff", System.Globalization.CultureInfo.InvariantCulture), StringComparer.Ordinal);
                 }
             }
         }

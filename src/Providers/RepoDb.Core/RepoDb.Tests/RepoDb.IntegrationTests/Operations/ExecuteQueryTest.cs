@@ -59,14 +59,14 @@ namespace RepoDb.IntegrationTests.Operations
                 result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
-                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
+                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)], System.Globalization.CultureInfo.InvariantCulture));
 
                     // Assert
                     Assert.AreEqual(item.ColumnBit, kvp[nameof(IdentityTable.ColumnBit)]);
                     Assert.AreEqual(item.ColumnDateTime, kvp[nameof(IdentityTable.ColumnDateTime)]);
                     Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(IdentityTable.ColumnDateTime2)]);
                     Assert.AreEqual(item.ColumnDecimal, kvp[nameof(IdentityTable.ColumnDecimal)]);
-                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)]));
+                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)], System.Globalization.CultureInfo.InvariantCulture));
                     Assert.AreEqual(item.ColumnInt, kvp[nameof(IdentityTable.ColumnInt)]);
                     Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(IdentityTable.ColumnNVarChar)]);
                 });
@@ -93,14 +93,14 @@ namespace RepoDb.IntegrationTests.Operations
                 result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
-                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
+                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)], System.Globalization.CultureInfo.InvariantCulture));
 
                     // Assert
                     Assert.AreEqual(item.ColumnBit, kvp[nameof(IdentityTable.ColumnBit)]);
                     Assert.AreEqual(item.ColumnDateTime, kvp[nameof(IdentityTable.ColumnDateTime)]);
                     Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(IdentityTable.ColumnDateTime2)]);
                     Assert.AreEqual(item.ColumnDecimal, kvp[nameof(IdentityTable.ColumnDecimal)]);
-                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)]));
+                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)], System.Globalization.CultureInfo.InvariantCulture));
                     Assert.AreEqual(item.ColumnInt, kvp[nameof(IdentityTable.ColumnInt)]);
                     Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(IdentityTable.ColumnNVarChar)]);
                 });
@@ -127,14 +127,14 @@ namespace RepoDb.IntegrationTests.Operations
                 result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
-                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
+                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)], System.Globalization.CultureInfo.InvariantCulture));
 
                     // Assert
                     Assert.AreEqual(item.ColumnBit, kvp[nameof(IdentityTable.ColumnBit)]);
                     Assert.AreEqual(item.ColumnDateTime, kvp[nameof(IdentityTable.ColumnDateTime)]);
                     Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(IdentityTable.ColumnDateTime2)]);
                     Assert.AreEqual(item.ColumnDecimal, kvp[nameof(IdentityTable.ColumnDecimal)]);
-                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)]));
+                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)], System.Globalization.CultureInfo.InvariantCulture));
                     Assert.AreEqual(item.ColumnInt, kvp[nameof(IdentityTable.ColumnInt)]);
                     Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(IdentityTable.ColumnNVarChar)]);
                 });
@@ -161,14 +161,14 @@ namespace RepoDb.IntegrationTests.Operations
                 result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
-                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
+                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)], System.Globalization.CultureInfo.InvariantCulture));
 
                     // Assert
                     Assert.AreEqual(item.ColumnBit, kvp[nameof(IdentityTable.ColumnBit)]);
                     Assert.AreEqual(item.ColumnDateTime, kvp[nameof(IdentityTable.ColumnDateTime)]);
                     Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(IdentityTable.ColumnDateTime2)]);
                     Assert.AreEqual(item.ColumnDecimal, kvp[nameof(IdentityTable.ColumnDecimal)]);
-                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)]));
+                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)], System.Globalization.CultureInfo.InvariantCulture));
                     Assert.AreEqual(item.ColumnInt, kvp[nameof(IdentityTable.ColumnInt)]);
                     Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(IdentityTable.ColumnNVarChar)]);
                 });
@@ -195,14 +195,14 @@ namespace RepoDb.IntegrationTests.Operations
                 result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
-                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
+                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)], System.Globalization.CultureInfo.InvariantCulture));
 
                     // Assert
                     Assert.AreEqual(item.ColumnBit, kvp[nameof(IdentityTable.ColumnBit)]);
                     Assert.AreEqual(item.ColumnDateTime, kvp[nameof(IdentityTable.ColumnDateTime)]);
                     Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(IdentityTable.ColumnDateTime2)]);
                     Assert.AreEqual(item.ColumnDecimal, kvp[nameof(IdentityTable.ColumnDecimal)]);
-                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)]));
+                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)], System.Globalization.CultureInfo.InvariantCulture));
                     Assert.AreEqual(item.ColumnInt, kvp[nameof(IdentityTable.ColumnInt)]);
                     Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(IdentityTable.ColumnNVarChar)]);
                 });
@@ -230,14 +230,14 @@ namespace RepoDb.IntegrationTests.Operations
                 result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
-                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
+                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)], System.Globalization.CultureInfo.InvariantCulture));
 
                     // Assert
                     Assert.AreEqual(item.ColumnBit, kvp[nameof(IdentityTable.ColumnBit)]);
                     Assert.AreEqual(item.ColumnDateTime, kvp[nameof(IdentityTable.ColumnDateTime)]);
                     Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(IdentityTable.ColumnDateTime2)]);
                     Assert.AreEqual(item.ColumnDecimal, kvp[nameof(IdentityTable.ColumnDecimal)]);
-                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)]));
+                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)], System.Globalization.CultureInfo.InvariantCulture));
                     Assert.AreEqual(item.ColumnInt, kvp[nameof(IdentityTable.ColumnInt)]);
                     Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(IdentityTable.ColumnNVarChar)]);
                 });
@@ -343,14 +343,14 @@ namespace RepoDb.IntegrationTests.Operations
                 result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
-                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
+                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)], System.Globalization.CultureInfo.InvariantCulture));
 
                     // Assert
                     Assert.AreEqual(item.ColumnBit, kvp[nameof(IdentityTable.ColumnBit)]);
                     Assert.AreEqual(item.ColumnDateTime, kvp[nameof(IdentityTable.ColumnDateTime)]);
                     Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(IdentityTable.ColumnDateTime2)]);
                     Assert.AreEqual(item.ColumnDecimal, kvp[nameof(IdentityTable.ColumnDecimal)]);
-                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)]));
+                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)], System.Globalization.CultureInfo.InvariantCulture));
                     Assert.AreEqual(item.ColumnInt, kvp[nameof(IdentityTable.ColumnInt)]);
                     Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(IdentityTable.ColumnNVarChar)]);
                 });
@@ -377,14 +377,14 @@ namespace RepoDb.IntegrationTests.Operations
                 result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
-                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
+                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)], System.Globalization.CultureInfo.InvariantCulture));
 
                     // Assert
                     Assert.AreEqual(item.ColumnBit, kvp[nameof(IdentityTable.ColumnBit)]);
                     Assert.AreEqual(item.ColumnDateTime, kvp[nameof(IdentityTable.ColumnDateTime)]);
                     Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(IdentityTable.ColumnDateTime2)]);
                     Assert.AreEqual(item.ColumnDecimal, kvp[nameof(IdentityTable.ColumnDecimal)]);
-                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)]));
+                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)], System.Globalization.CultureInfo.InvariantCulture));
                     Assert.AreEqual(item.ColumnInt, kvp[nameof(IdentityTable.ColumnInt)]);
                     Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(IdentityTable.ColumnNVarChar)]);
                 });
@@ -411,14 +411,14 @@ namespace RepoDb.IntegrationTests.Operations
                 result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
-                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
+                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)], System.Globalization.CultureInfo.InvariantCulture));
 
                     // Assert
                     Assert.AreEqual(item.ColumnBit, kvp[nameof(IdentityTable.ColumnBit)]);
                     Assert.AreEqual(item.ColumnDateTime, kvp[nameof(IdentityTable.ColumnDateTime)]);
                     Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(IdentityTable.ColumnDateTime2)]);
                     Assert.AreEqual(item.ColumnDecimal, kvp[nameof(IdentityTable.ColumnDecimal)]);
-                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)]));
+                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)], System.Globalization.CultureInfo.InvariantCulture));
                     Assert.AreEqual(item.ColumnInt, kvp[nameof(IdentityTable.ColumnInt)]);
                     Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(IdentityTable.ColumnNVarChar)]);
                 });
@@ -445,14 +445,14 @@ namespace RepoDb.IntegrationTests.Operations
                 result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
-                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
+                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)], System.Globalization.CultureInfo.InvariantCulture));
 
                     // Assert
                     Assert.AreEqual(item.ColumnBit, kvp[nameof(IdentityTable.ColumnBit)]);
                     Assert.AreEqual(item.ColumnDateTime, kvp[nameof(IdentityTable.ColumnDateTime)]);
                     Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(IdentityTable.ColumnDateTime2)]);
                     Assert.AreEqual(item.ColumnDecimal, kvp[nameof(IdentityTable.ColumnDecimal)]);
-                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)]));
+                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)], System.Globalization.CultureInfo.InvariantCulture));
                     Assert.AreEqual(item.ColumnInt, kvp[nameof(IdentityTable.ColumnInt)]);
                     Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(IdentityTable.ColumnNVarChar)]);
                 });
@@ -479,14 +479,14 @@ namespace RepoDb.IntegrationTests.Operations
                 result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
-                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
+                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)], System.Globalization.CultureInfo.InvariantCulture));
 
                     // Assert
                     Assert.AreEqual(item.ColumnBit, kvp[nameof(IdentityTable.ColumnBit)]);
                     Assert.AreEqual(item.ColumnDateTime, kvp[nameof(IdentityTable.ColumnDateTime)]);
                     Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(IdentityTable.ColumnDateTime2)]);
                     Assert.AreEqual(item.ColumnDecimal, kvp[nameof(IdentityTable.ColumnDecimal)]);
-                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)]));
+                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)], System.Globalization.CultureInfo.InvariantCulture));
                     Assert.AreEqual(item.ColumnInt, kvp[nameof(IdentityTable.ColumnInt)]);
                     Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(IdentityTable.ColumnNVarChar)]);
                 });
@@ -514,14 +514,14 @@ namespace RepoDb.IntegrationTests.Operations
                 result.AsList().ForEach(kvpItem =>
                 {
                     var kvp = kvpItem as IDictionary<string, object>;
-                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)]));
+                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(IdentityTable.Id)], System.Globalization.CultureInfo.InvariantCulture));
 
                     // Assert
                     Assert.AreEqual(item.ColumnBit, kvp[nameof(IdentityTable.ColumnBit)]);
                     Assert.AreEqual(item.ColumnDateTime, kvp[nameof(IdentityTable.ColumnDateTime)]);
                     Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(IdentityTable.ColumnDateTime2)]);
                     Assert.AreEqual(item.ColumnDecimal, kvp[nameof(IdentityTable.ColumnDecimal)]);
-                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)]));
+                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(IdentityTable.ColumnFloat)], System.Globalization.CultureInfo.InvariantCulture));
                     Assert.AreEqual(item.ColumnInt, kvp[nameof(IdentityTable.ColumnInt)]);
                     Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(IdentityTable.ColumnNVarChar)]);
                 });

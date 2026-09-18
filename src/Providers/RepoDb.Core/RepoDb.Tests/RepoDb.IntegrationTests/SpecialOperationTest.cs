@@ -192,7 +192,7 @@ namespace RepoDb.IntegrationTests
                 connection.InsertAll<IdentityTable>(entities);
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(item => (new long[] { }).Contains(item.Id));
+                var queryResult = connection.Query<IdentityTable>(item => (System.Array.Empty<long>()).Contains(item.Id));
 
                 // Assert
                 Assert.AreEqual(0, queryResult.Count());
@@ -211,7 +211,7 @@ namespace RepoDb.IntegrationTests
                 await connection.InsertAllAsync<IdentityTable>(entities).ConfigureAwait(false);
 
                 // Act
-                var queryResult = await connection.QueryAsync<IdentityTable>(item => (new long[] { }).Contains(item.Id)).ConfigureAwait(false);
+                var queryResult = await connection.QueryAsync<IdentityTable>(item => (System.Array.Empty<long>()).Contains(item.Id)).ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(0, queryResult.Count());

@@ -43,7 +43,7 @@ namespace RepoDb.IntegrationTests.Conversions
             var tables = Enumerable.Range(1, 5).Select(i => new IdentityTableWithColumnIntAsString
             {
                 RowGuid = Guid.NewGuid(),
-                ColumnInt = (i * 100).ToString(),
+                ColumnInt = (i * 100).ToString(System.Globalization.CultureInfo.InvariantCulture),
                 ColumnNVarChar = Guid.NewGuid().ToString()
             }).AsList();
 
@@ -61,7 +61,7 @@ namespace RepoDb.IntegrationTests.Conversions
                 foreach (var table in tables)
                 {
                     var match = results.First(r => r.RowGuid == table.RowGuid);
-                    Assert.AreEqual(int.Parse(table.ColumnInt), match.ColumnInt);
+                    Assert.AreEqual(int.Parse(table.ColumnInt, System.Globalization.CultureInfo.InvariantCulture), match.ColumnInt);
                 }
 
                 // Reset
@@ -109,7 +109,7 @@ namespace RepoDb.IntegrationTests.Conversions
             var tables = Enumerable.Range(1, 5).Select(i => new IdentityTableWithColumnIntAsString
             {
                 RowGuid = Guid.NewGuid(),
-                ColumnInt = (i * 100).ToString(),
+                ColumnInt = (i * 100).ToString(System.Globalization.CultureInfo.InvariantCulture),
                 ColumnNVarChar = Guid.NewGuid().ToString()
             }).AsList();
 
@@ -128,7 +128,7 @@ namespace RepoDb.IntegrationTests.Conversions
                 foreach (var table in tables)
                 {
                     var match = results.First(r => r.RowGuid == table.RowGuid);
-                    Assert.AreEqual(int.Parse(table.ColumnInt), match.ColumnInt);
+                    Assert.AreEqual(int.Parse(table.ColumnInt, System.Globalization.CultureInfo.InvariantCulture), match.ColumnInt);
                 }
 
                 // Reset

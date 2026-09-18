@@ -52,7 +52,7 @@ namespace RepoDb.IntegrationTests.Conversions
                 var updates = tables.Select((table, index) => new IdentityTableWithColumnIntAsString
                 {
                     Id = table.Id,
-                    ColumnInt = ((index + 1) * 100).ToString()
+                    ColumnInt = ((index + 1) * 100).ToString(System.Globalization.CultureInfo.InvariantCulture)
                 }).AsList();
 
                 // Act
@@ -64,7 +64,7 @@ namespace RepoDb.IntegrationTests.Conversions
                 foreach (var update in updates)
                 {
                     var match = results.First(r => r.Id == update.Id);
-                    Assert.AreEqual(int.Parse(update.ColumnInt), match.ColumnInt);
+                    Assert.AreEqual(int.Parse(update.ColumnInt, System.Globalization.CultureInfo.InvariantCulture), match.ColumnInt);
                 }
 
                 // Reset
@@ -124,7 +124,7 @@ namespace RepoDb.IntegrationTests.Conversions
                 var updates = tables.Select((table, index) => new IdentityTableWithColumnIntAsString
                 {
                     Id = table.Id,
-                    ColumnInt = ((index + 1) * 100).ToString()
+                    ColumnInt = ((index + 1) * 100).ToString(System.Globalization.CultureInfo.InvariantCulture)
                 }).AsList();
 
                 // Act
@@ -137,7 +137,7 @@ namespace RepoDb.IntegrationTests.Conversions
                 foreach (var update in updates)
                 {
                     var match = results.First(r => r.Id == update.Id);
-                    Assert.AreEqual(int.Parse(update.ColumnInt), match.ColumnInt);
+                    Assert.AreEqual(int.Parse(update.ColumnInt, System.Globalization.CultureInfo.InvariantCulture), match.ColumnInt);
                 }
 
                 // Reset

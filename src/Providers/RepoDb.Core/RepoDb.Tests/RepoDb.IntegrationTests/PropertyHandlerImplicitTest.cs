@@ -121,7 +121,7 @@ namespace RepoDb.IntegrationTests
             public int? Set(string input,
                 PropertyHandlerSetOptions options)
             {
-                return Convert.ToInt32(input);
+                return Convert.ToInt32(input, System.Globalization.CultureInfo.InvariantCulture);
             }
         }
 
@@ -135,7 +135,7 @@ namespace RepoDb.IntegrationTests
             {
                 if (input > 0)
                 {
-                    return Convert.ToInt64(input);
+                    return Convert.ToInt64(input, System.Globalization.CultureInfo.InvariantCulture);
                 }
                 else
                 {
@@ -153,7 +153,7 @@ namespace RepoDb.IntegrationTests
             public decimal? Set(long? input,
                 PropertyHandlerSetOptions options)
             {
-                return Convert.ToDecimal(input);
+                return Convert.ToDecimal(input, System.Globalization.CultureInfo.InvariantCulture);
             }
         }
 
@@ -165,7 +165,7 @@ namespace RepoDb.IntegrationTests
             public long? Get(object input,
                 PropertyHandlerGetOptions options)
             {
-                var value = Convert.ToInt64(input);
+                var value = Convert.ToInt64(input, System.Globalization.CultureInfo.InvariantCulture);
                 if (value > 0)
                 {
                     return value;

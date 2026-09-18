@@ -53,7 +53,7 @@ namespace RepoDb.IntegrationTests.Conversions
 
                 // Assert
                 Assert.IsNotNull(result);
-                Assert.AreEqual(table.ColumnInt.ToString(), result.ColumnInt, StringComparer.Ordinal);
+                Assert.AreEqual(table.ColumnInt.GetValueOrDefault().ToString(System.Globalization.CultureInfo.InvariantCulture), result.ColumnInt, StringComparer.Ordinal);
 
                 // Reset
                 GlobalConfiguration.Options.ConversionType = ConversionType.Default;
@@ -99,7 +99,7 @@ namespace RepoDb.IntegrationTests.Conversions
 
                 // Assert
                 Assert.IsNotNull(result);
-                Assert.AreEqual(table.ColumnInt.ToString(), result.ColumnInt, StringComparer.Ordinal);
+                Assert.AreEqual(table.ColumnInt.GetValueOrDefault().ToString(System.Globalization.CultureInfo.InvariantCulture), result.ColumnInt, StringComparer.Ordinal);
 
                 // Reset
                 GlobalConfiguration.Options.ConversionType = ConversionType.Default;

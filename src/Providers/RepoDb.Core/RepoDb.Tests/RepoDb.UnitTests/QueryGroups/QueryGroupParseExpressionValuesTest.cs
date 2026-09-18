@@ -209,7 +209,7 @@ namespace RepoDb.UnitTests
         public void TestQueryGroupParseExpressionValueWithIntMethodClass()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == Convert.ToInt32("1000"));
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == Convert.ToInt32("1000", System.Globalization.CultureInfo.InvariantCulture));
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
