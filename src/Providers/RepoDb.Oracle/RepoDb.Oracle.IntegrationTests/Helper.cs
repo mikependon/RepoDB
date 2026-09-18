@@ -132,6 +132,27 @@ namespace RepoDb.Oracle.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Asserts the members equality of a <see cref="CompleteTable"/> and a dynamic (<see cref="IDictionary{TKey, TValue}"/>) row.
+        /// Only the scalar columns are compared - a dynamic row carries the raw ODP.NET values (RAW, LOBs, XMLTYPE,
+        /// time-zone timestamps), which are already covered by the typed <see cref="AssertPropertiesEquality{T}(T, T)"/>.
+        /// </summary>
+        /// <param name="table">The expected <see cref="CompleteTable"/> instance.</param>
+        /// <param name="row">The dynamic row (as a dictionary) that was read from the database.</param>
+        public static void AssertMembersEquality(CompleteTable table,
+            IDictionary<string, object> row)
+        {
+            Assert(row.ContainsKey("Id"), "Id", table.Id, null);
+            Assert(table.Id == Convert.ToInt32(row["Id"], CultureInfo.InvariantCulture), "Id", table.Id, row["Id"]);
+            Assert(string.Equals(table.ColumnVarchar, Convert.ToString(row["ColumnVarchar"], CultureInfo.InvariantCulture), StringComparison.Ordinal),
+                "ColumnVarchar", table.ColumnVarchar, row["ColumnVarchar"]);
+            Assert(string.Equals(table.ColumnVarchar2, Convert.ToString(row["ColumnVarchar2"], CultureInfo.InvariantCulture), StringComparison.Ordinal),
+                "ColumnVarchar2", table.ColumnVarchar2, row["ColumnVarchar2"]);
+            Assert(table.ColumnInt == Convert.ToInt32(row["ColumnInt"], CultureInfo.InvariantCulture), "ColumnInt", table.ColumnInt, row["ColumnInt"]);
+            Assert(table.ColumnBigInt == Convert.ToInt64(row["ColumnBigInt"], CultureInfo.InvariantCulture), "ColumnBigInt", table.ColumnBigInt, row["ColumnBigInt"]);
+            Assert(table.ColumnNumber == Convert.ToDecimal(row["ColumnNumber"], CultureInfo.InvariantCulture), "ColumnNumber", table.ColumnNumber, row["ColumnNumber"]);
+        }
+
         private static void Assert(bool condition,
             string propertyName,
             object value1,
