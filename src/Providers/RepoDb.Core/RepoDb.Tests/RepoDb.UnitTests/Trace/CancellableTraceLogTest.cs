@@ -1082,6 +1082,66 @@ namespace RepoDb.UnitTests.Trace
 
         #endregion
 
+        #region QueryFirst
+
+        [TestMethod]
+        public void ThrowExceptionOnQueryFirstCancelledOperation()
+        {
+            // Prepare
+            var connection = new TraceDbConnection();
+
+            // Act
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .QueryFirst("", (QueryField)null, trace: new ErroneousCancellationTrace());
+            });
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnQueryFirstAsyncCancelledOperation()
+        {
+            // Prepare
+            var connection = new TraceDbConnection();
+
+            // Act
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .QueryFirstAsync("", (QueryField)null, trace: new ErroneousCancellationTrace()).ConfigureAwait(false);
+            }).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnQueryFirstIfNoRowsFound()
+        {
+            // Prepare
+            var connection = new TraceDbConnection();
+
+            // Act
+            Assert.Throws<EmptyException>(() =>
+            {
+                connection
+                    .QueryFirst("", (QueryField)null);
+            });
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnQueryFirstAsyncIfNoRowsFound()
+        {
+            // Prepare
+            var connection = new TraceDbConnection();
+
+            // Act
+            await Assert.ThrowsAsync<EmptyException>(async () =>
+            {
+                await connection
+                    .QueryFirstAsync("", (QueryField)null).ConfigureAwait(false);
+            }).ConfigureAwait(false);
+        }
+
+        #endregion
+
         #region QueryAll
 
         [TestMethod]
@@ -3070,6 +3130,50 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             await connection.QueryAsync<TraceEntity>(te => te.Id == 1,
+                trace: trace).ConfigureAwait(false);
+
+            // Assert
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+        }
+
+        #endregion
+
+        #endregion
+
+        #region QueryFirst
+
+        #region QueryFirst
+
+        [TestMethod]
+        public void TestDbConnectionTraceSilentCancellationForQueryFirst()
+        {
+            // Prepare
+            var trace = new SilentCancellationTrace();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection.QueryFirst<TraceEntity>(te => te.Id == 1,
+                trace: trace);
+
+            // Assert
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+        }
+
+        #endregion
+
+        #region QueryFirstAsync
+
+        [TestMethod]
+        public async Task TestDbConnectionTraceSilentCancellationForQueryFirstAsync()
+        {
+            // Prepare
+            var trace = new SilentCancellationTrace();
+            var connection = new TraceDbConnection();
+
+            // Act
+            await connection.QueryFirstAsync<TraceEntity>(te => te.Id == 1,
                 trace: trace).ConfigureAwait(false);
 
             // Assert
@@ -5269,6 +5373,54 @@ namespace RepoDb.UnitTests.Trace
             // Act
             await connection.QueryAsync<TraceEntity>(te => te.Id == 1,
                 trace: trace).ConfigureAwait(false);
+
+            // Assert
+            Assert.IsTrue(trace.IsValid);
+        }
+
+        #endregion
+
+        #endregion
+
+        #region QueryFirst
+
+        #region QueryFirst
+
+        [TestMethod]
+        public void TestDbConnectionTracePropertiesForQueryFirst()
+        {
+            // Prepare
+            var trace = new PropertyValidatorTrace();
+            var connection = new TraceDbConnection();
+
+            // Act
+            Assert.Throws<EmptyException>(() =>
+            {
+                connection.QueryFirst<TraceEntity>(te => te.Id == 1,
+                    trace: trace);
+            });
+
+            // Assert
+            Assert.IsTrue(trace.IsValid);
+        }
+
+        #endregion
+
+        #region QueryFirstAsync
+
+        [TestMethod]
+        public async Task TestDbConnectionTracePropertiesForQueryFirstAsync()
+        {
+            // Prepare
+            var trace = new PropertyValidatorTrace();
+            var connection = new TraceDbConnection();
+
+            // Act
+            await Assert.ThrowsAsync<EmptyException>(async () =>
+            {
+                await connection.QueryFirstAsync<TraceEntity>(te => te.Id == 1,
+                    trace: trace).ConfigureAwait(false);
+            }).ConfigureAwait(false);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
