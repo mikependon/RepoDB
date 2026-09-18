@@ -317,6 +317,66 @@ namespace RepoDb.UnitTests.Trace
 
         #endregion
 
+        #region ExecuteQuerySingle
+
+        [TestMethod]
+        public void ThrowExceptionOnExecuteQuerySingleCancelledOperation()
+        {
+            // Prepare
+            var connection = new TraceDbConnection();
+
+            // Act
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .ExecuteQuerySingle("", trace: new ErroneousCancellationTrace());
+            });
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnExecuteQuerySingleAsyncCancelledOperation()
+        {
+            // Prepare
+            var connection = new TraceDbConnection();
+
+            // Act
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .ExecuteQuerySingleAsync("", trace: new ErroneousCancellationTrace()).ConfigureAwait(false);
+            }).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnExecuteQuerySingleIfNoRowsFound()
+        {
+            // Prepare
+            var connection = new TraceDbConnection();
+
+            // Act
+            Assert.Throws<EmptyException>(() =>
+            {
+                connection
+                    .ExecuteQuerySingle("");
+            });
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnExecuteQuerySingleAsyncIfNoRowsFound()
+        {
+            // Prepare
+            var connection = new TraceDbConnection();
+
+            // Act
+            await Assert.ThrowsAsync<EmptyException>(async () =>
+            {
+                await connection
+                    .ExecuteQuerySingleAsync("").ConfigureAwait(false);
+            }).ConfigureAwait(false);
+        }
+
+        #endregion
+
         #region ExecuteScalar
 
         [TestMethod]
@@ -1618,6 +1678,43 @@ namespace RepoDb.UnitTests.Trace
             // Act
             await connection
                 .ExecuteQueryFirstAsync("", trace: trace).ConfigureAwait(false)
+                ;
+
+            // Assert
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+        }
+
+        #endregion
+
+        #region ExecuteQuerySingle
+
+        [TestMethod]
+        public void TestDbConnectionTraceSilentCancellationForExecuteQuerySingle()
+        {
+            // Prepare
+            var trace = new SilentCancellationTrace();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection
+                .ExecuteQuerySingle("", trace: trace);
+
+            // Assert
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+        }
+
+        [TestMethod]
+        public async Task TestDbConnectionTraceSilentCancellationForExecuteQuerySingleAsync()
+        {
+            // Prepare
+            var trace = new SilentCancellationTrace();
+            var connection = new TraceDbConnection();
+
+            // Act
+            await connection
+                .ExecuteQuerySingleAsync("", trace: trace).ConfigureAwait(false)
                 ;
 
             // Assert
@@ -3844,6 +3941,46 @@ namespace RepoDb.UnitTests.Trace
             {
                 await connection
                     .ExecuteQueryFirstAsync("", trace: trace).ConfigureAwait(false);
+            }).ConfigureAwait(false);
+
+            // Assert
+            Assert.IsTrue(trace.IsValid);
+        }
+
+        #endregion
+
+        #region ExecuteQuerySingle
+
+        [TestMethod]
+        public void TestDbConnectionTracePropertiesForExecuteQuerySingle()
+        {
+            // Prepare
+            var trace = new PropertyValidatorTrace();
+            var connection = new TraceDbConnection();
+
+            // Act
+            Assert.Throws<EmptyException>(() =>
+            {
+                connection
+                    .ExecuteQuerySingle("", trace: trace);
+            });
+
+            // Assert
+            Assert.IsTrue(trace.IsValid);
+        }
+
+        [TestMethod]
+        public async Task TestDbConnectionTracePropertiesForExecuteQuerySingleAsync()
+        {
+            // Prepare
+            var trace = new PropertyValidatorTrace();
+            var connection = new TraceDbConnection();
+
+            // Act
+            await Assert.ThrowsAsync<EmptyException>(async () =>
+            {
+                await connection
+                    .ExecuteQuerySingleAsync("", trace: trace).ConfigureAwait(false);
             }).ConfigureAwait(false);
 
             // Assert
