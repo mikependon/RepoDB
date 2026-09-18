@@ -378,6 +378,85 @@ namespace RepoDb
 
         #endregion
 
+        #region ExecuteQueryFirst
+
+        /// <summary>
+        /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// converts the first row of the result back to an instance of the target data entity object.
+        /// </summary>
+        /// <param name="commandText">The command text to be used.</param>
+        /// <param name="param">
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
+        /// </param>
+        /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>
+        /// An instance of the target data entity object containing the converted result of the first row returned by the underlying <see cref="IDataReader"/> object.
+        /// </returns>
+        /// <remarks>An <see cref="Exceptions.EmptyException"/> is thrown if the query did not return any row.</remarks>
+        public TEntity ExecuteQueryFirst(string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            string cacheKey = null,
+            int? cacheItemExpiration = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.ExecuteQueryFirst<TEntity>(commandText: commandText,
+                param: param,
+                commandType: commandType,
+                cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration ?? CacheItemExpiration,
+                transaction: transaction);
+        }
+
+        #endregion
+
+        #region ExecuteQueryFirstAsync
+
+        /// <summary>
+        /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// converts the first row of the result back to an instance of the target data entity object.
+        /// </summary>
+        /// <param name="commandText">The command text to be used.</param>
+        /// <param name="param">
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
+        /// </param>
+        /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>
+        /// An instance of the target data entity object containing the converted result of the first row returned by the underlying <see cref="IDataReader"/> object.
+        /// </returns>
+        /// <remarks>An <see cref="Exceptions.EmptyException"/> is thrown if the query did not return any row.</remarks>
+        public Task<TEntity> ExecuteQueryFirstAsync(string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            string cacheKey = null,
+            int? cacheItemExpiration = null,
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            return DbRepository.ExecuteQueryFirstAsync<TEntity>(commandText: commandText,
+                param: param,
+                commandType: commandType,
+                cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration ?? CacheItemExpiration,
+                transaction: transaction,
+                cancellationToken: cancellationToken);
+        }
+
+        #endregion
+
         #region ExecuteNonQuery
 
         /// <summary>
