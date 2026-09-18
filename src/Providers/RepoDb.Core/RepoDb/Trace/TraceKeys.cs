@@ -140,6 +140,11 @@ namespace RepoDb
         public const string QueryAll = "QueryAll";
 
         /// <summary>
+        /// The trace key for the 'QueryFirst' operation.
+        /// </summary>
+        public const string QueryFirst = "QueryFirst";
+
+        /// <summary>
         /// The trace key for the 'QueryMultiple' operation.
         /// </summary>
         public const string QueryMultiple = "QueryMultiple";
