@@ -150,6 +150,11 @@ namespace RepoDb
         public const string QueryMultiple = "QueryMultiple";
 
         /// <summary>
+        /// The trace key for the 'QuerySingle' operation.
+        /// </summary>
+        public const string QuerySingle = "QuerySingle";
+
+        /// <summary>
         /// The trace key for the 'SkipQuery' operation.
         /// </summary>
         public const string SkipQuery = "SkipQuery";
