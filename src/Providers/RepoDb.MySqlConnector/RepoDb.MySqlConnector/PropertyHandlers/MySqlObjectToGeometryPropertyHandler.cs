@@ -15,7 +15,7 @@ namespace RepoDb.PropertyHandlers.MySqlConnector
     /// <summary>
     /// A property handler that maps the MySQL spatial types (<c>GEOMETRY</c>, <c>POINT</c>, <c>LINESTRING</c>, <c>POLYGON</c>, <c>MULTIPOINT</c>, <c>MULTILINESTRING</c>, <c>MULTIPOLYGON</c> and <c>GEOMETRYCOLLECTION</c>) into a <see cref="MySqlGeometry"/> property.
     /// </summary>
-    public class GeometryToMySqlGeometryPropertyHandler : IPropertyHandler<object, MySqlGeometry>
+    public class MySqlObjectToGeometryPropertyHandler : IPropertyHandler<object, MySqlGeometry>
     {
         /// <summary>
         /// Converts the spatial value, as returned by the driver, into a <see cref="MySqlGeometry"/>.
