@@ -39,13 +39,14 @@ namespace RepoDb.PropertyHandlers.MySql
         }
 
         /// <summary>
-        /// Converts the <see cref="MySqlGeometry"/> into the value written into the spatial column, which the driver serializes as its MySQL internal format.
+        /// Converts the <see cref="MySqlGeometry"/> into the value written into the spatial column.
         /// </summary>
         /// <param name="input">The <see cref="MySqlGeometry"/> to write.</param>
         /// <param name="options">The options of the property handler for writing the value.</param>
-        /// <returns>The <see cref="MySqlGeometry"/> (boxed), or <c>null</c> when its <see cref="MySqlGeometry.IsNull"/> is <c>true</c>.</returns>
+        /// <returns>The <see cref="byte"/> array of the <see cref="MySqlGeometry.Value"/> (the MySQL internal format, which is a 4-byte SRID followed by the WKB), or <c>null</c> when its <see cref="MySqlGeometry.IsNull"/> is <c>true</c>.
+        /// The bytes are written instead of the <see cref="MySqlGeometry"/> itself as the parameter of a spatial column is created as a binary parameter, for which the driver does not serialize a <see cref="MySqlGeometry"/> object.</returns>
         public object Set(MySqlGeometry input,
             PropertyHandlerSetOptions options) =>
-            input.IsNull ? null : (object)input;
+            input.IsNull ? null : input.Value;
     }
 }

@@ -6,8 +6,10 @@
 
 #endregion
 
+using Oracle.ManagedDataAccess.Client;
 using Oracle.ManagedDataAccess.Types;
 using RepoDb.Attributes;
+using RepoDb.Attributes.Parameter.Oracle;
 using RepoDb.PropertyHandlers.Oracle;
 
 namespace RepoDb.Oracle.IntegrationTests.Models
@@ -20,6 +22,7 @@ namespace RepoDb.Oracle.IntegrationTests.Models
     {
         public System.Int64 Id { get; set; }
 
+        [OracleDbType(OracleDbType.Vector)]
         [PropertyHandler(typeof(OracleVectorToDoubleArrayPropertyHandler))]
         public System.Double[] ColumnVectorDouble { get; set; }
     }

@@ -61,7 +61,8 @@ namespace RepoDb.MySql.IntegrationTests.PropertyHandlers
 
                 // Assert
                 Assert.IsNotNull(result);
-                Assert.IsInstanceOfType(result, typeof(MySqlGeometry));
+                Assert.IsInstanceOfType(result, typeof(byte[]));
+                CollectionAssert.AreEqual(CreatePointBytes(1.5, 2.5), (byte[])result);
             }
         }
 
@@ -169,12 +170,12 @@ namespace RepoDb.MySql.IntegrationTests.PropertyHandlers
                 // Act
                 var id = Convert.ToInt64(connection.Insert(entity));
                 var result = connection.Query<MySqlGeometryEntity>(e => e.Id == id).First();
-                var text = connection.ExecuteScalar<string>("SELECT ST_AsText(`ColumnGeometry`) FROM `PropertyHandler` WHERE `Id` = @Id;", new { Id = id });
+                var isNull = connection.ExecuteScalar<long>("SELECT COUNT(1) FROM `PropertyHandler` WHERE `Id` = @Id AND `ColumnGeometry` IS NULL;", new { Id = id }) == 1;
 
                 // Assert
                 Assert.AreEqual(id, result.Id);
                 Assert.IsTrue(result.ColumnGeometry.IsNull);
-                Assert.IsNull(text);
+                Assert.IsTrue(isNull);
             }
         }
     }

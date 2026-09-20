@@ -126,6 +126,8 @@ namespace RepoDb.Oracle.IntegrationTests.PropertyHandlers
         {
             using (var connection = new OracleConnection(Database.ConnectionString))
             {
+                Database.EnsureVectorSupported();
+
                 // Setup
                 var entity = new OracleVectorDoubleEntity { ColumnVectorDouble = new double[] { 1.5d, 2.5d, 3.5d } };
 
@@ -144,6 +146,8 @@ namespace RepoDb.Oracle.IntegrationTests.PropertyHandlers
         {
             using (var connection = new OracleConnection(Database.ConnectionString))
             {
+                Database.EnsureVectorSupported();
+
                 // Setup
                 var entity = new OracleVectorDoubleEntity { ColumnVectorDouble = null };
 

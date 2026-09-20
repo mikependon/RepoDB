@@ -126,6 +126,8 @@ namespace RepoDb.Oracle.IntegrationTests.PropertyHandlers
         {
             using (var connection = new OracleConnection(Database.ConnectionString))
             {
+                Database.EnsureVectorSupported();
+
                 // Setup
                 var entity = new OracleVectorFloatEntity { ColumnVectorFloat = new float[] { 1.5f, 2.5f, 3.5f } };
 
@@ -144,6 +146,8 @@ namespace RepoDb.Oracle.IntegrationTests.PropertyHandlers
         {
             using (var connection = new OracleConnection(Database.ConnectionString))
             {
+                Database.EnsureVectorSupported();
+
                 // Setup
                 var entity = new OracleVectorFloatEntity { ColumnVectorFloat = null };
 
