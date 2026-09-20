@@ -70,6 +70,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
                 connection.Truncate<IdentityCompleteTable>();
                 connection.Truncate<NonIdentityCompleteTable>();
                 connection.Truncate<TriggerCompatibilityTable>();
+                connection.Truncate<VectorEntity>();
             }
         }
 
@@ -97,6 +98,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
         {
             CreateIdentityCompleteTable();
             CreateNonIdentityCompleteTable();
+            CreatePropertyHandlerTable();
         }
 
         private static void CreateIdentityCompleteTable()
@@ -198,6 +200,26 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
                             [Id] ASC
                         )
                     ) ON [PRIMARY];
+                END";
+            using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
+            {
+                connection.ExecuteNonQuery(commandText);
+            }
+        }
+
+        private static void CreatePropertyHandlerTable()
+        {
+            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'PropertyHandler'))
+                BEGIN
+                    CREATE TABLE [dbo].[PropertyHandler]
+                    (
+                        [Id] INT IDENTITY(1, 1) NOT NULL,
+                        [Embedding] VECTOR(3) NULL,
+                        CONSTRAINT [PropertyHandler_Id] PRIMARY KEY
+                        (
+                            [Id] ASC
+                        )
+                    );
                 END";
             using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
             {
