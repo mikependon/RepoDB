@@ -67,6 +67,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
                 connection.Truncate<CompleteTable>();
                 connection.Truncate<NonIdentityCompleteTable>();
                 connection.Truncate<EnumTable>();
+                connection.Truncate("PropertyHandler");
             }
         }
 
@@ -98,6 +99,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
             CreateCompleteTable();
             CreateNonIdentityCompleteTable();
             CreateEnumTable();
+            CreatePropertyHandlerTable();
         }
 
         private static void CreateCompleteTable()
@@ -483,6 +485,19 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
         #endregion
 
         #region EnumTable
+
+        private static void CreatePropertyHandlerTable()
+        {
+            using (var connection = new NpgsqlConnection(ConnectionString))
+            {
+                connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS public.""PropertyHandler""
+                    (
+                        ""Id"" bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+                        ""ColumnTsVector"" tsvector,
+                        ""ColumnTsQuery"" tsquery
+                    );");
+            }
+        }
 
         private static void CreateEnumTable()
         {

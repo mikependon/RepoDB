@@ -54,6 +54,7 @@ namespace RepoDb.Vertica.IntegrationTests.Setup
             {
                 connection.Truncate<CompleteTable>();
                 connection.Truncate<NonIdentityCompleteTable>();
+                connection.Truncate("PropertyHandler");
             }
         }
 
@@ -93,6 +94,7 @@ namespace RepoDb.Vertica.IntegrationTests.Setup
         {
             CreateCompleteTable();
             CreateNonIdentityCompleteTable();
+            CreatePropertyHandlerTable();
         }
 
         private static void CreateCompleteTable()
@@ -193,6 +195,20 @@ namespace RepoDb.Vertica.IntegrationTests.Setup
                         ""ColumnText"" LONG VARCHAR(1000000),
                         ""ColumnTinyText"" VARCHAR(255),
                         ""ColumnBit"" BOOLEAN,
+                        PRIMARY KEY (""Id"")
+                    );");
+            }
+        }
+
+        private static void CreatePropertyHandlerTable()
+        {
+            using (var connection = new VerticaConnection(ConnectionString))
+            {
+                connection.ExecuteNonQuery(@"DROP TABLE IF EXISTS ""PropertyHandler"" CASCADE;");
+                connection.ExecuteNonQuery(@"CREATE TABLE ""PropertyHandler""
+                    (
+                        ""Id"" IDENTITY(1, 1),
+                        ""ColumnTime"" TIME,
                         PRIMARY KEY (""Id"")
                     );");
             }

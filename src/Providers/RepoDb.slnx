@@ -1,0 +1,129 @@
+<Solution>
+  <Folder Name="/Core/">
+    <Project Path="RepoDb.Core/RepoDb/RepoDb.csproj" />
+    <Project Path="RepoDb.Core/RepoDb.Tests/RepoDb.UnitTests/RepoDb.UnitTests.csproj" />
+    <Project Path="RepoDb.Core/RepoDb.Tests/RepoDb.IntegrationTests/RepoDb.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/ClickHouse/Core/">
+    <Project Path="RepoDb.ClickHouse/RepoDb.ClickHouse/RepoDb.ClickHouse.csproj" />
+    <Project Path="RepoDb.ClickHouse/RepoDb.ClickHouse.UnitTests/RepoDb.ClickHouse.UnitTests.csproj" />
+    <Project Path="RepoDb.ClickHouse/RepoDb.ClickHouse.IntegrationTests/RepoDb.ClickHouse.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/ClickHouse/Bulk/">
+    <Project Path="RepoDb.ClickHouse.BulkOperations/RepoDb.ClickHouse.BulkOperations/RepoDb.ClickHouse.BulkOperations.csproj" />
+    <Project Path="RepoDb.ClickHouse.BulkOperations/RepoDb.ClickHouse.BulkOperations.IntegrationTests/RepoDb.ClickHouse.BulkOperations.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/Db2/Core/">
+    <Project Path="RepoDb.Db2/RepoDb.Db2/RepoDb.Db2.csproj" />
+    <Project Path="RepoDb.Db2/RepoDb.Db2.UnitTests/RepoDb.Db2.UnitTests.csproj" />
+    <Project Path="RepoDb.Db2/RepoDb.Db2.IntegrationTests/RepoDb.Db2.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/Db2/Bulk/">
+    <Project Path="RepoDb.Db2.BulkOperations/RepoDb.Db2.BulkOperations/RepoDb.Db2.BulkOperations.csproj" />
+    <Project Path="RepoDb.Db2.BulkOperations/RepoDb.Db2.BulkOperations.IntegrationTests/RepoDb.Db2.BulkOperations.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/EnterpriseDb/Core/">
+    <Project Path="RepoDb.EnterpriseDb/RepoDb.EnterpriseDb/RepoDb.EnterpriseDb.csproj" />
+    <Project Path="RepoDb.EnterpriseDb/RepoDb.EnterpriseDb.UnitTests/RepoDb.EnterpriseDb.UnitTests.csproj" />
+    <Project Path="RepoDb.EnterpriseDb/RepoDb.EnterpriseDb.IntegrationTests/RepoDb.EnterpriseDb.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/EnterpriseDb/Bulk/">
+    <Project Path="RepoDb.EnterpriseDb.BulkOperations/RepoDb.EnterpriseDb.BulkOperations/RepoDb.EnterpriseDb.BulkOperations.csproj" />
+    <Project Path="RepoDb.EnterpriseDb.BulkOperations/RepoDb.EnterpriseDb.BulkOperations.IntegrationTests/RepoDb.EnterpriseDb.BulkOperations.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/Firebird/Core/">
+    <Project Path="RepoDb.Firebird/RepoDb.Firebird/RepoDb.Firebird.csproj" />
+    <Project Path="RepoDb.Firebird/RepoDb.Firebird.UnitTests/RepoDb.Firebird.UnitTests.csproj" />
+    <Project Path="RepoDb.Firebird/RepoDb.Firebird.IntegrationTests/RepoDb.Firebird.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/Firebird/Bulk/">
+    <Project Path="RepoDb.Firebird.BulkOperations/RepoDb.Firebird.BulkOperations/RepoDb.Firebird.BulkOperations.csproj" />
+    <Project Path="RepoDb.Firebird.BulkOperations/RepoDb.Firebird.BulkOperations.IntegrationTests/RepoDb.Firebird.BulkOperations.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/MariaDb/Core/">
+    <Project Path="RepoDb.MariaDb/RepoDb.MariaDb/RepoDb.MariaDb.csproj" />
+    <Project Path="RepoDb.MariaDb/RepoDb.MariaDb.UnitTests/RepoDb.MariaDb.UnitTests.csproj" />
+    <Project Path="RepoDb.MariaDb/RepoDb.MariaDb.IntegrationTests/RepoDb.MariaDb.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/MariaDb/Bulk/">
+    <Project Path="RepoDb.MariaDb.BulkOperations/RepoDb.MariaDb.BulkOperations/RepoDb.MariaDb.BulkOperations.csproj" />
+    <Project Path="RepoDb.MariaDb.BulkOperations/RepoDb.MariaDb.BulkOperations.IntegrationTests/RepoDb.MariaDb.BulkOperations.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/MariaDbConnector/Core/">
+    <Project Path="RepoDb.MariaDbConnector/RepoDb.MariaDbConnector/RepoDb.MariaDbConnector.csproj" />
+    <Project Path="RepoDb.MariaDbConnector/RepoDb.MariaDbConnector.UnitTests/RepoDb.MariaDbConnector.UnitTests.csproj" />
+    <Project Path="RepoDb.MariaDbConnector/RepoDb.MariaDbConnector.IntegrationTests/RepoDb.MariaDbConnector.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/MariaDbConnector/Bulk/">
+    <Project Path="RepoDb.MariaDbConnector.BulkOperations/RepoDb.MariaDbConnector.BulkOperations/RepoDb.MariaDbConnector.BulkOperations.csproj" />
+    <Project Path="RepoDb.MariaDbConnector.BulkOperations/RepoDb.MariaDbConnector.BulkOperations.IntegrationTests/RepoDb.MariaDbConnector.BulkOperations.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/MySql/Core/">
+    <Project Path="RepoDb.MySql/RepoDb.MySql/RepoDb.MySql.csproj" />
+    <Project Path="RepoDb.MySql/RepoDb.MySql.UnitTests/RepoDb.MySql.UnitTests.csproj" />
+    <Project Path="RepoDb.MySql/RepoDb.MySql.IntegrationTests/RepoDb.MySql.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/MySql/Bulk/">
+    <Project Path="RepoDb.MySql.BulkOperations/RepoDb.MySql.BulkOperations/RepoDb.MySql.BulkOperations.csproj" />
+    <Project Path="RepoDb.MySql.BulkOperations/RepoDb.MySql.BulkOperations.IntegrationTests/RepoDb.MySq.BulkOperations.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/MySqlConnector/Core/">
+    <Project Path="RepoDb.MySqlConnector/RepoDb.MySqlConnector/RepoDb.MySqlConnector.csproj" />
+    <Project Path="RepoDb.MySqlConnector/RepoDb.MySqlConnector.UnitTests/RepoDb.MySqlConnector.UnitTests.csproj" />
+    <Project Path="RepoDb.MySqlConnector/RepoDb.MySqlConnector.IntegrationTests/RepoDb.MySqlConnector.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/MySqlConnector/Bulk/">
+    <Project Path="RepoDb.MySqlConnector.BulkOperations/RepoDb.MySqlConnector.BulkOperations/RepoDb.MySqlConnector.BulkOperations.csproj" />
+    <Project Path="RepoDb.MySqlConnector.BulkOperations/RepoDb.MySqlConnector.BulkOperations.IntegrationTests/RepoDb.MySqlConnector.BulkOperations.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/Oracle/Core/">
+    <Project Path="RepoDb.Oracle/RepoDb.Oracle/RepoDb.Oracle.csproj" />
+    <Project Path="RepoDb.Oracle/RepoDb.Oracle.UnitTests/RepoDb.Oracle.UnitTests.csproj" />
+    <Project Path="RepoDb.Oracle/RepoDb.Oracle.IntegrationTests/RepoDb.Oracle.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/Oracle/Bulk/">
+    <Project Path="RepoDb.Oracle.BulkOperations/RepoDb.Oracle.BulkOperations/RepoDb.Oracle.BulkOperations.csproj" />
+    <Project Path="RepoDb.Oracle.BulkOperations/RepoDb.Oracle.BulkOperations.IntegrationTests/RepoDb.Oracle.BulkOperations.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/PostgreSql/Core/">
+    <Project Path="RepoDb.PostgreSql/RepoDb.PostgreSql/RepoDb.PostgreSql.csproj" />
+    <Project Path="RepoDb.PostgreSql/RepoDb.PostgreSql.UnitTests/RepoDb.PostgreSql.UnitTests.csproj" />
+    <Project Path="RepoDb.PostgreSql/RepoDb.PostgreSql.IntegrationTests/RepoDb.PostgreSql.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/PostgreSql/Bulk/">
+    <Project Path="RepoDb.PostgreSql.BulkOperations/RepoDb.PostgreSql.BulkOperations/RepoDb.PostgreSql.BulkOperations.csproj" />
+    <Project Path="RepoDb.PostgreSql.BulkOperations/RepoDb.PostgreSql.BulkOperations.IntegrationTests/RepoDb.PostgreSql.BulkOperations.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/SapHana/Core/">
+    <Project Path="RepoDb.SapHana/RepoDb.SapHana/RepoDb.SapHana.csproj" />
+    <Project Path="RepoDb.SapHana/RepoDb.SapHana.UnitTests/RepoDb.SapHana.UnitTests.csproj" />
+    <Project Path="RepoDb.SapHana/RepoDb.SapHana.IntegrationTests/RepoDb.SapHana.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/SapHana/Bulk/">
+    <Project Path="RepoDb.SapHana.BulkOperations/RepoDb.SapHana.BulkOperations/RepoDb.SapHana.BulkOperations.csproj" />
+    <Project Path="RepoDb.SapHana.BulkOperations/RepoDb.SapHana.BulkOperations.IntegrationTests/RepoDb.SapHana.BulkOperations.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/Sqlite.Microsoft/Core/">
+    <Project Path="RepoDb.Sqlite.Microsoft/RepoDb.Sqlite.Microsoft/RepoDb.Sqlite.Microsoft.csproj" />
+    <Project Path="RepoDb.Sqlite.Microsoft/RepoDb.Sqlite.Microsoft.UnitTests/RepoDb.Sqlite.Microsoft.UnitTests.csproj" />
+    <Project Path="RepoDb.Sqlite.Microsoft/RepoDb.Sqlite.Microsoft.IntegrationTests/RepoDb.Sqlite.Microsoft.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/SqlServer/Core/">
+    <Project Path="RepoDb.SqlServer/RepoDb.SqlServer/RepoDb.SqlServer.csproj" />
+    <Project Path="RepoDb.SqlServer/RepoDb.SqlServer.UnitTests/RepoDb.SqlServer.UnitTests.csproj" />
+    <Project Path="RepoDb.SqlServer/RepoDb.SqlServer.IntegrationTests/RepoDb.SqlServer.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/SqlServer/Bulk/">
+    <Project Path="RepoDb.SqlServer.BulkOperations/RepoDb.SqlServer.BulkOperations/RepoDb.SqlServer.BulkOperations.csproj" />
+    <Project Path="RepoDb.SqlServer.BulkOperations/RepoDb.SqlServer.BulkOperations.IntegrationTests/RepoDb.SqlServer.BulkOperations.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/Vertica/Core/">
+    <Project Path="RepoDb.Vertica/RepoDb.Vertica/RepoDb.Vertica.csproj" />
+    <Project Path="RepoDb.Vertica/RepoDb.Vertica.UnitTests/RepoDb.Vertica.UnitTests.csproj" />
+    <Project Path="RepoDb.Vertica/RepoDb.Vertica.IntegrationTests/RepoDb.Vertica.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/Vertica/Bulk/">
+    <Project Path="RepoDb.Vertica.BulkOperations/RepoDb.Vertica.BulkOperations/RepoDb.Vertica.BulkOperations.csproj" />
+    <Project Path="RepoDb.Vertica.BulkOperations/RepoDb.Vertica.BulkOperations.IntegrationTests/RepoDb.Vertica.BulkOperations.IntegrationTests.csproj" />
+  </Folder>
+</Solution>

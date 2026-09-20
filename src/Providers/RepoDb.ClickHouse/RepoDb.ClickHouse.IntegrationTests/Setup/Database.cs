@@ -63,6 +63,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Setup
                 {
                     connection.Truncate<CompleteTable>();
                     connection.Truncate<NonIdentityCompleteTable>();
+                    connection.Truncate("PropertyHandler");
                 }
                 catch (MissingFieldsException)
                 {
@@ -119,6 +120,22 @@ namespace RepoDb.ClickHouse.IntegrationTests.Setup
         {
             CreateCompleteTable();
             CreateNonIdentityCompleteTable();
+            CreatePropertyHandlerTable();
+        }
+
+        private static void CreatePropertyHandlerTable()
+        {
+            using (var connection = new ClickHouseConnection(ConnectionString))
+            {
+                connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS PropertyHandler
+                    (
+                        Id Int64,
+                        ColumnDecimal Nullable(Decimal(18,4)),
+                        ColumnFixedString Nullable(FixedString(8))
+                    )
+                    ENGINE = ReplacingMergeTree
+                    ORDER BY Id;");
+            }
         }
 
         private static void CreateCompleteTable()

@@ -16,23 +16,6 @@ namespace RepoDb.Oracle.PropertyHandlers
     /// A <see cref="IPropertyHandler{TInput, TResult}"/> that converts a <see cref="Guid"/> data entity
     /// property to/from an array of <see cref="byte"/> for binding against an Oracle <c>RAW(16)</c> column.
     /// </summary>
-    /// <remarks>
-    /// Oracle has no native GUID/UNIQUEIDENTIFIER type, and ODP.NET's <c>OracleParameter.Value</c> setter
-    /// does not accept a raw <see cref="Guid"/> value (unlike other DB providers),
-    /// throwing <c>ArgumentException: Value does not fall within the expected range.</c> if one is assigned
-    /// directly. The idiomatic Oracle storage for a GUID is a 16-byte <c>RAW(16)</c> column.
-    /// <para>
-    /// Use this handler if needed as it is intentionally NOT registered automatically for every <see cref="Guid"/> property,
-    /// since <see cref="PropertyHandlerMapper"/> registrations keyed by CLR type are global across the
-    /// whole process — auto-registering it would also affect
-    /// unrelated connections. Register it explicitly, scoped to the specific entity property that maps
-    /// to a <c>RAW(16)</c> column:
-    /// <code>
-    /// PropertyHandlerMapper.Add&lt;CompleteTable, GuidToByteArrayPropertyHandler&gt;(
-    ///     e => e.SessionId, new GuidToByteArrayPropertyHandler(), true);
-    /// </code>
-    /// </para>
-    /// </remarks>
     public class OracleGuidToByteArrayPropertyHandler : IPropertyHandler<byte[], Guid>
     {
         /// <summary>

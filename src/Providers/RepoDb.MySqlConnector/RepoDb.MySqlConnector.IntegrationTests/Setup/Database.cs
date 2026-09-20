@@ -61,6 +61,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
             {
                 connection.Truncate<CompleteTable>();
                 connection.Truncate<NonIdentityCompleteTable>();
+                connection.Truncate("PropertyHandler");
             }
         }
 
@@ -113,6 +114,29 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
         {
             CreateCompleteTable();
             CreateNonIdentityCompleteTable();
+            CreatePropertyHandlerTable();
+        }
+
+        private static void CreatePropertyHandlerTable()
+        {
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                // The 'PropertyHandler' table is shared with the RepoDb.MySql integration tests (same database), therefore
+                // the definition must be the same and the columns of the other project must be ensured, whichever creates it first.
+                connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS `PropertyHandler`
+                    (
+                        `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+                        `ColumnGeometry` geometry DEFAULT NULL,
+                        `ColumnTinyInt` tinyint(4) DEFAULT NULL,
+                        PRIMARY KEY (`Id`)
+                    ) ENGINE=InnoDB;");
+                var hasColumnTinyInt = connection.ExecuteScalar<long>(@"SELECT COUNT(1) FROM information_schema.columns
+                    WHERE table_schema = DATABASE() AND table_name = 'PropertyHandler' AND column_name = 'ColumnTinyInt';") > 0;
+                if (hasColumnTinyInt == false)
+                {
+                    connection.ExecuteNonQuery("ALTER TABLE `PropertyHandler` ADD COLUMN `ColumnTinyInt` tinyint(4) DEFAULT NULL;");
+                }
+            }
         }
 
         private static void CreateCompleteTable()
