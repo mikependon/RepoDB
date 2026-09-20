@@ -457,6 +457,60 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
+        public void TestQueryGroupParseExpressionValueWithStringConditionalCheckingTrueBranch()
+        {
+            // Setup
+            var value = "ABC";
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == (value == "ABC" ? "YES" : "NO"));
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = "YES";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionValueWithStringConditionalCheckingFalseBranch()
+        {
+            // Setup
+            var value = "ABC";
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == (value != "ABC" ? "YES" : "NO"));
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = "NO";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionValueWithRelationalConditionalChecking()
+        {
+            // Setup
+            var high = 2;
+            var low = 1;
+            var greaterThan = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == (high > low ? "YES" : "NO"));
+            var greaterThanOrEqual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == (high >= high ? "YES" : "NO"));
+            var lessThan = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == (low < high ? "YES" : "NO"));
+            var lessThanOrEqual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == (low <= low ? "YES" : "NO"));
+
+            // Act
+            var greaterThanValue = greaterThan.QueryFields.First().Parameter.Value;
+            var greaterThanOrEqualValue = greaterThanOrEqual.QueryFields.First().Parameter.Value;
+            var lessThanValue = lessThan.QueryFields.First().Parameter.Value;
+            var lessThanOrEqualValue = lessThanOrEqual.QueryFields.First().Parameter.Value;
+
+            // Assert
+            Assert.AreEqual("YES", greaterThanValue);
+            Assert.AreEqual("YES", greaterThanOrEqualValue);
+            Assert.AreEqual("YES", lessThanValue);
+            Assert.AreEqual("YES", lessThanOrEqualValue);
+        }
+
+        [TestMethod]
         public void TestQueryGroupParseExpressionWithDefaultValue()
         {
             // Setup

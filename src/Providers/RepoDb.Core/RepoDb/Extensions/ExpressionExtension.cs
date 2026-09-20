@@ -464,33 +464,8 @@ string.Equals(expression.Method.Name, "EndsWith", StringComparison.Ordinal))
         /// <returns>The extracted value from <see cref="ConditionalExpression"/> object.</returns>
         public static object GetValue(this ConditionalExpression expression)
         {
-            var test = expression.Test.GetValue();
-            var trueValue = expression.IfTrue.GetValue();
-            if (expression.Test.NodeType == ExpressionType.Equal)
-            {
-                return test == trueValue ? trueValue : expression.IfFalse.GetValue();
-            }
-            else if (expression.Test.NodeType == ExpressionType.NotEqual)
-            {
-                return test != trueValue ? trueValue : expression.IfFalse.GetValue();
-            }
-            else if (expression.Test.NodeType > ExpressionType.GreaterThan)
-            {
-                return test.ToNumber() > trueValue.ToNumber() ? trueValue : expression.IfFalse.GetValue();
-            }
-            else if (expression.Test.NodeType > ExpressionType.GreaterThanOrEqual)
-            {
-                return test.ToNumber() >= trueValue?.ToNumber() ? trueValue : expression.IfFalse.GetValue();
-            }
-            else if (expression.Test.NodeType > ExpressionType.LessThan)
-            {
-                return test.ToNumber() < trueValue?.ToNumber() ? trueValue : expression.IfFalse.GetValue();
-            }
-            else if (expression.Test.NodeType > ExpressionType.LessThanOrEqual)
-            {
-                return test.ToNumber() <= trueValue?.ToNumber() ? trueValue : expression.IfFalse.GetValue();
-            }
-            throw new NotSupportedException($"The operation '{expression.NodeType}' at expression '{expression}' is currently not supported.");
+            var test = Expression.Lambda<Func<bool>>(expression.Test).Compile().Invoke();
+            return test ? expression.IfTrue.GetValue() : expression.IfFalse.GetValue();
         }
 
         /// <summary>
