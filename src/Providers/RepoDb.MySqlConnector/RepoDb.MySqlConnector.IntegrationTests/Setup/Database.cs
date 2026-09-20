@@ -61,6 +61,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
             {
                 connection.Truncate<CompleteTable>();
                 connection.Truncate<NonIdentityCompleteTable>();
+                connection.Truncate("PropertyHandler");
             }
         }
 
@@ -113,6 +114,21 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
         {
             CreateCompleteTable();
             CreateNonIdentityCompleteTable();
+            CreatePropertyHandlerTable();
+        }
+
+        private static void CreatePropertyHandlerTable()
+        {
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS `PropertyHandler`
+                    (
+                        `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+                        `ColumnGeometry` geometry DEFAULT NULL,
+                        `ColumnTinyInt` tinyint(4) DEFAULT NULL,
+                        PRIMARY KEY (`Id`)
+                    ) ENGINE=InnoDB;");
+            }
         }
 
         private static void CreateCompleteTable()
