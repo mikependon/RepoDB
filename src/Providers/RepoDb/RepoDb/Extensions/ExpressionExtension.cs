@@ -492,36 +492,8 @@ namespace RepoDb.Extensions
         /// <returns>The extracted value from <see cref="ConditionalExpression"/> object.</returns>
         public static object GetValue(this ConditionalExpression expression)
         {
-            var test = expression.Test.GetValue();
-            var ifTrue = expression.IfTrue.GetValue();
-            if (expression.Test.NodeType == ExpressionType.Equal)
-            {
-                return test == ifTrue ? ifTrue : expression.IfFalse.GetValue();
-            }
-            else if (expression.Test.NodeType == ExpressionType.NotEqual)
-            {
-                return test != ifTrue ? ifTrue : expression.IfFalse.GetValue();
-            }
-            else if (expression.Test.NodeType > ExpressionType.GreaterThan)
-            {
-                return test?.ToNumber() > ifTrue.ToNumber() ? ifTrue : expression.IfFalse.GetValue();
-            }
-            else if (expression.Test.NodeType > ExpressionType.GreaterThanOrEqual)
-            {
-                return test?.ToNumber() >= ifTrue?.ToNumber() ? ifTrue : expression.IfFalse.GetValue();
-            }
-            else if (expression.Test.NodeType > ExpressionType.LessThan)
-            {
-                return test?.ToNumber() < ifTrue?.ToNumber() ? ifTrue : expression.IfFalse.GetValue();
-            }
-            else if (expression.Test.NodeType > ExpressionType.LessThanOrEqual)
-            {
-                return test?.ToNumber() <= ifTrue?.ToNumber() ? ifTrue : expression.IfFalse.GetValue();
-            }
-            else
-            {
-                throw new NotSupportedException($"The operation '{expression.NodeType.ToString()}' at expression '{expression.ToString()}' is currently not supported.");
-            }
+            var test = Expression.Lambda<Func<bool>>(expression.Test).Compile().Invoke();
+            return test ? expression.IfTrue.GetValue() : expression.IfFalse.GetValue();
         }
 
         /// <summary>
