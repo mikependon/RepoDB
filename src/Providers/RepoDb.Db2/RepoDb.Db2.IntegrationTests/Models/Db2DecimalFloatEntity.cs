@@ -6,8 +6,10 @@
 
 #endregion
 
+using IBM.Data.Db2;
 using IBM.Data.DB2Types;
 using RepoDb.Attributes;
+using RepoDb.Attributes.Parameter.Db2;
 using RepoDb.PropertyHandlers.Db2;
 
 namespace RepoDb.Db2.IntegrationTests.Models
@@ -21,6 +23,7 @@ namespace RepoDb.Db2.IntegrationTests.Models
         public System.Int32 Id { get; set; }
 
         [PropertyHandler(typeof(Db2DecimalFloatPropertyHandler))]
+        [Db2Type(DB2Type.DecimalFloat)]
         public DB2DecimalFloat ColumnDecFloat { get; set; }
     }
 }
