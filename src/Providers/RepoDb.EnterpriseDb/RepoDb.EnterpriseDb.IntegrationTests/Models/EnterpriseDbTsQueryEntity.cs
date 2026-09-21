@@ -6,6 +6,8 @@
 
 #endregion
 
+using RepoDb.Attributes.Parameter.EnterpriseDb;
+using RepoDb.Connector.EnterpriseDb;
 using RepoDb.Attributes;
 using RepoDb.PropertyHandlers.EnterpriseDb;
 
@@ -20,6 +22,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.Models
         public System.Int64 Id { get; set; }
 
         [PropertyHandler(typeof(TsQueryToStringPropertyHandler))]
+        [EnterpriseDbType(EDBType.TsQuery)]
         public System.String ColumnTsQuery { get; set; }
     }
 }
