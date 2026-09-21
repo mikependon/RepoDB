@@ -29,13 +29,13 @@ namespace RepoDb.PropertyHandlers.Firebird
             FirebirdZonedValueConverter.ToDateTimeOffset(input);
 
         /// <summary>
-        /// Passes the <see cref="DateTimeOffset"/> to the driver, which binds it as a <c>TIMESTAMP WITH TIME ZONE</c> value.
+        /// Converts the <see cref="DateTimeOffset"/> into an <c>FbZonedDateTime</c> (holding the UTC date and time, with the offset as a fixed-offset <c>Etc/GMT</c> time zone name, for example <c>Etc/GMT-3</c>), to be written into a <c>TIMESTAMP WITH TIME ZONE</c> column.
         /// </summary>
         /// <param name="input">The <see cref="DateTimeOffset"/> to write.</param>
         /// <param name="options">The options of the property handler for writing the value.</param>
-        /// <returns>The <see cref="DateTimeOffset"/> (boxed), or <c>null</c> when the value is <c>null</c>.</returns>
+        /// <returns>The <c>FbZonedDateTime</c> (boxed), or <c>null</c> when the value is <c>null</c>.</returns>
         public object Set(DateTimeOffset? input,
             PropertyHandlerSetOptions options) =>
-            input.HasValue ? (object)input.Value : null;
+            input.HasValue ? FirebirdZonedValueConverter.ToZonedDateTime(input.Value) : null;
     }
 }

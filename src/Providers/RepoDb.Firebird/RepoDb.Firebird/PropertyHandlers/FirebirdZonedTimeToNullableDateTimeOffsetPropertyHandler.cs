@@ -29,7 +29,7 @@ namespace RepoDb.PropertyHandlers.Firebird
             FirebirdZonedValueConverter.ToDateTimeOffset(input);
 
         /// <summary>
-        /// Converts the <see cref="DateTimeOffset"/> into an <c>FbZonedTime</c> (holding the UTC time of day, with the offset as the time zone name, for example <c>+03:00</c>), to be written into a <c>TIME WITH TIME ZONE</c> column. The date part is ignored.
+        /// Converts the <see cref="DateTimeOffset"/> into an <c>FbZonedTime</c> (holding the UTC time of day, with the offset as a fixed-offset <c>Etc/GMT</c> time zone name, for example <c>Etc/GMT-3</c>), to be written into a <c>TIME WITH TIME ZONE</c> column. The date part is ignored.
         /// </summary>
         /// <param name="input">The <see cref="DateTimeOffset"/> to write.</param>
         /// <param name="options">The options of the property handler for writing the value.</param>

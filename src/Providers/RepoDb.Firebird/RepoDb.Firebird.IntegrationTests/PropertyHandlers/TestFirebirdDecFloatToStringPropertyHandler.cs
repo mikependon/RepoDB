@@ -45,7 +45,7 @@ namespace RepoDb.Firebird.IntegrationTests.PropertyHandlers
                 var result = handler.Set("123.45", null);
 
                 // Assert
-                Assert.AreEqual("123.45", result);
+                Assert.AreEqual("123.45", handler.Get(result, null));
             }
         }
 

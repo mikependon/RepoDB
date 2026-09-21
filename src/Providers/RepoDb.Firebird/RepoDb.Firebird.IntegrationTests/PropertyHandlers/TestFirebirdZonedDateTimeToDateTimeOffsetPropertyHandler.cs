@@ -46,7 +46,8 @@ namespace RepoDb.Firebird.IntegrationTests.PropertyHandlers
                 var result = handler.Set(value, null);
 
                 // Assert
-                Assert.AreEqual(value, result);
+                Assert.IsInstanceOfType(result, typeof(FirebirdSql.Data.Types.FbZonedDateTime));
+                Assert.AreEqual(value, handler.Get(result, null));
             }
         }
 

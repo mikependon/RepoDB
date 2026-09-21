@@ -46,7 +46,7 @@ namespace RepoDb.Firebird.IntegrationTests.PropertyHandlers
 
                 // Assert
                 Assert.IsInstanceOfType(result, typeof(FbDecFloat));
-                Assert.AreEqual("123.45", result.ToString());
+                Assert.AreEqual(123.45m, decimal.Parse(result.ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 

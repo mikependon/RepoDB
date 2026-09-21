@@ -27,13 +27,13 @@ namespace RepoDb.PropertyHandlers.Firebird
             FirebirdDecFloatConverter.ToText(input);
 
         /// <summary>
-        /// Passes the text form of the value to the driver, which Firebird converts to <c>DECFLOAT</c> on assignment.
+        /// Converts the text form of the value into an <c>FbDecFloat</c>, to be written into the <c>DECFLOAT</c> column (the driver does not accept text for a <c>DECFLOAT</c> parameter).
         /// </summary>
         /// <param name="input">The text form of the <c>DECFLOAT</c> value to write (for example <c>123.45</c> or <c>1.5E+20</c>).</param>
         /// <param name="options">The options of the property handler for writing the value.</param>
-        /// <returns>The text itself, or <c>null</c> when the text is <c>null</c>.</returns>
+        /// <returns>The <c>FbDecFloat</c> (boxed), the text itself when it is not a finite number (for example <c>NaN</c>), or <c>null</c> when the text is <c>null</c>.</returns>
         public object Set(string input,
             PropertyHandlerSetOptions options) =>
-            input;
+            input == null ? null : FirebirdDecFloatConverter.FromText(input);
     }
 }

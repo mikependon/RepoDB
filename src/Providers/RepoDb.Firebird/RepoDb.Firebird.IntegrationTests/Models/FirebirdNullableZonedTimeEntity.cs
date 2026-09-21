@@ -6,7 +6,9 @@
 
 #endregion
 
+using FirebirdSql.Data.FirebirdClient;
 using RepoDb.Attributes;
+using RepoDb.Attributes.Parameter.Firebird;
 using RepoDb.PropertyHandlers.Firebird;
 
 namespace RepoDb.Firebird.IntegrationTests.Models
@@ -20,6 +22,8 @@ namespace RepoDb.Firebird.IntegrationTests.Models
         public System.Int64 Id { get; set; }
 
         [PropertyHandler(typeof(FirebirdZonedTimeToNullableDateTimeOffsetPropertyHandler))]
+        [TypeMap(System.Data.DbType.Time)]
+        [FbDbType(FbDbType.TimeTZ)]
         public System.DateTimeOffset? ColumnTimeTz { get; set; }
     }
 }
