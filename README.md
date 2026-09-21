@@ -178,10 +178,10 @@ It's intentionally lightweight rather than OTel-based, keeping RepoDB's thin, fa
 If your organization is evaluating or adopting RepoDB for production use, keep the following in mind:
 
 - **🖥️ Run the benchmark on your environment** — Published [benchmarks](src/Benchmarks/README.md) reflect our infrastructure, not yours. Re-run them on your own setup before trusting the numbers.
-- **⚠️ Be aware of the limitations** — RepoDB has documented, provider-specific [limitations](src/Shared/RepoDb.Docs/limitations.md). Review them before production use.
+- **⚠️ Be aware of the limitations** — RepoDB has documented, provider-specific [limitations](LIMITATIONS.md). Review them before production use.
 - **🔒 Security is best-effort, not SLA-backed** — No dedicated security team or response SLA. See our [Security Policy](SECURITY.md) before security-sensitive adoption.
-- **🤝 Understand our contributions and support policy** — Maintained by one individual; support is free but follows a documented [support policy](src/Shared/RepoDb.Docs/support-policy.md), not an enterprise SLA.
-- **🚌 Factor in the bus factor** — No formal [governance](src/Shared/RepoDb.Docs/support-policy.md#governance) yet. Weigh single-maintainer risk in your planning.
+- **🤝 Understand our contributions and support policy** — Maintained by one individual; support is free but follows a documented [support policy](SUPPORT_POLICY.md), not an enterprise SLA.
+- **🚌 Factor in the bus factor** — No formal [governance](SUPPORT_POLICY.md#governance) yet. Weigh single-maintainer risk in your planning.
 - **🔢 No formal versioning/breaking-change policy** — Only the latest release gets fixes (see [Security Policy](SECURITY.md#-supported-versions)). Pin exact versions and review release notes before upgrading.
 
 ## Contributions
@@ -208,8 +208,8 @@ Read our [contributing](CONTRIBUTING.md) page for more.
 - [Coding Standards](https://github.com/mikependon/RepoDb/tree/master/src/Shared/RepoDb.Docs/coding-standards.md)
 - [Issuing a Pull Request](https://github.com/mikependon/RepoDb/tree/master/src/Shared/RepoDb.Docs/issuing-a-pull-request.md)
 - [Reporting an Issue](https://github.com/mikependon/RepoDb/tree/master/src/Shared/RepoDb.Docs/reporting-an-issue.md)
-- [Support Policy](https://github.com/mikependon/RepoDb/tree/master/src/Shared/RepoDb.Docs/support-policy.md)
-- [Limitations](https://github.com/mikependon/RepoDb/tree/master/src/Shared/RepoDb.Docs/limitations.md)
+- [Support Policy](https://github.com/mikependon/RepoDb/tree/master/SUPPORT_POLICY.md)
+- [Limitations](https://github.com/mikependon/RepoDb/tree/master/LIMITATIONS.md)
 
 ### Contributors
 

@@ -55,7 +55,7 @@ If the file was created by the author (or is already present), no need to modify
 - Check [existing issues](https://github.com/mikependon/RepoDb/issues) and open pull requests to avoid duplicating work.
 - For non-trivial changes, open an issue first to align on approach before investing significant time.
 - Review [Building the Solutions](RepoDb.Docs/building-the-solutions.md) to get your local environment running.
-- Keep an eye on [Limitations](limitations.md) and the [Support Policy](RepoDb.Docs/support-policy.md) so your contribution lands where it's most useful.
+- Keep an eye on [Limitations](LIMITATIONS.md) and the [Support Policy](SUPPORT_POLICY.md) so your contribution lands where it's most useful.
 
 ## ✅ Recognition
 
