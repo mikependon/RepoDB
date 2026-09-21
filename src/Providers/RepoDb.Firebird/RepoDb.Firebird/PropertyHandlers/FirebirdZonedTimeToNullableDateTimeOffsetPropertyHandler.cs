@@ -8,6 +8,7 @@
 
 using RepoDb.Interfaces;
 using RepoDb.Options;
+using RepoDb.Resolvers;
 using System;
 
 namespace RepoDb.PropertyHandlers.Firebird
@@ -17,6 +18,9 @@ namespace RepoDb.PropertyHandlers.Firebird
     /// </summary>
     public class FirebirdZonedTimeToNullableDateTimeOffsetPropertyHandler : IPropertyHandler<object, DateTimeOffset?>
     {
+        private static readonly FirebirdZonedValueToDateTimeOffsetResolver zonedValueToDateTimeOffsetResolver = new FirebirdZonedValueToDateTimeOffsetResolver();
+        private static readonly DateTimeOffsetToFirebirdZonedTimeResolver dateTimeOffsetToZonedTimeResolver = new DateTimeOffsetToFirebirdZonedTimeResolver();
+
         /// <summary>
         /// Converts the <c>TIME WITH TIME ZONE</c> value, as returned by the driver, into a <see cref="Nullable{T}"/> of <see cref="DateTimeOffset"/> on 1970-01-01.
         /// </summary>
@@ -26,7 +30,7 @@ namespace RepoDb.PropertyHandlers.Firebird
         /// <exception cref="InvalidOperationException">Thrown when the UTC offset of the time zone cannot be determined.</exception>
         public DateTimeOffset? Get(object input,
             PropertyHandlerGetOptions options) =>
-            FirebirdZonedValueConverter.ToDateTimeOffset(input);
+            zonedValueToDateTimeOffsetResolver.Resolve(input);
 
         /// <summary>
         /// Converts the <see cref="DateTimeOffset"/> into an <c>FbZonedTime</c> (holding the UTC time of day, with the offset as a fixed-offset <c>Etc/GMT</c> time zone name, for example <c>Etc/GMT-3</c>), to be written into a <c>TIME WITH TIME ZONE</c> column. The date part is ignored.
@@ -36,6 +40,6 @@ namespace RepoDb.PropertyHandlers.Firebird
         /// <returns>The <c>FbZonedTime</c> (boxed), or <c>null</c> when the value is <c>null</c>.</returns>
         public object Set(DateTimeOffset? input,
             PropertyHandlerSetOptions options) =>
-            input.HasValue ? FirebirdZonedValueConverter.ToZonedTime(input.Value) : null;
+            input.HasValue ? dateTimeOffsetToZonedTimeResolver.Resolve(input.Value) : null;
     }
 }

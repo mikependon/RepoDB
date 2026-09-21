@@ -8,6 +8,7 @@
 
 using RepoDb.Interfaces;
 using RepoDb.Options;
+using RepoDb.Resolvers;
 
 namespace RepoDb.PropertyHandlers.Firebird
 {
@@ -16,6 +17,9 @@ namespace RepoDb.PropertyHandlers.Firebird
     /// </summary>
     public class FirebirdDecFloatToStringPropertyHandler : IPropertyHandler<object, string>
     {
+        private static readonly FirebirdDecFloatToTextResolver decFloatToTextResolver = new FirebirdDecFloatToTextResolver();
+        private static readonly TextToFirebirdDecFloatResolver textToDecFloatResolver = new TextToFirebirdDecFloatResolver();
+
         /// <summary>
         /// Converts the <c>DECFLOAT</c> value, as returned by the driver, into its text form.
         /// </summary>
@@ -24,7 +28,7 @@ namespace RepoDb.PropertyHandlers.Firebird
         /// <returns>The text form of the value, or <c>null</c> when the value is <c>null</c>.</returns>
         public string Get(object input,
             PropertyHandlerGetOptions options) =>
-            FirebirdDecFloatConverter.ToText(input);
+            decFloatToTextResolver.Resolve(input);
 
         /// <summary>
         /// Converts the text form of the value into an <c>FbDecFloat</c>, to be written into the <c>DECFLOAT</c> column (the driver does not accept text for a <c>DECFLOAT</c> parameter).
@@ -34,6 +38,6 @@ namespace RepoDb.PropertyHandlers.Firebird
         /// <returns>The <c>FbDecFloat</c> (boxed), the text itself when it is not a finite number (for example <c>NaN</c>), or <c>null</c> when the text is <c>null</c>.</returns>
         public object Set(string input,
             PropertyHandlerSetOptions options) =>
-            input == null ? null : FirebirdDecFloatConverter.FromText(input);
+            input == null ? null : textToDecFloatResolver.Resolve(input);
     }
 }

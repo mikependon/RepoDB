@@ -8,6 +8,7 @@
 
 using RepoDb.Interfaces;
 using RepoDb.Options;
+using RepoDb.Resolvers;
 using System;
 
 namespace RepoDb.PropertyHandlers.Firebird
@@ -17,6 +18,9 @@ namespace RepoDb.PropertyHandlers.Firebird
     /// </summary>
     public class FirebirdDecFloatToNullableDecimalPropertyHandler : IPropertyHandler<object, decimal?>
     {
+        private static readonly FirebirdDecFloatToDecimalResolver decFloatToDecimalResolver = new FirebirdDecFloatToDecimalResolver();
+        private static readonly DecimalToFirebirdDecFloatResolver decimalToDecFloatResolver = new DecimalToFirebirdDecFloatResolver();
+
         /// <summary>
         /// Converts the <c>DECFLOAT</c> value, as returned by the driver, into a <see cref="Nullable{T}"/> of <see cref="decimal"/>.
         /// </summary>
@@ -27,7 +31,7 @@ namespace RepoDb.PropertyHandlers.Firebird
         /// <exception cref="FormatException">Thrown when the value is <c>NaN</c> or infinity.</exception>
         public decimal? Get(object input,
             PropertyHandlerGetOptions options) =>
-            FirebirdDecFloatConverter.ToDecimal(input);
+            decFloatToDecimalResolver.Resolve(input);
 
         /// <summary>
         /// Converts the <see cref="decimal"/> into an <c>FbDecFloat</c>, to be written into a <c>DECFLOAT</c> column.
@@ -37,6 +41,6 @@ namespace RepoDb.PropertyHandlers.Firebird
         /// <returns>The <c>FbDecFloat</c> (boxed), or <c>null</c> when the value is <c>null</c>.</returns>
         public object Set(decimal? input,
             PropertyHandlerSetOptions options) =>
-            input.HasValue ? FirebirdDecFloatConverter.FromDecimal(input.Value) : null;
+            input.HasValue ? decimalToDecFloatResolver.Resolve(input.Value) : null;
     }
 }

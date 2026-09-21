@@ -48,7 +48,7 @@ namespace RepoDb.Firebird.IntegrationTests.PropertyHandlers
                 // Assert
                 Assert.IsInstanceOfType(result, typeof(FbZonedTime));
                 Assert.AreEqual(value.UtcDateTime.TimeOfDay, ((FbZonedTime)result).Time);
-                Assert.AreEqual("+02:00", ((FbZonedTime)result).TimeZone);
+                Assert.AreEqual("Etc/GMT-2", ((FbZonedTime)result).TimeZone);
             }
         }
 

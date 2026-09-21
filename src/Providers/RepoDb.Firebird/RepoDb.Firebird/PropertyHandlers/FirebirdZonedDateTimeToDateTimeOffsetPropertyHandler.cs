@@ -8,6 +8,7 @@
 
 using RepoDb.Interfaces;
 using RepoDb.Options;
+using RepoDb.Resolvers;
 using System;
 
 namespace RepoDb.PropertyHandlers.Firebird
@@ -20,6 +21,9 @@ namespace RepoDb.PropertyHandlers.Firebird
     /// </remarks>
     public class FirebirdZonedDateTimeToDateTimeOffsetPropertyHandler : IPropertyHandler<object, DateTimeOffset>
     {
+        private static readonly FirebirdZonedValueToDateTimeOffsetResolver zonedValueToDateTimeOffsetResolver = new FirebirdZonedValueToDateTimeOffsetResolver();
+        private static readonly DateTimeOffsetToFirebirdZonedDateTimeResolver dateTimeOffsetToZonedDateTimeResolver = new DateTimeOffsetToFirebirdZonedDateTimeResolver();
+
         /// <summary>
         /// Converts the <c>TIMESTAMP WITH TIME ZONE</c> value, as returned by the driver, into a <see cref="DateTimeOffset"/>.
         /// </summary>
@@ -29,7 +33,7 @@ namespace RepoDb.PropertyHandlers.Firebird
         /// <exception cref="InvalidOperationException">Thrown when the UTC offset of the time zone cannot be determined.</exception>
         public DateTimeOffset Get(object input,
             PropertyHandlerGetOptions options) =>
-            FirebirdZonedValueConverter.ToDateTimeOffset(input) ?? default;
+            zonedValueToDateTimeOffsetResolver.Resolve(input) ?? default;
 
         /// <summary>
         /// Converts the <see cref="DateTimeOffset"/> into an <c>FbZonedDateTime</c> (holding the UTC date and time, with the offset as a fixed-offset <c>Etc/GMT</c> time zone name, for example <c>Etc/GMT-3</c>), to be written into a <c>TIMESTAMP WITH TIME ZONE</c> column.
@@ -39,6 +43,6 @@ namespace RepoDb.PropertyHandlers.Firebird
         /// <returns>The <c>FbZonedDateTime</c> (boxed).</returns>
         public object Set(DateTimeOffset input,
             PropertyHandlerSetOptions options) =>
-            FirebirdZonedValueConverter.ToZonedDateTime(input);
+            dateTimeOffsetToZonedDateTimeResolver.Resolve(input);
     }
 }

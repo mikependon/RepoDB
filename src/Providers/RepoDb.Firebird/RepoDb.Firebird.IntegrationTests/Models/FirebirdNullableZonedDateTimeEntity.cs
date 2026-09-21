@@ -8,7 +8,6 @@
 
 using FirebirdSql.Data.FirebirdClient;
 using RepoDb.Attributes;
-using RepoDb.Attributes.Parameter;
 using RepoDb.Attributes.Parameter.Firebird;
 using RepoDb.PropertyHandlers.Firebird;
 
@@ -20,7 +19,7 @@ namespace RepoDb.Firebird.IntegrationTests.Models
     [Map("PropertyHandler")]
     public class FirebirdNullableZonedDateTimeEntity
     {
-        public System.Int64 Id { get; set; }
+        public long Id { get; set; }
 
         [PropertyHandler(typeof(FirebirdZonedDateTimeToNullableDateTimeOffsetPropertyHandler))]
         [TypeMap(System.Data.DbType.DateTime)]
