@@ -504,7 +504,7 @@ Start the `mariadb` service defined in [docker-compose.yml](https://github.com/m
 Add the environment variables under `System`.
 
 - REPODB_MARIADB_CONSTR_SYSTEM = `Server=127.0.0.1;Port=3307;Database=sys;User ID=root;Password=RepoDB2026;`
-- REPODB_MARIADB_CONSTR = `Server=127.0.0.1;Port=3307;Database=RepoDb;User ID=root;Password=RepoDB2026;AllowLoadLocalInfile=True;AllowUserVariables=True;`
+- REPODB_MARIADB_CONSTR_BULK = `Server=127.0.0.1;Port=3307;Database=RepoDb;User ID=root;Password=RepoDB2026;AllowLoadLocalInfile=True;AllowUserVariables=True;`
 
 Build the integration tests.
 
@@ -590,7 +590,7 @@ Start the `mariadb` service defined in [docker-compose.yml](https://github.com/m
 Add the environment variables under `System`.
 
 - REPODB_MARIADB_CONSTR_SYSTEM = `Server=127.0.0.1;Port=3307;Database=sys;User ID=root;Password=RepoDB2026;`
-- REPODB_MARIADB_CONSTR = `Server=127.0.0.1;Port=3307;Database=RepoDb;User ID=root;Password=RepoDB2026;AllowLoadLocalInfile=True;AllowUserVariables=True;`
+- REPODB_MARIADB_CONSTR_BULK = `Server=127.0.0.1;Port=3307;Database=RepoDb;User ID=root;Password=RepoDB2026;AllowLoadLocalInfile=True;AllowUserVariables=True;`
 
 Build the integration tests.
 
@@ -678,7 +678,7 @@ Start the `mysql` service defined in [docker-compose.yml](https://github.com/mik
 Add the environment variables under `System`.
 
 - REPODB_MYSQL_CONSTR_SYSTEM = `Server=127.0.0.1;Port=3306;Database=sys;User ID=root;Password=RepoDB2026;`
-- REPODB_MYSQL_CONSTR = `Server=127.0.0.1;Port=3306;Database=RepoDb;User ID=root;Password=RepoDB2026;AllowLoadLocalInfile=True;AllowUserVariables=True;`
+- REPODB_MYSQL_CONSTR_BULK = `Server=127.0.0.1;Port=3306;Database=RepoDb;User ID=root;Password=RepoDB2026;AllowLoadLocalInfile=True;AllowUserVariables=True;`
 
 Build the integration tests.
 
@@ -764,7 +764,7 @@ Start the `mysql` service defined in [docker-compose.yml](https://github.com/mik
 Add the environment variables under `System`.
 
 - REPODB_MYSQL_CONSTR_SYSTEM = `Server=127.0.0.1;Port=3306;Database=sys;User ID=root;Password=RepoDB2026;`
-- REPODB_MYSQL_CONSTR = `Server=127.0.0.1;Port=3306;Database=RepoDb;User ID=root;Password=RepoDB2026;AllowLoadLocalInfile=True;AllowUserVariables=True;`
+- REPODB_MYSQL_CONSTR_BULK = `Server=127.0.0.1;Port=3306;Database=RepoDb;User ID=root;Password=RepoDB2026;AllowLoadLocalInfile=True;AllowUserVariables=True;`
 
 Build the integration tests.
 

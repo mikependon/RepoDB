@@ -44,7 +44,7 @@ namespace RepoDb.IntegrationTests.Setup
                 "Server=127.0.0.1;Port=3306;Database=sys;User ID=root;Password=RepoDB2026;";
 
             ConnectionString =
-                Environment.GetEnvironmentVariable("REPODB_MYSQL_CONSTR") ??
+                Environment.GetEnvironmentVariable("REPODB_MYSQL_CONSTR_BULK") ??
                 "Server=127.0.0.1;Port=3306;Database=RepoDb;User ID=root;Password=RepoDB2026;AllowLoadLocalInfile=True;AllowUserVariables=True;";
 
             // Initialize MySqlConnector
