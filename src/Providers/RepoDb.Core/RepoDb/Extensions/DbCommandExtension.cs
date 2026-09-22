@@ -73,10 +73,7 @@ namespace RepoDb.Extensions
             // Set the values
             parameter.ParameterName = name.AsParameterName(dbSetting);
 
-            // Some providers (e.g. Vertica) lazily initialize internal parameter state inside the DbType
-            // setter, and throw setting Value first on a parameter fresh off IDbCommand.CreateParameter()
-            // if DbType was never touched - so for those, assign one (inferred from the value's CLR type
-            // when the caller didn't supply one) before Value rather than after.
+            // Set DbType if needed. Some providers require the DbType to be set before the value is set, otherwise it will throw an exception.
             if (dbSetting?.RequiresDbTypeBeforeValue == true)
             {
                 parameter.DbType = dbType ?? (value != null ? clientTypeToDbTypeResolver.Resolve(value.GetType()) : null) ?? parameter.DbType;
@@ -99,6 +96,12 @@ namespace RepoDb.Extensions
 
             // Table-Valued Parameter
             EnsureTableValueParameter(parameter);
+
+            // Invoke backdoor even via dynamic handler
+            if (command.Connection != null)
+            {
+                DbHelperMapper.Get(command.Connection)?.DynamicHandler(parameter, "RepoDb.Internal.Compiler.Events[AfterCreateDbParameter]");
+            }
 
             // Return the parameter
             return parameter;

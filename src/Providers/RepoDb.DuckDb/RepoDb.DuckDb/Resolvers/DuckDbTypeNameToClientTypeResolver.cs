@@ -1,7 +1,6 @@
 #region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
-// Portions copyright their respective RepoDB contributors.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
 
@@ -9,6 +8,7 @@
 
 using RepoDb.Interfaces;
 using System;
+using System.Numerics;
 
 namespace RepoDb.Resolvers
 {
@@ -35,7 +35,7 @@ namespace RepoDb.Resolvers
             ColumnSmallInt (System.Int16)
             ColumnInteger (System.Int32)
             ColumnBigInt (System.Int64)
-            ColumnHugeInt (System.Decimal)
+            ColumnHugeInt (System.Numerics.BigInteger)
             ColumnUTinyInt (System.Byte)
             ColumnUSmallInt (System.UInt16)
             ColumnUInteger (System.UInt32)
@@ -48,7 +48,7 @@ namespace RepoDb.Resolvers
             ColumnDate (System.DateTime)
             ColumnTime (System.TimeSpan)
             ColumnTimestamp (System.DateTime)
-            ColumnTimestampTz (System.DateTimeOffset)
+            ColumnTimestampTz (System.DateTime)
             ColumnUuid (System.Guid)
             ColumnJson (System.String)
             ColumnBit (System.String)
@@ -61,12 +61,12 @@ namespace RepoDb.Resolvers
                 "smallint" or "int2" or "short" => typeof(short),
                 "integer" or "int4" or "int" or "signed" => typeof(int),
                 "bigint" or "int8" or "long" => typeof(long),
-                "hugeint" => typeof(decimal),
+                "hugeint" => typeof(BigInteger),
                 "utinyint" => typeof(byte),
                 "usmallint" => typeof(ushort),
                 "uinteger" => typeof(uint),
                 "ubigint" => typeof(ulong),
-                "uhugeint" => typeof(decimal),
+                "uhugeint" => typeof(BigInteger),
                 "float" or "float4" or "real" => typeof(float),
                 "double" or "float8" => typeof(double),
                 "decimal" or "numeric" => typeof(decimal),
@@ -75,7 +75,7 @@ namespace RepoDb.Resolvers
                 "date" => typeof(DateTime),
                 "time" => typeof(TimeSpan),
                 "timestamp" or "datetime" or "timestamp_s" or "timestamp_ms" or "timestamp_ns" => typeof(DateTime),
-                "timestamp with time zone" or "timestamptz" => typeof(DateTimeOffset),
+                "timestamp with time zone" or "timestamptz" => typeof(DateTime),
                 "uuid" => typeof(Guid),
                 "bit" or "bitstring" => typeof(string),
                 "interval" => typeof(TimeSpan),

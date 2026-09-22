@@ -91,6 +91,12 @@ We want the .NET community to understand this library's limitations before using
   - [Bulk Insert and Merge Identity Correlation Relies on RETURNING Order](#bulk-insert-and-merge-identity-correlation-relies-on-returning-order)
   - [BulkMerge Without Updateable Columns Undercounts Affected Rows](#bulkmerge-without-updateable-columns-undercounts-affected-rows)
   - [Verification Status](#verification-status-7)
+- DuckDB
+  - [No Native Auto-Increment](#no-native-auto-increment)
+  - [GetScopeIdentity Not Supported](#getscopeidentity-not-supported)
+  - [TIME / DATE / BLOB Require PropertyHandlers, and Only Reach Strongly-Typed Entities](#time--date--blob-require-propertyhandlers-and-only-reach-strongly-typed-entities)
+  - [INTERVAL With a Month/Year Component Is Unsupported](#interval-with-a-monthyear-component-is-unsupported)
+  - [No Spatial/Geometry Support](#no-spatialgeometry-support)
 
 ## Core
 
@@ -1400,3 +1406,70 @@ This edge case only triggers when a merge's qualifier set covers every non-ident
 The dual-registration wiring added to `RepoDb.EnterpriseDb`'s `EnterpriseDbBootstrap` — registering `DbSettingMapper`/`DbHelperMapper`/`StatementBuilderMapper` for `RepoDb.Connector.EnterpriseDb.EDBConnection` alongside the pre-existing official-driver registration, and the `Activator.CreateInstance`-based connection-retry path in `EnterpriseDbDbHelper` — is exercised by neither `RepoDb.EnterpriseDb.UnitTests` nor `RepoDb.EnterpriseDb.IntegrationTests`, both of which predate this change and only ever construct the official `EnterpriseDB.EDBClient.EDBConnection`. Only `RepoDb.EnterpriseDb.BulkOperations.IntegrationTests` references `RepoDb.Connector.EnterpriseDb.EDBConnection` at all, and that suite itself has not been run.
 
 The `build-enterprisedb`/`build-enterprisedb-bulk` CI workflows are configured to start a real `docker.enterprisedb.com/k8s/edb-postgres-advanced:18` container and run `dotnet test` against it, the same pattern used for every DB-backed provider in this repository. Unlike the other providers' container images, this one requires authentication against EDB's own registry — the workflow's own comment notes the `EDB_DOCKER_USERNAME`/`EDB_DOCKER_PASSWORD` repository secrets must be configured before the job can even pull the image. Whether those secrets are configured, and whether the CI job has actually run to completion, could not be determined from the source alone — check the actual CI run history before trusting a passing badge.
+
+## DuckDB
+
+These limitations are specific to the [RepoDb.DuckDb](https://www.nuget.org/packages/RepoDb.DuckDb) package, on top of the [Core](#core) limitations above. DuckDB is an embedded, in-process analytical database with no server component, accessed through the `DuckDB.NET.Data.Full` ADO.NET driver — several of the caveats below stem from that driver returning its own native structs (rather than the equivalent BCL type) for a few DuckDB SQL types.
+
+### No Native Auto-Increment
+
+DuckDB has no `AUTO_INCREMENT`/`IDENTITY` column concept. `Setup/Database.cs` in the integration tests, and any schema meant to work with RepoDB's identity-retrieval path, emulate it with `CREATE SEQUENCE` plus `DEFAULT nextval('seq_name')` on the primary key column instead:
+
+```sql
+CREATE SEQUENCE IF NOT EXISTS seq_completetable_id START 1;
+CREATE TABLE IF NOT EXISTS "CompleteTable"
+(
+    "Id" BIGINT DEFAULT nextval('seq_completetable_id') PRIMARY KEY,
+    ...
+);
+```
+
+`DuckDbDbHelper`'s column-introspection query treats a `column_default` containing `nextval(` as the signal that a column is an identity column.
+
+**Alternative Solution**
+
+No workaround needed — this is handled transparently by `DuckDbDbHelper`/`DuckDbStatementBuilder` as long as the table itself was created with a sequence-backed default, as shown above.
+
+### GetScopeIdentity Not Supported
+
+DuckDB has no session-scoped "last identity" function (unlike MySQL's `LAST_INSERT_ID()` or PostgreSQL's `lastval()`) — reading a sequence's current value requires knowing the sequence's name via `currval(seq)`, which the `IDbHelper.GetScopeIdentity<T>`/`GetScopeIdentityAsync<T>` method signature has no way to supply. `DuckDbDbHelper`'s implementation always throws `NotSupportedException`.
+
+This is not reachable in practice: `RepoDb.Core` only falls back to `GetScopeIdentity` when `IDbSetting.IsMultiStatementExecutable` is `false`, and `DuckDbDbSetting` always sets it to `true`. `DuckDbStatementBuilder` instead appends a `RETURNING <key> AS "Result"` clause directly onto the `Insert`/`InsertAll`/`Merge`/`MergeAll` statement, so the generated identity comes back from the same round trip.
+
+**Alternative Solution**
+
+None needed for `Insert`/`InsertAll`/`Merge`/`MergeAll` — identity retrieval already works via `RETURNING`. Avoid calling `IDbHelper.GetScopeIdentity`/`GetScopeIdentityAsync` directly against a `DuckDBConnection`.
+
+### TIME / DATE / BLOB Require PropertyHandlers, and Only Reach Strongly-Typed Entities
+
+`DuckDB.NET.Data` returns its own native/BCL types for three SQL types that have no direct match against the CLR type RepoDB otherwise expects on a mapped entity property:
+
+| DuckDB type | Value returned by the driver | Entity property type | Handler |
+|---|---|---|---|
+| `TIME` | `System.TimeOnly` (read) / requires a boxed `DuckDB.NET.Native.DuckDBTimeOnly` (write) | `TimeSpan` / `TimeSpan?` | `DuckDbTimeOnlyToTimeSpanPropertyHandler` / `DuckDbTimeOnlyToNullableTimeSpanPropertyHandler` |
+| `DATE` | `System.DateOnly` | `DateTime` / `DateTime?` | `DuckDbDateOnlyToDateTimePropertyHandler` / `DuckDbDateOnlyToNullableDateTimePropertyHandler` |
+| `BLOB` | An unmanaged `Stream` (read) | `byte[]` | `DuckDbStreamToByteArrayPropertyHandler` |
+
+Without the matching handler, reading a `TIME`/`DATE`/`BLOB` column into a `TimeSpan`/`DateTime`/`byte[]`-typed property throws inside RepoDB's compiled reader (`Failed to convert the value expression into its destination .NET CLR Type ...`), and writing a plain `TimeSpan` back into a `TIME` column throws inside the driver itself (`Unable to cast object of type 'System.TimeSpan' to type 'DuckDB.NET.Native.DuckDBTimeOnly'`). All five handlers live under `RepoDb.PropertyHandlers.DuckDb` and are opt-in — attach one via `[PropertyHandler(typeof(...))]` on the property, or `PropertyHandlerMapper.Add<TEntity, THandler>(e => e.Column, new THandler(), true)`, the same way `RepoDb.DuckDb.IntegrationTests`' `Setup/Database.cs` wires them onto `CompleteTable`/`NonIdentityCompleteTable`'s `ColumnTime`/`ColumnDate`/`ColumnBlob*` properties.
+
+Because a `PropertyHandler` mapping is attached to a specific CLR property, it has no effect on schema-less access paths that never go through that property — an `ExpandoObject`/`IDictionary<string, object>`-based `Insert`/`Update`/`Query` (the `object param` / dynamic overloads, or any `...ViaTableName` call given a plain dictionary), or a purely dynamic `QueryAll("TableName")` — all still see the driver's raw `TimeOnly`/`DateOnly`/`Stream` value on read, and still fail to bind a plain `TimeSpan` on write. There is no type-level equivalent that reaches these paths without risking cross-provider interference in a process that also talks to another database.
+
+**Alternative Solution**
+
+Use a strongly-typed entity class (with the appropriate `[PropertyHandler(...)]` attribute, or an equivalent `PropertyHandlerMapper.Add` call made once at startup) for any table with `TIME`, `DATE`, or `BLOB` columns. Avoid the dynamic/`ExpandoObject`/table-name-only overloads for those specific columns; if a dynamic path is unavoidable, convert the raw `TimeOnly`/`DateOnly`/`Stream` value yourself after the call returns, or bind the parameter directly on a raw `DuckDBCommand` for the write direction.
+
+### INTERVAL With a Month/Year Component Is Unsupported
+
+DuckDB's `INTERVAL` type stores a `(months, days, microseconds)` triple. `DuckDbTypeNameToClientTypeResolver` maps it to `TimeSpan`, which only has room for the `days`/`microseconds` component. A month/year-free interval (e.g. `INTERVAL '3 days 4 hours'`) round-trips as a `TimeSpan` without issue, but the DuckDB.NET driver itself throws inside its own `GetValue()` when reading back an interval that carries a non-zero `months` component (e.g. `INTERVAL '1 year'` or `INTERVAL '2 months'`) — the exception happens before any RepoDB code (including a `PropertyHandler`) runs, so this cannot be worked around at the RepoDB layer.
+
+**Alternative Solution**
+
+Avoid storing month/year-bearing `INTERVAL` values in columns read through RepoDB, or read them with a raw SQL cast to something else (e.g. `EXTRACT` the components you need in the query itself) rather than selecting the `INTERVAL` column directly.
+
+### No Spatial/Geometry Support
+
+Unlike `RepoDb.MySqlConnector`/`RepoDb.MariaDb` (which ship a `PropertyHandler` for their driver's `MySqlGeometry`/geometry type), `RepoDb.DuckDb` has no spatial type support in this initial version — DuckDB's spatial functionality lives in an optional `spatial` extension with its own driver-level representation that has not been evaluated against this provider.
+
+**Alternative Solution**
+
+Load the `spatial` extension and interact with geometry columns via raw SQL (`ExecuteQuery`/`ExecuteNonQuery` with `ST_*` functions and a `VARCHAR`/`BLOB` (WKT/WKB) representation) rather than a mapped entity property, until first-class support is added.
