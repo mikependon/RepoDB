@@ -1,3 +1,15 @@
+<div align="center">
+    <a href="https://repodb.net/tutorial/get-started-oracle/"><image src="Oracle.png" style="width:256px;" /></a>
+    <br/>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/get-started-oracle/"><strong>RepoDb.Oracle.BulkOperations</strong></a></span>
+    <br/>
+    <span style="font-size:16px;">A high-performance data productivity platform for bulk operations on Oracle in .NET.</span>
+</div>
+
+-----
+
+<br/>
+
 [![OracleBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-oracle-bulk.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-oracle-bulk.yml)
 [![OracleBulkHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![OracleBulkVersion](https://img.shields.io/nuget/v/repodb.oracle.bulkoperations?&logo=nuget)](https://www.nuget.org/packages/RepoDb.Oracle.BulkOperations)

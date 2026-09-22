@@ -1,3 +1,15 @@
+<div align="center">
+    <a href="https://repodb.net/tutorial/get-started-saphana/"><image src="SAPHANA.png" style="width:256px;" /></a>
+    <br/>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/get-started-saphana/"><strong>RepoDb.SapHana.BulkOperations</strong></a></span>
+    <br/>
+    <span style="font-size:16px;">A high-performance data productivity platform for bulk operations on SAP HANA in .NET.</span>
+</div>
+
+-----
+
+<br/>
+
 [![SapHanaBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-saphana-bulk.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-saphana-bulk.yml)
 [![SapHanaBulkHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![SapHanaBulkVersion](https://img.shields.io/nuget/v/repodb.saphana.bulkoperations?&logo=nuget)](https://www.nuget.org/packages/RepoDb.SapHana.BulkOperations)

@@ -1,3 +1,15 @@
+<div align="center">
+    <a href="https://repodb.net/tutorial/get-started-mariadb/"><image src="MariaDB.png" style="width:256px;" /></a>
+    <br/>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/get-started-mariadb/"><strong>RepoDb.MariaDbConnector</strong></a></span>
+    <br/>
+    <span style="font-size:16px;">A high-performance data productivity platform for MariaDB (via MariaDB Connector) in .NET.</span>
+</div>
+
+-----
+
+<br/>
+
 [![MariaDbConnectorBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-mariadbconnector.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-mariadbconnector.yml)
 [![MariaDbConnectorHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![MariaDbConnectorVersion](https://img.shields.io/nuget/v/RepoDb.MariaDbConnector?&logo=nuget)](https://www.nuget.org/packages/RepoDb.MariaDbConnector)

@@ -1,3 +1,15 @@
+<div align="center">
+    <a href="https://repodb.net/tutorial/get-started-mariadb/"><image src="MariaDB.png" style="width:256px;" /></a>
+    <br/>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/get-started-mariadb/"><strong>RepoDb.MariaDb.BulkOperations</strong></a></span>
+    <br/>
+    <span style="font-size:16px;">A high-performance data productivity platform for bulk operations on MariaDB in .NET.</span>
+</div>
+
+-----
+
+<br/>
+
 [![MariaDbBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-mariadb-bulk.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-mariadb-bulk.yml)
 [![MariaDbBulkHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![MariaDbBulkVersion](https://img.shields.io/nuget/v/repodb.mariadb.bulkoperations?&logo=nuget)](https://www.nuget.org/packages/RepoDb.MariaDb.BulkOperations)

@@ -1,3 +1,15 @@
+<div align="center">
+    <a href="https://repodb.net/tutorial/get-started-mysql/"><image src="MySQL.png" style="width:256px;" /></a>
+    <br/>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/get-started-mysql/"><strong>RepoDb.MySql.BulkOperations</strong></a></span>
+    <br/>
+    <span style="font-size:16px;">A high-performance data productivity platform for bulk operations on MySQL in .NET.</span>
+</div>
+
+-----
+
+<br/>
+
 [![MySqlBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-mysql-bulk.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-mysql-bulk.yml)
 [![MySqlBulkHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![MySqlBulkVersion](https://img.shields.io/nuget/v/repodb.mysql.bulkoperations?&logo=nuget)](https://www.nuget.org/packages/RepoDb.MySql.BulkOperations)

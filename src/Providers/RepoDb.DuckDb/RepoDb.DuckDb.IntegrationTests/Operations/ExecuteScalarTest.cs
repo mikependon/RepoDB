@@ -1,0 +1,107 @@
+﻿#region Copyright Attributions
+
+// Copyright (c) 2019 Bradley Graigner and Michael Camara Pendon.
+// Portions copyright their respective RepoDB contributors.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using DuckDB.NET.Data;
+using RepoDb.DuckDb.IntegrationTests.Setup;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace RepoDb.DuckDb.IntegrationTests.Operations
+{
+    [TestClass]
+    public class ExecuteScalarTest
+    {
+        [TestInitialize]
+        public void Initialize()
+        {
+            Database.Initialize();
+            Cleanup();
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            Database.Cleanup();
+        }
+
+        #region Sync
+
+        [TestMethod]
+        public void TestDuckDBConnectionExecuteScalar()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new DuckDBConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.ExecuteScalar("SELECT COUNT(*) FROM \"CompleteTable\";");
+
+                // Assert
+                Assert.AreEqual(tables.Count(), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
+            }
+        }
+
+        [TestMethod]
+        public void TestDuckDBConnectionExecuteScalarWithReturnType()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new DuckDBConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM \"CompleteTable\";");
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestDuckDBConnectionExecuteScalarAsync()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new DuckDBConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = await connection.ExecuteScalarAsync("SELECT COUNT(*) FROM \"CompleteTable\";").ConfigureAwait(false);
+
+                // Assert
+                Assert.AreEqual(tables.Count(), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
+            }
+        }
+
+        [TestMethod]
+        public async Task TestDuckDBConnectionExecuteScalarAsyncWithReturnType()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new DuckDBConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM \"CompleteTable\";").ConfigureAwait(false);
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+            }
+        }
+
+        #endregion
+    }
+}

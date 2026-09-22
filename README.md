@@ -58,6 +58,7 @@ Fluent operations (Query, Insert, Merge, Delete, Update, and [more](http://repod
 
 - [ClickHouse](http://repodb.net/tutorial/get-started-clickhouse)
 - [DB2](http://repodb.net/tutorial/get-started-db2)
+- [DuckDB](http://repodb.net/tutorial/get-started-duckdb)
 - [EnterpriseDB](http://repodb.net/tutorial/get-started-enterprisedb)
 - [Firebird](http://repodb.net/tutorial/get-started-firebird)
 - [MariaDB](http://repodb.net/tutorial/get-started-mariadb)
@@ -87,7 +88,6 @@ We have envisioned the following databases to be supported to further grow the e
 
 - [AuroraDB](https://aws.amazon.com/rds/aurora/)
 - [CockroachDB](https://www.cockroachlabs.com/)
-- [DuckDB](https://duckdb.org/)
 - [KingbaseES](https://www.kingbase.com.cn/)
 - [Redshift](https://aws.amazon.com/redshift/)
 - [Snowflake](https://www.snowflake.com/)
@@ -219,9 +219,37 @@ Read our [contributing](CONTRIBUTING.md) page for more.
 
 ## Credits
 
-Thanks to all [contributors](https://github.com/mikependon/RepoDb/graphs/contributors) and to [Scott Hanselman](https://www.hanselman.com/) for [featuring RepoDB](https://www.hanselman.com/blog/ExploringTheNETOpenSourceHybridORMLibraryRepoDB.aspx).
+Thanks to all [contributors](https://github.com/mikependon/RepoDb/graphs/contributors) and to [Scott Hanselman](https://www.hanselman.com/) for [featuring RepoDB](https://www.hanselman.com/blog/ExploringTheNETOpenSourceHybridORMLibraryRepoDB.aspx), and also to all the tools and projects that make RepoDB possible.
 
-Tools and projects that make RepoDB possible: [GitHub](https://github.com/), [GitHub Actions](https://github.com/features/actions), [Docker](https://www.docker.com/), [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ), [Moq](https://github.com/moq/moq4), [MSTest](https://github.com/microsoft/testfx), [NuGet](https://www.nuget.org/), [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher), [Shields](https://shields.io/), [Roslyn](https://github.com/dotnet/roslyn), [Meziantou.Analyzer](https://github.com/meziantou/Meziantou.Analyzer), [Microsoft.Data.SqlClient](https://www.nuget.org/packages/Microsoft.Data.SqlClient/), [Microsoft.Data.Sqlite](https://www.nuget.org/packages/Microsoft.Data.Sqlite/), [System.Data.SQLite.Core](https://www.nuget.org/packages/System.Data.SQLite.Core/), [MySql.Data](https://www.nuget.org/packages/MySql.Data/), [MySqlConnector](https://www.nuget.org/packages/MySqlConnector/), [Npgsql](https://www.nuget.org/packages/Npgsql/), [FirebirdSql.Data.FirebirdClient](https://www.nuget.org/packages/FirebirdSql.Data.FirebirdClient/), [Net.IBM.Data.Db2](https://www.nuget.org/packages/Net.IBM.Data.Db2/), [Oracle.ManagedDataAccess.Core](https://www.nuget.org/packages/Oracle.ManagedDataAccess.Core/), [ClickHouse.Driver](https://www.nuget.org/packages/ClickHouse.Driver/), [RepoDb.Connector.MariaDb](https://www.nuget.org/packages/RepoDb.Connector.MariaDb/), [RepoDb.Connector.MariaDbConnector](https://www.nuget.org/packages/RepoDb.Connector.MariaDbConnector/), [Vertica.Data](https://www.nuget.org/packages/Vertica.Data/), [RepoDb.Connector.EnterpriseDb](https://www.nuget.org/packages/RepoDb.Connector.EnterpriseDb/), [Sap.Data.Hana.Net.v6.0](https://www.nuget.org/packages/Sap.Data.Hana.Net.v6.0/).
+| Package or Library | Description |
+|---|---|
+| [ClickHouse.Driver](https://www.nuget.org/packages/ClickHouse.Driver/) | ADO.NET driver behind the ClickHouse provider. |
+| [Docker](https://www.docker.com/) | Runs the containerized databases used for integration testing. |
+| [DuckDB.NET.Data.Full](https://www.nuget.org/packages/DuckDB.NET.Data.Full/) | ADO.NET driver behind the DuckDB provider. |
+| [FirebirdSql.Data.FirebirdClient](https://www.nuget.org/packages/FirebirdSql.Data.FirebirdClient/) | ADO.NET driver behind the Firebird provider. |
+| [GitHub](https://github.com/) | Source code hosting and repository platform. |
+| [GitHub Actions](https://github.com/features/actions) | CI/CD pipeline that builds, tests, and releases every package. |
+| [Meziantou.Analyzer](https://github.com/meziantou/Meziantou.Analyzer) | Roslyn analyzer that enforces code-quality rules during build. |
+| [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ) | Hosts the live community Q&A and chat. |
+| [Microsoft.Data.SqlClient](https://www.nuget.org/packages/Microsoft.Data.SqlClient/) | ADO.NET driver behind the SQL Server provider. |
+| [Microsoft.Data.Sqlite](https://www.nuget.org/packages/Microsoft.Data.Sqlite/) | ADO.NET driver behind the SQLite (Microsoft) provider. |
+| [Moq](https://github.com/moq/moq4) | Mocking framework used in the unit test suites. |
+| [MSTest](https://github.com/microsoft/testfx) | Test framework used across unit and integration tests. |
+| [MySql.Data](https://www.nuget.org/packages/MySql.Data/) | ADO.NET driver behind the MySQL provider. |
+| [MySqlConnector](https://www.nuget.org/packages/MySqlConnector/) | ADO.NET driver behind the MySQL Connector provider. |
+| [Net.IBM.Data.Db2](https://www.nuget.org/packages/Net.IBM.Data.Db2/) | ADO.NET driver behind the DB2 provider. |
+| [Npgsql](https://www.nuget.org/packages/Npgsql/) | ADO.NET driver behind the PostgreSQL provider. |
+| [NuGet](https://www.nuget.org/) | Package distribution for RepoDB and all its provider packages. |
+| [Oracle.ManagedDataAccess.Core](https://www.nuget.org/packages/Oracle.ManagedDataAccess.Core/) | ADO.NET driver behind the Oracle provider. |
+| [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) | Benchmark harness used to compare RepoDB's performance against other data access libraries. |
+| [RepoDb.Connector.EnterpriseDb](https://www.nuget.org/packages/RepoDb.Connector.EnterpriseDb/) | Underlying connector powering the EnterpriseDB provider. |
+| [RepoDb.Connector.MariaDb](https://www.nuget.org/packages/RepoDb.Connector.MariaDb/) | Underlying connector powering the MariaDB provider. |
+| [RepoDb.Connector.MariaDbConnector](https://www.nuget.org/packages/RepoDb.Connector.MariaDbConnector/) | Underlying connector powering the MariaDB Connector provider. |
+| [Roslyn](https://github.com/dotnet/roslyn) | The .NET compiler platform RepoDB is built and analyzed with. |
+| [Sap.Data.Hana.Net.v6.0](https://www.nuget.org/packages/Sap.Data.Hana.Net.v6.0/) | ADO.NET driver behind the SAP HANA provider. |
+| [Shields](https://shields.io/) | Generates the build, version, and download badges shown in this README. |
+| [System.Data.SQLite.Core](https://www.nuget.org/packages/System.Data.SQLite.Core/) | ADO.NET driver behind the SQLite (System) provider. |
+| [Vertica.Data](https://www.nuget.org/packages/Vertica.Data/) | ADO.NET driver behind the Vertica provider. |
 
 ## License
 

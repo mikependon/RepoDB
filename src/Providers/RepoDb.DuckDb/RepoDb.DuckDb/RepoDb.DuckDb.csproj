@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Title>RepoDb.DuckDb</Title>
+    <AssemblyName>RepoDb.DuckDb</AssemblyName>
+    <!-- DuckDB.NET.Data.Full only supports net8.0+ (no netstandard2.0 build), unlike most other providers in this repo. -->
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <Description>A hybrid .NET ORM library for DuckDB.</Description>
+    <LangVersion>preview</LangVersion>
+    <Nullable>annotations</Nullable>
+    <PackageTags>orm hybrid-orm micro-orm duckdb</PackageTags>
+    <RepositoryUrl>https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.DuckDb</RepositoryUrl>
+    <PackageIcon>DuckDB.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageReleaseNotes>http://repodb.net/release/duckdb</PackageReleaseNotes>
+    <PackageProjectUrl>https://repodb.net/tutorial/get-started-duckdb</PackageProjectUrl>
+    <!--
+      Pins the version this project is stamped as when it is a ProjectReference dependency of another
+      package, independently of the consuming package's own -p:Version. Pass
+      -p:RepoDbDuckDbVersion=<version> to set it. PackageVersion is used (not Version) because it is
+      not overridden by the global Version property.
+    -->
+    <PackageVersion Condition="'$(RepoDbDuckDbVersion)' != ''">$(RepoDbDuckDbVersion)</PackageVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="DuckDB.NET.Data.Full" Version="1.5.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />
+    <None Include="..\README.md" Pack="True" PackagePath="\" />
+    <None Include="..\DuckDB.png" Pack="True" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
+  </ItemGroup>
+</Project>

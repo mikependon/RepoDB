@@ -1,3 +1,15 @@
+<div align="center">
+    <a href="https://repodb.net/tutorial/get-started-db2/"><image src="DB2.png" style="width:256px;" /></a>
+    <br/>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/get-started-db2/"><strong>RepoDb.Db2.BulkOperations</strong></a></span>
+    <br/>
+    <span style="font-size:16px;">A high-performance data productivity platform for bulk operations on IBM DB2 in .NET.</span>
+</div>
+
+-----
+
+<br/>
+
 [![Db2BulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-db2-bulk.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-db2-bulk.yml)
 [![Db2BulkHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![Db2BulkVersion](https://img.shields.io/nuget/v/repodb.db2.bulkoperations?&logo=nuget)](https://www.nuget.org/packages/RepoDb.Db2.BulkOperations)

@@ -1,3 +1,15 @@
+<div align="center">
+    <a href="https://repodb.net/tutorial/get-started-firebird/"><image src="Firebird.png" style="width:256px;" /></a>
+    <br/>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/get-started-firebird/"><strong>RepoDb.Firebird.BulkOperations</strong></a></span>
+    <br/>
+    <span style="font-size:16px;">A high-performance data productivity platform for bulk operations on Firebird in .NET.</span>
+</div>
+
+-----
+
+<br/>
+
 [![FirebirdBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-firebird-bulk.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-firebird-bulk.yml)
 [![FirebirdBulkHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![FirebirdBulkVersion](https://img.shields.io/nuget/v/repodb.firebird.bulkoperations?&logo=nuget)](https://www.nuget.org/packages/RepoDb.Firebird.BulkOperations)

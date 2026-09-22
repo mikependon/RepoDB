@@ -1,3 +1,15 @@
+<div align="center">
+    <a href="https://repodb.net/tutorial/get-started-enterprisedb/"><image src="EnterpriseDB.png" style="width:256px;" /></a>
+    <br/>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/get-started-enterprisedb/"><strong>RepoDb.EnterpriseDb</strong></a></span>
+    <br/>
+    <span style="font-size:16px;">A high-performance data productivity platform for EnterpriseDB in .NET.</span>
+</div>
+
+-----
+
+<br/>
+
 [![EnterpriseDbBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-enterprisedb.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-enterprisedb.yml)
 [![EnterpriseDbHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![EnterpriseDbVersion](https://img.shields.io/nuget/v/RepoDb.EnterpriseDb?&logo=nuget)](https://www.nuget.org/packages/RepoDb.EnterpriseDb)

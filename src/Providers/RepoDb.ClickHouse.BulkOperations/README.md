@@ -1,3 +1,15 @@
+<div align="center">
+    <a href="https://repodb.net/tutorial/get-started-clickhouse/"><image src="ClickHouse.png" style="width:256px;" /></a>
+    <br/>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/get-started-clickhouse/"><strong>RepoDb.ClickHouse.BulkOperations</strong></a></span>
+    <br/>
+    <span style="font-size:16px;">A high-performance data productivity platform for bulk operations on ClickHouse in .NET.</span>
+</div>
+
+-----
+
+<br/>
+
 [![ClickHouseBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-clickhouse-bulk.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-clickhouse-bulk.yml)
 [![ClickHouseBulkHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![ClickHouseBulkVersion](https://img.shields.io/nuget/v/repodb.clickhouse.bulkoperations?&logo=nuget)](https://www.nuget.org/packages/RepoDb.ClickHouse.BulkOperations)

@@ -10,7 +10,7 @@
     <RepositoryUrl>https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.ClickHouse.BulkOperations</RepositoryUrl>
     <PackageReleaseNotes>http://repodb.net/release/clickhouseconnectorbulk</PackageReleaseNotes>
     <PackageProjectUrl>https://repodb.net/tutorial/get-started-clickhouse</PackageProjectUrl>
-    <PackageIcon>icon.png</PackageIcon>
+    <PackageIcon>ClickHouse.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <!--
@@ -27,7 +27,7 @@
   <ItemGroup>
     <None Include="..\..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />
     <None Include="..\README.md" Pack="True" PackagePath="\" />
-    <None Include="..\..\..\..\icon.png" Pack="True" PackagePath="\" />
+    <None Include="..\ClickHouse.png" Pack="True" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />

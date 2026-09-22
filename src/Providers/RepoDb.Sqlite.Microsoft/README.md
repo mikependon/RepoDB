@@ -1,3 +1,15 @@
+<div align="center">
+    <a href="https://repodb.net/tutorial/get-started-sqlite/"><image src="SQLite.png" style="width:256px;" /></a>
+    <br/>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/get-started-sqlite/"><strong>RepoDb.Sqlite.Microsoft</strong></a></span>
+    <br/>
+    <span style="font-size:16px;">A high-performance data productivity platform for SQLite in .NET.</span>
+</div>
+
+-----
+
+<br/>
+
 [![SqLiteMicrosoftBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlite-microsoft.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlite-microsoft.yml)
 [![SqLiteMicrosoftHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![SqLiteMicrosoftVersion](https://img.shields.io/nuget/v/RepoDb.Sqlite.Microsoft?&logo=nuget)](https://www.nuget.org/packages/RepoDb.Sqlite.Microsoft)

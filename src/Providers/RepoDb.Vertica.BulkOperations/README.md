@@ -1,3 +1,15 @@
+<div align="center">
+    <a href="https://repodb.net/tutorial/get-started-vertica/"><image src="Vertica.png" style="width:256px;" /></a>
+    <br/>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/get-started-vertica/"><strong>RepoDb.Vertica.BulkOperations</strong></a></span>
+    <br/>
+    <span style="font-size:16px;">A high-performance data productivity platform for bulk operations on Vertica in .NET.</span>
+</div>
+
+-----
+
+<br/>
+
 [![VerticaBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-vertica-bulk.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-vertica-bulk.yml)
 [![VerticaBulkHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![VerticaBulkVersion](https://img.shields.io/nuget/v/repodb.vertica.bulkoperations?&logo=nuget)](https://www.nuget.org/packages/RepoDb.Vertica.BulkOperations)

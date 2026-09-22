@@ -1,3 +1,15 @@
+<div align="center">
+    <a href="https://repodb.net/tutorial/get-started-enterprisedb/"><image src="EnterpriseDB.png" style="width:256px;" /></a>
+    <br/>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/get-started-enterprisedb/"><strong>RepoDb.EnterpriseDb.BulkOperations</strong></a></span>
+    <br/>
+    <span style="font-size:16px;">A high-performance data productivity platform for bulk operations on EnterpriseDB in .NET.</span>
+</div>
+
+-----
+
+<br/>
+
 [![EnterpriseDbBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-enterprisedb-bulk.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-enterprisedb-bulk.yml)
 [![EnterpriseDbBulkHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![EnterpriseDbBulkVersion](https://img.shields.io/nuget/v/repodb.enterprisedb.bulkoperations?&logo=nuget)](https://www.nuget.org/packages/RepoDb.EnterpriseDb.BulkOperations)

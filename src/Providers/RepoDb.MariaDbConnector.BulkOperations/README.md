@@ -1,3 +1,15 @@
+<div align="center">
+    <a href="https://repodb.net/tutorial/get-started-mariadb/"><image src="MariaDB.png" style="width:256px;" /></a>
+    <br/>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/get-started-mariadb/"><strong>RepoDb.MariaDbConnector.BulkOperations</strong></a></span>
+    <br/>
+    <span style="font-size:16px;">A high-performance data productivity platform for bulk operations on MariaDB (via MariaDB Connector) in .NET.</span>
+</div>
+
+-----
+
+<br/>
+
 [![MariaDbConnectorBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-mariadbconnector-bulk.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-mariadbconnector-bulk.yml)
 [![MariaDbConnectorBulkHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![MariaDbConnectorBulkVersion](https://img.shields.io/nuget/v/repodb.mariadbconnector.bulkoperations?&logo=nuget)](https://www.nuget.org/packages/RepoDb.MariaDbConnector.BulkOperations)

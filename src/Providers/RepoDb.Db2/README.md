@@ -1,3 +1,15 @@
+<div align="center">
+    <a href="https://repodb.net/tutorial/get-started-db2/"><image src="DB2.png" style="width:256px;" /></a>
+    <br/>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/get-started-db2/"><strong>RepoDb.Db2</strong></a></span>
+    <br/>
+    <span style="font-size:16px;">A high-performance data productivity platform for IBM DB2 in .NET.</span>
+</div>
+
+-----
+
+<br/>
+
 [![Db2Build](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-db2.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-db2.yml)
 [![Db2Home](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![Db2Version](https://img.shields.io/nuget/v/RepoDb.Db2?&logo=nuget)](https://www.nuget.org/packages/RepoDb.Db2)
