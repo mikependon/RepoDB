@@ -1,3 +1,15 @@
+<div align="center">
+    <image src="SQLServer.png" style="width:256px;" />
+    <br/>
+    <span style="font-size:28px;font-weight:bold;">SQL Server</span>
+    <br/>
+    <span style="font-size:16px;">A high-performance bulk-operations extension for SQL Server in .NET.</span>
+</div>
+
+-----
+
+<br/>
+
 [![SqlServerBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr-bulk.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr-bulk.yml)
 [![SqlServerBulkHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![SqlServerBulkVersion](https://img.shields.io/nuget/v/repodb.sqlserver.bulkoperations?&logo=nuget)](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations)

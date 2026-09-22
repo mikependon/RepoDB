@@ -1,0 +1,31 @@
+<div align="center">
+    <image src="Snowflake.png" style="width:256px;" />
+    <br/>
+    <span style="font-size:28px;font-weight:bold;">Snowflake</span>
+    <br/>
+    <span style="font-size:16px;">A high-performance data productivity platform for Snowflake in .NET — on the roadmap, not yet available.</span>
+</div>
+
+-----
+
+<br/>
+
+# RepoDb.Snowflake
+
+Snowflake is on the [databases roadmap](https://github.com/mikependon/RepoDB#databases-on-the-roadmap) — a dedicated `RepoDb.Snowflake` package is not yet available.
+
+## Important Pages
+
+- [GitHub Home](https://github.com/mikependon/RepoDb) — core library and source code.
+- [Website](http://repodb.net) — full documentation, API reference, and blog.
+
+## Community
+
+- [GitHub Issues](https://github.com/mikependon/RepoDb/issues) — bug reports and feature requests.
+- [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ) — live Q&A.
+- [GitHub Discussions](https://github.com/mikependon/RepoDB/discussions) — ask questions and share ideas.
+- [X / Twitter](https://x.com/mike_pendon) — news and updates.
+
+## License
+
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2026 [Michael Camara Pendon](https://x.com/mike_pendon)

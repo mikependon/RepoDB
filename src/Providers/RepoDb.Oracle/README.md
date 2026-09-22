@@ -1,3 +1,15 @@
+<div align="center">
+    <image src="Oracle.png" style="width:256px;" />
+    <br/>
+    <span style="font-size:28px;font-weight:bold;">Oracle</span>
+    <br/>
+    <span style="font-size:16px;">A high-performance data productivity platform for Oracle in .NET.</span>
+</div>
+
+-----
+
+<br/>
+
 [![OracleBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-oracle.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-oracle.yml)
 [![OracleHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![OracleVersion](https://img.shields.io/nuget/v/RepoDb.Oracle?&logo=nuget)](https://www.nuget.org/packages/RepoDb.Oracle)

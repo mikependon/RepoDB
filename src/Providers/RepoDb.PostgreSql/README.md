@@ -1,3 +1,15 @@
+<div align="center">
+    <image src="PostgreSQL.png" style="width:256px;" />
+    <br/>
+    <span style="font-size:28px;font-weight:bold;">PostgreSQL</span>
+    <br/>
+    <span style="font-size:16px;">A high-performance data productivity platform for PostgreSQL in .NET.</span>
+</div>
+
+-----
+
+<br/>
+
 [![PostgreSqlBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-pgsql.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-pgsql.yml)
 [![PostgreSqlHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![PostgreSqlVersion](https://img.shields.io/nuget/v/RepoDb.PostgreSql?&logo=nuget)](https://www.nuget.org/packages/RepoDb.PostgreSql)

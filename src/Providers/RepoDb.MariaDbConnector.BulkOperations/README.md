@@ -1,3 +1,15 @@
+<div align="center">
+    <image src="MariaDB.png" style="width:256px;" />
+    <br/>
+    <span style="font-size:28px;font-weight:bold;">MariaDB Connector</span>
+    <br/>
+    <span style="font-size:16px;">A high-performance bulk-operations extension for MariaDB (via MariaDB Connector) in .NET.</span>
+</div>
+
+-----
+
+<br/>
+
 [![MariaDbConnectorBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-mariadbconnector-bulk.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-mariadbconnector-bulk.yml)
 [![MariaDbConnectorBulkHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![MariaDbConnectorBulkVersion](https://img.shields.io/nuget/v/repodb.mariadbconnector.bulkoperations?&logo=nuget)](https://www.nuget.org/packages/RepoDb.MariaDbConnector.BulkOperations)

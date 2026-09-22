@@ -1,3 +1,15 @@
+<div align="center">
+    <image src="MySQL.png" style="width:256px;" />
+    <br/>
+    <span style="font-size:28px;font-weight:bold;">MySQL Connector</span>
+    <br/>
+    <span style="font-size:16px;">A high-performance bulk-operations extension for MySQL (via MySqlConnector) in .NET.</span>
+</div>
+
+-----
+
+<br/>
+
 [![MySqlConnectorBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-mysqlconnector-bulk.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-mysqlconnector-bulk.yml)
 [![MySqlConnectorBulkHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![MySqlConnectorBulkVersion](https://img.shields.io/nuget/v/repodb.mysqlconnector.bulkoperations?&logo=nuget)](https://www.nuget.org/packages/RepoDb.MySqlConnector.BulkOperations)

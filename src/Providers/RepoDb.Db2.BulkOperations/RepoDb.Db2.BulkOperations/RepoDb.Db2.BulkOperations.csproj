@@ -10,7 +10,7 @@
     <RepositoryUrl>https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.Db2.BulkOperations</RepositoryUrl>
     <PackageReleaseNotes>http://repodb.net/release/db2bulk</PackageReleaseNotes>
     <PackageProjectUrl>https://repodb.net/tutorial/get-started-db2</PackageProjectUrl>
-    <PackageIcon>icon.png</PackageIcon>
+    <PackageIcon>DB2.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <!--
@@ -41,7 +41,7 @@
   <ItemGroup>
     <None Include="..\..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />
     <None Include="..\README.md" Pack="True" PackagePath="\" />
-    <None Include="..\..\..\..\icon.png" Pack="True" PackagePath="\" />
+    <None Include="..\DB2.png" Pack="True" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />

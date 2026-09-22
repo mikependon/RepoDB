@@ -1,3 +1,15 @@
+<div align="center">
+    <image src="DuckDB.png" style="width:256px;" />
+    <br/>
+    <span style="font-size:28px;font-weight:bold;">DuckDB</span>
+    <br/>
+    <span style="font-size:16px;">A high-performance data productivity platform for DuckDB in .NET.</span>
+</div>
+
+-----
+
+<br/>
+
 [![DuckDbBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-duckdb.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-duckdb.yml)
 [![DuckDbHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![DuckDbVersion](https://img.shields.io/nuget/v/RepoDb.DuckDb?&logo=nuget)](https://www.nuget.org/packages/RepoDb.DuckDb)

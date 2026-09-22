@@ -12,7 +12,7 @@
 		<PackageReleaseNotes>http://repodb.net/release/oracle</PackageReleaseNotes>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<PackageProjectUrl>https://repodb.net/tutorial/get-started-oracle</PackageProjectUrl>
-		<PackageIcon>icon.png</PackageIcon>
+		<PackageIcon>Oracle.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 		<!--
@@ -33,7 +33,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="..\..\..\..\icon.png" Pack="True" PackagePath="\" />
+		<None Include="..\Oracle.png" Pack="True" PackagePath="\" />
 		<None Include="..\README.md" Pack="True" PackagePath="\" />
 		<None Include="..\..\..\..\LICENSE.txt">
 			<Pack>True</Pack>

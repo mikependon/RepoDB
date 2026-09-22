@@ -1,3 +1,15 @@
+<div align="center">
+    <image src="SQLServer.png" style="width:256px;" />
+    <br/>
+    <span style="font-size:28px;font-weight:bold;">SQL Server</span>
+    <br/>
+    <span style="font-size:16px;">A high-performance data productivity platform for SQL Server in .NET.</span>
+</div>
+
+-----
+
+<br/>
+
 [![SqlServerBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr.yml)
 [![SqlServerHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![SqlServerVersion](https://img.shields.io/nuget/v/RepoDb.SqlServer?&logo=nuget)](https://www.nuget.org/packages/RepoDb.SqlServer)
