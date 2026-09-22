@@ -219,9 +219,7 @@ Read our [contributing](CONTRIBUTING.md) page for more.
 
 ## Credits
 
-Thanks to all [contributors](https://github.com/mikependon/RepoDb/graphs/contributors) and to [Scott Hanselman](https://www.hanselman.com/) for [featuring RepoDB](https://www.hanselman.com/blog/ExploringTheNETOpenSourceHybridORMLibraryRepoDB.aspx).
-
-Tools and projects that make RepoDB possible:
+Thanks to all [contributors](https://github.com/mikependon/RepoDb/graphs/contributors) and to [Scott Hanselman](https://www.hanselman.com/) for [featuring RepoDB](https://www.hanselman.com/blog/ExploringTheNETOpenSourceHybridORMLibraryRepoDB.aspx), and also to all the tools and projects that make RepoDB possible.
 
 | Package or Library | Description |
 |---|---|
