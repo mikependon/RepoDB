@@ -46,7 +46,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.PropertyHandlers
 
                 // Assert
                 Assert.IsInstanceOfType(result, typeof(NpgsqlTsQuery));
-                Assert.AreEqual("'fat' & 'rat'", result.ToString());
+                Assert.AreEqual("'fat' & 'rat'", result.ToString(), StringComparer.Ordinal);
             }
         }
 
@@ -80,8 +80,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.PropertyHandlers
                 var resultOfString = handler.Get("'fat' & 'rat'", null);
 
                 // Assert
-                Assert.AreEqual("'fat' & 'rat'", resultOfType);
-                Assert.AreEqual("'fat' & 'rat'", resultOfString);
+                Assert.AreEqual("'fat' & 'rat'", resultOfType, StringComparer.Ordinal);
+                Assert.AreEqual("'fat' & 'rat'", resultOfString, StringComparer.Ordinal);
             }
         }
 
@@ -128,12 +128,12 @@ namespace RepoDb.PostgreSql.IntegrationTests.PropertyHandlers
                 };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<PostgreSqlTsQueryEntity>(e => e.Id == id).First();
 
                 // Assert
                 Assert.AreEqual(id, result.Id);
-                Assert.AreEqual("'fat' & 'rat'", result.ColumnTsQuery);
+                Assert.AreEqual("'fat' & 'rat'", result.ColumnTsQuery, StringComparer.Ordinal);
             }
         }
 
@@ -149,7 +149,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.PropertyHandlers
                 };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<PostgreSqlTsQueryEntity>(e => e.Id == id).First();
 
                 // Assert
@@ -177,9 +177,9 @@ namespace RepoDb.PostgreSql.IntegrationTests.PropertyHandlers
 
                 // Assert
                 Assert.AreEqual(3, result.Count);
-                Assert.AreEqual("'fat' & 'rat'", result[0].ColumnTsQuery);
+                Assert.AreEqual("'fat' & 'rat'", result[0].ColumnTsQuery, StringComparer.Ordinal);
                 Assert.IsNull(result[1].ColumnTsQuery);
-                Assert.AreEqual("'cat' | 'dog'", result[2].ColumnTsQuery);
+                Assert.AreEqual("'cat' | 'dog'", result[2].ColumnTsQuery, StringComparer.Ordinal);
             }
         }
     }

@@ -48,7 +48,7 @@ namespace RepoDb.Firebird.IntegrationTests.PropertyHandlers
                 // Assert
                 Assert.IsInstanceOfType(result, typeof(FbZonedTime));
                 Assert.AreEqual(value.UtcDateTime.TimeOfDay, ((FbZonedTime)result).Time);
-                Assert.AreEqual("Etc/GMT-2", ((FbZonedTime)result).TimeZone);
+                Assert.AreEqual("Etc/GMT-2", ((FbZonedTime)result).TimeZone, StringComparer.Ordinal);
             }
         }
 
@@ -111,7 +111,7 @@ namespace RepoDb.Firebird.IntegrationTests.PropertyHandlers
                 var entity = new FirebirdZonedTimeEntity { ColumnTimeTz = value };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<FirebirdZonedTimeEntity>(e => e.Id == id).First();
 
                 // Assert

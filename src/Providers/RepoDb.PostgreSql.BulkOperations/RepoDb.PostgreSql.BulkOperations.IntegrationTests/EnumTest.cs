@@ -49,7 +49,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
             (NpgsqlConnection)(_enumDataSource.CreateConnection()).EnsureOpen();
 
         private static IEnumerable<PostgreSqlBulkInsertMapItem> GetEnumColumnMappings() =>
-            Helper.GetEnumTableMappings().Where(m => m.SourceColumn != nameof(Models.EnumTable.Id));
+            Helper.GetEnumTableMappings().Where(m => !string.Equals(m.SourceColumn, nameof(Models.EnumTable.Id), System.StringComparison.Ordinal));
 
         public static List<EnumTable> CreateEnumTablesWithNullValues(int count,
             bool hasId = false,

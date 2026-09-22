@@ -39,7 +39,7 @@ namespace RepoDb.UnitTests.Equalities
             var objA = new OrderField("OrderFieldName", Order.Ascending);
 
             // Act
-            var equal = (objA.GetHashCode() == "fieldname".GetHashCode());
+            var equal = (objA.GetHashCode() == "fieldname".GetHashCode(System.StringComparison.Ordinal));
 
             // Assert
             Assert.IsFalse(equal);

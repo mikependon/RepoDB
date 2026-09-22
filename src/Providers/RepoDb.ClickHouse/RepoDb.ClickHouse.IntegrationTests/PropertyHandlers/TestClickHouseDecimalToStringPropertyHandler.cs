@@ -85,9 +85,9 @@ namespace RepoDb.ClickHouse.IntegrationTests.PropertyHandlers
                 var resultOfInt = handler.Get(123, null);
 
                 // Assert
-                Assert.AreEqual(123.4567m.ToString(CultureInfo.InvariantCulture), resultOfDecimal);
-                Assert.AreEqual(123.4567m.ToString(CultureInfo.InvariantCulture), resultOfClickHouseDecimal);
-                Assert.AreEqual("123", resultOfInt);
+                Assert.AreEqual(123.4567m.ToString(CultureInfo.InvariantCulture), resultOfDecimal, StringComparer.Ordinal);
+                Assert.AreEqual(123.4567m.ToString(CultureInfo.InvariantCulture), resultOfClickHouseDecimal, StringComparer.Ordinal);
+                Assert.AreEqual("123", resultOfInt, StringComparer.Ordinal);
             }
         }
 

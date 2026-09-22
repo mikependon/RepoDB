@@ -49,7 +49,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var result = connection.MinAll<CompleteTable>(e => e.ColumnInt);
 
                 // Assert
-                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -84,7 +84,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var result = await connection.MinAllAsync<CompleteTable>(e => e.ColumnInt).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -124,7 +124,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     Field.Parse<CompleteTable>(e => e.ColumnInt).First());
 
                 // Assert
-                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -161,7 +161,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     Field.Parse<CompleteTable>(e => e.ColumnInt).First()).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 

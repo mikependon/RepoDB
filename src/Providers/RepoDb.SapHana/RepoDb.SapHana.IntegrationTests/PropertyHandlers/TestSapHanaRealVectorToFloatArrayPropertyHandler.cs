@@ -173,7 +173,7 @@ namespace RepoDb.SapHana.IntegrationTests.PropertyHandlers
                 var entity = new SapHanaRealVectorEntity { ColumnRealVector = new[] { 1.5f, 2.5f, 3.5f } };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<SapHanaRealVectorEntity>(e => e.Id == id).First();
 
                 // Assert
@@ -193,7 +193,7 @@ namespace RepoDb.SapHana.IntegrationTests.PropertyHandlers
                 var entity = new SapHanaRealVectorEntity { ColumnRealVector = null };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<SapHanaRealVectorEntity>(e => e.Id == id).First();
 
                 // Assert

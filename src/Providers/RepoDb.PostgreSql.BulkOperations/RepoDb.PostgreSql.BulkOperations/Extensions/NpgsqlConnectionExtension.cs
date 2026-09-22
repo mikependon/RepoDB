@@ -240,7 +240,7 @@ namespace RepoDb
                             npgsqlDbType == NpgsqlDbType.Bigint ||
                             npgsqlDbType == NpgsqlDbType.Smallint)
                         {
-                            data = Convert.ToInt32(data);
+                            data = Convert.ToInt32(data, System.Globalization.CultureInfo.InvariantCulture);
                         }
                         else if (npgsqlDbType == NpgsqlDbType.Text)
                         {
@@ -591,7 +591,7 @@ namespace RepoDb
                     type == NpgsqlDbType.Bigint ||
                     type == NpgsqlDbType.Smallint)
                 {
-                    data = Convert.ToInt32(data);
+                    data = Convert.ToInt32(data, System.Globalization.CultureInfo.InvariantCulture);
                 }
                 else if (type == NpgsqlDbType.Text)
                 {

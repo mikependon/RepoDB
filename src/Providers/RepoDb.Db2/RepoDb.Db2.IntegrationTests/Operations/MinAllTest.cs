@@ -49,7 +49,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 var result = connection.MinAll<CompleteTable>(e => e.ColumnInt);
 
                 // Assert
-                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -68,7 +68,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                     var result = connection.MinAll<CompleteTable>(e => e.ColumnInt);
 
                     // Assert
-                    Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
+                    Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
                 }
                 finally
                 {
@@ -108,7 +108,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 var result = await connection.MinAllAsync<CompleteTable>(e => e.ColumnInt).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -127,7 +127,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                     var result = await connection.MinAllAsync<CompleteTable>(e => e.ColumnInt).ConfigureAwait(false);
 
                     // Assert
-                    Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
+                    Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
                 }
                 finally
                 {
@@ -172,7 +172,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                     new Field("ColumnInt", typeof(int)));
 
                 // Assert
-                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -193,7 +193,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                     new Field("ColumnInt", typeof(int))).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 

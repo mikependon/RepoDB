@@ -42,9 +42,9 @@ namespace RepoDb
             PostgreSqlBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting)
         {
-            var key = HashCode.Combine("BinaryBulkInsert".GetHashCode(),
-                sourceTableName.GetHashCode(),
-                destinationTableName.GetHashCode(),
+            var key = HashCode.Combine("BinaryBulkInsert".GetHashCode(StringComparison.Ordinal),
+                sourceTableName.GetHashCode(StringComparison.Ordinal),
+                destinationTableName.GetHashCode(StringComparison.Ordinal),
                 EnumerableGetHashCode(fields),
                 identityField.GetHashCode(),
                 identityBehavior.GetHashCode());
@@ -142,9 +142,9 @@ namespace RepoDb
             PostgreSqlBulkImportMergeCommandType mergeCommandType,
             IDbSetting dbSetting)
         {
-            var key = HashCode.Combine("BinaryBulkMerge".GetHashCode(),
-                HashCode.Combine(sourceTableName.GetHashCode(),
-                    destinationTableName.GetHashCode(),
+            var key = HashCode.Combine("BinaryBulkMerge".GetHashCode(StringComparison.Ordinal),
+                HashCode.Combine(sourceTableName.GetHashCode(StringComparison.Ordinal),
+                    destinationTableName.GetHashCode(StringComparison.Ordinal),
                     EnumerableGetHashCode(fields),
                     EnumerableGetHashCode(qualifiers),
                     primaryField.GetHashCode(),
@@ -863,7 +863,6 @@ SET ""Identity"" = EXCLUDED.""Identity"";";
         /// <param name="qualifiers"></param>
         /// <param name="identityField"></param>
         /// <param name="dbSetting"></param>
-        /// <returns></returns>
         private static void WriteReturnIdentityResultsFromActualTable(QueryBuilder builder,
             string sourceTableName,
             string destinationTableName,
@@ -930,9 +929,9 @@ SET ""Identity"" = EXCLUDED.""Identity"";";
             PostgreSqlBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting)
         {
-            var key = HashCode.Combine("BinaryBulkUpdate".GetHashCode(),
-                sourceTableName.GetHashCode(),
-                destinationTableName.GetHashCode(),
+            var key = HashCode.Combine("BinaryBulkUpdate".GetHashCode(StringComparison.Ordinal),
+                sourceTableName.GetHashCode(StringComparison.Ordinal),
+                destinationTableName.GetHashCode(StringComparison.Ordinal),
                 EnumerableGetHashCode(fields),
                 EnumerableGetHashCode(qualifiers),
                 primaryField.GetHashCode(),
@@ -1023,9 +1022,9 @@ SET ""Identity"" = EXCLUDED.""Identity"";";
             PostgreSqlBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting)
         {
-            var key = HashCode.Combine("BinaryBulkDelete".GetHashCode(),
-                sourceTableName.GetHashCode(),
-                destinationTableName.GetHashCode(),
+            var key = HashCode.Combine("BinaryBulkDelete".GetHashCode(StringComparison.Ordinal),
+                sourceTableName.GetHashCode(StringComparison.Ordinal),
+                destinationTableName.GetHashCode(StringComparison.Ordinal),
                 EnumerableGetHashCode(fields),
                 EnumerableGetHashCode(qualifiers),
                 primaryField.GetHashCode(),
@@ -1102,9 +1101,9 @@ SET ""Identity"" = EXCLUDED.""Identity"";";
             Field primaryField,
             IDbSetting dbSetting)
         {
-            var key = HashCode.Combine("BinaryBulkDeleteByKey".GetHashCode(),
-                sourceTableName.GetHashCode(),
-                destinationTableName.GetHashCode(),
+            var key = HashCode.Combine("BinaryBulkDeleteByKey".GetHashCode(StringComparison.Ordinal),
+                sourceTableName.GetHashCode(StringComparison.Ordinal),
+                destinationTableName.GetHashCode(StringComparison.Ordinal),
                 primaryField.GetHashCode());
 
             // Get from cache

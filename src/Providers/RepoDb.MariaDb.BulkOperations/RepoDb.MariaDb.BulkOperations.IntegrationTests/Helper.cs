@@ -69,11 +69,11 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests
             var propertiesOfType2 = typeof(T2).GetProperties();
             propertiesOfType1.AsList().ForEach(propertyOfType1 =>
             {
-                if (propertyOfType1.Name == "Id" || propertyOfType1.Name == "IdMapped")
+                if (string.Equals(propertyOfType1.Name, "Id", StringComparison.Ordinal) || string.Equals(propertyOfType1.Name, "IdMapped", StringComparison.Ordinal))
                 {
                     return;
                 }
-                var propertyOfType2 = propertiesOfType2.FirstOrDefault(p => p.Name == propertyOfType1.Name);
+                var propertyOfType2 = propertiesOfType2.FirstOrDefault(p => string.Equals(p.Name, propertyOfType1.Name, StringComparison.Ordinal));
                 if (propertyOfType2 == null)
                 {
                     return;
@@ -139,7 +139,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests
             var properties = obj.GetType().GetProperties();
             properties.AsList().ForEach(property =>
             {
-                if (property.Name == "Id")
+                if (string.Equals(property.Name, "Id", StringComparison.Ordinal))
                 {
                     return;
                 }
@@ -166,7 +166,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests
                         {
                             value2 = ((DateTime)value2).TimeOfDay;
                         }
-                        Assert.AreEqual(Convert.ChangeType(value1, propertyType), Convert.ChangeType(value2, propertyType),
+                        Assert.AreEqual(Convert.ChangeType(value1, propertyType, System.Globalization.CultureInfo.InvariantCulture), Convert.ChangeType(value2, propertyType, System.Globalization.CultureInfo.InvariantCulture),
                             $"Assert failed for '{property.Name}'. The values are '{value1}' and '{value2}'.");
                     }
                 }

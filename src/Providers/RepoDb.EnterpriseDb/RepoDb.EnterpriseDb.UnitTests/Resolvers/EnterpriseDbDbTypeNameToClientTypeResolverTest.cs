@@ -527,7 +527,6 @@ namespace RepoDb.EnterpriseDb.UnitTests.Resolvers
             var result = resolver.Resolve("DATE");
 
             // Assert
-            // TODO: This requires a mapping whether which type to use.
 #if NET6_0_OR_GREATER
             Assert.AreEqual(typeof(DateOnly), result);
 #else
@@ -650,7 +649,6 @@ namespace RepoDb.EnterpriseDb.UnitTests.Resolvers
             var result = resolver.Resolve("TIME WITHOUT TIME ZONE");
 
             // Assert
-            // TODO: We should not just change it this
 #if NET6_0_OR_GREATER
             Assert.AreEqual(typeof(TimeOnly), result);
 #else

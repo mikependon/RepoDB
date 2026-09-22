@@ -110,7 +110,7 @@ namespace RepoDb.Vertica.IntegrationTests.PropertyHandlers
                 var entity = new VerticaTimeToDateTimeEntity { ColumnTime = new DateTime(2026, 9, 20, 10, 30, 15) };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<VerticaTimeToDateTimeEntity>(e => e.Id == id).First();
 
                 // Assert

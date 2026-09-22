@@ -166,7 +166,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var raw = GetRawValue(connection, model.SessionId);
 
                 // Assert
-                Assert.AreEqual("a1b2c3d4-e5f6-4789-abcd-0123456789ef", raw);
+                Assert.AreEqual("a1b2c3d4-e5f6-4789-abcd-0123456789ef", raw, StringComparer.Ordinal);
             }
         }
 
@@ -204,7 +204,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<NullableGuidTextAttributeModel>(e => e.SessionId == model.SessionId).First();
 
                 // Assert
-                Assert.AreEqual("00000000-0000-0000-0000-000000000000", raw);
+                Assert.AreEqual("00000000-0000-0000-0000-000000000000", raw, StringComparer.Ordinal);
                 Assert.IsTrue(result.Value.HasValue);
                 Assert.AreEqual(Guid.Empty, result.Value.Value);
             }
@@ -307,7 +307,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
 
                 // Assert
                 Assert.AreEqual(model.ColumnNVarChar, result.ColumnNVarChar);
-                Assert.AreEqual(model.ColumnNVarChar.Value.ToString("D"), GetRawValue(connection, model.SessionId));
+                Assert.AreEqual(model.ColumnNVarChar.Value.ToString("D"), GetRawValue(connection, model.SessionId), StringComparer.Ordinal);
             }
         }
 

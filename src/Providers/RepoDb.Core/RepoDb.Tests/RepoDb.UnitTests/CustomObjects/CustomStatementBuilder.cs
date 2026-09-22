@@ -82,7 +82,7 @@ namespace RepoDb.UnitTests.CustomObjects
             return string.Empty;
         }
 
-        public string CreateMergeAll(string tableName, IEnumerable<Field> fields, IEnumerable<Field> qualifiers, int batchSize = 10, DbField primaryField = null, DbField identityField = null, string hints = null)
+        public string CreateMergeAll(string tableName, IEnumerable<Field> fields, IEnumerable<Field> qualifiers = null, int batchSize = 10, DbField primaryField = null, DbField identityField = null, string hints = null)
         {
             return string.Empty;
         }

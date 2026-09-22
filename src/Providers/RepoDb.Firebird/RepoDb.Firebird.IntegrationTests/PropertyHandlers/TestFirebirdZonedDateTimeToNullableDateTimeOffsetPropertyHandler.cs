@@ -126,7 +126,7 @@ namespace RepoDb.Firebird.IntegrationTests.PropertyHandlers
                 var entity = new FirebirdNullableZonedDateTimeEntity { ColumnTimeStampTz = value };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<FirebirdNullableZonedDateTimeEntity>(e => e.Id == id).First();
 
                 // Assert
@@ -145,7 +145,7 @@ namespace RepoDb.Firebird.IntegrationTests.PropertyHandlers
                 var entity = new FirebirdNullableZonedDateTimeEntity { ColumnTimeStampTz = null };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<FirebirdNullableZonedDateTimeEntity>(e => e.Id == id).First();
 
                 // Assert

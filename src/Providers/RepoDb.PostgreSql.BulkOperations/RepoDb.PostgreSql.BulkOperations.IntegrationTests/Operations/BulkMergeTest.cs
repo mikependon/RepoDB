@@ -2035,7 +2035,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(entities.Count(), result);
                 foreach (DataRow row in table.Rows)
                 {
-                    Assert.IsTrue(Convert.ToInt32(row["Id"]) > 0);
+                    Assert.IsTrue(Convert.ToInt32(row["Id"], System.Globalization.CultureInfo.InvariantCulture) > 0);
                 }
 
                 // Assert
@@ -2066,7 +2066,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(entities.Count(), result);
                 foreach (DataRow row in table.Rows)
                 {
-                    Assert.IsTrue(Convert.ToInt32(row["Id"]) > 0);
+                    Assert.IsTrue(Convert.ToInt32(row["Id"], System.Globalization.CultureInfo.InvariantCulture) > 0);
                 }
 
                 // Assert
@@ -2223,7 +2223,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(entities.Count(), result);
                 foreach (DataRow row in table.Rows)
                 {
-                    Assert.IsTrue(Convert.ToInt32(row["Id"]) > 0);
+                    Assert.IsTrue(Convert.ToInt32(row["Id"], System.Globalization.CultureInfo.InvariantCulture) > 0);
                 }
 
                 // Assert
@@ -2266,7 +2266,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(entities.Count(), result);
                 foreach (DataRow row in table.Rows)
                 {
-                    Assert.IsTrue(Convert.ToInt32(row["Id"]) > 0);
+                    Assert.IsTrue(Convert.ToInt32(row["Id"], System.Globalization.CultureInfo.InvariantCulture) > 0);
                 }
 
                 // Assert
@@ -2359,7 +2359,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(entities.Count(), result);
                 foreach (DataRow row in table.Rows)
                 {
-                    Assert.IsTrue(Convert.ToInt32(row["Id"]) > 0);
+                    Assert.IsTrue(Convert.ToInt32(row["Id"], System.Globalization.CultureInfo.InvariantCulture) > 0);
                 }
 
                 // Assert
@@ -2400,7 +2400,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(entities.Count(), result);
                 foreach (DataRow row in table.Rows)
                 {
-                    Assert.IsTrue(Convert.ToInt32(row["Id"]) > 0);
+                    Assert.IsTrue(Convert.ToInt32(row["Id"], System.Globalization.CultureInfo.InvariantCulture) > 0);
                 }
 
                 // Assert
@@ -5102,7 +5102,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(entities.Count(), result);
                 foreach (DataRow row in table.Rows)
                 {
-                    Assert.IsTrue(Convert.ToInt32(row["Id"]) > 0);
+                    Assert.IsTrue(Convert.ToInt32(row["Id"], System.Globalization.CultureInfo.InvariantCulture) > 0);
                 }
 
                 // Assert
@@ -5133,7 +5133,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(entities.Count(), result);
                 foreach (DataRow row in table.Rows)
                 {
-                    Assert.IsTrue(Convert.ToInt32(row["Id"]) > 0);
+                    Assert.IsTrue(Convert.ToInt32(row["Id"], System.Globalization.CultureInfo.InvariantCulture) > 0);
                 }
 
                 // Assert
@@ -5290,7 +5290,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(entities.Count(), result);
                 foreach (DataRow row in table.Rows)
                 {
-                    Assert.IsTrue(Convert.ToInt32(row["Id"]) > 0);
+                    Assert.IsTrue(Convert.ToInt32(row["Id"], System.Globalization.CultureInfo.InvariantCulture) > 0);
                 }
 
                 // Assert
@@ -5333,7 +5333,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(entities.Count(), result);
                 foreach (DataRow row in table.Rows)
                 {
-                    Assert.IsTrue(Convert.ToInt32(row["Id"]) > 0);
+                    Assert.IsTrue(Convert.ToInt32(row["Id"], System.Globalization.CultureInfo.InvariantCulture) > 0);
                 }
 
                 // Assert
@@ -5426,7 +5426,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(entities.Count(), result);
                 foreach (DataRow row in table.Rows)
                 {
-                    Assert.IsTrue(Convert.ToInt32(row["Id"]) > 0);
+                    Assert.IsTrue(Convert.ToInt32(row["Id"], System.Globalization.CultureInfo.InvariantCulture) > 0);
                 }
 
                 // Assert
@@ -5467,7 +5467,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(entities.Count(), result);
                 foreach (DataRow row in table.Rows)
                 {
-                    Assert.IsTrue(Convert.ToInt32(row["Id"]) > 0);
+                    Assert.IsTrue(Convert.ToInt32(row["Id"], System.Globalization.CultureInfo.InvariantCulture) > 0);
                 }
 
                 // Assert

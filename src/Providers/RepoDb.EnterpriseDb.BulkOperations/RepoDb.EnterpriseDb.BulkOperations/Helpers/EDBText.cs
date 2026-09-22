@@ -265,7 +265,7 @@ namespace RepoDb
                 .Join(" AND ");
 
             var sequenceExpression = string.Concat(
-                "nextval(pg_get_serial_sequence('", quotedTableName.Replace("'", "''"), "', '", identityField.Name.Replace("'", "''"), "'))");
+                "nextval(pg_get_serial_sequence('", quotedTableName.Replace("'", "''", System.StringComparison.Ordinal), "', '", identityField.Name.Replace("'", "''", System.StringComparison.Ordinal), "'))");
 
             var preAssignStatement = string.Concat(
                 "UPDATE ", quotedPseudoTableName, " SET ", quotedIdentityColumn, " = ", sequenceExpression, " ",

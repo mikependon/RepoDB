@@ -166,7 +166,7 @@ namespace RepoDb.Vertica.BulkOperations.Extensions
                 return 0;
             }
 
-            var lastIdentity = Convert.ToInt64(connection.GetDbHelper().GetScopeIdentity<object>(connection, transaction));
+            var lastIdentity = Convert.ToInt64(connection.GetDbHelper().GetScopeIdentity<object>(connection, transaction), System.Globalization.CultureInfo.InvariantCulture);
             var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
 
             for (var i = 0; i < entities.Count; i++)
@@ -212,7 +212,7 @@ namespace RepoDb.Vertica.BulkOperations.Extensions
                 return 0;
             }
 
-            var lastIdentity = Convert.ToInt64(await connection.GetDbHelper().GetScopeIdentityAsync<object>(connection, transaction, cancellationToken).ConfigureAwait(false));
+            var lastIdentity = Convert.ToInt64(await connection.GetDbHelper().GetScopeIdentityAsync<object>(connection, transaction, cancellationToken).ConfigureAwait(false), System.Globalization.CultureInfo.InvariantCulture);
             var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
 
             for (var i = 0; i < entities.Count; i++)
@@ -254,7 +254,7 @@ namespace RepoDb.Vertica.BulkOperations.Extensions
                 return 0;
             }
 
-            var lastIdentity = Convert.ToInt64(connection.GetDbHelper().GetScopeIdentity<object>(connection, transaction));
+            var lastIdentity = Convert.ToInt64(connection.GetDbHelper().GetScopeIdentity<object>(connection, transaction), System.Globalization.CultureInfo.InvariantCulture);
 
             SetIdentityValues(rows, identityField, i => lastIdentity - (rows.Count - 1 - i));
 
@@ -294,7 +294,7 @@ namespace RepoDb.Vertica.BulkOperations.Extensions
                 return 0;
             }
 
-            var lastIdentity = Convert.ToInt64(await connection.GetDbHelper().GetScopeIdentityAsync<object>(connection, transaction, cancellationToken).ConfigureAwait(false));
+            var lastIdentity = Convert.ToInt64(await connection.GetDbHelper().GetScopeIdentityAsync<object>(connection, transaction, cancellationToken).ConfigureAwait(false), System.Globalization.CultureInfo.InvariantCulture);
 
             SetIdentityValues(rows, identityField, i => lastIdentity - (rows.Count - 1 - i));
 
@@ -432,7 +432,7 @@ namespace RepoDb.Vertica.BulkOperations.Extensions
         /// True when a value read from a row's identity property/column is the "please generate one" sentinel.
         /// </summary>
         private static bool IsUnsetIdentityValue(object value) =>
-            value == null || value is DBNull || Convert.ToInt64(value) == 0;
+            value == null || value is DBNull || Convert.ToInt64(value, System.Globalization.CultureInfo.InvariantCulture) == 0;
 
         /// <summary>
         /// Computes, in insertion order, the identity values Vertica assigned to the rows inserted by the merge's
@@ -450,7 +450,7 @@ namespace RepoDb.Vertica.BulkOperations.Extensions
                 return [];
             }
 
-            var lastIdentity = Convert.ToInt64(connection.GetDbHelper().GetScopeIdentity<object>(connection, transaction));
+            var lastIdentity = Convert.ToInt64(connection.GetDbHelper().GetScopeIdentity<object>(connection, transaction), System.Globalization.CultureInfo.InvariantCulture);
             var identities = new long[insertedCount];
 
             for (var i = 0; i < insertedCount; i++)
@@ -474,7 +474,7 @@ namespace RepoDb.Vertica.BulkOperations.Extensions
                 return [];
             }
 
-            var lastIdentity = Convert.ToInt64(await connection.GetDbHelper().GetScopeIdentityAsync<object>(connection, transaction, cancellationToken).ConfigureAwait(false));
+            var lastIdentity = Convert.ToInt64(await connection.GetDbHelper().GetScopeIdentityAsync<object>(connection, transaction, cancellationToken).ConfigureAwait(false), System.Globalization.CultureInfo.InvariantCulture);
             var identities = new long[insertedCount];
 
             for (var i = 0; i < insertedCount; i++)

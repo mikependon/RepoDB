@@ -77,7 +77,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.PropertyHandlers
                 var result = handler.Get("ABC\0\0\0\0\0", null);
 
                 // Assert
-                Assert.AreEqual("ABC", result);
+                Assert.AreEqual("ABC", result, StringComparer.Ordinal);
             }
         }
 
@@ -95,7 +95,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.PropertyHandlers
                 var result = handler.Get(bytes, null);
 
                 // Assert
-                Assert.AreEqual("ABC", result);
+                Assert.AreEqual("ABC", result, StringComparer.Ordinal);
             }
         }
 
@@ -144,7 +144,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.PropertyHandlers
 
                 // Assert
                 Assert.AreEqual(entity.Id, result.Id);
-                Assert.AreEqual("ABC", result.ColumnFixedString);
+                Assert.AreEqual("ABC", result.ColumnFixedString, StringComparer.Ordinal);
             }
         }
 
@@ -161,7 +161,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.PropertyHandlers
                 var result = connection.Query<ClickHouseFixedStringEntity>(e => e.Id == entity.Id).First();
 
                 // Assert
-                Assert.AreEqual("ABCDEFGH", result.ColumnFixedString);
+                Assert.AreEqual("ABCDEFGH", result.ColumnFixedString, StringComparer.Ordinal);
             }
         }
 

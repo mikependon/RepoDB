@@ -589,7 +589,7 @@ namespace RepoDb
             }
             if (IsIntegral(value.GetType()) && IsIntegral(columnType))
             {
-                return Convert.ChangeType(value, columnType);
+                return Convert.ChangeType(value, columnType, System.Globalization.CultureInfo.InvariantCulture);
             }
             return value;
         }

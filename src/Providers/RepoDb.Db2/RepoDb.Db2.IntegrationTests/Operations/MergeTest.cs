@@ -59,7 +59,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             var result = connection.Merge<CompleteTable>(table);
 
             // Assert
-            Assert.IsTrue(Convert.ToInt64(result) > 0);
+            Assert.IsTrue(Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
             Assert.AreEqual(1, connection.CountAll<CompleteTable>());
 
             // Act
@@ -84,7 +84,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 var result = connection.Merge<CompleteTable>(table);
 
                 // Assert
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.IsTrue(Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
 
                 // Act
@@ -114,7 +114,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
 
             // Assert
             Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-            Assert.AreEqual(table.Id, Convert.ToInt32(result));
+            Assert.AreEqual(table.Id, Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
 
             // Act
             var queryResult = connection.Query<CompleteTable>(result);
@@ -143,7 +143,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
 
             // Assert
             Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-            Assert.AreEqual(table.Id, Convert.ToInt32(result));
+            Assert.AreEqual(table.Id, Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
 
             // Act
             var queryResult = connection.Query<CompleteTable>(result);
@@ -168,7 +168,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             var result = await connection.MergeAsync<CompleteTable>(table).ConfigureAwait(false);
 
             // Assert
-            Assert.IsTrue(Convert.ToInt64(result) > 0);
+            Assert.IsTrue(Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
             Assert.AreEqual(1, connection.CountAll<CompleteTable>());
 
             // Act
@@ -193,7 +193,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 var result = await connection.MergeAsync<CompleteTable>(table).ConfigureAwait(false);
 
                 // Assert
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.IsTrue(Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
 
                 // Act
@@ -223,7 +223,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
 
             // Assert
             Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-            Assert.AreEqual(table.Id, Convert.ToInt32(result));
+            Assert.AreEqual(table.Id, Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
 
             // Act
             var queryResult = connection.Query<CompleteTable>(result);
@@ -252,7 +252,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
 
             // Assert
             Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-            Assert.AreEqual(table.Id, Convert.ToInt32(result));
+            Assert.AreEqual(table.Id, Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
 
             // Act
             var queryResult = connection.Query<CompleteTable>(result);
@@ -282,7 +282,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 table);
 
             // Assert
-            Assert.IsTrue(Convert.ToInt64(result) > 0);
+            Assert.IsTrue(Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
             Assert.AreEqual(1, connection.CountAll<CompleteTable>());
 
             // Act
@@ -308,7 +308,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
 
             // Assert
             Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-            Assert.AreEqual(table.Id, Convert.ToInt32(result));
+            Assert.AreEqual(table.Id, Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
 
             // Act
             var queryResult = connection.Query<CompleteTable>(result);
@@ -338,7 +338,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
 
             // Assert
             Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-            Assert.AreEqual(table.Id, Convert.ToInt32(result));
+            Assert.AreEqual(table.Id, Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
 
             // Act
             var queryResult = connection.Query<CompleteTable>(result);
@@ -364,7 +364,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 table).ConfigureAwait(false);
 
             // Assert
-            Assert.IsTrue(Convert.ToInt64(result) > 0);
+            Assert.IsTrue(Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
             Assert.AreEqual(1, connection.CountAll<CompleteTable>());
 
             // Act
@@ -390,7 +390,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
 
             // Assert
             Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-            Assert.AreEqual(table.Id, Convert.ToInt32(result));
+            Assert.AreEqual(table.Id, Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
 
             // Act
             var queryResult = connection.Query<CompleteTable>(result);
@@ -420,7 +420,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
 
             // Assert
             Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-            Assert.AreEqual(table.Id, Convert.ToInt32(result));
+            Assert.AreEqual(table.Id, Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
 
             // Act
             var queryResult = connection.Query<CompleteTable>(result);

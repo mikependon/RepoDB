@@ -2630,7 +2630,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
 
                         foreach (DataRow row in table.Rows)
                         {
-                            row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
+                            row["Id"] = Convert.ToInt64(row["Id"], System.Globalization.CultureInfo.InvariantCulture) + 100000;
                         }
 
                         // Open the destination connection
@@ -2677,7 +2677,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
 
                         foreach (DataRow row in table.Rows)
                         {
-                            row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
+                            row["Id"] = Convert.ToInt64(row["Id"], System.Globalization.CultureInfo.InvariantCulture) + 100000;
                         }
 
                         // Open the destination connection
@@ -2744,7 +2744,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
 
                         foreach (DataRow row in table.Rows)
                         {
-                            row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
+                            row["Id"] = Convert.ToInt64(row["Id"], System.Globalization.CultureInfo.InvariantCulture) + 100000;
                         }
 
                         // Open the destination connection
@@ -3051,7 +3051,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
 
                         foreach (DataRow row in table.Rows)
                         {
-                            row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
+                            row["Id"] = Convert.ToInt64(row["Id"], System.Globalization.CultureInfo.InvariantCulture) + 100000;
                         }
 
                         // Open the destination connection
@@ -3098,7 +3098,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
 
                         foreach (DataRow row in table.Rows)
                         {
-                            row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
+                            row["Id"] = Convert.ToInt64(row["Id"], System.Globalization.CultureInfo.InvariantCulture) + 100000;
                         }
 
                         // Open the destination connection
@@ -3165,7 +3165,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
 
                         foreach (DataRow row in table.Rows)
                         {
-                            row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
+                            row["Id"] = Convert.ToInt64(row["Id"], System.Globalization.CultureInfo.InvariantCulture) + 100000;
                         }
 
                         // Open the destination connection
@@ -3323,7 +3323,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
 
                         foreach (DataRow row in table.Rows)
                         {
-                            row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
+                            row["Id"] = Convert.ToInt64(row["Id"], System.Globalization.CultureInfo.InvariantCulture) + 100000;
                         }
 
                         // Open the destination connection
@@ -3370,7 +3370,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
 
                         foreach (DataRow row in table.Rows)
                         {
-                            row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
+                            row["Id"] = Convert.ToInt64(row["Id"], System.Globalization.CultureInfo.InvariantCulture) + 100000;
                         }
 
                         // Open the destination connection
@@ -3437,7 +3437,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
 
                         foreach (DataRow row in table.Rows)
                         {
-                            row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
+                            row["Id"] = Convert.ToInt64(row["Id"], System.Globalization.CultureInfo.InvariantCulture) + 100000;
                         }
 
                         // Open the destination connection
@@ -3804,7 +3804,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
 
                         foreach (DataRow row in table.Rows)
                         {
-                            row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
+                            row["Id"] = Convert.ToInt64(row["Id"], System.Globalization.CultureInfo.InvariantCulture) + 100000;
                         }
 
                         // Open the destination connection
@@ -3851,7 +3851,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
 
                         foreach (DataRow row in table.Rows)
                         {
-                            row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
+                            row["Id"] = Convert.ToInt64(row["Id"], System.Globalization.CultureInfo.InvariantCulture) + 100000;
                         }
 
                         // Open the destination connection
@@ -3918,7 +3918,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
 
                         foreach (DataRow row in table.Rows)
                         {
-                            row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
+                            row["Id"] = Convert.ToInt64(row["Id"], System.Globalization.CultureInfo.InvariantCulture) + 100000;
                         }
 
                         // Open the destination connection
@@ -4216,7 +4216,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
 
                         foreach (DataRow row in table.Rows)
                         {
-                            row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
+                            row["Id"] = Convert.ToInt64(row["Id"], System.Globalization.CultureInfo.InvariantCulture) + 100000;
                         }
 
                         // Open the destination connection
@@ -4263,7 +4263,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
 
                         foreach (DataRow row in table.Rows)
                         {
-                            row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
+                            row["Id"] = Convert.ToInt64(row["Id"], System.Globalization.CultureInfo.InvariantCulture) + 100000;
                         }
 
                         // Open the destination connection
@@ -4330,7 +4330,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
 
                         foreach (DataRow row in table.Rows)
                         {
-                            row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
+                            row["Id"] = Convert.ToInt64(row["Id"], System.Globalization.CultureInfo.InvariantCulture) + 100000;
                         }
 
                         // Open the destination connection
@@ -4497,7 +4497,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
 
                         foreach (DataRow row in table.Rows)
                         {
-                            row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
+                            row["Id"] = Convert.ToInt64(row["Id"], System.Globalization.CultureInfo.InvariantCulture) + 100000;
                         }
 
                         // Open the destination connection
@@ -4544,7 +4544,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
 
                         foreach (DataRow row in table.Rows)
                         {
-                            row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
+                            row["Id"] = Convert.ToInt64(row["Id"], System.Globalization.CultureInfo.InvariantCulture) + 100000;
                         }
 
                         // Open the destination connection
@@ -4611,7 +4611,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
 
                         foreach (DataRow row in table.Rows)
                         {
-                            row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
+                            row["Id"] = Convert.ToInt64(row["Id"], System.Globalization.CultureInfo.InvariantCulture) + 100000;
                         }
 
                         // Open the destination connection

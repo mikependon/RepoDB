@@ -330,7 +330,7 @@ namespace RepoDb.Firebird.BulkOperations
             for (var offset = 0; offset < rows.Length; offset += effectiveBatchSize)
             {
                 var count = Math.Min(effectiveBatchSize, rows.Length - offset);
-                await using var batch = CreateBatch(commandText);
+                using var batch = CreateBatch(commandText);
 
                 for (var rowIndex = 0; rowIndex < count; rowIndex++)
                 {

@@ -161,8 +161,8 @@ namespace RepoDb.DbHelpers
                 reader.GetBoolean(3),
                 DbTypeResolver.Resolve(columnType),
                 reader.IsDBNull(7) ? (int?)null : reader.GetInt32(7),
-                reader.IsDBNull(8) ? (byte?)null : byte.Parse(reader.GetInt16(8).ToString()),
-                reader.IsDBNull(9) ? (byte?)null : byte.Parse(reader.GetInt16(9).ToString()),
+                reader.IsDBNull(8) ? (byte?)null : byte.Parse(reader.GetInt16(8).ToString(System.Globalization.CultureInfo.InvariantCulture)),
+                reader.IsDBNull(9) ? (byte?)null : byte.Parse(reader.GetInt16(9).ToString(System.Globalization.CultureInfo.InvariantCulture)),
                 columnType,
                 reader.GetBoolean(10),
                 "FIREBIRD");
@@ -190,8 +190,8 @@ namespace RepoDb.DbHelpers
                 await reader.GetFieldValueAsync<bool>(3, cancellationToken).ConfigureAwait(false),
                 DbTypeResolver.Resolve(columnType),
                 await reader.IsDBNullAsync(7, cancellationToken).ConfigureAwait(false) ? (int?)null : await reader.GetFieldValueAsync<int>(7, cancellationToken).ConfigureAwait(false),
-                await reader.IsDBNullAsync(8, cancellationToken).ConfigureAwait(false) ? null : byte.Parse((await reader.GetFieldValueAsync<short>(8, cancellationToken).ConfigureAwait(false)).ToString()),
-                await reader.IsDBNullAsync(9, cancellationToken).ConfigureAwait(false) ? null : byte.Parse((await reader.GetFieldValueAsync<short>(9, cancellationToken).ConfigureAwait(false)).ToString()),
+                await reader.IsDBNullAsync(8, cancellationToken).ConfigureAwait(false) ? null : byte.Parse((await reader.GetFieldValueAsync<short>(8, cancellationToken).ConfigureAwait(false)).ToString(System.Globalization.CultureInfo.InvariantCulture)),
+                await reader.IsDBNullAsync(9, cancellationToken).ConfigureAwait(false) ? null : byte.Parse((await reader.GetFieldValueAsync<short>(9, cancellationToken).ConfigureAwait(false)).ToString(System.Globalization.CultureInfo.InvariantCulture)),
                 columnType,
                 await reader.GetFieldValueAsync<bool>(10, cancellationToken).ConfigureAwait(false),
                 "FIREBIRD");
@@ -329,7 +329,7 @@ namespace RepoDb.DbHelpers
         public void DynamicHandler<TEventInstance>(TEventInstance instance,
             string key)
         {
-            if (key == "RepoDb.Internal.Compiler.Events[AfterCreateDbParameter]")
+            if (string.Equals(key, "RepoDb.Internal.Compiler.Events[AfterCreateDbParameter]", StringComparison.Ordinal))
             {
                 HandleDbParameterPostCreation((FbParameter)(object)instance);
             }

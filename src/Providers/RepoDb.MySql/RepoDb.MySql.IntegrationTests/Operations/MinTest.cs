@@ -51,7 +51,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     (object)null);
 
                 // Assert
-                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -69,7 +69,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     e => ids.Contains(e.Id));
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -86,7 +86,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     new { tables.First().Id });
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -103,7 +103,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     new QueryField("Id", tables.First().Id));
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -125,7 +125,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     queryFields);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -148,7 +148,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     queryGroup);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -185,7 +185,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     (object)null).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -203,7 +203,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     e => ids.Contains(e.Id)).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -220,7 +220,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     new { tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -237,7 +237,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -259,7 +259,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     queryFields).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -282,7 +282,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     queryGroup).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -324,7 +324,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     (object)null);
 
                 // Assert
-                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -342,7 +342,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     new { tables.First().Id });
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -360,7 +360,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     new QueryField("Id", tables.First().Id));
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -383,7 +383,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     queryFields);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -407,7 +407,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     queryGroup);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -446,7 +446,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     (object)null).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -464,7 +464,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     new { tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -482,7 +482,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -505,7 +505,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     queryFields).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -529,7 +529,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     queryGroup).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 

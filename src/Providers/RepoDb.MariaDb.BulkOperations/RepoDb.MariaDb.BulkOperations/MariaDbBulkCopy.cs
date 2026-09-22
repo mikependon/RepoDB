@@ -255,7 +255,7 @@ namespace RepoDb.MariaDb.BulkOperations
         /// escape rule.
         /// </summary>
         private static string QuoteIdentifier(string identifier) =>
-            $"`{identifier?.Replace("`", "``")}`";
+            $"`{identifier?.Replace("`", "``", StringComparison.Ordinal)}`";
 
         /// <summary>
         /// 

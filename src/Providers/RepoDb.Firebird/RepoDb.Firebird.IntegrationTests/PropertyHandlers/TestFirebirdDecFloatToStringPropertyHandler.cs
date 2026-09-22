@@ -45,7 +45,7 @@ namespace RepoDb.Firebird.IntegrationTests.PropertyHandlers
                 var result = handler.Set("123.45", null);
 
                 // Assert
-                Assert.AreEqual("123.45", handler.Get(result, null));
+                Assert.AreEqual("123.45", handler.Get(result, null), StringComparer.Ordinal);
             }
         }
 
@@ -80,9 +80,9 @@ namespace RepoDb.Firebird.IntegrationTests.PropertyHandlers
                 var resultOfString = handler.Get("123.45", null);
 
                 // Assert
-                Assert.AreEqual("123.45", resultOfDecFloat);
-                Assert.AreEqual("123.45", resultOfDecimal);
-                Assert.AreEqual("123.45", resultOfString);
+                Assert.AreEqual("123.45", resultOfDecFloat, StringComparer.Ordinal);
+                Assert.AreEqual("123.45", resultOfDecimal, StringComparer.Ordinal);
+                Assert.AreEqual("123.45", resultOfString, StringComparer.Ordinal);
             }
         }
 
@@ -126,12 +126,12 @@ namespace RepoDb.Firebird.IntegrationTests.PropertyHandlers
                 var entity = new FirebirdDecFloatToStringEntity { ColumnDecFloat = "123.45" };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<FirebirdDecFloatToStringEntity>(e => e.Id == id).First();
 
                 // Assert
                 Assert.AreEqual(id, result.Id);
-                Assert.AreEqual("123.45", result.ColumnDecFloat);
+                Assert.AreEqual("123.45", result.ColumnDecFloat, StringComparer.Ordinal);
             }
         }
 
@@ -144,7 +144,7 @@ namespace RepoDb.Firebird.IntegrationTests.PropertyHandlers
                 var entity = new FirebirdDecFloatToStringEntity { ColumnDecFloat = null };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<FirebirdDecFloatToStringEntity>(e => e.Id == id).First();
 
                 // Assert

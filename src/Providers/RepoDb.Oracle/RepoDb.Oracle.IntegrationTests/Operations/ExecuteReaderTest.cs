@@ -137,9 +137,9 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             foreach (var item in result)
             {
                 var row = (IDictionary<string, object>)item;
-                var table = tables.First(e => e.Id == System.Convert.ToInt32(row["Id"]));
+                var table = tables.First(e => e.Id == System.Convert.ToInt32(row["Id"], System.Globalization.CultureInfo.InvariantCulture));
                 Assert.AreEqual(table.ColumnVarchar, row["ColumnVarchar"]);
-                Assert.AreEqual(table.ColumnInt, System.Convert.ToInt32(row["ColumnInt"]));
+                Assert.AreEqual(table.ColumnInt, System.Convert.ToInt32(row["ColumnInt"], System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -239,9 +239,9 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             foreach (var item in result)
             {
                 var row = (IDictionary<string, object>)item;
-                var table = tables.First(e => e.Id == System.Convert.ToInt32(row["Id"]));
+                var table = tables.First(e => e.Id == System.Convert.ToInt32(row["Id"], System.Globalization.CultureInfo.InvariantCulture));
                 Assert.AreEqual(table.ColumnVarchar, row["ColumnVarchar"]);
-                Assert.AreEqual(table.ColumnInt, System.Convert.ToInt32(row["ColumnInt"]));
+                Assert.AreEqual(table.ColumnInt, System.Convert.ToInt32(row["ColumnInt"], System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 

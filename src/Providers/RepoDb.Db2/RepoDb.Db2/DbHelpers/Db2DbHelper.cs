@@ -81,15 +81,15 @@ namespace RepoDb.DbHelpers
         private DbField ReaderToDbField(DbDataReader reader)
         {
             return new DbField(reader.GetString(0),
-                !reader.IsDBNull(1) && Convert.ToInt32(reader.GetValue(1)) == 1,
-                !reader.IsDBNull(2) && Convert.ToInt32(reader.GetValue(2)) == 1,
-                !reader.IsDBNull(3) && Convert.ToInt32(reader.GetValue(3)) == 1,
+                !reader.IsDBNull(1) && Convert.ToInt32(reader.GetValue(1), System.Globalization.CultureInfo.InvariantCulture) == 1,
+                !reader.IsDBNull(2) && Convert.ToInt32(reader.GetValue(2), System.Globalization.CultureInfo.InvariantCulture) == 1,
+                !reader.IsDBNull(3) && Convert.ToInt32(reader.GetValue(3), System.Globalization.CultureInfo.InvariantCulture) == 1,
                 reader.IsDBNull(4) ? DbTypeResolver.Resolve("varchar") : DbTypeResolver.Resolve(reader.GetString(4)),
-                reader.IsDBNull(5) ? 0 : Convert.ToInt32(reader.GetValue(5)),
-                reader.IsDBNull(6) ? (byte?)0 : Convert.ToByte(reader.GetValue(6)),
-                reader.IsDBNull(7) ? (byte?)0 : Convert.ToByte(reader.GetValue(7)),
+                reader.IsDBNull(5) ? 0 : Convert.ToInt32(reader.GetValue(5), System.Globalization.CultureInfo.InvariantCulture),
+                reader.IsDBNull(6) ? (byte?)0 : Convert.ToByte(reader.GetValue(6), System.Globalization.CultureInfo.InvariantCulture),
+                reader.IsDBNull(7) ? (byte?)0 : Convert.ToByte(reader.GetValue(7), System.Globalization.CultureInfo.InvariantCulture),
                 reader.IsDBNull(4) ? "varchar" : reader.GetString(4),
-                !reader.IsDBNull(8) && Convert.ToInt32(reader.GetValue(8)) == 1,
+                !reader.IsDBNull(8) && Convert.ToInt32(reader.GetValue(8), System.Globalization.CultureInfo.InvariantCulture) == 1,
                 "DB2");
         }
 
@@ -103,15 +103,15 @@ namespace RepoDb.DbHelpers
             CancellationToken cancellationToken = default)
         {
             return new DbField(await reader.GetFieldValueAsync<string>(0, cancellationToken).ConfigureAwait(false),
-                !await reader.IsDBNullAsync(1, cancellationToken).ConfigureAwait(false) && Convert.ToInt32(await reader.GetFieldValueAsync<object>(1, cancellationToken).ConfigureAwait(false)) == 1,
-                !await reader.IsDBNullAsync(2, cancellationToken).ConfigureAwait(false) && Convert.ToInt32(await reader.GetFieldValueAsync<object>(2, cancellationToken).ConfigureAwait(false)) == 1,
-                !await reader.IsDBNullAsync(3, cancellationToken).ConfigureAwait(false) && Convert.ToInt32(await reader.GetFieldValueAsync<object>(3, cancellationToken).ConfigureAwait(false)) == 1,
+                !await reader.IsDBNullAsync(1, cancellationToken).ConfigureAwait(false) && Convert.ToInt32(await reader.GetFieldValueAsync<object>(1, cancellationToken).ConfigureAwait(false), System.Globalization.CultureInfo.InvariantCulture) == 1,
+                !await reader.IsDBNullAsync(2, cancellationToken).ConfigureAwait(false) && Convert.ToInt32(await reader.GetFieldValueAsync<object>(2, cancellationToken).ConfigureAwait(false), System.Globalization.CultureInfo.InvariantCulture) == 1,
+                !await reader.IsDBNullAsync(3, cancellationToken).ConfigureAwait(false) && Convert.ToInt32(await reader.GetFieldValueAsync<object>(3, cancellationToken).ConfigureAwait(false), System.Globalization.CultureInfo.InvariantCulture) == 1,
                 await reader.IsDBNullAsync(4, cancellationToken).ConfigureAwait(false) ? DbTypeResolver.Resolve("varchar") : DbTypeResolver.Resolve(await reader.GetFieldValueAsync<string>(4, cancellationToken).ConfigureAwait(false)),
-                await reader.IsDBNullAsync(5, cancellationToken).ConfigureAwait(false) ? 0 : Convert.ToInt32(await reader.GetFieldValueAsync<object>(5, cancellationToken).ConfigureAwait(false)),
-                await reader.IsDBNullAsync(6, cancellationToken).ConfigureAwait(false) ? (byte?)0 : Convert.ToByte(await reader.GetFieldValueAsync<object>(6, cancellationToken).ConfigureAwait(false)),
-                await reader.IsDBNullAsync(7, cancellationToken).ConfigureAwait(false) ? (byte?)0 : Convert.ToByte(await reader.GetFieldValueAsync<object>(7, cancellationToken).ConfigureAwait(false)),
+                await reader.IsDBNullAsync(5, cancellationToken).ConfigureAwait(false) ? 0 : Convert.ToInt32(await reader.GetFieldValueAsync<object>(5, cancellationToken).ConfigureAwait(false), System.Globalization.CultureInfo.InvariantCulture),
+                await reader.IsDBNullAsync(6, cancellationToken).ConfigureAwait(false) ? (byte?)0 : Convert.ToByte(await reader.GetFieldValueAsync<object>(6, cancellationToken).ConfigureAwait(false), System.Globalization.CultureInfo.InvariantCulture),
+                await reader.IsDBNullAsync(7, cancellationToken).ConfigureAwait(false) ? (byte?)0 : Convert.ToByte(await reader.GetFieldValueAsync<object>(7, cancellationToken).ConfigureAwait(false), System.Globalization.CultureInfo.InvariantCulture),
                 await reader.IsDBNullAsync(4, cancellationToken).ConfigureAwait(false) ? "varchar" : await reader.GetFieldValueAsync<string>(4, cancellationToken).ConfigureAwait(false),
-                !await reader.IsDBNullAsync(8, cancellationToken).ConfigureAwait(false) && Convert.ToInt32(await reader.GetFieldValueAsync<object>(8, cancellationToken).ConfigureAwait(false)) == 1,
+                !await reader.IsDBNullAsync(8, cancellationToken).ConfigureAwait(false) && Convert.ToInt32(await reader.GetFieldValueAsync<object>(8, cancellationToken).ConfigureAwait(false), System.Globalization.CultureInfo.InvariantCulture) == 1,
                 "DB2");
         }
 
@@ -245,7 +245,7 @@ namespace RepoDb.DbHelpers
         public void DynamicHandler<TEventInstance>(TEventInstance instance,
             string key)
         {
-            if (key == "RepoDb.Internal.Compiler.Events[AfterCreateDbParameter]")
+            if (string.Equals(key, "RepoDb.Internal.Compiler.Events[AfterCreateDbParameter]", StringComparison.Ordinal))
             {
                 HandleDbParameterPostCreation((DB2Parameter)(object)instance);
             }

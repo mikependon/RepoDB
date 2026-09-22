@@ -49,7 +49,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var result = connection.MinAll<MdsCompleteTable>(e => e.ColumnInt);
 
                 // Assert
-                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -84,7 +84,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var result = await connection.MinAllAsync<MdsCompleteTable>(e => e.ColumnInt).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -124,7 +124,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                     Field.Parse<MdsCompleteTable>(e => e.ColumnInt).First());
 
                 // Assert
-                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -161,7 +161,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                     Field.Parse<MdsCompleteTable>(e => e.ColumnInt).First()).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 

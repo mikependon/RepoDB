@@ -77,7 +77,7 @@ namespace RepoDb.Oracle.IntegrationTests.PropertyHandlers
 
                 // Act
                 var resultOfNull = handler.Get(null, null);
-                var resultOfEmpty = handler.Get(new byte[0], null);
+                var resultOfEmpty = handler.Get(Array.Empty<byte>(), null);
 
                 // Assert
                 Assert.AreEqual(Guid.Empty, resultOfNull);
@@ -94,7 +94,7 @@ namespace RepoDb.Oracle.IntegrationTests.PropertyHandlers
                 var entity = new OracleGuidEntity { ColumnGuid = Guid.NewGuid() };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<OracleGuidEntity>(e => e.Id == id).First();
 
                 // Assert
@@ -112,7 +112,7 @@ namespace RepoDb.Oracle.IntegrationTests.PropertyHandlers
                 var entity = new OracleGuidEntity { ColumnGuid = Guid.Empty };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<OracleGuidEntity>(e => e.Id == id).First();
 
                 // Assert

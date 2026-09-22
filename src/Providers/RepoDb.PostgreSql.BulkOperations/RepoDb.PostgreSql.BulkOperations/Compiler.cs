@@ -636,7 +636,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <returns></returns>
         private static int GetHashCode(Type entityType,
             string tableName) =>
-            (tableName ?? ClassMappedNameCache.Get(entityType)).GetHashCode();
+            (tableName ?? ClassMappedNameCache.Get(entityType)).GetHashCode(StringComparison.Ordinal);
 
         /// <summary>
         /// 
@@ -676,12 +676,6 @@ namespace RepoDb.PostgreSql.BulkOperations
 
         #endregion
 
-
-
-
-
-        // TODO: Remove
-
         #region GetMethodFunc
 
         /// <summary>
@@ -712,7 +706,7 @@ namespace RepoDb.PostgreSql.BulkOperations
             /// <returns></returns>
             public static Func<TEntity, TResult> GetFunc(string methodName)
             {
-                if (cache.TryGetValue(methodName.GetHashCode(), out var func) == false)
+                if (cache.TryGetValue(methodName.GetHashCode(StringComparison.Ordinal), out var func) == false)
                 {
                     var typeOfEntity = typeof(TEntity);
                     var method = typeOfEntity.GetMethod(methodName);
@@ -727,7 +721,7 @@ namespace RepoDb.PostgreSql.BulkOperations
                             .Compile();
                     }
 
-                    cache.TryAdd(methodName.GetHashCode(), func);
+                    cache.TryAdd(methodName.GetHashCode(StringComparison.Ordinal), func);
                 }
                 return func;
             }
@@ -763,7 +757,7 @@ namespace RepoDb.PostgreSql.BulkOperations
             /// <returns></returns>
             public static Action<TEntity> GetFunc(string methodName)
             {
-                if (cache.TryGetValue(methodName.GetHashCode(), out var func) == false)
+                if (cache.TryGetValue(methodName.GetHashCode(StringComparison.Ordinal), out var func) == false)
                 {
                     var typeOfEntity = typeof(TEntity);
                     var method = typeOfEntity.GetMethod(methodName);
@@ -778,7 +772,7 @@ namespace RepoDb.PostgreSql.BulkOperations
                             .Compile();
                     }
 
-                    cache.TryAdd(methodName.GetHashCode(), func);
+                    cache.TryAdd(methodName.GetHashCode(StringComparison.Ordinal), func);
                 }
                 return func;
             }
@@ -820,7 +814,7 @@ namespace RepoDb.PostgreSql.BulkOperations
             public static Func<TEntity, object[], TResult> GetFunc(string methodName,
                 Type[] types)
             {
-                var key = HashCode.Combine(methodName.GetHashCode());
+                var key = HashCode.Combine(methodName.GetHashCode(StringComparison.Ordinal));
                 for (int i = 0; i < types.Length; i++)
                 {
                     key = HashCode.Combine(key, types[i].GetHashCode());
@@ -888,7 +882,7 @@ namespace RepoDb.PostgreSql.BulkOperations
             public static Action<TEntity, object[]> GetFunc(string methodName,
                 Type[] types)
             {
-                var key = HashCode.Combine(methodName.GetHashCode());
+                var key = HashCode.Combine(methodName.GetHashCode(StringComparison.Ordinal));
                 for (int i = 0; i < types.Length; i++)
                 {
                     key = HashCode.Combine(key, types[i].GetHashCode());
@@ -1057,7 +1051,7 @@ namespace RepoDb.PostgreSql.BulkOperations
             /// <returns></returns>
             public static Func<TEntity, TResult> GetFunc(string fieldName)
             {
-                if (cache.TryGetValue(fieldName.GetHashCode(), out var func) == false)
+                if (cache.TryGetValue(fieldName.GetHashCode(StringComparison.Ordinal), out var func) == false)
                 {
                     var typeOfEntity = typeof(TEntity);
                     var fieldInfo = typeOfEntity
@@ -1074,7 +1068,7 @@ namespace RepoDb.PostgreSql.BulkOperations
                             .Compile();
                     }
 
-                    cache.TryAdd(fieldName.GetHashCode(), func);
+                    cache.TryAdd(fieldName.GetHashCode(StringComparison.Ordinal), func);
                 }
                 return func;
             }
@@ -1110,7 +1104,7 @@ namespace RepoDb.PostgreSql.BulkOperations
             /// <returns></returns>
             public static Func<TEnum> GetFunc(string value)
             {
-                if (cache.TryGetValue(value.GetHashCode(), out var func) == false)
+                if (cache.TryGetValue(value.GetHashCode(StringComparison.Ordinal), out var func) == false)
                 {
                     var typeOfEnum = typeof(TEnum);
                     var fieldInfo = typeOfEnum.GetField(value);
@@ -1124,7 +1118,7 @@ namespace RepoDb.PostgreSql.BulkOperations
                             .Compile();
                     }
 
-                    cache.TryAdd(value.GetHashCode(), func);
+                    cache.TryAdd(value.GetHashCode(StringComparison.Ordinal), func);
                 }
                 return func;
             }

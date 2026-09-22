@@ -91,7 +91,7 @@ namespace RepoDb.Db2.IntegrationTests.PropertyHandlers
                 var entity = new Db2ByteEntity { ColumnTinyInt = 200 };
 
                 // Act
-                var id = Convert.ToInt32(connection.Insert(entity));
+                var id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<Db2ByteEntity>(e => e.Id == id).First();
 
                 // Assert
@@ -110,8 +110,8 @@ namespace RepoDb.Db2.IntegrationTests.PropertyHandlers
                 var maxEntity = new Db2ByteEntity { ColumnTinyInt = byte.MaxValue };
 
                 // Act
-                var minId = Convert.ToInt32(connection.Insert(minEntity));
-                var maxId = Convert.ToInt32(connection.Insert(maxEntity));
+                var minId = Convert.ToInt32(connection.Insert(minEntity), System.Globalization.CultureInfo.InvariantCulture);
+                var maxId = Convert.ToInt32(connection.Insert(maxEntity), System.Globalization.CultureInfo.InvariantCulture);
                 var minResult = connection.Query<Db2ByteEntity>(e => e.Id == minId).First();
                 var maxResult = connection.Query<Db2ByteEntity>(e => e.Id == maxId).First();
 
@@ -128,7 +128,7 @@ namespace RepoDb.Db2.IntegrationTests.PropertyHandlers
             {
                 // Setup
                 var entity = new Db2ByteEntity { ColumnTinyInt = 10 };
-                entity.Id = Convert.ToInt32(connection.Insert(entity));
+                entity.Id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 entity.ColumnTinyInt = 250;
 
                 // Act

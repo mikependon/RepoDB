@@ -48,7 +48,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.Operations
                 var result = connection.SumAll<CompleteTable>(e => e.ColumnInteger);
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInteger), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInteger), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -83,7 +83,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.Operations
                 var result = await connection.SumAllAsync<CompleteTable>(e => e.ColumnInteger).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInteger), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInteger), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -123,7 +123,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.Operations
                     Field.Parse<CompleteTable>(e => e.ColumnInteger).First());
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInteger), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInteger), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -160,7 +160,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.Operations
                     Field.Parse<CompleteTable>(e => e.ColumnInteger).First()).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInteger), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInteger), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 

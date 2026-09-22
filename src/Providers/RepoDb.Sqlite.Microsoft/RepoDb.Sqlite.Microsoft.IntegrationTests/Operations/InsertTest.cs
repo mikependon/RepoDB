@@ -12,6 +12,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Sqlite.Microsoft.IntegrationTests.Models;
 using RepoDb.Sqlite.Microsoft.IntegrationTests.Setup;
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -53,7 +54,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<MdsCompleteTable>());
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.IsTrue(Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
                 Assert.IsTrue(table.Id > 0);
 
                 // Act
@@ -81,7 +82,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<MdsNonIdentityCompleteTable>());
-                Assert.AreEqual(table.Id.ToString(), result?.ToString(), true);
+                Assert.AreEqual(table.Id.ToString(), result?.ToString(), true, CultureInfo.CurrentCulture);
 
                 // Act
                 var queryResult = connection.Query<MdsNonIdentityCompleteTable>(result);
@@ -112,7 +113,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<MdsCompleteTable>());
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.IsTrue(Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
                 Assert.IsTrue(table.Id > 0);
 
                 // Act
@@ -140,7 +141,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<MdsNonIdentityCompleteTable>());
-                Assert.AreEqual(table.Id.ToString(), result?.ToString(), true);
+                Assert.AreEqual(table.Id.ToString(), result?.ToString(), true, CultureInfo.CurrentCulture);
 
                 // Act
                 var queryResult = connection.Query<MdsNonIdentityCompleteTable>(result);
@@ -176,7 +177,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<MdsCompleteTable>());
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.IsTrue(Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
 
                 // Act
                 var queryResult = connection.Query<MdsCompleteTable>(result);
@@ -204,7 +205,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<MdsCompleteTable>());
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.IsTrue(Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
                 Assert.AreEqual(((dynamic)table).Id, result);
 
                 // Act
@@ -233,7 +234,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<MdsCompleteTable>());
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.IsTrue(Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
 
                 // Act
                 var queryResult = connection.Query<MdsCompleteTable>(result);
@@ -261,7 +262,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<MdsNonIdentityCompleteTable>());
-                Assert.AreEqual(table.Id.ToString(), result?.ToString(), true);
+                Assert.AreEqual(table.Id.ToString(), result?.ToString(), true, CultureInfo.CurrentCulture);
 
                 // Act
                 var queryResult = connection.Query<MdsNonIdentityCompleteTable>(result);
@@ -349,7 +350,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<MdsCompleteTable>());
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.IsTrue(Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
 
                 // Act
                 var queryResult = connection.Query<MdsCompleteTable>(result);
@@ -377,7 +378,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<MdsCompleteTable>());
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.IsTrue(Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
                 Assert.AreEqual(((dynamic)table).Id, result);
 
                 // Act
@@ -406,7 +407,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<MdsCompleteTable>());
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.IsTrue(Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
 
                 // Act
                 var queryResult = connection.Query<MdsCompleteTable>(result);
@@ -434,7 +435,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<MdsNonIdentityCompleteTable>());
-                Assert.AreEqual(table.Id.ToString(), result?.ToString(), true);
+                Assert.AreEqual(table.Id.ToString(), result?.ToString(), true, CultureInfo.CurrentCulture);
 
                 // Act
                 var queryResult = connection.Query<MdsNonIdentityCompleteTable>(result);

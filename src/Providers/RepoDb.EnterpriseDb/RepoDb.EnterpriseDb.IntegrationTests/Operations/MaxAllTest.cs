@@ -48,7 +48,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.Operations
                 var result = connection.MaxAll<CompleteTable>(e => e.ColumnInteger);
 
                 // Assert
-                Assert.AreEqual(tables.Max(e => e.ColumnInteger), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Max(e => e.ColumnInteger), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -83,7 +83,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.Operations
                 var result = await connection.MaxAllAsync<CompleteTable>(e => e.ColumnInteger).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Max(e => e.ColumnInteger), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Max(e => e.ColumnInteger), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -123,7 +123,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.Operations
                     Field.Parse<CompleteTable>(e => e.ColumnInteger).First());
 
                 // Assert
-                Assert.AreEqual(tables.Max(e => e.ColumnInteger), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Max(e => e.ColumnInteger), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -160,7 +160,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.Operations
                     Field.Parse<CompleteTable>(e => e.ColumnInteger).First()).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Max(e => e.ColumnInteger), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Max(e => e.ColumnInteger), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 

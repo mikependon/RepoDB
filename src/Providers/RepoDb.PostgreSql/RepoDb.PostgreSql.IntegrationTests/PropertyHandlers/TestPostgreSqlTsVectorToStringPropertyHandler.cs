@@ -46,7 +46,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.PropertyHandlers
 
                 // Assert
                 Assert.IsInstanceOfType(result, typeof(NpgsqlTsVector));
-                Assert.AreEqual("'cat':3 'fat':2 'rat':5", result.ToString());
+                Assert.AreEqual("'cat':3 'fat':2 'rat':5", result.ToString(), StringComparer.Ordinal);
             }
         }
 
@@ -80,8 +80,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.PropertyHandlers
                 var resultOfString = handler.Get("'cat':3 'fat':2 'rat':5", null);
 
                 // Assert
-                Assert.AreEqual("'cat':3 'fat':2 'rat':5", resultOfType);
-                Assert.AreEqual("'cat':3 'fat':2 'rat':5", resultOfString);
+                Assert.AreEqual("'cat':3 'fat':2 'rat':5", resultOfType, StringComparer.Ordinal);
+                Assert.AreEqual("'cat':3 'fat':2 'rat':5", resultOfString, StringComparer.Ordinal);
             }
         }
 
@@ -128,12 +128,12 @@ namespace RepoDb.PostgreSql.IntegrationTests.PropertyHandlers
                 };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<PostgreSqlTsVectorEntity>(e => e.Id == id).First();
 
                 // Assert
                 Assert.AreEqual(id, result.Id);
-                Assert.AreEqual("'cat':3 'fat':2 'rat':5", result.ColumnTsVector);
+                Assert.AreEqual("'cat':3 'fat':2 'rat':5", result.ColumnTsVector, StringComparer.Ordinal);
             }
         }
 
@@ -149,7 +149,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.PropertyHandlers
                 };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<PostgreSqlTsVectorEntity>(e => e.Id == id).First();
 
                 // Assert
@@ -177,9 +177,9 @@ namespace RepoDb.PostgreSql.IntegrationTests.PropertyHandlers
 
                 // Assert
                 Assert.AreEqual(3, result.Count);
-                Assert.AreEqual("'cat':3 'fat':2 'rat':5", result[0].ColumnTsVector);
+                Assert.AreEqual("'cat':3 'fat':2 'rat':5", result[0].ColumnTsVector, StringComparer.Ordinal);
                 Assert.IsNull(result[1].ColumnTsVector);
-                Assert.AreEqual("'cat' 'fat'", result[2].ColumnTsVector);
+                Assert.AreEqual("'cat' 'fat'", result[2].ColumnTsVector, StringComparer.Ordinal);
             }
         }
     }

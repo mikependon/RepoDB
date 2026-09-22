@@ -136,7 +136,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
 
                 // Assert
                 Assert.AreEqual(JsonValueKind.Object, result.Element.ValueKind);
-                Assert.AreEqual("John", result.Element.GetProperty("name").GetString());
+                Assert.AreEqual("John", result.Element.GetProperty("name").GetString(), StringComparer.Ordinal);
                 Assert.AreEqual(30, result.Element.GetProperty("age").GetInt32());
             }
         }
@@ -154,7 +154,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = (await connection.QueryAsync<JsonElementAttributeModel>(e => e.SessionId == model.SessionId).ConfigureAwait(false)).First();
 
                 // Assert
-                Assert.AreEqual("John", result.Element.GetProperty("name").GetString());
+                Assert.AreEqual("John", result.Element.GetProperty("name").GetString(), StringComparer.Ordinal);
             }
         }
 
@@ -171,7 +171,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var raw = GetRawValue(connection, model.SessionId);
 
                 // Assert
-                Assert.AreEqual("{\"name\":\"John\",\"tags\":[1,2]}", raw);
+                Assert.AreEqual("{\"name\":\"John\",\"tags\":[1,2]}", raw, StringComparer.Ordinal);
             }
         }
 
@@ -208,7 +208,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
 
                 // Assert
                 // The element is a clone, therefore it does not depend on the (disposed) document used by the handler
-                Assert.AreEqual("John", result.Element.GetProperty("name").GetString());
+                Assert.AreEqual("John", result.Element.GetProperty("name").GetString(), StringComparer.Ordinal);
             }
         }
 
@@ -238,7 +238,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                     var result = connection.Query<JsonElementAttributeModel>(e => e.SessionId == model.SessionId).First();
 
                     // Assert
-                    Assert.AreEqual(json, raw);
+                    Assert.AreEqual(json, raw, StringComparer.Ordinal);
                     Assert.AreEqual(kind, result.Element.ValueKind);
                 }
             }
@@ -261,7 +261,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
 
                 // Assert
                 Assert.IsFalse(isNull);
-                Assert.AreEqual("null", raw);
+                Assert.AreEqual("null", raw, StringComparer.Ordinal);
                 Assert.AreEqual(JsonValueKind.Null, result.Element.ValueKind);
             }
         }
@@ -279,7 +279,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<JsonElementAttributeModel>(e => e.SessionId == model.SessionId).First();
 
                 // Assert
-                Assert.AreEqual("日本語 \"quoted\" Ñandú 😀", result.Element.GetProperty("text").GetString());
+                Assert.AreEqual("日本語 \"quoted\" Ñandú 😀", result.Element.GetProperty("text").GetString(), StringComparer.Ordinal);
             }
         }
 

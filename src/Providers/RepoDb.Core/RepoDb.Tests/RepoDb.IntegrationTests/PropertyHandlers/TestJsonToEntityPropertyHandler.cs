@@ -143,7 +143,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
             Person actual)
         {
             Assert.IsNotNull(actual);
-            Assert.AreEqual(expected.Name, actual.Name);
+            Assert.AreEqual(expected.Name, actual.Name, StringComparer.Ordinal);
             Assert.AreEqual(expected.Age, actual.Age);
             CollectionAssert.AreEqual(expected.Tags, actual.Tags);
         }
@@ -199,7 +199,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var raw = GetRawValue(connection, model.SessionId);
 
                 // Assert
-                Assert.AreEqual("{\"Name\":\"John Doe\",\"Age\":30,\"Tags\":[\"a\",\"b\"]}", raw);
+                Assert.AreEqual("{\"Name\":\"John Doe\",\"Age\":30,\"Tags\":[\"a\",\"b\"]}", raw, StringComparer.Ordinal);
             }
         }
 
@@ -215,7 +215,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<PersonAttributeModel>(e => e.SessionId == sessionId).First();
 
                 // Assert
-                Assert.AreEqual("Jane", result.Owner.Name);
+                Assert.AreEqual("Jane", result.Owner.Name, StringComparer.Ordinal);
                 Assert.AreEqual(25, result.Owner.Age);
                 CollectionAssert.AreEqual(new[] { "x" }, result.Owner.Tags);
             }
@@ -251,7 +251,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                     Name = "Acme",
                     Owner = CreatePerson("Owner", 50),
                     Employees = new List<Person> { CreatePerson("E1", 20), CreatePerson("E2", 21) },
-                    Metrics = new Dictionary<string, int> { { "Revenue", 100 }, { "Cost", 40 } }
+                    Metrics = new Dictionary<string, int>(StringComparer.Ordinal) { { "Revenue", 100 }, { "Cost", 40 } }
                 };
                 var model = new CompanyAttributeModel { SessionId = Guid.NewGuid(), Company = company };
 
@@ -260,7 +260,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<CompanyAttributeModel>(e => e.SessionId == model.SessionId).First();
 
                 // Assert
-                Assert.AreEqual("Acme", result.Company.Name);
+                Assert.AreEqual("Acme", result.Company.Name, StringComparer.Ordinal);
                 AssertPerson(company.Owner, result.Company.Owner);
                 Assert.AreEqual(2, result.Company.Employees.Count);
                 AssertPerson(company.Employees[1], result.Company.Employees[1]);
@@ -283,7 +283,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<PersonAttributeModel>(e => e.SessionId == model.SessionId).First();
 
                 // Assert
-                Assert.AreEqual("{\"Name\":null,\"Age\":0,\"Tags\":null}", raw);
+                Assert.AreEqual("{\"Name\":null,\"Age\":0,\"Tags\":null}", raw, StringComparer.Ordinal);
                 Assert.IsNotNull(result.Owner);
                 Assert.IsNull(result.Owner.Name);
                 Assert.IsNull(result.Owner.Tags);
@@ -303,7 +303,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<PersonAttributeModel>(e => e.SessionId == model.SessionId).First();
 
                 // Assert
-                Assert.AreEqual(model.Owner.Name, result.Owner.Name);
+                Assert.AreEqual(model.Owner.Name, result.Owner.Name, StringComparer.Ordinal);
             }
         }
 

@@ -115,22 +115,13 @@ namespace RepoDb.PostgreSql.BulkOperations
         public override int GetHashCode()
         {
             // Make sure to return if it is already provided
-            if (this.hashCode != null)
+            if (hashCode != null)
             {
-                return this.hashCode.Value;
+                return hashCode.Value;
             }
 
-            // Base
-            var hashCode = base.GetHashCode();
-
-            // NpgsqlDbType
-            hashCode = HashCode.Combine(hashCode, NpgsqlDbType);
-
-            // DataTypeName
-            hashCode = HashCode.Combine(hashCode, DataTypeName);
-
-            // Set and return the hashcode
-            return (this.hashCode = hashCode).Value;
+            hashCode = HashCode.Combine(hashCode, base.GetHashCode(), NpgsqlDbType, DataTypeName);
+            return hashCode.Value;
         }
 
         #endregion

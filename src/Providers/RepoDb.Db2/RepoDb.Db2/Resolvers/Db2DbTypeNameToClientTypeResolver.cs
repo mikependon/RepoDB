@@ -41,9 +41,9 @@ namespace RepoDb.Resolvers
             // variant, and the IBM.Data.Db2 DB2Type enumeration has no timezone-aware member at
             // all (every Date/Time/Timestamp member maps only to a plain DateTime/TimeSpan) - so
             // "WITH TIME ZONE" is mapped here for the SQL-level type only, on a best-effort basis.
-            if (name.StartsWith("timestamp"))
+            if (name.StartsWith("timestamp", StringComparison.Ordinal))
             {
-                return name.Contains("with time zone") ? typeof(DateTimeOffset) : typeof(DateTime);
+                return name.Contains("with time zone", StringComparison.Ordinal) ? typeof(DateTimeOffset) : typeof(DateTime);
             }
 
             return name switch

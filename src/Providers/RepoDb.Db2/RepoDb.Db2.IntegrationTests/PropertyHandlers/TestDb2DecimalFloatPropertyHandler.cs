@@ -47,7 +47,7 @@ namespace RepoDb.Db2.IntegrationTests.PropertyHandlers
 
                 // Assert
                 Assert.IsInstanceOfType(result, typeof(DB2DecimalFloat));
-                Assert.AreEqual(value.ToString(), result.ToString());
+                Assert.AreEqual(value.ToString(), result.ToString(), StringComparer.Ordinal);
             }
         }
 
@@ -85,9 +85,9 @@ namespace RepoDb.Db2.IntegrationTests.PropertyHandlers
                 Assert.IsFalse(resultOfDecimalFloat.IsNull);
                 Assert.IsFalse(resultOfDecimal.IsNull);
                 Assert.IsFalse(resultOfString.IsNull);
-                Assert.AreEqual(expected.ToString(), resultOfDecimalFloat.ToString());
-                Assert.AreEqual(expected.ToString(), resultOfDecimal.ToString());
-                Assert.AreEqual(expected.ToString(), resultOfString.ToString());
+                Assert.AreEqual(expected.ToString(), resultOfDecimalFloat.ToString(), StringComparer.Ordinal);
+                Assert.AreEqual(expected.ToString(), resultOfDecimal.ToString(), StringComparer.Ordinal);
+                Assert.AreEqual(expected.ToString(), resultOfString.ToString(), StringComparer.Ordinal);
             }
         }
 
@@ -133,13 +133,13 @@ namespace RepoDb.Db2.IntegrationTests.PropertyHandlers
                 var entity = new Db2DecimalFloatEntity { ColumnDecFloat = new DB2DecimalFloat(123.456m) };
 
                 // Act
-                var id = Convert.ToInt32(connection.Insert(entity));
+                var id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<Db2DecimalFloatEntity>(e => e.Id == id).First();
 
                 // Assert
                 Assert.AreEqual(id, result.Id);
                 Assert.IsFalse(result.ColumnDecFloat.IsNull);
-                Assert.AreEqual(entity.ColumnDecFloat.ToString(), result.ColumnDecFloat.ToString());
+                Assert.AreEqual(entity.ColumnDecFloat.ToString(), result.ColumnDecFloat.ToString(), StringComparer.Ordinal);
             }
         }
 
@@ -152,7 +152,7 @@ namespace RepoDb.Db2.IntegrationTests.PropertyHandlers
                 var entity = new Db2DecimalFloatEntity { ColumnDecFloat = DB2DecimalFloat.Null };
 
                 // Act
-                var id = Convert.ToInt32(connection.Insert(entity));
+                var id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<Db2DecimalFloatEntity>(e => e.Id == id).First();
 
                 // Assert

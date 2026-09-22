@@ -72,7 +72,7 @@ namespace RepoDb.UnitTests.CustomObjects
         public override void CopyTo(Array array,
             int index)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public override IEnumerator GetEnumerator()

@@ -52,7 +52,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 var result = connection.SumAll<CompleteTable>(e => e.ColumnSmallInt);
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnSmallInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnSmallInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -71,7 +71,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                     var result = connection.SumAll<CompleteTable>(e => e.ColumnSmallInt);
 
                     // Assert
-                    Assert.AreEqual(tables.Sum(e => e.ColumnSmallInt), Convert.ToInt32(result));
+                    Assert.AreEqual(tables.Sum(e => e.ColumnSmallInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
                 }
                 finally
                 {
@@ -111,7 +111,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 var result = await connection.SumAllAsync<CompleteTable>(e => e.ColumnSmallInt).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnSmallInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnSmallInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -130,7 +130,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                     var result = await connection.SumAllAsync<CompleteTable>(e => e.ColumnSmallInt).ConfigureAwait(false);
 
                     // Assert
-                    Assert.AreEqual(tables.Sum(e => e.ColumnSmallInt), Convert.ToInt32(result));
+                    Assert.AreEqual(tables.Sum(e => e.ColumnSmallInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
                 }
                 finally
                 {
@@ -175,7 +175,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                     new Field("ColumnSmallInt", typeof(short)));
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnSmallInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnSmallInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -196,7 +196,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                     new Field("ColumnSmallInt", typeof(short))).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnSmallInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnSmallInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 

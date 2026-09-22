@@ -132,7 +132,7 @@ namespace RepoDb.Oracle.IntegrationTests.PropertyHandlers
                 var entity = new OracleVectorFloatEntity { ColumnVectorFloat = new float[] { 1.5f, 2.5f, 3.5f } };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<OracleVectorFloatEntity>(e => e.Id == id).First();
 
                 // Assert
@@ -152,7 +152,7 @@ namespace RepoDb.Oracle.IntegrationTests.PropertyHandlers
                 var entity = new OracleVectorFloatEntity { ColumnVectorFloat = null };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<OracleVectorFloatEntity>(e => e.Id == id).First();
 
                 // Assert

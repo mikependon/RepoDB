@@ -50,7 +50,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.IsTrue(Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
                 Assert.IsTrue(table.Id > 0);
 
                 // Act
@@ -103,7 +103,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.IsTrue(Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
                 Assert.IsTrue(table.Id > 0);
 
                 // Act
@@ -161,7 +161,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.IsTrue(Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>(result);
@@ -186,7 +186,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.IsTrue(Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>(result);
@@ -211,8 +211,8 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
-                Assert.IsTrue(((dynamic)table).Id == Convert.ToInt64(result));
+                Assert.IsTrue(Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
+                Assert.IsTrue(((dynamic)table).Id == Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>(result);
@@ -287,7 +287,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityCompleteTable>());
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.IsTrue(Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
 
                 // Act
                 var queryResult = connection.Query<NonIdentityCompleteTable>(result);
@@ -316,7 +316,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.IsTrue(Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>(result);
@@ -341,7 +341,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.IsTrue(Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>(result);
@@ -366,8 +366,8 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
-                Assert.IsTrue(((dynamic)table).Id == Convert.ToInt64(result));
+                Assert.IsTrue(Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
+                Assert.IsTrue(((dynamic)table).Id == Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture));
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>(result);
@@ -392,7 +392,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityCompleteTable>());
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.IsTrue(Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
 
                 // Act
                 var queryResult = connection.Query<NonIdentityCompleteTable>(result);
@@ -442,7 +442,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityCompleteTable>());
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.IsTrue(Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
 
                 // Act
                 var queryResult = connection.Query<NonIdentityCompleteTable>(result);

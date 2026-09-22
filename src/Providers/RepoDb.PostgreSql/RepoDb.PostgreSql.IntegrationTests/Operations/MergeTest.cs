@@ -346,7 +346,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.IsTrue(Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>(result);
@@ -559,7 +559,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.IsTrue(Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>(result);

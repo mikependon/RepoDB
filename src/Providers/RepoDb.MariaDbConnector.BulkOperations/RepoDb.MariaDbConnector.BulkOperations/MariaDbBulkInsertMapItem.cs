@@ -7,6 +7,7 @@
 #endregion
 
 using System;
+using System.Data;
 using RepoDb.Connector.MariaDbConnector;
 
 namespace RepoDb.MariaDbConnector.BulkOperations
@@ -78,15 +79,13 @@ namespace RepoDb.MariaDbConnector.BulkOperations
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
         {
-            if (this.hashCode != null)
+            if (hashCode != null)
             {
-                return this.hashCode.Value;
+                return hashCode.Value;
             }
 
-            var hashCode = base.GetHashCode();
-            hashCode = HashCode.Combine(hashCode, MariaDbType);
-
-            return (this.hashCode = hashCode).Value;
+            hashCode = HashCode.Combine(hashCode, base.GetHashCode(), MariaDbType);
+            return hashCode.Value;
         }
 
         #endregion

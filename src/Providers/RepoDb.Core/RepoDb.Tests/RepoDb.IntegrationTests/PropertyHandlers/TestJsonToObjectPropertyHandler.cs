@@ -143,7 +143,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
-                var model = CreateModel(new Dictionary<string, int> { { "one", 1 }, { "two", 2 }, { "three", 3 } });
+                var model = CreateModel(new Dictionary<string, int>(StringComparer.Ordinal) { { "one", 1 }, { "two", 2 }, { "three", 3 } });
 
                 // Act
                 connection.Insert(model);
@@ -164,7 +164,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
-                var model = CreateModel(new Dictionary<string, int> { { "one", 1 }, { "two", 2 } });
+                var model = CreateModel(new Dictionary<string, int>(StringComparer.Ordinal) { { "one", 1 }, { "two", 2 } });
 
                 // Act
                 await connection.InsertAsync(model).ConfigureAwait(false);
@@ -183,14 +183,14 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
-                var model = CreateModel(new Dictionary<string, int> { { "one", 1 }, { "two", 2 } });
+                var model = CreateModel(new Dictionary<string, int>(StringComparer.Ordinal) { { "one", 1 }, { "two", 2 } });
 
                 // Act
                 connection.Insert(model);
                 var raw = GetRawValue(connection, model.SessionId);
 
                 // Assert
-                Assert.AreEqual("{\"one\":1,\"two\":2}", raw);
+                Assert.AreEqual("{\"one\":1,\"two\":2}", raw, StringComparer.Ordinal);
             }
         }
 
@@ -217,7 +217,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
-                var model = CreateModel(new Dictionary<string, int>());
+                var model = CreateModel(new Dictionary<string, int>(StringComparer.Ordinal));
 
                 // Act
                 connection.Insert(model);
@@ -225,7 +225,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<DictionaryAttributeModel>(e => e.SessionId == model.SessionId).First();
 
                 // Assert
-                Assert.AreEqual("{}", raw);
+                Assert.AreEqual("{}", raw, StringComparer.Ordinal);
                 Assert.IsNotNull(result.Values);
                 Assert.AreEqual(0, result.Values.Count);
             }
@@ -245,7 +245,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<ListAttributeModel>(e => e.SessionId == model.SessionId).First();
 
                 // Assert
-                Assert.AreEqual("[3,1,2]", raw);
+                Assert.AreEqual("[3,1,2]", raw, StringComparer.Ordinal);
                 CollectionAssert.AreEqual(model.Values, result.Values);
             }
         }
@@ -264,7 +264,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<ListAttributeModel>(e => e.SessionId == model.SessionId).First();
 
                 // Assert
-                Assert.AreEqual("[]", raw);
+                Assert.AreEqual("[]", raw, StringComparer.Ordinal);
                 Assert.IsNotNull(result.Values);
                 Assert.AreEqual(0, result.Values.Count);
             }
@@ -284,7 +284,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<IntegerAttributeModel>(e => e.SessionId == model.SessionId).First();
 
                 // Assert
-                Assert.AreEqual("12345", raw);
+                Assert.AreEqual("12345", raw, StringComparer.Ordinal);
                 Assert.AreEqual(12345, result.Value);
             }
         }
@@ -298,7 +298,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var model = new NestedAttributeModel
                 {
                     SessionId = Guid.NewGuid(),
-                    Values = new Dictionary<string, List<int>> { { "odd", new List<int> { 1, 3 } }, { "even", new List<int> { 2, 4 } } }
+                    Values = new Dictionary<string, List<int>>(StringComparer.Ordinal) { { "odd", new List<int> { 1, 3 } }, { "even", new List<int> { 2, 4 } } }
                 };
 
                 // Act
@@ -317,7 +317,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
-                var model = CreateModel(new Dictionary<string, int> { { "日本語", 1 }, { "Ñandú \"q\"", 2 } });
+                var model = CreateModel(new Dictionary<string, int>(StringComparer.Ordinal) { { "日本語", 1 }, { "Ñandú \"q\"", 2 } });
 
                 // Act
                 connection.Insert(model);
@@ -336,7 +336,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
             {
                 // Setup
                 var models = Enumerable.Range(1, 10)
-                    .Select(i => CreateModel(new Dictionary<string, int> { { $"key-{i}", i } }))
+                    .Select(i => CreateModel(new Dictionary<string, int>(StringComparer.Ordinal) { { $"key-{i}", i } }))
                     .ToList();
 
                 // Act
@@ -359,11 +359,11 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
-                var model = CreateModel(new Dictionary<string, int> { { "before", 1 } });
+                var model = CreateModel(new Dictionary<string, int>(StringComparer.Ordinal) { { "before", 1 } });
                 connection.Insert(model);
 
                 // Act
-                model.Values = new Dictionary<string, int> { { "after", 2 } };
+                model.Values = new Dictionary<string, int>(StringComparer.Ordinal) { { "after", 2 } };
                 var affectedRows = connection.Update(model);
                 var result = connection.Query<DictionaryAttributeModel>(e => e.SessionId == model.SessionId).First();
 
@@ -383,7 +383,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 FluentMapper
                     .Entity<DictionaryFluentModel>()
                     .PropertyHandler(e => e.ColumnNVarChar, new JsonToObjectPropertyHandler<Dictionary<string, int>>());
-                var model = new DictionaryFluentModel { SessionId = Guid.NewGuid(), ColumnNVarChar = new Dictionary<string, int> { { "k", 7 } } };
+                var model = new DictionaryFluentModel { SessionId = Guid.NewGuid(), ColumnNVarChar = new Dictionary<string, int>(StringComparer.Ordinal) { { "k", 7 } } };
 
                 // Act
                 connection.Insert(model);
@@ -401,7 +401,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
             {
                 // Setup
                 PropertyHandlerMapper.Add<Dictionary<string, int>, JsonToObjectPropertyHandler<Dictionary<string, int>>>(true);
-                var model = new DictionaryTypeLevelModel { SessionId = Guid.NewGuid(), ColumnNVarChar = new Dictionary<string, int> { { "k", 7 } } };
+                var model = new DictionaryTypeLevelModel { SessionId = Guid.NewGuid(), ColumnNVarChar = new Dictionary<string, int>(StringComparer.Ordinal) { { "k", 7 } } };
 
                 // Act
                 connection.Insert(model);

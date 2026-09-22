@@ -46,7 +46,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 var result = connection.ExecuteScalar("SELECT COUNT(*) FROM \"CompleteTable\";");
 
                 // Assert
-                Assert.AreEqual(tables.Count(), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Count(), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -82,7 +82,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 var result = await connection.ExecuteScalarAsync("SELECT COUNT(*) FROM \"CompleteTable\";").ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Count(), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Count(), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 

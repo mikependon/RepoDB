@@ -140,8 +140,8 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 // Assert
                 Assert.IsNotNull(result.Document);
                 Assert.IsTrue(XNode.DeepEquals(model.Document, result.Document));
-                Assert.AreEqual("1", result.Document.Root.Attribute("a").Value);
-                Assert.AreEqual("text", result.Document.Root.Element("child").Value);
+                Assert.AreEqual("1", result.Document.Root.Attribute("a").Value, StringComparer.Ordinal);
+                Assert.AreEqual("text", result.Document.Root.Element("child").Value, StringComparer.Ordinal);
             }
         }
 
@@ -176,7 +176,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
 
                 // Assert
                 // The default parsing drops the insignificant whitespaces, and the writing is not indented
-                Assert.AreEqual("<root><child a=\"1\">text</child></root>", raw);
+                Assert.AreEqual("<root><child a=\"1\">text</child></root>", raw, StringComparer.Ordinal);
             }
         }
 
@@ -192,7 +192,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<XDocumentTextColumnAttributeModel>(e => e.SessionId == sessionId).First();
 
                 // Assert
-                Assert.AreEqual("items", result.Document.Root.Name.LocalName);
+                Assert.AreEqual("items", result.Document.Root.Name.LocalName, StringComparer.Ordinal);
                 Assert.AreEqual(2, result.Document.Root.Elements("item").Count());
             }
         }
@@ -209,7 +209,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<XDocumentXmlColumnAttributeModel>(e => e.SessionId == sessionId).First();
 
                 // Assert
-                Assert.AreEqual("items", result.Document.Root.Name.LocalName);
+                Assert.AreEqual("items", result.Document.Root.Name.LocalName, StringComparer.Ordinal);
                 Assert.AreEqual(2, result.Document.Root.Elements("item").Count());
             }
         }
@@ -229,7 +229,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                     new { SessionId = model.SessionId });
 
                 // Assert
-                Assert.AreEqual("value-1", value);
+                Assert.AreEqual("value-1", value, StringComparer.Ordinal);
             }
         }
 
@@ -249,8 +249,8 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 XNamespace a = "urn:a";
                 XNamespace defaultNamespace = "urn:default";
                 Assert.AreEqual(a + "root", result.Document.Root.Name);
-                Assert.AreEqual("x", result.Document.Root.Element(defaultNamespace + "child").Value);
-                Assert.AreEqual("1", result.Document.Root.Element(defaultNamespace + "child").Attribute(a + "attr").Value);
+                Assert.AreEqual("x", result.Document.Root.Element(defaultNamespace + "child").Value, StringComparer.Ordinal);
+                Assert.AreEqual("1", result.Document.Root.Element(defaultNamespace + "child").Attribute(a + "attr").Value, StringComparer.Ordinal);
                 Assert.IsNotNull(result.Document.Root.Element(a + "other"));
             }
         }
@@ -268,8 +268,8 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<XDocumentXmlColumnAttributeModel>(e => e.SessionId == model.SessionId).First();
 
                 // Assert
-                Assert.AreEqual("a & b < c 日本語 Ñandú 😀", result.Document.Root.Value);
-                Assert.AreEqual("\"q\"", result.Document.Root.Attribute("a").Value);
+                Assert.AreEqual("a & b < c 日本語 Ñandú 😀", result.Document.Root.Value, StringComparer.Ordinal);
+                Assert.AreEqual("\"q\"", result.Document.Root.Attribute("a").Value, StringComparer.Ordinal);
             }
         }
 
@@ -286,7 +286,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<XDocumentXmlColumnAttributeModel>(e => e.SessionId == model.SessionId).First();
 
                 // Assert
-                Assert.AreEqual("<not>&xml", result.Document.Root.Value);
+                Assert.AreEqual("<not>&xml", result.Document.Root.Value, StringComparer.Ordinal);
             }
         }
 
@@ -304,7 +304,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<XDocumentTextColumnAttributeModel>(e => e.SessionId == model.SessionId).First();
 
                 // Assert
-                Assert.AreEqual("<root />", raw);
+                Assert.AreEqual("<root />", raw, StringComparer.Ordinal);
                 Assert.IsNull(result.Document.Declaration);
             }
         }
@@ -322,7 +322,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
 
                 // Assert
                 Assert.IsNotNull(result.Document.Declaration);
-                Assert.AreEqual("1.0", result.Document.Declaration.Version);
+                Assert.AreEqual("1.0", result.Document.Declaration.Version, StringComparer.Ordinal);
             }
         }
 
@@ -382,7 +382,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
 
                 // Assert
                 Assert.AreEqual(1, affectedRows);
-                Assert.AreEqual("2", result.Document.Root.Attribute("v").Value);
+                Assert.AreEqual("2", result.Document.Root.Attribute("v").Value, StringComparer.Ordinal);
             }
         }
 
@@ -401,7 +401,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                     new { SessionId = model.SessionId }).First();
 
                 // Assert
-                Assert.AreEqual("1", result.Document.Root.Attribute("v").Value);
+                Assert.AreEqual("1", result.Document.Root.Attribute("v").Value, StringComparer.Ordinal);
             }
         }
 
@@ -421,7 +421,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<XDocumentFluentModel>(e => e.SessionId == model.SessionId).First();
 
                 // Assert
-                Assert.AreEqual("1", result.ColumnXml.Root.Attribute("v").Value);
+                Assert.AreEqual("1", result.ColumnXml.Root.Attribute("v").Value, StringComparer.Ordinal);
             }
         }
 
@@ -439,7 +439,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<XDocumentTypeLevelModel>(e => e.SessionId == model.SessionId).First();
 
                 // Assert
-                Assert.AreEqual("1", result.ColumnXml.Root.Attribute("v").Value);
+                Assert.AreEqual("1", result.ColumnXml.Root.Attribute("v").Value, StringComparer.Ordinal);
             }
         }
 

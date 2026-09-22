@@ -143,14 +143,14 @@ namespace RepoDb.MySqlConnector.IntegrationTests.PropertyHandlers
                 };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<MySqlConnectorGeometryEntity>(e => e.Id == id).First();
                 var text = connection.ExecuteScalar<string>("SELECT ST_AsText(`ColumnGeometry`) FROM `PropertyHandler` WHERE `Id` = @Id;", new { Id = id });
 
                 // Assert
                 Assert.AreEqual(id, result.Id);
                 Assert.IsNotNull(result.ColumnGeometry);
-                Assert.AreEqual("POINT(1.5 2.5)", text);
+                Assert.AreEqual("POINT(1.5 2.5)", text, StringComparer.Ordinal);
             }
         }
 
@@ -166,7 +166,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.PropertyHandlers
                 };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<MySqlConnectorGeometryEntity>(e => e.Id == id).First();
                 var isNull = connection.ExecuteScalar<long>("SELECT COUNT(1) FROM `PropertyHandler` WHERE `Id` = @Id AND `ColumnGeometry` IS NULL;", new { Id = id }) == 1;
 

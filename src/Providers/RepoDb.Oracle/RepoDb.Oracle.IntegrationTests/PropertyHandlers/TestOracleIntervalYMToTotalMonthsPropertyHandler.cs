@@ -115,7 +115,7 @@ namespace RepoDb.Oracle.IntegrationTests.PropertyHandlers
                 var entity = new OracleIntervalYMToTotalMonthsEntity { ColumnIntervalYm = 29L };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<OracleIntervalYMToTotalMonthsEntity>(e => e.Id == id).First();
 
                 // Assert
@@ -133,7 +133,7 @@ namespace RepoDb.Oracle.IntegrationTests.PropertyHandlers
                 var entity = new OracleIntervalYMToTotalMonthsEntity { ColumnIntervalYm = 0L };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<OracleIntervalYMToTotalMonthsEntity>(e => e.Id == id).First();
 
                 // Assert
@@ -150,7 +150,7 @@ namespace RepoDb.Oracle.IntegrationTests.PropertyHandlers
                 var entity = new OracleIntervalYMToTotalMonthsEntity { ColumnIntervalYm = null };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<OracleIntervalYMToTotalMonthsEntity>(e => e.Id == id).First();
 
                 // Assert

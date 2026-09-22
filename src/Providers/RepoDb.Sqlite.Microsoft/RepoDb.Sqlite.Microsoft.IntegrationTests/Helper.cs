@@ -56,11 +56,11 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
             var propertiesOfType2 = typeof(T2).GetProperties();
             propertiesOfType1.AsList().ForEach(propertyOfType1 =>
             {
-                if (propertyOfType1.Name == "Id")
+                if (string.Equals(propertyOfType1.Name, "Id", StringComparison.Ordinal))
                 {
                     return;
                 }
-                var propertyOfType2 = propertiesOfType2.FirstOrDefault(p => p.Name == propertyOfType1.Name);
+                var propertyOfType2 = propertiesOfType2.FirstOrDefault(p => string.Equals(p.Name, propertyOfType1.Name, StringComparison.Ordinal));
                 if (propertyOfType2 == null)
                 {
                     return;
@@ -88,7 +88,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                         }
                         else
                         {
-                            value2 = Convert.ChangeType(value2, value1.GetType());
+                            value2 = Convert.ChangeType(value2, value1.GetType(), System.Globalization.CultureInfo.InvariantCulture);
                         }
                     }
                     Assert.AreEqual(value1, value2,
@@ -136,7 +136,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
             var properties = obj.GetType().GetProperties();
             properties.AsList().ForEach(property =>
             {
-                if (property.Name == "Id")
+                if (string.Equals(property.Name, "Id", StringComparison.Ordinal))
                 {
                     return;
                 }
@@ -163,7 +163,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                         }
                         else if (propertyType == typeof(string) && value2 is DateTime)
                         {
-                            value1 = DateTime.Parse(value1?.ToString());
+                            value1 = DateTime.Parse(value1?.ToString(), System.Globalization.CultureInfo.InvariantCulture);
                         }
                         if (value1.GetType() != value2.GetType())
                         {
@@ -174,7 +174,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                             }
                             else
                             {
-                                value2 = Convert.ChangeType(value2, value1.GetType());
+                                value2 = Convert.ChangeType(value2, value1.GetType(), System.Globalization.CultureInfo.InvariantCulture);
                             }
                         }
                         Assert.AreEqual(value1, value2,
@@ -205,8 +205,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                     ColumnBlob = Encoding.Default.GetBytes($"ColumnBlob:{i}"),
                     ColumnBoolean = "true",
                     ColumnChar = "C",
-                    ColumnDate = EpocDate.ToString(DATE_FORMAT),
-                    ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).ToString(DATE_FORMAT),
+                    ColumnDate = EpocDate.ToString(DATE_FORMAT, System.Globalization.CultureInfo.InvariantCulture),
+                    ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).ToString(DATE_FORMAT, System.Globalization.CultureInfo.InvariantCulture),
                     ColumnDecimal = Convert.ToInt64(i),
                     ColumnDouble = Convert.ToDouble(i),
                     ColumnInt = i,
@@ -216,7 +216,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                     ColumnReal = (float)i,
                     ColumnString = $"ColumnString:{i}",
                     ColumnText = $"ColumnText:{i}",
-                    ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).ToString(DATE_FORMAT),
+                    ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).ToString(DATE_FORMAT, System.Globalization.CultureInfo.InvariantCulture),
                     ColumnVarChar = $"ColumnVarChar:{i}"
                 });
             }
@@ -233,8 +233,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
             table.ColumnBlob = Encoding.UTF32.GetBytes(Guid.NewGuid().ToString());
             table.ColumnBoolean = "true";
             table.ColumnChar = char.Parse("C").ToString();
-            table.ColumnDate = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).Date.ToString(DATE_FORMAT);
-            table.ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).ToString(DATE_FORMAT);
+            table.ColumnDate = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).Date.ToString(DATE_FORMAT, System.Globalization.CultureInfo.InvariantCulture);
+            table.ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).ToString(DATE_FORMAT, System.Globalization.CultureInfo.InvariantCulture);
             table.ColumnDecimal = Randomizer.Next(1000000);
             table.ColumnDouble = Convert.ToDouble(Randomizer.Next(1000000));
             table.ColumnInt = Randomizer.Next(1000000);
@@ -243,7 +243,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
             table.ColumnReal = Convert.ToSingle(Randomizer.Next(1000000));
             table.ColumnString = $"{table.ColumnString} - Updated with {Guid.NewGuid()}";
             table.ColumnText = $"{table.ColumnText} - Updated with {Guid.NewGuid()}";
-            table.ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).ToString(DATE_FORMAT);
+            table.ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).ToString(DATE_FORMAT, System.Globalization.CultureInfo.InvariantCulture);
             table.ColumnVarChar = $"{table.ColumnVarChar} - Updated with {Guid.NewGuid()}";
         }
 
@@ -394,8 +394,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                     ColumnBlob = Encoding.Default.GetBytes($"ColumnBlob:{i}"),
                     ColumnBoolean = "true",
                     ColumnChar = "C",
-                    ColumnDate = EpocDate.ToString(DATE_FORMAT),
-                    ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).ToString(DATE_FORMAT),
+                    ColumnDate = EpocDate.ToString(DATE_FORMAT, System.Globalization.CultureInfo.InvariantCulture),
+                    ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).ToString(DATE_FORMAT, System.Globalization.CultureInfo.InvariantCulture),
                     ColumnDecimal = i,
                     ColumnDouble = Convert.ToDouble(i),
                     ColumnInt = i,
@@ -405,7 +405,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                     ColumnReal = (float)i,
                     ColumnString = $"ColumnString:{i}",
                     ColumnText = $"ColumnText:{i}",
-                    ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).ToString(DATE_FORMAT),
+                    ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).ToString(DATE_FORMAT, System.Globalization.CultureInfo.InvariantCulture),
                     ColumnVarChar = $"ColumnVarChar:{i}"
                 });
             }

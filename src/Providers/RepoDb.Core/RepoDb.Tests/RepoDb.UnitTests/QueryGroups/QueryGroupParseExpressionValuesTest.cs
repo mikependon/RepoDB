@@ -493,9 +493,9 @@ namespace RepoDb.UnitTests
             var high = 2;
             var low = 1;
             var greaterThan = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == (high > low ? "YES" : "NO"));
-            var greaterThanOrEqual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == (high >= high ? "YES" : "NO"));
+            var greaterThanOrEqual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == (high >= low ? "YES" : "NO"));
             var lessThan = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == (low < high ? "YES" : "NO"));
-            var lessThanOrEqual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == (low <= low ? "YES" : "NO"));
+            var lessThanOrEqual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == (low <= high ? "YES" : "NO"));
 
             // Act
             var greaterThanValue = greaterThan.QueryFields.First().Parameter.Value;

@@ -45,7 +45,7 @@ namespace RepoDb.SapHana.IntegrationTests.PropertyHandlers
                 var result = handler.Set(guid, null);
 
                 // Assert
-                Assert.AreEqual(guid.ToString(), result);
+                Assert.AreEqual(guid.ToString(), result, StringComparer.Ordinal);
             }
         }
 
@@ -106,7 +106,7 @@ namespace RepoDb.SapHana.IntegrationTests.PropertyHandlers
                 var entity = new SapHanaGuidEntity { ColumnGuid = Guid.NewGuid() };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<SapHanaGuidEntity>(e => e.Id == id).First();
 
                 // Assert
@@ -124,7 +124,7 @@ namespace RepoDb.SapHana.IntegrationTests.PropertyHandlers
                 var entity = new SapHanaGuidEntity { ColumnGuid = Guid.Empty };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<SapHanaGuidEntity>(e => e.Id == id).First();
 
                 // Assert

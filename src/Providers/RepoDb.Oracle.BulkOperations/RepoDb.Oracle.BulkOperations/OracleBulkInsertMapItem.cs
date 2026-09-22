@@ -78,15 +78,13 @@ namespace RepoDb.Oracle.BulkOperations
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
         {
-            if (this.hashCode != null)
+            if (hashCode != null)
             {
-                return this.hashCode.Value;
+                return hashCode.Value;
             }
 
-            var hashCode = base.GetHashCode();
-            hashCode = HashCode.Combine(hashCode, OracleDbType);
-
-            return (this.hashCode = hashCode).Value;
+            hashCode = HashCode.Combine(hashCode, base.GetHashCode(), OracleDbType);
+            return hashCode.Value;
         }
 
         #endregion

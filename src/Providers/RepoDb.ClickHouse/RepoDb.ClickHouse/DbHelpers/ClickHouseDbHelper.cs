@@ -162,7 +162,7 @@ namespace RepoDb.DbHelpers
                 reader.GetBoolean(2),
                 IsNullableType(columnType),
                 DbTypeResolver.Resolve(columnType),
-                reader.IsDBNull(4) ? (int?)null : Convert.ToInt32(reader.GetValue(4)),
+                reader.IsDBNull(4) ? (int?)null : Convert.ToInt32(reader.GetValue(4), System.Globalization.CultureInfo.InvariantCulture),
                 reader.IsDBNull(5) ? null : byte.Parse(reader.GetValue(5).ToString()),
                 ResolveScale(columnName, columnType, numericScale),
                 reader.GetString(7),
@@ -189,7 +189,7 @@ namespace RepoDb.DbHelpers
                 Convert.ToBoolean(await reader.GetFieldValueAsync<object>(2, cancellationToken).ConfigureAwait(false)),
                 IsNullableType(columnType),
                 DbTypeResolver.Resolve(columnType),
-                await reader.IsDBNullAsync(4, cancellationToken).ConfigureAwait(false) ? (int?)null : Convert.ToInt32(await reader.GetFieldValueAsync<object>(4, cancellationToken).ConfigureAwait(false)),
+                await reader.IsDBNullAsync(4, cancellationToken).ConfigureAwait(false) ? (int?)null : Convert.ToInt32(await reader.GetFieldValueAsync<object>(4, cancellationToken).ConfigureAwait(false), System.Globalization.CultureInfo.InvariantCulture),
                 await reader.IsDBNullAsync(5, cancellationToken).ConfigureAwait(false) ? null : byte.Parse((await reader.GetFieldValueAsync<object>(5, cancellationToken).ConfigureAwait(false)).ToString()),
                 ResolveScale(columnName, columnType, numericScale),
                 await reader.GetFieldValueAsync<string>(7, cancellationToken).ConfigureAwait(false),
@@ -314,7 +314,7 @@ namespace RepoDb.DbHelpers
         public void DynamicHandler<TEventInstance>(TEventInstance instance,
             string key)
         {
-            if (key == AfterCreateDbParameterEventKey &&
+            if (string.Equals(key, AfterCreateDbParameterEventKey, StringComparison.Ordinal) &&
                 instance is ClickHouseDbParameter parameter &&
                 parameter.ClickHouseType == null &&
                 parameter.Value is DateTime &&

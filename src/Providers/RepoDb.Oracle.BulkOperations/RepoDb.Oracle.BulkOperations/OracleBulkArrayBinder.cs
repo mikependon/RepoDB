@@ -262,7 +262,7 @@ namespace RepoDb.Oracle.BulkOperations
             {
                 var count = Math.Min(batchSize, rows.Count - offset);
 
-                await using var command = connection.CreateCommand();
+                using var command = connection.CreateCommand();
 
                 command.Transaction = Transaction;
                 command.BindByName = true;

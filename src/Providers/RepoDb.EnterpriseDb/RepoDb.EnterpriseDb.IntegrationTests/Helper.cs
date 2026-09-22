@@ -50,7 +50,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests
 
         private static DateTime GetCurrentUniversalTime() =>
             //DateTime.UtcNow()
-            ToUtcKind(DateTime.Parse(DateTime.UtcNow.ToString(DateTimeFormat)));
+            ToUtcKind(DateTime.Parse(DateTime.UtcNow.ToString(DateTimeFormat, System.Globalization.CultureInfo.InvariantCulture), System.Globalization.CultureInfo.InvariantCulture));
 
         private static DateTimeOffset ToDateTimeOffset(DateTime value) =>
             new(value);
@@ -114,11 +114,11 @@ namespace RepoDb.EnterpriseDb.IntegrationTests
             var propertiesOfType2 = typeof(T2).GetProperties();
             propertiesOfType1.AsList().ForEach(propertyOfType1 =>
             {
-                if (propertyOfType1.Name == "Id")
+                if (string.Equals(propertyOfType1.Name, "Id", StringComparison.Ordinal))
                 {
                     return;
                 }
-                var propertyOfType2 = propertiesOfType2.FirstOrDefault(p => p.Name == propertyOfType1.Name);
+                var propertyOfType2 = propertiesOfType2.FirstOrDefault(p => string.Equals(p.Name, propertyOfType1.Name, StringComparison.Ordinal));
                 if (propertyOfType2 == null)
                 {
                     return;
@@ -180,7 +180,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests
             var properties = obj.GetType().GetProperties();
             properties.AsList().ForEach(property =>
             {
-                if (property.Name == "Id")
+                if (string.Equals(property.Name, "Id", StringComparison.Ordinal))
                 {
                     return;
                 }
@@ -213,7 +213,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests
                     else
                     {
                         var propertyType = property.PropertyType.GetUnderlyingType();
-                        Assert.AreEqual(Convert.ChangeType(value1, propertyType), Convert.ChangeType(value2, propertyType),
+                        Assert.AreEqual(Convert.ChangeType(value1, propertyType, System.Globalization.CultureInfo.InvariantCulture), Convert.ChangeType(value2, propertyType, System.Globalization.CultureInfo.InvariantCulture),
                             $"Assert failed for '{property.Name}'. The values are '{value1}' and '{value2}'.");
                     }
                 }

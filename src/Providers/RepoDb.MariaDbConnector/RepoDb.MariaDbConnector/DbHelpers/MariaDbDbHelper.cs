@@ -119,8 +119,8 @@ namespace RepoDb.DbHelpers
                 reader.GetBoolean(3),
                 DbTypeResolver.Resolve(columnType),
                 size,
-                reader.IsDBNull(6) ? null : byte.Parse(reader.GetInt32(6).ToString()),
-                reader.IsDBNull(7) ? null : byte.Parse(reader.GetInt32(7).ToString()),
+                reader.IsDBNull(6) ? null : byte.Parse(reader.GetInt32(6).ToString(System.Globalization.CultureInfo.InvariantCulture)),
+                reader.IsDBNull(7) ? null : byte.Parse(reader.GetInt32(7).ToString(System.Globalization.CultureInfo.InvariantCulture)),
                 reader.GetString(8),
                 reader.GetBoolean(9),
                 "MARIADB");
@@ -289,7 +289,7 @@ namespace RepoDb.DbHelpers
         public void DynamicHandler<TEventInstance>(TEventInstance instance,
             string key)
         {
-            if (key == "RepoDb.Internal.Compiler.Events[AfterCreateDbParameter]")
+            if (string.Equals(key, "RepoDb.Internal.Compiler.Events[AfterCreateDbParameter]", StringComparison.Ordinal))
             {
                 HandleDbParameterPostCreation((MariaDbParameter)(object)instance);
             }

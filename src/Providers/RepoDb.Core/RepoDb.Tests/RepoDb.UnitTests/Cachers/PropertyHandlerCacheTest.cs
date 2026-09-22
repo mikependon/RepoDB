@@ -37,12 +37,12 @@ namespace RepoDb.UnitTests.Cachers
         {
             public string Get(string input, PropertyHandlerGetOptions options)
             {
-                throw new NotImplementedException();
+                throw new NotSupportedException();
             }
 
             public string Set(string input, PropertyHandlerSetOptions options)
             {
-                throw new NotImplementedException();
+                throw new NotSupportedException();
             }
         }
 
@@ -50,12 +50,12 @@ namespace RepoDb.UnitTests.Cachers
         {
             public string Get(string input, PropertyHandlerGetOptions options)
             {
-                throw new NotImplementedException();
+                throw new NotSupportedException();
             }
 
             public string Set(string input, PropertyHandlerSetOptions options)
             {
-                throw new NotImplementedException();
+                throw new NotSupportedException();
             }
         }
 

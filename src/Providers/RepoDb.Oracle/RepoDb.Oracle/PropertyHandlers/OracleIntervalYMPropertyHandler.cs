@@ -35,7 +35,7 @@ namespace RepoDb.PropertyHandlers.Oracle
                 case OracleIntervalYM interval:
                     return interval;
                 default:
-                    return new OracleIntervalYM(Convert.ToInt64(input));
+                    return new OracleIntervalYM(Convert.ToInt64(input, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 

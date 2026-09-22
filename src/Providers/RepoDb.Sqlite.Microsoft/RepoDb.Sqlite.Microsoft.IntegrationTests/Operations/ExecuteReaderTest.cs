@@ -54,7 +54,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                         // Act
                         var id = reader.GetInt64(0);
                         var columnInt = reader.GetInt32(1);
-                        var columnDateTime = reader.GetDateTime(2).ToString(Helper.DATE_FORMAT);
+                        var columnDateTime = reader.GetDateTime(2).ToString(Helper.DATE_FORMAT, System.Globalization.CultureInfo.InvariantCulture);
                         var table = tables.FirstOrDefault(e => e.Id == id);
 
                         // Assert
@@ -84,7 +84,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                             // Act
                             var id = reader.GetInt64(0);
                             var columnInt = reader.GetInt32(1);
-                            var columnDateTime = reader.GetDateTime(2).ToString(Helper.DATE_FORMAT);
+                            var columnDateTime = reader.GetDateTime(2).ToString(Helper.DATE_FORMAT, System.Globalization.CultureInfo.InvariantCulture);
                             var table = tables.FirstOrDefault(e => e.Id == id);
 
                             // Assert
@@ -157,7 +157,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                         // Act
                         var id = reader.GetInt64(0);
                         var columnInt = reader.GetInt32(1);
-                        var columnDateTime = reader.GetDateTime(2).ToString(Helper.DATE_FORMAT);
+                        var columnDateTime = reader.GetDateTime(2).ToString(Helper.DATE_FORMAT, System.Globalization.CultureInfo.InvariantCulture);
                         var table = tables.FirstOrDefault(e => e.Id == id);
 
                         // Assert
@@ -187,7 +187,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                             // Act
                             var id = reader.GetInt64(0);
                             var columnInt = reader.GetInt32(1);
-                            var columnDateTime = reader.GetDateTime(2).ToString(Helper.DATE_FORMAT);
+                            var columnDateTime = reader.GetDateTime(2).ToString(Helper.DATE_FORMAT, System.Globalization.CultureInfo.InvariantCulture);
                             var table = tables.FirstOrDefault(e => e.Id == id);
 
                             // Assert

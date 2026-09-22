@@ -51,7 +51,7 @@ namespace RepoDb.UnitTests.Extensions
         {
             public Guid Get(string input, PropertyHandlerGetOptions options)
             {
-                Guid.TryParse(input, out Guid output);
+                _ = Guid.TryParse(input, out Guid output);
                 return output;
             }
 

@@ -889,7 +889,7 @@ namespace RepoDb.IntegrationTests
                 }
                 catch (InvalidEnumArgumentException e)
                 {
-                    Assert.IsTrue(e.Message.Contains(nameof(Direction3)));
+                    Assert.IsTrue(e.Message.Contains(nameof(Direction3), StringComparison.Ordinal));
 
                     // We are in an EN-US scope so the message should match
                     Assert.AreEqual("The value of argument 'value' (10) is invalid for Enum type 'Direction3'. (Parameter 'value')", e.Message, StringComparer.Ordinal);
@@ -953,7 +953,7 @@ namespace RepoDb.IntegrationTests
                 }
                 catch (InvalidEnumArgumentException e)
                 {
-                    Assert.IsTrue(e.Message.Contains(nameof(Direction3)));
+                    Assert.IsTrue(e.Message.Contains(nameof(Direction3), StringComparison.Ordinal));
 
                     // We are in an EN-US scope so the message should match
                     Assert.AreEqual("The value of argument 'value' (10) is invalid for Enum type 'Direction3'. (Parameter 'value')", e.Message, StringComparer.Ordinal);
@@ -981,10 +981,10 @@ namespace RepoDb.IntegrationTests
                 }
                 catch (ArgumentOutOfRangeException e)
                 {
-                    Assert.IsTrue(e.Message.Contains(nameof(Direction)));
+                    Assert.IsTrue(e.Message.Contains(nameof(Direction), StringComparison.Ordinal));
 
                     // We are in an EN-US scope so the message should match
-                    Assert.AreEqual("Invalid value for Direction (Parameter 'value')\nActual value was Center.", e.Message.Replace("\r", ""), StringComparer.Ordinal);
+                    Assert.AreEqual("Invalid value for Direction (Parameter 'value')\nActual value was Center.", e.Message.Replace("\r", "", StringComparison.Ordinal), StringComparer.Ordinal);
                 }
 
                 // Assert
@@ -1031,10 +1031,10 @@ namespace RepoDb.IntegrationTests
                 }
                 catch (ArgumentOutOfRangeException e)
                 {
-                    Assert.IsTrue(e.Message.Contains(nameof(Direction3)));
+                    Assert.IsTrue(e.Message.Contains(nameof(Direction3), StringComparison.Ordinal));
 
                     // We are in an EN-US scope so the message should match
-                    Assert.AreEqual("Invalid value for Direction3 (Parameter 'value')\nActual value was Center.", e.Message.Replace("\r", ""), StringComparer.Ordinal);
+                    Assert.AreEqual("Invalid value for Direction3 (Parameter 'value')\nActual value was Center.", e.Message.Replace("\r", "", StringComparison.Ordinal), StringComparer.Ordinal);
                 }
 
                 try
@@ -1044,10 +1044,10 @@ namespace RepoDb.IntegrationTests
                 }
                 catch (ArgumentOutOfRangeException e)
                 {
-                    Assert.IsTrue(e.Message.Contains(nameof(Direction3)));
+                    Assert.IsTrue(e.Message.Contains(nameof(Direction3), StringComparison.Ordinal));
 
                     // We are in an EN-US scope so the message should match
-                    Assert.AreEqual("Invalid value for Direction3 (Parameter 'value')\nActual value was 9.", e.Message.Replace("\r", ""), StringComparer.Ordinal);
+                    Assert.AreEqual("Invalid value for Direction3 (Parameter 'value')\nActual value was 9.", e.Message.Replace("\r", "", StringComparison.Ordinal), StringComparer.Ordinal);
                 }
 
                 // Assert
@@ -1070,10 +1070,10 @@ namespace RepoDb.IntegrationTests
                 }
                 catch (ArgumentOutOfRangeException e)
                 {
-                    Assert.IsTrue(e.Message.Contains(nameof(Direction4)));
+                    Assert.IsTrue(e.Message.Contains(nameof(Direction4), StringComparison.Ordinal));
 
                     // We are in an EN-US scope so the message should match
-                    Assert.AreEqual("Invalid value for Direction4 (Parameter 'value')\nActual value was Center.", e.Message.Replace("\r", ""), StringComparer.Ordinal);
+                    Assert.AreEqual("Invalid value for Direction4 (Parameter 'value')\nActual value was Center.", e.Message.Replace("\r", "", StringComparison.Ordinal), StringComparer.Ordinal);
                 }
 
                 try
@@ -1083,10 +1083,10 @@ namespace RepoDb.IntegrationTests
                 }
                 catch (ArgumentOutOfRangeException e)
                 {
-                    Assert.IsTrue(e.Message.Contains(nameof(Direction4)));
+                    Assert.IsTrue(e.Message.Contains(nameof(Direction4), StringComparison.Ordinal));
 
                     // We are in an EN-US scope so the message should match
-                    Assert.AreEqual("Invalid value for Direction4 (Parameter 'value')\nActual value was 9.", e.Message.Replace("\r", ""), StringComparer.Ordinal);
+                    Assert.AreEqual("Invalid value for Direction4 (Parameter 'value')\nActual value was 9.", e.Message.Replace("\r", "", StringComparison.Ordinal), StringComparer.Ordinal);
                 }
 
                 // Assert
@@ -1116,10 +1116,10 @@ namespace RepoDb.IntegrationTests
                 }
                 catch (ArgumentOutOfRangeException e)
                 {
-                    Assert.IsTrue(e.Message.Contains(nameof(Direction)));
+                    Assert.IsTrue(e.Message.Contains(nameof(Direction), StringComparison.Ordinal));
 
                     // We are in an EN-US scope so the message should match
-                    Assert.AreEqual("Invalid value for Direction (Parameter 'value')\nActual value was Center.", e.Message.Replace("\r", ""), StringComparer.Ordinal);
+                    Assert.AreEqual("Invalid value for Direction (Parameter 'value')\nActual value was Center.", e.Message.Replace("\r", "", StringComparison.Ordinal), StringComparer.Ordinal);
                 }
 
                 // Assert
@@ -1166,10 +1166,10 @@ namespace RepoDb.IntegrationTests
                 }
                 catch (ArgumentOutOfRangeException e)
                 {
-                    Assert.IsTrue(e.Message.Contains(nameof(Direction3)));
+                    Assert.IsTrue(e.Message.Contains(nameof(Direction3), StringComparison.Ordinal));
 
                     // We are in an EN-US scope so the message should match
-                    Assert.AreEqual("Invalid value for Direction3 (Parameter 'value')\nActual value was Center.", e.Message.Replace("\r", ""), StringComparer.Ordinal);
+                    Assert.AreEqual("Invalid value for Direction3 (Parameter 'value')\nActual value was Center.", e.Message.Replace("\r", "", StringComparison.Ordinal), StringComparer.Ordinal);
                 }
 
                 try
@@ -1179,10 +1179,10 @@ namespace RepoDb.IntegrationTests
                 }
                 catch (ArgumentOutOfRangeException e)
                 {
-                    Assert.IsTrue(e.Message.Contains(nameof(Direction3)));
+                    Assert.IsTrue(e.Message.Contains(nameof(Direction3), StringComparison.Ordinal));
 
                     // We are in an EN-US scope so the message should match
-                    Assert.AreEqual("Invalid value for Direction3 (Parameter 'value')\nActual value was 9.", e.Message.Replace("\r", ""), StringComparer.Ordinal);
+                    Assert.AreEqual("Invalid value for Direction3 (Parameter 'value')\nActual value was 9.", e.Message.Replace("\r", "", StringComparison.Ordinal), StringComparer.Ordinal);
                 }
 
                 // Assert
@@ -1205,10 +1205,10 @@ namespace RepoDb.IntegrationTests
                 }
                 catch (ArgumentOutOfRangeException e)
                 {
-                    Assert.IsTrue(e.Message.Contains(nameof(Direction4)));
+                    Assert.IsTrue(e.Message.Contains(nameof(Direction4), StringComparison.Ordinal));
 
                     // We are in an EN-US scope so the message should match
-                    Assert.AreEqual("Invalid value for Direction4 (Parameter 'value')\nActual value was Center.", e.Message.Replace("\r", ""), StringComparer.Ordinal);
+                    Assert.AreEqual("Invalid value for Direction4 (Parameter 'value')\nActual value was Center.", e.Message.Replace("\r", "", StringComparison.Ordinal), StringComparer.Ordinal);
                 }
 
                 try
@@ -1218,10 +1218,10 @@ namespace RepoDb.IntegrationTests
                 }
                 catch (ArgumentOutOfRangeException e)
                 {
-                    Assert.IsTrue(e.Message.Contains(nameof(Direction4)));
+                    Assert.IsTrue(e.Message.Contains(nameof(Direction4), StringComparison.Ordinal));
 
                     // We are in an EN-US scope so the message should match
-                    Assert.AreEqual("Invalid value for Direction4 (Parameter 'value')\nActual value was 9.", e.Message.Replace("\r", ""), StringComparer.Ordinal);
+                    Assert.AreEqual("Invalid value for Direction4 (Parameter 'value')\nActual value was 9.", e.Message.Replace("\r", "", StringComparison.Ordinal), StringComparer.Ordinal);
                 }
 
                 // Assert
@@ -1278,10 +1278,10 @@ namespace RepoDb.IntegrationTests
                 }
                 catch (ArgumentOutOfRangeException e)
                 {
-                    Assert.IsTrue(e.Message.Contains(nameof(Direction3)));
+                    Assert.IsTrue(e.Message.Contains(nameof(Direction3), StringComparison.Ordinal));
 
                     // We are in an EN-US scope so the message should match
-                    Assert.AreEqual("Invalid value for Direction3 (Parameter 'value')\nActual value was North, West.", e.Message.Replace("\r", ""), StringComparer.Ordinal);
+                    Assert.AreEqual("Invalid value for Direction3 (Parameter 'value')\nActual value was North, West.", e.Message.Replace("\r", "", StringComparison.Ordinal), StringComparer.Ordinal);
                 }
 
                 Assert.AreEqual(Direction3.South, data);
@@ -1335,10 +1335,10 @@ namespace RepoDb.IntegrationTests
                 }
                 catch (ArgumentOutOfRangeException e)
                 {
-                    Assert.IsTrue(e.Message.Contains(nameof(Direction3)));
+                    Assert.IsTrue(e.Message.Contains(nameof(Direction3), StringComparison.Ordinal));
 
                     // We are in an EN-US scope so the message should match
-                    Assert.AreEqual("Invalid value for Direction3 (Parameter 'value')\nActual value was North, West.", e.Message.Replace("\r", ""), StringComparer.Ordinal);
+                    Assert.AreEqual("Invalid value for Direction3 (Parameter 'value')\nActual value was North, West.", e.Message.Replace("\r", "", StringComparison.Ordinal), StringComparer.Ordinal);
                 }
 
                 Assert.AreEqual(Direction3.South, data);

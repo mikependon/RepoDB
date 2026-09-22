@@ -418,7 +418,7 @@ namespace RepoDb.SapHana.BulkOperations
             for (var offset = 0; offset < rows.Length; offset += effectiveBatchSize)
             {
                 var count = Math.Min(effectiveBatchSize, rows.Length - offset);
-                await using var command = CreateCommand(commandText);
+                using var command = CreateCommand(commandText);
                 var parameters = AddParameters(command, mappings);
                 await command.PrepareAsync(cancellationToken).ConfigureAwait(false);
 

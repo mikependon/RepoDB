@@ -187,7 +187,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var raw = GetRawValue(connection, model.SessionId);
 
                 // Assert
-                Assert.AreEqual("10.0.0.1", raw);
+                Assert.AreEqual("10.0.0.1", raw, StringComparer.Ordinal);
             }
         }
 
@@ -229,7 +229,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<IPAddressAttributeModel>(e => e.SessionId == model.SessionId).First();
 
                 // Assert
-                Assert.AreEqual(model.Address.ToString(), raw);
+                Assert.AreEqual(model.Address.ToString(), raw, StringComparer.Ordinal);
                 Assert.AreEqual(model.Address, result.Address);
             }
         }

@@ -252,7 +252,7 @@ namespace RepoDb.DbHelpers
         public void DynamicHandler<TEventInstance>(TEventInstance instance,
             string key)
         {
-            if (key == "RepoDb.Internal.Compiler.Events[AfterCreateDbParameter]")
+            if (string.Equals(key, "RepoDb.Internal.Compiler.Events[AfterCreateDbParameter]", StringComparison.Ordinal))
             {
                 HandleDbParameterPostCreation((HanaParameter)(object)instance);
             }

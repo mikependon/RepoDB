@@ -125,7 +125,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 // Assert
                 Assert.IsNotNull(result.Node);
                 Assert.IsTrue(JsonNode.DeepEquals(model.Node, result.Node));
-                Assert.AreEqual("John", (string)result.Node["name"]);
+                Assert.AreEqual("John", (string)result.Node["name"], StringComparer.Ordinal);
                 Assert.AreEqual(30, (int)result.Node["age"]);
             }
         }
@@ -160,7 +160,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var raw = GetRawValue(connection, model.SessionId);
 
                 // Assert
-                Assert.AreEqual("{\"name\":\"John\",\"tags\":[1,2]}", raw);
+                Assert.AreEqual("{\"name\":\"John\",\"tags\":[1,2]}", raw, StringComparer.Ordinal);
             }
         }
 
@@ -196,7 +196,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<JsonNodeAttributeModel>(e => e.SessionId == model.SessionId).First();
 
                 // Assert
-                Assert.AreEqual("[1,\"two\",true]", raw);
+                Assert.AreEqual("[1,\"two\",true]", raw, StringComparer.Ordinal);
                 Assert.IsInstanceOfType<JsonArray>(result.Node);
                 Assert.AreEqual(3, result.Node.AsArray().Count);
             }
@@ -226,7 +226,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                     var result = connection.Query<JsonNodeAttributeModel>(e => e.SessionId == model.SessionId).First();
 
                     // Assert
-                    Assert.AreEqual(json, raw);
+                    Assert.AreEqual(json, raw, StringComparer.Ordinal);
                     Assert.IsInstanceOfType<JsonValue>(result.Node);
                     Assert.IsTrue(JsonNode.DeepEquals(node, result.Node));
                 }
@@ -252,7 +252,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
 
                 // Assert
                 Assert.IsTrue(JsonNode.DeepEquals(model.Node, result.Node));
-                Assert.AreEqual("E2", (string)result.Node["employees"][1]["name"]);
+                Assert.AreEqual("E2", (string)result.Node["employees"][1]["name"], StringComparer.Ordinal);
                 Assert.IsNull(result.Node["nothing"]);
             }
         }
@@ -275,7 +275,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
 
                 // Assert
                 Assert.AreEqual(2, (int)updated.Node["count"]);
-                Assert.AreEqual("yes", (string)updated.Node["added"]);
+                Assert.AreEqual("yes", (string)updated.Node["added"], StringComparer.Ordinal);
             }
         }
 
@@ -292,7 +292,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<JsonNodeAttributeModel>(e => e.SessionId == model.SessionId).First();
 
                 // Assert
-                Assert.AreEqual("日本語 \"quoted\" Ñandú 😀 <tag>", (string)result.Node["text"]);
+                Assert.AreEqual("日本語 \"quoted\" Ñandú 😀 <tag>", (string)result.Node["text"], StringComparer.Ordinal);
             }
         }
 
@@ -534,7 +534,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var raw = GetRawValue(connection, model.SessionId);
 
                 // Assert
-                Assert.AreEqual("{\"v\":1}", raw);
+                Assert.AreEqual("{\"v\":1}", raw, StringComparer.Ordinal);
                 Assert.AreSame(parent, model.Node.Parent);
             }
         }

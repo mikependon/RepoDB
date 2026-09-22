@@ -360,7 +360,7 @@ namespace RepoDb.StatementBuilders
         /// <returns>A sql statement for insert operation.</returns>
         public override string CreateInsertAll(string tableName,
             IEnumerable<Field> fields = null,
-            int batchSize = 1,
+            int batchSize = Constant.DefaultBatchOperationSize,
             DbField primaryField = null,
             DbField identityField = null,
             string hints = null)
@@ -429,8 +429,8 @@ namespace RepoDb.StatementBuilders
         /// <returns>A sql statement for merge operation.</returns>
         public override string CreateMergeAll(string tableName,
             IEnumerable<Field> fields,
-            IEnumerable<Field> qualifiers,
-            int batchSize = 1,
+            IEnumerable<Field> qualifiers = null,
+            int batchSize = Constant.DefaultBatchOperationSize,
             DbField primaryField = null,
             DbField identityField = null,
             string hints = null)
@@ -648,7 +648,7 @@ namespace RepoDb.StatementBuilders
         public override string CreateUpdateAll(string tableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
-            int batchSize = 1,
+            int batchSize = Constant.DefaultBatchOperationSize,
             DbField primaryField = null,
             DbField identityField = null,
             string hints = null)

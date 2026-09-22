@@ -163,7 +163,7 @@ namespace RepoDb.UnitTests.Mappers
         public class WithHandlerPropertyHandler : IPropertyHandler<decimal?, WithHandlerEnum?>
         {
             public WithHandlerEnum? Get(decimal? input, PropertyHandlerGetOptions options)
-                => throw new NotImplementedException();
+                => throw new NotSupportedException();
 
             public decimal? Set(WithHandlerEnum? input, PropertyHandlerSetOptions options)
                 => input switch
@@ -171,7 +171,7 @@ namespace RepoDb.UnitTests.Mappers
                     WithHandlerEnum.A => 100,
                     WithHandlerEnum.B => 200,
                     null => null,
-                    _ => throw new NotImplementedException()
+                    _ => throw new NotSupportedException()
                 };
         }
 

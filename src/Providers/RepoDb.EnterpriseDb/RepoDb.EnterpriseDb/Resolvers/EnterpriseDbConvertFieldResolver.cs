@@ -10,6 +10,7 @@ using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using System;
 using System.Data;
+using System.Globalization;
 
 namespace RepoDb.Resolvers
 {
@@ -51,7 +52,7 @@ namespace RepoDb.Resolvers
                 var dbType = DbTypeResolver.Resolve(field.Type);
                 if (dbType != null)
                 {
-                    var dbTypeName = StringNameResolver.Resolve(dbType.Value).ToUpper();
+                    var dbTypeName = StringNameResolver.Resolve(dbType.Value).ToUpper(CultureInfo.CurrentCulture);
                     return string.Concat("CAST(", field.Name.AsField(dbSetting), " AS ", dbTypeName, ")");
                 }
             }

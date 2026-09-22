@@ -190,7 +190,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var raw = GetRawValue(connection, model.SessionId);
 
                 // Assert
-                Assert.AreEqual("Inactive", raw);
+                Assert.AreEqual("Inactive", raw, StringComparer.Ordinal);
             }
         }
 
@@ -226,7 +226,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                     var result = connection.Query<StatusAttributeModel>(e => e.SessionId == model.SessionId).First();
 
                     // Assert
-                    Assert.AreEqual(status.ToString(), raw);
+                    Assert.AreEqual(status.ToString(), raw, StringComparer.Ordinal);
                     Assert.AreEqual(status, result.Status);
                 }
             }
@@ -297,7 +297,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<PermissionsAttributeModel>(e => e.SessionId == model.SessionId).First();
 
                 // Assert
-                Assert.AreEqual("Read,Write", raw);
+                Assert.AreEqual("Read,Write", raw, StringComparer.Ordinal);
                 Assert.AreEqual(Permissions.Read | Permissions.Write, result.Permissions);
             }
         }
@@ -315,7 +315,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var raw = GetRawValue(connection, model.SessionId);
 
                 // Assert
-                Assert.AreEqual("Read,Write,Execute", raw);
+                Assert.AreEqual("Read,Write,Execute", raw, StringComparer.Ordinal);
             }
         }
 
@@ -355,7 +355,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<PermissionsAttributeModel>(e => e.SessionId == model.SessionId).First();
 
                 // Assert
-                Assert.AreEqual("None", raw);
+                Assert.AreEqual("None", raw, StringComparer.Ordinal);
                 Assert.AreEqual(Permissions.None, result.Permissions);
             }
         }
@@ -398,7 +398,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 // Assert
                 Assert.AreEqual(1, affectedRows);
                 Assert.AreEqual(Status.Inactive, result.Status);
-                Assert.AreEqual("Inactive", GetRawValue(connection, model.SessionId));
+                Assert.AreEqual("Inactive", GetRawValue(connection, model.SessionId), StringComparer.Ordinal);
             }
         }
 
@@ -456,7 +456,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
 
                 // Assert
                 Assert.AreEqual(Status.Inactive, result.ColumnNVarChar);
-                Assert.AreEqual("Inactive", GetRawValue(connection, model.SessionId));
+                Assert.AreEqual("Inactive", GetRawValue(connection, model.SessionId), StringComparer.Ordinal);
             }
         }
 
@@ -475,7 +475,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
 
                 // Assert
                 Assert.AreEqual(Status.Inactive, result.ColumnNVarChar);
-                Assert.AreEqual("Inactive", GetRawValue(connection, model.SessionId));
+                Assert.AreEqual("Inactive", GetRawValue(connection, model.SessionId), StringComparer.Ordinal);
             }
         }
 
@@ -563,7 +563,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<StatusAttributeModel>(e => e.SessionId == model.SessionId).First();
 
                 // Assert
-                Assert.AreEqual("99", raw);
+                Assert.AreEqual("99", raw, StringComparer.Ordinal);
                 Assert.AreEqual((Status)99, result.Status);
                 Assert.IsFalse(Enum.IsDefined(result.Status));
             }

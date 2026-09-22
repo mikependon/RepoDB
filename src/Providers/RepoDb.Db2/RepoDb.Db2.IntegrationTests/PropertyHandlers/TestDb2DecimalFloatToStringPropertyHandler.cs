@@ -47,7 +47,7 @@ namespace RepoDb.Db2.IntegrationTests.PropertyHandlers
 
                 // Assert
                 Assert.IsInstanceOfType(result, typeof(DB2DecimalFloat));
-                Assert.AreEqual(expected.ToString(), result.ToString());
+                Assert.AreEqual(expected.ToString(), result.ToString(), StringComparer.Ordinal);
             }
         }
 
@@ -84,9 +84,9 @@ namespace RepoDb.Db2.IntegrationTests.PropertyHandlers
                 var resultOfString = handler.Get("123.456", null);
 
                 // Assert
-                Assert.AreEqual(expected, resultOfDecimalFloat);
-                Assert.AreEqual(expected, resultOfDecimal);
-                Assert.AreEqual(expected, resultOfString);
+                Assert.AreEqual(expected, resultOfDecimalFloat, StringComparer.Ordinal);
+                Assert.AreEqual(expected, resultOfDecimal, StringComparer.Ordinal);
+                Assert.AreEqual(expected, resultOfString, StringComparer.Ordinal);
             }
         }
 
@@ -118,12 +118,12 @@ namespace RepoDb.Db2.IntegrationTests.PropertyHandlers
                 var expected = new DB2DecimalFloat(123.456m).ToString();
 
                 // Act
-                var id = Convert.ToInt32(connection.Insert(entity));
+                var id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<Db2DecimalFloatToStringEntity>(e => e.Id == id).First();
 
                 // Assert
                 Assert.AreEqual(id, result.Id);
-                Assert.AreEqual(expected, result.ColumnDecFloat);
+                Assert.AreEqual(expected, result.ColumnDecFloat, StringComparer.Ordinal);
             }
         }
 
@@ -136,7 +136,7 @@ namespace RepoDb.Db2.IntegrationTests.PropertyHandlers
                 var entity = new Db2DecimalFloatToStringEntity { ColumnDecFloat = null };
 
                 // Act
-                var id = Convert.ToInt32(connection.Insert(entity));
+                var id = Convert.ToInt32(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<Db2DecimalFloatToStringEntity>(e => e.Id == id).First();
 
                 // Assert

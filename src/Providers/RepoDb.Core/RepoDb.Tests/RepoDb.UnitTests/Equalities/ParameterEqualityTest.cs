@@ -63,7 +63,7 @@ namespace RepoDb.UnitTests.Equalities
             var objA = new Parameter("ParameterName", new object());
 
             // Act
-            var equal = (objA.GetHashCode() == "ParameterName".GetHashCode());
+            var equal = (objA.GetHashCode() == "ParameterName".GetHashCode(System.StringComparison.Ordinal));
 
             // Assert
             Assert.IsTrue(equal);
@@ -76,7 +76,7 @@ namespace RepoDb.UnitTests.Equalities
             var objA = new Parameter("ParameterName", new object());
 
             // Act
-            var equal = (objA.GetHashCode() == "Parametername".GetHashCode());
+            var equal = (objA.GetHashCode() == "Parametername".GetHashCode(System.StringComparison.Ordinal));
 
             // Assert
             Assert.IsFalse(equal);

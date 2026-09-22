@@ -110,7 +110,7 @@ namespace RepoDb.Firebird.IntegrationTests.PropertyHandlers
                 var entity = new FirebirdZonedDateTimeEntity { ColumnTimeStampTz = value };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<FirebirdZonedDateTimeEntity>(e => e.Id == id).First();
 
                 // Assert

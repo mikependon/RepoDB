@@ -84,7 +84,7 @@ namespace RepoDb.Oracle.IntegrationTests.PropertyHandlers
 
                 // Assert
                 Assert.IsNotNull(result);
-                Assert.AreEqual(Xml, ToText(result));
+                Assert.AreEqual(Xml, ToText(result), StringComparer.Ordinal);
             }
         }
 
@@ -130,13 +130,13 @@ namespace RepoDb.Oracle.IntegrationTests.PropertyHandlers
                 var entity = new OracleXElementEntity { ColumnXml = Create() };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<OracleXElementEntity>(e => e.Id == id).First();
 
                 // Assert
                 Assert.AreEqual(id, result.Id);
                 Assert.IsNotNull(result.ColumnXml);
-                Assert.AreEqual(Xml, ToText(result.ColumnXml));
+                Assert.AreEqual(Xml, ToText(result.ColumnXml), StringComparer.Ordinal);
             }
         }
 
@@ -149,7 +149,7 @@ namespace RepoDb.Oracle.IntegrationTests.PropertyHandlers
                 var entity = new OracleXElementEntity { ColumnXml = null };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<OracleXElementEntity>(e => e.Id == id).First();
 
                 // Assert

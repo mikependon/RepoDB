@@ -80,7 +80,7 @@ namespace RepoDb.IntegrationTests.Setup
 
             using var command = connection.CreateCommand();
             command.CommandText = $"SELECT COUNT(*) FROM SYS.SCHEMAS WHERE SCHEMA_NAME = '{schemaName}'";
-            var exists = Convert.ToInt32(command.ExecuteScalar()) > 0;
+            var exists = Convert.ToInt32(command.ExecuteScalar(), System.Globalization.CultureInfo.InvariantCulture) > 0;
 
             if (!exists)
             {

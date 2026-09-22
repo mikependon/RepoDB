@@ -127,7 +127,7 @@ namespace RepoDb.Firebird.IntegrationTests.PropertyHandlers
                 var entity = new FirebirdDecFloatToNullableDecimalEntity { ColumnDecFloat = 123.45m };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<FirebirdDecFloatToNullableDecimalEntity>(e => e.Id == id).First();
 
                 // Assert
@@ -145,7 +145,7 @@ namespace RepoDb.Firebird.IntegrationTests.PropertyHandlers
                 var entity = new FirebirdDecFloatToNullableDecimalEntity { ColumnDecFloat = 1234567890.123456789012345678m };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<FirebirdDecFloatToNullableDecimalEntity>(e => e.Id == id).First();
 
                 // Assert
@@ -162,7 +162,7 @@ namespace RepoDb.Firebird.IntegrationTests.PropertyHandlers
                 var entity = new FirebirdDecFloatToNullableDecimalEntity { ColumnDecFloat = null };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<FirebirdDecFloatToNullableDecimalEntity>(e => e.Id == id).First();
 
                 // Assert

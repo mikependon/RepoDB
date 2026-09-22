@@ -114,7 +114,7 @@ namespace RepoDb.Oracle.IntegrationTests.PropertyHandlers
                 var entity = new OracleIntervalYMEntity { ColumnIntervalYm = new OracleIntervalYM(2, 5) };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<OracleIntervalYMEntity>(e => e.Id == id).First();
 
                 // Assert
@@ -133,7 +133,7 @@ namespace RepoDb.Oracle.IntegrationTests.PropertyHandlers
                 var entity = new OracleIntervalYMEntity { ColumnIntervalYm = OracleIntervalYM.Null };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<OracleIntervalYMEntity>(e => e.Id == id).First();
 
                 // Assert

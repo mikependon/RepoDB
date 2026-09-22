@@ -157,7 +157,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var raw = GetRawValue(connection, model.SessionId);
 
                 // Assert
-                Assert.AreEqual("red,green,blue", raw);
+                Assert.AreEqual("red,green,blue", raw, StringComparer.Ordinal);
             }
         }
 
@@ -191,7 +191,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<StringArrayAttributeModel>(e => e.SessionId == model.SessionId).First();
 
                 // Assert
-                Assert.AreEqual("only", raw);
+                Assert.AreEqual("only", raw, StringComparer.Ordinal);
                 CollectionAssert.AreEqual(new[] { "only" }, result.Tags);
             }
         }
@@ -210,7 +210,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<StringArrayAttributeModel>(e => e.SessionId == model.SessionId).First();
 
                 // Assert
-                Assert.AreEqual(string.Empty, raw);
+                Assert.AreEqual(string.Empty, raw, StringComparer.Ordinal);
                 Assert.IsNotNull(result.Tags);
                 Assert.AreEqual(0, result.Tags.Length);
             }
@@ -247,7 +247,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<StringArrayAttributeModel>(e => e.SessionId == model.SessionId).First();
 
                 // Assert
-                Assert.AreEqual("a,,b,", raw);
+                Assert.AreEqual("a,,b,", raw, StringComparer.Ordinal);
                 CollectionAssert.AreEqual(model.Tags, result.Tags);
             }
         }

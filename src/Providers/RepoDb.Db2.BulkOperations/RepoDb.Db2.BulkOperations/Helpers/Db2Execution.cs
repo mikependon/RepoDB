@@ -485,7 +485,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
             {
                 while (snapshotReader.Read())
                 {
-                    var rowOrder = Convert.ToInt64(snapshotReader.GetValue(0));
+                    var rowOrder = Convert.ToInt64(snapshotReader.GetValue(0), System.Globalization.CultureInfo.InvariantCulture);
                     if (snapshotReader.IsDBNull(1))
                     {
                         unmatchedRowOrders.Add(rowOrder);
@@ -563,7 +563,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
             {
                 while (await snapshotReader.ReadAsync(cancellationToken).ConfigureAwait(false))
                 {
-                    var rowOrder = Convert.ToInt64(snapshotReader.GetValue(0));
+                    var rowOrder = Convert.ToInt64(snapshotReader.GetValue(0), System.Globalization.CultureInfo.InvariantCulture);
                     if (snapshotReader.IsDBNull(1))
                     {
                         unmatchedRowOrders.Add(rowOrder);
@@ -635,7 +635,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
             {
                 while (snapshotReader.Read())
                 {
-                    var rowOrder = Convert.ToInt64(snapshotReader.GetValue(0));
+                    var rowOrder = Convert.ToInt64(snapshotReader.GetValue(0), System.Globalization.CultureInfo.InvariantCulture);
                     if (snapshotReader.IsDBNull(1))
                     {
                         unmatchedRowOrders.Add(rowOrder);
@@ -709,7 +709,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
             {
                 while (await snapshotReader.ReadAsync(cancellationToken).ConfigureAwait(false))
                 {
-                    var rowOrder = Convert.ToInt64(snapshotReader.GetValue(0));
+                    var rowOrder = Convert.ToInt64(snapshotReader.GetValue(0), System.Globalization.CultureInfo.InvariantCulture);
                     if (snapshotReader.IsDBNull(1))
                     {
                         unmatchedRowOrders.Add(rowOrder);

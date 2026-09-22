@@ -54,7 +54,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                     (object)null);
 
                 // Assert
-                Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -74,7 +74,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                         (object)null);
 
                     // Assert
-                    Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result));
+                    Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
                 }
                 finally
                 {
@@ -97,7 +97,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                     e => ids.Contains(e.Id));
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Max(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Max(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -114,7 +114,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                     new { tables.First().Id });
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Max(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Max(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -131,7 +131,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                     new QueryField("Id", tables.First().Id));
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Max(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Max(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -153,7 +153,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                     queryFields);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Max(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Max(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -176,7 +176,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                     queryGroup);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Max(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Max(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -212,7 +212,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                     (object)null).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -232,7 +232,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                         (object)null).ConfigureAwait(false);
 
                     // Assert
-                    Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result));
+                    Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
                 }
                 finally
                 {
@@ -255,7 +255,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                     e => ids.Contains(e.Id)).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Max(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Max(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -272,7 +272,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                     new { tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Max(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Max(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -289,7 +289,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                     new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Max(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Max(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -311,7 +311,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                     queryFields).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Max(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Max(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -334,7 +334,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                     queryGroup).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Max(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Max(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -375,7 +375,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                     (object)null);
 
                 // Assert
-                Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -393,7 +393,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                     new { tables.First().Id });
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Max(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Max(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -411,7 +411,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                     new QueryField("Id", tables.First().Id));
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Max(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Max(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -434,7 +434,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                     queryFields);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Max(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Max(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -458,7 +458,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                     queryGroup);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Max(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Max(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -480,7 +480,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                     (object)null).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -498,7 +498,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                     new { tables.First().Id }).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Max(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Max(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -516,7 +516,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                     new QueryField("Id", tables.First().Id)).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Max(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Max(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -539,7 +539,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                     queryFields).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Max(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Max(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -563,7 +563,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                     queryGroup).ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Max(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Max(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 

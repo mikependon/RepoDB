@@ -437,7 +437,7 @@ namespace RepoDb
             var bulkInsertIndex = -1;
             var index = 0;
 
-            var targetPropertyType = PropertyCache.Get<TEntity>().FirstOrDefault(p => p.PropertyInfo.Name == identityField.Name);
+            var targetPropertyType = PropertyCache.Get<TEntity>().FirstOrDefault(p => string.Equals(p.PropertyInfo.Name, identityField.Name, StringComparison.Ordinal));
             var propType = targetPropertyType.PropertyInfo.PropertyType;
 
             foreach (var result in identityResults)

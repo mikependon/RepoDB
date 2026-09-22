@@ -97,7 +97,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.PropertyHandlers
                 var entity = new MySqlConnectorBooleanEntity { ColumnTinyInt = true };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<MySqlConnectorBooleanEntity>(e => e.Id == id).First();
 
                 // Assert
@@ -115,7 +115,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.PropertyHandlers
                 var entity = new MySqlConnectorBooleanEntity { ColumnTinyInt = false };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<MySqlConnectorBooleanEntity>(e => e.Id == id).First();
 
                 // Assert

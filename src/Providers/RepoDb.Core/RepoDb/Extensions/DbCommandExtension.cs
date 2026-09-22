@@ -467,7 +467,7 @@ namespace RepoDb.Extensions
                 var entityClassProperty = (entityType == paramClassProperty.GetDeclaringType()) ?
                     paramClassProperty :
                     entityClassProperties?
-                        .FirstOrDefault(e => string.Equals(e.GetMappedName(), paramClassProperty.GetMappedName()));
+                        .FirstOrDefault(e => string.Equals(e.GetMappedName(), paramClassProperty.GetMappedName(), StringComparison.Ordinal));
                 var name = paramClassProperty
                     .GetMappedName()
                     .AsUnquoted(command.Connection.GetDbSetting());

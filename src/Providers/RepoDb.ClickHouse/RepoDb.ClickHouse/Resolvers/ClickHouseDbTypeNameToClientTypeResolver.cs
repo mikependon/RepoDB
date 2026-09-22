@@ -32,11 +32,11 @@ namespace RepoDb.Resolvers
             var typeName = dbTypeName.Trim();
             while (true)
             {
-                if (typeName.StartsWith("Nullable(", StringComparison.OrdinalIgnoreCase) && typeName.EndsWith(")"))
+                if (typeName.StartsWith("Nullable(", StringComparison.OrdinalIgnoreCase) && typeName.EndsWith(")", StringComparison.Ordinal))
                 {
                     typeName = typeName.Substring("Nullable(".Length, typeName.Length - "Nullable(".Length - 1).Trim();
                 }
-                else if (typeName.StartsWith("LowCardinality(", StringComparison.OrdinalIgnoreCase) && typeName.EndsWith(")"))
+                else if (typeName.StartsWith("LowCardinality(", StringComparison.OrdinalIgnoreCase) && typeName.EndsWith(")", StringComparison.Ordinal))
                 {
                     typeName = typeName.Substring("LowCardinality(".Length, typeName.Length - "LowCardinality(".Length - 1).Trim();
                 }
@@ -47,7 +47,7 @@ namespace RepoDb.Resolvers
             }
 
             // Strip any parameterized suffix, e.g. "FixedString(16)" -> "FixedString", "DateTime64(3)" -> "DateTime64"
-            var parenIndex = typeName.IndexOf('(');
+            var parenIndex = typeName.IndexOf('(', StringComparison.Ordinal);
             var baseName = (parenIndex >= 0 ? typeName.Substring(0, parenIndex) : typeName).Trim();
 
             return baseName.ToLowerInvariant() switch

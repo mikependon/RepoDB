@@ -101,7 +101,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
             foreach (var t1Property in t1Properties)
             {
-                if (t1Property.Name == "Id" || t1Property.Name == "IdMapped")
+                if (string.Equals(t1Property.Name, "Id", StringComparison.Ordinal) || string.Equals(t1Property.Name, "IdMapped", StringComparison.Ordinal))
                 {
                     continue;
                 }
@@ -206,7 +206,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         {
             foreach (var kvp1 in dict1)
             {
-                if (kvp1.Key == "Id" || kvp1.Key == "IdMapped")
+                if (string.Equals(kvp1.Key, "Id", StringComparison.Ordinal) || string.Equals(kvp1.Key, "IdMapped", StringComparison.Ordinal))
                 {
                     continue;
                 }

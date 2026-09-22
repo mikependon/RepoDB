@@ -118,7 +118,7 @@ namespace RepoDb.Oracle.IntegrationTests
                     Assert(bytes1.SequenceEqual(bytes2), property.Name, value1, value2);
                     continue;
                 }
-                else if (property.Name == "ColumnXml" && value1 is string xml1 && value2 is string xml2)
+                else if (string.Equals(property.Name, "ColumnXml", StringComparison.Ordinal) && value1 is string xml1 && value2 is string xml2)
                 {
                     // Oracle's XMLTYPE storage (this project uses BINARY XML) reformats/pretty-prints
                     // the XML on storage - a compact input like "<a><b>1</b></a>" comes back with

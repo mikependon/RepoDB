@@ -262,7 +262,7 @@ namespace RepoDb.StatementBuilders
                 where,
                 hints);
 
-            return result.Replace("COUNT (", "COUNT(");
+            return result.Replace("COUNT (", "COUNT(", StringComparison.Ordinal);
         }
 
         #endregion
@@ -281,7 +281,7 @@ namespace RepoDb.StatementBuilders
             var result = base.CreateCountAll(tableName,
                 hints);
 
-            return result.Replace("COUNT (", "COUNT(");
+            return result.Replace("COUNT (", "COUNT(", StringComparison.Ordinal);
         }
 
         #endregion
@@ -359,7 +359,7 @@ namespace RepoDb.StatementBuilders
         /// <returns>A sql statement for insert-all operation.</returns>
         public override string CreateInsertAll(string tableName,
             IEnumerable<Field> fields = null,
-            int batchSize = 1,
+            int batchSize = Constant.DefaultBatchOperationSize,
             DbField primaryField = null,
             DbField identityField = null,
             string hints = null)
@@ -391,7 +391,7 @@ namespace RepoDb.StatementBuilders
                 where,
                 hints);
 
-            return result.Replace("MAX (", "MAX(");
+            return result.Replace("MAX (", "MAX(", StringComparison.Ordinal);
         }
 
         #endregion
@@ -413,7 +413,7 @@ namespace RepoDb.StatementBuilders
                 field,
                 hints);
 
-            return result.Replace("MAX (", "MAX(");
+            return result.Replace("MAX (", "MAX(", StringComparison.Ordinal);
         }
 
         #endregion
@@ -487,7 +487,7 @@ namespace RepoDb.StatementBuilders
         /// <returns>A sql statement for merge-all operation.</returns>
         public override string CreateMergeAll(string tableName,
             IEnumerable<Field> fields,
-            IEnumerable<Field> qualifiers,
+            IEnumerable<Field> qualifiers = null,
             int batchSize = 10,
             DbField primaryField = null,
             DbField identityField = null,
@@ -520,7 +520,7 @@ namespace RepoDb.StatementBuilders
                 where,
                 hints);
 
-            return result.Replace("MIN (", "MIN(");
+            return result.Replace("MIN (", "MIN(", StringComparison.Ordinal);
         }
 
         #endregion
@@ -542,7 +542,7 @@ namespace RepoDb.StatementBuilders
                 field,
                 hints);
 
-            return result.Replace("MIN (", "MIN(");
+            return result.Replace("MIN (", "MIN(", StringComparison.Ordinal);
         }
 
         #endregion
@@ -567,7 +567,7 @@ namespace RepoDb.StatementBuilders
                 where,
                 hints);
 
-            return result.Replace("SUM (", "SUM(");
+            return result.Replace("SUM (", "SUM(", StringComparison.Ordinal);
         }
 
         #endregion
@@ -589,7 +589,7 @@ namespace RepoDb.StatementBuilders
                 field,
                 hints);
 
-            return result.Replace("SUM (", "SUM(");
+            return result.Replace("SUM (", "SUM(", StringComparison.Ordinal);
         }
 
         #endregion

@@ -38,9 +38,9 @@ namespace RepoDb.Resolvers
 
             var name = dbTypeName.ToLowerInvariant().Trim();
 
-            if (name.StartsWith("timestamp"))
+            if (name.StartsWith("timestamp", StringComparison.Ordinal))
             {
-                return name.Contains("with time zone") ? DB2Type.TimeStampWithTimeZone : DB2Type.Timestamp;
+                return name.Contains("with time zone", StringComparison.Ordinal) ? DB2Type.TimeStampWithTimeZone : DB2Type.Timestamp;
             }
 
             return name switch

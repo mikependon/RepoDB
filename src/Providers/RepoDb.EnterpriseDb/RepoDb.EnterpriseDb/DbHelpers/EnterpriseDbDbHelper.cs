@@ -138,10 +138,17 @@ namespace RepoDb.DbHelpers
         /// </summary>
         /// <param name="ex"></param>
         /// <returns></returns>
-        private static bool IsOperationInProgressException(Exception ex) =>
-            ex.GetType().Name == "NpgsqlOperationInProgressException";
+        private static bool IsOperationInProgressException(Exception ex) => string.Equals(ex.GetType().Name, "NpgsqlOperationInProgressException", StringComparison.Ordinal);
 
-        private TResult TryExecuteOnExistingConnection<TResult>(IDbConnection connection, Func<IDbConnection, TResult> func)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        private TResult TryExecuteOnExistingConnection<TResult>(IDbConnection connection,
+            Func<IDbConnection, TResult> func)
         {
             try
             {
@@ -156,7 +163,16 @@ namespace RepoDb.DbHelpers
             }
         }
 
-        private async Task<TResult> TryExecuteOnExistingConnectionAsync<TResult>(IDbConnection connection, Func<IDbConnection, Task<TResult>> func)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        private async Task<TResult> TryExecuteOnExistingConnectionAsync<TResult>(IDbConnection connection,
+            Func<IDbConnection,
+            Task<TResult>> func)
         {
             try
             {
@@ -165,9 +181,12 @@ namespace RepoDb.DbHelpers
             catch (Exception ex) when (IsOperationInProgressException(ex))
             {
                 Debug.WriteLine($"{ex.GetType().Name} occurred. Retrying the operation on a new connection.");
-                await using var newConnection = (DbConnection)Activator.CreateInstance(connection.GetType(), connection.ConnectionString);
-                await newConnection.OpenAsync().ConfigureAwait(false);
-                return await func(newConnection).ConfigureAwait(false);
+                var newConnection = (DbConnection)Activator.CreateInstance(connection.GetType(), connection.ConnectionString);
+                await using (newConnection.ConfigureAwait(true))
+                {
+                    await newConnection.OpenAsync().ConfigureAwait(false);
+                    return await func(newConnection).ConfigureAwait(false);
+                }
             }
         }
 
@@ -316,7 +335,7 @@ namespace RepoDb.DbHelpers
         public void DynamicHandler<TEventInstance>(TEventInstance instance,
             string key)
         {
-            if (key == "RepoDb.Internal.Compiler.Events[AfterCreateDbParameter]")
+            if (string.Equals(key, "RepoDb.Internal.Compiler.Events[AfterCreateDbParameter]", StringComparison.Ordinal))
             {
                 HandleDbParameterPostCreation(instance as IDbDataParameter);
             }

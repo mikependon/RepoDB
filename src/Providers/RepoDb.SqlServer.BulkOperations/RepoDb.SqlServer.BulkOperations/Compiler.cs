@@ -10,6 +10,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -51,7 +52,8 @@ namespace RepoDb.SqlServer.BulkOperations
             /// <returns></returns>
             public static Func<TEntity, TResult> GetFunc(string methodName)
             {
-                if (cache.TryGetValue(methodName.GetHashCode(), out var func) == false)
+                var hashCode = StringComparer.Ordinal.GetHashCode(methodName);
+                if (cache.TryGetValue(hashCode, out var func) == false)
                 {
                     var typeOfEntity = typeof(TEntity);
                     var method = typeOfEntity.GetMethod(methodName);
@@ -66,7 +68,7 @@ namespace RepoDb.SqlServer.BulkOperations
                             .Compile();
                     }
 
-                    cache.TryAdd(methodName.GetHashCode(), func);
+                    cache.TryAdd(hashCode, func);
                 }
                 return func;
             }
@@ -102,7 +104,8 @@ namespace RepoDb.SqlServer.BulkOperations
             /// <returns></returns>
             public static Action<TEntity> GetFunc(string methodName)
             {
-                if (cache.TryGetValue(methodName.GetHashCode(), out var func) == false)
+                var hashCode = StringComparer.Ordinal.GetHashCode(methodName);
+                if (cache.TryGetValue(hashCode, out var func) == false)
                 {
                     var typeOfEntity = typeof(TEntity);
                     var method = typeOfEntity.GetMethod(methodName);
@@ -117,7 +120,7 @@ namespace RepoDb.SqlServer.BulkOperations
                             .Compile();
                     }
 
-                    cache.TryAdd(methodName.GetHashCode(), func);
+                    cache.TryAdd(hashCode, func);
                 }
                 return func;
             }
@@ -159,8 +162,8 @@ namespace RepoDb.SqlServer.BulkOperations
             public static Func<TEntity, object[], TResult> GetFunc(string methodName,
                 Type[] types)
             {
-                var key = methodName.GetHashCode() + types?.Sum(e => e.GetHashCode());
-                if (cache.TryGetValue(key.Value, out var func) == false)
+                var hashCode = StringComparer.Ordinal.GetHashCode(methodName) + types?.Sum(e => e.GetHashCode());
+                if (cache.TryGetValue(hashCode.Value, out var func) == false)
                 {
                     var typeOfEntity = typeof(TEntity);
                     var method = typeOfEntity.GetMethod(methodName, types);
@@ -183,7 +186,7 @@ namespace RepoDb.SqlServer.BulkOperations
                             .Compile();
                     }
 
-                    cache.TryAdd(key.Value, func);
+                    cache.TryAdd(hashCode.Value, func);
                 }
                 return func;
             }
@@ -223,8 +226,8 @@ namespace RepoDb.SqlServer.BulkOperations
             public static Action<TEntity, object[]> GetFunc(string methodName,
                 Type[] types)
             {
-                var key = methodName.GetHashCode() + types?.Sum(e => e.GetHashCode());
-                if (cache.TryGetValue(key.Value, out var func) == false)
+                var hashCode = StringComparer.Ordinal.GetHashCode(methodName) + types?.Sum(e => e.GetHashCode());
+                if (cache.TryGetValue(hashCode.Value, out var func) == false)
                 {
                     var typeOfEntity = typeof(TEntity);
                     var method = typeOfEntity.GetMethod(methodName, types);
@@ -247,7 +250,7 @@ namespace RepoDb.SqlServer.BulkOperations
                             .Compile();
                     }
 
-                    cache.TryAdd(key.Value, func);
+                    cache.TryAdd(hashCode.Value, func);
                 }
                 return func;
             }
@@ -388,7 +391,8 @@ namespace RepoDb.SqlServer.BulkOperations
             /// <returns></returns>
             public static Func<TEntity, TResult> GetFunc(string fieldName)
             {
-                if (cache.TryGetValue(fieldName.GetHashCode(), out var func) == false)
+                var hashCode = StringComparer.Ordinal.GetHashCode(fieldName);
+                if (cache.TryGetValue(hashCode, out var func) == false)
                 {
                     var typeOfEntity = typeof(TEntity);
                     var fieldInfo = typeOfEntity
@@ -405,7 +409,7 @@ namespace RepoDb.SqlServer.BulkOperations
                             .Compile();
                     }
 
-                    cache.TryAdd(fieldName.GetHashCode(), func);
+                    cache.TryAdd(hashCode, func);
                 }
                 return func;
             }
@@ -441,7 +445,8 @@ namespace RepoDb.SqlServer.BulkOperations
             /// <returns></returns>
             public static Func<TEnum> GetFunc(string value)
             {
-                if (cache.TryGetValue(value.GetHashCode(), out var func) == false)
+                var hashCode = StringComparer.Ordinal.GetHashCode(value);
+                if (cache.TryGetValue(hashCode, out var func) == false)
                 {
                     var typeOfEnum = typeof(TEnum);
                     var fieldInfo = typeOfEnum.GetField(value);
@@ -455,7 +460,7 @@ namespace RepoDb.SqlServer.BulkOperations
                             .Compile();
                     }
 
-                    cache.TryAdd(value.GetHashCode(), func);
+                    cache.TryAdd(hashCode, func);
                 }
                 return func;
             }

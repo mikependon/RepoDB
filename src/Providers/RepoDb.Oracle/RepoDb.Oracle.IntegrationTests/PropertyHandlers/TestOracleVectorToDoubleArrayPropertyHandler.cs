@@ -132,7 +132,7 @@ namespace RepoDb.Oracle.IntegrationTests.PropertyHandlers
                 var entity = new OracleVectorDoubleEntity { ColumnVectorDouble = new double[] { 1.5d, 2.5d, 3.5d } };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<OracleVectorDoubleEntity>(e => e.Id == id).First();
 
                 // Assert
@@ -152,7 +152,7 @@ namespace RepoDb.Oracle.IntegrationTests.PropertyHandlers
                 var entity = new OracleVectorDoubleEntity { ColumnVectorDouble = null };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<OracleVectorDoubleEntity>(e => e.Id == id).First();
 
                 // Assert

@@ -59,7 +59,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             var result = connection.Insert<CompleteTable>(table);
 
             // Assert
-            Assert.IsTrue(System.Convert.ToInt64(result) > 0);
+            Assert.IsTrue(System.Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
             Assert.AreEqual(1, connection.CountAll<CompleteTable>());
 
             // Act
@@ -85,7 +85,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 var result = connection.Insert<CompleteTable>(table);
 
                 // Assert
-                Assert.IsTrue(System.Convert.ToInt64(result) > 0);
+                Assert.IsTrue(System.Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
 
                 // Act
@@ -117,7 +117,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             var result = await connection.InsertAsync<CompleteTable>(table).ConfigureAwait(false);
 
             // Assert
-            Assert.IsTrue(System.Convert.ToInt64(result) > 0);
+            Assert.IsTrue(System.Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
             Assert.AreEqual(1, connection.CountAll<CompleteTable>());
 
             // Act
@@ -143,7 +143,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 var result = await connection.InsertAsync<CompleteTable>(table).ConfigureAwait(false);
 
                 // Assert
-                Assert.IsTrue(System.Convert.ToInt64(result) > 0);
+                Assert.IsTrue(System.Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
 
                 // Act
@@ -185,7 +185,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             var result = connection.Insert(ClassMappedNameCache.Get<CompleteTable>(), table);
 
             // Assert
-            Assert.IsTrue(System.Convert.ToInt64(result) > 0);
+            Assert.IsTrue(System.Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
             Assert.AreEqual(1, connection.CountAll<CompleteTable>());
 
             // Act
@@ -212,7 +212,7 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             var result = await connection.InsertAsync(ClassMappedNameCache.Get<CompleteTable>(), table).ConfigureAwait(false);
 
             // Assert
-            Assert.IsTrue(System.Convert.ToInt64(result) > 0);
+            Assert.IsTrue(System.Convert.ToInt64(result, System.Globalization.CultureInfo.InvariantCulture) > 0);
             Assert.AreEqual(1, connection.CountAll<CompleteTable>());
 
             // Act

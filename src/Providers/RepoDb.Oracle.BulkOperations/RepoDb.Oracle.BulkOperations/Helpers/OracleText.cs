@@ -29,7 +29,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <returns></returns>
         private static string UnquoteForPseudoTableName(string tableName) =>
-            tableName?.Replace("\"", string.Empty);
+            tableName?.Replace("\"", string.Empty, StringComparison.Ordinal);
 
         /// <summary>
         /// 

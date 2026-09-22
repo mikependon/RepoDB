@@ -37,15 +37,15 @@ namespace RepoDb.Resolvers
 
             // TIMESTAMP columns are reported with an inline scale/qualifier, e.g. "TIMESTAMP(6)",
             // "TIMESTAMP(6) WITH TIME ZONE" or "TIMESTAMP(6) WITH LOCAL TIME ZONE".
-            if (name.StartsWith("timestamp"))
+            if (name.StartsWith("timestamp", StringComparison.Ordinal))
             {
-                return name.Contains("with time zone") || name.Contains("with local time zone") ?
+                return name.Contains("with time zone", StringComparison.Ordinal) || name.Contains("with local time zone", StringComparison.Ordinal) ?
                     typeof(DateTimeOffset) : typeof(DateTime);
             }
 
             // INTERVAL columns are reported as "INTERVAL YEAR(2) TO MONTH" or
             // "INTERVAL DAY(2) TO SECOND(6)".
-            if (name.StartsWith("interval"))
+            if (name.StartsWith("interval", StringComparison.Ordinal))
             {
                 return typeof(TimeSpan);
             }

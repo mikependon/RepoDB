@@ -46,7 +46,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var result = connection.ExecuteScalar("SELECT COUNT(*) FROM [MdsCompleteTable];");
 
                 // Assert
-                Assert.AreEqual(tables.Count(), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Count(), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -82,7 +82,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var result = await connection.ExecuteScalarAsync("SELECT COUNT(*) FROM [MdsCompleteTable];").ConfigureAwait(false);
 
                 // Assert
-                Assert.AreEqual(tables.Count(), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Count(), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 

@@ -140,8 +140,8 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 // Assert
                 Assert.IsNotNull(result.Element);
                 Assert.IsTrue(XNode.DeepEquals(model.Element, result.Element));
-                Assert.AreEqual("1", result.Element.Attribute("a").Value);
-                Assert.AreEqual("text", result.Element.Element("child").Value);
+                Assert.AreEqual("1", result.Element.Attribute("a").Value, StringComparer.Ordinal);
+                Assert.AreEqual("text", result.Element.Element("child").Value, StringComparer.Ordinal);
             }
         }
 
@@ -176,7 +176,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
 
                 // Assert
                 // The default parsing drops the insignificant whitespaces, and the writing is not indented
-                Assert.AreEqual("<root><child a=\"1\">text</child></root>", raw);
+                Assert.AreEqual("<root><child a=\"1\">text</child></root>", raw, StringComparer.Ordinal);
             }
         }
 
@@ -193,7 +193,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var raw = GetRawValue(connection, "ColumnNVarChar", model.SessionId);
 
                 // Assert
-                Assert.AreEqual("<root><item id=\"1\" /></root>", raw);
+                Assert.AreEqual("<root><item id=\"1\" /></root>", raw, StringComparer.Ordinal);
             }
         }
 
@@ -209,7 +209,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<XElementTextColumnAttributeModel>(e => e.SessionId == sessionId).First();
 
                 // Assert
-                Assert.AreEqual("items", result.Element.Name.LocalName);
+                Assert.AreEqual("items", result.Element.Name.LocalName, StringComparer.Ordinal);
                 Assert.AreEqual(2, result.Element.Elements("item").Count());
             }
         }
@@ -226,7 +226,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<XElementXmlColumnAttributeModel>(e => e.SessionId == sessionId).First();
 
                 // Assert
-                Assert.AreEqual("items", result.Element.Name.LocalName);
+                Assert.AreEqual("items", result.Element.Name.LocalName, StringComparer.Ordinal);
                 Assert.AreEqual(2, result.Element.Elements("item").Count());
             }
         }
@@ -246,7 +246,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                     new { SessionId = model.SessionId });
 
                 // Assert
-                Assert.AreEqual("value-1", value);
+                Assert.AreEqual("value-1", value, StringComparer.Ordinal);
             }
         }
 
@@ -266,8 +266,8 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 XNamespace a = "urn:a";
                 XNamespace defaultNamespace = "urn:default";
                 Assert.AreEqual(a + "root", result.Element.Name);
-                Assert.AreEqual("x", result.Element.Element(defaultNamespace + "child").Value);
-                Assert.AreEqual("1", result.Element.Element(defaultNamespace + "child").Attribute(a + "attr").Value);
+                Assert.AreEqual("x", result.Element.Element(defaultNamespace + "child").Value, StringComparer.Ordinal);
+                Assert.AreEqual("1", result.Element.Element(defaultNamespace + "child").Attribute(a + "attr").Value, StringComparer.Ordinal);
                 Assert.IsNotNull(result.Element.Element(a + "other"));
             }
         }
@@ -285,8 +285,8 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<XElementXmlColumnAttributeModel>(e => e.SessionId == model.SessionId).First();
 
                 // Assert
-                Assert.AreEqual("a & b < c 日本語 Ñandú 😀", result.Element.Value);
-                Assert.AreEqual("\"q\"", result.Element.Attribute("a").Value);
+                Assert.AreEqual("a & b < c 日本語 Ñandú 😀", result.Element.Value, StringComparer.Ordinal);
+                Assert.AreEqual("\"q\"", result.Element.Attribute("a").Value, StringComparer.Ordinal);
             }
         }
 
@@ -303,7 +303,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<XElementXmlColumnAttributeModel>(e => e.SessionId == model.SessionId).First();
 
                 // Assert
-                Assert.AreEqual("<not>&xml", result.Element.Value);
+                Assert.AreEqual("<not>&xml", result.Element.Value, StringComparer.Ordinal);
             }
         }
 
@@ -363,7 +363,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
 
                 // Assert
                 Assert.AreEqual(1, affectedRows);
-                Assert.AreEqual("2", result.Element.Attribute("v").Value);
+                Assert.AreEqual("2", result.Element.Attribute("v").Value, StringComparer.Ordinal);
             }
         }
 
@@ -382,7 +382,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                     new { SessionId = model.SessionId }).First();
 
                 // Assert
-                Assert.AreEqual("1", result.Element.Attribute("v").Value);
+                Assert.AreEqual("1", result.Element.Attribute("v").Value, StringComparer.Ordinal);
             }
         }
 
@@ -402,7 +402,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<XElementFluentModel>(e => e.SessionId == model.SessionId).First();
 
                 // Assert
-                Assert.AreEqual("1", result.ColumnXml.Attribute("v").Value);
+                Assert.AreEqual("1", result.ColumnXml.Attribute("v").Value, StringComparer.Ordinal);
             }
         }
 
@@ -420,7 +420,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var result = connection.Query<XElementTypeLevelModel>(e => e.SessionId == model.SessionId).First();
 
                 // Assert
-                Assert.AreEqual("1", result.ColumnXml.Attribute("v").Value);
+                Assert.AreEqual("1", result.ColumnXml.Attribute("v").Value, StringComparer.Ordinal);
             }
         }
 

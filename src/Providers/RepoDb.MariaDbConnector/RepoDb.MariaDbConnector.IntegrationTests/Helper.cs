@@ -53,11 +53,11 @@ namespace RepoDb.MariaDb.IntegrationTests
             var propertiesOfType2 = typeof(T2).GetProperties();
             propertiesOfType1.AsList().ForEach(propertyOfType1 =>
             {
-                if (propertyOfType1.Name == "Id")
+                if (string.Equals(propertyOfType1.Name, "Id", StringComparison.Ordinal))
                 {
                     return;
                 }
-                var propertyOfType2 = propertiesOfType2.FirstOrDefault(p => p.Name == propertyOfType1.Name);
+                var propertyOfType2 = propertiesOfType2.FirstOrDefault(p => string.Equals(p.Name, propertyOfType1.Name, StringComparison.Ordinal));
                 if (propertyOfType2 == null)
                 {
                     return;
@@ -121,7 +121,7 @@ namespace RepoDb.MariaDb.IntegrationTests
             var properties = obj.GetType().GetProperties();
             properties.AsList().ForEach(property =>
             {
-                if (property.Name == "Id")
+                if (string.Equals(property.Name, "Id", StringComparison.Ordinal))
                 {
                     return;
                 }
@@ -146,7 +146,7 @@ namespace RepoDb.MariaDb.IntegrationTests
                         {
                             value2 = dateTime.TimeOfDay;
                         }
-                        Assert.AreEqual(Convert.ChangeType(value1, propertyType), Convert.ChangeType(value2, propertyType),
+                        Assert.AreEqual(Convert.ChangeType(value1, propertyType, System.Globalization.CultureInfo.InvariantCulture), Convert.ChangeType(value2, propertyType, System.Globalization.CultureInfo.InvariantCulture),
                             $"Assert failed for '{property.Name}'. The values are '{value1}' and '{value2}'.");
                     }
                 }
@@ -166,7 +166,7 @@ namespace RepoDb.MariaDb.IntegrationTests
         {
             var tables = new List<CompleteTable>();
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff", System.Globalization.CultureInfo.InvariantCulture), System.Globalization.CultureInfo.InvariantCulture),
                     DateTimeKind.Unspecified);
             for (var i = 0; i < count; i++)
             {
@@ -225,7 +225,7 @@ namespace RepoDb.MariaDb.IntegrationTests
         public static void UpdateCompleteTableProperties(CompleteTable table)
         {
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff", System.Globalization.CultureInfo.InvariantCulture), System.Globalization.CultureInfo.InvariantCulture),
                     DateTimeKind.Unspecified);
             table.ColumnVarchar = $"ColumnVarChar:{1}-Updated";
             table.ColumnInt = 1;
@@ -279,7 +279,7 @@ namespace RepoDb.MariaDb.IntegrationTests
         {
             var tables = new List<dynamic>();
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff", System.Globalization.CultureInfo.InvariantCulture), System.Globalization.CultureInfo.InvariantCulture),
                     DateTimeKind.Unspecified);
             for (var i = 0; i < count; i++)
             {
@@ -339,7 +339,7 @@ namespace RepoDb.MariaDb.IntegrationTests
         public static void UpdateCompleteTableAsDynamicProperties(dynamic table)
         {
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff", System.Globalization.CultureInfo.InvariantCulture), System.Globalization.CultureInfo.InvariantCulture),
                     DateTimeKind.Unspecified);
             table.ColumnVarchar = $"ColumnVarChar:{1}";
             table.ColumnInt = 1;
@@ -393,7 +393,7 @@ namespace RepoDb.MariaDb.IntegrationTests
         {
             var tables = new List<ExpandoObject>();
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff", System.Globalization.CultureInfo.InvariantCulture), System.Globalization.CultureInfo.InvariantCulture),
                     DateTimeKind.Unspecified);
             for (var i = 0; i < count; i++)
             {
@@ -452,7 +452,7 @@ namespace RepoDb.MariaDb.IntegrationTests
         public static void UpdateCompleteTableAsExpandoObjectProperties(ExpandoObject table)
         {
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff", System.Globalization.CultureInfo.InvariantCulture), System.Globalization.CultureInfo.InvariantCulture),
                     DateTimeKind.Unspecified);
             var item = table as IDictionary<string, object>;
             item["ColumnVarchar"] = $"ColumnVarChar:{2}";
@@ -511,7 +511,7 @@ namespace RepoDb.MariaDb.IntegrationTests
         {
             var tables = new List<NonIdentityCompleteTable>();
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff", System.Globalization.CultureInfo.InvariantCulture), System.Globalization.CultureInfo.InvariantCulture),
                     DateTimeKind.Unspecified);
             for (var i = 0; i < count; i++)
             {
@@ -571,7 +571,7 @@ namespace RepoDb.MariaDb.IntegrationTests
         public static void UpdateNonIdentityCompleteTableProperties(NonIdentityCompleteTable table)
         {
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff", System.Globalization.CultureInfo.InvariantCulture), System.Globalization.CultureInfo.InvariantCulture),
                     DateTimeKind.Unspecified);
             table.ColumnVarchar = $"ColumnVarChar:{1}";
             table.ColumnInt = 1;
@@ -625,7 +625,7 @@ namespace RepoDb.MariaDb.IntegrationTests
         {
             var tables = new List<dynamic>();
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff", System.Globalization.CultureInfo.InvariantCulture), System.Globalization.CultureInfo.InvariantCulture),
                     DateTimeKind.Unspecified);
             for (var i = 0; i < count; i++)
             {
@@ -685,7 +685,7 @@ namespace RepoDb.MariaDb.IntegrationTests
         public static void UpdateNonIdentityCompleteTableAsDynamicProperties(dynamic table)
         {
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff", System.Globalization.CultureInfo.InvariantCulture), System.Globalization.CultureInfo.InvariantCulture),
                     DateTimeKind.Unspecified);
             table.ColumnVarchar = $"ColumnVarChar:{1}";
             table.ColumnInt = 1;
@@ -739,7 +739,7 @@ namespace RepoDb.MariaDb.IntegrationTests
         {
             var tables = new List<ExpandoObject>();
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff", System.Globalization.CultureInfo.InvariantCulture), System.Globalization.CultureInfo.InvariantCulture),
                     DateTimeKind.Unspecified);
             for (var i = 0; i < count; i++)
             {
@@ -798,7 +798,7 @@ namespace RepoDb.MariaDb.IntegrationTests
         public static void UpdateNonIdentityCompleteTableAsExpandoObjectProperties(ExpandoObject table)
         {
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff", System.Globalization.CultureInfo.InvariantCulture), System.Globalization.CultureInfo.InvariantCulture),
                     DateTimeKind.Unspecified);
             var item = table as IDictionary<string, object>;
             item["ColumnVarchar"] = $"ColumnVarChar:{2}";

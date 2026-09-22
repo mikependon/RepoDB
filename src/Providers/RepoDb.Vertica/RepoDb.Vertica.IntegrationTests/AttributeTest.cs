@@ -119,7 +119,7 @@ namespace RepoDb.Vertica.IntegrationTests
                 var queryResult = connection.QueryAll<AttributeTable>();
 
                 // Assert
-                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.ColumnVarchar == table.ColumnVarchar)));
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => string.Equals(e.ColumnVarchar, table.ColumnVarchar, StringComparison.Ordinal))));
             }
         }
 

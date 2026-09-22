@@ -125,7 +125,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
 
                 // Assert
                 Assert.IsNotNull(resultDocument);
-                Assert.AreEqual("John", resultDocument.RootElement.GetProperty("name").GetString());
+                Assert.AreEqual("John", resultDocument.RootElement.GetProperty("name").GetString(), StringComparer.Ordinal);
                 Assert.AreEqual(30, resultDocument.RootElement.GetProperty("age").GetInt32());
             }
         }
@@ -146,7 +146,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
 
                 // Assert
                 Assert.IsNotNull(resultDocument);
-                Assert.AreEqual("John", resultDocument.RootElement.GetProperty("name").GetString());
+                Assert.AreEqual("John", resultDocument.RootElement.GetProperty("name").GetString(), StringComparer.Ordinal);
             }
         }
 
@@ -164,7 +164,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var raw = GetRawValue(connection, model.SessionId);
 
                 // Assert
-                Assert.AreEqual("{\"name\":\"John\",\"age\":30}", raw);
+                Assert.AreEqual("{\"name\":\"John\",\"age\":30}", raw, StringComparer.Ordinal);
             }
         }
 
@@ -183,7 +183,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 var raw = GetRawValue(connection, model.SessionId);
 
                 // Assert
-                Assert.AreEqual("{ \"name\" : \"John\",\n  \"age\" : 30 }", raw);
+                Assert.AreEqual("{ \"name\" : \"John\",\n  \"age\" : 30 }", raw, StringComparer.Ordinal);
             }
         }
 
@@ -252,7 +252,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                     using var resultDocument = result.Document;
 
                     // Assert
-                    Assert.AreEqual(json, raw);
+                    Assert.AreEqual(json, raw, StringComparer.Ordinal);
                     Assert.AreEqual(kind, resultDocument.RootElement.ValueKind);
                 }
             }
@@ -277,7 +277,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
 
                 // Assert
                 Assert.IsFalse(isNull);
-                Assert.AreEqual("null", raw);
+                Assert.AreEqual("null", raw, StringComparer.Ordinal);
                 Assert.IsNotNull(resultDocument);
                 Assert.AreEqual(JsonValueKind.Null, resultDocument.RootElement.ValueKind);
             }
@@ -298,7 +298,7 @@ namespace RepoDb.IntegrationTests.PropertyHandlers
                 using var resultDocument = result.Document;
 
                 // Assert
-                Assert.AreEqual("日本語 \"quoted\" Ñandú 😀", resultDocument.RootElement.GetProperty("text").GetString());
+                Assert.AreEqual("日本語 \"quoted\" Ñandú 😀", resultDocument.RootElement.GetProperty("text").GetString(), StringComparer.Ordinal);
             }
         }
 
