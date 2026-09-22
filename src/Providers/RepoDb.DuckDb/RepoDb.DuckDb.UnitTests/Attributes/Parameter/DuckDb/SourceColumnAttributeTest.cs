@@ -1,0 +1,80 @@
+#region Copyright Attributions
+
+// Copyright (c) 2026 Michael Camara Pendon.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using DuckDB.NET.Data;
+using RepoDb.Attributes.Parameter.DuckDb;
+using RepoDb.DbSettings;
+using RepoDb.Extensions;
+
+namespace RepoDb.DuckDb.UnitTests.Attributes.Parameter.DuckDb
+{
+    [TestClass]
+    public class SourceColumnAttributeTest
+    {
+        [TestInitialize]
+        public void Initialize()
+        {
+            DbSettingMapper.Add<DuckDBConnection>(new DuckDbDbSetting(), true);
+        }
+
+        #region Classes
+
+        private class SourceColumnAttributeTestClass
+        {
+            [SourceColumn("MappedColumnName")]
+            public object ColumnName { get; set; }
+        }
+
+        #endregion
+
+        [TestMethod]
+        public void TestSourceColumnAttributeViaEntityViaCreateParameters()
+        {
+            // Act
+            using var connection = new DuckDBConnection();
+            using var command = connection.CreateCommand();
+
+            DbCommandExtension
+                .CreateParameters(command, new SourceColumnAttributeTestClass
+                {
+                    ColumnName = "Test"
+                });
+
+            // Assert
+            Assert.AreEqual(1, command.Parameters.Count);
+
+            // Assert
+            var parameter = command.Parameters["$ColumnName"];
+            Assert.AreEqual("MappedColumnName", parameter.SourceColumn, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSourceColumnAttributeViaAnonymousViaCreateParameters()
+        {
+            // Act
+            using var connection = new DuckDBConnection();
+            using var command = connection.CreateCommand();
+
+            DbCommandExtension
+                .CreateParameters(command, new
+                {
+                    ColumnName = "Test"
+                },
+                typeof(SourceColumnAttributeTestClass));
+
+            // Assert
+            Assert.AreEqual(1, command.Parameters.Count);
+
+            // Assert
+            var parameter = command.Parameters["$ColumnName"];
+            Assert.AreEqual("MappedColumnName", parameter.SourceColumn, StringComparer.Ordinal);
+        }
+    }
+}
