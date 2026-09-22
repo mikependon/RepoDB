@@ -1,6 +1,6 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
-// Copyright (c) 2019 Bradley Graigner and Michael Camara Pendon.
+// Copyright (c) 2026 Bradley Graigner and Michael Camara Pendon.
 // Portions copyright their respective RepoDB contributors.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
@@ -30,13 +30,6 @@ namespace RepoDb.DuckDb.IntegrationTests.Models
         public TimeSpan? ColumnTime { get; set; }
         public DateTime? ColumnTimeStamp { get; set; }
         public Int16? ColumnYear { get; set; }
-        public Byte[] ColumnGeometry { get; set; }
-        public Byte[] ColumnLineString { get; set; }
-        public Byte[] ColumnMultiLineString { get; set; }
-        public Byte[] ColumnMultiPoint { get; set; }
-        public Byte[] ColumnMultiPolygon { get; set; }
-        public Byte[] ColumnPoint { get; set; }
-        public Byte[] ColumnPolygon { get; set; }
         public Int64? ColumnBigint { get; set; }
         public Decimal? ColumnDecimal { get; set; }
         public Double? ColumnDouble { get; set; }
@@ -54,6 +47,6 @@ namespace RepoDb.DuckDb.IntegrationTests.Models
         public String ColumnMediumText { get; set; }
         public String ColumnText { get; set; }
         public String ColumnTinyText { get; set; }
-        public UInt64? ColumnBit { get; set; }
+        public String ColumnBit { get; set; }
     }
 }

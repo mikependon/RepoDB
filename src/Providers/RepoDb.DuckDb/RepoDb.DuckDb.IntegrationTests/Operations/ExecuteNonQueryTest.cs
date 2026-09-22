@@ -42,7 +42,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteNonQuery("DELETE FROM `CompleteTable`;");
+                var result = connection.ExecuteNonQuery("DELETE FROM \"CompleteTable\";");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -58,7 +58,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteNonQuery("DELETE FROM `CompleteTable` WHERE Id = @Id;",
+                var result = connection.ExecuteNonQuery("DELETE FROM \"CompleteTable\" WHERE Id = $Id;",
                     new { tables.Last().Id });
 
                 // Assert
@@ -75,7 +75,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteNonQuery("DELETE FROM `CompleteTable`; DELETE FROM `CompleteTable`;");
+                var result = connection.ExecuteNonQuery("DELETE FROM \"CompleteTable\"; DELETE FROM \"CompleteTable\";");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -95,7 +95,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteNonQueryAsync("DELETE FROM `CompleteTable`;").ConfigureAwait(false);
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\";").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -111,7 +111,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteNonQueryAsync("DELETE FROM `CompleteTable` WHERE Id = @Id;",
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\" WHERE Id = $Id;",
                     new { tables.Last().Id }).ConfigureAwait(false);
 
                 // Assert
@@ -128,7 +128,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteNonQueryAsync("DELETE FROM `CompleteTable`; DELETE FROM `CompleteTable`;").ConfigureAwait(false);
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\"; DELETE FROM \"CompleteTable\";").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);

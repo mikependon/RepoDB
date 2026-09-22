@@ -43,7 +43,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteScalar("SELECT COUNT(*) FROM `CompleteTable`;");
+                var result = connection.ExecuteScalar("SELECT COUNT(*) FROM \"CompleteTable\";");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
@@ -59,7 +59,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM `CompleteTable`;");
+                var result = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM \"CompleteTable\";");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -79,7 +79,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteScalarAsync("SELECT COUNT(*) FROM `CompleteTable`;").ConfigureAwait(false);
+                var result = await connection.ExecuteScalarAsync("SELECT COUNT(*) FROM \"CompleteTable\";").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
@@ -95,7 +95,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM `CompleteTable`;").ConfigureAwait(false);
+                var result = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM \"CompleteTable\";").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);

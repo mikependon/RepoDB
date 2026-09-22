@@ -1,6 +1,6 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
-// Copyright (c) 2020 Michael Camara Pendon.
+// Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
 
@@ -8,12 +8,13 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DuckDB.NET.Data;
-using RepoDb.Attributes.Parameter.DuckDb;
+using RepoDb.Attributes;
 using RepoDb.Extensions;
 using RepoDb.DuckDb.IntegrationTests.Setup;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data;
 using System.Linq;
 using System.Text;
 
@@ -37,21 +38,24 @@ namespace RepoDb.DuckDb.IntegrationTests
 
         #region Classes
 
+        // DuckDB has no provider-specific parameter-type enum (unlike, e.g., MySqlConnector's MySqlDbType or
+        // Npgsql's NpgsqlDbType - DuckDBParameter only exposes the standard System.Data.DbType), so this
+        // exercises the generic, provider-agnostic RepoDb.Attributes.TypeMapAttribute instead.
         [Table("CompleteTable")]
         public class AttributeTable
         {
             public int Id { get; set; }
 
-            [MySqlDbType(MySqlDbType.Blob)]
+            [TypeMap(DbType.Binary)]
             public byte[] ColumnBlob { get; set; }
 
-            [MySqlDbType(MySqlDbType.Int64)]
+            [TypeMap(DbType.Int64)]
             public long ColumnBigInt { get; set; }
 
-            [MySqlDbType(MySqlDbType.DateTime)]
+            [TypeMap(DbType.DateTime)]
             public DateTime ColumnDateTime2 { get; set; }
 
-            [MySqlDbType(MySqlDbType.VarChar)]
+            [TypeMap(DbType.String)]
             public string ColumnVarChar { get; set; }
         }
 
@@ -80,7 +84,7 @@ namespace RepoDb.DuckDb.IntegrationTests
         #region Methods
 
         [TestMethod]
-        public void TestDuckDBConnectionForInsertForMySqlMapAttribute()
+        public void TestDuckDBConnectionForInsertForTypeMapAttribute()
         {
             // Setup
             var table = CreateAttributeTables(1).First();
@@ -102,7 +106,7 @@ namespace RepoDb.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestDuckDBConnectionForInsertAllForMySqlMapAttribute()
+        public void TestDuckDBConnectionForInsertAllForTypeMapAttribute()
         {
             // Setup
             var tables = CreateAttributeTables(10).AsList();
@@ -124,7 +128,7 @@ namespace RepoDb.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestDuckDBConnectionForQueryForMySqlMapAttribute()
+        public void TestDuckDBConnectionForQueryForTypeMapAttribute()
         {
             // Setup
             var table = CreateAttributeTables(1).First();
@@ -143,7 +147,7 @@ namespace RepoDb.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestDuckDBConnectionForQueryAllForMySqlMapAttribute()
+        public void TestDuckDBConnectionForQueryAllForTypeMapAttribute()
         {
             // Setup
             var tables = CreateAttributeTables(10).AsList();

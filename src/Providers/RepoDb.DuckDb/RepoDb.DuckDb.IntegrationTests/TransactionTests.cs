@@ -1178,7 +1178,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
-                    entity.ColumnBit = 0;
+                    entity.ColumnBit = "0";
 
                     // Act
                     connection.Update<CompleteTable>(entity, transaction: transaction);
@@ -1191,7 +1191,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                 var queryResult = connection.Query<CompleteTable>(entity.Id);
 
                 // Assert
-                Assert.AreEqual((ulong)0, queryResult.First().ColumnBit);
+                Assert.AreEqual("0", queryResult.First().ColumnBit);
             }
         }
 
@@ -1209,7 +1209,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
-                    entity.ColumnBit = 0;
+                    entity.ColumnBit = "0";
 
                     // Act
                     connection.Update<CompleteTable>(entity, transaction: transaction);
@@ -1222,7 +1222,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                 var queryResult = connection.Query<CompleteTable>(entity.Id);
 
                 // Assert
-                Assert.AreEqual((ulong)1, queryResult.First().ColumnBit);
+                Assert.AreEqual("1", queryResult.First().ColumnBit);
             }
         }
 
@@ -1244,7 +1244,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
-                    entity.ColumnBit = 0;
+                    entity.ColumnBit = "0";
 
                     // Act
                     await connection.UpdateAsync<CompleteTable>(entity, transaction: transaction).ConfigureAwait(false);
@@ -1257,7 +1257,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                 var queryResult = connection.Query<CompleteTable>(entity.Id);
 
                 // Assert
-                Assert.AreEqual((ulong)0, queryResult.First().ColumnBit);
+                Assert.AreEqual("0", queryResult.First().ColumnBit);
             }
         }
 
@@ -1275,7 +1275,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
-                    entity.ColumnBit = 0;
+                    entity.ColumnBit = "0";
 
                     // Act
                     await connection.UpdateAsync<CompleteTable>(entity, transaction: transaction).ConfigureAwait(false);
@@ -1288,7 +1288,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                 var queryResult = connection.Query<CompleteTable>(entity.Id);
 
                 // Assert
-                Assert.AreEqual((ulong)1, queryResult.First().ColumnBit);
+                Assert.AreEqual("1", queryResult.First().ColumnBit);
             }
         }
 
@@ -1314,7 +1314,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
-                    entities.ForEach(entity => entity.ColumnBit = 0);
+                    entities.ForEach(entity => entity.ColumnBit = "0");
 
                     // Act
                     connection.UpdateAll<CompleteTable>(entities, transaction: transaction);
@@ -1327,7 +1327,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Assert.AreEqual((ulong)0, queryResult.First(item => item.Id == entity.Id).ColumnBit));
+                entities.ForEach(entity => Assert.AreEqual("0", queryResult.First(item => item.Id == entity.Id).ColumnBit));
             }
         }
 
@@ -1345,7 +1345,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
-                    entities.ForEach(entity => entity.ColumnBit = 0);
+                    entities.ForEach(entity => entity.ColumnBit = "0");
 
                     // Act
                     connection.UpdateAll<CompleteTable>(entities, transaction: transaction);
@@ -1358,7 +1358,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Assert.AreEqual((ulong)1, queryResult.First(item => item.Id == entity.Id).ColumnBit));
+                entities.ForEach(entity => Assert.AreEqual("1", queryResult.First(item => item.Id == entity.Id).ColumnBit));
             }
         }
 
@@ -1380,7 +1380,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
-                    entities.ForEach(entity => entity.ColumnBit = 0);
+                    entities.ForEach(entity => entity.ColumnBit = "0");
 
                     // Act
                     await connection.UpdateAllAsync<CompleteTable>(entities, transaction: transaction).ConfigureAwait(false);
@@ -1393,7 +1393,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Assert.AreEqual((ulong)0, queryResult.First(item => item.Id == entity.Id).ColumnBit));
+                entities.ForEach(entity => Assert.AreEqual("0", queryResult.First(item => item.Id == entity.Id).ColumnBit));
             }
         }
 
@@ -1411,7 +1411,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
-                    entities.ForEach(entity => entity.ColumnBit = 0);
+                    entities.ForEach(entity => entity.ColumnBit = "0");
 
                     // Act
                     await connection.UpdateAllAsync<CompleteTable>(entities, transaction: transaction).ConfigureAwait(false);
@@ -1424,7 +1424,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Assert.AreEqual((ulong)1, queryResult.First(item => item.Id == entity.Id).ColumnBit));
+                entities.ForEach(entity => Assert.AreEqual("1", queryResult.First(item => item.Id == entity.Id).ColumnBit));
             }
         }
 
@@ -1548,7 +1548,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                     connection.InsertAll<CompleteTable>(entities);
 
                     // Prepare
-                    entities.ForEach(entity => entity.ColumnBit = 0);
+                    entities.ForEach(entity => entity.ColumnBit = "0");
 
                     // Act
                     connection.UpdateAll<CompleteTable>(entities);
@@ -1557,7 +1557,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                     var queryResult = connection.QueryAll<CompleteTable>();
 
                     // Assert
-                    entities.ForEach(entity => Assert.AreEqual((ulong)0, queryResult.First(item => item.Id == entity.Id).ColumnBit));
+                    entities.ForEach(entity => Assert.AreEqual("0", queryResult.First(item => item.Id == entity.Id).ColumnBit));
                 }
 
                 // Complete
@@ -1579,7 +1579,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                     connection.InsertAll<CompleteTable>(entities);
 
                     // Prepare
-                    entities.ForEach(entity => entity.ColumnBit = 0);
+                    entities.ForEach(entity => entity.ColumnBit = "0");
 
                     // Act
                     await connection.UpdateAllAsync<CompleteTable>(entities).ConfigureAwait(false);
@@ -1588,7 +1588,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                     var queryResult = connection.QueryAll<CompleteTable>();
 
                     // Assert
-                    entities.ForEach(entity => Assert.AreEqual((ulong)0, queryResult.First(item => item.Id == entity.Id).ColumnBit));
+                    entities.ForEach(entity => Assert.AreEqual("0", queryResult.First(item => item.Id == entity.Id).ColumnBit));
                 }
 
                 // Complete

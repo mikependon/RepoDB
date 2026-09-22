@@ -49,12 +49,12 @@ namespace RepoDb.DuckDb.IntegrationTests
                 var fields = helper.GetFields(connection, "CompleteTable", null);
 
                 // Assert
-                using (var reader = connection.ExecuteReader(@"SELECT COLUMN_NAME AS ColumnName
-                    FROM INFORMATION_SCHEMA.COLUMNS
+                using (var reader = connection.ExecuteReader(@"SELECT column_name AS ColumnName
+                    FROM information_schema.columns
                     WHERE
-                        TABLE_NAME = @TableName
-                        AND TABLE_SCHEMA = @TableSchema
-                    ORDER BY ORDINAL_POSITION;", new { TableName = "CompleteTable", TableSchema = connection.Database }))
+                        table_name = $TableName
+                        AND table_schema = $TableSchema
+                    ORDER BY ordinal_position;", new { TableName = "CompleteTable", TableSchema = "main" }))
                 {
                     var fieldCount = 0;
 
@@ -127,12 +127,12 @@ namespace RepoDb.DuckDb.IntegrationTests
                 var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null).ConfigureAwait(false);
 
                 // Assert
-                using (var reader = connection.ExecuteReader(@"SELECT COLUMN_NAME AS ColumnName
-                    FROM INFORMATION_SCHEMA.COLUMNS
+                using (var reader = connection.ExecuteReader(@"SELECT column_name AS ColumnName
+                    FROM information_schema.columns
                     WHERE
-                        TABLE_NAME = @TableName
-                        AND TABLE_SCHEMA = @TableSchema
-                    ORDER BY ORDINAL_POSITION;", new { TableName = "CompleteTable", TableSchema = connection.Database }))
+                        table_name = $TableName
+                        AND table_schema = $TableSchema
+                    ORDER BY ordinal_position;", new { TableName = "CompleteTable", TableSchema = "main" }))
                 {
                     var fieldCount = 0;
 
@@ -195,6 +195,11 @@ namespace RepoDb.DuckDb.IntegrationTests
 
         #region GetScopeIdentity
 
+        // DuckDB has no session-scoped "last identity" function (see DuckDbDbHelper.GetScopeIdentity's remarks);
+        // identity values normally flow back via the statement builder's 'RETURNING' clause instead (see
+        // TestDbHelperGetScopeIdentity's use of Insert<T> above, which already exercises that path), so these
+        // two tests just confirm the documented NotSupportedException rather than a real scope-identity lookup.
+
         #region Sync
 
         [TestMethod]
@@ -213,11 +218,8 @@ namespace RepoDb.DuckDb.IntegrationTests
                 Assert.IsTrue(insertResult > 0);
                 Assert.IsTrue(table.Id > 0);
 
-                // Act
-                var result = helper.GetScopeIdentity<long>(connection, null);
-
-                // Assert
-                Assert.AreEqual(insertResult, result);
+                // Act / Assert
+                Assert.Throws<NotSupportedException>(() => helper.GetScopeIdentity<long>(connection, null));
             }
         }
 
@@ -241,11 +243,9 @@ namespace RepoDb.DuckDb.IntegrationTests
                 Assert.IsTrue(insertResult > 0);
                 Assert.IsTrue(table.Id > 0);
 
-                // Act
-                var result = await helper.GetScopeIdentityAsync<long>(connection, null).ConfigureAwait(false);
-
-                // Assert
-                Assert.AreEqual(insertResult, result);
+                // Act / Assert
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
+                    await helper.GetScopeIdentityAsync<long>(connection, null).ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

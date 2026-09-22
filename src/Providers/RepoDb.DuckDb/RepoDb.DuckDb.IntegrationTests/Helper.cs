@@ -213,7 +213,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                     ColumnMediumText = $"ColumnMediumText:{i}",
                     ColumnText = $"ColumText:{i}",
                     ColumnTinyText = $"ColumnTinyText:{i}",
-                    ColumnBit = (UInt64)1
+                    ColumnBit = "1"
                 });
             }
             return tables;
@@ -268,7 +268,7 @@ namespace RepoDb.DuckDb.IntegrationTests
             table.ColumnMediumText = $"ColumnMediumText:{1}-Updated";
             table.ColumnText = $"ColumText:{1}-Updated";
             table.ColumnTinyText = $"ColumnTinyText:{1}-Updated";
-            table.ColumnBit = (UInt64)1;
+            table.ColumnBit = "1";
         }
 
         /// <summary>
@@ -327,7 +327,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                     ColumnMediumText = $"ColumnMediumText:{i}",
                     ColumnText = $"ColumText:{i}",
                     ColumnTinyText = $"ColumnTinyText:{i}",
-                    ColumnBit = (UInt64)1
+                    ColumnBit = "1"
                 });
             }
             return tables;
@@ -382,7 +382,7 @@ namespace RepoDb.DuckDb.IntegrationTests
             table.ColumnMediumText = $"ColumnMediumText:{1}";
             table.ColumnText = $"ColumText:{1}";
             table.ColumnTinyText = $"ColumnTinyText:{1}";
-            table.ColumnBit = (UInt64)1;
+            table.ColumnBit = "1";
         }
 
         /// <summary>
@@ -440,7 +440,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                 item["ColumnMediumText"] = $"ColumnMediumText:{i}";
                 item["ColumnText"] = $"ColumText:{i}";
                 item["ColumnTinyText"] = $"ColumnTinyText:{i}";
-                item["ColumnBit"] = (UInt64)1;
+                item["ColumnBit"] = "1";
                 tables.Add((ExpandoObject)item);
             }
             return tables;
@@ -496,7 +496,7 @@ namespace RepoDb.DuckDb.IntegrationTests
             item["ColumnMediumText"] = $"ColumnMediumText:{2}";
             item["ColumnText"] = $"ColumText:{2}";
             item["ColumnTinyText"] = $"ColumnTinyText:{2}";
-            item["ColumnBit"] = (UInt64)1;
+            item["ColumnBit"] = "1";
         }
 
         #endregion
@@ -559,7 +559,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                     ColumnMediumText = $"ColumnMediumText:{i}",
                     ColumnText = $"ColumText:{i}",
                     ColumnTinyText = $"ColumnTinyText:{i}",
-                    ColumnBit = (UInt64)1
+                    ColumnBit = "1"
                 });
             }
             return tables;
@@ -614,7 +614,7 @@ namespace RepoDb.DuckDb.IntegrationTests
             table.ColumnMediumText = $"ColumnMediumText:{1}";
             table.ColumnText = $"ColumText:{1}";
             table.ColumnTinyText = $"ColumnTinyText:{1}";
-            table.ColumnBit = (UInt64)1;
+            table.ColumnBit = "1";
         }
 
         /// <summary>
@@ -673,7 +673,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                     ColumnMediumText = $"ColumnMediumText:{i}",
                     ColumnText = $"ColumText:{i}",
                     ColumnTinyText = $"ColumnTinyText:{i}",
-                    ColumnBit = (UInt64)1
+                    ColumnBit = "1"
                 });
             }
             return tables;
@@ -728,7 +728,7 @@ namespace RepoDb.DuckDb.IntegrationTests
             table.ColumnMediumText = $"ColumnMediumText:{1}";
             table.ColumnText = $"ColumText:{1}";
             table.ColumnTinyText = $"ColumnTinyText:{1}";
-            table.ColumnBit = (UInt64)1;
+            table.ColumnBit = "1";
         }
 
         /// <summary>
@@ -786,7 +786,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                 item["ColumnMediumText"] = $"ColumnMediumText:{i}";
                 item["ColumnText"] = $"ColumText:{i}";
                 item["ColumnTinyText"] = $"ColumnTinyText:{i}";
-                item["ColumnBit"] = (UInt64)1;
+                item["ColumnBit"] = "1";
                 tables.Add((ExpandoObject)item);
             }
             return tables;
@@ -842,7 +842,7 @@ namespace RepoDb.DuckDb.IntegrationTests
             item["ColumnMediumText"] = $"ColumnMediumText:{2}";
             item["ColumnText"] = $"ColumText:{2}";
             item["ColumnTinyText"] = $"ColumnTinyText:{2}";
-            item["ColumnBit"] = (UInt64)1;
+            item["ColumnBit"] = "1";
         }
 
         #endregion

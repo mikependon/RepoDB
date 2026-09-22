@@ -45,8 +45,8 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                using (var extractor = connection.ExecuteQueryMultiple(@"SELECT * FROM `CompleteTable`;
-                    SELECT * FROM `CompleteTable`;"))
+                using (var extractor = connection.ExecuteQueryMultiple(@"SELECT * FROM ""CompleteTable"";
+                    SELECT * FROM ""CompleteTable"";"))
                 {
                     var list = new List<IEnumerable<CompleteTable>>();
 
@@ -73,8 +73,8 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                using (var extractor = connection.ExecuteQueryMultiple(@"SELECT * FROM `CompleteTable` WHERE Id = @Id1;
-                    SELECT * FROM `CompleteTable` WHERE Id = @Id2;",
+                using (var extractor = connection.ExecuteQueryMultiple(@"SELECT * FROM ""CompleteTable"" WHERE Id = $Id1;
+                    SELECT * FROM ""CompleteTable"" WHERE Id = $Id2;",
                     new
                     {
                         Id1 = tables.First().Id,
@@ -105,8 +105,8 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                using (var extractor = connection.ExecuteQueryMultiple(@"SELECT * FROM `CompleteTable` WHERE Id = @Id;
-                    SELECT * FROM `CompleteTable` WHERE Id = @Id;",
+                using (var extractor = connection.ExecuteQueryMultiple(@"SELECT * FROM ""CompleteTable"" WHERE Id = $Id;
+                    SELECT * FROM ""CompleteTable"" WHERE Id = $Id;",
                     new { Id = tables.Last().Id }))
                 {
                     var list = new List<IEnumerable<CompleteTable>>();
@@ -137,8 +137,8 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                using (var extractor = await connection.ExecuteQueryMultipleAsync(@"SELECT * FROM `CompleteTable`;
-                    SELECT * FROM `CompleteTable`;").ConfigureAwait(false))
+                using (var extractor = await connection.ExecuteQueryMultipleAsync(@"SELECT * FROM ""CompleteTable"";
+                    SELECT * FROM ""CompleteTable"";").ConfigureAwait(false))
                 {
                     var list = new List<IEnumerable<CompleteTable>>();
 
@@ -165,8 +165,8 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                using (var extractor = await connection.ExecuteQueryMultipleAsync(@"SELECT * FROM `CompleteTable` WHERE Id = @Id1;
-                    SELECT * FROM `CompleteTable` WHERE Id = @Id2;",
+                using (var extractor = await connection.ExecuteQueryMultipleAsync(@"SELECT * FROM ""CompleteTable"" WHERE Id = $Id1;
+                    SELECT * FROM ""CompleteTable"" WHERE Id = $Id2;",
                     new
                     {
                         Id1 = tables.First().Id,
@@ -197,8 +197,8 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                using (var extractor = await connection.ExecuteQueryMultipleAsync(@"SELECT * FROM `CompleteTable` WHERE Id = @Id;
-                    SELECT * FROM `CompleteTable` WHERE Id = @Id;",
+                using (var extractor = await connection.ExecuteQueryMultipleAsync(@"SELECT * FROM ""CompleteTable"" WHERE Id = $Id;
+                    SELECT * FROM ""CompleteTable"" WHERE Id = $Id;",
                     new { Id = tables.Last().Id }).ConfigureAwait(false))
                 {
                     var list = new List<IEnumerable<CompleteTable>>();

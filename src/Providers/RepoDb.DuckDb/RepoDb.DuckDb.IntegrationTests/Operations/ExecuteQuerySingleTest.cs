@@ -45,7 +45,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteQuerySingle("SELECT * FROM `CompleteTable` WHERE Id = @Id;",
+                var result = connection.ExecuteQuerySingle("SELECT * FROM \"CompleteTable\" WHERE Id = $Id;",
                     new { tables.Last().Id });
 
                 // Assert
@@ -64,7 +64,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteQuerySingle("SELECT * FROM `CompleteTable` ORDER BY Id ASC LIMIT 1;");
+                var result = connection.ExecuteQuerySingle("SELECT * FROM \"CompleteTable\" ORDER BY Id ASC LIMIT 1;");
 
                 // Assert
                 var kvp = (IDictionary<string, object>)result;
@@ -79,7 +79,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                Assert.Throws<EmptyException>(() => connection.ExecuteQuerySingle("SELECT * FROM `CompleteTable`;"));
+                Assert.Throws<EmptyException>(() => connection.ExecuteQuerySingle("SELECT * FROM \"CompleteTable\";"));
             }
         }
 
@@ -92,7 +92,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                Assert.Throws<EmptyException>(() => connection.ExecuteQuerySingle("SELECT * FROM `CompleteTable` WHERE Id = @Id;",
+                Assert.Throws<EmptyException>(() => connection.ExecuteQuerySingle("SELECT * FROM \"CompleteTable\" WHERE Id = $Id;",
                     new { Id = -1L }));
             }
         }
@@ -106,7 +106,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                Assert.Throws<MultipleRowsFoundException>(() => connection.ExecuteQuerySingle("SELECT * FROM `CompleteTable`;"));
+                Assert.Throws<MultipleRowsFoundException>(() => connection.ExecuteQuerySingle("SELECT * FROM \"CompleteTable\";"));
             }
         }
 
@@ -116,7 +116,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                Assert.Throws<MySqlException>(() => connection.ExecuteQuerySingle("SELECT * FROM `CompleteTable` WHERE Id = @Id;"));
+                Assert.Throws<DuckDBException>(() => connection.ExecuteQuerySingle("SELECT * FROM \"CompleteTable\" WHERE Id = $Id;"));
             }
         }
 
@@ -126,7 +126,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                Assert.Throws<MySqlException>(() => connection.ExecuteQuerySingle("SELEC * FROM `CompleteTable`;"));
+                Assert.Throws<DuckDBException>(() => connection.ExecuteQuerySingle("SELEC * FROM \"CompleteTable\";"));
             }
         }
 
@@ -143,7 +143,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteQuerySingleAsync("SELECT * FROM `CompleteTable` WHERE Id = @Id;",
+                var result = await connection.ExecuteQuerySingleAsync("SELECT * FROM \"CompleteTable\" WHERE Id = $Id;",
                     new { tables.Last().Id }).ConfigureAwait(false);
 
                 // Assert
@@ -162,7 +162,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteQuerySingleAsync("SELECT * FROM `CompleteTable` ORDER BY Id ASC LIMIT 1;").ConfigureAwait(false);
+                var result = await connection.ExecuteQuerySingleAsync("SELECT * FROM \"CompleteTable\" ORDER BY Id ASC LIMIT 1;").ConfigureAwait(false);
 
                 // Assert
                 var kvp = (IDictionary<string, object>)result;
@@ -177,7 +177,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                await Assert.ThrowsAsync<EmptyException>(async () => await connection.ExecuteQuerySingleAsync("SELECT * FROM `CompleteTable`;").ConfigureAwait(false)).ConfigureAwait(false);
+                await Assert.ThrowsAsync<EmptyException>(async () => await connection.ExecuteQuerySingleAsync("SELECT * FROM \"CompleteTable\";").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -190,7 +190,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                await Assert.ThrowsAsync<EmptyException>(async () => await connection.ExecuteQuerySingleAsync("SELECT * FROM `CompleteTable` WHERE Id = @Id;",
+                await Assert.ThrowsAsync<EmptyException>(async () => await connection.ExecuteQuerySingleAsync("SELECT * FROM \"CompleteTable\" WHERE Id = $Id;",
                     new { Id = -1L }).ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
@@ -204,7 +204,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                await Assert.ThrowsAsync<MultipleRowsFoundException>(async () => await connection.ExecuteQuerySingleAsync("SELECT * FROM `CompleteTable`;").ConfigureAwait(false)).ConfigureAwait(false);
+                await Assert.ThrowsAsync<MultipleRowsFoundException>(async () => await connection.ExecuteQuerySingleAsync("SELECT * FROM \"CompleteTable\";").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -214,7 +214,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                await Assert.ThrowsAsync<MySqlException>(async () => await connection.ExecuteQuerySingleAsync("SELECT * FROM `CompleteTable` WHERE Id = @Id;").ConfigureAwait(false)).ConfigureAwait(false);
+                await Assert.ThrowsAsync<DuckDBException>(async () => await connection.ExecuteQuerySingleAsync("SELECT * FROM \"CompleteTable\" WHERE Id = $Id;").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -224,7 +224,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                await Assert.ThrowsAsync<MySqlException>(async () => await connection.ExecuteQuerySingleAsync("SELEC * FROM `CompleteTable`;").ConfigureAwait(false)).ConfigureAwait(false);
+                await Assert.ThrowsAsync<DuckDBException>(async () => await connection.ExecuteQuerySingleAsync("SELEC * FROM \"CompleteTable\";").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -241,7 +241,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteQuerySingle<CompleteTable>("SELECT * FROM `CompleteTable` WHERE Id = @Id;",
+                var result = connection.ExecuteQuerySingle<CompleteTable>("SELECT * FROM \"CompleteTable\" WHERE Id = $Id;",
                     new { tables.Last().Id });
 
                 // Assert
@@ -259,7 +259,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteQuerySingle<CompleteTable>("SELECT * FROM `CompleteTable` ORDER BY Id ASC LIMIT 1;");
+                var result = connection.ExecuteQuerySingle<CompleteTable>("SELECT * FROM \"CompleteTable\" ORDER BY Id ASC LIMIT 1;");
 
                 // Assert
                 Assert.AreEqual(tables.First().Id, result.Id);
@@ -273,7 +273,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                Assert.Throws<EmptyException>(() => connection.ExecuteQuerySingle<CompleteTable>("SELECT * FROM `CompleteTable`;"));
+                Assert.Throws<EmptyException>(() => connection.ExecuteQuerySingle<CompleteTable>("SELECT * FROM \"CompleteTable\";"));
             }
         }
 
@@ -286,7 +286,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                Assert.Throws<EmptyException>(() => connection.ExecuteQuerySingle<CompleteTable>("SELECT * FROM `CompleteTable` WHERE Id = @Id;",
+                Assert.Throws<EmptyException>(() => connection.ExecuteQuerySingle<CompleteTable>("SELECT * FROM \"CompleteTable\" WHERE Id = $Id;",
                     new { Id = -1L }));
             }
         }
@@ -300,7 +300,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                Assert.Throws<MultipleRowsFoundException>(() => connection.ExecuteQuerySingle<CompleteTable>("SELECT * FROM `CompleteTable`;"));
+                Assert.Throws<MultipleRowsFoundException>(() => connection.ExecuteQuerySingle<CompleteTable>("SELECT * FROM \"CompleteTable\";"));
             }
         }
 
@@ -310,7 +310,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                Assert.Throws<MySqlException>(() => connection.ExecuteQuerySingle<CompleteTable>("SELECT * FROM `CompleteTable` WHERE Id = @Id;"));
+                Assert.Throws<DuckDBException>(() => connection.ExecuteQuerySingle<CompleteTable>("SELECT * FROM \"CompleteTable\" WHERE Id = $Id;"));
             }
         }
 
@@ -320,7 +320,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                Assert.Throws<MySqlException>(() => connection.ExecuteQuerySingle<CompleteTable>("SELEC * FROM `CompleteTable`;"));
+                Assert.Throws<DuckDBException>(() => connection.ExecuteQuerySingle<CompleteTable>("SELEC * FROM \"CompleteTable\";"));
             }
         }
 
@@ -337,7 +337,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteQuerySingleAsync<CompleteTable>("SELECT * FROM `CompleteTable` WHERE Id = @Id;",
+                var result = await connection.ExecuteQuerySingleAsync<CompleteTable>("SELECT * FROM \"CompleteTable\" WHERE Id = $Id;",
                     new { tables.Last().Id }).ConfigureAwait(false);
 
                 // Assert
@@ -355,7 +355,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteQuerySingleAsync<CompleteTable>("SELECT * FROM `CompleteTable` ORDER BY Id ASC LIMIT 1;").ConfigureAwait(false);
+                var result = await connection.ExecuteQuerySingleAsync<CompleteTable>("SELECT * FROM \"CompleteTable\" ORDER BY Id ASC LIMIT 1;").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.First().Id, result.Id);
@@ -369,7 +369,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                await Assert.ThrowsAsync<EmptyException>(async () => await connection.ExecuteQuerySingleAsync<CompleteTable>("SELECT * FROM `CompleteTable`;").ConfigureAwait(false)).ConfigureAwait(false);
+                await Assert.ThrowsAsync<EmptyException>(async () => await connection.ExecuteQuerySingleAsync<CompleteTable>("SELECT * FROM \"CompleteTable\";").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -382,7 +382,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                await Assert.ThrowsAsync<EmptyException>(async () => await connection.ExecuteQuerySingleAsync<CompleteTable>("SELECT * FROM `CompleteTable` WHERE Id = @Id;",
+                await Assert.ThrowsAsync<EmptyException>(async () => await connection.ExecuteQuerySingleAsync<CompleteTable>("SELECT * FROM \"CompleteTable\" WHERE Id = $Id;",
                     new { Id = -1L }).ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
@@ -396,7 +396,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                await Assert.ThrowsAsync<MultipleRowsFoundException>(async () => await connection.ExecuteQuerySingleAsync<CompleteTable>("SELECT * FROM `CompleteTable`;").ConfigureAwait(false)).ConfigureAwait(false);
+                await Assert.ThrowsAsync<MultipleRowsFoundException>(async () => await connection.ExecuteQuerySingleAsync<CompleteTable>("SELECT * FROM \"CompleteTable\";").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -406,7 +406,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                await Assert.ThrowsAsync<MySqlException>(async () => await connection.ExecuteQuerySingleAsync<CompleteTable>("SELECT * FROM `CompleteTable` WHERE Id = @Id;").ConfigureAwait(false)).ConfigureAwait(false);
+                await Assert.ThrowsAsync<DuckDBException>(async () => await connection.ExecuteQuerySingleAsync<CompleteTable>("SELECT * FROM \"CompleteTable\" WHERE Id = $Id;").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -416,7 +416,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                await Assert.ThrowsAsync<MySqlException>(async () => await connection.ExecuteQuerySingleAsync<CompleteTable>("SELEC * FROM `CompleteTable`;").ConfigureAwait(false)).ConfigureAwait(false);
+                await Assert.ThrowsAsync<DuckDBException>(async () => await connection.ExecuteQuerySingleAsync<CompleteTable>("SELEC * FROM \"CompleteTable\";").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

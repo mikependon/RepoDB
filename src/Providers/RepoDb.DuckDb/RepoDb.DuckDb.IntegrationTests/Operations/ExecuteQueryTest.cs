@@ -44,7 +44,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteQuery<CompleteTable>("SELECT * FROM `CompleteTable`;");
+                var result = connection.ExecuteQuery<CompleteTable>("SELECT * FROM \"CompleteTable\";");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -61,7 +61,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteQuery<CompleteTable>("SELECT * FROM `CompleteTable` WHERE Id = @Id;",
+                var result = connection.ExecuteQuery<CompleteTable>("SELECT * FROM \"CompleteTable\" WHERE Id = $Id;",
                     new { tables.Last().Id });
 
                 // Assert
@@ -83,7 +83,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM `CompleteTable`;").ConfigureAwait(false);
+                var result = await connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM \"CompleteTable\";").ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -100,7 +100,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM `CompleteTable` WHERE Id = @Id;",
+                var result = await connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM \"CompleteTable\" WHERE Id = $Id;",
                     new { tables.Last().Id }).ConfigureAwait(false);
 
                 // Assert
