@@ -1,9 +1,9 @@
 <div align="center">
     <image src="Snowflake.png" style="width:256px;" />
     <br/>
-    <span style="font-size:28px;font-weight:bold;">Snowflake</span>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/"><strong>RepoDb.Snowflake.BulkOperations</strong></a></span>
     <br/>
-    <span style="font-size:16px;">A high-performance bulk-operations extension for Snowflake in .NET — on the roadmap, not yet available.</span>
+    <span style="font-size:16px;">A high-performance data productivity platform for bulk operations on Snowflake in .NET — on the roadmap, not yet available.</span>
 </div>
 
 -----

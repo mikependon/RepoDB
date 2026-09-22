@@ -1,7 +1,7 @@
 <div align="center">
     <image src="Redshift.png" style="width:256px;" />
     <br/>
-    <span style="font-size:28px;font-weight:bold;">Redshift</span>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/"><strong>RepoDb.Redshift</strong></a></span>
     <br/>
     <span style="font-size:16px;">A high-performance data productivity platform for Redshift in .NET — on the roadmap, not yet available.</span>
 </div>

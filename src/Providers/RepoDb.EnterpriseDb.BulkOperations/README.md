@@ -1,9 +1,9 @@
 <div align="center">
     <image src="EnterpriseDB.png" style="width:256px;" />
     <br/>
-    <span style="font-size:28px;font-weight:bold;">EnterpriseDB</span>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/get-started-enterprisedb/"><strong>RepoDb.EnterpriseDb.BulkOperations</strong></a></span>
     <br/>
-    <span style="font-size:16px;">A high-performance bulk-operations extension for EnterpriseDB in .NET.</span>
+    <span style="font-size:16px;">A high-performance data productivity platform for bulk operations on EnterpriseDB in .NET.</span>
 </div>
 
 -----

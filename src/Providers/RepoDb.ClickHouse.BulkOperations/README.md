@@ -1,9 +1,9 @@
 <div align="center">
     <image src="ClickHouse.png" style="width:256px;" />
     <br/>
-    <span style="font-size:28px;font-weight:bold;">ClickHouse</span>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/get-started-clickhouse/"><strong>RepoDb.ClickHouse.BulkOperations</strong></a></span>
     <br/>
-    <span style="font-size:16px;">A high-performance bulk-operations extension for ClickHouse in .NET.</span>
+    <span style="font-size:16px;">A high-performance data productivity platform for bulk operations on ClickHouse in .NET.</span>
 </div>
 
 -----

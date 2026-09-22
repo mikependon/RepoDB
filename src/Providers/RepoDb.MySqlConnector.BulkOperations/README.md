@@ -1,9 +1,9 @@
 <div align="center">
     <image src="MySQL.png" style="width:256px;" />
     <br/>
-    <span style="font-size:28px;font-weight:bold;">MySQL Connector</span>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/get-started-mysql/"><strong>RepoDb.MySqlConnector.BulkOperations</strong></a></span>
     <br/>
-    <span style="font-size:16px;">A high-performance bulk-operations extension for MySQL (via MySqlConnector) in .NET.</span>
+    <span style="font-size:16px;">A high-performance data productivity platform for bulk operations on MySQL (via MySqlConnector) in .NET.</span>
 </div>
 
 -----

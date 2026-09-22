@@ -1,9 +1,9 @@
 <div align="center">
     <image src="PostgreSQL.png" style="width:256px;" />
     <br/>
-    <span style="font-size:28px;font-weight:bold;">PostgreSQL</span>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/get-started-postgresql/"><strong>RepoDb.PostgreSql.BulkOperations</strong></a></span>
     <br/>
-    <span style="font-size:16px;">A high-performance bulk-operations extension for PostgreSQL in .NET.</span>
+    <span style="font-size:16px;">A high-performance data productivity platform for bulk operations on PostgreSQL in .NET.</span>
 </div>
 
 -----

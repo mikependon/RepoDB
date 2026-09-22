@@ -1,7 +1,7 @@
 <div align="center">
     <image src="MySQL.png" style="width:256px;" />
     <br/>
-    <span style="font-size:28px;font-weight:bold;">MySQL</span>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/get-started-mysql/"><strong>RepoDb.MySql</strong></a></span>
     <br/>
     <span style="font-size:16px;">A high-performance data productivity platform for MySQL in .NET.</span>
 </div>

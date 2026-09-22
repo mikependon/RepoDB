@@ -1,7 +1,7 @@
 <div align="center">
     <image src="SAPHANA.png" style="width:256px;" />
     <br/>
-    <span style="font-size:28px;font-weight:bold;">SAP HANA</span>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/get-started-saphana/"><strong>RepoDb.SapHana</strong></a></span>
     <br/>
     <span style="font-size:16px;">A high-performance data productivity platform for SAP HANA in .NET.</span>
 </div>

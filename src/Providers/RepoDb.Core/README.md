@@ -1,3 +1,15 @@
+<div align="center">
+    <image src="RepoDbCore.png" style="width:256px;" />
+    <br/>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/"><strong>RepoDb</strong></a></span>
+    <br/>
+    <span style="font-size:16px;">A high-performance data productivity platform for .NET applications.</span>
+</div>
+
+-----
+
+<br/>
+
 [![CoreBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr.yml)
 [![CoreHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![CoreVersion](https://img.shields.io/nuget/v/RepoDb?&logo=nuget)](https://www.nuget.org/packages/RepoDb)

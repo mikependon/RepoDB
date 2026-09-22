@@ -1,7 +1,7 @@
 <div align="center">
     <image src="KingbaseES.png" style="width:256px;" />
     <br/>
-    <span style="font-size:28px;font-weight:bold;">KingbaseES</span>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/"><strong>RepoDb.KingbaseES</strong></a></span>
     <br/>
     <span style="font-size:16px;">A high-performance data productivity platform for KingbaseES in .NET — on the roadmap, not yet available.</span>
 </div>

@@ -7,7 +7,7 @@
     <LangVersion>preview</LangVersion>
     <Nullable>annotations</Nullable>
     <PackageTags>orm hybrid-orm micro-orm</PackageTags>
-    <PackageIcon>icon.png</PackageIcon>
+    <PackageIcon>RepoDbCore.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageReleaseNotes>http://repodb.net/release/core</PackageReleaseNotes>
@@ -48,7 +48,7 @@
   <ItemGroup>
     <None Include="..\..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />
     <None Include="..\README.md" Pack="True" PackagePath="\" />
-    <None Include="..\..\..\..\icon.png" Pack="True" PackagePath="\" />
+    <None Include="..\RepoDbCore.png" Pack="True" PackagePath="\" />
     <None Include="..\..\..\..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
   <ItemGroup>

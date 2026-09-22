@@ -1,9 +1,9 @@
 <div align="center">
     <image src="SQLServer.png" style="width:256px;" />
     <br/>
-    <span style="font-size:28px;font-weight:bold;">SQL Server</span>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/get-started-sqlserver/"><strong>RepoDb.SqlServer.BulkOperations</strong></a></span>
     <br/>
-    <span style="font-size:16px;">A high-performance bulk-operations extension for SQL Server in .NET.</span>
+    <span style="font-size:16px;">A high-performance data productivity platform for bulk operations on SQL Server in .NET.</span>
 </div>
 
 -----

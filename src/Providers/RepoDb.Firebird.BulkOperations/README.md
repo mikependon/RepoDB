@@ -1,9 +1,9 @@
 <div align="center">
     <image src="Firebird.png" style="width:256px;" />
     <br/>
-    <span style="font-size:28px;font-weight:bold;">Firebird</span>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/get-started-firebird/"><strong>RepoDb.Firebird.BulkOperations</strong></a></span>
     <br/>
-    <span style="font-size:16px;">A high-performance bulk-operations extension for Firebird in .NET.</span>
+    <span style="font-size:16px;">A high-performance data productivity platform for bulk operations on Firebird in .NET.</span>
 </div>
 
 -----

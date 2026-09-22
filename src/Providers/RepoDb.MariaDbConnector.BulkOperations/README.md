@@ -1,9 +1,9 @@
 <div align="center">
     <image src="MariaDB.png" style="width:256px;" />
     <br/>
-    <span style="font-size:28px;font-weight:bold;">MariaDB Connector</span>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/get-started-mariadb/"><strong>RepoDb.MariaDbConnector.BulkOperations</strong></a></span>
     <br/>
-    <span style="font-size:16px;">A high-performance bulk-operations extension for MariaDB (via MariaDB Connector) in .NET.</span>
+    <span style="font-size:16px;">A high-performance data productivity platform for bulk operations on MariaDB (via MariaDB Connector) in .NET.</span>
 </div>
 
 -----

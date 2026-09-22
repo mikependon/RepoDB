@@ -1,7 +1,7 @@
 <div align="center">
     <image src="CockroachDB.png" style="width:256px;" />
     <br/>
-    <span style="font-size:28px;font-weight:bold;">CockroachDB</span>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/"><strong>RepoDb.CockroachDB</strong></a></span>
     <br/>
     <span style="font-size:16px;">A high-performance data productivity platform for CockroachDB in .NET — on the roadmap, not yet available.</span>
 </div>

@@ -1,9 +1,9 @@
 <div align="center">
     <image src="DB2.png" style="width:256px;" />
     <br/>
-    <span style="font-size:28px;font-weight:bold;">DB2</span>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/get-started-db2/"><strong>RepoDb.Db2.BulkOperations</strong></a></span>
     <br/>
-    <span style="font-size:16px;">A high-performance bulk-operations extension for IBM DB2 in .NET.</span>
+    <span style="font-size:16px;">A high-performance data productivity platform for bulk operations on IBM DB2 in .NET.</span>
 </div>
 
 -----
