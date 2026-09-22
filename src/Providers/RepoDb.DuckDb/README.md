@@ -1,5 +1,5 @@
 <div align="center">
-    <image src="DuckDB.png" style="width:256px;" />
+    <a href="https://repodb.net/tutorial/get-started-duckdb/"><image src="DuckDB.png" style="width:256px;" /></a>
     <br/>
     <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/get-started-duckdb/"><strong>RepoDb.DuckDb</strong></a></span>
     <br/>

@@ -1,5 +1,5 @@
 <div align="center">
-    <image src="Firebird.png" style="width:256px;" />
+    <a href="https://repodb.net/tutorial/get-started-firebird/"><image src="Firebird.png" style="width:256px;" /></a>
     <br/>
     <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/get-started-firebird/"><strong>RepoDb.Firebird</strong></a></span>
     <br/>

@@ -1,5 +1,5 @@
 <div align="center">
-    <image src="ClickHouse.png" style="width:256px;" />
+    <a href="https://repodb.net/tutorial/get-started-clickhouse/"><image src="ClickHouse.png" style="width:256px;" /></a>
     <br/>
     <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/get-started-clickhouse/"><strong>RepoDb.ClickHouse</strong></a></span>
     <br/>

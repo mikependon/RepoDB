@@ -1,5 +1,5 @@
 <div align="center">
-    <image src="Snowflake.png" style="width:256px;" />
+    <a href="https://repodb.net/tutorial/"><image src="Snowflake.png" style="width:256px;" /></a>
     <br/>
     <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/"><strong>RepoDb.Snowflake</strong></a></span>
     <br/>
