@@ -21,7 +21,9 @@ namespace RepoDb.DuckDb.UnitTests.Attributes.Parameter.DuckDb
         [TestInitialize]
         public void Initialize()
         {
-            DbSettingMapper.Add<DuckDBConnection>(new DuckDbDbSetting(), true);
+            GlobalConfiguration
+                .Setup()
+                .UseDuckDb();
         }
 
         #region Classes
@@ -51,7 +53,7 @@ namespace RepoDb.DuckDb.UnitTests.Attributes.Parameter.DuckDb
             Assert.AreEqual(1, command.Parameters.Count);
 
             // Assert
-            var parameter = command.Parameters["$ColumnName"];
+            var parameter = command.Parameters["ColumnName"];
             Assert.AreEqual("MappedColumnName", parameter.SourceColumn, StringComparer.Ordinal);
         }
 
@@ -73,7 +75,7 @@ namespace RepoDb.DuckDb.UnitTests.Attributes.Parameter.DuckDb
             Assert.AreEqual(1, command.Parameters.Count);
 
             // Assert
-            var parameter = command.Parameters["$ColumnName"];
+            var parameter = command.Parameters["ColumnName"];
             Assert.AreEqual("MappedColumnName", parameter.SourceColumn, StringComparer.Ordinal);
         }
     }
