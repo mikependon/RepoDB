@@ -1,0 +1,19 @@
+name: Build & Run Tests - RepoDb.DuckDb (Push)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'src/Providers/RepoDb.Core/**'
+      - 'src/Providers/RepoDb.DuckDb/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-duckdb.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: src/Providers/RepoDb.DuckDb
+      solution-file: RepoDb.DuckDb.sln
+      artifact-name: release-duckdb
+      db-engine: none
