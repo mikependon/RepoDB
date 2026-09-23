@@ -46,5 +46,10 @@ namespace RepoDb.Contexts.Execution
         /// 
         /// </summary>
         public Action<object, object> KeyPropertySetterFunc { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool HasKeyField { get; set; }
     }
 }

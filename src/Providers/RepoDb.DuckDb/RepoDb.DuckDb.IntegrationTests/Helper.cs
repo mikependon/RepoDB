@@ -12,6 +12,7 @@ using RepoDb.DuckDb.IntegrationTests.Models;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -129,6 +130,35 @@ namespace RepoDb.DuckDb.IntegrationTests
                 {
                     var value1 = property.GetValue(obj);
                     var value2 = dictionary[property.Name];
+
+                    // DuckDB.NET returns BLOB columns as a raw (unmanaged) Stream, not a byte[], when the
+                    // reader is consumed dynamically (e.g. via BatchQuery(tableName: ...) into an
+                    // ExpandoObject) instead of into a strongly-typed entity - the registered
+                    // DuckDbStreamToByteArrayPropertyHandler only ever runs for a mapped class property, so
+                    // it never sees these dynamic reads. Materialize the Stream here the same way that
+                    // handler does, purely so the comparison below has a byte[] to compare against.
+                    if (value2 is Stream blobStream)
+                    {
+                        using var memoryStream = new MemoryStream();
+                        blobStream.CopyTo(memoryStream);
+                        value2 = memoryStream.ToArray();
+                    }
+
+                    // Same story for DATE/TIME columns: DuckDB.NET returns System.DateOnly/System.TimeOnly
+                    // for those, and the DuckDbDateOnlyTo*/DuckDbTimeOnlyTo* property handlers that convert
+                    // them to DateTime/TimeSpan for a mapped class property (registered per-property in
+                    // Database.cs) never run for a dynamic ExpandoObject read either. Neither DateOnly nor
+                    // TimeOnly implements IConvertible, so left as-is these would fail the same way the
+                    // Stream did above once Convert.ChangeType is reached below.
+                    if (value2 is DateOnly dateOnlyValue)
+                    {
+                        value2 = dateOnlyValue.ToDateTime(TimeOnly.MinValue);
+                    }
+                    else if (value2 is TimeOnly timeOnlyValue)
+                    {
+                        value2 = timeOnlyValue.ToTimeSpan();
+                    }
+
                     if (value1 is byte[] b1 && value2 is byte[] b2)
                     {
                         for (var i = 0; i < Math.Min(b1.Length, b2.Length); i++)
@@ -172,6 +202,7 @@ namespace RepoDb.DuckDb.IntegrationTests
             {
                 tables.Add(new CompleteTable
                 {
+                    Id = (i + 1),
                     ColumnVarchar = $"ColumnVarChar:{i}",
                     ColumnInt = i,
                     ColumnDecimal2 = Convert.ToDecimal(i),

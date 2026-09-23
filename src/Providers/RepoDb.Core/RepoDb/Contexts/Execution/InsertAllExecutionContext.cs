@@ -51,5 +51,10 @@ namespace RepoDb.Contexts.Execution
         /// 
         /// </summary>
         public bool HasIdentityKey { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool HasKeyField { get; set; }
     }
 }

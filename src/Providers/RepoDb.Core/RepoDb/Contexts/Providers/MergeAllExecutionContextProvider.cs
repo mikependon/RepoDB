@@ -324,7 +324,8 @@ outputFields: null,
                 BatchSize = batchSize,
                 SingleDataEntityParametersSetterFunc = singleEntityParametersSetterFunc,
                 MultipleDataEntitiesParametersSetterFunc = multipleEntitiesParametersSetterFunc,
-                KeyPropertySetterFunc = keyPropertySetterFunc
+                KeyPropertySetterFunc = keyPropertySetterFunc,
+                HasKeyField = keyField != null
             };
         }
     }

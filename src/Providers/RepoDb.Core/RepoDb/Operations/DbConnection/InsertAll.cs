@@ -615,7 +615,7 @@ namespace RepoDb
                                 Tracer
                                     .InvokeAfterExecution(traceResult, trace, result);
                             }
-                            else if (context.KeyPropertySetterFunc == null)
+                            else if (context.KeyPropertySetterFunc == null && !context.HasKeyField)
                             {
                                 // Before Execution
                                 var traceResult = Tracer
@@ -649,7 +649,7 @@ namespace RepoDb
                                 {
                                     var value = Converter.DbNullToNull(reader.GetValue(0));
                                     var index = batchItems.Count > 1 && reader.FieldCount > 1 ? reader.GetInt32(1) : position;
-                                    context.KeyPropertySetterFunc.Invoke(batchItems[index], value);
+                                    context.KeyPropertySetterFunc?.Invoke(batchItems[index], value);
                                     position++;
                                 }
 
@@ -896,7 +896,11 @@ namespace RepoDb
                                 await Tracer
                                     .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
                             }
-                            else if (context.KeyPropertySetterFunc == null)
+                            // A statement that returns the key column (e.g. 'INSERT ... RETURNING') is always read via the
+                            // data reader below, even if the key cannot be set back to the entity (e.g. an anonymous type's
+                            // read-only property). Some drivers (i.e. DuckDB.NET) report 0 rows changed on ExecuteNonQuery()
+                            // for any statement that has a RETURNING clause, which would make the operation return 0.
+                            else if (context.KeyPropertySetterFunc == null && !context.HasKeyField)
                             {
                                 // Before Execution
                                 var traceResult = await Tracer
@@ -930,7 +934,7 @@ namespace RepoDb
                                 {
                                     var value = Converter.DbNullToNull(reader.GetValue(0));
                                     var index = batchItems.Count > 1 && reader.FieldCount > 1 ? reader.GetInt32(1) : position;
-                                    context.KeyPropertySetterFunc.Invoke(batchItems[index], value);
+                                    context.KeyPropertySetterFunc?.Invoke(batchItems[index], value);
                                     position++;
                                 }
 

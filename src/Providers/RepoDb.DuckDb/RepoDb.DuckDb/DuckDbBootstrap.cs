@@ -9,7 +9,10 @@
 using DuckDB.NET.Data;
 using RepoDb.DbHelpers;
 using RepoDb.DbSettings;
+using RepoDb.PropertyHandlers.DuckDb;
 using RepoDb.StatementBuilders;
+using System;
+using System.IO;
 
 namespace RepoDb
 {
@@ -48,6 +51,27 @@ namespace RepoDb
 
             // Map the Statement Builder
             StatementBuilderMapper.Add<DuckDBConnection>(new DuckDbStatementBuilder(), true);
+
+            // Map the PropertyHandler for BLOB columns at the type level (keyed by the reader's reported
+            // CLR type, System.IO.Stream - see DuckDbStreamToByteArrayPropertyHandler). DuckDB.NET returns
+            // an unmanaged Stream when reading a BLOB value, which has no built-in coercion to byte[]. This
+            // makes any byte[]-typed property against a DuckDB BLOB column work without requiring the
+            // caller to register a per-property handler (an explicit per-property registration, like the
+            // ones in the integration tests' Database.cs, still takes precedence over this default).
+            PropertyHandlerMapper.Add<Stream, DuckDbStreamToByteArrayPropertyHandler>(true);
+
+            // Map the PropertyHandler for TIME columns at the type level (keyed by System.TimeSpan - the
+            // CLR type DuckDbTypeNameToClientTypeResolver resolves a TIME column's DbField.Type to). This
+            // one matters specifically for dynamic/table-name writes (e.g. InsertAll(tableName, entities)
+            // against anonymous/ExpandoObject entities): RepoDb.Core's dynamic parameter-creation path has
+            // no ClassProperty to attach a per-property handler to, so it falls back to this type-level
+            // registration instead (see RepoDb.Reflection.Compiler.GetDictionaryStringObjectPropertyValueExpression/
+            // GetObjectInstancePropertyValueExpression). Without it, a raw TimeSpan value is handed straight
+            // to DuckDB.NET, whose converter has no case for (DuckDBType.Time, TimeSpan) and blindly casts
+            // the boxed value to its native DuckDBTimeOnly struct, throwing InvalidCastException. DuckDB.NET
+            // *does* accept a plain DateTime for DATE columns natively, so no equivalent registration is
+            // needed for DuckDbDateOnlyToDateTimePropertyHandler here.
+            PropertyHandlerMapper.Add<TimeSpan, DuckDbTimeOnlyToTimeSpanPropertyHandler>(true);
 
             // Set the flag
             IsInitialized = true;

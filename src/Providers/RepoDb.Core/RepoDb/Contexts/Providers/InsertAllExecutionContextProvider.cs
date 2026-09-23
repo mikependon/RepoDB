@@ -279,6 +279,7 @@ outputFields: null,
                 SingleDataEntityParametersSetterFunc = singleEntityParametersSetterFunc,
                 MultipleDataEntitiesParametersSetterFunc = multipleEntitiesParametersSetterFunc,
                 KeyPropertySetterFunc = keyPropertySetterFunc,
+                HasKeyField = keyField != null,
                 HasIdentityKey = keyField != null &&
                     string.Equals(keyField.Name.AsUnquoted(trim: true, dbSetting), dbFields?.GetIdentity()?.Name.AsUnquoted(trim: true, dbSetting), StringComparison.OrdinalIgnoreCase)
             };

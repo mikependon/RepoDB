@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using DuckDB.NET.Data;
 using RepoDb.Exceptions;
@@ -494,7 +495,7 @@ namespace RepoDb.StatementBuilders
 
                 // Get the string
                 var sql = string.Concat("RETURNING ", returnValue, " AS ", "Result".AsQuoted(DbSetting), ", ",
-                    $"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index}", " AS ", "OrderColumn".AsQuoted(DbSetting));
+                    index.ToString(CultureInfo.InvariantCulture), " AS ", "OrderColumn".AsQuoted(DbSetting));
 
                 // Set the result
                 builder
@@ -635,5 +636,118 @@ namespace RepoDb.StatementBuilders
         }
 
         #endregion
+
+        #region CreateSum
+
+        /// <summary>
+        /// Creates a SQL Statement for sum operation. See <see cref="SumAsNonHugeInt(QueryBuilder, Field)"/>
+        /// for why the 'SUM' expression is wrapped.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be summarized.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for sum operation.</returns>
+        public override string CreateSum(string tableName,
+            Field field,
+            QueryGroup where = null,
+            string hints = null)
+        {
+            // Ensure with guards
+            GuardTableName(tableName);
+            GuardHints(hints);
+
+            // Check the field
+            if (field == null)
+            {
+                throw new ArgumentNullException(nameof(field), "The field cannot be null.");
+            }
+
+            // Initialize the builder
+            var builder = new QueryBuilder();
+
+            // Build the query
+            builder.Clear()
+                .Select();
+            SumAsNonHugeInt(builder, field)
+                .WriteText($"AS {"SumValue".AsQuoted(DbSetting)}")
+                .From()
+                .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
+                .WhereFrom(where, DbSetting)
+                .End();
+
+            // Return the query
+            return builder.GetString();
+        }
+
+        #endregion
+
+        #region CreateSumAll
+
+        /// <summary>
+        /// Creates a SQL Statement for sum-all operation. See <see cref="SumAsNonHugeInt(QueryBuilder, Field)"/>
+        /// for why the 'SUM' expression is wrapped.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be summarized.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for sum-all operation.</returns>
+        public override string CreateSumAll(string tableName,
+            Field field,
+            string hints = null)
+        {
+            // Ensure with guards
+            GuardTableName(tableName);
+            GuardHints(hints);
+
+            // Check the field
+            if (field == null)
+            {
+                throw new ArgumentNullException(nameof(field), "The field cannot be null.");
+            }
+
+            // Initialize the builder
+            var builder = new QueryBuilder();
+
+            // Build the query
+            builder.Clear()
+                .Select();
+            SumAsNonHugeInt(builder, field)
+                .WriteText($"AS {"SumValue".AsQuoted(DbSetting)}")
+                .From()
+                .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
+                .End();
+
+            // Return the query
+            return builder.GetString();
+        }
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// Appends 'SUM (field) + CAST(0 AS DECIMAL(38, 0))' to the builder. DuckDB's SUM() over ANY integer
+        /// column (TINYINT..BIGINT, UBIGINT, HUGEINT) returns a HUGEINT, which DuckDB.NET hands back as a
+        /// <see cref="System.Numerics.BigInteger"/> - a type that does not implement <see cref="IConvertible"/>,
+        /// so <see cref="Convert"/> (and RepoDb's own scalar conversion for Sum&lt;TResult&gt;) throws
+        /// <see cref="InvalidCastException"/> on it. Adding a DECIMAL(38, 0) zero makes DuckDB's type promotion
+        /// turn only that HUGEINT result into a DECIMAL(38, 0) (read as a <see cref="decimal"/>), while a DOUBLE
+        /// sum stays a DOUBLE and a DECIMAL(p, s) sum stays a DECIMAL(38, s) - verified against DuckDB 1.5.5. A
+        /// NULL sum (empty table / all NULLs) stays NULL.
+        /// </summary>
+        /// <param name="builder">The builder to append to.</param>
+        /// <param name="field">The field to be summarized.</param>
+        /// <returns>The same builder.</returns>
+        private QueryBuilder SumAsNonHugeInt(QueryBuilder builder,
+            Field field) =>
+            builder
+                .Sum(field, DbSetting)
+                .WriteText("+ CAST(0 AS DECIMAL(38, 0))");
+
+        #endregion
     }
 }
+

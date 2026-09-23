@@ -1086,7 +1086,7 @@ namespace RepoDb.DuckDb.UnitTests
                 new Field("Field", typeof(int)),
                 null,
                 null);
-            var expected = "SELECT SUM (\"Field\") AS \"SumValue\" FROM \"Table\" ;";
+            var expected = "SELECT SUM (\"Field\") + CAST(0 AS DECIMAL(38, 0)) AS \"SumValue\" FROM \"Table\" ;";
 
             // Assert
             Assert.AreEqual(expected, query, StringComparer.Ordinal);
@@ -1103,7 +1103,7 @@ namespace RepoDb.DuckDb.UnitTests
                 new Field("Field", typeof(int)),
                 QueryGroup.Parse(new { Id = 1 }),
                 null);
-            var expected = "SELECT SUM (\"Field\") AS \"SumValue\" FROM \"Table\" WHERE (\"Id\" = $Id) ;";
+            var expected = "SELECT SUM (\"Field\") + CAST(0 AS DECIMAL(38, 0)) AS \"SumValue\" FROM \"Table\" WHERE (\"Id\" = $Id) ;";
 
             // Assert
             Assert.AreEqual(expected, query, StringComparer.Ordinal);
@@ -1137,7 +1137,7 @@ namespace RepoDb.DuckDb.UnitTests
             var query = builder.CreateSumAll("Table",
                 new Field("Field", typeof(int)),
                 null);
-            var expected = "SELECT SUM (\"Field\") AS \"SumValue\" FROM \"Table\" ;";
+            var expected = "SELECT SUM (\"Field\") + CAST(0 AS DECIMAL(38, 0)) AS \"SumValue\" FROM \"Table\" ;";
 
             // Assert
             Assert.AreEqual(expected, query, StringComparer.Ordinal);

@@ -1764,6 +1764,31 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        internal static MethodInfo GetMaterializeDictionaryValueMethod()
+        {
+            return typeof(Compiler).GetMethod(nameof(MaterializeDictionaryValue), BindingFlags.Static | BindingFlags.NonPublic);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private static object MaterializeDictionaryValue(object value)
+        {
+            if (value is System.IO.Stream stream)
+            {
+                using var memoryStream = new System.IO.MemoryStream();
+                stream.CopyTo(memoryStream);
+                return memoryStream.ToArray();
+            }
+            return value;
+        }
+
+        /// <summary>
         /// Returns the list of the bindings for the object.
         /// </summary>
         /// <param name="readerParameterExpression">The data reader parameter.</param>
@@ -1796,7 +1821,8 @@ namespace RepoDb.Reflection
                 var values = new Expression[]
                 {
                     Expression.Constant(readerField.Name),
-                    ConvertExpressionToTypeExpression(expression, StaticType.Object)
+                    Expression.Call(GetMaterializeDictionaryValueMethod(),
+                        ConvertExpressionToTypeExpression(expression, StaticType.Object))
                 };
                 elementInits.Add(Expression.ElementInit(addMethod, values));
             }
