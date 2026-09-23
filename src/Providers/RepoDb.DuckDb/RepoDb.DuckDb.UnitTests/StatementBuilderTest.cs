@@ -682,9 +682,9 @@ namespace RepoDb.DuckDb.UnitTests
                 3,
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null, false),
                 null);
-            var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( $Id, $Name, $Address ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = $Name, \"Address\" = $Address RETURNING \"Id\" AS \"Result\", $__RepoDb_OrderColumn_0 AS \"OrderColumn\" ; " +
-                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( $Id_1, $Name_1, $Address_1 ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = $Name_1, \"Address\" = $Address_1 RETURNING \"Id\" AS \"Result\", $__RepoDb_OrderColumn_1 AS \"OrderColumn\" ; " +
-                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( $Id_2, $Name_2, $Address_2 ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = $Name_2, \"Address\" = $Address_2 RETURNING \"Id\" AS \"Result\", $__RepoDb_OrderColumn_2 AS \"OrderColumn\" ;";
+            var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( $Id, $Name, $Address ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = $Name, \"Address\" = $Address RETURNING \"Id\" AS \"Result\", 0 AS \"OrderColumn\" ; " +
+                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( $Id_1, $Name_1, $Address_1 ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = $Name_1, \"Address\" = $Address_1 RETURNING \"Id\" AS \"Result\", 1 AS \"OrderColumn\" ; " +
+                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( $Id_2, $Name_2, $Address_2 ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = $Name_2, \"Address\" = $Address_2 RETURNING \"Id\" AS \"Result\", 2 AS \"OrderColumn\" ;";
 
             // Assert
             Assert.AreEqual(expected, query, StringComparer.Ordinal);
@@ -703,9 +703,9 @@ namespace RepoDb.DuckDb.UnitTests
                 3,
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null, false),
                 null);
-            var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( $Id, $Name, $Address ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = $Name, \"Address\" = $Address RETURNING \"Id\" AS \"Result\", $__RepoDb_OrderColumn_0 AS \"OrderColumn\" ; " +
-                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( $Id_1, $Name_1, $Address_1 ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = $Name_1, \"Address\" = $Address_1 RETURNING \"Id\" AS \"Result\", $__RepoDb_OrderColumn_1 AS \"OrderColumn\" ; " +
-                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( $Id_2, $Name_2, $Address_2 ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = $Name_2, \"Address\" = $Address_2 RETURNING \"Id\" AS \"Result\", $__RepoDb_OrderColumn_2 AS \"OrderColumn\" ;";
+            var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( $Id, $Name, $Address ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = $Name, \"Address\" = $Address RETURNING \"Id\" AS \"Result\", 0 AS \"OrderColumn\" ; " +
+                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( $Id_1, $Name_1, $Address_1 ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = $Name_1, \"Address\" = $Address_1 RETURNING \"Id\" AS \"Result\", 1 AS \"OrderColumn\" ; " +
+                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( $Id_2, $Name_2, $Address_2 ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = $Name_2, \"Address\" = $Address_2 RETURNING \"Id\" AS \"Result\", 2 AS \"OrderColumn\" ;";
 
             // Assert
             Assert.AreEqual(expected, query, StringComparer.Ordinal);
@@ -725,9 +725,9 @@ namespace RepoDb.DuckDb.UnitTests
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null, false),
                 new DbField("Id", false, true, false, typeof(int), null, null, null, null, false));
             // Same simplification as CreateMerge's identity test: no LAST_INSERT_ID()-style special-casing needed.
-            var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( $Id, $Name, $Address ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = $Name, \"Address\" = $Address RETURNING \"Id\" AS \"Result\", $__RepoDb_OrderColumn_0 AS \"OrderColumn\" ; " +
-                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( $Id_1, $Name_1, $Address_1 ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = $Name_1, \"Address\" = $Address_1 RETURNING \"Id\" AS \"Result\", $__RepoDb_OrderColumn_1 AS \"OrderColumn\" ; " +
-                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( $Id_2, $Name_2, $Address_2 ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = $Name_2, \"Address\" = $Address_2 RETURNING \"Id\" AS \"Result\", $__RepoDb_OrderColumn_2 AS \"OrderColumn\" ;";
+            var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( $Id, $Name, $Address ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = $Name, \"Address\" = $Address RETURNING \"Id\" AS \"Result\", 0 AS \"OrderColumn\" ; " +
+                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( $Id_1, $Name_1, $Address_1 ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = $Name_1, \"Address\" = $Address_1 RETURNING \"Id\" AS \"Result\", 1 AS \"OrderColumn\" ; " +
+                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( $Id_2, $Name_2, $Address_2 ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = $Name_2, \"Address\" = $Address_2 RETURNING \"Id\" AS \"Result\", 2 AS \"OrderColumn\" ;";
 
             // Assert
             Assert.AreEqual(expected, query, StringComparer.Ordinal);
