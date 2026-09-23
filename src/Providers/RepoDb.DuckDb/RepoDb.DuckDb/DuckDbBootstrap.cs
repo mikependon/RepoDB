@@ -1,7 +1,6 @@
 ﻿#region Copyright Attributions
 
-// Copyright (c) 2019 Bradley Graigner and Michael Camara Pendon.
-// Portions copyright their respective RepoDB contributors.
+// Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
 
@@ -10,7 +9,9 @@
 using DuckDB.NET.Data;
 using RepoDb.DbHelpers;
 using RepoDb.DbSettings;
+using RepoDb.PropertyHandlers.DuckDb;
 using RepoDb.StatementBuilders;
+using System;
 
 namespace RepoDb
 {
@@ -33,7 +34,12 @@ namespace RepoDb
         /// <summary>
         ///
         /// </summary>
-        internal static void InitializeInternal()
+        /// <param name="addDefaultHandlers">
+        /// A value indicating whether to map <see cref="DuckDbStreamToByteArrayPropertyHandler"/> and
+        /// <see cref="DuckDbTimeOnlyToTimeSpanPropertyHandler"/> at the type level.
+        /// </param>
+        internal static void InitializeInternal(
+            bool addDefaultHandlers = true)
         {
             // Skip if already initialized
             if (IsInitialized == true)
@@ -49,6 +55,13 @@ namespace RepoDb
 
             // Map the Statement Builder
             StatementBuilderMapper.Add<DuckDBConnection>(new DuckDbStatementBuilder(), true);
+
+            // Map the PropertyHandlers if needed
+            if (addDefaultHandlers)
+            {
+                PropertyHandlerMapper.Add<byte[], DuckDbStreamToByteArrayPropertyHandler>(true);
+                PropertyHandlerMapper.Add<TimeSpan, DuckDbTimeOnlyToTimeSpanPropertyHandler>(true);
+            }
 
             // Set the flag
             IsInitialized = true;

@@ -1,6 +1,6 @@
 ﻿#region Copyright Attributions
 
-// Copyright (c) 2022 Michael Camara Pendon.
+// Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
 
@@ -22,7 +22,22 @@ namespace RepoDb
         /// <returns>The used global configuration instance itself.</returns>
         public static GlobalConfiguration UseDuckDb(this GlobalConfiguration globalConfiguration)
         {
-            DuckDbBootstrap.InitializeInternal();
+            UseDuckDb(globalConfiguration, true);
+            return globalConfiguration;
+        }
+
+        /// <summary>
+        /// Initializes all the necessary settings for DuckDB.
+        /// </summary>
+        /// <param name="globalConfiguration">The instance of the global configuration in used.</param>
+        /// <param name="addDefaultHandlers">
+        /// A value indicating whether to map the default DuckDB-specific <c>PropertyHandler</c>s at the type level.
+        /// </param>
+        /// <returns>The used global configuration instance itself.</returns>
+        public static GlobalConfiguration UseDuckDb(this GlobalConfiguration globalConfiguration,
+            bool addDefaultHandlers)
+        {
+            DuckDbBootstrap.InitializeInternal(addDefaultHandlers);
             return globalConfiguration;
         }
     }

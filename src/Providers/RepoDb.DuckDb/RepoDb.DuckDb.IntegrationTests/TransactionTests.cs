@@ -1,7 +1,6 @@
 ﻿#region Copyright Attributions
 
-// Copyright (c) 2019 Bradley Graigner and Michael Camara Pendon.
-// Portions copyright their respective RepoDB contributors.
+// Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
 
@@ -1191,7 +1190,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                 var queryResult = connection.Query<CompleteTable>(entity.Id);
 
                 // Assert
-                Assert.AreEqual("0", queryResult.First().ColumnBit);
+                Assert.AreEqual("0", queryResult.First().ColumnBit, System.StringComparer.Ordinal);
             }
         }
 
@@ -1222,7 +1221,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                 var queryResult = connection.Query<CompleteTable>(entity.Id);
 
                 // Assert
-                Assert.AreEqual("1", queryResult.First().ColumnBit);
+                Assert.AreEqual("1", queryResult.First().ColumnBit, System.StringComparer.Ordinal);
             }
         }
 
@@ -1257,7 +1256,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                 var queryResult = connection.Query<CompleteTable>(entity.Id);
 
                 // Assert
-                Assert.AreEqual("0", queryResult.First().ColumnBit);
+                Assert.AreEqual("0", queryResult.First().ColumnBit, System.StringComparer.Ordinal);
             }
         }
 
@@ -1288,7 +1287,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                 var queryResult = connection.Query<CompleteTable>(entity.Id);
 
                 // Assert
-                Assert.AreEqual("1", queryResult.First().ColumnBit);
+                Assert.AreEqual("1", queryResult.First().ColumnBit, System.StringComparer.Ordinal);
             }
         }
 
@@ -1327,7 +1326,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Assert.AreEqual("0", queryResult.First(item => item.Id == entity.Id).ColumnBit));
+                entities.ForEach(entity => Assert.AreEqual("0", queryResult.First(item => item.Id == entity.Id).ColumnBit, System.StringComparer.Ordinal));
             }
         }
 
@@ -1358,7 +1357,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Assert.AreEqual("1", queryResult.First(item => item.Id == entity.Id).ColumnBit));
+                entities.ForEach(entity => Assert.AreEqual("1", queryResult.First(item => item.Id == entity.Id).ColumnBit, System.StringComparer.Ordinal));
             }
         }
 
@@ -1393,7 +1392,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Assert.AreEqual("0", queryResult.First(item => item.Id == entity.Id).ColumnBit));
+                entities.ForEach(entity => Assert.AreEqual("0", queryResult.First(item => item.Id == entity.Id).ColumnBit, System.StringComparer.Ordinal));
             }
         }
 
@@ -1424,7 +1423,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Assert.AreEqual("1", queryResult.First(item => item.Id == entity.Id).ColumnBit));
+                entities.ForEach(entity => Assert.AreEqual("1", queryResult.First(item => item.Id == entity.Id).ColumnBit, System.StringComparer.Ordinal));
             }
         }
 
@@ -1557,7 +1556,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                     var queryResult = connection.QueryAll<CompleteTable>();
 
                     // Assert
-                    entities.ForEach(entity => Assert.AreEqual("0", queryResult.First(item => item.Id == entity.Id).ColumnBit));
+                    entities.ForEach(entity => Assert.AreEqual("0", queryResult.First(item => item.Id == entity.Id).ColumnBit, System.StringComparer.Ordinal));
                 }
 
                 // Complete
@@ -1588,7 +1587,7 @@ namespace RepoDb.DuckDb.IntegrationTests
                     var queryResult = connection.QueryAll<CompleteTable>();
 
                     // Assert
-                    entities.ForEach(entity => Assert.AreEqual("0", queryResult.First(item => item.Id == entity.Id).ColumnBit));
+                    entities.ForEach(entity => Assert.AreEqual("0", queryResult.First(item => item.Id == entity.Id).ColumnBit, System.StringComparer.Ordinal));
                 }
 
                 // Complete

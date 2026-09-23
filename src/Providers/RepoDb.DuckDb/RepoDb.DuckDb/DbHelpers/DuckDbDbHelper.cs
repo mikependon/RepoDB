@@ -1,7 +1,6 @@
 #region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
-// Portions copyright their respective RepoDB contributors.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
 
@@ -121,7 +120,7 @@ namespace RepoDb.DbHelpers
         }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         /// <param name="reader"></param>
         /// <param name="cancellationToken"></param>
@@ -136,11 +135,11 @@ namespace RepoDb.DbHelpers
                 await reader.GetFieldValueAsync<bool>(3, cancellationToken).ConfigureAwait(false),
                 DbTypeResolver.Resolve(GetBaseTypeName(columnType)),
                 await reader.IsDBNullAsync(5, cancellationToken).ConfigureAwait(false) ? (int?)null :
-                    Convert.ToInt32(await reader.GetFieldValueAsync<object>(5, cancellationToken).ConfigureAwait(false), CultureInfo.InvariantCulture),
+                    Convert.ToInt32(reader.GetValue(5), CultureInfo.InvariantCulture),
                 await reader.IsDBNullAsync(6, cancellationToken).ConfigureAwait(false) ? (byte?)null :
-                    Convert.ToByte(await reader.GetFieldValueAsync<object>(6, cancellationToken).ConfigureAwait(false), CultureInfo.InvariantCulture),
+                    Convert.ToByte(reader.GetValue(6), CultureInfo.InvariantCulture),
                 await reader.IsDBNullAsync(7, cancellationToken).ConfigureAwait(false) ? (byte?)null :
-                    Convert.ToByte(await reader.GetFieldValueAsync<object>(7, cancellationToken).ConfigureAwait(false), CultureInfo.InvariantCulture),
+                    Convert.ToByte(reader.GetValue(7), CultureInfo.InvariantCulture),
                 await reader.GetFieldValueAsync<string>(8, cancellationToken).ConfigureAwait(false),
                 await reader.GetFieldValueAsync<bool>(9, cancellationToken).ConfigureAwait(false),
                 "DUCKDB");

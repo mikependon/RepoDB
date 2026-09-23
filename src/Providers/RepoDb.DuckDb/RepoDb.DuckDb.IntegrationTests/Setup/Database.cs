@@ -1,7 +1,6 @@
 #region Copyright Attributions
 
-// Copyright (c) 2026 Bradley Graigner and Michael Camara Pendon.
-// Portions copyright their respective RepoDB contributors.
+// Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
 
@@ -12,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using DuckDB.NET.Data;
 using RepoDb.DuckDb.IntegrationTests.Models;
+using RepoDb.PropertyHandlers.DuckDb;
 
 namespace RepoDb.DuckDb.IntegrationTests.Setup
 {
@@ -30,11 +30,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Setup
 
         public static void Initialize()
         {
-            // Set the connection string. DuckDB is an embedded engine (no server/database/grant concept
-            // like MySQL), so the connection string is either a file path or ':memory:'. A real temp file
-            // is used by default (rather than ':memory:') because the test suite opens a fresh
-            // DuckDBConnection per operation, and DuckDB's in-memory databases do not persist once every
-            // connection referencing them has been closed - unlike a file-backed database.
+            // Set the connection string
             ConnectionString =
                 Environment.GetEnvironmentVariable("REPODB_DUCKDB_CONSTR") ??
                 $"Data Source={GetDefaultDatabaseFilePath()}";
@@ -47,6 +43,11 @@ namespace RepoDb.DuckDb.IntegrationTests.Setup
                 .Setup()
                 .UseDuckDb();
 
+            // Map the property handlers for the DuckDB types that have no direct CLR equivalent: DATE and
+            // TIME are returned by the driver as System.DateOnly/System.TimeOnly (not DateTime/TimeSpan),
+            // and BLOB is returned as a Stream (not byte[]).
+            MapPropertyHandlers();
+
             // Create tables
             CreateTables();
         }
@@ -57,7 +58,49 @@ namespace RepoDb.DuckDb.IntegrationTests.Setup
             {
                 connection.Truncate<CompleteTable>();
                 connection.Truncate<NonIdentityCompleteTable>();
+                connection.Truncate("PropertyHandler");
             }
+        }
+
+        private static void MapPropertyHandlers()
+        {
+            PropertyHandlerMapper.Add<CompleteTable, DuckDbTimeOnlyToNullableTimeSpanPropertyHandler>(
+                e => e.ColumnTime, new DuckDbTimeOnlyToNullableTimeSpanPropertyHandler(), true);
+            PropertyHandlerMapper.Add<CompleteTable, DuckDbDateOnlyToNullableDateTimePropertyHandler>(
+                e => e.ColumnDate, new DuckDbDateOnlyToNullableDateTimePropertyHandler(), true);
+            PropertyHandlerMapper.Add<CompleteTable, DuckDbStreamToByteArrayPropertyHandler>(
+                e => e.ColumnBlob, new DuckDbStreamToByteArrayPropertyHandler(), true);
+            PropertyHandlerMapper.Add<CompleteTable, DuckDbStreamToByteArrayPropertyHandler>(
+                e => e.ColumnBlobAsArray, new DuckDbStreamToByteArrayPropertyHandler(), true);
+            PropertyHandlerMapper.Add<CompleteTable, DuckDbStreamToByteArrayPropertyHandler>(
+                e => e.ColumnBinary, new DuckDbStreamToByteArrayPropertyHandler(), true);
+            PropertyHandlerMapper.Add<CompleteTable, DuckDbStreamToByteArrayPropertyHandler>(
+                e => e.ColumnLongBlob, new DuckDbStreamToByteArrayPropertyHandler(), true);
+            PropertyHandlerMapper.Add<CompleteTable, DuckDbStreamToByteArrayPropertyHandler>(
+                e => e.ColumnMediumBlob, new DuckDbStreamToByteArrayPropertyHandler(), true);
+            PropertyHandlerMapper.Add<CompleteTable, DuckDbStreamToByteArrayPropertyHandler>(
+                e => e.ColumnTinyBlob, new DuckDbStreamToByteArrayPropertyHandler(), true);
+            PropertyHandlerMapper.Add<CompleteTable, DuckDbStreamToByteArrayPropertyHandler>(
+                e => e.ColumnVarBinary, new DuckDbStreamToByteArrayPropertyHandler(), true);
+
+            PropertyHandlerMapper.Add<NonIdentityCompleteTable, DuckDbTimeOnlyToNullableTimeSpanPropertyHandler>(
+                e => e.ColumnTime, new DuckDbTimeOnlyToNullableTimeSpanPropertyHandler(), true);
+            PropertyHandlerMapper.Add<NonIdentityCompleteTable, DuckDbDateOnlyToNullableDateTimePropertyHandler>(
+                e => e.ColumnDate, new DuckDbDateOnlyToNullableDateTimePropertyHandler(), true);
+            PropertyHandlerMapper.Add<NonIdentityCompleteTable, DuckDbStreamToByteArrayPropertyHandler>(
+                e => e.ColumnBlob, new DuckDbStreamToByteArrayPropertyHandler(), true);
+            PropertyHandlerMapper.Add<NonIdentityCompleteTable, DuckDbStreamToByteArrayPropertyHandler>(
+                e => e.ColumnBlobAsArray, new DuckDbStreamToByteArrayPropertyHandler(), true);
+            PropertyHandlerMapper.Add<NonIdentityCompleteTable, DuckDbStreamToByteArrayPropertyHandler>(
+                e => e.ColumnBinary, new DuckDbStreamToByteArrayPropertyHandler(), true);
+            PropertyHandlerMapper.Add<NonIdentityCompleteTable, DuckDbStreamToByteArrayPropertyHandler>(
+                e => e.ColumnLongBlob, new DuckDbStreamToByteArrayPropertyHandler(), true);
+            PropertyHandlerMapper.Add<NonIdentityCompleteTable, DuckDbStreamToByteArrayPropertyHandler>(
+                e => e.ColumnMediumBlob, new DuckDbStreamToByteArrayPropertyHandler(), true);
+            PropertyHandlerMapper.Add<NonIdentityCompleteTable, DuckDbStreamToByteArrayPropertyHandler>(
+                e => e.ColumnTinyBlob, new DuckDbStreamToByteArrayPropertyHandler(), true);
+            PropertyHandlerMapper.Add<NonIdentityCompleteTable, DuckDbStreamToByteArrayPropertyHandler>(
+                e => e.ColumnVarBinary, new DuckDbStreamToByteArrayPropertyHandler(), true);
         }
 
         private static string GetDefaultDatabaseFilePath() =>
@@ -108,6 +151,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Setup
         {
             CreateCompleteTable();
             CreateNonIdentityCompleteTable();
+            CreatePropertyHandlerTable();
         }
 
         private static void CreateCompleteTable()
@@ -199,6 +243,21 @@ namespace RepoDb.DuckDb.IntegrationTests.Setup
                         ""ColumnText"" VARCHAR DEFAULT NULL,
                         ""ColumnTinyText"" VARCHAR DEFAULT NULL,
                         ""ColumnBit"" BIT DEFAULT NULL
+                    );");
+            }
+        }
+
+        private static void CreatePropertyHandlerTable()
+        {
+            using (var connection = new DuckDBConnection(ConnectionString))
+            {
+                connection.ExecuteNonQuery(@"CREATE SEQUENCE IF NOT EXISTS seq_propertyhandler_id START 1;");
+                connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS ""PropertyHandler""
+                    (
+                        ""Id"" BIGINT DEFAULT nextval('seq_propertyhandler_id') PRIMARY KEY,
+                        ""ColumnTime"" TIME DEFAULT NULL,
+                        ""ColumnDate"" DATE DEFAULT NULL,
+                        ""ColumnBlob"" BLOB DEFAULT NULL
                     );");
             }
         }

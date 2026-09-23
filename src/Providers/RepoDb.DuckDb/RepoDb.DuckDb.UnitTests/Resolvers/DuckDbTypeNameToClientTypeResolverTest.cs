@@ -1,7 +1,6 @@
 #region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
-// Portions copyright their respective RepoDB contributors.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
 
@@ -10,6 +9,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Resolvers;
 using System;
+using System.Numerics;
 
 namespace RepoDb.DuckDb.UnitTests.Resolvers
 {
@@ -99,7 +99,20 @@ namespace RepoDb.DuckDb.UnitTests.Resolvers
             var result = resolver.Resolve("HUGEINT");
 
             // Assert
-            Assert.AreEqual(typeof(decimal), result);
+            Assert.AreEqual(typeof(BigInteger), result);
+        }
+
+        [TestMethod]
+        public void TestDuckDbTypeNameToClientTypeResolverForUHugeInt()
+        {
+            // Setup
+            var resolver = new DuckDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("UHUGEINT");
+
+            // Assert
+            Assert.AreEqual(typeof(BigInteger), result);
         }
 
         [TestMethod]
@@ -281,7 +294,7 @@ namespace RepoDb.DuckDb.UnitTests.Resolvers
             var result = resolver.Resolve("TIMESTAMPTZ");
 
             // Assert
-            Assert.AreEqual(typeof(DateTimeOffset), result);
+            Assert.AreEqual(typeof(DateTime), result);
         }
 
         [TestMethod]

@@ -116,7 +116,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                Assert.Throws<DuckDBException>(() => connection.ExecuteQuerySingle("SELECT * FROM \"CompleteTable\" WHERE Id = $Id;"));
+                Assert.Throws<System.InvalidOperationException>(() => connection.ExecuteQuerySingle("SELECT * FROM \"CompleteTable\" WHERE Id = $Id;"));
             }
         }
 
@@ -214,7 +214,12 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                await Assert.ThrowsAsync<DuckDBException>(async () => await connection.ExecuteQuerySingleAsync("SELECT * FROM \"CompleteTable\" WHERE Id = $Id;").ConfigureAwait(false)).ConfigureAwait(false);
+                // DuckDB.NET's own PreparedStatement.BindParameters() compares the supplied parameter
+                // count against the statement's expected parameter count *before* ever calling into the
+                // native binder, and throws a plain System.InvalidOperationException directly from C#
+                // when too few are supplied - it never gets far enough to raise a DuckDBException for
+                // this specific case (verified against DuckDB.NET's PreparedStatement.cs source).
+                await Assert.ThrowsAsync<System.InvalidOperationException>(async () => await connection.ExecuteQuerySingleAsync("SELECT * FROM \"CompleteTable\" WHERE Id = $Id;").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -310,7 +315,12 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                Assert.Throws<DuckDBException>(() => connection.ExecuteQuerySingle<CompleteTable>("SELECT * FROM \"CompleteTable\" WHERE Id = $Id;"));
+                // DuckDB.NET's own PreparedStatement.BindParameters() compares the supplied parameter
+                // count against the statement's expected parameter count *before* ever calling into the
+                // native binder, and throws a plain System.InvalidOperationException directly from C#
+                // when too few are supplied - it never gets far enough to raise a DuckDBException for
+                // this specific case (verified against DuckDB.NET's PreparedStatement.cs source).
+                Assert.Throws<System.InvalidOperationException>(() => connection.ExecuteQuerySingle<CompleteTable>("SELECT * FROM \"CompleteTable\" WHERE Id = $Id;"));
             }
         }
 
@@ -406,7 +416,12 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                await Assert.ThrowsAsync<DuckDBException>(async () => await connection.ExecuteQuerySingleAsync<CompleteTable>("SELECT * FROM \"CompleteTable\" WHERE Id = $Id;").ConfigureAwait(false)).ConfigureAwait(false);
+                // DuckDB.NET's own PreparedStatement.BindParameters() compares the supplied parameter
+                // count against the statement's expected parameter count *before* ever calling into the
+                // native binder, and throws a plain System.InvalidOperationException directly from C#
+                // when too few are supplied - it never gets far enough to raise a DuckDBException for
+                // this specific case (verified against DuckDB.NET's PreparedStatement.cs source).
+                await Assert.ThrowsAsync<System.InvalidOperationException>(async () => await connection.ExecuteQuerySingleAsync<CompleteTable>("SELECT * FROM \"CompleteTable\" WHERE Id = $Id;").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

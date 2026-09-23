@@ -89,7 +89,7 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                Assert.Throws<DuckDBException>(() => connection.ExecuteQueryFirst("SELECT * FROM \"CompleteTable\" WHERE Id = $Id;"));
+                Assert.Throws<System.InvalidOperationException>(() => connection.ExecuteQueryFirst("SELECT * FROM \"CompleteTable\" WHERE Id = $Id;"));
             }
         }
 
@@ -160,7 +160,12 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                await Assert.ThrowsAsync<DuckDBException>(async () => await connection.ExecuteQueryFirstAsync("SELECT * FROM \"CompleteTable\" WHERE Id = $Id;").ConfigureAwait(false)).ConfigureAwait(false);
+                // DuckDB.NET's own PreparedStatement.BindParameters() compares the supplied parameter
+                // count against the statement's expected parameter count *before* ever calling into the
+                // native binder, and throws a plain System.InvalidOperationException directly from C#
+                // when too few are supplied - it never gets far enough to raise a DuckDBException for
+                // this specific case (verified against DuckDB.NET's PreparedStatement.cs source).
+                await Assert.ThrowsAsync<System.InvalidOperationException>(async () => await connection.ExecuteQueryFirstAsync("SELECT * FROM \"CompleteTable\" WHERE Id = $Id;").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -243,7 +248,12 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                Assert.Throws<DuckDBException>(() => connection.ExecuteQueryFirst<CompleteTable>("SELECT * FROM \"CompleteTable\" WHERE Id = $Id;"));
+                // DuckDB.NET's own PreparedStatement.BindParameters() compares the supplied parameter
+                // count against the statement's expected parameter count *before* ever calling into the
+                // native binder, and throws a plain System.InvalidOperationException directly from C#
+                // when too few are supplied - it never gets far enough to raise a DuckDBException for
+                // this specific case (verified against DuckDB.NET's PreparedStatement.cs source).
+                Assert.Throws<System.InvalidOperationException>(() => connection.ExecuteQueryFirst<CompleteTable>("SELECT * FROM \"CompleteTable\" WHERE Id = $Id;"));
             }
         }
 
@@ -326,7 +336,16 @@ namespace RepoDb.DuckDb.IntegrationTests.Operations
             using (var connection = new DuckDBConnection(Database.ConnectionString))
             {
                 // Act
-                await Assert.ThrowsAsync<DuckDBException>(async () => await connection.ExecuteQueryFirstAsync<CompleteTable>("SELECT * FROM \"CompleteTable\" WHERE Id = $Id;").ConfigureAwait(false)).ConfigureAwait(false);
+
+                // DuckDB.NET's own PreparedStatement.BindParameters() compares the supplied parameter
+                // count against the statement's expected parameter count *before* ever calling into the
+                // native binder, and throws a plain System.InvalidOperationException ("Invalid number of
+                // parameters. Expected 1, got 0") directly from C# when too few are supplied - it never
+                // gets far enough to raise a DuckDBException for this specific case (verified against
+                // DuckDB.NET's PreparedStatement.cs source). That's different from a named-but-mismatched
+                // parameter (e.g. wrong casing/prefix), which DOES reach the native bind/execute step and
+                // surfaces as a DuckDBException instead.
+                await Assert.ThrowsAsync<System.InvalidOperationException>(async () => await connection.ExecuteQueryFirstAsync<CompleteTable>("SELECT * FROM \"CompleteTable\" WHERE Id = $Id;").ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 

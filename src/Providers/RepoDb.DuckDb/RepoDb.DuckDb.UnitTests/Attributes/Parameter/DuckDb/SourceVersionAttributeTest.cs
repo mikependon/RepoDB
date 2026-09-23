@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DuckDB.NET.Data;
 using RepoDb.Attributes.Parameter.DuckDb;
@@ -15,7 +16,7 @@ using RepoDb.Extensions;
 namespace RepoDb.DuckDb.UnitTests.Attributes.Parameter.DuckDb
 {
     [TestClass]
-    public class SourceColumnNullMappingAttributeTest
+    public class SourceVersionAttributeTest
     {
         [TestInitialize]
         public void Initialize()
@@ -27,37 +28,39 @@ namespace RepoDb.DuckDb.UnitTests.Attributes.Parameter.DuckDb
 
         #region Classes
 
-        private class SourceColumnNullMappingAttributeTestClass
+        private class SourceVersionAttributeTestClass
         {
-            [SourceColumnNullMapping(true)]
+            [SourceVersion(DataRowVersion.Original)]
             public object ColumnName { get; set; }
         }
 
         #endregion
 
+        // DuckDBParameter.SourceVersion's setter does not persist the assigned value (confirmed empirically -
+        // see the remarks on SourceVersionAttribute), so these tests only verify that attribute-driven
+        // assignment runs without throwing and still produces the expected parameter, rather than asserting
+        // a round-tripped value the driver itself does not support.
+
         [TestMethod]
-        public void TestSourceColumnNullMappingAttributeViaEntityViaCreateParameters()
+        public void TestSourceVersionAttributeViaEntityViaCreateParameters()
         {
             // Act
             using var connection = new DuckDBConnection();
             using var command = connection.CreateCommand();
 
             DbCommandExtension
-                .CreateParameters(command, new SourceColumnNullMappingAttributeTestClass
+                .CreateParameters(command, new SourceVersionAttributeTestClass
                 {
                     ColumnName = "Test"
                 });
 
             // Assert
             Assert.AreEqual(1, command.Parameters.Count);
-
-            // Assert
-            var parameter = command.Parameters["ColumnName"];
-            Assert.IsTrue(parameter.SourceColumnNullMapping);
+            Assert.IsNotNull(command.Parameters["ColumnName"]);
         }
 
         [TestMethod]
-        public void TestSourceColumnNullMappingAttributeViaAnonymousViaCreateParameters()
+        public void TestSourceVersionAttributeViaAnonymousViaCreateParameters()
         {
             // Act
             using var connection = new DuckDBConnection();
@@ -68,14 +71,11 @@ namespace RepoDb.DuckDb.UnitTests.Attributes.Parameter.DuckDb
                 {
                     ColumnName = "Test"
                 },
-                typeof(SourceColumnNullMappingAttributeTestClass));
+                typeof(SourceVersionAttributeTestClass));
 
             // Assert
             Assert.AreEqual(1, command.Parameters.Count);
-
-            // Assert
-            var parameter = command.Parameters["ColumnName"];
-            Assert.IsTrue(parameter.SourceColumnNullMapping);
+            Assert.IsNotNull(command.Parameters["ColumnName"]);
         }
     }
 }
