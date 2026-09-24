@@ -182,7 +182,7 @@ If your organization is evaluating or adopting RepoDB for production use, keep t
 - **🔒 Security is best-effort, not SLA-backed** — No dedicated security team or response SLA. See our [Security Policy](SECURITY.md) before security-sensitive adoption.
 - **🤝 Understand our contributions and support policy** — Maintained by one individual; support is free but follows a documented [support policy](SUPPORT_POLICY.md), not an enterprise SLA.
 - **🚌 Factor in the bus factor** — No formal [governance](SUPPORT_POLICY.md#governance) yet. Weigh single-maintainer risk in your planning.
-- **🔢 No formal versioning/breaking-change policy** — Only the latest release gets fixes (see [Security Policy](SECURITY.md#-supported-versions)). Pin exact versions and review release notes before upgrading.
+- **🔢 Versioning follows a documented policy** — See our [Versioning Policy](VERSIONING_POLICY.md) for what `MAJOR`/`MINOR`/`PATCH` and pre-release builds mean. Only the latest release gets fixes (see [Security Policy](SECURITY.md#-supported-versions)). Pin exact versions and review release notes before upgrading.
 
 ## Contributions
 
