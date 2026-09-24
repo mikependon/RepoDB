@@ -94,9 +94,15 @@ We want the .NET community to understand this library's limitations before using
 - DuckDB
   - [No Native Auto-Increment](#no-native-auto-increment)
   - [GetScopeIdentity Not Supported](#getscopeidentity-not-supported)
-  - [TIME / DATE / BLOB Require PropertyHandlers, and Only Reach Strongly-Typed Entities](#time--date--blob-require-propertyhandlers-and-only-reach-strongly-typed-entities)
+  - [Merge Requires a UNIQUE/PRIMARY KEY Constraint on the Qualifiers](#merge-requires-a-uniqueprimary-key-constraint-on-the-qualifiers)
+  - [TIME / DATE / BLOB Require PropertyHandlers](#time--date--blob-require-propertyhandlers)
+  - [Default Type-Level PropertyHandlers Are Process-Wide](#default-type-level-propertyhandlers-are-process-wide)
   - [INTERVAL With a Month/Year Component Is Unsupported](#interval-with-a-monthyear-component-is-unsupported)
+  - [HUGEINT / UHUGEINT Map to BigInteger](#hugeint--uhugeint-map-to-biginteger)
+  - [Raw SQL Uses `$name` Parameter Placeholders](#raw-sql-uses-name-parameter-placeholders)
   - [No Spatial/Geometry Support](#no-spatialgeometry-support)
+  - [Embedded Engine: Single-Writer File Access and Optimistic Transactions](#embedded-engine-single-writer-file-access-and-optimistic-transactions)
+  - [Requires .NET 8.0 or Later](#requires-net-80-or-later)
 
 ## Core
 
@@ -1440,7 +1446,23 @@ This is not reachable in practice: `RepoDb.Core` only falls back to `GetScopeIde
 
 None needed for `Insert`/`InsertAll`/`Merge`/`MergeAll` — identity retrieval already works via `RETURNING`. Avoid calling `IDbHelper.GetScopeIdentity`/`GetScopeIdentityAsync` directly against a `DuckDBConnection`.
 
-### TIME / DATE / BLOB Require PropertyHandlers, and Only Reach Strongly-Typed Entities
+### Merge Requires a UNIQUE/PRIMARY KEY Constraint on the Qualifiers
+
+DuckDB has no `MERGE` statement in the dialect `DuckDbStatementBuilder` targets, so `CreateMerge`/`CreateMergeAll` compile to an upsert instead:
+
+```sql
+INSERT INTO "Table" (...) VALUES (...)
+ON CONFLICT ("Qualifier1", ...) DO UPDATE SET "Column" = $Column, ...
+RETURNING "Id" AS "Result" ;
+```
+
+`ON CONFLICT (...)` is only valid when the listed columns exactly match a `PRIMARY KEY` or `UNIQUE` constraint on the target table. That makes RepoDB's usual "merge on any set of qualifier fields" behavior narrower here: `Merge`/`MergeAll` with custom `qualifiers` that are not backed by such a constraint is rejected by DuckDB's binder rather than falling back to an `UPDATE`-then-`INSERT`. Separately, when every merged field is also a qualifier, the `DO UPDATE SET` list is empty and the generated statement is not valid SQL.
+
+**Alternative Solution**
+
+Merge on the primary key (the default), or add a `UNIQUE` constraint covering exactly the qualifier columns you pass. Always include at least one non-qualifier field in the merged entity. For a qualifier set that cannot be made unique, use `Exists` + `Update`/`Insert` yourself.
+
+### TIME / DATE / BLOB Require PropertyHandlers
 
 `DuckDB.NET.Data` returns its own native/BCL types for three SQL types that have no direct match against the CLR type RepoDB otherwise expects on a mapped entity property:
 
@@ -1450,21 +1472,58 @@ None needed for `Insert`/`InsertAll`/`Merge`/`MergeAll` — identity retrieval a
 | `DATE` | `System.DateOnly` | `DateTime` / `DateTime?` | `DuckDbDateOnlyToDateTimePropertyHandler` / `DuckDbDateOnlyToNullableDateTimePropertyHandler` |
 | `BLOB` | An unmanaged `Stream` (read) | `byte[]` | `DuckDbStreamToByteArrayPropertyHandler` |
 
-Without the matching handler, reading a `TIME`/`DATE`/`BLOB` column into a `TimeSpan`/`DateTime`/`byte[]`-typed property throws inside RepoDB's compiled reader (`Failed to convert the value expression into its destination .NET CLR Type ...`), and writing a plain `TimeSpan` back into a `TIME` column throws inside the driver itself (`Unable to cast object of type 'System.TimeSpan' to type 'DuckDB.NET.Native.DuckDBTimeOnly'`). All five handlers live under `RepoDb.PropertyHandlers.DuckDb` and are opt-in — attach one via `[PropertyHandler(typeof(...))]` on the property, or `PropertyHandlerMapper.Add<TEntity, THandler>(e => e.Column, new THandler(), true)`, the same way `RepoDb.DuckDb.IntegrationTests`' `Setup/Database.cs` wires them onto `CompleteTable`/`NonIdentityCompleteTable`'s `ColumnTime`/`ColumnDate`/`ColumnBlob*` properties.
+Without the matching handler, reading a `TIME`/`DATE`/`BLOB` column into a `TimeSpan`/`DateTime`/`byte[]`-typed property throws inside RepoDB's compiled reader (`Failed to convert the value expression into its destination .NET CLR Type ...`), and writing a plain `TimeSpan` back into a `TIME` column throws inside the driver itself (`Unable to cast object of type 'System.TimeSpan' to type 'DuckDB.NET.Native.DuckDBTimeOnly'`).
 
-Because a `PropertyHandler` mapping is attached to a specific CLR property, it has no effect on schema-less access paths that never go through that property — an `ExpandoObject`/`IDictionary<string, object>`-based `Insert`/`Update`/`Query` (the `object param` / dynamic overloads, or any `...ViaTableName` call given a plain dictionary), or a purely dynamic `QueryAll("TableName")` — all still see the driver's raw `TimeOnly`/`DateOnly`/`Stream` value on read, and still fail to bind a plain `TimeSpan` on write. There is no type-level equivalent that reaches these paths without risking cross-provider interference in a process that also talks to another database.
+`UseDuckDb()` registers two of the five handlers at the **type level** by default — `DuckDbStreamToByteArrayPropertyHandler` for `byte[]` and `DuckDbTimeOnlyToTimeSpanPropertyHandler` for `TimeSpan` — and `UseDuckDb(false)` skips them. This covers the write direction, including the dynamic/`ExpandoObject`/table-name-only paths that have no `ClassProperty` to hang a per-property handler on and fall back to the type-level mapping. It does **not** fully cover reads: on the read path, RepoDB looks up a type-level handler by the CLR type the *data reader reports* for the column (`Compiler.GetHandlerInstance`), not by the property's type — and DuckDB.NET reports `TIME` as `TimeOnly`, `DATE` as `DateOnly`, and `BLOB` as `Stream`, none of which match the `TimeSpan`/`byte[]` registrations. Purely dynamic reads (`QueryAll("TableName")`, `ExecuteQuery` into `dynamic`) never consult property handlers at all and always see the raw `TimeOnly`/`DateOnly`/`Stream` value.
+
+The remaining three handlers — both `DateOnly` handlers and `DuckDbTimeOnlyToNullableTimeSpanPropertyHandler` — are never registered automatically. All five live under `RepoDb.PropertyHandlers.DuckDb`.
 
 **Alternative Solution**
 
-Use a strongly-typed entity class (with the appropriate `[PropertyHandler(...)]` attribute, or an equivalent `PropertyHandlerMapper.Add` call made once at startup) for any table with `TIME`, `DATE`, or `BLOB` columns. Avoid the dynamic/`ExpandoObject`/table-name-only overloads for those specific columns; if a dynamic path is unavoidable, convert the raw `TimeOnly`/`DateOnly`/`Stream` value yourself after the call returns, or bind the parameter directly on a raw `DuckDBCommand` for the write direction.
+Use a strongly-typed entity class and attach the handler per property — `[PropertyHandler(typeof(...))]`, or `PropertyHandlerMapper.Add<TEntity, THandler>(e => e.Column, new THandler(), true)` once at startup — for every `TIME`, `DATE`, and `BLOB` column, the same way `RepoDb.DuckDb.IntegrationTests`' `Setup/Database.cs` wires them onto `CompleteTable`/`NonIdentityCompleteTable`. If a dynamic read path is unavoidable, convert the raw `TimeOnly`/`DateOnly`/`Stream` value yourself after the call returns.
+
+### Default Type-Level PropertyHandlers Are Process-Wide
+
+`PropertyHandlerMapper` is global to the process and is keyed only by CLR type — not by connection type — so the two default registrations made by `UseDuckDb()` (see [above](#time--date--blob-require-propertyhandlers)) apply to **every** `TimeSpan` and `byte[]` RepoDB handles afterwards, for every provider, not just DuckDB:
+
+- **`TimeSpan` writes** — every `TimeSpan` parameter value is converted into DuckDB.NET's native `DuckDBTimeOnly` struct before binding. Another provider's driver (a SQL Server/MySQL `TIME`, a PostgreSQL `interval`) receives a struct it has no binding for, and a DuckDB `INTERVAL` column receives a time-of-day value rather than an interval.
+- **`TimeSpan` reads** — any column whose reader-reported type is `TimeSpan` (SQL Server/MySQL `TIME`, PostgreSQL `interval`, and DuckDB's own `INTERVAL`) is routed into `DuckDbTimeOnlyToTimeSpanPropertyHandler.Get`, which returns `default(TimeSpan)` (`00:00:00`) for any input that is not a `TimeOnly`. The value is silently zeroed, with no exception.
+- **Out-of-range `TimeSpan`** — the `TIME` handlers build `DuckDBTimeOnly` from `Hours`/`Minutes`/`Seconds` cast to `byte`, so the `Days` component of a `TimeSpan` of 24 hours or more is silently dropped, and a negative `TimeSpan` wraps into an invalid value.
+- **`byte[]`** — `DuckDbStreamToByteArrayPropertyHandler.Get` returns `Array.Empty<byte>()` for any input that is neither a `byte[]` nor a `Stream`, so a `NULL` that reaches it can come back as an empty array rather than `null`.
+
+This has been derived from reading the source; there is no integration test for an `INTERVAL` column or for a process that uses DuckDB alongside another provider.
+
+**Alternative Solution**
+
+In any process that also uses another RepoDB provider, or that maps `INTERVAL` columns to `TimeSpan`, call `GlobalConfiguration.Setup().UseDuckDb(false)` and attach the DuckDB handlers per property instead (see [above](#time--date--blob-require-propertyhandlers)).
 
 ### INTERVAL With a Month/Year Component Is Unsupported
 
-DuckDB's `INTERVAL` type stores a `(months, days, microseconds)` triple. `DuckDbTypeNameToClientTypeResolver` maps it to `TimeSpan`, which only has room for the `days`/`microseconds` component. A month/year-free interval (e.g. `INTERVAL '3 days 4 hours'`) round-trips as a `TimeSpan` without issue, but the DuckDB.NET driver itself throws inside its own `GetValue()` when reading back an interval that carries a non-zero `months` component (e.g. `INTERVAL '1 year'` or `INTERVAL '2 months'`) — the exception happens before any RepoDB code (including a `PropertyHandler`) runs, so this cannot be worked around at the RepoDB layer.
+DuckDB's `INTERVAL` type stores a `(months, days, microseconds)` triple. `DuckDbTypeNameToClientTypeResolver` maps it to `TimeSpan`, which only has room for the `days`/`microseconds` component. The DuckDB.NET driver itself throws inside its own `GetValue()` when reading back an interval that carries a non-zero `months` component (e.g. `INTERVAL '1 year'` or `INTERVAL '2 months'`) — the exception happens before any RepoDB code (including a `PropertyHandler`) runs, so this cannot be worked around at the RepoDB layer.
+
+A month/year-free interval (e.g. `INTERVAL '3 days 4 hours'`) is otherwise representable as a `TimeSpan`, but with the default type-level handlers enabled it is read back as `TimeSpan.Zero` and cannot be written correctly (see [Default Type-Level PropertyHandlers Are Process-Wide](#default-type-level-propertyhandlers-are-process-wide)).
 
 **Alternative Solution**
 
-Avoid storing month/year-bearing `INTERVAL` values in columns read through RepoDB, or read them with a raw SQL cast to something else (e.g. `EXTRACT` the components you need in the query itself) rather than selecting the `INTERVAL` column directly.
+Avoid storing month/year-bearing `INTERVAL` values in columns read through RepoDB, or read them with a raw SQL cast to something else (e.g. `EXTRACT` the components you need in the query itself) rather than selecting the `INTERVAL` column directly. For month/year-free intervals, use `UseDuckDb(false)`.
+
+### HUGEINT / UHUGEINT Map to BigInteger
+
+`DuckDbTypeNameToClientTypeResolver` maps `HUGEINT`/`UHUGEINT` to `System.Numerics.BigInteger`, which is what DuckDB.NET returns for them. `BigInteger` does not implement `IConvertible`, so any RepoDB path that converts a scalar with `Convert.ChangeType` (e.g. `ExecuteScalar<long>`, `Max<T>`/`Min<T>` over a `HUGEINT` column) throws `InvalidCastException`.
+
+`DuckDbStatementBuilder` works around this for `Sum`/`SumAll` only: DuckDB's `SUM()` over *any* integer column returns a `HUGEINT`, so the builder emits `SUM(field) + CAST(0 AS DECIMAL(38, 0))` to promote the result to a `DECIMAL(38, 0)` (read as `decimal`). `Max`/`Min`/`Average` and raw `ExecuteScalar` calls get no such treatment.
+
+**Alternative Solution**
+
+Prefer `BIGINT`/`UBIGINT` columns unless you need the 128-bit range. Otherwise, map `HUGEINT` properties as `BigInteger`, and for scalar results either request `ExecuteScalar<BigInteger>`/`ExecuteScalar<object>` or `CAST` the expression to `DECIMAL(38, 0)` in raw SQL.
+
+### Raw SQL Uses `$name` Parameter Placeholders
+
+`DuckDbDbSetting.ParameterPrefix` is `$`, not `@`. Every statement RepoDB generates uses `$name`, but any raw SQL passed to `ExecuteQuery`/`ExecuteNonQuery`/`ExecuteScalar`/`ExecuteReader`/`QueryMultiple` must use `$name` too — `@name` placeholders will not bind. `DuckDbDbHelper.DynamicHandler` also strips the leading `$` from every `DuckDBParameter.ParameterName` RepoDB creates, because DuckDB.NET expects the bare name; parameters you construct yourself and pass through must likewise be named without the sigil.
+
+**Alternative Solution**
+
+Write raw SQL with `$name` placeholders (e.g. `WHERE "Id" = $Id`) when porting queries from other providers.
 
 ### No Spatial/Geometry Support
 
@@ -1473,3 +1532,25 @@ Unlike `RepoDb.MySqlConnector`/`RepoDb.MariaDb` (which ship a `PropertyHandler` 
 **Alternative Solution**
 
 Load the `spatial` extension and interact with geometry columns via raw SQL (`ExecuteQuery`/`ExecuteNonQuery` with `ST_*` functions and a `VARCHAR`/`BLOB` (WKT/WKB) representation) rather than a mapped entity property, until first-class support is added.
+
+### Embedded Engine: Single-Writer File Access and Optimistic Transactions
+
+DuckDB runs in-process; there is no server, and the connection string is a file path (`Data Source=my.db`) or `Data Source=:memory:`. A database file can be opened read-write by only one process at a time — a second process (e.g. another instance of a web app, or a test runner in parallel with the app) fails to open it. Within one process, concurrent transactions use optimistic concurrency control: two transactions that modify the same row conflict, and the later one fails at commit rather than waiting on a lock. Each `:memory:` connection is also its own, separate database.
+
+`DuckDbDbSetting` reports `IsTransactionSupported = true`, and RepoDB's transaction handling works as usual — but RepoDB does not retry conflicting commits for you.
+
+**Alternative Solution**
+
+Use DuckDB for analytical/embedded workloads with one writing process. Retry transactions that fail with a conflict, keep write transactions short, and share a single file-backed database (not `:memory:`) when multiple connections need to see the same data.
+
+### Requires .NET 8.0 or Later
+
+`DuckDB.NET.Data.Full` ships no `netstandard2.0` build, so `RepoDb.DuckDb` targets `net8.0`/`net9.0`/`net10.0` only — unlike most other providers in this repository, it cannot be used from .NET Framework or older .NET (Core) versions.
+
+**Alternative Solution**
+
+None within RepoDB — upgrade the consuming project to .NET 8.0 or later.
+
+### Verification Status
+
+`RepoDb.DuckDb` has unit test coverage (`DbSettingTest.cs`, `QuotationTest.cs`, `MappingTest.cs`, `StatementBuilderTest.cs`, plus attribute/resolver coverage) and an integration test suite (`RepoDb.DuckDb.IntegrationTests`, including operation, transaction, enum, and property-handler tests) run against a file-backed DuckDB database by the `build-duckdb`/`build-pr-duckdb` CI workflows — no database container is needed. The integration suite registers per-property handlers on its own models, so it does not exercise the [process-wide default handlers](#default-type-level-propertyhandlers-are-process-wide) against `INTERVAL` columns or alongside another provider, and it runs single-process, single-writer.
