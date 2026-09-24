@@ -43,7 +43,7 @@ namespace RepoDb.DuckDb.IntegrationTests.PropertyHandlers
                 var entity = new DuckDbTimeEntity { ColumnTime = new TimeSpan(1, 2, 3) };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<DuckDbTimeEntity>(e => e.Id == id).First();
 
                 // Assert
@@ -90,7 +90,7 @@ namespace RepoDb.DuckDb.IntegrationTests.PropertyHandlers
                 var entity = new DuckDbDateEntity { ColumnDate = new DateTime(2026, 9, 20) };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<DuckDbDateEntity>(e => e.Id == id).First();
 
                 // Assert
@@ -137,7 +137,7 @@ namespace RepoDb.DuckDb.IntegrationTests.PropertyHandlers
                 var entity = new DuckDbBlobEntity { ColumnBlob = new byte[] { 9, 8, 7, 6 } };
 
                 // Act
-                var id = Convert.ToInt64(connection.Insert(entity));
+                var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
                 var result = connection.Query<DuckDbBlobEntity>(e => e.Id == id).First();
 
                 // Assert
