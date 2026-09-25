@@ -965,10 +965,9 @@ namespace RepoDb
                 return null;
 
             var tempTableName = CreateBulkInsertTempTableName(tableName, usePhysicalPseudoTempTable, dbSetting);
-            var sql = GetCreateTemporaryTableSqlText(tableName, tempTableName, fields, dbSetting, true);
-
+            var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
+            var sql = GetCreateTemporaryTableSqlText(tableName, tempTableName, fields, identityField, dbSetting, true);
             connection.ExecuteNonQuery(sql, transaction: transaction, trace: trace);
-
             return tempTableName;
         }
 
@@ -987,10 +986,9 @@ namespace RepoDb
                 return null;
 
             var tempTableName = CreateBulkInsertTempTableName(tableName, usePhysicalPseudoTempTable, dbSetting);
-            var sql = GetCreateTemporaryTableSqlText(tableName, tempTableName, fields, dbSetting, true);
-
+            var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false))?.GetIdentity()?.AsField();
+            var sql = GetCreateTemporaryTableSqlText(tableName, tempTableName, fields, identityField, dbSetting, true);
             await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false);
-
             return tempTableName;
         }
 
