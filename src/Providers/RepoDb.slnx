@@ -13,6 +13,11 @@
     <Project Path="RepoDb.ClickHouse.BulkOperations/RepoDb.ClickHouse.BulkOperations/RepoDb.ClickHouse.BulkOperations.csproj" />
     <Project Path="RepoDb.ClickHouse.BulkOperations/RepoDb.ClickHouse.BulkOperations.IntegrationTests/RepoDb.ClickHouse.BulkOperations.IntegrationTests.csproj" />
   </Folder>
+  <Folder Name="/CockroachDB/Core/">
+    <Project Path="RepoDb.CockroachDB/RepoDb.CockroachDB/RepoDb.CockroachDB.csproj" />
+    <Project Path="RepoDb.CockroachDB/RepoDb.CockroachDB.UnitTests/RepoDb.CockroachDB.UnitTests.csproj" />
+    <Project Path="RepoDb.CockroachDB/RepoDb.CockroachDB.IntegrationTests/RepoDb.CockroachDB.IntegrationTests.csproj" />
+  </Folder>
   <Folder Name="/Db2/Core/">
     <Project Path="RepoDb.Db2/RepoDb.Db2/RepoDb.Db2.csproj" />
     <Project Path="RepoDb.Db2/RepoDb.Db2.UnitTests/RepoDb.Db2.UnitTests.csproj" />

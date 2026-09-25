@@ -1,0 +1,64 @@
+﻿#region Copyright Attributions
+
+// Copyright (c) 2026 Michael Camara Pendon.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+using RepoDb.Extensions;
+using RepoDb.Interfaces;
+using System;
+using System.Data;
+using System.Globalization;
+
+namespace RepoDb.Resolvers
+{
+    /// <summary>
+    /// A class that is being used to resolve the <see cref="Field"/> name conversion for CockroachDB.
+    /// </summary>
+    public class CockroachDbConvertFieldResolver : DbConvertFieldResolver
+    {
+        /// <summary>
+        /// Creates a new instance of <see cref="CockroachDbConvertFieldResolver"/> class.
+        /// </summary>
+        public CockroachDbConvertFieldResolver()
+            : this(new ClientTypeToDbTypeResolver(),
+                 new DbTypeToCockroachDbStringNameResolver())
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="CockroachDbConvertFieldResolver"/> class.
+        /// </summary>
+        public CockroachDbConvertFieldResolver(IResolver<Type, DbType?> dbTypeResolver,
+            IResolver<DbType, string> stringNameResolver)
+            : base(dbTypeResolver,
+                  stringNameResolver)
+        { }
+
+        #region Methods
+
+        /// <summary>
+        /// Returns the converted name of the <see cref="Field"/> object for CockroachDB.
+        /// </summary>
+        /// <param name="field">The instance of the <see cref="Field"/> to be converted.</param>
+        /// <param name="dbSetting">The current in used <see cref="IDbSetting"/> object.</param>
+        /// <returns>The converted name of the <see cref="Field"/> object for CockroachDB.</returns>
+        public override string Resolve(Field field,
+            IDbSetting dbSetting)
+        {
+            if (field?.Type != null)
+            {
+                var dbType = DbTypeResolver.Resolve(field.Type);
+                if (dbType != null)
+                {
+                    var dbTypeName = StringNameResolver.Resolve(dbType.Value).ToUpper(CultureInfo.CurrentCulture);
+                    return string.Concat("CAST(", field.Name.AsField(dbSetting), " AS ", dbTypeName, ")");
+                }
+            }
+            return field?.Name?.AsQuoted(true, true, dbSetting);
+        }
+
+        #endregion
+    }
+}

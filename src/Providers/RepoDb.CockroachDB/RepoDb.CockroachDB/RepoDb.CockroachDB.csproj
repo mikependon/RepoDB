@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Title>RepoDb.CockroachDB</Title>
+    <AssemblyName>RepoDb.CockroachDB</AssemblyName>
+    <TargetFrameworks>net8;net10.0</TargetFrameworks>
+    <Nullable>annotations</Nullable>
+    <Description>A hybrid .NET ORM library for CockroachDB.</Description>
+    <PackageTags>orm hybrid-orm micro-orm cockroachdb cockroach</PackageTags>
+    <RepositoryUrl>https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.CockroachDB</RepositoryUrl>
+    <PackageIcon>CockroachDB.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReleaseNotes>http://repodb.net/release/cockroachdb</PackageReleaseNotes>
+    <PackageProjectUrl>https://repodb.net/tutorial/get-started-cockroachdb</PackageProjectUrl>
+    <!--
+      Pins the version this project is stamped as when it is a ProjectReference dependency of another
+      package (e.g. RepoDb.CockroachDB.BulkOperations), independently of the consuming package's own
+      -p:Version. Pass -p:RepoDbCockroachDbVersion=<version> to set it. PackageVersion is used (not
+      Version) because it is not overridden by the global Version property.
+    -->
+    <PackageVersion Condition="'$(RepoDbCockroachDbVersion)' != ''">$(RepoDbCockroachDbVersion)</PackageVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="RepoDb.Connector.CockroachDb" Version="0.0.1-alpha1" />
+    <PackageReference Include="System.Text.Json" Version="10.0.9" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <PackageReference Remove="System.Linq.Async" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />
+    <None Include="..\README.md" Pack="True" PackagePath="\" />
+    <None Include="..\CockroachDB.png" Pack="True" PackagePath="\" />
+  </ItemGroup>
+</Project>
