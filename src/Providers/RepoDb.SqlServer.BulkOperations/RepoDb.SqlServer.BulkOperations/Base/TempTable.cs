@@ -24,13 +24,27 @@ namespace RepoDb
     {
         #region CreateTemporaryTable
 
+        /// <summary>
+        /// Composes the <c>SELECT ... INTO</c> statement that creates the temporary (pseudo) table.
+        /// </summary>
+        /// <remarks>
+        /// A plain <c>SELECT ... INTO</c> makes the staged identity column an <c>IDENTITY</c> column too, so
+        /// <see cref="SqlBulkCopy"/> (without <see cref="SqlBulkCopyOptions.KeepIdentity"/>) discards the caller's
+        /// values and generates new ones, and the qualifier join then matches the wrong rows (#1351).
+        /// When <paramref name="identityField"/> is staged, the statement adds a <c>UNION ALL</c> branch
+        /// with <c>NULLIF(identity, identity)</c>, so the staged column keeps its exact type but is a
+        /// plain, nullable column.
+        /// </remarks>
         private static string GetCreateTemporaryTableSqlText(string tableName,
             string tempTableName,
             IEnumerable<Field> fields,
+            Field identityField,
             IDbSetting dbSetting,
             bool isReturnIdentity)
         {
             var builder = new QueryBuilder();
+            var hasIdentityField = identityField != null &&
+                fields?.Any(field => string.Equals(field.Name, identityField.Name, StringComparison.OrdinalIgnoreCase)) == true;
 
             // Compose the statement
             builder
@@ -51,8 +65,38 @@ namespace RepoDb
                 .From()
                 .TableNameFrom(tableName, dbSetting)
                 .Where()
-                .WriteText("(1 = 0)")
-                .End();
+                .WriteText("(1 = 0)");
+
+            // Strip the IDENTITY property of the staged identity column
+            if (hasIdentityField)
+            {
+                var unionFields = fields
+                    .Select(field =>
+                    {
+                        var quotedName = field.Name.AsQuoted(dbSetting);
+                        return string.Equals(field.Name, identityField.Name, StringComparison.OrdinalIgnoreCase) ?
+                            $"NULLIF({quotedName}, {quotedName})" : quotedName;
+                    })
+                    .Join(", ");
+
+                builder
+                    .WriteText("UNION ALL")
+                    .Select()
+                    .WriteText(unionFields);
+
+                if (isReturnIdentity)
+                {
+                    builder.WriteText(", CONVERT(INT, NULL)");
+                }
+
+                builder
+                    .From()
+                    .TableNameFrom(tableName, dbSetting)
+                    .Where()
+                    .WriteText("(1 = 0)");
+            }
+
+            builder.End();
 
             // Return the text
             return builder.ToString();
@@ -70,7 +114,8 @@ namespace RepoDb
             SqlTransaction transaction,
             ITrace trace)
         {
-            var sql = GetCreateTemporaryTableSqlText(tableName, tempTableName, fields, dbSetting, isReturnIdentity);
+            var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
+            var sql = GetCreateTemporaryTableSqlText(tableName, tempTableName, fields, identityField, dbSetting, isReturnIdentity);
             connection.ExecuteNonQuery(sql, transaction: transaction, trace: trace);
         }
 
@@ -87,7 +132,8 @@ namespace RepoDb
             ITrace trace,
             CancellationToken cancellationToken)
         {
-            var sql = GetCreateTemporaryTableSqlText(tableName, tempTableName, fields, dbSetting, isReturnIdentity);
+            var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false))?.GetIdentity()?.AsField();
+            var sql = GetCreateTemporaryTableSqlText(tableName, tempTableName, fields, identityField, dbSetting, isReturnIdentity);
             await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
