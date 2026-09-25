@@ -103,6 +103,11 @@ We want the .NET community to understand this library's limitations before using
   - [No Spatial/Geometry Support](#no-spatialgeometry-support)
   - [Embedded Engine: Single-Writer File Access and Optimistic Transactions](#embedded-engine-single-writer-file-access-and-optimistic-transactions)
   - [Requires .NET 8.0 or Later](#requires-net-80-or-later)
+  - [Bulk Operations: Unmapped Columns Are Staged Twice](#bulk-operations-unmapped-columns-are-staged-twice)
+  - [Bulk Operations: Async Methods Run Synchronously](#bulk-operations-async-methods-run-synchronously)
+  - [Bulk Operations Staging Table](#bulk-operations-staging-table-8)
+  - [Bulk Insert and Merge Identity Correlation Relies on Insertion Order](#bulk-insert-and-merge-identity-correlation-relies-on-insertion-order)
+  - [Verification Status](#verification-status-8)
 
 ## Core
 
@@ -1415,7 +1420,7 @@ The `build-enterprisedb`/`build-enterprisedb-bulk` CI workflows are configured t
 
 ## DuckDB
 
-These limitations are specific to the [RepoDb.DuckDb](https://www.nuget.org/packages/RepoDb.DuckDb) package, on top of the [Core](#core) limitations above. DuckDB is an embedded, in-process analytical database with no server component, accessed through the `DuckDB.NET.Data.Full` ADO.NET driver — several of the caveats below stem from that driver returning its own native structs (rather than the equivalent BCL type) for a few DuckDB SQL types.
+These limitations are specific to the [RepoDb.DuckDb](https://www.nuget.org/packages/RepoDb.DuckDb) and [RepoDb.DuckDb.BulkOperations](https://www.nuget.org/packages/RepoDb.DuckDb.BulkOperations) packages, on top of the [Core](#core) limitations above. DuckDB is an embedded, in-process analytical database with no server component, accessed through the `DuckDB.NET.Data.Full` ADO.NET driver — several of the caveats below stem from that driver returning its own native structs (rather than the equivalent BCL type) for a few DuckDB SQL types.
 
 ### No Native Auto-Increment
 
@@ -1551,6 +1556,51 @@ Use DuckDB for analytical/embedded workloads with one writing process. Retry tra
 
 None within RepoDB — upgrade the consuming project to .NET 8.0 or later.
 
+### Bulk Operations: Unmapped Columns Are Staged Twice
+
+Every bulk load in `RepoDb.DuckDb.BulkOperations` goes through `DuckDbBulkAppender`, which writes rows with DuckDB.NET's native `DuckDBAppender`. The appender has no column-list API: every appended row must supply a value for every column of the target table, in table order.
+
+`DuckDBAppender.AppendDefault()` would normally fill the columns that are not mapped, but in `DuckDB.NET.Data.Full` 1.5.5 it is not usable. Against a column with a `nextval(...)` default (the [auto-increment emulation](#no-native-auto-increment) used for identity columns), it crashes the process with an access violation inside the native appender. Against a column with a constant default, it writes a corrupted value into the preceding column.
+
+`DuckDbBulkAppender` therefore never calls `AppendDefault()`. When the mappings cover every column of the target table, rows are appended directly. Otherwise — most commonly a `BulkInsert` that leaves out the sequence-backed `Id` column — rows are appended into a session-private temporary table holding only the mapped columns, then copied with `INSERT INTO <table> (<columns>) SELECT <columns> FROM <temp> ORDER BY rowid`, so that DuckDB itself applies the column defaults. That second copy costs an extra pass over the data.
+
+**Alternative Solution**
+
+Map every column of the target table (including an explicit identity value) to take the direct append path. Revisit this once a DuckDB.NET release fixes `AppendDefault()`.
+
+### Bulk Operations: Async Methods Run Synchronously
+
+DuckDB is an in-process engine, and `DuckDBAppender` has no asynchronous API. `DuckDbBulkAppender.WriteToServerAsync` performs the same synchronous append as `WriteToServer` and returns a completed task, checking the `CancellationToken` once per row. The async bulk methods do not free the calling thread while rows are being appended.
+
+**Alternative Solution**
+
+None needed for correctness. Wrap the call in `Task.Run` if a UI or request thread must not be blocked during a large bulk load.
+
+### Bulk Operations Staging Table
+
+`BulkInsert` (with `ReturnIdentity`), `BulkMerge`, `BulkUpdate`, `BulkDelete`, and `BulkDeleteByKey` stage rows into a pseudo table named deterministically from `{pseudoTableType}{tableName}{Operation}` (e.g. `MemoryPersonMerge`), created with `CREATE OR REPLACE [TEMP] TABLE ... AS SELECT ... LIMIT 0` and dropped at the end of every call. `DuckDbBulkImportPseudoTableType` has three values:
+
+- **`Auto`** *(default)* and **`Memory`** — a DuckDB `TEMP` table, private to the connection.
+- **`Physical`** — an ordinary table, visible to every connection on the same database.
+
+Two concurrent callers using `Physical` against the same target table share the same staging-table name, and `CREATE OR REPLACE` lets one silently replace the other's staged rows.
+
+**Alternative Solution**
+
+Keep the default `Auto`/`Memory` staging. Serialize `Physical` bulk operations against the same table.
+
+### Bulk Insert and Merge Identity Correlation Relies on Insertion Order
+
+`BulkInsert`/`BulkMerge` with `identityBehavior: ReturnIdentity` read the generated identity values back with `INSERT ... SELECT ... FROM <pseudo table> ORDER BY rowid RETURNING <identity>`, and assign each returned value positionally to the source entity or `DataRow`. `BulkMerge` first correlates matched rows through a `LEFT JOIN` snapshot keyed on the staging table's `rowid`, then inserts the unmatched rows the same way.
+
+This relies on DuckDB processing the ordered `SELECT` and emitting `RETURNING` rows in insertion order, which DuckDB does while its `preserve_insertion_order` setting is enabled (the default). It is not a documented guarantee of the `RETURNING` clause itself.
+
+**Alternative Solution**
+
+Leave `preserve_insertion_order` at its default (`true`) on connections used for `ReturnIdentity` bulk operations.
+
 ### Verification Status
 
 `RepoDb.DuckDb` has unit test coverage (`DbSettingTest.cs`, `QuotationTest.cs`, `MappingTest.cs`, `StatementBuilderTest.cs`, plus attribute/resolver coverage) and an integration test suite (`RepoDb.DuckDb.IntegrationTests`, including operation, transaction, enum, and property-handler tests) run against a file-backed DuckDB database by the `build-duckdb`/`build-pr-duckdb` CI workflows — no database container is needed. The integration suite registers per-property handlers on its own models, so it does not exercise the [process-wide default handlers](#default-type-level-propertyhandlers-are-process-wide) against `INTERVAL` columns or alongside another provider, and it runs single-process, single-writer.
+
+`RepoDb.DuckDb.BulkOperations` has an integration test suite (`BulkInsertTest.cs`/`BulkMergeTest.cs`/`BulkUpdateTest.cs`/`BulkDeleteTest.cs`/`BulkDeleteByKeyTest.cs`, 590 tests per target framework) that passes locally against a file-backed DuckDB database on `net8.0`, `net9.0`, and `net10.0`, and is run by the `build-duckdb-bulk`/`build-pr-duckdb-bulk` CI workflows. It has no unit test project asserting the `DuckDbText` SQL generation in isolation. The suite covers only `UUID`, `UTINYINT`, `TIMESTAMP`, `DECIMAL`, `DOUBLE`, `INTEGER`, and `VARCHAR` columns; other column types (e.g. `DATE`, `TIME`, `BLOB`, `HUGEINT`, `INTERVAL`) have not been exercised through `DuckDbBulkAppender`, and neither has the `Physical` staging path under concurrent writers.

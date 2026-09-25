@@ -68,5 +68,6 @@
     <InternalsVisibleTo Include="RepoDb.Vertica.BulkOperations" />
     <InternalsVisibleTo Include="RepoDb.SapHana.BulkOperations" />
     <InternalsVisibleTo Include="RepoDb.EnterpriseDb.BulkOperations" />
+    <InternalsVisibleTo Include="RepoDb.DuckDb.BulkOperations" />
   </ItemGroup>
 </Project>
