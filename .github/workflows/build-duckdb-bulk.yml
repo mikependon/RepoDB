@@ -1,0 +1,20 @@
+name: Build & Run Tests - RepoDb.DuckDb.BulkOperations (Push)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'src/Providers/RepoDb.Core/**'
+      - 'src/Providers/RepoDb.DuckDb/**'
+      - 'src/Providers/RepoDb.DuckDb.BulkOperations/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-duckdb-bulk.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: src/Providers/RepoDb.DuckDb.BulkOperations
+      solution-file: RepoDb.DuckDb.BulkOperations.sln
+      artifact-name: release-duckdb-bulk
+      db-engine: none
