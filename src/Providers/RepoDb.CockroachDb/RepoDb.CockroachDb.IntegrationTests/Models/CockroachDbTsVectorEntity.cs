@@ -14,14 +14,14 @@ using RepoDb.PropertyHandlers.CockroachDb;
 namespace RepoDb.CockroachDb.IntegrationTests.Models
 {
     /// <summary>
-    /// A minimal model that maps to the "PropertyHandler" table, used to test <see cref="TsVectorToStringPropertyHandler"/>.
+    /// A minimal model that maps to the "PropertyHandler" table, used to test <see cref="CockroachDbTsVectorToStringPropertyHandler"/>.
     /// </summary>
     [Map("PropertyHandler")]
     public class CockroachDbTsVectorEntity
     {
         public System.Int64 Id { get; set; }
 
-        [PropertyHandler(typeof(TsVectorToStringPropertyHandler))]
+        [PropertyHandler(typeof(CockroachDbTsVectorToStringPropertyHandler))]
         [CockroachDbType(CockroachDbType.TsVector)]
         public System.String ColumnTsVector { get; set; }
     }

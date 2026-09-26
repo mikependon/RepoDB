@@ -14,14 +14,14 @@ using RepoDb.PropertyHandlers.CockroachDb;
 namespace RepoDb.CockroachDb.IntegrationTests.Models
 {
     /// <summary>
-    /// A minimal model that maps to the "PropertyHandler" table, used to test <see cref="TsQueryToStringPropertyHandler"/>.
+    /// A minimal model that maps to the "PropertyHandler" table, used to test <see cref="CockroachDbTsQueryToStringPropertyHandler"/>.
     /// </summary>
     [Map("PropertyHandler")]
     public class CockroachDbTsQueryEntity
     {
         public System.Int64 Id { get; set; }
 
-        [PropertyHandler(typeof(TsQueryToStringPropertyHandler))]
+        [PropertyHandler(typeof(CockroachDbTsQueryToStringPropertyHandler))]
         [CockroachDbType(CockroachDbType.TsQuery)]
         public System.String ColumnTsQuery { get; set; }
     }

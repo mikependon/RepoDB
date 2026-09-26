@@ -18,7 +18,7 @@ using System.Linq;
 namespace RepoDb.MariaDb.IntegrationTests.PropertyHandlers
 {
     [TestClass]
-    public class TestGeometryToMySqlGeometryPropertyHandler
+    public class TestMariaDbConnectorGeometryToMySqlGeometryPropertyHandler
     {
         [TestInitialize]
         public void Initialize()
@@ -48,12 +48,12 @@ namespace RepoDb.MariaDb.IntegrationTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestGeometryToMySqlGeometryPropertyHandlerSetWithValue()
+        public void TestMariaDbConnectorGeometryToMySqlGeometryPropertyHandlerSetWithValue()
         {
             using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
-                var handler = new GeometryToMySqlGeometryPropertyHandler();
+                var handler = new MariaDbConnectorGeometryToMySqlGeometryPropertyHandler();
                 var geometry = MySqlGeometry.FromMySql(CreatePointBytes(1.5, 2.5));
 
                 // Act
@@ -66,12 +66,12 @@ namespace RepoDb.MariaDb.IntegrationTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestGeometryToMySqlGeometryPropertyHandlerSetWithNull()
+        public void TestMariaDbConnectorGeometryToMySqlGeometryPropertyHandlerSetWithNull()
         {
             using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
-                var handler = new GeometryToMySqlGeometryPropertyHandler();
+                var handler = new MariaDbConnectorGeometryToMySqlGeometryPropertyHandler();
 
                 // Act
                 var result = handler.Set(null, null);
@@ -82,12 +82,12 @@ namespace RepoDb.MariaDb.IntegrationTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestGeometryToMySqlGeometryPropertyHandlerGetWithGeometry()
+        public void TestMariaDbConnectorGeometryToMySqlGeometryPropertyHandlerGetWithGeometry()
         {
             using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
-                var handler = new GeometryToMySqlGeometryPropertyHandler();
+                var handler = new MariaDbConnectorGeometryToMySqlGeometryPropertyHandler();
                 var geometry = MySqlGeometry.FromMySql(CreatePointBytes(1.5, 2.5));
 
                 // Act
@@ -99,12 +99,12 @@ namespace RepoDb.MariaDb.IntegrationTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestGeometryToMySqlGeometryPropertyHandlerGetWithBytes()
+        public void TestMariaDbConnectorGeometryToMySqlGeometryPropertyHandlerGetWithBytes()
         {
             using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
-                var handler = new GeometryToMySqlGeometryPropertyHandler();
+                var handler = new MariaDbConnectorGeometryToMySqlGeometryPropertyHandler();
 
                 // Act
                 var result = handler.Get(CreatePointBytes(1.5, 2.5), null);
@@ -115,12 +115,12 @@ namespace RepoDb.MariaDb.IntegrationTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestGeometryToMySqlGeometryPropertyHandlerGetWithNullValues()
+        public void TestMariaDbConnectorGeometryToMySqlGeometryPropertyHandlerGetWithNullValues()
         {
             using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
-                var handler = new GeometryToMySqlGeometryPropertyHandler();
+                var handler = new MariaDbConnectorGeometryToMySqlGeometryPropertyHandler();
 
                 // Act
                 var resultOfNull = handler.Get(null, null);
@@ -133,7 +133,7 @@ namespace RepoDb.MariaDb.IntegrationTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestGeometryToMySqlGeometryPropertyHandlerInsertAndQuery()
+        public void TestMariaDbConnectorGeometryToMySqlGeometryPropertyHandlerInsertAndQuery()
         {
             using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
@@ -156,7 +156,7 @@ namespace RepoDb.MariaDb.IntegrationTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestGeometryToMySqlGeometryPropertyHandlerInsertAndQueryWithNull()
+        public void TestMariaDbConnectorGeometryToMySqlGeometryPropertyHandlerInsertAndQueryWithNull()
         {
             using (var connection = new MariaDbConnection(Database.ConnectionString))
             {

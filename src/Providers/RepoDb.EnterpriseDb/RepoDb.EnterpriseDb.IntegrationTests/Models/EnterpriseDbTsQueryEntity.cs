@@ -14,14 +14,14 @@ using RepoDb.PropertyHandlers.EnterpriseDb;
 namespace RepoDb.EnterpriseDb.IntegrationTests.Models
 {
     /// <summary>
-    /// A minimal model that maps to the "PropertyHandler" table, used to test <see cref="TsQueryToStringPropertyHandler"/>.
+    /// A minimal model that maps to the "PropertyHandler" table, used to test <see cref="EnterpriseDbTsQueryToStringPropertyHandler"/>.
     /// </summary>
     [Map("PropertyHandler")]
     public class EnterpriseDbTsQueryEntity
     {
         public System.Int64 Id { get; set; }
 
-        [PropertyHandler(typeof(TsQueryToStringPropertyHandler))]
+        [PropertyHandler(typeof(EnterpriseDbTsQueryToStringPropertyHandler))]
         [EnterpriseDbType(EDBType.TsQuery)]
         public System.String ColumnTsQuery { get; set; }
     }

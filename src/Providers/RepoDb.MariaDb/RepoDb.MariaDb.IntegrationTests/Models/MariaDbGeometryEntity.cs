@@ -13,14 +13,14 @@ using RepoDb.PropertyHandlers.MariaDb;
 namespace RepoDb.MariaDb.IntegrationTests.Models
 {
     /// <summary>
-    /// A minimal model that maps to the "PropertyHandler" table, used to test <see cref="GeometryToMySqlGeometryPropertyHandler"/>.
+    /// A minimal model that maps to the "PropertyHandler" table, used to test <see cref="MariaDbGeometryToMySqlGeometryPropertyHandler"/>.
     /// </summary>
     [Map("PropertyHandler")]
     public class MariaDbGeometryEntity
     {
         public System.Int64 Id { get; set; }
 
-        [PropertyHandler(typeof(GeometryToMySqlGeometryPropertyHandler))]
+        [PropertyHandler(typeof(MariaDbGeometryToMySqlGeometryPropertyHandler))]
         public MySqlGeometry ColumnGeometry { get; set; }
     }
 }

@@ -18,7 +18,7 @@ using System.Linq;
 namespace RepoDb.CockroachDb.IntegrationTests.PropertyHandlers
 {
     [TestClass]
-    public class TestTsVectorToStringPropertyHandler
+    public class TestCockroachDbTsQueryToStringPropertyHandler
     {
         [TestInitialize]
         public void Initialize()
@@ -34,29 +34,29 @@ namespace RepoDb.CockroachDb.IntegrationTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestTsVectorToStringPropertyHandlerSet()
+        public void TestCockroachDbTsQueryToStringPropertyHandlerSet()
         {
             using (var connection = new CockroachDbConnection(Database.ConnectionString))
             {
                 // Setup
-                var handler = new TsVectorToStringPropertyHandler();
+                var handler = new CockroachDbTsQueryToStringPropertyHandler();
 
                 // Act
-                var result = handler.Set("'cat':3 'fat':2 'rat':5", null);
+                var result = handler.Set("'fat' & 'rat'", null);
 
                 // Assert
-                Assert.IsInstanceOfType(result, typeof(NpgsqlTsVector));
-                Assert.AreEqual("'cat':3 'fat':2 'rat':5", result.ToString(), StringComparer.Ordinal);
+                Assert.IsInstanceOfType(result, typeof(NpgsqlTsQuery));
+                Assert.AreEqual("'fat' & 'rat'", result.ToString(), StringComparer.Ordinal);
             }
         }
 
         [TestMethod]
-        public void TestTsVectorToStringPropertyHandlerSetWithNull()
+        public void TestCockroachDbTsQueryToStringPropertyHandlerSetWithNull()
         {
             using (var connection = new CockroachDbConnection(Database.ConnectionString))
             {
                 // Setup
-                var handler = new TsVectorToStringPropertyHandler();
+                var handler = new CockroachDbTsQueryToStringPropertyHandler();
 
                 // Act
                 var result = handler.Set(null, null);
@@ -67,31 +67,31 @@ namespace RepoDb.CockroachDb.IntegrationTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestTsVectorToStringPropertyHandlerGetWithSupportedTypes()
+        public void TestCockroachDbTsQueryToStringPropertyHandlerGetWithSupportedTypes()
         {
             using (var connection = new CockroachDbConnection(Database.ConnectionString))
             {
                 // Setup
-                var handler = new TsVectorToStringPropertyHandler();
-                var value = NpgsqlTsVector.Parse("'cat':3 'fat':2 'rat':5");
+                var handler = new CockroachDbTsQueryToStringPropertyHandler();
+                var value = NpgsqlTsQuery.Parse("'fat' & 'rat'");
 
                 // Act
                 var resultOfType = handler.Get(value, null);
-                var resultOfString = handler.Get("'cat':3 'fat':2 'rat':5", null);
+                var resultOfString = handler.Get("'fat' & 'rat'", null);
 
                 // Assert
-                Assert.AreEqual("'cat':3 'fat':2 'rat':5", resultOfType, StringComparer.Ordinal);
-                Assert.AreEqual("'cat':3 'fat':2 'rat':5", resultOfString, StringComparer.Ordinal);
+                Assert.AreEqual("'fat' & 'rat'", resultOfType, StringComparer.Ordinal);
+                Assert.AreEqual("'fat' & 'rat'", resultOfString, StringComparer.Ordinal);
             }
         }
 
         [TestMethod]
-        public void TestTsVectorToStringPropertyHandlerGetWithNullValues()
+        public void TestCockroachDbTsQueryToStringPropertyHandlerGetWithNullValues()
         {
             using (var connection = new CockroachDbConnection(Database.ConnectionString))
             {
                 // Setup
-                var handler = new TsVectorToStringPropertyHandler();
+                var handler = new CockroachDbTsQueryToStringPropertyHandler();
 
                 // Act
                 var resultOfNull = handler.Get(null, null);
@@ -104,12 +104,12 @@ namespace RepoDb.CockroachDb.IntegrationTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestTsVectorToStringPropertyHandlerGetWithUnsupportedType()
+        public void TestCockroachDbTsQueryToStringPropertyHandlerGetWithUnsupportedType()
         {
             using (var connection = new CockroachDbConnection(Database.ConnectionString))
             {
                 // Setup
-                var handler = new TsVectorToStringPropertyHandler();
+                var handler = new CockroachDbTsQueryToStringPropertyHandler();
 
                 // Act & Assert
                 Assert.ThrowsExactly<ArgumentException>(() => handler.Get(123, null));
@@ -117,69 +117,69 @@ namespace RepoDb.CockroachDb.IntegrationTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestTsVectorToStringPropertyHandlerInsertAndQuery()
+        public void TestCockroachDbTsQueryToStringPropertyHandlerInsertAndQuery()
         {
             using (var connection = new CockroachDbConnection(Database.ConnectionString))
             {
                 // Setup
-                var entity = new CockroachDbTsVectorEntity
+                var entity = new CockroachDbTsQueryEntity
                 {
-                    ColumnTsVector = "'cat':3 'fat':2 'rat':5"
+                    ColumnTsQuery = "'fat' & 'rat'"
                 };
 
                 // Act
                 var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
-                var result = connection.Query<CockroachDbTsVectorEntity>(e => e.Id == id).First();
+                var result = connection.Query<CockroachDbTsQueryEntity>(e => e.Id == id).First();
 
                 // Assert
                 Assert.AreEqual(id, result.Id);
-                Assert.AreEqual("'cat':3 'fat':2 'rat':5", result.ColumnTsVector, StringComparer.Ordinal);
+                Assert.AreEqual("'fat' & 'rat'", result.ColumnTsQuery, StringComparer.Ordinal);
             }
         }
 
         [TestMethod]
-        public void TestTsVectorToStringPropertyHandlerInsertAndQueryWithNull()
+        public void TestCockroachDbTsQueryToStringPropertyHandlerInsertAndQueryWithNull()
         {
             using (var connection = new CockroachDbConnection(Database.ConnectionString))
             {
                 // Setup
-                var entity = new CockroachDbTsVectorEntity
+                var entity = new CockroachDbTsQueryEntity
                 {
-                    ColumnTsVector = null
+                    ColumnTsQuery = null
                 };
 
                 // Act
                 var id = Convert.ToInt64(connection.Insert(entity), System.Globalization.CultureInfo.InvariantCulture);
-                var result = connection.Query<CockroachDbTsVectorEntity>(e => e.Id == id).First();
+                var result = connection.Query<CockroachDbTsQueryEntity>(e => e.Id == id).First();
 
                 // Assert
                 Assert.AreEqual(id, result.Id);
-                Assert.IsNull(result.ColumnTsVector);
+                Assert.IsNull(result.ColumnTsQuery);
             }
         }
 
         [TestMethod]
-        public void TestTsVectorToStringPropertyHandlerInsertAllAndQueryAll()
+        public void TestCockroachDbTsQueryToStringPropertyHandlerInsertAllAndQueryAll()
         {
             using (var connection = new CockroachDbConnection(Database.ConnectionString))
             {
                 // Setup
                 var entities = new[]
                 {
-                    new CockroachDbTsVectorEntity { ColumnTsVector = "'cat':3 'fat':2 'rat':5" },
-                    new CockroachDbTsVectorEntity { ColumnTsVector = null },
-                    new CockroachDbTsVectorEntity { ColumnTsVector = "'cat' 'fat'" }
+                    new CockroachDbTsQueryEntity { ColumnTsQuery = "'fat' & 'rat'" },
+                    new CockroachDbTsQueryEntity { ColumnTsQuery = null },
+                    new CockroachDbTsQueryEntity { ColumnTsQuery = "'cat' | 'dog'" }
                 };
 
                 // Act
                 connection.InsertAll(entities);
-                var result = connection.QueryAll<CockroachDbTsVectorEntity>().OrderBy(e => e.Id).ToList();
+                var result = connection.QueryAll<CockroachDbTsQueryEntity>().OrderBy(e => e.Id).ToList();
 
                 // Assert
                 Assert.AreEqual(3, result.Count);
-                Assert.AreEqual("'cat':3 'fat':2 'rat':5", result[0].ColumnTsVector, StringComparer.Ordinal);
-                Assert.IsNull(result[1].ColumnTsVector);
-                Assert.AreEqual("'cat' 'fat'", result[2].ColumnTsVector, StringComparer.Ordinal);
+                Assert.AreEqual("'fat' & 'rat'", result[0].ColumnTsQuery, StringComparer.Ordinal);
+                Assert.IsNull(result[1].ColumnTsQuery);
+                Assert.AreEqual("'cat' | 'dog'", result[2].ColumnTsQuery, StringComparer.Ordinal);
             }
         }
     }

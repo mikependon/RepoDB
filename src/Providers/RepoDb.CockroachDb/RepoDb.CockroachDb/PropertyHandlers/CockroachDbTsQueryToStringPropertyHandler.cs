@@ -11,12 +11,12 @@ using RepoDb.Interfaces;
 using RepoDb.Options;
 using System;
 
-namespace RepoDb.PropertyHandlers.EnterpriseDb
+namespace RepoDb.PropertyHandlers.CockroachDb
 {
     /// <summary>
     /// A property handler that maps the full-text search <c>tsquery</c> type into a <see cref="string"/> property.
     /// </summary>
-    public class TsQueryToStringPropertyHandler : IPropertyHandler<object, string>
+    public class CockroachDbTsQueryToStringPropertyHandler : IPropertyHandler<object, string>
     {
         /// <summary>
         /// Converts the <c>tsquery</c> value, as returned by the driver, into its text form (for example <c>'fat' &amp; 'cat'</c>).
@@ -43,7 +43,7 @@ namespace RepoDb.PropertyHandlers.EnterpriseDb
 
 #pragma warning disable CS0618 // The client-side parsing is intentional, see the summary of the member.
         /// <summary>
-        /// Converts the text form of a <c>tsquery</c> into an <see cref="NpgsqlTsQuery"/>, to be written into a <c>tsquery</c> column. The parsing is performed on the client by the driver, which marks it as unreliable for complex values (it cannot fully duplicate the PostgreSQL logic); prefer simple, well-formed values, or use the server functions (<c>to_tsquery</c>) in the SQL for complex ones.
+        /// Converts the text form of a <c>tsquery</c> into an <see cref="NpgsqlTsQuery"/>, to be written into a <c>tsquery</c> column. The parsing is performed on the client by the driver, which marks it as unreliable for complex values (it cannot fully duplicate the server logic); prefer simple, well-formed values, or use the server functions (<c>to_tsquery</c>) in the SQL for complex ones.
         /// </summary>
         /// <param name="input">The text form of the <c>tsquery</c> to write (for example <c>'fat' &amp; 'cat'</c>).</param>
         /// <param name="options">The options of the property handler for writing the value.</param>

@@ -18,7 +18,7 @@ using System.Linq;
 namespace RepoDb.EnterpriseDb.IntegrationTests.PropertyHandlers
 {
     [TestClass]
-    public class TestTsQueryToStringPropertyHandler
+    public class TestEnterpriseDbTsQueryToStringPropertyHandler
     {
         [TestInitialize]
         public void Initialize()
@@ -34,12 +34,12 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestTsQueryToStringPropertyHandlerSet()
+        public void TestEnterpriseDbTsQueryToStringPropertyHandlerSet()
         {
             using (var connection = new EDBConnection(Database.ConnectionString))
             {
                 // Setup
-                var handler = new TsQueryToStringPropertyHandler();
+                var handler = new EnterpriseDbTsQueryToStringPropertyHandler();
 
                 // Act
                 var result = handler.Set("'fat' & 'rat'", null);
@@ -51,12 +51,12 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestTsQueryToStringPropertyHandlerSetWithNull()
+        public void TestEnterpriseDbTsQueryToStringPropertyHandlerSetWithNull()
         {
             using (var connection = new EDBConnection(Database.ConnectionString))
             {
                 // Setup
-                var handler = new TsQueryToStringPropertyHandler();
+                var handler = new EnterpriseDbTsQueryToStringPropertyHandler();
 
                 // Act
                 var result = handler.Set(null, null);
@@ -67,12 +67,12 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestTsQueryToStringPropertyHandlerGetWithSupportedTypes()
+        public void TestEnterpriseDbTsQueryToStringPropertyHandlerGetWithSupportedTypes()
         {
             using (var connection = new EDBConnection(Database.ConnectionString))
             {
                 // Setup
-                var handler = new TsQueryToStringPropertyHandler();
+                var handler = new EnterpriseDbTsQueryToStringPropertyHandler();
                 var value = NpgsqlTsQuery.Parse("'fat' & 'rat'");
 
                 // Act
@@ -86,12 +86,12 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestTsQueryToStringPropertyHandlerGetWithNullValues()
+        public void TestEnterpriseDbTsQueryToStringPropertyHandlerGetWithNullValues()
         {
             using (var connection = new EDBConnection(Database.ConnectionString))
             {
                 // Setup
-                var handler = new TsQueryToStringPropertyHandler();
+                var handler = new EnterpriseDbTsQueryToStringPropertyHandler();
 
                 // Act
                 var resultOfNull = handler.Get(null, null);
@@ -104,12 +104,12 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestTsQueryToStringPropertyHandlerGetWithUnsupportedType()
+        public void TestEnterpriseDbTsQueryToStringPropertyHandlerGetWithUnsupportedType()
         {
             using (var connection = new EDBConnection(Database.ConnectionString))
             {
                 // Setup
-                var handler = new TsQueryToStringPropertyHandler();
+                var handler = new EnterpriseDbTsQueryToStringPropertyHandler();
 
                 // Act & Assert
                 Assert.ThrowsExactly<ArgumentException>(() => handler.Get(123, null));
@@ -117,7 +117,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestTsQueryToStringPropertyHandlerInsertAndQuery()
+        public void TestEnterpriseDbTsQueryToStringPropertyHandlerInsertAndQuery()
         {
             using (var connection = new EDBConnection(Database.ConnectionString))
             {
@@ -138,7 +138,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestTsQueryToStringPropertyHandlerInsertAndQueryWithNull()
+        public void TestEnterpriseDbTsQueryToStringPropertyHandlerInsertAndQueryWithNull()
         {
             using (var connection = new EDBConnection(Database.ConnectionString))
             {
@@ -159,7 +159,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestTsQueryToStringPropertyHandlerInsertAllAndQueryAll()
+        public void TestEnterpriseDbTsQueryToStringPropertyHandlerInsertAllAndQueryAll()
         {
             using (var connection = new EDBConnection(Database.ConnectionString))
             {

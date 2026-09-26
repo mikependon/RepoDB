@@ -18,7 +18,7 @@ using System.Linq;
 namespace RepoDb.EnterpriseDb.IntegrationTests.PropertyHandlers
 {
     [TestClass]
-    public class TestTsVectorToStringPropertyHandler
+    public class TestEnterpriseDbTsVectorToStringPropertyHandler
     {
         [TestInitialize]
         public void Initialize()
@@ -34,12 +34,12 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestTsVectorToStringPropertyHandlerSet()
+        public void TestEnterpriseDbTsVectorToStringPropertyHandlerSet()
         {
             using (var connection = new EDBConnection(Database.ConnectionString))
             {
                 // Setup
-                var handler = new TsVectorToStringPropertyHandler();
+                var handler = new EnterpriseDbTsVectorToStringPropertyHandler();
 
                 // Act
                 var result = handler.Set("'cat':3 'fat':2 'rat':5", null);
@@ -51,12 +51,12 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestTsVectorToStringPropertyHandlerSetWithNull()
+        public void TestEnterpriseDbTsVectorToStringPropertyHandlerSetWithNull()
         {
             using (var connection = new EDBConnection(Database.ConnectionString))
             {
                 // Setup
-                var handler = new TsVectorToStringPropertyHandler();
+                var handler = new EnterpriseDbTsVectorToStringPropertyHandler();
 
                 // Act
                 var result = handler.Set(null, null);
@@ -67,12 +67,12 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestTsVectorToStringPropertyHandlerGetWithSupportedTypes()
+        public void TestEnterpriseDbTsVectorToStringPropertyHandlerGetWithSupportedTypes()
         {
             using (var connection = new EDBConnection(Database.ConnectionString))
             {
                 // Setup
-                var handler = new TsVectorToStringPropertyHandler();
+                var handler = new EnterpriseDbTsVectorToStringPropertyHandler();
                 var value = NpgsqlTsVector.Parse("'cat':3 'fat':2 'rat':5");
 
                 // Act
@@ -86,12 +86,12 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestTsVectorToStringPropertyHandlerGetWithNullValues()
+        public void TestEnterpriseDbTsVectorToStringPropertyHandlerGetWithNullValues()
         {
             using (var connection = new EDBConnection(Database.ConnectionString))
             {
                 // Setup
-                var handler = new TsVectorToStringPropertyHandler();
+                var handler = new EnterpriseDbTsVectorToStringPropertyHandler();
 
                 // Act
                 var resultOfNull = handler.Get(null, null);
@@ -104,12 +104,12 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestTsVectorToStringPropertyHandlerGetWithUnsupportedType()
+        public void TestEnterpriseDbTsVectorToStringPropertyHandlerGetWithUnsupportedType()
         {
             using (var connection = new EDBConnection(Database.ConnectionString))
             {
                 // Setup
-                var handler = new TsVectorToStringPropertyHandler();
+                var handler = new EnterpriseDbTsVectorToStringPropertyHandler();
 
                 // Act & Assert
                 Assert.ThrowsExactly<ArgumentException>(() => handler.Get(123, null));
@@ -117,7 +117,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestTsVectorToStringPropertyHandlerInsertAndQuery()
+        public void TestEnterpriseDbTsVectorToStringPropertyHandlerInsertAndQuery()
         {
             using (var connection = new EDBConnection(Database.ConnectionString))
             {
@@ -138,7 +138,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestTsVectorToStringPropertyHandlerInsertAndQueryWithNull()
+        public void TestEnterpriseDbTsVectorToStringPropertyHandlerInsertAndQueryWithNull()
         {
             using (var connection = new EDBConnection(Database.ConnectionString))
             {
@@ -159,7 +159,7 @@ namespace RepoDb.EnterpriseDb.IntegrationTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestTsVectorToStringPropertyHandlerInsertAllAndQueryAll()
+        public void TestEnterpriseDbTsVectorToStringPropertyHandlerInsertAllAndQueryAll()
         {
             using (var connection = new EDBConnection(Database.ConnectionString))
             {

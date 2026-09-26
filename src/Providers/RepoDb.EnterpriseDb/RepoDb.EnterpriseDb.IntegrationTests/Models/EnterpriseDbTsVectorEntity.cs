@@ -14,14 +14,14 @@ using RepoDb.PropertyHandlers.EnterpriseDb;
 namespace RepoDb.EnterpriseDb.IntegrationTests.Models
 {
     /// <summary>
-    /// A minimal model that maps to the "PropertyHandler" table, used to test <see cref="TsVectorToStringPropertyHandler"/>.
+    /// A minimal model that maps to the "PropertyHandler" table, used to test <see cref="EnterpriseDbTsVectorToStringPropertyHandler"/>.
     /// </summary>
     [Map("PropertyHandler")]
     public class EnterpriseDbTsVectorEntity
     {
         public System.Int64 Id { get; set; }
 
-        [PropertyHandler(typeof(TsVectorToStringPropertyHandler))]
+        [PropertyHandler(typeof(EnterpriseDbTsVectorToStringPropertyHandler))]
         [EnterpriseDbType(EDBType.TsVector)]
         public System.String ColumnTsVector { get; set; }
     }

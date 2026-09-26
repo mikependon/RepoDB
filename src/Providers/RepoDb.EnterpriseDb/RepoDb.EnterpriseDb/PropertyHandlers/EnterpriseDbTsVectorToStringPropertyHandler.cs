@@ -16,7 +16,7 @@ namespace RepoDb.PropertyHandlers.EnterpriseDb
     /// <summary>
     /// A property handler that maps the full-text search <c>tsvector</c> type into a <see cref="string"/> property.
     /// </summary>
-    public class TsVectorToStringPropertyHandler : IPropertyHandler<object, string>
+    public class EnterpriseDbTsVectorToStringPropertyHandler : IPropertyHandler<object, string>
     {
         /// <summary>
         /// Converts the <c>tsvector</c> value, as returned by the driver, into its text form (for example <c>'cat':3 'fat':2</c>).
