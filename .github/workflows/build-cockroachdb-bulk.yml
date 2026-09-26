@@ -1,0 +1,20 @@
+name: Build & Run Tests - RepoDb.CockroachDb.BulkOperations (Push)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'src/Providers/RepoDb.Core/**'
+      - 'src/Providers/RepoDb.CockroachDb/**'
+      - 'src/Providers/RepoDb.CockroachDb.BulkOperations/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-cockroachdb-bulk.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: src/Providers/RepoDb.CockroachDb.BulkOperations
+      solution-file: RepoDb.CockroachDb.BulkOperations.sln
+      artifact-name: release-cockroachdb-bulk
+      db-engine: cockroachdb

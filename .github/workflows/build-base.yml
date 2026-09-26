@@ -581,7 +581,7 @@ jobs:
           name: ${{ inputs.artifact-name }}
           path: release/*nupkg
 
-  # CockroachDB only (e.g. RepoDb.CockroachDb)
+  # CockroachDB only (e.g. RepoDb.CockroachDb, RepoDb.CockroachDb.BulkOperations)
   build-cockroachdb:
     if: inputs.db-engine == 'cockroachdb'
     runs-on: ubuntu-latest
