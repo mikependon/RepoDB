@@ -8,14 +8,14 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Extensions;
-using RepoDb.CockroachDB.IntegrationTests.Models;
+using RepoDb.CockroachDb.IntegrationTests.Models;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Text;
 
-namespace RepoDb.CockroachDB.IntegrationTests
+namespace RepoDb.CockroachDb.IntegrationTests
 {
     public static class Helper
     {

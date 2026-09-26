@@ -8,11 +8,11 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Connector.CockroachDb;
-using RepoDb.CockroachDB.IntegrationTests.Setup;
+using RepoDb.CockroachDb.IntegrationTests.Setup;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RepoDb.CockroachDB.IntegrationTests.Operations
+namespace RepoDb.CockroachDb.IntegrationTests.Operations
 {
     [TestClass]
     public class ExecuteNonQueryTest

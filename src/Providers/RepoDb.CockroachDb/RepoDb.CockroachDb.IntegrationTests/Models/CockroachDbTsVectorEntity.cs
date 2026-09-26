@@ -11,7 +11,7 @@ using RepoDb.Connector.CockroachDb;
 using RepoDb.Attributes;
 using RepoDb.PropertyHandlers.CockroachDb;
 
-namespace RepoDb.CockroachDB.IntegrationTests.Models
+namespace RepoDb.CockroachDb.IntegrationTests.Models
 {
     /// <summary>
     /// A minimal model that maps to the "PropertyHandler" table, used to test <see cref="TsVectorToStringPropertyHandler"/>.

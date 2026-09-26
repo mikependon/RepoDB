@@ -9,14 +9,14 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Connector.CockroachDb;
 using RepoDb.Exceptions;
-using RepoDb.CockroachDB.IntegrationTests.Models;
-using RepoDb.CockroachDB.IntegrationTests.Setup;
+using RepoDb.CockroachDb.IntegrationTests.Models;
+using RepoDb.CockroachDb.IntegrationTests.Setup;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RepoDb.CockroachDB.IntegrationTests.Operations
+namespace RepoDb.CockroachDb.IntegrationTests.Operations
 {
     [TestClass]
     public class ExecuteQueryFirstTest

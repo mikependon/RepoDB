@@ -9,13 +9,13 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Connector.CockroachDb;
 using RepoDb.Enumerations;
-using RepoDb.CockroachDB.IntegrationTests.Models;
-using RepoDb.CockroachDB.IntegrationTests.Setup;
+using RepoDb.CockroachDb.IntegrationTests.Models;
+using RepoDb.CockroachDb.IntegrationTests.Setup;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
 
-namespace RepoDb.CockroachDB.IntegrationTests
+namespace RepoDb.CockroachDb.IntegrationTests
 {
     [TestClass]
     public class TransactionTests

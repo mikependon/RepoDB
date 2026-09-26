@@ -12,7 +12,7 @@ using RepoDb.Attributes.Parameter.CockroachDb;
 using RepoDb.DbSettings;
 using RepoDb.Extensions;
 
-namespace RepoDb.CockroachDB.UnitTests.Attributes.Parameter.CockroachDb
+namespace RepoDb.CockroachDb.UnitTests.Attributes.Parameter.CockroachDb
 {
     [TestClass]
     public class ConvertedValueAttributeTest

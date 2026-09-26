@@ -11,7 +11,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Resolvers;
 using System.Data;
 
-namespace RepoDb.CockroachDB.UnitTests.Resolvers
+namespace RepoDb.CockroachDb.UnitTests.Resolvers
 {
     [TestClass]
     public class DbTypeToCockroachDbStringNameResolverTest

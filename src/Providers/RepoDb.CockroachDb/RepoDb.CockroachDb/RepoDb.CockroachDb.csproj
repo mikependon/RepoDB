@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Title>RepoDb.CockroachDB</Title>
-    <AssemblyName>RepoDb.CockroachDB</AssemblyName>
+    <Title>RepoDb.CockroachDb</Title>
+    <AssemblyName>RepoDb.CockroachDb</AssemblyName>
     <TargetFrameworks>net8;net10.0</TargetFrameworks>
     <Nullable>annotations</Nullable>
     <Description>A hybrid .NET ORM library for CockroachDB.</Description>
@@ -13,7 +13,7 @@
     <PackageProjectUrl>https://repodb.net/tutorial/get-started-cockroachdb</PackageProjectUrl>
     <!--
       Pins the version this project is stamped as when it is a ProjectReference dependency of another
-      package (e.g. RepoDb.CockroachDB.BulkOperations), independently of the consuming package's own
+      package (e.g. RepoDb.CockroachDb.BulkOperations), independently of the consuming package's own
       -p:Version. Pass -p:RepoDbCockroachDbVersion=<version> to set it. PackageVersion is used (not
       Version) because it is not overridden by the global Version property.
     -->

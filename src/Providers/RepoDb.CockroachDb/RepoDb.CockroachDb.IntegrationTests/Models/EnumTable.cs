@@ -6,9 +6,9 @@
 
 #endregion
 
-using RepoDb.CockroachDB.IntegrationTests.Enumerations;
+using RepoDb.CockroachDb.IntegrationTests.Enumerations;
 
-namespace RepoDb.CockroachDB.IntegrationTests.Models
+namespace RepoDb.CockroachDb.IntegrationTests.Models
 {
     public class EnumTable
     {

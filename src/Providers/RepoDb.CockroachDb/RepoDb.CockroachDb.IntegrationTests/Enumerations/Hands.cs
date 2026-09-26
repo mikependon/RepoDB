@@ -6,7 +6,7 @@
 
 #endregion
 
-namespace RepoDb.CockroachDB.IntegrationTests.Enumerations
+namespace RepoDb.CockroachDb.IntegrationTests.Enumerations
 {
     public enum Hands
     {

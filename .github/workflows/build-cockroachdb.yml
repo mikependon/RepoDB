@@ -1,4 +1,4 @@
-name: Build & Run Tests - RepoDb.CockroachDB (Push)
+name: Build & Run Tests - RepoDb.CockroachDb (Push)
 
 on:
   workflow_dispatch:
@@ -14,6 +14,6 @@ jobs:
     uses: ./.github/workflows/build-base.yml
     with:
       solution-dir: src/Providers/RepoDb.CockroachDb
-      solution-file: RepoDb.CockroachDB.sln
+      solution-file: RepoDb.CockroachDb.sln
       artifact-name: release-cockroachdb
       db-engine: cockroachdb

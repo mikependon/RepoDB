@@ -12,7 +12,7 @@ using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using System;
 
-namespace RepoDb.CockroachDB.UnitTests
+namespace RepoDb.CockroachDb.UnitTests
 {
     [TestClass]
     public class StatementBuilderTest

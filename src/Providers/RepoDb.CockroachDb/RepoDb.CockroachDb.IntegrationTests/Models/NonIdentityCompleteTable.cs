@@ -8,7 +8,7 @@
 
 using System;
 
-namespace RepoDb.CockroachDB.IntegrationTests.Models
+namespace RepoDb.CockroachDb.IntegrationTests.Models
 {
     public class NonIdentityCompleteTable
     {

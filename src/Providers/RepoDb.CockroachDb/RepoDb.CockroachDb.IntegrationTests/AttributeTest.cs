@@ -11,7 +11,7 @@ using RepoDb.Connector.CockroachDb;
 using RepoDb.Attributes;
 using RepoDb.Attributes.Parameter.CockroachDb;
 using RepoDb.Extensions;
-using RepoDb.CockroachDB.IntegrationTests.Setup;
+using RepoDb.CockroachDb.IntegrationTests.Setup;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -19,7 +19,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RepoDb.CockroachDB.IntegrationTests
+namespace RepoDb.CockroachDb.IntegrationTests
 {
     [TestClass]
     public class AttributeTest

@@ -10,12 +10,12 @@ using RepoDb.Connector.CockroachDb;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NpgsqlTypes;
 using RepoDb.PropertyHandlers.CockroachDb;
-using RepoDb.CockroachDB.IntegrationTests.Models;
-using RepoDb.CockroachDB.IntegrationTests.Setup;
+using RepoDb.CockroachDb.IntegrationTests.Models;
+using RepoDb.CockroachDb.IntegrationTests.Setup;
 using System;
 using System.Linq;
 
-namespace RepoDb.CockroachDB.IntegrationTests.PropertyHandlers
+namespace RepoDb.CockroachDb.IntegrationTests.PropertyHandlers
 {
     [TestClass]
     public class TestTsQueryToStringPropertyHandler

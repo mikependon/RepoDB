@@ -6,7 +6,7 @@
 
 #endregion
 
-namespace RepoDb.CockroachDB.IntegrationTests.Models
+namespace RepoDb.CockroachDb.IntegrationTests.Models
 {
     public class CompleteTable
     {

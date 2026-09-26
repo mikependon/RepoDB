@@ -12,7 +12,7 @@ using RepoDb.Attributes.Parameter.CockroachDb;
 using RepoDb.DbSettings;
 using RepoDb.Extensions;
 
-namespace RepoDb.CockroachDB.UnitTests.Attributes
+namespace RepoDb.CockroachDb.UnitTests.Attributes
 {
     [TestClass]
     public class CockroachDbTypeMapAttributeTest

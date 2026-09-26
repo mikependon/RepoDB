@@ -10,7 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Resolvers;
 using System;
 
-namespace RepoDb.CockroachDB.UnitTests.Resolvers
+namespace RepoDb.CockroachDb.UnitTests.Resolvers
 {
     [TestClass]
     public class CockroachDbDbTypeNameToClientTypeResolverTest

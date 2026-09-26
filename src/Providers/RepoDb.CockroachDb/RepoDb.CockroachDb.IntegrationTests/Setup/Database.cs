@@ -9,9 +9,9 @@
 using System;
 using System.Collections.Generic;
 using RepoDb.Connector.CockroachDb;
-using RepoDb.CockroachDB.IntegrationTests.Models;
+using RepoDb.CockroachDb.IntegrationTests.Models;
 
-namespace RepoDb.CockroachDB.IntegrationTests.Setup
+namespace RepoDb.CockroachDb.IntegrationTests.Setup
 {
     public static class Database
     {

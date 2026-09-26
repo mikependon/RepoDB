@@ -11,7 +11,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Connector.CockroachDb;
 using RepoDb.Extensions;
 
-namespace RepoDb.CockroachDB.UnitTests
+namespace RepoDb.CockroachDb.UnitTests
 {
     [TestClass]
     public class QuotationTest

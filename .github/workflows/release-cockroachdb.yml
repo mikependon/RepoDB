@@ -1,4 +1,4 @@
-name: Release - RepoDb.CockroachDB (Manual)
+name: Release - RepoDb.CockroachDb (Manual)
 
 on:
   workflow_dispatch:
@@ -21,5 +21,5 @@ jobs:
     with:
       version: ${{ inputs.version }}
       dependency-overrides: ${{ inputs.dependency-overrides }}
-      project-name: RepoDb.CockroachDB
-      project-path: src/Providers/RepoDb.CockroachDb/RepoDb.CockroachDb/RepoDb.CockroachDB.csproj
+      project-name: RepoDb.CockroachDb
+      project-path: src/Providers/RepoDb.CockroachDb/RepoDb.CockroachDb/RepoDb.CockroachDb.csproj
