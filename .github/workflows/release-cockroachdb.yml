@@ -22,4 +22,4 @@ jobs:
       version: ${{ inputs.version }}
       dependency-overrides: ${{ inputs.dependency-overrides }}
       project-name: RepoDb.CockroachDB
-      project-path: src/Providers/RepoDb.CockroachDB/RepoDb.CockroachDB/RepoDb.CockroachDB.csproj
+      project-path: src/Providers/RepoDb.CockroachDb/RepoDb.CockroachDb/RepoDb.CockroachDB.csproj

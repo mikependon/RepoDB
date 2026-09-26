@@ -12,6 +12,6 @@
   </ItemGroup>
 	<ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
-    <ProjectReference Include="..\RepoDb.CockroachDB\RepoDb.CockroachDB.csproj" />
+    <ProjectReference Include="..\RepoDb.CockroachDb\RepoDb.CockroachDB.csproj" />
   </ItemGroup>
 </Project>

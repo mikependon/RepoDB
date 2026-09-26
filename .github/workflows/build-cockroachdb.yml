@@ -5,7 +5,7 @@ on:
   push:
     paths:
       - 'src/Providers/RepoDb.Core/**'
-      - 'src/Providers/RepoDb.CockroachDB/**'
+      - 'src/Providers/RepoDb.CockroachDb/**'
       - '.github/workflows/build-base.yml'
       - '.github/workflows/build-cockroachdb.yml'
 
@@ -13,7 +13,7 @@ jobs:
   build:
     uses: ./.github/workflows/build-base.yml
     with:
-      solution-dir: src/Providers/RepoDb.CockroachDB
+      solution-dir: src/Providers/RepoDb.CockroachDb
       solution-file: RepoDb.CockroachDB.sln
       artifact-name: release-cockroachdb
       db-engine: cockroachdb

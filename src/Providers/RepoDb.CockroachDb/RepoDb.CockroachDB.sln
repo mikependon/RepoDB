@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.CockroachDB", "RepoDb.CockroachDB\RepoDb.CockroachDB.csproj", "{0DB958C6-91F7-4D1C-A54F-8207D995919B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.CockroachDB", "RepoDb.CockroachDb\RepoDb.CockroachDB.csproj", "{0DB958C6-91F7-4D1C-A54F-8207D995919B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.CockroachDB.Tests", "RepoDb.CockroachDB.Tests", "{EB7B6EAE-5E72-4C14-8A2D-EE61AE44A739}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.CockroachDB.IntegrationTests", "RepoDb.CockroachDB.IntegrationTests\RepoDb.CockroachDB.IntegrationTests.csproj", "{C3D41D65-8CDC-4204-9297-06AD5AF87F6B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.CockroachDB.IntegrationTests", "RepoDb.CockroachDb.IntegrationTests\RepoDb.CockroachDB.IntegrationTests.csproj", "{C3D41D65-8CDC-4204-9297-06AD5AF87F6B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.CockroachDB.Base", "RepoDb.CockroachDB.Base", "{4B1D098D-6EF2-4C2C-A8F1-0034BA08A0A4}"
 	ProjectSection(SolutionItems) = preProject
@@ -16,7 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.CockroachDB.Base", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "..\RepoDb.Core\RepoDb\RepoDb.csproj", "{B1D0B0A9-B7ED-493E-A0D8-3C6344B919DB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.CockroachDB.UnitTests", "RepoDb.CockroachDB.UnitTests\RepoDb.CockroachDB.UnitTests.csproj", "{019FDE6C-0554-4120-B495-CFFEF28C5CE0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.CockroachDB.UnitTests", "RepoDb.CockroachDb.UnitTests\RepoDb.CockroachDB.UnitTests.csproj", "{019FDE6C-0554-4120-B495-CFFEF28C5CE0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
