@@ -1,0 +1,17 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🛡️ Report a security vulnerability
+    url: https://github.com/mikependon/RepoDB/blob/master/SECURITY.md
+    about: Please do not open a public issue for vulnerabilities. Follow the private reporting steps in the Security Policy.
+  - name: 💬 GitHub Discussions
+    url: https://github.com/mikependon/RepoDB/discussions
+    about: Ask open-ended questions, share ideas, and show what you built with RepoDB.
+  - name: 👥 Microsoft Teams community
+    url: https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ
+    about: Live Q&A and chat with the community.
+  - name: 📚 Documentation
+    url: https://repodb.net
+    about: Guides, API reference, and tutorials for every supported database.
+  - name: ⚠️ Known limitations
+    url: https://github.com/mikependon/RepoDB/blob/master/LIMITATIONS.md
+    about: Check whether your problem is a documented limitation before reporting it as a bug.

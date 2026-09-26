@@ -1,0 +1,212 @@
+name: 🐞 Report a Bug
+description: Something in RepoDB throws, returns wrong data, or behaves differently from the documentation.
+title: "Bug: "
+labels: ["bug"]
+assignees: ["mikependon"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! 🙏
+
+        The fastest bugs to fix are the ones we can **reproduce**. Please fill in every required field and, whenever possible, share a *minimal* table schema and model (not your real production schema).
+
+        > [!IMPORTANT]
+        > **Found a security vulnerability?** Do **not** open a public issue. Follow the [Security Policy](https://github.com/mikependon/RepoDB/blob/master/SECURITY.md) instead.
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Before you submit
+      description: Please confirm the following. It saves a round trip for both of us.
+      options:
+        - label: I searched the [existing issues](https://github.com/mikependon/RepoDB/issues?q=is%3Aissue) and this bug has not been reported yet.
+          required: true
+        - label: I checked the [Limitations](https://github.com/mikependon/RepoDB/blob/master/LIMITATIONS.md) page and this is not a documented limitation.
+          required: true
+        - label: I reproduced this on the latest published version of the packages involved (only the latest release receives fixes).
+          required: false
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug description
+      description: A clear and concise description of what went wrong.
+      placeholder: e.g. "BulkMerge returns 0 affected rows when the qualifier is a non-primary column."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: packages
+    attributes:
+      label: Affected package(s)
+      description: Select every RepoDB package involved. Pick "Other" if yours is not listed and name it in the version field below.
+      multiple: true
+      options:
+        - RepoDb (Core)
+        - RepoDb.SqlServer
+        - RepoDb.PostgreSql
+        - RepoDb.MySql
+        - RepoDb.MySqlConnector
+        - RepoDb.MariaDb
+        - RepoDb.MariaDbConnector
+        - RepoDb.Oracle
+        - RepoDb.Sqlite.Microsoft
+        - RepoDb.Db2
+        - RepoDb.ClickHouse
+        - RepoDb.DuckDb
+        - RepoDb.EnterpriseDb
+        - RepoDb.Firebird
+        - RepoDb.SapHana
+        - RepoDb.Vertica
+        - RepoDb.SqlServer.BulkOperations
+        - RepoDb.PostgreSql.BulkOperations
+        - RepoDb.MySql.BulkOperations
+        - RepoDb.MySqlConnector.BulkOperations
+        - RepoDb.MariaDb.BulkOperations
+        - RepoDb.MariaDbConnector.BulkOperations
+        - RepoDb.Oracle.BulkOperations
+        - RepoDb.Db2.BulkOperations
+        - RepoDb.ClickHouse.BulkOperations
+        - RepoDb.DuckDb.BulkOperations
+        - RepoDb.EnterpriseDb.BulkOperations
+        - RepoDb.Firebird.BulkOperations
+        - RepoDb.SapHana.BulkOperations
+        - RepoDb.Vertica.BulkOperations
+        - RepoDb.Telemetry.Core / RepoDb.Telemetry.Default
+        - Other (please specify below)
+    validations:
+      required: true
+
+  - type: input
+    id: versions
+    attributes:
+      label: Package version(s)
+      description: The exact NuGet versions from your project file.
+      placeholder: e.g. RepoDb 1.14.0, RepoDb.SqlServer 1.14.0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      description: Which RepoDB operation or feature is failing?
+      multiple: true
+      options:
+        - Query / QueryAll / QueryMultiple / BatchQuery / SkipQuery
+        - Insert / InsertAll
+        - Update / UpdateAll
+        - Merge / MergeAll
+        - Delete / DeleteAll / Truncate
+        - Count / Exists / Sum / Max / Min / Average
+        - ExecuteQuery / ExecuteNonQuery / ExecuteScalar / ExecuteReader
+        - Bulk operations (BulkInsert / BulkMerge / BulkUpdate / BulkDelete)
+        - Mapping (attributes, FluentMapper, naming)
+        - Property handlers / type conversion
+        - Transactions
+        - Caching
+        - Tracing / telemetry
+        - Repositories (BaseRepository / DbRepository)
+        - Other / not sure
+    validations:
+      required: true
+
+  - type: input
+    id: database
+    attributes:
+      label: Database and version
+      description: The database server (or engine) and its version.
+      placeholder: e.g. SQL Server 2022 (16.0.4135), PostgreSQL 17.2, DuckDB 1.5.5
+    validations:
+      required: true
+
+  - type: input
+    id: runtime
+    attributes:
+      label: .NET runtime and OS
+      description: The target framework and operating system where the bug happens.
+      placeholder: e.g. .NET 10.0 on Windows 11, .NET 8.0 in a Linux container
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: The smallest piece of code that triggers the bug. Include the `GlobalConfiguration.Setup()` call and any mappings or property handlers involved.
+      placeholder: |
+        GlobalConfiguration.Setup().UseSqlServer();
+
+        using var connection = new SqlConnection(connectionString);
+        var people = connection.QueryAll<Person>();
+      render: csharp
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What happened instead? Include wrong values, row counts, or the generated SQL if you captured it (e.g. with tracing).
+    validations:
+      required: true
+
+  - type: textarea
+    id: exception
+    attributes:
+      label: Exception message and stack trace
+      description: Paste the full exception, including inner exceptions and the complete stack trace. This will be formatted automatically.
+      placeholder: |
+        System.NullReferenceException: Object reference not set to an instance of an object.
+           at RepoDb.DbConnectionExtension.QueryAllInternal[TEntity](...)
+      render: text
+    validations:
+      required: false
+
+  - type: textarea
+    id: schema
+    attributes:
+      label: Table schema (SQL)
+      description: A minimal `CREATE TABLE` script that reproduces the problem. Please don't share real production data.
+      placeholder: |
+        CREATE TABLE [dbo].[Person]
+        (
+            [Id] BIGINT IDENTITY(1,1) PRIMARY KEY,
+            [Name] NVARCHAR(128) NOT NULL
+        );
+      render: sql
+    validations:
+      required: false
+
+  - type: textarea
+    id: model
+    attributes:
+      label: Model class
+      description: The C# class that maps to the schema above, including any attributes.
+      placeholder: |
+        [Map("[dbo].[Person]")]
+        public class Person
+        {
+            public long Id { get; set; }
+            public string Name { get; set; }
+        }
+      render: csharp
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Anything else that helps, e.g. "it worked in 1.13.x", a workaround you found, or a link to a sample repository.
+    validations:
+      required: false
