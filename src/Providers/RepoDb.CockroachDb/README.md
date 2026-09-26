@@ -1,7 +1,7 @@
 <div align="center">
     <a href="https://repodb.net/tutorial/"><image src="CockroachDB.png" style="width:256px;" /></a>
     <br/>
-    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/"><strong>RepoDb.CockroachDB</strong></a></span>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/"><strong>RepoDb.CockroachDb</strong></a></span>
     <br/>
     <span style="font-size:16px;">A high-performance data productivity platform for CockroachDB in .NET — on the roadmap, not yet available.</span>
 </div>
@@ -10,9 +10,9 @@
 
 <br/>
 
-# RepoDb.CockroachDB
+# RepoDb.CockroachDb
 
-CockroachDB is on the [databases roadmap](https://github.com/mikependon/RepoDB#databases-on-the-roadmap) — a dedicated `RepoDb.CockroachDB` package is not yet available.
+CockroachDB is on the [databases roadmap](https://github.com/mikependon/RepoDB#databases-on-the-roadmap) — a dedicated `RepoDb.CockroachDb` package is not yet available.
 
 ## Important Pages
 

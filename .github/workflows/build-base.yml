@@ -16,7 +16,7 @@ on:
         required: true
         type: string
       db-engine:
-        description: 'Database service required for this build: none, sqlserver, postgresql, mysql, mariadb, oracle, db2, clickhouse, firebird, vertica, enterprisedb, saphana'
+        description: 'Database service required for this build: none, sqlserver, postgresql, mysql, mariadb, oracle, db2, clickhouse, cockroachdb, firebird, vertica, enterprisedb, saphana'
         required: true
         type: string
     secrets:
@@ -52,6 +52,9 @@ env:
   REPODB_DB2_CONSTR: "Server=127.0.0.1:50000;Database=REPODB;UID=db2inst1;PWD=RepoDB2026;"
   # ClickHouse
   REPODB_CLICKHOUSE_CONSTR: "Host=127.0.0.1;Port=8123;Protocol=http;Database=RepoDb;Username=default;Password=RepoDB2026;UseCustomDecimals=false;"
+  # CockroachDB
+  REPODB_COCKROACHDB_CONSTR_SYSTEM: "Server=127.0.0.1;Port=26257;Database=defaultdb;User Id=root;"
+  REPODB_COCKROACHDB_CONSTR: "Server=127.0.0.1;Port=26257;Database=RepoDb;User Id=root;"
   # Firebird 
   REPODB_FIREBIRD_CONSTR: "DataSource=127.0.0.1;Port=3050;Database=/firebird/data/repodb.fdb;User=SYSDBA;Password=RepoDB2026;Charset=UTF8;Pooling=false;"
   # Vertica
@@ -577,6 +580,67 @@ jobs:
         with:
           name: ${{ inputs.artifact-name }}
           path: release/*nupkg
+
+  # CockroachDB only (e.g. RepoDb.CockroachDb)
+  build-cockroachdb:
+    if: inputs.db-engine == 'cockroachdb'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v5
+
+      - name: Setup .NET Versions
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: |
+            10.0.x
+
+      - name: Dotnet Build
+        run: dotnet build -c release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
+
+      - name: Start CockroachDB service
+        run: |
+          docker run -d --name cockroachdb             -p 127.0.0.1:26257:26257             -p 127.0.0.1:8080:8080             cockroachdb/cockroach:latest             start-single-node --insecure
+
+      - name: Wait for CockroachDB service to be ready
+        run: |
+          for i in $(seq 1 60); do
+            if docker exec cockroachdb ./cockroach sql --insecure -e "SELECT 1" > /dev/null 2>&1; then
+              echo "CockroachDB is ready (after $((i * 5))s)."
+              exit 0
+            fi
+            echo "Waiting for CockroachDB to become ready... attempt $i/60"
+            sleep 5
+          done
+          echo "CockroachDB did not become ready within the timeout. Recent container logs:"
+          docker logs cockroachdb --tail 200
+          exit 1
+
+      - name: Test for .NET 8.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net8.0 --no-build ${{ inputs.solution-file }}
+
+      - name: Test for .NET 9.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net9.0 --no-build ${{ inputs.solution-file }}
+
+      - name: Test for .NET 10.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net10.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
+
+      - name: Run Dotnet Pack
+        run: dotnet pack -c release -p Version="1.14.0-dev-${{ github.run_number }}" -o release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
+
+      - name: Package Nuget
+        uses: actions/upload-artifact@v5
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: release/*nupkg
+
+      - name: Stop CockroachDB service
+        if: always()
+        run: docker rm -f cockroachdb || true
 
   # EnterpriseDB (EDB Postgres Advanced Server) only (e.g. RepoDb.EnterpriseDb, RepoDb.EnterpriseDb.BulkOperations)
   build-enterprisedb:

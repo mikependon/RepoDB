@@ -13,6 +13,18 @@ services:
     environment:
       CLICKHOUSE_PASSWORD: RepoDB2026
 
+  cockroachdb:
+    container_name: cockroachdb
+    image: cockroachdb/cockroach:latest
+    command: start-single-node --insecure
+    ports:
+      - 127.0.0.1:26257:26257
+      - 127.0.0.1:8080:8080
+    networks:
+      - repodb
+    environment:
+      COCKROACH_DATABASE: repodb
+
   db2:
     container_name: db2
     image: icr.io/db2_community/db2:12.1.0.0

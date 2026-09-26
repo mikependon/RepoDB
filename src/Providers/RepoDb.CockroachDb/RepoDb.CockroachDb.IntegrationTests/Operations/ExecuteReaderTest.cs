@@ -1,0 +1,244 @@
+﻿#region Copyright Attributions
+
+// Copyright (c) 2026 Michael Camara Pendon.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Connector.CockroachDb;
+using System;
+using RepoDb.Extensions;
+using RepoDb.Reflection;
+using RepoDb.CockroachDb.IntegrationTests.Models;
+using RepoDb.CockroachDb.IntegrationTests.Setup;
+using System.Data.Common;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace RepoDb.CockroachDb.IntegrationTests.Operations
+{
+    [TestClass]
+    public class ExecuteReaderTest
+    {
+        [TestInitialize]
+        public void Initialize()
+        {
+            Database.Initialize();
+            Cleanup();
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            Database.Cleanup();
+        }
+
+        #region Sync
+
+        [TestMethod]
+        public void TestCockroachDbConnectionExecuteReader()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new CockroachDbConnection(Database.ConnectionString))
+            {
+                // Act
+                using (var reader = connection.ExecuteReader("SELECT \"Id\", \"ColumnInteger\", \"ColumnDate\" FROM \"CompleteTable\";"))
+                {
+                    while (reader.Read())
+                    {
+                        // Act
+                        var id = reader.GetInt64(0);
+                        var columnInt = reader.GetInt32(1);
+                        var columnDate = (DateOnly)reader.GetValue(2);
+                        var table = tables.FirstOrDefault(e => e.Id == id);
+
+                        // Assert
+                        Assert.IsNotNull(table);
+                        Assert.AreEqual(columnInt, table.ColumnInteger);
+                        Assert.AreEqual(columnDate, table.ColumnDate);
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestCockroachDbConnectionExecuteReaderWithMultipleStatements()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new CockroachDbConnection(Database.ConnectionString))
+            {
+                // Act
+                using (var reader = connection.ExecuteReader("SELECT \"Id\", \"ColumnInteger\", \"ColumnDate\" FROM \"CompleteTable\"; SELECT \"Id\", \"ColumnInteger\", \"ColumnDate\" FROM \"CompleteTable\";"))
+                {
+                    do
+                    {
+                        while (reader.Read())
+                        {
+                            // Act
+                            var id = reader.GetInt64(0);
+                            var columnInt = reader.GetInt32(1);
+                            var columnDate = (DateOnly)reader.GetValue(2);
+                            var table = tables.FirstOrDefault(e => e.Id == id);
+
+                            // Assert
+                            Assert.IsNotNull(table);
+                            Assert.AreEqual(columnInt, table.ColumnInteger);
+                            Assert.AreEqual(columnDate, table.ColumnDate);
+                        }
+                    } while (reader.NextResult());
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestCockroachDbConnectionExecuteReaderAsExtractedEntity()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new CockroachDbConnection(Database.ConnectionString))
+            {
+                // Act
+                using (var reader = connection.ExecuteReader("SELECT * FROM \"CompleteTable\";"))
+                {
+                    // Act
+                    var result = DataReader.ToEnumerable<CompleteTable>((DbDataReader)reader).AsList();
+
+                    // Assert
+                    tables.AsList().ForEach(table => Helper.AssertPropertiesEquality(table, result.First(e => e.Id == table.Id)));
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestCockroachDbConnectionExecuteReaderAsExtractedDynamic()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new CockroachDbConnection(Database.ConnectionString))
+            {
+                // Act
+                using (var reader = connection.ExecuteReader("SELECT * FROM \"CompleteTable\";"))
+                {
+                    // Act
+                    var result = DataReader.ToEnumerable((DbDataReader)reader).AsList();
+
+                    // Assert
+                    tables.AsList().ForEach(table => Helper.AssertMembersEquality(table, result.First(e => e.Id == table.Id)));
+                }
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestCockroachDbConnectionExecuteReaderAsync()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new CockroachDbConnection(Database.ConnectionString))
+            {
+                // Act
+                using (var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInteger\", \"ColumnDate\" FROM \"CompleteTable\";").ConfigureAwait(false))
+                {
+                    while (reader.Read())
+                    {
+                        // Act
+                        var id = reader.GetInt64(0);
+                        var columnInt = reader.GetInt32(1);
+                        var columnDate = (DateOnly)reader.GetValue(2);
+                        var table = tables.FirstOrDefault(e => e.Id == id);
+
+                        // Assert
+                        Assert.IsNotNull(table);
+                        Assert.AreEqual(columnInt, table.ColumnInteger);
+                        Assert.AreEqual(columnDate, table.ColumnDate);
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public async Task TestCockroachDbConnectionExecuteReaderAsyncWithMultipleStatements()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new CockroachDbConnection(Database.ConnectionString))
+            {
+                // Act
+                using (var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInteger\", \"ColumnDate\" FROM \"CompleteTable\"; SELECT \"Id\", \"ColumnInteger\", \"ColumnDate\" FROM \"CompleteTable\";").ConfigureAwait(false))
+                {
+                    do
+                    {
+                        while (reader.Read())
+                        {
+                            // Act
+                            var id = reader.GetInt64(0);
+                            var columnInt = reader.GetInt32(1);
+                            var columnDate = (DateOnly)reader.GetValue(2);
+                            var table = tables.FirstOrDefault(e => e.Id == id);
+
+                            // Assert
+                            Assert.IsNotNull(table);
+                            Assert.AreEqual(columnInt, table.ColumnInteger);
+                            Assert.AreEqual(columnDate, table.ColumnDate);
+                        }
+                    } while (reader.NextResult());
+                }
+            }
+        }
+
+        [TestMethod]
+        public async Task TestCockroachDbConnectionExecuteReaderAsyncAsExtractedEntity()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new CockroachDbConnection(Database.ConnectionString))
+            {
+                // Act
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM \"CompleteTable\";").ConfigureAwait(false))
+                {
+                    // Act
+                    var result = DataReader.ToEnumerable<CompleteTable>((DbDataReader)reader).AsList();
+
+                    // Assert
+                    tables.AsList().ForEach(table => Helper.AssertPropertiesEquality(table, result.First(e => e.Id == table.Id)));
+                }
+            }
+        }
+
+        [TestMethod]
+        public async Task TestCockroachDbConnectionExecuteReaderAsyncAsExtractedDynamic()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new CockroachDbConnection(Database.ConnectionString))
+            {
+                // Act
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM \"CompleteTable\";").ConfigureAwait(false))
+                {
+                    // Act
+                    var result = DataReader.ToEnumerable((DbDataReader)reader).AsList();
+
+                    // Assert
+                    tables.AsList().ForEach(table => Helper.AssertMembersEquality(table, result.First(e => e.Id == table.Id)));
+                }
+            }
+        }
+
+        #endregion
+    }
+}
