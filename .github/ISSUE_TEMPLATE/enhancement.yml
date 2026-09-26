@@ -1,0 +1,91 @@
+name: ✨ Enhancement
+description: Improve something that already exists in RepoDB (behavior, performance, API ergonomics).
+title: "Enhancement: "
+labels: ["enhancement"]
+assignees: ["mikependon"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form to improve an **existing** feature. If you want something RepoDB does not have yet, please use **💡 Request or Propose** instead.
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Before you submit
+      options:
+        - label: I searched the [existing issues](https://github.com/mikependon/RepoDB/issues?q=is%3Aissue) and this enhancement has not been suggested yet.
+          required: true
+
+  - type: input
+    id: feature
+    attributes:
+      label: Existing feature
+      description: Which operation, class, or behavior should be improved?
+      placeholder: e.g. MergeAll, PropertyHandlerMapper, BulkInsert with ReturnIdentity
+    validations:
+      required: true
+
+  - type: dropdown
+    id: packages
+    attributes:
+      label: Package(s) involved
+      description: Select the package(s) the enhancement applies to.
+      multiple: true
+      options:
+        - RepoDb (Core)
+        - A specific database provider (e.g. RepoDb.SqlServer)
+        - A bulk operations package (e.g. RepoDb.SqlServer.BulkOperations)
+        - RepoDb.Telemetry.Core / RepoDb.Telemetry.Default
+        - All providers
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: current
+    attributes:
+      label: Current behavior
+      description: How does it work today, and what makes it frustrating, slow, or hard to use?
+      placeholder: e.g. "MergeAll issues one round trip per batch even when the provider supports a single multi-row upsert."
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed
+    attributes:
+      label: Proposed enhancement
+      description: How should it work instead? Be as specific as you can.
+    validations:
+      required: true
+
+  - type: textarea
+    id: code
+    attributes:
+      label: Code example
+      description: How the improved API or usage would look from the caller's side.
+      placeholder: |
+        var result = connection.MergeAll(people, qualifiers: e => new { e.Email });
+      render: csharp
+    validations:
+      required: false
+
+  - type: dropdown
+    id: breaking
+    attributes:
+      label: Is this a breaking change?
+      description: Would existing code have to change, or would results differ, after this enhancement?
+      options:
+        - "No"
+        - "Yes"
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Benchmarks, links to similar features in other libraries, or anything else that supports the enhancement.
+    validations:
+      required: false

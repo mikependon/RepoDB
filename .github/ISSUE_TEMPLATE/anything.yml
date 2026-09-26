@@ -1,0 +1,51 @@
+name: 📝 Anything Else
+description: Something that doesn't fit the other forms (documentation, packaging, CI, general feedback).
+labels: []
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please check first whether one of the other forms fits better. They ask for the details we usually need:
+
+        - **🐞 Report a Bug**: something throws, returns wrong data, or misbehaves.
+        - **✨ Enhancement**: improve an existing feature.
+        - **💡 Request or Propose**: something new.
+        - **❓ Ask a Question**: how to use RepoDB.
+
+  - type: dropdown
+    id: topic
+    attributes:
+      label: Topic
+      options:
+        - Documentation or website
+        - NuGet packaging or versioning
+        - Build, CI/CD, or tests
+        - General feedback
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe the issue in as much detail as you can. For anything that fails, include the exception message and stack trace.
+    validations:
+      required: true
+
+  - type: input
+    id: packages
+    attributes:
+      label: Related package(s) and version(s)
+      placeholder: e.g. RepoDb 1.14.0, RepoDb.SqlServer 1.14.0
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Links, screenshots, or anything else that helps.
+    validations:
+      required: false

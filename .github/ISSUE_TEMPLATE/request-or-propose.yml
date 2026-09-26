@@ -1,0 +1,91 @@
+name: 💡 Request or Propose
+description: Suggest a new feature, operation, or database provider that RepoDB does not have yet.
+title: "Request: "
+labels: ["request"]
+assignees: ["mikependon"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for something **new**. To improve a feature that already exists, please use **✨ Enhancement** instead.
+
+        Requests with a clear use case and an API sketch are much easier to evaluate and prioritize.
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Before you submit
+      options:
+        - label: I searched the [existing issues](https://github.com/mikependon/RepoDB/issues?q=is%3Aissue) and [discussions](https://github.com/mikependon/RepoDB/discussions) and this has not been requested yet.
+          required: true
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Type of request
+      options:
+        - New operation or API
+        - New database provider
+        - New bulk operations package
+        - New property handler / type support
+        - Tooling, documentation, or samples
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: What are you trying to do, and why is it hard or impossible with RepoDB today?
+      placeholder: e.g. "I need to read and write Snowflake tables, but there is no RepoDB provider for it."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: Describe what you would like RepoDB to provide.
+    validations:
+      required: true
+
+  - type: textarea
+    id: api
+    attributes:
+      label: API proposal
+      description: How you would like to call the new feature. A sketch is fine; it does not need to compile.
+      placeholder: |
+        var rows = connection.QueryAll<Person>(orderBy: OrderField.Ascending<Person>(e => e.Name), top: 10);
+      render: csharp
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives or workarounds
+      description: What do you use today instead (raw SQL, another library, custom extension methods)?
+      render: csharp
+    validations:
+      required: false
+
+  - type: dropdown
+    id: contribute
+    attributes:
+      label: Would you like to contribute?
+      description: Contributions are welcome. See the [Contributing Guide](https://github.com/mikependon/RepoDB/blob/master/CONTRIBUTING.md).
+      options:
+        - Yes, I can submit a pull request
+        - Yes, I can help test it
+        - No, I am only requesting it
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Links, references to similar features in other libraries, or anything else that helps.
+    validations:
+      required: false

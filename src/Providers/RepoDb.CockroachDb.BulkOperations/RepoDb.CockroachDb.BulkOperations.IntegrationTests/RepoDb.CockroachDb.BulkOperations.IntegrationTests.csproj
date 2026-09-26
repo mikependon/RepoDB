@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>RepoDb.CockroachDb.BulkOperations.IntegrationTests</AssemblyName>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <EnableMSTestRunner>true</EnableMSTestRunner>
+    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+    <TestTfmsInParallel>false</TestTfmsInParallel>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="10.0.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="MSTest" Version="4.2.3" />
+    <PackageReference Include="RepoDb.Connector.CockroachDb" Version="0.0.1-alpha1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
+    <ProjectReference Include="..\..\RepoDb.CockroachDb\RepoDb.CockroachDb\RepoDb.CockroachDb.csproj" />
+    <ProjectReference Include="..\RepoDb.CockroachDb.BulkOperations\RepoDb.CockroachDb.BulkOperations.csproj" />
+  </ItemGroup>
+</Project>

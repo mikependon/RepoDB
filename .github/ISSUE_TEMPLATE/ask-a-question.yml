@@ -1,0 +1,46 @@
+name: ❓ Ask a Question
+description: Ask how to use RepoDB, or whether something is supported.
+title: "Question: "
+labels: ["question"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Happy to help! 😊 For quick or open-ended questions, [GitHub Discussions](https://github.com/mikependon/RepoDB/discussions) and the [Microsoft Teams community](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ) are often faster, and the answers help others too.
+
+        The [documentation](https://repodb.net) and the [Limitations](https://github.com/mikependon/RepoDB/blob/master/LIMITATIONS.md) page may already have your answer.
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+      description: What would you like to know? One question per issue, please.
+      placeholder: e.g. "How do I map a JSON column to a nested class with RepoDb.PostgreSql?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: tried
+    attributes:
+      label: What have you tried?
+      description: Share the code you have so far, if any. It helps us answer with something that fits your setup.
+      render: csharp
+    validations:
+      required: false
+
+  - type: input
+    id: packages
+    attributes:
+      label: Package(s) and version(s)
+      placeholder: e.g. RepoDb 1.14.0, RepoDb.PostgreSql 1.14.0
+    validations:
+      required: false
+
+  - type: input
+    id: database
+    attributes:
+      label: Database and version
+      placeholder: e.g. PostgreSQL 17.2
+    validations:
+      required: false
