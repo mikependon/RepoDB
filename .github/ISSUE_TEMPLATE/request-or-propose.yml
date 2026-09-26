@@ -38,7 +38,7 @@ body:
     attributes:
       label: Problem to solve
       description: What are you trying to do, and why is it hard or impossible with RepoDB today?
-      placeholder: e.g. "I need to upsert rows into CockroachDB, but there is no RepoDB provider for it."
+      placeholder: e.g. "I need to read and write Snowflake tables, but there is no RepoDB provider for it."
     validations:
       required: true
 

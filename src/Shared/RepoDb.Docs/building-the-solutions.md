@@ -8,6 +8,8 @@ In this page, we will guide you on how to build the RepoDB solutions.
 - [RepoDb.Core](#building-the-repodbcore)
 - [RepoDb.ClickHouse](#building-the-repodbclickhouse)
 - [RepoDb.ClickHouse.BulkOperations](#building-the-repodbclickhousebulkoperations)
+- [RepoDb.CockroachDb](#building-the-repodbcockroachdb)
+- [RepoDb.CockroachDb.BulkOperations](#building-the-repodbcockroachdbbulkoperations)
 - [RepoDb.Db2](#building-the-repodbdb2)
 - [RepoDb.Db2.BulkOperations](#building-the-repodbdb2bulkoperations)
 - [RepoDb.EnterpriseDb](#building-the-repodbenterprisedb)
@@ -202,6 +204,94 @@ Execute the integration tests.
 
 ```
 > dotnet test RepoDb.ClickHouse.BulkOperations.IntegrationTests.csproj -v n
+```
+
+## Building the [RepoDb.CockroachDb](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.CockroachDb)
+
+```
+> cd c:\src\RepoDB\src\Providers\RepoDb.CockroachDb
+> dotnet build RepoDb.CockroachDb.sln -v n
+```
+
+#### Pre-requisites
+
+```
+> docker compose up -d cockroachdb
+```
+
+This starts a single insecure CockroachDB node exposing the `root` user (no password) on port `26257`, plus the DB Console on port `8080`, matching the default connection strings used by the tests below. The tests create the `RepoDb` database themselves if it does not exist yet.
+
+#### Building and executing the [RepoDb.CockroachDb.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.CockroachDb/RepoDb.CockroachDb.IntegrationTests)
+
+Start the `cockroachdb` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running).
+
+```
+> docker compose up -d cockroachdb
+```
+
+Add the environment variables under `System`.
+
+- REPODB_COCKROACHDB_CONSTR_SYSTEM = `Server=127.0.0.1;Port=26257;Database=defaultdb;User Id=root;`
+- REPODB_COCKROACHDB_CONSTR = `Server=127.0.0.1;Port=26257;Database=RepoDb;User Id=root;`
+
+Build the integration tests.
+
+```
+> cd c:\src\RepoDB\src\Providers\RepoDb.CockroachDb\RepoDb.CockroachDb.IntegrationTests
+> dotnet build RepoDb.CockroachDb.IntegrationTests.csproj -v n
+```
+
+Execute the integration tests.
+
+```
+> dotnet test RepoDb.CockroachDb.IntegrationTests.csproj -v n
+```
+
+#### Building and executing the [RepoDb.CockroachDb.UnitTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.CockroachDb/RepoDb.CockroachDb.UnitTests)
+
+```
+> cd c:\src\RepoDB\src\Providers\RepoDb.CockroachDb\RepoDb.CockroachDb.UnitTests
+> dotnet build RepoDb.CockroachDb.UnitTests.csproj -v n
+> dotnet test RepoDb.CockroachDb.UnitTests.csproj -v n
+```
+
+## Building the [RepoDb.CockroachDb.BulkOperations](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.CockroachDb.BulkOperations)
+
+```
+> cd c:\src\RepoDB\src\Providers\RepoDb.CockroachDb.BulkOperations
+> dotnet build RepoDb.CockroachDb.BulkOperations.sln -v n
+```
+
+#### Pre-requisites
+
+Start the `cockroachdb` service as described in the prior section.
+
+> Please ignore this pre-requisite if you have done it already in the prior section.
+
+#### Building and executing the [RepoDb.CockroachDb.BulkOperations.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.CockroachDb.BulkOperations/RepoDb.CockroachDb.BulkOperations.IntegrationTests)
+
+Start the `cockroachdb` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running).
+
+```
+> docker compose up -d cockroachdb
+```
+
+Add the environment variables under `System` (the same ones used by `RepoDb.CockroachDb.IntegrationTests`).
+
+- REPODB_COCKROACHDB_CONSTR_SYSTEM = `Server=127.0.0.1;Port=26257;Database=defaultdb;User Id=root;`
+- REPODB_COCKROACHDB_CONSTR = `Server=127.0.0.1;Port=26257;Database=RepoDb;User Id=root;`
+
+Build the integration tests.
+
+```
+> cd c:\src\RepoDB\src\Providers\RepoDb.CockroachDb.BulkOperations\RepoDb.CockroachDb.BulkOperations.IntegrationTests
+> dotnet build RepoDb.CockroachDb.BulkOperations.IntegrationTests.csproj -v n
+```
+
+Execute the integration tests.
+
+```
+> dotnet test RepoDb.CockroachDb.BulkOperations.IntegrationTests.csproj -v n
 ```
 
 ## Building the [RepoDb.Db2](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.Db2)
