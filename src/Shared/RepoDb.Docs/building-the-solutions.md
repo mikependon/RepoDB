@@ -12,6 +12,8 @@ In this page, we will guide you on how to build the RepoDB solutions.
 - [RepoDb.CockroachDb.BulkOperations](#building-the-repodbcockroachdbbulkoperations)
 - [RepoDb.Db2](#building-the-repodbdb2)
 - [RepoDb.Db2.BulkOperations](#building-the-repodbdb2bulkoperations)
+- [RepoDb.DuckDb](#building-the-repodbduckdb)
+- [RepoDb.DuckDb.BulkOperations](#building-the-repodbduckdbbulkoperations)
 - [RepoDb.EnterpriseDb](#building-the-repodbenterprisedb)
 - [RepoDb.Firebird](#building-the-repodbfirebird)
 - [RepoDb.Firebird.BulkOperations](#building-the-repodbfirebirdbulkoperations)
@@ -51,7 +53,7 @@ In this page, we will guide you on how to build the RepoDB solutions.
 
 ## Starting a Database via Docker
 
-Every provider except SQLite has a matching service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root, all sharing the password `RepoDB2026`. Start only the service(s) you need:
+Every provider except SQLite and DuckDB (both embedded, in-process engines) has a matching service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root, all sharing the password `RepoDB2026`. Start only the service(s) you need:
 
 ```
 > cd c:\src\RepoDB
@@ -378,6 +380,76 @@ Execute the integration tests.
 
 ```
 > dotnet test RepoDb.Db2.BulkOperations.IntegrationTests.csproj -v n
+```
+
+## Building the [RepoDb.DuckDb](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.DuckDb)
+
+```
+> cd c:\src\RepoDB\src\Providers\RepoDb.DuckDb
+> dotnet build RepoDb.DuckDb.sln -v n
+```
+
+#### Pre-requisites
+
+None - DuckDB is an embedded, in-process engine, so it needs no Docker service or separate install (the native engine ships inside the `DuckDB.NET.Data.Full` package). By default the tests use a file named `repodb_duckdb_tests.db` in the system temp folder, which is deleted and recreated at the start of every run.
+
+#### Building and executing the [RepoDb.DuckDb.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.DuckDb/RepoDb.DuckDb.IntegrationTests)
+
+Optionally, add the environment variable under `System` to use a different database file.
+
+- REPODB_DUCKDB_CONSTR = `Data Source=C:\DuckDb\Databases\RepoDb.db`
+
+Build the integration tests.
+
+```
+> cd c:\src\RepoDB\src\Providers\RepoDb.DuckDb\RepoDb.DuckDb.IntegrationTests
+> dotnet build RepoDb.DuckDb.IntegrationTests.csproj -v n
+```
+
+Execute the integration tests.
+
+```
+> dotnet test RepoDb.DuckDb.IntegrationTests.csproj -v n
+```
+
+> A DuckDB database file can be opened read-write by only one process at a time, so don't run the integration tests while another process (e.g. an IDE test session) has the same file open.
+
+#### Building and executing the [RepoDb.DuckDb.UnitTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.DuckDb/RepoDb.DuckDb.UnitTests)
+
+```
+> cd c:\src\RepoDB\src\Providers\RepoDb.DuckDb\RepoDb.DuckDb.UnitTests
+> dotnet build RepoDb.DuckDb.UnitTests.csproj -v n
+> dotnet test RepoDb.DuckDb.UnitTests.csproj -v n
+```
+
+## Building the [RepoDb.DuckDb.BulkOperations](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.DuckDb.BulkOperations)
+
+```
+> cd c:\src\RepoDB\src\Providers\RepoDb.DuckDb.BulkOperations
+> dotnet build RepoDb.DuckDb.BulkOperations.sln -v n
+```
+
+#### Pre-requisites
+
+None - as with `RepoDb.DuckDb`, no Docker service is needed. By default the tests use a file named `repodb_duckdb_bulk_tests.db` in the system temp folder, separate from the one used by `RepoDb.DuckDb.IntegrationTests`.
+
+#### Building and executing the [RepoDb.DuckDb.BulkOperations.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.DuckDb.BulkOperations/RepoDb.DuckDb.BulkOperations.IntegrationTests)
+
+Optionally, add the environment variable under `System` to use a different database file.
+
+- REPODB_DUCKDB_BULK_CONSTR = `Data Source=C:\DuckDb\Databases\RepoDbBulk.db`
+
+Build the integration tests.
+
+```
+> cd c:\src\RepoDB\src\Providers\RepoDb.DuckDb.BulkOperations\RepoDb.DuckDb.BulkOperations.IntegrationTests
+> dotnet build RepoDb.DuckDb.BulkOperations.IntegrationTests.csproj -v n
+```
+
+Execute the integration tests.
+
+```
+> dotnet test RepoDb.DuckDb.BulkOperations.IntegrationTests.csproj -v n
 ```
 
 ## Building the [RepoDb.EnterpriseDb](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.EnterpriseDb)
