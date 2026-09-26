@@ -1,0 +1,47 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.7.11911.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.CockroachDb.BulkOperations", "RepoDb.CockroachDb.BulkOperations\RepoDb.CockroachDb.BulkOperations.csproj", "{DE6302A7-3A92-4FBA-8D4F-2F728ACD5E3C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "..\RepoDb.Core\RepoDb\RepoDb.csproj", "{67D36FDC-29D3-478F-9915-2BA51FCEAB4C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.CockroachDb", "..\RepoDb.CockroachDb\RepoDb.CockroachDb\RepoDb.CockroachDb.csproj", "{0DB958C6-91F7-4D1C-A54F-8207D995919B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.CockroachDb.BulkOperations.Base", "RepoDb.CockroachDb.BulkOperations.Base", "{30B6A2EE-888B-4472-8034-6415E52575A5}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.CockroachDb.BulkOperations.IntegrationTests", "RepoDb.CockroachDb.BulkOperations.IntegrationTests\RepoDb.CockroachDb.BulkOperations.IntegrationTests.csproj", "{4DA4D44C-8771-4D2A-9E31-0FD7722C23CB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DE6302A7-3A92-4FBA-8D4F-2F728ACD5E3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE6302A7-3A92-4FBA-8D4F-2F728ACD5E3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE6302A7-3A92-4FBA-8D4F-2F728ACD5E3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE6302A7-3A92-4FBA-8D4F-2F728ACD5E3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67D36FDC-29D3-478F-9915-2BA51FCEAB4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67D36FDC-29D3-478F-9915-2BA51FCEAB4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67D36FDC-29D3-478F-9915-2BA51FCEAB4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67D36FDC-29D3-478F-9915-2BA51FCEAB4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DB958C6-91F7-4D1C-A54F-8207D995919B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DB958C6-91F7-4D1C-A54F-8207D995919B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DB958C6-91F7-4D1C-A54F-8207D995919B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DB958C6-91F7-4D1C-A54F-8207D995919B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DA4D44C-8771-4D2A-9E31-0FD7722C23CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DA4D44C-8771-4D2A-9E31-0FD7722C23CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DA4D44C-8771-4D2A-9E31-0FD7722C23CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DA4D44C-8771-4D2A-9E31-0FD7722C23CB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {949C38F9-C6C5-4561-8E34-A256CD61385A}
+	EndGlobalSection
+EndGlobal

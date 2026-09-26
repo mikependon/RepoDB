@@ -18,6 +18,10 @@
     <Project Path="RepoDb.CockroachDb/RepoDb.CockroachDb.UnitTests/RepoDb.CockroachDb.UnitTests.csproj" />
     <Project Path="RepoDb.CockroachDb/RepoDb.CockroachDb.IntegrationTests/RepoDb.CockroachDb.IntegrationTests.csproj" />
   </Folder>
+  <Folder Name="/CockroachDb/Bulk/">
+    <Project Path="RepoDb.CockroachDb.BulkOperations/RepoDb.CockroachDb.BulkOperations/RepoDb.CockroachDb.BulkOperations.csproj" />
+    <Project Path="RepoDb.CockroachDb.BulkOperations/RepoDb.CockroachDb.BulkOperations.IntegrationTests/RepoDb.CockroachDb.BulkOperations.IntegrationTests.csproj" />
+  </Folder>
   <Folder Name="/Db2/Core/">
     <Project Path="RepoDb.Db2/RepoDb.Db2/RepoDb.Db2.csproj" />
     <Project Path="RepoDb.Db2/RepoDb.Db2.UnitTests/RepoDb.Db2.UnitTests.csproj" />

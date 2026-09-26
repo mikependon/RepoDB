@@ -1,0 +1,7 @@
+<Project>
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+  <PropertyGroup>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)..\..\..\..\obj\RepoDb.CockroachDb.BulkOperations.IntegrationTests\</BaseIntermediateOutputPath>
+    <BaseOutputPath>$(MSBuildThisFileDirectory)..\..\..\..\bin\RepoDb.CockroachDb.BulkOperations.IntegrationTests\</BaseOutputPath>
+  </PropertyGroup>
+</Project>
