@@ -92,22 +92,24 @@ We want the .NET community to understand this library's limitations before using
   - [BulkMerge Without Updateable Columns Undercounts Affected Rows](#bulkmerge-without-updateable-columns-undercounts-affected-rows)
   - [Verification Status](#verification-status-7)
 - DuckDB
-  - [No Native Auto-Increment](#no-native-auto-increment)
-  - [GetScopeIdentity Not Supported](#getscopeidentity-not-supported)
   - [Merge Requires a UNIQUE/PRIMARY KEY Constraint on the Qualifiers](#merge-requires-a-uniqueprimary-key-constraint-on-the-qualifiers)
-  - [TIME / DATE / BLOB Require PropertyHandlers](#time--date--blob-require-propertyhandlers)
   - [Default Type-Level PropertyHandlers Are Process-Wide](#default-type-level-propertyhandlers-are-process-wide)
   - [INTERVAL With a Month/Year Component Is Unsupported](#interval-with-a-monthyear-component-is-unsupported)
   - [HUGEINT / UHUGEINT Map to BigInteger](#hugeint--uhugeint-map-to-biginteger)
   - [Raw SQL Uses `$name` Parameter Placeholders](#raw-sql-uses-name-parameter-placeholders)
-  - [No Spatial/Geometry Support](#no-spatialgeometry-support)
-  - [Embedded Engine: Single-Writer File Access and Optimistic Transactions](#embedded-engine-single-writer-file-access-and-optimistic-transactions)
   - [Requires .NET 8.0 or Later](#requires-net-80-or-later)
   - [Bulk Operations: Unmapped Columns Are Staged Twice](#bulk-operations-unmapped-columns-are-staged-twice)
-  - [Bulk Operations: Async Methods Run Synchronously](#bulk-operations-async-methods-run-synchronously)
   - [Bulk Operations Staging Table](#bulk-operations-staging-table-8)
   - [Bulk Insert and Merge Identity Correlation Relies on Insertion Order](#bulk-insert-and-merge-identity-correlation-relies-on-insertion-order)
   - [Verification Status](#verification-status-8)
+- CockroachDB
+  - [RepoDb.Connector.CockroachDb Is a Prerelease Package](#repodbconnectorcockroachdb-is-a-prerelease-package)
+  - [Requires .NET 8.0 or Later](#requires-net-80-or-later-1)
+  - [DDL Inside a Transaction Commits the Transaction](#ddl-inside-a-transaction-commits-the-transaction)
+  - [Sequential Identity Columns Create Write Hotspots](#sequential-identity-columns-create-write-hotspots)
+  - [Bulk Operations Staging Table](#bulk-operations-staging-table-9)
+  - [Bulk Insert and Merge Identity Correlation Relies on RETURNING Order](#bulk-insert-and-merge-identity-correlation-relies-on-returning-order-1)
+  - [Verification Status](#verification-status-9)
 
 ## Core
 
@@ -1422,35 +1424,6 @@ The `build-enterprisedb`/`build-enterprisedb-bulk` CI workflows are configured t
 
 These limitations are specific to the [RepoDb.DuckDb](https://www.nuget.org/packages/RepoDb.DuckDb) and [RepoDb.DuckDb.BulkOperations](https://www.nuget.org/packages/RepoDb.DuckDb.BulkOperations) packages, on top of the [Core](#core) limitations above. DuckDB is an embedded, in-process analytical database with no server component, accessed through the `DuckDB.NET.Data.Full` ADO.NET driver — several of the caveats below stem from that driver returning its own native structs (rather than the equivalent BCL type) for a few DuckDB SQL types.
 
-### No Native Auto-Increment
-
-DuckDB has no `AUTO_INCREMENT`/`IDENTITY` column concept. `Setup/Database.cs` in the integration tests, and any schema meant to work with RepoDB's identity-retrieval path, emulate it with `CREATE SEQUENCE` plus `DEFAULT nextval('seq_name')` on the primary key column instead:
-
-```sql
-CREATE SEQUENCE IF NOT EXISTS seq_completetable_id START 1;
-CREATE TABLE IF NOT EXISTS "CompleteTable"
-(
-    "Id" BIGINT DEFAULT nextval('seq_completetable_id') PRIMARY KEY,
-    ...
-);
-```
-
-`DuckDbDbHelper`'s column-introspection query treats a `column_default` containing `nextval(` as the signal that a column is an identity column.
-
-**Alternative Solution**
-
-No workaround needed — this is handled transparently by `DuckDbDbHelper`/`DuckDbStatementBuilder` as long as the table itself was created with a sequence-backed default, as shown above.
-
-### GetScopeIdentity Not Supported
-
-DuckDB has no session-scoped "last identity" function (unlike MySQL's `LAST_INSERT_ID()` or PostgreSQL's `lastval()`) — reading a sequence's current value requires knowing the sequence's name via `currval(seq)`, which the `IDbHelper.GetScopeIdentity<T>`/`GetScopeIdentityAsync<T>` method signature has no way to supply. `DuckDbDbHelper`'s implementation always throws `NotSupportedException`.
-
-This is not reachable in practice: `RepoDb.Core` only falls back to `GetScopeIdentity` when `IDbSetting.IsMultiStatementExecutable` is `false`, and `DuckDbDbSetting` always sets it to `true`. `DuckDbStatementBuilder` instead appends a `RETURNING <key> AS "Result"` clause directly onto the `Insert`/`InsertAll`/`Merge`/`MergeAll` statement, so the generated identity comes back from the same round trip.
-
-**Alternative Solution**
-
-None needed for `Insert`/`InsertAll`/`Merge`/`MergeAll` — identity retrieval already works via `RETURNING`. Avoid calling `IDbHelper.GetScopeIdentity`/`GetScopeIdentityAsync` directly against a `DuckDBConnection`.
-
 ### Merge Requires a UNIQUE/PRIMARY KEY Constraint on the Qualifiers
 
 DuckDB has no `MERGE` statement in the dialect `DuckDbStatementBuilder` targets, so `CreateMerge`/`CreateMergeAll` compile to an upsert instead:
@@ -1467,29 +1440,9 @@ RETURNING "Id" AS "Result" ;
 
 Merge on the primary key (the default), or add a `UNIQUE` constraint covering exactly the qualifier columns you pass. Always include at least one non-qualifier field in the merged entity. For a qualifier set that cannot be made unique, use `Exists` + `Update`/`Insert` yourself.
 
-### TIME / DATE / BLOB Require PropertyHandlers
-
-`DuckDB.NET.Data` returns its own native/BCL types for three SQL types that have no direct match against the CLR type RepoDB otherwise expects on a mapped entity property:
-
-| DuckDB type | Value returned by the driver | Entity property type | Handler |
-|---|---|---|---|
-| `TIME` | `System.TimeOnly` (read) / requires a boxed `DuckDB.NET.Native.DuckDBTimeOnly` (write) | `TimeSpan` / `TimeSpan?` | `DuckDbTimeOnlyToTimeSpanPropertyHandler` / `DuckDbTimeOnlyToNullableTimeSpanPropertyHandler` |
-| `DATE` | `System.DateOnly` | `DateTime` / `DateTime?` | `DuckDbDateOnlyToDateTimePropertyHandler` / `DuckDbDateOnlyToNullableDateTimePropertyHandler` |
-| `BLOB` | An unmanaged `Stream` (read) | `byte[]` | `DuckDbStreamToByteArrayPropertyHandler` |
-
-Without the matching handler, reading a `TIME`/`DATE`/`BLOB` column into a `TimeSpan`/`DateTime`/`byte[]`-typed property throws inside RepoDB's compiled reader (`Failed to convert the value expression into its destination .NET CLR Type ...`), and writing a plain `TimeSpan` back into a `TIME` column throws inside the driver itself (`Unable to cast object of type 'System.TimeSpan' to type 'DuckDB.NET.Native.DuckDBTimeOnly'`).
-
-`UseDuckDb()` registers two of the five handlers at the **type level** by default — `DuckDbStreamToByteArrayPropertyHandler` for `byte[]` and `DuckDbTimeOnlyToTimeSpanPropertyHandler` for `TimeSpan` — and `UseDuckDb(false)` skips them. This covers the write direction, including the dynamic/`ExpandoObject`/table-name-only paths that have no `ClassProperty` to hang a per-property handler on and fall back to the type-level mapping. It does **not** fully cover reads: on the read path, RepoDB looks up a type-level handler by the CLR type the *data reader reports* for the column (`Compiler.GetHandlerInstance`), not by the property's type — and DuckDB.NET reports `TIME` as `TimeOnly`, `DATE` as `DateOnly`, and `BLOB` as `Stream`, none of which match the `TimeSpan`/`byte[]` registrations. Purely dynamic reads (`QueryAll("TableName")`, `ExecuteQuery` into `dynamic`) never consult property handlers at all and always see the raw `TimeOnly`/`DateOnly`/`Stream` value.
-
-The remaining three handlers — both `DateOnly` handlers and `DuckDbTimeOnlyToNullableTimeSpanPropertyHandler` — are never registered automatically. All five live under `RepoDb.PropertyHandlers.DuckDb`.
-
-**Alternative Solution**
-
-Use a strongly-typed entity class and attach the handler per property — `[PropertyHandler(typeof(...))]`, or `PropertyHandlerMapper.Add<TEntity, THandler>(e => e.Column, new THandler(), true)` once at startup — for every `TIME`, `DATE`, and `BLOB` column, the same way `RepoDb.DuckDb.IntegrationTests`' `Setup/Database.cs` wires them onto `CompleteTable`/`NonIdentityCompleteTable`. If a dynamic read path is unavoidable, convert the raw `TimeOnly`/`DateOnly`/`Stream` value yourself after the call returns.
-
 ### Default Type-Level PropertyHandlers Are Process-Wide
 
-`PropertyHandlerMapper` is global to the process and is keyed only by CLR type — not by connection type — so the two default registrations made by `UseDuckDb()` (see [above](#time--date--blob-require-propertyhandlers)) apply to **every** `TimeSpan` and `byte[]` RepoDB handles afterwards, for every provider, not just DuckDB:
+By default, `UseDuckDb()` registers two type-level handlers: `DuckDbStreamToByteArrayPropertyHandler` for `byte[]` and `DuckDbTimeOnlyToTimeSpanPropertyHandler` for `TimeSpan`. `PropertyHandlerMapper` is global to the process and keyed only by CLR type, not by connection type, so these two handlers apply to **every** `TimeSpan` and `byte[]` RepoDB handles afterwards, for every provider, not just DuckDB:
 
 - **`TimeSpan` writes** — every `TimeSpan` parameter value is converted into DuckDB.NET's native `DuckDBTimeOnly` struct before binding. Another provider's driver (a SQL Server/MySQL `TIME`, a PostgreSQL `interval`) receives a struct it has no binding for, and a DuckDB `INTERVAL` column receives a time-of-day value rather than an interval.
 - **`TimeSpan` reads** — any column whose reader-reported type is `TimeSpan` (SQL Server/MySQL `TIME`, PostgreSQL `interval`, and DuckDB's own `INTERVAL`) is routed into `DuckDbTimeOnlyToTimeSpanPropertyHandler.Get`, which returns `default(TimeSpan)` (`00:00:00`) for any input that is not a `TimeOnly`. The value is silently zeroed, with no exception.
@@ -1500,7 +1453,7 @@ This has been derived from reading the source; there is no integration test for 
 
 **Alternative Solution**
 
-In any process that also uses another RepoDB provider, or that maps `INTERVAL` columns to `TimeSpan`, call `GlobalConfiguration.Setup().UseDuckDb(false)` and attach the DuckDB handlers per property instead (see [above](#time--date--blob-require-propertyhandlers)).
+In any process that also uses another RepoDB provider, or that maps `INTERVAL` columns to `TimeSpan`, call `GlobalConfiguration.Setup().UseDuckDb(false)` and attach the DuckDB handlers (under `RepoDb.PropertyHandlers.DuckDb`) per property instead, with `[PropertyHandler(typeof(...))]` or `PropertyHandlerMapper.Add<TEntity, THandler>(...)`.
 
 ### INTERVAL With a Month/Year Component Is Unsupported
 
@@ -1530,24 +1483,6 @@ Prefer `BIGINT`/`UBIGINT` columns unless you need the 128-bit range. Otherwise, 
 
 Write raw SQL with `$name` placeholders (e.g. `WHERE "Id" = $Id`) when porting queries from other providers.
 
-### No Spatial/Geometry Support
-
-Unlike `RepoDb.MySqlConnector`/`RepoDb.MariaDb` (which ship a `PropertyHandler` for their driver's `MySqlGeometry`/geometry type), `RepoDb.DuckDb` has no spatial type support in this initial version — DuckDB's spatial functionality lives in an optional `spatial` extension with its own driver-level representation that has not been evaluated against this provider.
-
-**Alternative Solution**
-
-Load the `spatial` extension and interact with geometry columns via raw SQL (`ExecuteQuery`/`ExecuteNonQuery` with `ST_*` functions and a `VARCHAR`/`BLOB` (WKT/WKB) representation) rather than a mapped entity property, until first-class support is added.
-
-### Embedded Engine: Single-Writer File Access and Optimistic Transactions
-
-DuckDB runs in-process; there is no server, and the connection string is a file path (`Data Source=my.db`) or `Data Source=:memory:`. A database file can be opened read-write by only one process at a time — a second process (e.g. another instance of a web app, or a test runner in parallel with the app) fails to open it. Within one process, concurrent transactions use optimistic concurrency control: two transactions that modify the same row conflict, and the later one fails at commit rather than waiting on a lock. Each `:memory:` connection is also its own, separate database.
-
-`DuckDbDbSetting` reports `IsTransactionSupported = true`, and RepoDB's transaction handling works as usual — but RepoDB does not retry conflicting commits for you.
-
-**Alternative Solution**
-
-Use DuckDB for analytical/embedded workloads with one writing process. Retry transactions that fail with a conflict, keep write transactions short, and share a single file-backed database (not `:memory:`) when multiple connections need to see the same data.
-
 ### Requires .NET 8.0 or Later
 
 `DuckDB.NET.Data.Full` ships no `netstandard2.0` build, so `RepoDb.DuckDb` targets `net8.0`/`net9.0`/`net10.0` only — unlike most other providers in this repository, it cannot be used from .NET Framework or older .NET (Core) versions.
@@ -1560,21 +1495,13 @@ None within RepoDB — upgrade the consuming project to .NET 8.0 or later.
 
 Every bulk load in `RepoDb.DuckDb.BulkOperations` goes through `DuckDbBulkAppender`, which writes rows with DuckDB.NET's native `DuckDBAppender`. The appender has no column-list API: every appended row must supply a value for every column of the target table, in table order.
 
-`DuckDBAppender.AppendDefault()` would normally fill the columns that are not mapped, but in `DuckDB.NET.Data.Full` 1.5.5 it is not usable. Against a column with a `nextval(...)` default (the [auto-increment emulation](#no-native-auto-increment) used for identity columns), it crashes the process with an access violation inside the native appender. Against a column with a constant default, it writes a corrupted value into the preceding column.
+`DuckDBAppender.AppendDefault()` would normally fill the columns that are not mapped, but in `DuckDB.NET.Data.Full` 1.5.5 it is not usable. Against a column with a `nextval(...)` default (how identity columns are emulated, since DuckDB has no `IDENTITY`/`AUTO_INCREMENT`), it crashes the process with an access violation inside the native appender. Against a column with a constant default, it writes a corrupted value into the preceding column.
 
 `DuckDbBulkAppender` therefore never calls `AppendDefault()`. When the mappings cover every column of the target table, rows are appended directly. Otherwise — most commonly a `BulkInsert` that leaves out the sequence-backed `Id` column — rows are appended into a session-private temporary table holding only the mapped columns, then copied with `INSERT INTO <table> (<columns>) SELECT <columns> FROM <temp> ORDER BY rowid`, so that DuckDB itself applies the column defaults. That second copy costs an extra pass over the data.
 
 **Alternative Solution**
 
 Map every column of the target table (including an explicit identity value) to take the direct append path. Revisit this once a DuckDB.NET release fixes `AppendDefault()`.
-
-### Bulk Operations: Async Methods Run Synchronously
-
-DuckDB is an in-process engine, and `DuckDBAppender` has no asynchronous API. `DuckDbBulkAppender.WriteToServerAsync` performs the same synchronous append as `WriteToServer` and returns a completed task, checking the `CancellationToken` once per row. The async bulk methods do not free the calling thread while rows are being appended.
-
-**Alternative Solution**
-
-None needed for correctness. Wrap the call in `Task.Run` if a UI or request thread must not be blocked during a large bulk load.
 
 ### Bulk Operations Staging Table
 
@@ -1604,3 +1531,77 @@ Leave `preserve_insertion_order` at its default (`true`) on connections used for
 `RepoDb.DuckDb` has unit test coverage (`DbSettingTest.cs`, `QuotationTest.cs`, `MappingTest.cs`, `StatementBuilderTest.cs`, plus attribute/resolver coverage) and an integration test suite (`RepoDb.DuckDb.IntegrationTests`, including operation, transaction, enum, and property-handler tests) run against a file-backed DuckDB database by the `build-duckdb`/`build-pr-duckdb` CI workflows — no database container is needed. The integration suite registers per-property handlers on its own models, so it does not exercise the [process-wide default handlers](#default-type-level-propertyhandlers-are-process-wide) against `INTERVAL` columns or alongside another provider, and it runs single-process, single-writer.
 
 `RepoDb.DuckDb.BulkOperations` has an integration test suite (`BulkInsertTest.cs`/`BulkMergeTest.cs`/`BulkUpdateTest.cs`/`BulkDeleteTest.cs`/`BulkDeleteByKeyTest.cs`, 590 tests per target framework) that passes locally against a file-backed DuckDB database on `net8.0`, `net9.0`, and `net10.0`, and is run by the `build-duckdb-bulk`/`build-pr-duckdb-bulk` CI workflows. It has no unit test project asserting the `DuckDbText` SQL generation in isolation. The suite covers only `UUID`, `UTINYINT`, `TIMESTAMP`, `DECIMAL`, `DOUBLE`, `INTEGER`, and `VARCHAR` columns; other column types (e.g. `DATE`, `TIME`, `BLOB`, `HUGEINT`, `INTERVAL`) have not been exercised through `DuckDbBulkAppender`, and neither has the `Physical` staging path under concurrent writers.
+
+## CockroachDB
+
+These limitations are specific to the `RepoDb.CockroachDb` and `RepoDb.CockroachDb.BulkOperations` packages, on top of the [Core](#core) limitations above. CockroachDB is a distributed SQL database that speaks the PostgreSQL wire protocol. Both packages are built on [`RepoDb.Connector.CockroachDb`](https://www.nuget.org/packages/RepoDb.Connector.CockroachDb), a Npgsql-based connector. The bulk operations write rows through its `CockroachDbBulkCopy`. `RepoDb.CockroachDb.BulkOperations` was ported from `RepoDb.EnterpriseDb.BulkOperations` and still generates the same PostgreSQL SQL. Several of the limitations below come from that SQL. Unless stated otherwise, each behavior below was checked by running the generated statements directly against CockroachDB `v26.3.2` (single node, `--insecure`, default cluster and session settings).
+
+### RepoDb.Connector.CockroachDb Is a Prerelease Package
+
+Both packages depend on `RepoDb.Connector.CockroachDb` `0.0.1-alpha1`, which is published to nuget.org as a prerelease. A stable NuGet package cannot depend on a prerelease one without the `NU5104` warning. The connector's public API (`CockroachDbConnection`, `CockroachDbBulkCopy`, `CockroachDbType`, and so on) may still change before it reaches a stable release.
+
+**Alternative Solution**
+
+Treat `RepoDb.CockroachDb` and `RepoDb.CockroachDb.BulkOperations` as prerelease as well until the connector ships a stable version, and pin the exact connector version in consuming projects.
+
+### Requires .NET 8.0 or Later
+
+`RepoDb.Connector.CockroachDb` only ships `net8.0`/`net9.0`/`net10.0` builds. `RepoDb.CockroachDb` targets `net8.0`/`net10.0` (a `net9.0` consumer uses the `net8.0` build), and `RepoDb.CockroachDb.BulkOperations` targets `net8.0`/`net9.0`/`net10.0`. Neither can be used from .NET Framework or older .NET (Core) versions.
+
+**Alternative Solution**
+
+None within RepoDB. Upgrade the consuming project to .NET 8.0 or later.
+
+### DDL Inside a Transaction Commits the Transaction
+
+CockroachDB's `autocommit_before_ddl` session setting is `on` by default. When a schema change runs inside an explicit transaction, CockroachDB first commits everything that transaction has done so far and prints `NOTICE: auto-committing transaction before processing DDL due to autocommit_before_ddl setting`. A later `ROLLBACK` does not undo that work:
+
+```sql
+BEGIN;
+INSERT INTO t VALUES (1);
+CREATE TABLE s (id INT8);   -- commits the INSERT above
+ROLLBACK;                   -- the row inserted above is still there
+```
+
+Every staged bulk operation (see [Bulk Operations Staging Table](#bulk-operations-staging-table-9)) runs `DROP TABLE`, `CREATE TABLE`, and `ALTER TABLE` for its staging table. When one of those is called with a `transaction` argument, any changes the caller made earlier in that transaction are committed at that point, and the caller can no longer roll them back.
+
+**Alternative Solution**
+
+Don't rely on rolling back a transaction that also performs a staged bulk operation. Run the bulk operation outside the transaction, or run `SET autocommit_before_ddl = off` on the connection first, if your CockroachDB version and workload allow it.
+
+### Sequential Identity Columns Create Write Hotspots
+
+RepoDB's identity handling (and the integration test schemas) use `INT8 GENERATED ALWAYS AS IDENTITY` primary keys. CockroachDB accepts them but warns that `using sequential values in a primary key does not perform as well as using random UUIDs`. Sequential keys send every insert to the same range, which limits write throughput on a multi-node cluster.
+
+**Alternative Solution**
+
+For write-heavy tables, prefer a `UUID PRIMARY KEY DEFAULT gen_random_uuid()` key (mapped to a `Guid` property), or CockroachDB's `unique_rowid()`, over a sequential identity column.
+
+### Bulk Operations Staging Table
+
+`BulkMerge`, `BulkUpdate`, `BulkDelete`, `BulkDeleteByKey`, and `BulkInsert` with `identityBehavior: ReturnIdentity` all stage rows into a pseudo table before applying them to the target table. Only a plain `BulkInsert` (without `ReturnIdentity`) writes straight into the target table through `CockroachDbBulkCopy`. On CockroachDB, **creating the staging table fails**, so every staged operation fails:
+
+- **Staging table creation.** `CockroachDbText.GetCreatePseudoTableSql` runs `CREATE [TEMP] TABLE <pseudo> AS SELECT ... WHERE (1 = 0)`, then `ALTER TABLE <pseudo> ADD COLUMN "__RepoDbBulkRowOrder__" BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY`. In CockroachDB, `CREATE TABLE ... AS` always gives the new table a hidden `rowid` primary key, so the `ALTER TABLE` fails with `ERROR: multiple primary keys for table "..." are not allowed` (`SQLSTATE 42611`). Adding the same column without `PRIMARY KEY` succeeds.
+- **Temporary tables are experimental.** `Memory` staging, and `Auto` below 5,000 rows (`CockroachDbConstants.RowCountThresholdForPhysicalTable`), use `CREATE TEMP TABLE`. By default CockroachDB rejects it with `ERROR: temporary tables are only supported experimentally` (`SQLSTATE XCEXF`) unless the session first runs `SET experimental_enable_temp_tables = 'on'`. Turning the setting on does not help on its own, because the `ALTER TABLE` above still fails.
+- **Truncating the staging table.** Right after creating it, every staged operation runs `TRUNCATE TABLE <pseudo> RESTART IDENTITY`. CockroachDB has no `RESTART IDENTITY` clause and fails with a syntax error (`SQLSTATE 42601`). A plain `TRUNCATE TABLE <pseudo>` works.
+- **Name collisions.** Staging tables are named deterministically from `{pseudoTableType}{tableName}{Operation}` (for example `PhysicalPersonMerge`), the same scheme as the other bulk packages in this document. Once staging works, two concurrent callers using `Physical` staging (or `Auto` at 5,000 rows or more) against the same target table would still share one staging table and could corrupt each other's staged rows.
+
+The remaining statements in the staged SQL were checked and do work on CockroachDB: `UPDATE ... FROM`, `DELETE ... USING`, `INSERT ... ON CONFLICT ... DO UPDATE ... RETURNING`, `INSERT ... OVERRIDING SYSTEM VALUE`, `nextval(pg_get_serial_sequence(...))` on an identity column, and `CREATE INDEX` on the staging table.
+
+**Alternative Solution**
+
+Until the staging SQL is adapted for CockroachDB, use only plain `BulkInsert` (without `ReturnIdentity`) from `RepoDb.CockroachDb.BulkOperations`. For merge, update, and delete, use the batched `MergeAll`/`UpdateAll`/`Delete` operations from `RepoDb.CockroachDb`. A fix needs to create the row-order column without `PRIMARY KEY` (or declare it in an explicit `CREATE TABLE`), drop `RESTART IDENTITY`, and either enable `experimental_enable_temp_tables` or avoid `TEMP` tables.
+
+### Bulk Insert and Merge Identity Correlation Relies on RETURNING Order
+
+`BulkInsert`/`BulkMerge` with `identityBehavior: ReturnIdentity` read identity values back with a single `INSERT ... SELECT ... ORDER BY <row-order column> ... RETURNING <identity>` statement. Each returned value is then assigned to the source entity or `DataRow` in order, which assumes `RETURNING` emits rows in the same order as the ordered `SELECT`. This is the same assumption described for [EnterpriseDB](#bulk-insert-and-merge-identity-correlation-relies-on-returning-order). CockroachDB doesn't document any guarantee about `RETURNING` row order, and because it runs queries as distributed plans across nodes, this assumption is weaker here than on a single-node PostgreSQL server.
+
+**Alternative Solution**
+
+This could not be tested, because the staging tables these statements read from cannot be created yet (see [above](#bulk-operations-staging-table-9)). Once staging works, verify that identities are matched to the right rows, especially for large batches on a multi-node cluster, before relying on `ReturnIdentity` in production.
+
+### Verification Status
+
+`RepoDb.CockroachDb` has a unit test project (`RepoDb.CockroachDb.UnitTests`, 178 tests passing on `net10.0`) and an integration test suite (`RepoDb.CockroachDb.IntegrationTests`, 714 test methods). The `build-cockroachdb`/`build-pr-cockroachdb` CI workflows run the integration suite against a `cockroachdb/cockroach:latest` single-node container. That image tag is not pinned, so a new CockroachDB release can change CI results without any code change.
+
+`RepoDb.CockroachDb.BulkOperations` builds on `net8.0`, `net9.0`, and `net10.0`. Its integration test suite (590 tests: 441 positive and 149 negative, carried over unchanged from `RepoDb.EnterpriseDb.BulkOperations`) has not been run yet, there are no CI workflows for it, and there is no unit test project for the `CockroachDbText` SQL generation. The staging-table failures above were found by running the generated SQL directly against CockroachDB `v26.3.2`, not through the test suite. Expect every test that uses staging (all merge, update, delete, and delete-by-key tests, plus the insert tests that use `ReturnIdentity`) to fail until the staging SQL is fixed.
