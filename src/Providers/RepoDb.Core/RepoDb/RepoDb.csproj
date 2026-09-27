@@ -71,5 +71,6 @@
     <InternalsVisibleTo Include="RepoDb.DuckDb.BulkOperations" />
     <InternalsVisibleTo Include="RepoDb.CockroachDb.BulkOperations" />
     <InternalsVisibleTo Include="RepoDb.AuroraDb.PostgreSql.BulkOperations" />
+    <InternalsVisibleTo Include="RepoDb.AuroraDb.MySqlConnector.BulkOperations" />
   </ItemGroup>
 </Project>

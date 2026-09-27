@@ -1,0 +1,243 @@
+﻿#region Copyright Attributions
+
+// Copyright (c) 2026 Michael Camara Pendon.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Connector.AuroraDb.MySqlConnector;
+using RepoDb.Extensions;
+using RepoDb.Reflection;
+using RepoDb.AuroraDb.MySqlConnector.IntegrationTests.Models;
+using RepoDb.AuroraDb.MySqlConnector.IntegrationTests.Setup;
+using System.Data.Common;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace RepoDb.AuroraDb.MySqlConnector.IntegrationTests.Operations
+{
+    [TestClass]
+    public class ExecuteReaderTest
+    {
+        [TestInitialize]
+        public void Initialize()
+        {
+            Database.Initialize();
+            Cleanup();
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            Database.Cleanup();
+        }
+
+        #region Sync
+
+        [TestMethod]
+        public void TestAuroraDbConnectionExecuteReader()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new AuroraDbConnection(Database.ConnectionString))
+            {
+                // Act
+                using (var reader = connection.ExecuteReader("SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`;"))
+                {
+                    while (reader.Read())
+                    {
+                        // Act
+                        var id = reader.GetInt64(0);
+                        var columnInt = reader.GetInt32(1);
+                        var columnDateTime = reader.GetDateTime(2);
+                        var table = tables.FirstOrDefault(e => e.Id == id);
+
+                        // Assert
+                        Assert.IsNotNull(table);
+                        Assert.AreEqual(columnInt, table.ColumnInt);
+                        Assert.AreEqual(columnDateTime, table.ColumnDateTime);
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestAuroraDbConnectionExecuteReaderWithMultipleStatements()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new AuroraDbConnection(Database.ConnectionString))
+            {
+                // Act
+                using (var reader = connection.ExecuteReader("SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`; SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`;"))
+                {
+                    do
+                    {
+                        while (reader.Read())
+                        {
+                            // Act
+                            var id = reader.GetInt64(0);
+                            var columnInt = reader.GetInt32(1);
+                            var columnDateTime = reader.GetDateTime(2);
+                            var table = tables.FirstOrDefault(e => e.Id == id);
+
+                            // Assert
+                            Assert.IsNotNull(table);
+                            Assert.AreEqual(columnInt, table.ColumnInt);
+                            Assert.AreEqual(columnDateTime, table.ColumnDateTime);
+                        }
+                    } while (reader.NextResult());
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestAuroraDbConnectionExecuteReaderAsExtractedEntity()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new AuroraDbConnection(Database.ConnectionString))
+            {
+                // Act
+                using (var reader = connection.ExecuteReader("SELECT * FROM `CompleteTable`;"))
+                {
+                    // Act
+                    var result = DataReader.ToEnumerable<CompleteTable>((DbDataReader)reader).AsList();
+
+                    // Assert
+                    tables.AsList().ForEach(table => Helper.AssertPropertiesEquality(table, result.First(e => e.Id == table.Id)));
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestAuroraDbConnectionExecuteReaderAsExtractedDynamic()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new AuroraDbConnection(Database.ConnectionString))
+            {
+                // Act
+                using (var reader = connection.ExecuteReader("SELECT * FROM `CompleteTable`;"))
+                {
+                    // Act
+                    var result = DataReader.ToEnumerable((DbDataReader)reader).AsList();
+
+                    // Assert
+                    tables.AsList().ForEach(table => Helper.AssertMembersEquality(table, result.First(e => e.Id == table.Id)));
+                }
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestAuroraDbConnectionExecuteReaderAsync()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new AuroraDbConnection(Database.ConnectionString))
+            {
+                // Act
+                using (var reader = await connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`;").ConfigureAwait(false))
+                {
+                    while (reader.Read())
+                    {
+                        // Act
+                        var id = reader.GetInt64(0);
+                        var columnInt = reader.GetInt32(1);
+                        var columnDateTime = reader.GetDateTime(2);
+                        var table = tables.FirstOrDefault(e => e.Id == id);
+
+                        // Assert
+                        Assert.IsNotNull(table);
+                        Assert.AreEqual(columnInt, table.ColumnInt);
+                        Assert.AreEqual(columnDateTime, table.ColumnDateTime);
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public async Task TestAuroraDbConnectionExecuteReaderAsyncWithMultipleStatements()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new AuroraDbConnection(Database.ConnectionString))
+            {
+                // Act
+                using (var reader = await connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`; SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`;").ConfigureAwait(false))
+                {
+                    do
+                    {
+                        while (reader.Read())
+                        {
+                            // Act
+                            var id = reader.GetInt64(0);
+                            var columnInt = reader.GetInt32(1);
+                            var columnDateTime = reader.GetDateTime(2);
+                            var table = tables.FirstOrDefault(e => e.Id == id);
+
+                            // Assert
+                            Assert.IsNotNull(table);
+                            Assert.AreEqual(columnInt, table.ColumnInt);
+                            Assert.AreEqual(columnDateTime, table.ColumnDateTime);
+                        }
+                    } while (reader.NextResult());
+                }
+            }
+        }
+
+        [TestMethod]
+        public async Task TestAuroraDbConnectionExecuteReaderAsyncAsExtractedEntity()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new AuroraDbConnection(Database.ConnectionString))
+            {
+                // Act
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM `CompleteTable`;").ConfigureAwait(false))
+                {
+                    // Act
+                    var result = DataReader.ToEnumerable<CompleteTable>((DbDataReader)reader).AsList();
+
+                    // Assert
+                    tables.AsList().ForEach(table => Helper.AssertPropertiesEquality(table, result.First(e => e.Id == table.Id)));
+                }
+            }
+        }
+
+        [TestMethod]
+        public async Task TestAuroraDbConnectionExecuteReaderAsyncAsExtractedDynamic()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new AuroraDbConnection(Database.ConnectionString))
+            {
+                // Act
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM `CompleteTable`;").ConfigureAwait(false))
+                {
+                    // Act
+                    var result = DataReader.ToEnumerable((DbDataReader)reader).AsList();
+
+                    // Assert
+                    tables.AsList().ForEach(table => Helper.AssertMembersEquality(table, result.First(e => e.Id == table.Id)));
+                }
+            }
+        }
+
+        #endregion
+    }
+}
