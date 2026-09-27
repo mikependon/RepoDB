@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Title>RepoDb.AuroraDb.PostgreSql</Title>
+    <AssemblyName>RepoDb.AuroraDb.PostgreSql</AssemblyName>
+    <PackageId>RepoDb.AuroraDb.PostgreSql</PackageId>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <Nullable>annotations</Nullable>
+    <Description>A hybrid .NET ORM library for Amazon Aurora PostgreSQL (using RepoDb.Connector.AuroraDb.Npgsql).</Description>
+    <PackageTags>orm hybrid-orm micro-orm auroradb aurora aws amazon postgresql npgsql</PackageTags>
+    <RepositoryUrl>https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.AuroraDb.PostgreSql</RepositoryUrl>
+    <PackageIcon>AuroraDB.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageReleaseNotes>http://repodb.net/release/auroradbpostgresql</PackageReleaseNotes>
+    <PackageProjectUrl>https://repodb.net/tutorial/get-started-auroradb-postgresql</PackageProjectUrl>
+    <!--
+      Pins the version this project is stamped as when it is a ProjectReference dependency of another
+      package (e.g. RepoDb.AuroraDb.PostgreSql.BulkOperations), independently of the consuming package's own
+      -p:Version. Pass -p:RepoDbAuroraDbPostgreSqlVersion=<version> to set it. PackageVersion is used (not
+      Version) because it is not overridden by the global Version property.
+    -->
+    <PackageVersion Condition="'$(RepoDbAuroraDbPostgreSqlVersion)' != ''">$(RepoDbAuroraDbPostgreSqlVersion)</PackageVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="RepoDb.Connector.AuroraDb.Npgsql" Version="0.0.1-alpha1" />
+    <!--
+      RepoDb.Connector.AuroraDb.Npgsql only brings in Npgsql 9 (through AWS.AdvancedDotnetDataProviderWrapper.Dialect.Npgsql).
+      Npgsql 10 is pinned here so that the DATE/TIME columns are read as DateOnly/TimeOnly, the same as in RepoDb.PostgreSql,
+      which is what the type resolvers of this library expect.
+    -->
+    <PackageReference Include="Npgsql" Version="10.0.3" />
+    <PackageReference Include="System.Text.Json" Version="10.0.9" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <PackageReference Remove="System.Linq.Async" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />
+    <None Include="..\README.md" Pack="True" PackagePath="\" />
+    <None Include="..\AuroraDB.png" Pack="True" PackagePath="\" />
+  </ItemGroup>
+</Project>

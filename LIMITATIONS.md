@@ -110,6 +110,16 @@ We want the .NET community to understand this library's limitations before using
   - [Bulk Operations Staging Table](#bulk-operations-staging-table-9)
   - [Bulk Insert and Merge Identity Correlation Relies on RETURNING Order](#bulk-insert-and-merge-identity-correlation-relies-on-returning-order-1)
   - [Verification Status](#verification-status-9)
+- AuroraDB (PostgreSQL)
+  - [RepoDb.Connector.AuroraDb.Npgsql Is a Prerelease Package](#repodbconnectorauroradbnpgsql-is-a-prerelease-package)
+  - [Requires .NET 8.0 or Later](#requires-net-80-or-later-2)
+  - [Npgsql 10 Is Pinned Over the Connector's Npgsql 9](#npgsql-10-is-pinned-over-the-connectors-npgsql-9)
+  - [The AWS Wrapper Probes for Aurora on Every Connection Open](#the-aws-wrapper-probes-for-aurora-on-every-connection-open)
+  - [TransactionScope Fails on a Server That Is Not an Aurora Cluster](#transactionscope-fails-on-a-server-that-is-not-an-aurora-cluster)
+  - [PostgreSQL Enumerations Need Npgsql's Global Type Mapper](#postgresql-enumerations-need-npgsqls-global-type-mapper)
+  - [Spatial (PostGIS) Values Need an Npgsql Plugin](#spatial-postgis-values-need-an-npgsql-plugin)
+  - [No Bulk Operations Package Yet](#no-bulk-operations-package-yet)
+  - [Verification Status](#verification-status-10)
 
 ## Core
 
@@ -1605,3 +1615,84 @@ This could not be tested, because the staging tables these statements read from 
 `RepoDb.CockroachDb` has a unit test project (`RepoDb.CockroachDb.UnitTests`, 178 tests passing on `net10.0`) and an integration test suite (`RepoDb.CockroachDb.IntegrationTests`, 714 test methods). The `build-cockroachdb`/`build-pr-cockroachdb` CI workflows run the integration suite against a `cockroachdb/cockroach:latest` single-node container. That image tag is not pinned, so a new CockroachDB release can change CI results without any code change.
 
 `RepoDb.CockroachDb.BulkOperations` builds on `net8.0`, `net9.0`, and `net10.0`. Its integration test suite (590 tests: 441 positive and 149 negative, carried over unchanged from `RepoDb.EnterpriseDb.BulkOperations`) has not been run yet, there are no CI workflows for it, and there is no unit test project for the `CockroachDbText` SQL generation. The staging-table failures above were found by running the generated SQL directly against CockroachDB `v26.3.2`, not through the test suite. Expect every test that uses staging (all merge, update, delete, and delete-by-key tests, plus the insert tests that use `ReturnIdentity`) to fail until the staging SQL is fixed.
+
+## AuroraDB (PostgreSQL)
+
+These limitations are specific to the `RepoDb.AuroraDb.PostgreSql` package, on top of the [Core](#core) limitations above. Amazon Aurora PostgreSQL is PostgreSQL-compatible, so the package generates the same SQL as `RepoDb.PostgreSql`: `"` quoting, `RETURNING` for identities, `INSERT ... ON CONFLICT` for merges, `LIMIT`/`OFFSET` for paging, and `TRUNCATE ... RESTART IDENTITY`. It is built on [`RepoDb.Connector.AuroraDb.Npgsql`](https://www.nuget.org/packages/RepoDb.Connector.AuroraDb.Npgsql). That connector's `AuroraDbConnection` wraps Npgsql in the [AWS Advanced .NET Data Provider Wrapper](https://github.com/aws/aws-advanced-dotnet-data-provider-wrapper) (`AwsWrapperConnection<NpgsqlConnection>`). Unless stated otherwise, each behavior below was observed by running the integration test suite against the `postgis/postgis:latest` container (PostgreSQL `17.5`, PostGIS `3.5.2`). That container is a plain PostgreSQL server standing in for an Aurora cluster. None of it has been run against a real Aurora cluster.
+
+### RepoDb.Connector.AuroraDb.Npgsql Is a Prerelease Package
+
+The package depends on `RepoDb.Connector.AuroraDb.Npgsql` `0.0.1-alpha1`, which is published to nuget.org as a prerelease. A stable NuGet package cannot depend on a prerelease one without the `NU5104` warning. The connector's public API (`AuroraDbConnection`, `AuroraDbType`, `AuroraDbBulkCopy`, and so on) may still change before it reaches a stable release.
+
+**Alternative Solution**
+
+Treat `RepoDb.AuroraDb.PostgreSql` as prerelease as well until the connector ships a stable version, and pin the exact connector version in consuming projects.
+
+### Requires .NET 8.0 or Later
+
+`RepoDb.Connector.AuroraDb.Npgsql` and the AWS wrapper only ship `net8.0`/`net9.0`/`net10.0` builds, so `RepoDb.AuroraDb.PostgreSql` targets `net8.0`, `net9.0`, and `net10.0`. It cannot be used from .NET Framework or older .NET (Core) versions.
+
+**Alternative Solution**
+
+None within RepoDB. Upgrade the consuming project to .NET 8.0 or later.
+
+### Npgsql 10 Is Pinned Over the Connector's Npgsql 9
+
+The connector gets Npgsql through `AWS.AdvancedDotnetDataProviderWrapper.Dialect.Npgsql` `2.2.0`, which depends on Npgsql `9.0.5`. Npgsql 9 reads `DATE` columns as `DateTime` and `TIME` columns as `TimeSpan`. The type resolvers of this package expect `DateOnly` and `TimeOnly`, the same as `RepoDb.PostgreSql`, which uses Npgsql 10. On Npgsql 9, 292 of the 746 integration tests failed on date/time values. `RepoDb.AuroraDb.PostgreSql` therefore references Npgsql `10.0.3` directly, which lifts the whole dependency graph, including the AWS wrapper, to Npgsql 10.
+
+The AWS wrapper's Npgsql dialect was built against Npgsql 9. The full integration suite passes on Npgsql 10, but only against a single plain PostgreSQL server. Failover, read/write splitting, IAM authentication, and the other wrapper plugins have not been exercised on Npgsql 10.
+
+**Alternative Solution**
+
+Move the connector itself to Npgsql 10, then drop the direct Npgsql reference from this package. Until then, test the AWS wrapper plugins you rely on against your cluster before going to production.
+
+### The AWS Wrapper Probes for Aurora on Every Connection Open
+
+Every time an `AuroraDbConnection` is opened, the AWS wrapper runs dialect-detection queries such as `SELECT 1 FROM pg_catalog.aurora_replica_status() LIMIT 1` and a check for the `rds_tools` extension. On an Aurora cluster these functions exist. On any other PostgreSQL server (RDS PostgreSQL, self-managed, the local container, or CI), the first probe fails and the server logs an error. One run of the integration suite logged about 6,000 `function pg_catalog.aurora_replica_status() does not exist` errors. Adding `Plugins=;` or `CustomDialect=AwsWrapperDataProvider.Driver.Dialects.PgDialect, AwsWrapperDataProvider` to the connection string did not stop the probe.
+
+**Alternative Solution**
+
+None within RepoDB. The probes come from the AWS wrapper inside the connector. On a server that is not an Aurora cluster, expect the extra round-trips and the server log noise, or use `RepoDb.PostgreSql` for that server instead.
+
+### TransactionScope Fails on a Server That Is Not an Aurora Cluster
+
+Inside a `TransactionScope`, the connection is enlisted in the ambient transaction when it opens. The failed probe from the [previous section](#the-aws-wrapper-probes-for-aurora-on-every-connection-open) then runs inside that transaction and aborts it. The first RepoDB operation fails with an `AuroraDbException` with `SqlState` `25P02` (`current transaction is aborted, commands ignored until end of transaction block`), and nothing is committed. Explicit transactions (`connection.BeginTransaction()`) are not affected and pass their tests.
+
+On an Aurora cluster the probe succeeds, so `TransactionScope` is expected to work there, but this has not been verified. In the integration suite, the six `TransactionScope` tests are reported as inconclusive (skipped) when the server is not an Aurora cluster. Two negative tests pin the `25P02` failure, so a fix in the connector or the AWS wrapper will show up as a test failure.
+
+**Alternative Solution**
+
+Use explicit transactions (`BeginTransaction()` with the `transaction` argument of the RepoDB operations) when the server is not an Aurora cluster.
+
+### PostgreSQL Enumerations Need Npgsql's Global Type Mapper
+
+`AuroraDbConnection` creates its `NpgsqlConnection` internally from the connection string, so an `NpgsqlDataSourceBuilder.MapEnum<T>()` mapping cannot be applied to it. Npgsql-only members such as `ReloadTypes()` are not on `AuroraDbConnection` either.
+
+**Alternative Solution**
+
+Map the enumeration through the (obsolete) `NpgsqlConnection.GlobalTypeMapper.MapEnum<T>()` before the first connection for that connection string is opened. Npgsql builds and caches one data source per connection string, and a mapping added later does not affect an already-built data source. For Npgsql-only members, unwrap the inner connection with `connection.WrappedConnection.Unwrap<NpgsqlConnection>()` after opening it. The integration suite's `EnumTests` use both approaches.
+
+### Spatial (PostGIS) Values Need an Npgsql Plugin
+
+Aurora PostgreSQL supports PostGIS, and `AuroraDbType` has `Geometry` and `Geography` members. However, Npgsql cannot read or write these types without a spatial plugin such as `Npgsql.NetTopologySuite`, and this package does not reference one:
+
+- **Reading.** Querying a `GEOMETRY` column into a property throws an `InvalidCastException`.
+- **Schema.** `information_schema` reports both types as `USER-DEFINED`, so their `DbField.Type` is `object`.
+- **Writing geometry.** A `string` in Well-Known Text (or EWKT, e.g. `SRID=4326;POINT(1 2)`) can be inserted into a `GEOMETRY` column directly, because PostGIS casts `text` to `geometry` implicitly.
+- **Writing geography.** There is no such cast for `GEOGRAPHY`, so the same insert fails with `SqlState` `42804`.
+
+**Alternative Solution**
+
+Exchange the values as Well-Known Text through the PostGIS functions: `ST_GeomFromText(@Wkt, 4326)`/`ST_GeogFromText(@Wkt)` when writing, and `ST_AsText("Column")` when reading, with `ExecuteQuery`/`ExecuteScalar`. The integration suite's `SpatialTests` cover this. Registering `Npgsql.NetTopologySuite` through the global type mapper has not been tested.
+
+### No Bulk Operations Package Yet
+
+There is no `RepoDb.AuroraDb.PostgreSql.BulkOperations` package yet (`src/Providers/RepoDb.AuroraDb.PostgreSql.BulkOperations` only holds a placeholder README). The connector already ships `AuroraDbBulkCopy` (Npgsql binary `COPY`) for a future add-on.
+
+**Alternative Solution**
+
+Use the batched `InsertAll`/`MergeAll`/`UpdateAll` operations, or `AuroraDbBulkCopy` from `RepoDb.Connector.AuroraDb.Npgsql` directly.
+
+### Verification Status
+
+`RepoDb.AuroraDb.PostgreSql.UnitTests` has 194 test methods (288 test cases once the data rows are counted), and all of them pass. `RepoDb.AuroraDb.PostgreSql.IntegrationTests` has 760 test methods, 118 of which are negative (`ThrowException...`). The unit tests were ported from `RepoDb.CockroachDb`. The integration tests were ported from `RepoDb.PostgreSql`, plus the `AuroraDbType` attribute tests from `RepoDb.CockroachDb` and new `SpatialTests`. For comparison, the original `RepoDb.PostgreSql` integration suite passes 746/746 against the same container. Against the `postgis/postgis:latest` container, 1,042 of the 1,048 test cases pass on each of `net8.0`, `net9.0`, and `net10.0`; the other 6 are the inconclusive `TransactionScope` tests described above. The `build-auroradb-postgresql`/`build-pr-auroradb-postgresql` CI workflows run both suites against a `postgis/postgis:latest` service container. That image tag is not pinned, so a new PostgreSQL or PostGIS release can change CI results without any code change.

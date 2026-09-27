@@ -53,6 +53,7 @@ body:
         - RepoDb.Oracle
         - RepoDb.Sqlite.Microsoft
         - RepoDb.Db2
+        - RepoDb.AuroraDb.PostgreSql
         - RepoDb.ClickHouse
         - RepoDb.CockroachDb
         - RepoDb.DuckDb

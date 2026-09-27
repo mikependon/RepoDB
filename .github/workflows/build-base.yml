@@ -16,7 +16,7 @@ on:
         required: true
         type: string
       db-engine:
-        description: 'Database service required for this build: none, sqlserver, postgresql, mysql, mariadb, oracle, db2, clickhouse, cockroachdb, firebird, vertica, enterprisedb, saphana'
+        description: 'Database service required for this build: none, sqlserver, postgresql, auroradbnpgsql, mysql, mariadb, oracle, db2, clickhouse, cockroachdb, firebird, vertica, enterprisedb, saphana'
         required: true
         type: string
     secrets:
@@ -36,6 +36,9 @@ env:
   REPODB_PGSQL_CONSTR_POSTGRES: "Server=127.0.0.1;Port=5432;Database=postgres;User Id=postgres;Password=RepoDB2026;"
   REPODB_PGSQL_CONSTR: "Server=127.0.0.1;Port=5432;Database=RepoDb;User Id=postgres;Password=RepoDB2026;"
   REPODB_PGSQL_CONSTR_BULK: "Server=127.0.0.1;Port=5432;Database=RepoDbBulk;User Id=postgres;Password=RepoDB2026;"
+  # Amazon Aurora PostgreSQL (a plain PostgreSQL with PostGIS stands in for an Aurora PostgreSQL cluster)
+  REPODB_AURORADB_CONSTR_SYSTEM: "Server=127.0.0.1;Port=5435;Database=postgres;User Id=postgres;Password=RepoDB2026;"
+  REPODB_AURORADB_CONSTR: "Server=127.0.0.1;Port=5435;Database=RepoDb;User Id=postgres;Password=RepoDB2026;"
   # MySQL
   REPODB_MYSQL_CONSTR_SYSTEM: "Server=127.0.0.1;Port=3306;Database=sys;User ID=root;Password=RepoDB2026;"
   REPODB_MYSQL_CONSTR: "Server=127.0.0.1;Port=3306;Database=RepoDb;User ID=root;Password=RepoDB2026;"
@@ -165,6 +168,59 @@ jobs:
           - 127.0.0.1:5432:5432
         env:
           POSTGRES_PASSWORD: RepoDB2026
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v5
+
+      - name: Setup .NET Versions
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: |
+            10.0.x
+
+      - name: Dotnet Build
+        run: dotnet build -c release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
+
+      - name: Test for .NET 8.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net8.0 --no-build ${{ inputs.solution-file }}
+
+      - name: Test for .NET 9.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net9.0 --no-build ${{ inputs.solution-file }}
+
+      - name: Test for .NET 10.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net10.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
+
+      - name: Run Dotnet Pack
+        run: dotnet pack -c release -p Version="1.14.0-dev-${{ github.run_number }}" -o release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
+
+      - name: Package Nuget
+        uses: actions/upload-artifact@v5
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: release/*nupkg
+
+  # Amazon Aurora PostgreSQL only (e.g. RepoDb.AuroraDb.PostgreSql). A plain PostgreSQL with PostGIS stands in for an Aurora PostgreSQL cluster.
+  build-auroradbnpgsql:
+    if: inputs.db-engine == 'auroradbnpgsql'
+    runs-on: ubuntu-latest
+
+    services:
+      auroradbnpgsql:
+        image: postgis/postgis:latest
+        ports:
+          - 127.0.0.1:5435:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: RepoDB2026
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 30
 
     steps:
       - name: Check out repository code

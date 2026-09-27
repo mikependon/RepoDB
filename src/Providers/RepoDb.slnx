@@ -4,6 +4,11 @@
     <Project Path="RepoDb.Core/RepoDb.Tests/RepoDb.UnitTests/RepoDb.UnitTests.csproj" />
     <Project Path="RepoDb.Core/RepoDb.Tests/RepoDb.IntegrationTests/RepoDb.IntegrationTests.csproj" />
   </Folder>
+  <Folder Name="/AuroraDb/PostgreSql/">
+    <Project Path="RepoDb.AuroraDb.PostgreSql/RepoDb.AuroraDb.PostgreSql/RepoDb.AuroraDb.PostgreSql.csproj" />
+    <Project Path="RepoDb.AuroraDb.PostgreSql/RepoDb.AuroraDb.PostgreSql.UnitTests/RepoDb.AuroraDb.PostgreSql.UnitTests.csproj" />
+    <Project Path="RepoDb.AuroraDb.PostgreSql/RepoDb.AuroraDb.PostgreSql.IntegrationTests/RepoDb.AuroraDb.PostgreSql.IntegrationTests.csproj" />
+  </Folder>
   <Folder Name="/ClickHouse/Core/">
     <Project Path="RepoDb.ClickHouse/RepoDb.ClickHouse/RepoDb.ClickHouse.csproj" />
     <Project Path="RepoDb.ClickHouse/RepoDb.ClickHouse.UnitTests/RepoDb.ClickHouse.UnitTests.csproj" />

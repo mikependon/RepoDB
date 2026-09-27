@@ -1,0 +1,851 @@
+﻿#region Copyright Attributions
+
+// Copyright (c) 2020 Michael Camara Pendon.
+// Portions copyright their respective RepoDB contributors.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Connector.AuroraDb.Npgsql;
+using Npgsql;
+using Npgsql.NameTranslation;
+using RepoDb.Attributes;
+using RepoDb.Attributes.Parameter.AuroraDb;
+using RepoDb.Extensions;
+using RepoDb.AuroraDb.PostgreSql.IntegrationTests.Setup;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace RepoDb.AuroraDb.PostgreSql.IntegrationTests
+{
+    [TestClass]
+    public class EnumTests
+    {
+        /// <summary>
+        /// A dedicated connection string, so that the pooled Npgsql data source behind it is only built after the
+        /// <c>hand</c> enumeration has been mapped (the global type mapper does not affect already-built data sources).
+        /// </summary>
+        private static string EnumConnectionString => Database.ConnectionString.TrimEnd(';') + ";Application Name=RepoDb.EnumTests;";
+
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext context)
+        {
+#pragma warning disable CS0618 // The global type mapper is the only way to map an enum for the connections created by the AWS wrapper.
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<Hands>("hand", new NpgsqlNullNameTranslator());
+#pragma warning restore CS0618
+        }
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            Database.Initialize();
+            Cleanup();
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            Database.Cleanup();
+        }
+
+        #region Enumerations
+
+        public enum Hands
+        {
+            Unidentified,
+            Left,
+            Right
+        }
+
+        #endregion
+
+        #region SubClasses
+
+        [Map("CompleteTable")]
+        public class PersonWithText
+        {
+            public System.Int64 Id { get; set; }
+            public Hands? ColumnText { get; set; }
+        }
+
+        [Map("CompleteTable")]
+        public class PersonWithInteger
+        {
+            public System.Int64 Id { get; set; }
+            [AuroraDbType(AuroraDbType.Integer)]
+            public Hands? ColumnInteger { get; set; }
+        }
+
+        [Map("CompleteTable")]
+        public class PersonWithTextAsInteger
+        {
+            public System.Int64 Id { get; set; }
+            [TypeMap(System.Data.DbType.Int32)]
+            public Hands? ColumnText { get; set; }
+        }
+
+        [Map("EnumTable")]
+        public class PersonWithEnum
+        {
+            public System.Int64 Id { get; set; }
+            public Hands ColumnEnumHand { get; set; }
+        }
+
+        [Map("EnumTable")]
+        public class PersonWithNullableEnum
+        {
+            public System.Int64 Id { get; set; }
+            public Hands? ColumnEnumHand { get; set; }
+        }
+
+        #endregion
+
+        #region Helpers
+
+        public IEnumerable<PersonWithText> GetPersonWithText(int count)
+        {
+            var random = new Random();
+            for (var i = 0; i < count; i++)
+            {
+                var hand = random.Next(100) > 50 ? Hands.Right : Hands.Left;
+                yield return new PersonWithText
+                {
+                    Id = i,
+                    ColumnText = hand
+                };
+            }
+        }
+
+        public IEnumerable<PersonWithInteger> GetPersonWithInteger(int count)
+        {
+            var random = new Random();
+            for (var i = 0; i < count; i++)
+            {
+                var hand = random.Next(100) > 50 ? Hands.Right : Hands.Left;
+                yield return new PersonWithInteger
+                {
+                    Id = i,
+                    ColumnInteger = hand
+                };
+            }
+        }
+
+        public IEnumerable<PersonWithTextAsInteger> GetPersonWithTextAsInteger(int count)
+        {
+            var random = new Random();
+            for (var i = 0; i < count; i++)
+            {
+                var hand = random.Next(100) > 50 ? Hands.Right : Hands.Left;
+                yield return new PersonWithTextAsInteger
+                {
+                    Id = i,
+                    ColumnText = hand
+                };
+            }
+        }
+
+        public IEnumerable<PersonWithEnum> GetPersonWithEnum(int count)
+        {
+            var random = new Random();
+            for (var i = 0; i < count; i++)
+            {
+                var hand = random.Next(100) > 50 ? Hands.Right : Hands.Left;
+                yield return new PersonWithEnum
+                {
+                    Id = i,
+                    ColumnEnumHand = hand
+                };
+            }
+        }
+
+        public IEnumerable<PersonWithNullableEnum> GetPersonWithNullableEnum(int count)
+        {
+            var random = new Random();
+            for (var i = 0; i < count; i++)
+            {
+                var hand = random.Next(100) > 50 ? Hands.Right : Hands.Left;
+                yield return new PersonWithNullableEnum
+                {
+                    Id = i,
+                    ColumnEnumHand = hand
+                };
+            }
+        }
+
+        #endregion
+
+        [TestMethod]
+        public void TestInsertAndQueryEnumAsTextAsNull()
+        {
+            using (var connection = new AuroraDbConnection(Database.ConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithText(1).First();
+                person.ColumnText = null;
+
+                // Act
+                connection.Insert(person);
+
+                // Query
+                var queryResult = connection.Query<PersonWithText>(person.Id).First();
+
+                // Assert
+                Assert.IsNull(queryResult.ColumnText);
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAndQueryEnumAsText()
+        {
+            using (var connection = new AuroraDbConnection(Database.ConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithText(1).First();
+
+                // Act
+                connection.Insert(person);
+
+                // Query
+                var queryResult = connection.Query<PersonWithText>(person.Id).First();
+
+                // Assert
+                Assert.AreEqual(person.ColumnText, queryResult.ColumnText);
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAndQueryEnumAsTextByBatch()
+        {
+            using (var connection = new AuroraDbConnection(Database.ConnectionString))
+            {
+                // Setup
+                var people = GetPersonWithText(10).AsList();
+
+                // Act
+                connection.InsertAll(people);
+
+                // Query
+                var queryResult = connection.QueryAll<PersonWithText>().AsList();
+
+                // Assert
+                people.ForEach(p =>
+                {
+                    var item = queryResult.First(e => e.Id == p.Id);
+                    Assert.AreEqual(p.ColumnText, item.ColumnText);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAndQueryEnumAsIntegerAsNull()
+        {
+            using (var connection = new AuroraDbConnection(Database.ConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithInteger(1).First();
+                person.ColumnInteger = null;
+
+                // Act
+                connection.Insert(person);
+
+                // Query
+                var queryResult = connection.Query<PersonWithInteger>(person.Id).First();
+
+                // Assert
+                Assert.IsNull(queryResult.ColumnInteger);
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAndQueryEnumAsInteger()
+        {
+            using (var connection = new AuroraDbConnection(Database.ConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithInteger(1).First();
+
+                // Act
+                connection.Insert(person);
+
+                // Query
+                var queryResult = connection.Query<PersonWithInteger>(person.Id).First();
+
+                // Assert
+                Assert.AreEqual(person.ColumnInteger, queryResult.ColumnInteger);
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAndQueryEnumAsIntegerAsBatch()
+        {
+            using (var connection = new AuroraDbConnection(Database.ConnectionString))
+            {
+                // Setup
+                var people = GetPersonWithInteger(10).AsList();
+
+                // Act
+                connection.InsertAll(people);
+
+                // Query
+                var queryResult = connection.QueryAll<PersonWithInteger>().AsList();
+
+                // Assert
+                people.ForEach(p =>
+                {
+                    var item = queryResult.First(e => e.Id == p.Id);
+                    Assert.AreEqual(p.ColumnInteger, item.ColumnInteger);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAndQueryEnumAsTextAsInt()
+        {
+            using (var connection = new AuroraDbConnection(Database.ConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithTextAsInteger(1).First();
+
+                // Act
+                connection.Insert(person);
+
+                // Query
+                var queryResult = connection.Query<PersonWithTextAsInteger>(person.Id).First();
+
+                // Assert
+                Assert.AreEqual(person.ColumnText, queryResult.ColumnText);
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAndQueryEnumAsTextAsIntAsBatch()
+        {
+            using (var connection = new AuroraDbConnection(Database.ConnectionString))
+            {
+                // Setup
+                var people = GetPersonWithTextAsInteger(10).AsList();
+
+                // Act
+                connection.InsertAll(people);
+
+                // Query
+                var queryResult = connection.QueryAll<PersonWithTextAsInteger>().AsList();
+
+                // Assert
+                people.ForEach(p =>
+                {
+                    var item = queryResult.First(e => e.Id == p.Id);
+                    Assert.AreEqual(p.ColumnText, item.ColumnText);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAndQueryEnumAsEnum()
+        {
+            using (var connection = new AuroraDbConnection(EnumConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithEnum(1).First();
+
+                // Act
+                connection.Insert(person);
+
+                // Query
+                connection.ReloadTypes();
+                var queryResult = connection.Query<PersonWithEnum>(person.Id).First();
+
+                // Assert
+                Assert.AreEqual(person.ColumnEnumHand, queryResult.ColumnEnumHand);
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAndQueryEnumAsEnumAsBatch()
+        {
+            using (var connection = new AuroraDbConnection(EnumConnectionString))
+            {
+                // Setup
+                var people = GetPersonWithEnum(10).AsList();
+
+                // Act
+                connection.InsertAll(people);
+
+                // Query
+                connection.ReloadTypes();
+                var queryResult = connection.QueryAll<PersonWithEnum>().AsList();
+
+                // Assert
+                people.ForEach(p =>
+                {
+                    var item = queryResult.First(e => e.Id == p.Id);
+                    Assert.AreEqual(p.ColumnEnumHand, item.ColumnEnumHand);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAndQueryEnumAsEnumViaEnum()
+        {
+            using (var connection = new AuroraDbConnection(EnumConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithEnum(1).First();
+
+                // Act
+                connection.Insert(person);
+
+                // Query
+                connection.ReloadTypes();
+                var queryResult = connection.Query<PersonWithEnum>(where: p => p.ColumnEnumHand == person.ColumnEnumHand).First();
+
+                // Assert
+                Assert.AreEqual(person.ColumnEnumHand, queryResult.ColumnEnumHand);
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAndQueryEnumAsEnumViaDynamicEnum()
+        {
+            using (var connection = new AuroraDbConnection(EnumConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithEnum(1).First();
+
+                // Act
+                connection.Insert(person);
+
+                // Query
+                connection.ReloadTypes();
+                var queryResult = connection.Query<PersonWithEnum>(new { ColumnEnumHand = person.ColumnEnumHand }).First();
+
+                // Assert
+                Assert.AreEqual(person.ColumnEnumHand, queryResult.ColumnEnumHand);
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAndQueryEnumAsNullableEnumAsNull()
+        {
+            using (var connection = new AuroraDbConnection(EnumConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithNullableEnum(1).First();
+                person.ColumnEnumHand = null;
+
+                // Act
+                connection.Insert(person);
+
+                // Query
+                connection.ReloadTypes();
+                var queryResult = connection.Query<PersonWithNullableEnum>(person.Id).First();
+
+                // Assert
+                Assert.IsNull(queryResult.ColumnEnumHand);
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAndQueryEnumAsNullableEnum()
+        {
+            using (var connection = new AuroraDbConnection(EnumConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithNullableEnum(1).First();
+
+                // Act
+                connection.Insert(person);
+
+                // Query
+                connection.ReloadTypes();
+                var queryResult = connection.Query<PersonWithNullableEnum>(person.Id).First();
+
+                // Assert
+                Assert.AreEqual(person.ColumnEnumHand, queryResult.ColumnEnumHand);
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAndQueryEnumAsNullableEnumAsBatch()
+        {
+            using (var connection = new AuroraDbConnection(EnumConnectionString))
+            {
+                // Setup
+                var people = GetPersonWithNullableEnum(10).AsList();
+
+                // Act
+                connection.InsertAll(people);
+
+                // Query
+                connection.ReloadTypes();
+                var queryResult = connection.QueryAll<PersonWithNullableEnum>().AsList();
+
+                // Assert
+                people.ForEach(p =>
+                {
+                    var item = queryResult.First(e => e.Id == p.Id);
+                    Assert.AreEqual(p.ColumnEnumHand, item.ColumnEnumHand);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAndQueryEnumAsNullableEnumByEnum()
+        {
+            using (var connection = new AuroraDbConnection(EnumConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithNullableEnum(1).First();
+
+                // Act
+                connection.Insert(person);
+
+                // Query
+                connection.ReloadTypes();
+                var queryResult = connection.Query<PersonWithNullableEnum>(where: p => p.ColumnEnumHand == person.ColumnEnumHand).First();
+
+                // Assert
+                Assert.AreEqual(person.ColumnEnumHand, queryResult.ColumnEnumHand);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncEnumAsTextAsNull()
+        {
+            using (var connection = new AuroraDbConnection(Database.ConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithText(1).First();
+                person.ColumnText = null;
+
+                // Act
+                await connection.InsertAsync(person).ConfigureAwait(false);
+
+                // Query
+                var queryResult = (await connection.QueryAsync<PersonWithText>(person.Id).ConfigureAwait(false)).First();
+
+                // Assert
+                Assert.IsNull(queryResult.ColumnText);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncEnumAsText()
+        {
+            using (var connection = new AuroraDbConnection(Database.ConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithText(1).First();
+
+                // Act
+                await connection.InsertAsync(person).ConfigureAwait(false);
+
+                // Query
+                var queryResult = (await connection.QueryAsync<PersonWithText>(person.Id).ConfigureAwait(false)).First();
+
+                // Assert
+                Assert.AreEqual(person.ColumnText, queryResult.ColumnText);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncEnumAsTextByBatch()
+        {
+            using (var connection = new AuroraDbConnection(Database.ConnectionString))
+            {
+                // Setup
+                var people = GetPersonWithText(10).AsList();
+
+                // Act
+                await connection.InsertAllAsync(people).ConfigureAwait(false);
+
+                // Query
+                var queryResult = (await connection.QueryAllAsync<PersonWithText>().ConfigureAwait(false)).AsList();
+
+                // Assert
+                people.ForEach(p =>
+                {
+                    var item = queryResult.First(e => e.Id == p.Id);
+                    Assert.AreEqual(p.ColumnText, item.ColumnText);
+                });
+            }
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncEnumAsIntegerAsNull()
+        {
+            using (var connection = new AuroraDbConnection(Database.ConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithInteger(1).First();
+                person.ColumnInteger = null;
+
+                // Act
+                await connection.InsertAsync(person).ConfigureAwait(false);
+
+                // Query
+                var queryResult = (await connection.QueryAsync<PersonWithInteger>(person.Id).ConfigureAwait(false)).First();
+
+                // Assert
+                Assert.IsNull(queryResult.ColumnInteger);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncEnumAsInteger()
+        {
+            using (var connection = new AuroraDbConnection(Database.ConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithInteger(1).First();
+
+                // Act
+                await connection.InsertAsync(person).ConfigureAwait(false);
+
+                // Query
+                var queryResult = (await connection.QueryAsync<PersonWithInteger>(person.Id).ConfigureAwait(false)).First();
+
+                // Assert
+                Assert.AreEqual(person.ColumnInteger, queryResult.ColumnInteger);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncEnumAsIntegerAsBatch()
+        {
+            using (var connection = new AuroraDbConnection(Database.ConnectionString))
+            {
+                // Setup
+                var people = GetPersonWithInteger(10).AsList();
+
+                // Act
+                await connection.InsertAllAsync(people).ConfigureAwait(false);
+
+                // Query
+                var queryResult = (await connection.QueryAllAsync<PersonWithInteger>().ConfigureAwait(false)).AsList();
+
+                // Assert
+                people.ForEach(p =>
+                {
+                    var item = queryResult.First(e => e.Id == p.Id);
+                    Assert.AreEqual(p.ColumnInteger, item.ColumnInteger);
+                });
+            }
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncEnumAsTextAsInt()
+        {
+            using (var connection = new AuroraDbConnection(Database.ConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithTextAsInteger(1).First();
+
+                // Act
+                await connection.InsertAsync(person).ConfigureAwait(false);
+
+                // Query
+                var queryResult = (await connection.QueryAsync<PersonWithTextAsInteger>(person.Id).ConfigureAwait(false)).First();
+
+                // Assert
+                Assert.AreEqual(person.ColumnText, queryResult.ColumnText);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncEnumAsTextAsIntAsBatch()
+        {
+            using (var connection = new AuroraDbConnection(Database.ConnectionString))
+            {
+                // Setup
+                var people = GetPersonWithTextAsInteger(10).AsList();
+
+                // Act
+                await connection.InsertAllAsync(people).ConfigureAwait(false);
+
+                // Query
+                var queryResult = (await connection.QueryAllAsync<PersonWithTextAsInteger>().ConfigureAwait(false)).AsList();
+
+                // Assert
+                people.ForEach(p =>
+                {
+                    var item = queryResult.First(e => e.Id == p.Id);
+                    Assert.AreEqual(p.ColumnText, item.ColumnText);
+                });
+            }
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncEnumAsEnum()
+        {
+            using (var connection = new AuroraDbConnection(EnumConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithEnum(1).First();
+
+                // Act
+                await connection.InsertAsync(person).ConfigureAwait(false);
+
+                // Query
+                await connection.ReloadTypesAsync().ConfigureAwait(false);
+                var queryResult = (await connection.QueryAsync<PersonWithEnum>(person.Id).ConfigureAwait(false)).First();
+
+                // Assert
+                Assert.AreEqual(person.ColumnEnumHand, queryResult.ColumnEnumHand);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncEnumAsEnumAsBatch()
+        {
+            using (var connection = new AuroraDbConnection(EnumConnectionString))
+            {
+                // Setup
+                var people = GetPersonWithEnum(10).AsList();
+
+                // Act
+                await connection.InsertAllAsync(people).ConfigureAwait(false);
+
+                // Query
+                await connection.ReloadTypesAsync().ConfigureAwait(false);
+                var queryResult = (await connection.QueryAllAsync<PersonWithEnum>().ConfigureAwait(false)).AsList();
+
+                // Assert
+                people.ForEach(p =>
+                {
+                    var item = queryResult.First(e => e.Id == p.Id);
+                    Assert.AreEqual(p.ColumnEnumHand, item.ColumnEnumHand);
+                });
+            }
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncEnumAsEnumViaEnum()
+        {
+            using (var connection = new AuroraDbConnection(EnumConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithEnum(1).First();
+
+                // Act
+                await connection.InsertAsync(person).ConfigureAwait(false);
+
+                // Query
+                await connection.ReloadTypesAsync().ConfigureAwait(false);
+                var queryResult = (await connection.QueryAsync<PersonWithEnum>(where: p => p.ColumnEnumHand == person.ColumnEnumHand).ConfigureAwait(false)).First();
+
+                // Assert
+                Assert.AreEqual(person.ColumnEnumHand, queryResult.ColumnEnumHand);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncEnumAsEnumViaDynamicEnum()
+        {
+            using (var connection = new AuroraDbConnection(EnumConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithEnum(1).First();
+
+                // Act
+                await connection.InsertAsync(person).ConfigureAwait(false);
+
+                // Query
+                await connection.ReloadTypesAsync().ConfigureAwait(false);
+                var queryResult = (await connection.QueryAsync<PersonWithEnum>(new { ColumnEnumHand = person.ColumnEnumHand }).ConfigureAwait(false)).First();
+
+                // Assert
+                Assert.AreEqual(person.ColumnEnumHand, queryResult.ColumnEnumHand);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncEnumAsNullableEnumAsNull()
+        {
+            using (var connection = new AuroraDbConnection(EnumConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithNullableEnum(1).First();
+                person.ColumnEnumHand = null;
+
+                // Act
+                await connection.InsertAsync(person).ConfigureAwait(false);
+
+                // Query
+                await connection.ReloadTypesAsync().ConfigureAwait(false);
+                var queryResult = (await connection.QueryAsync<PersonWithNullableEnum>(person.Id).ConfigureAwait(false)).First();
+
+                // Assert
+                Assert.IsNull(queryResult.ColumnEnumHand);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncEnumAsNullableEnum()
+        {
+            using (var connection = new AuroraDbConnection(EnumConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithNullableEnum(1).First();
+
+                // Act
+                await connection.InsertAsync(person).ConfigureAwait(false);
+
+                // Query
+                await connection.ReloadTypesAsync().ConfigureAwait(false);
+                var queryResult = (await connection.QueryAsync<PersonWithNullableEnum>(person.Id).ConfigureAwait(false)).First();
+
+                // Assert
+                Assert.AreEqual(person.ColumnEnumHand, queryResult.ColumnEnumHand);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncEnumAsNullableEnumAsBatch()
+        {
+            using (var connection = new AuroraDbConnection(EnumConnectionString))
+            {
+                // Setup
+                var people = GetPersonWithNullableEnum(10).AsList();
+
+                // Act
+                await connection.InsertAllAsync(people).ConfigureAwait(false);
+
+                // Query
+                await connection.ReloadTypesAsync().ConfigureAwait(false);
+                var queryResult = (await connection.QueryAllAsync<PersonWithNullableEnum>().ConfigureAwait(false)).AsList();
+
+                // Assert
+                people.ForEach(p =>
+                {
+                    var item = queryResult.First(e => e.Id == p.Id);
+                    Assert.AreEqual(p.ColumnEnumHand, item.ColumnEnumHand);
+                });
+            }
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncEnumAsNullableEnumByEnum()
+        {
+            using (var connection = new AuroraDbConnection(EnumConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithNullableEnum(1).First();
+
+                // Act
+                await connection.InsertAsync(person).ConfigureAwait(false);
+
+                // Query
+                await connection.ReloadTypesAsync().ConfigureAwait(false);
+                var queryResult = (await connection.QueryAsync<PersonWithNullableEnum>(where: p => p.ColumnEnumHand == person.ColumnEnumHand).ConfigureAwait(false)).First();
+
+                // Assert
+                Assert.AreEqual(person.ColumnEnumHand, queryResult.ColumnEnumHand);
+            }
+        }
+    }
+}

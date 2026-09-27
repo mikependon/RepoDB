@@ -2,6 +2,17 @@ name: repodb
 
 services:
 
+  auroradbnpgsql:
+    container_name: auroradbnpgsql
+    image: postgis/postgis:latest
+    ports:
+      - 127.0.0.1:5435:5432
+    networks:
+      - repodb
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: RepoDB2026
+
   clickhouse:
     container_name: clickhouse
     image: clickhouse/clickhouse-server:latest
