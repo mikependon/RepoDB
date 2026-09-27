@@ -101,11 +101,11 @@ See the full [package list and build status](PACKAGES.md).
 
 ## Bulk Operations Support
 
-Every supported database, except AuroraDB (PostgreSQL) for now, has a dedicated bulk-operations add-on (`BulkInsert`, `BulkMerge`, `BulkUpdate`, `BulkDelete`), each built on top of that provider's own fastest data-loading mechanism, with sync and async variants:
+Every supported database has a dedicated bulk-operations add-on (`BulkInsert`, `BulkMerge`, `BulkUpdate`, `BulkDelete`), each built on top of that provider's own fastest data-loading mechanism, with sync and async variants:
 
 | DB Provider | Sync | Async | Class |
 |---|---|---|---|
-| AuroraDB (PostgreSQL) | ❌ | ❌ | Not yet available. [RepoDb.Connector.AuroraDb.Npgsql](https://www.nuget.org/packages/RepoDb.Connector.AuroraDb.Npgsql) already ships an `AuroraDbBulkCopy` (via Npgsql Native) for a future add-on. |
+| [AuroraDB (PostgreSQL)](https://www.nuget.org/packages/RepoDb.AuroraDb.PostgreSql.BulkOperations) | ✅ | ✅ | [AuroraDbBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.AuroraDb.PostgreSql.BulkOperations/RepoDb.AuroraDb.PostgreSql.BulkOperations/Base/WriteToServer.cs) (via [RepoDb.Connector.AuroraDb.Npgsql](https://www.nuget.org/packages/RepoDb.Connector.AuroraDb.Npgsql)) via Npgsql Native |
 | [ClickHouse](https://www.nuget.org/packages/RepoDb.ClickHouse.BulkOperations) | ✅ | ✅ | [ClickHouseBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.ClickHouse.BulkOperations/RepoDb.ClickHouse.BulkOperations/ClickHouseBulkCopy.cs) / `OPTIMIZE_ON_INSERT` |
 | [CockroachDB](https://www.nuget.org/packages/RepoDb.CockroachDb.BulkOperations) | ✅ | ✅ | [CockroachDbBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.CockroachDb.BulkOperations/RepoDb.CockroachDb.BulkOperations/Base/WriteToServer.cs) (via [RepoDb.Connector.CockroachDb](https://www.nuget.org/packages/RepoDb.Connector.CockroachDb)) via Npgsql Native |
 | [DB2](https://www.nuget.org/packages/RepoDb.Db2.BulkOperations) | ✅ | ✅ | [DB2BulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.Db2.BulkOperations/RepoDb.Db2.BulkOperations/Base/WriteToServer.cs) Native (Sync) / [Db2BulkArrayBinder](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.Db2.BulkOperations/RepoDb.Db2.BulkOperations/Db2BulkArrayBinder.cs) (Async Native) |
@@ -227,6 +227,7 @@ Thanks to all [contributors](https://github.com/mikependon/RepoDb/graphs/contrib
 
 | Package or Library | Description |
 |---|---|
+| [AWS Advanced .NET Data Provider Wrapper](https://github.com/aws/aws-advanced-dotnet-data-provider-wrapper) | AWS wrapper (failover, read/write splitting, IAM and Secrets Manager authentication) behind the AuroraDB (PostgreSQL) provider, via [RepoDb.Connector.AuroraDb.Npgsql](https://www.nuget.org/packages/RepoDb.Connector.AuroraDb.Npgsql/). |
 | [ClickHouse.Driver](https://www.nuget.org/packages/ClickHouse.Driver/) | ADO.NET driver behind the ClickHouse provider. |
 | [Docker](https://www.docker.com/) | Runs the containerized databases used for integration testing. |
 | [DuckDB.NET.Data.Full](https://www.nuget.org/packages/DuckDB.NET.Data.Full/) | ADO.NET driver behind the DuckDB provider. |

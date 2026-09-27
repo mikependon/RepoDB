@@ -7,6 +7,7 @@ In this page, we will guide you on how to build the RepoDB solutions.
 - [Starting a Database via Docker](#starting-a-database-via-docker)
 - [RepoDb.Core](#building-the-repodbcore)
 - [RepoDb.AuroraDb.PostgreSql](#building-the-repodbauroradbpostgresql)
+- [RepoDb.AuroraDb.PostgreSql.BulkOperations](#building-the-repodbauroradbpostgresqlbulkoperations)
 - [RepoDb.ClickHouse](#building-the-repodbclickhouse)
 - [RepoDb.ClickHouse.BulkOperations](#building-the-repodbclickhousebulkoperations)
 - [RepoDb.CockroachDb](#building-the-repodbcockroachdb)
@@ -168,6 +169,34 @@ Execute the integration tests. The `TransactionScope` tests are reported as inco
 > cd c:\src\RepoDB\src\Providers\RepoDb.AuroraDb.PostgreSql\RepoDb.AuroraDb.PostgreSql.UnitTests
 > dotnet build RepoDb.AuroraDb.PostgreSql.UnitTests.csproj -v n
 > dotnet test RepoDb.AuroraDb.PostgreSql.UnitTests.csproj -v n
+```
+
+## Building the [RepoDb.AuroraDb.PostgreSql.BulkOperations](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.AuroraDb.PostgreSql.BulkOperations)
+
+```
+> cd c:\src\RepoDB\src\Providers\RepoDb.AuroraDb.PostgreSql.BulkOperations
+> dotnet build RepoDb.AuroraDb.PostgreSql.BulkOperations.sln -v n
+```
+
+#### Building and executing the [RepoDb.AuroraDb.PostgreSql.BulkOperations.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.AuroraDb.PostgreSql.BulkOperations/RepoDb.AuroraDb.PostgreSql.BulkOperations.IntegrationTests)
+
+Start the `auroradbnpgsql` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running). The tests create the `RepoDbBulk` database themselves if it does not exist yet.
+
+```
+> docker compose up -d auroradbnpgsql
+```
+
+Add the environment variables under `System`.
+
+- REPODB_AURORADB_CONSTR_SYSTEM = `Server=127.0.0.1;Port=5435;Database=postgres;User Id=postgres;Password=RepoDB2026;`
+- REPODB_AURORADB_CONSTR_BULK = `Server=127.0.0.1;Port=5435;Database=RepoDbBulk;User Id=postgres;Password=RepoDB2026;`
+
+Build and execute the integration tests.
+
+```
+> cd c:\src\RepoDB\src\Providers\RepoDb.AuroraDb.PostgreSql.BulkOperations\RepoDb.AuroraDb.PostgreSql.BulkOperations.IntegrationTests
+> dotnet build RepoDb.AuroraDb.PostgreSql.BulkOperations.IntegrationTests.csproj -v n
+> dotnet test RepoDb.AuroraDb.PostgreSql.BulkOperations.IntegrationTests.csproj -v n
 ```
 
 ## Building the [RepoDb.ClickHouse](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.ClickHouse)

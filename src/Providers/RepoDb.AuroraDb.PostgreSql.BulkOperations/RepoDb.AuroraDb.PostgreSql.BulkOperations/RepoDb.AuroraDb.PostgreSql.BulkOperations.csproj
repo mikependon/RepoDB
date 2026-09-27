@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Title>RepoDb.AuroraDb.PostgreSql.BulkOperations</Title>
+    <AssemblyName>RepoDb.AuroraDb.PostgreSql.BulkOperations</AssemblyName>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <LangVersion>preview</LangVersion>
+    <Nullable>annotations</Nullable>
+    <Description>An extension library that contains the official Bulk Operations of RepoDB for Amazon Aurora PostgreSQL (using RepoDb.Connector.AuroraDb.Npgsql).</Description>
+    <PackageTags>orm hybrid-orm micro-orm auroradb aurora aws amazon postgresql npgsql bulkoperations</PackageTags>
+    <RepositoryUrl>https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.AuroraDb.PostgreSql.BulkOperations</RepositoryUrl>
+    <PackageReleaseNotes>http://repodb.net/release/auroradbpostgresqlbulk</PackageReleaseNotes>
+    <PackageProjectUrl>https://repodb.net/tutorial/get-started-auroradb-postgresql</PackageProjectUrl>
+    <PackageIcon>AuroraDB.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <!--
+      Pins the version this project is stamped as when it is a ProjectReference dependency of another
+      package, independently of the consuming package's own -p:Version. Pass
+      -p:RepoDbAuroraDbPostgreSqlBulkOperationsVersion=<version> to set it explicitly. PackageVersion is used (not
+      Version) because it is not overridden by the global Version property.
+    -->
+    <PackageVersion Condition="'$(RepoDbAuroraDbPostgreSqlBulkOperationsVersion)' != ''">$(RepoDbAuroraDbPostgreSqlBulkOperationsVersion)</PackageVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="RepoDb.Connector.AuroraDb.Npgsql" Version="0.0.1-alpha1" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />
+    <None Include="..\README.md" Pack="True" PackagePath="\" />
+    <None Include="..\AuroraDB.png" Pack="True" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
+    <ProjectReference Include="..\..\RepoDb.AuroraDb.PostgreSql\RepoDb.AuroraDb.PostgreSql\RepoDb.AuroraDb.PostgreSql.csproj" />
+  </ItemGroup>
+</Project>

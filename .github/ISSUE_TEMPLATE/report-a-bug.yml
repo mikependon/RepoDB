@@ -69,6 +69,7 @@ body:
         - RepoDb.MariaDbConnector.BulkOperations
         - RepoDb.Oracle.BulkOperations
         - RepoDb.Db2.BulkOperations
+        - RepoDb.AuroraDb.PostgreSql.BulkOperations
         - RepoDb.ClickHouse.BulkOperations
         - RepoDb.CockroachDb.BulkOperations
         - RepoDb.DuckDb.BulkOperations

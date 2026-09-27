@@ -39,6 +39,7 @@ env:
   # Amazon Aurora PostgreSQL (a plain PostgreSQL with PostGIS stands in for an Aurora PostgreSQL cluster)
   REPODB_AURORADB_CONSTR_SYSTEM: "Server=127.0.0.1;Port=5435;Database=postgres;User Id=postgres;Password=RepoDB2026;"
   REPODB_AURORADB_CONSTR: "Server=127.0.0.1;Port=5435;Database=RepoDb;User Id=postgres;Password=RepoDB2026;"
+  REPODB_AURORADB_CONSTR_BULK: "Server=127.0.0.1;Port=5435;Database=RepoDbBulk;User Id=postgres;Password=RepoDB2026;"
   # MySQL
   REPODB_MYSQL_CONSTR_SYSTEM: "Server=127.0.0.1;Port=3306;Database=sys;User ID=root;Password=RepoDB2026;"
   REPODB_MYSQL_CONSTR: "Server=127.0.0.1;Port=3306;Database=RepoDb;User ID=root;Password=RepoDB2026;"
@@ -203,7 +204,7 @@ jobs:
           name: ${{ inputs.artifact-name }}
           path: release/*nupkg
 
-  # Amazon Aurora PostgreSQL only (e.g. RepoDb.AuroraDb.PostgreSql). A plain PostgreSQL with PostGIS stands in for an Aurora PostgreSQL cluster.
+  # Amazon Aurora PostgreSQL only (e.g. RepoDb.AuroraDb.PostgreSql, RepoDb.AuroraDb.PostgreSql.BulkOperations). A plain PostgreSQL with PostGIS stands in for an Aurora PostgreSQL cluster.
   build-auroradbnpgsql:
     if: inputs.db-engine == 'auroradbnpgsql'
     runs-on: ubuntu-latest
