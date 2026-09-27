@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Title>RepoDb.AuroraDb.MySqlConnector</Title>
+    <PackageId>RepoDb.AuroraDb.MySqlConnector</PackageId>
+    <AssemblyName>RepoDb.AuroraDb.MySqlConnector</AssemblyName>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <Description>A hybrid .NET ORM library for Amazon Aurora MySQL (using RepoDb.Connector.AuroraDb.MySqlConnector).</Description>
+    <LangVersion>preview</LangVersion>
+    <Nullable>annotations</Nullable>
+    <PackageTags>orm hybrid-orm micro-orm auroradb aurora aws amazon mysql mysqlconnector</PackageTags>
+    <RepositoryUrl>https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.AuroraDb.MySqlConnector</RepositoryUrl>
+    <PackageIcon>AuroraDB.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageReleaseNotes>http://repodb.net/release/auroradbmysqlconnector</PackageReleaseNotes>
+    <PackageProjectUrl>https://repodb.net/tutorial/get-started-auroradb-mysqlconnector</PackageProjectUrl>
+    <!--
+      Pins the version this project is stamped as when it is a ProjectReference dependency of another
+      package, independently of the consuming package's own -p:Version. Pass
+      -p:RepoDbAuroraDbMySqlConnectorVersion=<version> to set it. PackageVersion is used (not
+      Version) because it is not overridden by the global Version property.
+    -->
+    <PackageVersion Condition="'$(RepoDbAuroraDbMySqlConnectorVersion)' != ''">$(RepoDbAuroraDbMySqlConnectorVersion)</PackageVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Attributes\AuroraDbTypeMapAttribute.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />
+    <None Include="..\README.md" Pack="True" PackagePath="\" />
+    <None Include="..\AuroraDB.png" Pack="True" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="RepoDb.Connector.AuroraDb.MySqlConnector" Version="0.0.1-alpha1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
+  </ItemGroup>
+</Project>

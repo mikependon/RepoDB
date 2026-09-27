@@ -6,6 +6,8 @@ In this page, we will guide you on how to build the RepoDB solutions.
 - [Clone the Repository](#clone-the-repository)
 - [Starting a Database via Docker](#starting-a-database-via-docker)
 - [RepoDb.Core](#building-the-repodbcore)
+- [RepoDb.AuroraDb.MySqlConnector](#building-the-repodbauroradbmysqlconnector)
+- [RepoDb.AuroraDb.MySqlConnector.BulkOperations](#building-the-repodbauroradbmysqlconnectorbulkoperations)
 - [RepoDb.AuroraDb.PostgreSql](#building-the-repodbauroradbpostgresql)
 - [RepoDb.AuroraDb.PostgreSql.BulkOperations](#building-the-repodbauroradbpostgresqlbulkoperations)
 - [RepoDb.ClickHouse](#building-the-repodbclickhouse)
@@ -120,6 +122,78 @@ Execute the unit tests.
 
 ```
 > dotnet test RepoDb.UnitTests.csproj -v n
+```
+
+## Building the [RepoDb.AuroraDb.MySqlConnector](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.AuroraDb.MySqlConnector)
+
+```
+> cd c:\src\RepoDB\src\Providers\RepoDb.AuroraDb.MySqlConnector
+> dotnet build RepoDb.AuroraDb.MySqlConnector.sln -v n
+```
+
+#### Pre-requisites
+
+```
+> docker compose up -d auroradbmysql
+```
+
+This starts a plain MySQL 8.0 server (`mysql:8.0`), standing in for an Amazon Aurora MySQL cluster, on port `3308` with the `root` user, matching the default connection strings used by the tests below. The tests create the `RepoDb` database themselves if it does not exist yet.
+
+#### Building and executing the [RepoDb.AuroraDb.MySqlConnector.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.AuroraDb.MySqlConnector/RepoDb.AuroraDb.MySqlConnector.IntegrationTests)
+
+Start the `auroradbmysql` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running).
+
+```
+> docker compose up -d auroradbmysql
+```
+
+Add the environment variables under `System`.
+
+- REPODB_AURORADB_MYSQL_CONSTR_SYSTEM = `Server=127.0.0.1;Port=3308;Database=sys;User ID=root;Password=RepoDB2026;`
+- REPODB_AURORADB_MYSQL_CONSTR = `Server=127.0.0.1;Port=3308;Database=RepoDb;User ID=root;Password=RepoDB2026;`
+
+Build and execute the integration tests.
+
+```
+> cd c:\src\RepoDB\src\Providers\RepoDb.AuroraDb.MySqlConnector\RepoDb.AuroraDb.MySqlConnector.IntegrationTests
+> dotnet build RepoDb.AuroraDb.MySqlConnector.IntegrationTests.csproj -v n
+> dotnet test RepoDb.AuroraDb.MySqlConnector.IntegrationTests.csproj -v n
+```
+
+#### Building and executing the [RepoDb.AuroraDb.MySqlConnector.UnitTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.AuroraDb.MySqlConnector/RepoDb.AuroraDb.MySqlConnector.UnitTests)
+
+```
+> cd c:\src\RepoDB\src\Providers\RepoDb.AuroraDb.MySqlConnector\RepoDb.AuroraDb.MySqlConnector.UnitTests
+> dotnet build RepoDb.AuroraDb.MySqlConnector.UnitTests.csproj -v n
+> dotnet test RepoDb.AuroraDb.MySqlConnector.UnitTests.csproj -v n
+```
+
+## Building the [RepoDb.AuroraDb.MySqlConnector.BulkOperations](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.AuroraDb.MySqlConnector.BulkOperations)
+
+```
+> cd c:\src\RepoDB\src\Providers\RepoDb.AuroraDb.MySqlConnector.BulkOperations
+> dotnet build RepoDb.AuroraDb.MySqlConnector.BulkOperations.sln -v n
+```
+
+#### Building and executing the [RepoDb.AuroraDb.MySqlConnector.BulkOperations.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.AuroraDb.MySqlConnector.BulkOperations/RepoDb.AuroraDb.MySqlConnector.BulkOperations.IntegrationTests)
+
+Start the `auroradbmysql` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running). The tests switch the server-side `local_infile` on themselves (`SET GLOBAL local_infile = 1`).
+
+```
+> docker compose up -d auroradbmysql
+```
+
+Add the environment variables under `System`.
+
+- REPODB_AURORADB_MYSQL_CONSTR_SYSTEM = `Server=127.0.0.1;Port=3308;Database=sys;User ID=root;Password=RepoDB2026;`
+- REPODB_AURORADB_MYSQL_CONSTR_BULK = `Server=127.0.0.1;Port=3308;Database=RepoDb;User ID=root;Password=RepoDB2026;AllowLoadLocalInfile=True;AllowUserVariables=True;`
+
+Build and execute the integration tests.
+
+```
+> cd c:\src\RepoDB\src\Providers\RepoDb.AuroraDb.MySqlConnector.BulkOperations\RepoDb.AuroraDb.MySqlConnector.BulkOperations.IntegrationTests
+> dotnet build RepoDb.AuroraDb.MySqlConnector.BulkOperations.IntegrationTests.csproj -v n
+> dotnet test RepoDb.AuroraDb.MySqlConnector.BulkOperations.IntegrationTests.csproj -v n
 ```
 
 ## Building the [RepoDb.AuroraDb.PostgreSql](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.AuroraDb.PostgreSql)

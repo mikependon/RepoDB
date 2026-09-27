@@ -1,0 +1,19 @@
+name: PR -  Build & Run Tests - RepoDb.AuroraDb.MySqlConnector
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'src/Providers/RepoDb.Core/**'
+      - 'src/Providers/RepoDb.AuroraDb.MySqlConnector/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-pr-auroradb-mysqlconnector.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: src/Providers/RepoDb.AuroraDb.MySqlConnector
+      solution-file: RepoDb.AuroraDb.MySqlConnector.sln
+      artifact-name: release-pr
+      db-engine: auroradbmysql

@@ -2,6 +2,17 @@ name: repodb
 
 services:
 
+  auroradbmysql:
+    container_name: auroradbmysql
+    image: mysql:8.0
+    ports:
+      - 127.0.0.1:3308:3306
+    networks:
+      - repodb
+    environment:
+      MYSQL_ROOT_PASSWORD: RepoDB2026
+    command: --local-infile=1
+
   auroradbnpgsql:
     container_name: auroradbnpgsql
     image: postgis/postgis:latest

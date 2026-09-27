@@ -53,6 +53,7 @@ body:
         - RepoDb.Oracle
         - RepoDb.Sqlite.Microsoft
         - RepoDb.Db2
+        - RepoDb.AuroraDb.MySqlConnector
         - RepoDb.AuroraDb.PostgreSql
         - RepoDb.ClickHouse
         - RepoDb.CockroachDb
@@ -69,6 +70,7 @@ body:
         - RepoDb.MariaDbConnector.BulkOperations
         - RepoDb.Oracle.BulkOperations
         - RepoDb.Db2.BulkOperations
+        - RepoDb.AuroraDb.MySqlConnector.BulkOperations
         - RepoDb.AuroraDb.PostgreSql.BulkOperations
         - RepoDb.ClickHouse.BulkOperations
         - RepoDb.CockroachDb.BulkOperations

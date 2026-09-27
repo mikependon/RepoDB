@@ -110,6 +110,16 @@ We want the .NET community to understand this library's limitations before using
   - [Bulk Operations Staging Table](#bulk-operations-staging-table-9)
   - [Bulk Insert and Merge Identity Correlation Relies on RETURNING Order](#bulk-insert-and-merge-identity-correlation-relies-on-returning-order-1)
   - [Verification Status](#verification-status-9)
+- AuroraDB (MySQL)
+  - [RepoDb.Connector.AuroraDb.MySqlConnector Is a Prerelease Package](#repodbconnectorauroradbmysqlconnector-is-a-prerelease-package)
+  - [Requires .NET 8.0 or Later](#requires-net-80-or-later-3)
+  - [Cannot Be Referenced Together With RepoDb.AuroraDb.PostgreSql](#cannot-be-referenced-together-with-repodbauroradbpostgresql)
+  - [Requires Aurora MySQL Version 3](#requires-aurora-mysql-version-3)
+  - [InsertAll Identity Correlation Relies on Consecutive AUTO_INCREMENT Values](#insertall-identity-correlation-relies-on-consecutive-auto_increment-values)
+  - [The AWS Wrapper Probes the Server on Every Connection Open](#the-aws-wrapper-probes-the-server-on-every-connection-open)
+  - [Connection-Open Errors Are Not Wrapped in AuroraDbException](#connection-open-errors-are-not-wrapped-in-auroradbexception)
+  - [No Bulk Operations Package Yet](#no-bulk-operations-package-yet)
+  - [Verification Status](#verification-status-11)
 - AuroraDB (PostgreSQL)
   - [RepoDb.Connector.AuroraDb.Npgsql Is a Prerelease Package](#repodbconnectorauroradbnpgsql-is-a-prerelease-package)
   - [Requires .NET 8.0 or Later](#requires-net-80-or-later-2)
@@ -1619,9 +1629,87 @@ This could not be tested, because the staging tables these statements read from 
 
 `RepoDb.CockroachDb.BulkOperations` builds on `net8.0`, `net9.0`, and `net10.0`. Its integration test suite (590 tests: 441 positive and 149 negative, carried over unchanged from `RepoDb.EnterpriseDb.BulkOperations`) has not been run yet, there are no CI workflows for it, and there is no unit test project for the `CockroachDbText` SQL generation. The staging-table failures above were found by running the generated SQL directly against CockroachDB `v26.3.2`, not through the test suite. Expect every test that uses staging (all merge, update, delete, and delete-by-key tests, plus the insert tests that use `ReturnIdentity`) to fail until the staging SQL is fixed.
 
+## AuroraDB (MySQL)
+
+These limitations are specific to the `RepoDb.AuroraDb.MySqlConnector` package, on top of the [Core](#core) limitations above. Amazon Aurora MySQL is MySQL-compatible. The package was ported from `RepoDb.MariaDbConnector` and generates the same SQL, apart from the MySQL-specific `VALUES ROW(...)` noted below. It is built on [`RepoDb.Connector.AuroraDb.MySqlConnector`](https://www.nuget.org/packages/RepoDb.Connector.AuroraDb.MySqlConnector). That connector's `AuroraDbConnection` wraps [MySqlConnector](https://www.nuget.org/packages/MySqlConnector) in the [AWS Advanced .NET Data Provider Wrapper](https://github.com/aws/aws-advanced-dotnet-data-provider-wrapper) (`AwsWrapperConnection<MySqlConnection>`). Unless stated otherwise, each behavior below was observed by running the test suites against the `mysql:8.0` container (MySQL `8.0.46`). That container is a plain MySQL server standing in for an Aurora cluster. None of it has been run against a real Aurora cluster.
+
+### RepoDb.Connector.AuroraDb.MySqlConnector Is a Prerelease Package
+
+The package depends on `RepoDb.Connector.AuroraDb.MySqlConnector` `0.0.1-alpha1`, which is published to nuget.org as a prerelease. A stable NuGet package cannot depend on a prerelease one without the `NU5104` warning. The connector's public API (`AuroraDbConnection`, `AuroraDbType`, `AuroraDbBulkCopy`, and so on) may still change before it reaches a stable release.
+
+**Alternative Solution**
+
+Treat `RepoDb.AuroraDb.MySqlConnector` as prerelease as well until the connector ships a stable version, and pin the exact connector version in consuming projects.
+
+### Requires .NET 8.0 or Later
+
+`RepoDb.Connector.AuroraDb.MySqlConnector` and the AWS wrapper only ship `net8.0`/`net9.0`/`net10.0` builds, so `RepoDb.AuroraDb.MySqlConnector` targets `net8.0`, `net9.0`, and `net10.0`. Unlike `RepoDb.MariaDbConnector`, which it was ported from, it has no `netstandard2.0` build and cannot be used from .NET Framework or older .NET (Core) versions.
+
+**Alternative Solution**
+
+None within RepoDB. Upgrade the consuming project to .NET 8.0 or later.
+
+### Cannot Be Referenced Together With RepoDb.AuroraDb.PostgreSql
+
+`RepoDb.AuroraDb.MySqlConnector` and `RepoDb.AuroraDb.PostgreSql` declare the same type names in the same namespaces. This is the same pattern as [MariaDb and MariaDbConnector](#installing-both-mariadb-and-mariadbconnector-together). Ten types collide: `RepoDb.AuroraDbBootstrap`, `RepoDb.AuroraDbGlobalConfiguration` (with its `UseAuroraDb()` extension method), `RepoDb.DbSettings.AuroraDbDbSetting`, `RepoDb.DbHelpers.AuroraDbDbHelper`, `RepoDb.StatementBuilders.AuroraDbStatementBuilder`, `RepoDb.Resolvers.AuroraDbDbTypeNameToClientTypeResolver`, and four attributes in `RepoDb.Attributes.Parameter.AuroraDb`. A project that references both packages fails to compile:
+
+```
+error CS0121: The call is ambiguous between the following methods or properties: 'RepoDb.AuroraDbGlobalConfiguration.UseAuroraDb(RepoDb.GlobalConfiguration)' ...
+```
+
+The two connectors do not collide, because their `AuroraDbConnection` types live in different namespaces (`RepoDb.Connector.AuroraDb.MySqlConnector` and `RepoDb.Connector.AuroraDb.Npgsql`). Only the RepoDB providers do.
+
+**Alternative Solution**
+
+Reference only one of the two providers per project. An application that talks to both an Aurora MySQL and an Aurora PostgreSQL cluster needs to keep each provider in its own project (assembly), or use `extern alias` for one of the package references. A lasting fix needs one of the providers to use distinct type names (for example an `AuroraDbMySql` prefix and a `UseAuroraDbMySql()` method).
+
+### Requires Aurora MySQL Version 3
+
+`InsertAll` on a table with an identity column reads the new identities back with a standalone `VALUES ROW(LAST_INSERT_ID() + 0), ROW(LAST_INSERT_ID() + 1), ...` statement. The `VALUES` statement needs MySQL 8.0.19 or later, which means Aurora MySQL version 3. `RepoDb.MariaDbConnector` emits `VALUES (...)` without `ROW`, which MariaDB accepts but MySQL rejects with a syntax error (`1064`). This was the only SQL change needed for MySQL, and it broke 447 of the integration tests before it was fixed.
+
+**Alternative Solution**
+
+Use Aurora MySQL version 3 (MySQL 8.0 compatible). Aurora MySQL version 2 (MySQL 5.7 compatible) is not supported.
+
+### InsertAll Identity Correlation Relies on Consecutive AUTO_INCREMENT Values
+
+`InsertAll` on a table with an identity column inserts each batch with one multi-row `INSERT` statement. It then assigns `LAST_INSERT_ID() + n` to the `n`-th entity of the batch, which assumes that the batch received consecutive `AUTO_INCREMENT` values. In MySQL 8.0 the default `innodb_autoinc_lock_mode` is `2` (interleaved), which is also what the test container runs with; check the value in your Aurora cluster parameter group. In that mode, the values of one multi-row insert are only guaranteed to be unique and increasing, not consecutive, while other statements insert into the same table concurrently. The same happens with an `auto_increment_increment` other than `1`. In either case the identities written back to the entities can be wrong.
+
+**Alternative Solution**
+
+The integration suite verifies the correlation (batch sizes 1, 10 and 100 over 250 rows) on a single connection, where it holds. For tables with concurrent writers, use `innodb_autoinc_lock_mode = 1` (consecutive) in the cluster parameter group, use `batchSize: 1`, or re-read the rows by a natural key after the insert.
+
+### The AWS Wrapper Probes the Server on Every Connection Open
+
+Every time an `AuroraDbConnection` is opened, the AWS wrapper runs its dialect and topology detection queries (`SHOW VARIABLES LIKE ...` and a lookup in `information_schema.tables`). One run of the integration suite executed about 30,000 `SHOW VARIABLES` and 8,500 `information_schema.tables` statements for about 8,500 connection opens. Unlike on PostgreSQL (see [AuroraDB (PostgreSQL)](#the-aws-wrapper-probes-for-aurora-on-every-connection-open)), these probes do not fail on a plain MySQL server, and a failed statement does not abort a MySQL transaction, so `TransactionScope` works and its tests pass.
+
+**Alternative Solution**
+
+None within RepoDB. Keep connection pooling enabled (the MySqlConnector default), so the pooled physical connections are reused, and expect a few extra round-trips per open.
+
+### Connection-Open Errors Are Not Wrapped in AuroraDbException
+
+The errors raised by the commands are wrapped into an `AuroraDbException`, which exposes the MySQL error `Number` and `SqlState` (for example `1062`/`23000` for a duplicate key, `1406`/`22001` for a too-long value, `1146`/`42S02` for a missing table, and `1064`/`42000` for a syntax error). A failure to open the connection is not wrapped: a wrong password, for example, throws the underlying `MySqlConnector.MySqlException` (`28000`), which a `catch (AuroraDbException)` block does not catch.
+
+**Alternative Solution**
+
+Catch `System.Data.Common.DbException`, which both exception types derive from, and read its `SqlState`. A lasting fix belongs in the connector: wrap the errors of `Open`/`OpenAsync` the same way as the command errors.
+
+### No Bulk Operations Package Yet
+
+There is no `RepoDb.AuroraDb.MySqlConnector.BulkOperations` package yet. `src/Providers/RepoDb.AuroraDb.MySqlConnector.BulkOperations` currently holds an unported copy of `RepoDb.MariaDbConnector.BulkOperations`. The connector already ships `AuroraDbBulkCopy` for a future add-on.
+
+**Alternative Solution**
+
+Use the batched `InsertAll`/`MergeAll`/`UpdateAll` operations, or `AuroraDbBulkCopy` from `RepoDb.Connector.AuroraDb.MySqlConnector` directly.
+
+### Verification Status
+
+`RepoDb.AuroraDb.MySqlConnector.UnitTests` has 189 test methods (207 test cases once the data rows are counted), and all of them pass. `RepoDb.AuroraDb.MySqlConnector.IntegrationTests` has 691 test methods, 116 of which are negative (`ThrowException...`). Both were ported from `RepoDb.MariaDbConnector`, plus a new `ProviderTest` (bootstrapping, resolvers, `Truncate`, and the geometry property handler) and a new `ScenarioTests` class. `ScenarioTests` covers identity correlation, transactions and `TransactionScope`, Unicode, nulls, the repositories, and the server errors. Against the `mysql:8.0` container, all 900 test cases pass on each of `net8.0`, `net9.0`, and `net10.0`. The `build-auroradb-mysqlconnector`/`build-pr-auroradb-mysqlconnector` CI workflows run both suites against a `mysql:8.0` service container.
+
 ## AuroraDB (PostgreSQL)
 
-These limitations are specific to the `RepoDb.AuroraDb.PostgreSql` and `RepoDb.AuroraDb.PostgreSql.BulkOperations` packages, on top of the [Core](#core) limitations above. Amazon Aurora PostgreSQL is PostgreSQL-compatible, so the package generates the same SQL as `RepoDb.PostgreSql`: `"` quoting, `RETURNING` for identities, `INSERT ... ON CONFLICT` for merges, `LIMIT`/`OFFSET` for paging, and `TRUNCATE ... RESTART IDENTITY`. Both are built on [`RepoDb.Connector.AuroraDb.Npgsql`](https://www.nuget.org/packages/RepoDb.Connector.AuroraDb.Npgsql), and the bulk operations write rows through its `AuroraDbBulkCopy` (Npgsql binary `COPY`). That connector's `AuroraDbConnection` wraps Npgsql in the [AWS Advanced .NET Data Provider Wrapper](https://github.com/aws/aws-advanced-dotnet-data-provider-wrapper) (`AwsWrapperConnection<NpgsqlConnection>`). Unless stated otherwise, each behavior below was observed by running the integration test suite against the `postgis/postgis:latest` container (PostgreSQL `17.5`, PostGIS `3.5.2`). That container is a plain PostgreSQL server standing in for an Aurora cluster. None of it has been run against a real Aurora cluster.
+These limitations are specific to the `RepoDb.AuroraDb.PostgreSql` and `RepoDb.AuroraDb.PostgreSql.BulkOperations` packages, on top of the [Core](#core) limitations above. Amazon Aurora PostgreSQL is PostgreSQL-compatible, so the package generates the same SQL as `RepoDb.PostgreSql`: `"` quoting, `RETURNING` for identities, `INSERT ... ON CONFLICT` for merges, `LIMIT`/`OFFSET` for paging, and `TRUNCATE ... RESTART IDENTITY`. Both are built on [`RepoDb.Connector.AuroraDb.Npgsql`](https://www.nuget.org/packages/RepoDb.Connector.AuroraDb.Npgsql), and the bulk operations write rows through its `AuroraDbBulkCopy` (Npgsql binary `COPY`). That connector's `AuroraDbConnection` wraps Npgsql in the [AWS Advanced .NET Data Provider Wrapper](https://github.com/aws/aws-advanced-dotnet-data-provider-wrapper) (`AwsWrapperConnection<NpgsqlConnection>`). Unless stated otherwise, each behavior below was observed by running the integration test suite against the `postgis/postgis:latest` container (PostgreSQL `17.5`, PostGIS `3.5.2`). That container is a plain PostgreSQL server standing in for an Aurora cluster. None of it has been run against a real Aurora cluster. This package cannot be referenced together with `RepoDb.AuroraDb.MySqlConnector` (see [below](#cannot-be-referenced-together-with-repodbauroradbpostgresql)).
 
 ### RepoDb.Connector.AuroraDb.Npgsql Is a Prerelease Package
 
