@@ -56,6 +56,7 @@ Read more about this through this [article](https://blogs.repodb.net/posts/2026/
 
 Fluent operations (Query, Insert, Merge, Delete, Update, and [more](http://repodb.net/operation)), batches and bulks are supported for DB providers mentioned below. Choose your database and follow the quick-start guide:
 
+- [AuroraDB (PostgreSQL)](http://repodb.net/tutorial/get-started-auroradb-postgresql)
 - [ClickHouse](http://repodb.net/tutorial/get-started-clickhouse)
 - [CockroachDB](http://repodb.net/tutorial/get-started-cockroachdb)
 - [DB2](http://repodb.net/tutorial/get-started-db2)
@@ -87,7 +88,7 @@ Explore individual features in the [documentation](http://repodb.net/docs).
 
 We have envisioned the following databases to be supported to further grow the ecosystem.
 
-- [AuroraDB](https://aws.amazon.com/rds/aurora/)
+- [AuroraDB (MySQL)](https://aws.amazon.com/rds/aurora/)
 - [KingbaseES](https://www.kingbase.com.cn/)
 - [Redshift](https://aws.amazon.com/redshift/)
 - [Snowflake](https://www.snowflake.com/)
@@ -104,6 +105,7 @@ Every supported database has a dedicated bulk-operations add-on (`BulkInsert`, `
 
 | DB Provider | Sync | Async | Class |
 |---|---|---|---|
+| [AuroraDB (PostgreSQL)](https://www.nuget.org/packages/RepoDb.AuroraDb.PostgreSql.BulkOperations) | ✅ | ✅ | [AuroraDbBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.AuroraDb.PostgreSql.BulkOperations/RepoDb.AuroraDb.PostgreSql.BulkOperations/Base/WriteToServer.cs) (via [RepoDb.Connector.AuroraDb.Npgsql](https://www.nuget.org/packages/RepoDb.Connector.AuroraDb.Npgsql)) via Npgsql Native |
 | [ClickHouse](https://www.nuget.org/packages/RepoDb.ClickHouse.BulkOperations) | ✅ | ✅ | [ClickHouseBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.ClickHouse.BulkOperations/RepoDb.ClickHouse.BulkOperations/ClickHouseBulkCopy.cs) / `OPTIMIZE_ON_INSERT` |
 | [CockroachDB](https://www.nuget.org/packages/RepoDb.CockroachDb.BulkOperations) | ✅ | ✅ | [CockroachDbBulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.CockroachDb.BulkOperations/RepoDb.CockroachDb.BulkOperations/Base/WriteToServer.cs) (via [RepoDb.Connector.CockroachDb](https://www.nuget.org/packages/RepoDb.Connector.CockroachDb)) via Npgsql Native |
 | [DB2](https://www.nuget.org/packages/RepoDb.Db2.BulkOperations) | ✅ | ✅ | [DB2BulkCopy](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.Db2.BulkOperations/RepoDb.Db2.BulkOperations/Base/WriteToServer.cs) Native (Sync) / [Db2BulkArrayBinder](https://github.com/mikependon/RepoDb/blob/master/src/Providers/RepoDb.Db2.BulkOperations/RepoDb.Db2.BulkOperations/Db2BulkArrayBinder.cs) (Async Native) |
@@ -225,6 +227,7 @@ Thanks to all [contributors](https://github.com/mikependon/RepoDb/graphs/contrib
 
 | Package or Library | Description |
 |---|---|
+| [AWS Advanced .NET Data Provider Wrapper](https://github.com/aws/aws-advanced-dotnet-data-provider-wrapper) | AWS wrapper (failover, read/write splitting, IAM and Secrets Manager authentication) behind the AuroraDB (PostgreSQL) provider, via [RepoDb.Connector.AuroraDb.Npgsql](https://www.nuget.org/packages/RepoDb.Connector.AuroraDb.Npgsql/). |
 | [ClickHouse.Driver](https://www.nuget.org/packages/ClickHouse.Driver/) | ADO.NET driver behind the ClickHouse provider. |
 | [Docker](https://www.docker.com/) | Runs the containerized databases used for integration testing. |
 | [DuckDB.NET.Data.Full](https://www.nuget.org/packages/DuckDB.NET.Data.Full/) | ADO.NET driver behind the DuckDB provider. |
@@ -244,6 +247,7 @@ Thanks to all [contributors](https://github.com/mikependon/RepoDb/graphs/contrib
 | [NuGet](https://www.nuget.org/) | Package distribution for RepoDB and all its provider packages. |
 | [Oracle.ManagedDataAccess.Core](https://www.nuget.org/packages/Oracle.ManagedDataAccess.Core/) | ADO.NET driver behind the Oracle provider. |
 | [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) | Benchmark harness used to compare RepoDB's performance against other data access libraries. |
+| [RepoDb.Connector.AuroraDb.Npgsql](https://www.nuget.org/packages/RepoDb.Connector.AuroraDb.Npgsql/) | Underlying connector powering the AuroraDB (PostgreSQL) provider, built on the AWS Advanced .NET Data Provider Wrapper. |
 | [RepoDb.Connector.CockroachDb](https://www.nuget.org/packages/RepoDb.Connector.CockroachDb/) | Underlying connector powering the CockroachDB provider. |
 | [RepoDb.Connector.EnterpriseDb](https://www.nuget.org/packages/RepoDb.Connector.EnterpriseDb/) | Underlying connector powering the EnterpriseDB provider. |
 | [RepoDb.Connector.MariaDb](https://www.nuget.org/packages/RepoDb.Connector.MariaDb/) | Underlying connector powering the MariaDB provider. |

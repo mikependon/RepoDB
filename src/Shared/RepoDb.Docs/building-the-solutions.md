@@ -6,6 +6,8 @@ In this page, we will guide you on how to build the RepoDB solutions.
 - [Clone the Repository](#clone-the-repository)
 - [Starting a Database via Docker](#starting-a-database-via-docker)
 - [RepoDb.Core](#building-the-repodbcore)
+- [RepoDb.AuroraDb.PostgreSql](#building-the-repodbauroradbpostgresql)
+- [RepoDb.AuroraDb.PostgreSql.BulkOperations](#building-the-repodbauroradbpostgresqlbulkoperations)
 - [RepoDb.ClickHouse](#building-the-repodbclickhouse)
 - [RepoDb.ClickHouse.BulkOperations](#building-the-repodbclickhousebulkoperations)
 - [RepoDb.CockroachDb](#building-the-repodbcockroachdb)
@@ -118,6 +120,83 @@ Execute the unit tests.
 
 ```
 > dotnet test RepoDb.UnitTests.csproj -v n
+```
+
+## Building the [RepoDb.AuroraDb.PostgreSql](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.AuroraDb.PostgreSql)
+
+```
+> cd c:\src\RepoDB\src\Providers\RepoDb.AuroraDb.PostgreSql
+> dotnet build RepoDb.AuroraDb.PostgreSql.sln -v n
+```
+
+#### Pre-requisites
+
+```
+> docker compose up -d auroradbnpgsql
+```
+
+This starts a plain PostgreSQL server with the PostGIS extension (`postgis/postgis:latest`), standing in for an Amazon Aurora PostgreSQL cluster, on port `5435` with the `postgres` user, matching the default connection strings used by the tests below. The tests create the `RepoDb` database and the `postgis` extension themselves if they do not exist yet.
+
+#### Building and executing the [RepoDb.AuroraDb.PostgreSql.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.AuroraDb.PostgreSql/RepoDb.AuroraDb.PostgreSql.IntegrationTests)
+
+Start the `auroradbnpgsql` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running).
+
+```
+> docker compose up -d auroradbnpgsql
+```
+
+Add the environment variables under `System`.
+
+- REPODB_AURORADB_CONSTR_SYSTEM = `Server=127.0.0.1;Port=5435;Database=postgres;User Id=postgres;Password=RepoDB2026;`
+- REPODB_AURORADB_CONSTR = `Server=127.0.0.1;Port=5435;Database=RepoDb;User Id=postgres;Password=RepoDB2026;`
+
+Build the integration tests.
+
+```
+> cd c:\src\RepoDB\src\Providers\RepoDb.AuroraDb.PostgreSql\RepoDb.AuroraDb.PostgreSql.IntegrationTests
+> dotnet build RepoDb.AuroraDb.PostgreSql.IntegrationTests.csproj -v n
+```
+
+Execute the integration tests. The `TransactionScope` tests are reported as inconclusive (skipped) unless the server is an actual Aurora cluster (see the [limitations](https://github.com/mikependon/RepoDB/blob/master/LIMITATIONS.md#transactionscope-fails-on-a-server-that-is-not-an-aurora-cluster)).
+
+```
+> dotnet test RepoDb.AuroraDb.PostgreSql.IntegrationTests.csproj -v n
+```
+
+#### Building and executing the [RepoDb.AuroraDb.PostgreSql.UnitTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.AuroraDb.PostgreSql/RepoDb.AuroraDb.PostgreSql.UnitTests)
+
+```
+> cd c:\src\RepoDB\src\Providers\RepoDb.AuroraDb.PostgreSql\RepoDb.AuroraDb.PostgreSql.UnitTests
+> dotnet build RepoDb.AuroraDb.PostgreSql.UnitTests.csproj -v n
+> dotnet test RepoDb.AuroraDb.PostgreSql.UnitTests.csproj -v n
+```
+
+## Building the [RepoDb.AuroraDb.PostgreSql.BulkOperations](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.AuroraDb.PostgreSql.BulkOperations)
+
+```
+> cd c:\src\RepoDB\src\Providers\RepoDb.AuroraDb.PostgreSql.BulkOperations
+> dotnet build RepoDb.AuroraDb.PostgreSql.BulkOperations.sln -v n
+```
+
+#### Building and executing the [RepoDb.AuroraDb.PostgreSql.BulkOperations.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.AuroraDb.PostgreSql.BulkOperations/RepoDb.AuroraDb.PostgreSql.BulkOperations.IntegrationTests)
+
+Start the `auroradbnpgsql` service defined in [docker-compose.yml](https://github.com/mikependon/RepoDB/blob/master/docker-compose.yml) at the repository root (skip if already running). The tests create the `RepoDbBulk` database themselves if it does not exist yet.
+
+```
+> docker compose up -d auroradbnpgsql
+```
+
+Add the environment variables under `System`.
+
+- REPODB_AURORADB_CONSTR_SYSTEM = `Server=127.0.0.1;Port=5435;Database=postgres;User Id=postgres;Password=RepoDB2026;`
+- REPODB_AURORADB_CONSTR_BULK = `Server=127.0.0.1;Port=5435;Database=RepoDbBulk;User Id=postgres;Password=RepoDB2026;`
+
+Build and execute the integration tests.
+
+```
+> cd c:\src\RepoDB\src\Providers\RepoDb.AuroraDb.PostgreSql.BulkOperations\RepoDb.AuroraDb.PostgreSql.BulkOperations.IntegrationTests
+> dotnet build RepoDb.AuroraDb.PostgreSql.BulkOperations.IntegrationTests.csproj -v n
+> dotnet test RepoDb.AuroraDb.PostgreSql.BulkOperations.IntegrationTests.csproj -v n
 ```
 
 ## Building the [RepoDb.ClickHouse](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.ClickHouse)

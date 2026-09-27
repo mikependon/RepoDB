@@ -1,0 +1,20 @@
+name: Build & Run Tests - RepoDb.AuroraDb.PostgreSql.BulkOperations (Push)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'src/Providers/RepoDb.Core/**'
+      - 'src/Providers/RepoDb.AuroraDb.PostgreSql/**'
+      - 'src/Providers/RepoDb.AuroraDb.PostgreSql.BulkOperations/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-auroradb-postgresql-bulk.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: src/Providers/RepoDb.AuroraDb.PostgreSql.BulkOperations
+      solution-file: RepoDb.AuroraDb.PostgreSql.BulkOperations.sln
+      artifact-name: release-auroradb-postgresql-bulk
+      db-engine: auroradbnpgsql

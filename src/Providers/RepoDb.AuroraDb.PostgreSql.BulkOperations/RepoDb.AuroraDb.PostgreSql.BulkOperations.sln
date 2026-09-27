@@ -1,0 +1,47 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.7.11911.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.AuroraDb.PostgreSql.BulkOperations", "RepoDb.AuroraDb.PostgreSql.BulkOperations\RepoDb.AuroraDb.PostgreSql.BulkOperations.csproj", "{07CE53A3-8102-4974-B78B-2CF9AC403B85}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "..\RepoDb.Core\RepoDb\RepoDb.csproj", "{67D36FDC-29D3-478F-9915-2BA51FCEAB4C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.AuroraDb.PostgreSql", "..\RepoDb.AuroraDb.PostgreSql\RepoDb.AuroraDb.PostgreSql\RepoDb.AuroraDb.PostgreSql.csproj", "{AEB610CA-0914-4A8F-B699-42D552069CB7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.AuroraDb.PostgreSql.BulkOperations.Base", "RepoDb.AuroraDb.PostgreSql.BulkOperations.Base", "{16256FE0-9D97-4E93-B6FF-BF91CCA5AB22}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.AuroraDb.PostgreSql.BulkOperations.IntegrationTests", "RepoDb.AuroraDb.PostgreSql.BulkOperations.IntegrationTests\RepoDb.AuroraDb.PostgreSql.BulkOperations.IntegrationTests.csproj", "{104A6E59-F7B7-4FD5-96A8-EEA1C83D78D0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{07CE53A3-8102-4974-B78B-2CF9AC403B85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07CE53A3-8102-4974-B78B-2CF9AC403B85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07CE53A3-8102-4974-B78B-2CF9AC403B85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07CE53A3-8102-4974-B78B-2CF9AC403B85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67D36FDC-29D3-478F-9915-2BA51FCEAB4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67D36FDC-29D3-478F-9915-2BA51FCEAB4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67D36FDC-29D3-478F-9915-2BA51FCEAB4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67D36FDC-29D3-478F-9915-2BA51FCEAB4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEB610CA-0914-4A8F-B699-42D552069CB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEB610CA-0914-4A8F-B699-42D552069CB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEB610CA-0914-4A8F-B699-42D552069CB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEB610CA-0914-4A8F-B699-42D552069CB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{104A6E59-F7B7-4FD5-96A8-EEA1C83D78D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{104A6E59-F7B7-4FD5-96A8-EEA1C83D78D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{104A6E59-F7B7-4FD5-96A8-EEA1C83D78D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{104A6E59-F7B7-4FD5-96A8-EEA1C83D78D0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {82BE13F2-684B-42F4-AD99-D49775833053}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,19 @@
+name: Build & Run Tests - RepoDb.AuroraDb.PostgreSql (Push)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'src/Providers/RepoDb.Core/**'
+      - 'src/Providers/RepoDb.AuroraDb.PostgreSql/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-auroradb-postgresql.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: src/Providers/RepoDb.AuroraDb.PostgreSql
+      solution-file: RepoDb.AuroraDb.PostgreSql.sln
+      artifact-name: release-auroradb-postgresql
+      db-engine: auroradbnpgsql
