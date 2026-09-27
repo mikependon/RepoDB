@@ -95,7 +95,7 @@ namespace RepoDb.AuroraDb.MySqlConnector.BulkOperations.IntegrationTests.Operati
         {
             var dbException = exception as DbException ?? exception.InnerException as DbException;
             Assert.IsNotNull(dbException, $"Expected a '{nameof(DbException)}' but was '{exception.GetType().FullName}': {exception.Message}");
-            Assert.AreEqual(expected, dbException.SqlState, dbException.Message);
+            Assert.AreEqual(expected, dbException.SqlState, StringComparer.Ordinal, dbException.Message);
         }
 
         #endregion
@@ -111,7 +111,7 @@ namespace RepoDb.AuroraDb.MySqlConnector.BulkOperations.IntegrationTests.Operati
         private static void AssertNotTheActiveTransaction(Exception exception)
         {
             Assert.IsInstanceOfType<InvalidOperationException>(exception);
-            StringAssert.Contains(exception.Message, "not the connection's active transaction");
+            StringAssert.Contains(exception.Message, "not the connection's active transaction", StringComparison.Ordinal);
         }
 
         [TestMethod]
@@ -473,7 +473,7 @@ namespace RepoDb.AuroraDb.MySqlConnector.BulkOperations.IntegrationTests.Operati
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationNonIdentityTable>().ToDictionary(t => t.Id);
-                tables.ForEach(t => Assert.AreEqual(t.ColumnNVarChar, queryResult[t.Id].ColumnNVarChar));
+                tables.ForEach(t => Assert.AreEqual(t.ColumnNVarChar, queryResult[t.Id].ColumnNVarChar, StringComparer.Ordinal));
             }
         }
 
@@ -505,7 +505,7 @@ namespace RepoDb.AuroraDb.MySqlConnector.BulkOperations.IntegrationTests.Operati
                     Assert.AreEqual(t.RowGuid, item.RowGuid);
                     Assert.AreEqual((double)t.ColumnFloat, item.ColumnFloat);
                     Assert.AreEqual((int)t.ColumnInt, item.ColumnInt);
-                    Assert.AreEqual(t.ColumnNVarChar, item.ColumnNVarChar);
+                    Assert.AreEqual(t.ColumnNVarChar, item.ColumnNVarChar, StringComparer.Ordinal);
                 });
             }
         }
@@ -618,7 +618,7 @@ namespace RepoDb.AuroraDb.MySqlConnector.BulkOperations.IntegrationTests.Operati
                 using (var connection = new AuroraDbConnection(Database.ConnectionString))
                 {
                     var exception = Assert.Throws<Exception>(() => connection.BulkMerge(tables, pseudoTableType: pseudoTableType));
-                    StringAssert.Contains(exception.Message, "XAER_RMFAIL");
+                    StringAssert.Contains(exception.Message, "XAER_RMFAIL", StringComparison.Ordinal);
                 }
             }
 
@@ -642,8 +642,8 @@ namespace RepoDb.AuroraDb.MySqlConnector.BulkOperations.IntegrationTests.Operati
 
                 // Act/Assert (LOAD DATA LOCAL skips the duplicates with a warning; the bulk copy then reports the row-count mismatch)
                 var exception = Assert.Throws<Exception>(() => connection.BulkInsert(tables));
-                StringAssert.Contains(exception.Message, "10 rows were copied");
-                StringAssert.Contains(exception.Message, "but only 0 were inserted");
+                StringAssert.Contains(exception.Message, "10 rows were copied", StringComparison.Ordinal);
+                StringAssert.Contains(exception.Message, "but only 0 were inserted", StringComparison.Ordinal);
 
                 // Assert
                 Assert.AreEqual(tables.Count, CountNonIdentityTable());
@@ -661,7 +661,7 @@ namespace RepoDb.AuroraDb.MySqlConnector.BulkOperations.IntegrationTests.Operati
             {
                 // Act/Assert
                 var exception = Assert.Throws<Exception>(() => connection.BulkInsert(tables));
-                StringAssert.Contains(exception.Message, "but only 9 were inserted");
+                StringAssert.Contains(exception.Message, "but only 9 were inserted", StringComparison.Ordinal);
 
                 // Assert (the bulk insert is not atomic: the 9 rows without a conflict stay inserted)
                 Assert.AreEqual(9, CountNonIdentityTable());

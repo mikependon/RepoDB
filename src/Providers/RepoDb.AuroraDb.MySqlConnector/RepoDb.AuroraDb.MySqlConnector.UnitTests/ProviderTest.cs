@@ -140,7 +140,7 @@ namespace RepoDb.AuroraDb.MySqlConnector.UnitTests
             var result = resolver.Resolve(dbType);
 
             // Assert
-            Assert.AreEqual(expected, result);
+            Assert.AreEqual(expected, result, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -153,7 +153,7 @@ namespace RepoDb.AuroraDb.MySqlConnector.UnitTests
             var result = resolver.Resolve((AuroraDbType)short.MaxValue);
 
             // Assert
-            Assert.AreEqual("TEXT", result);
+            Assert.AreEqual("TEXT", result, StringComparer.Ordinal);
         }
 
         #endregion

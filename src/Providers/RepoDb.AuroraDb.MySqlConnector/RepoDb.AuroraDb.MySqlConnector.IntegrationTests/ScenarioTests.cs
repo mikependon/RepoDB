@@ -70,7 +70,7 @@ namespace RepoDb.AuroraDb.MySqlConnector.IntegrationTests
             var auroraDbException = exception as AuroraDbException ?? exception.InnerException as AuroraDbException;
             Assert.IsNotNull(auroraDbException, $"Expected an '{nameof(AuroraDbException)}' but was '{exception.GetType().FullName}': {exception.Message}");
             Assert.AreEqual(expectedNumber, auroraDbException.Number, auroraDbException.Message);
-            Assert.AreEqual(expectedSqlState, auroraDbException.SqlState, auroraDbException.Message);
+            Assert.AreEqual(expectedSqlState, auroraDbException.SqlState, StringComparer.Ordinal, auroraDbException.Message);
         }
 
         #endregion
@@ -94,7 +94,7 @@ namespace RepoDb.AuroraDb.MySqlConnector.IntegrationTests
                 // Assert (every returned identity points to the row that was inserted from the same entity)
                 var queryResult = connection.QueryAll<CompleteTable>().ToDictionary(t => t.Id.Value);
                 Assert.AreEqual(tables.Count, queryResult.Count);
-                tables.ForEach(t => Assert.AreEqual(t.ColumnVarchar, queryResult[t.Id.Value].ColumnVarchar));
+                tables.ForEach(t => Assert.AreEqual(t.ColumnVarchar, queryResult[t.Id.Value].ColumnVarchar, StringComparer.Ordinal));
             }
         }
 
@@ -118,7 +118,7 @@ namespace RepoDb.AuroraDb.MySqlConnector.IntegrationTests
                 CollectionAssert.AreEqual(existingIds, tables.Take(4).Select(t => t.Id.Value).ToList());
                 var queryResult = connection.QueryAll<CompleteTable>().ToDictionary(t => t.Id.Value);
                 Assert.AreEqual(tables.Count, queryResult.Count);
-                tables.ForEach(t => Assert.AreEqual(t.ColumnVarchar, queryResult[t.Id.Value].ColumnVarchar));
+                tables.ForEach(t => Assert.AreEqual(t.ColumnVarchar, queryResult[t.Id.Value].ColumnVarchar, StringComparer.Ordinal));
             }
         }
 
@@ -233,7 +233,7 @@ namespace RepoDb.AuroraDb.MySqlConnector.IntegrationTests
                     var result = connection.Query<CompleteTable>(id).First();
 
                     // Assert
-                    Assert.AreEqual(text, result.ColumnVarchar);
+                    Assert.AreEqual(text, result.ColumnVarchar, StringComparer.Ordinal);
                 }
             }
         }
@@ -393,7 +393,7 @@ namespace RepoDb.AuroraDb.MySqlConnector.IntegrationTests
                 // wrapped into an AuroraDbException by the connector; the underlying MySqlException is thrown as-is.
                 var exception = Assert.Throws<System.Data.Common.DbException>(() => connection.Open());
                 Assert.IsNotInstanceOfType<AuroraDbException>(exception);
-                Assert.AreEqual("28000", exception.SqlState, exception.Message);
+                Assert.AreEqual("28000", exception.SqlState, StringComparer.Ordinal, exception.Message);
             }
         }
 

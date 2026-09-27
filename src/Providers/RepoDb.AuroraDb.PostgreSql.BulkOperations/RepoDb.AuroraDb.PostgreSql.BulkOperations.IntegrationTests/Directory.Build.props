@@ -3,5 +3,11 @@
   <PropertyGroup>
     <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)..\..\..\..\obj\RepoDb.AuroraDb.PostgreSql.BulkOperations.IntegrationTests\</BaseIntermediateOutputPath>
     <BaseOutputPath>$(MSBuildThisFileDirectory)..\..\..\..\bin\RepoDb.AuroraDb.PostgreSql.BulkOperations.IntegrationTests\</BaseOutputPath>
+    <!--
+      The outputs are redirected above, so a stale project-local obj/bin folder (e.g. one created by an IDE before the
+      redirection took effect) is no longer excluded by default and its generated AssemblyInfo.cs would be compiled
+      twice (CS0579). Exclude those folders explicitly.
+    -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);obj/**;bin/**</DefaultItemExcludes>
   </PropertyGroup>
 </Project>
