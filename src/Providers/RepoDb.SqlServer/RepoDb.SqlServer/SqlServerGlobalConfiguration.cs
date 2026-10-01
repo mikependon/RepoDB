@@ -7,6 +7,7 @@
 #endregion
 
 using Microsoft.Data.SqlClient;
+using RepoDb.DbSettings;
 
 namespace RepoDb
 {
@@ -23,6 +24,26 @@ namespace RepoDb
         public static GlobalConfiguration UseSqlServer(this GlobalConfiguration globalConfiguration)
         {
             SqlServerBootstrap.InitializeInternal();
+            return globalConfiguration;
+        }
+
+        /// <summary>
+        /// Initializes all the necessary settings for SQL Server, with the given setting. It accepts any class that inherits the
+        /// <see cref="SqlServerDbSetting"/>, i.e. the SqlServerBulkOperationsDbSetting of RepoDb.SqlServer.BulkOperations. The given setting
+        /// is always applied, even if SQL Server was already initialized.
+        /// </summary>
+        /// <param name="globalConfiguration">The instance of the global configuration in used.</param>
+        /// <param name="dbSetting">The setting to be used.</param>
+        /// <returns>The used global configuration instance itself.</returns>
+        public static GlobalConfiguration UseSqlServer(this GlobalConfiguration globalConfiguration,
+            SqlServerDbSetting dbSetting)
+        {
+            if (dbSetting == null)
+            {
+                throw new System.ArgumentNullException(nameof(dbSetting));
+            }
+
+            SqlServerBootstrap.InitializeInternal(dbSetting);
             return globalConfiguration;
         }
     }
