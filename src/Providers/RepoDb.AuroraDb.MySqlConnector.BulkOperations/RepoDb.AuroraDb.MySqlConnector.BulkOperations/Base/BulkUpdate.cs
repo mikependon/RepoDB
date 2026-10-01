@@ -59,6 +59,9 @@ namespace RepoDb
             AuroraDbTransaction transaction = null)
             where TEntity : class
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, entities, mappings?.Any() == true, transaction);
+
             // Identify the columns
             var entityList = entities.AsList();
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
@@ -139,6 +142,9 @@ namespace RepoDb
             string traceKey = AuroraDbTraceKeys.AuroraDbBulkUpdate,
             AuroraDbTransaction transaction = null)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, table, mappings?.Any() == true, transaction);
+
             if (table == null)
             {
                 throw new ArgumentNullException(nameof(table));
@@ -221,6 +227,9 @@ namespace RepoDb
             string traceKey = AuroraDbTraceKeys.AuroraDbBulkUpdate,
             AuroraDbTransaction transaction = null)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
+
             // Identify the columns
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
@@ -306,6 +315,9 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, entities, mappings?.Any() == true, transaction);
+
             // Identify the columns
             var entityList = entities.AsList();
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
@@ -388,6 +400,9 @@ namespace RepoDb
             AuroraDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, table, mappings?.Any() == true, transaction);
+
             if (table == null)
             {
                 throw new ArgumentNullException(nameof(table));
@@ -472,6 +487,9 @@ namespace RepoDb
             AuroraDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
+
             // Identify the columns
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);

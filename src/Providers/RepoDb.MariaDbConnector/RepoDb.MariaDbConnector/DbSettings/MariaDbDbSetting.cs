@@ -13,7 +13,7 @@ namespace RepoDb.DbSettings
     /// <summary>
     /// A setting class used for <see cref="MariaDbConnection"/> data provider.
     /// </summary>
-    public sealed class MariaDbDbSetting : BaseDbSetting
+    public class MariaDbDbSetting : BaseDbSetting
     {
         /// <summary>
         /// Creates a new instance of <see cref="MariaDbDbSetting"/> class.

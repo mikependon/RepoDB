@@ -28,7 +28,7 @@ namespace RepoDb
         /// <returns>The used global configuration instance itself.</returns>
         public static GlobalConfiguration UseClickHouse(this GlobalConfiguration globalConfiguration)
         {
-            UseClickHouse(globalConfiguration, new ClickHouseDbSetting());
+            ClickHouseBootstrap.InitializeInternal();
             return globalConfiguration;
         }
 
@@ -36,12 +36,12 @@ namespace RepoDb
         /// Initializes all the necessary settings for ClickHouse.
         /// </summary>
         /// <param name="globalConfiguration">The instance of the global configuration in used.</param>
-        /// <param name="isWaitForMutationsEnabled">A value indicating whether the internal mutations are enabled for the ClickHouse database.</param>
+        /// <param name="dbSetting">The setting to be used.</param>
         /// <returns>The used global configuration instance itself.</returns>
         public static GlobalConfiguration UseClickHouse(this GlobalConfiguration globalConfiguration,
-            IDbSetting dbeStting)
+            IDbSetting dbSetting)
         {
-            ClickHouseBootstrap.InitializeInternal(dbeStting);
+            ClickHouseBootstrap.InitializeInternal(dbSetting);
             return globalConfiguration;
         }
     }

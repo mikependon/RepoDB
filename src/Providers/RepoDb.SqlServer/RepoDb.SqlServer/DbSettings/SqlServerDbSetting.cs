@@ -10,9 +10,10 @@
 namespace RepoDb.DbSettings
 {
     /// <summary>
-    /// A setting class used for SQL Server data provider.
+    /// A setting class used for SQL Server data provider. It can be inherited by the settings of the extension
+    /// libraries (i.e. the SqlServerBulkOperationsDbSetting of RepoDb.SqlServer.BulkOperations).
     /// </summary>
-    public sealed class SqlServerDbSetting : BaseDbSetting
+    public class SqlServerDbSetting : BaseDbSetting
     {
         /// <summary>
         /// Creates a new instance of <see cref="SqlServerDbSetting"/> class.

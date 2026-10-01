@@ -7,6 +7,7 @@
 #endregion
 
 using RepoDb.Connector.MariaDbConnector;
+using RepoDb.DbSettings;
 
 namespace RepoDb
 {
@@ -24,6 +25,26 @@ namespace RepoDb
             this GlobalConfiguration globalConfiguration)
         {
             MariaDbBootstrap.InitializeInternal();
+            return globalConfiguration;
+        }
+
+        /// <summary>
+        /// Initializes all the necessary settings for MariaDB, with the given setting. It accepts any class that inherits the
+        /// <see cref="MariaDbDbSetting"/>, i.e. the MariaDbBulkOperationsDbSetting of RepoDb.MariaDbConnector.BulkOperations. The given
+        /// setting is always applied, even if MariaDB was already initialized.
+        /// </summary>
+        /// <param name="globalConfiguration">The instance of the global configuration in used.</param>
+        /// <param name="dbSetting">The setting to be used.</param>
+        /// <returns>The used global configuration instance itself.</returns>
+        public static GlobalConfiguration UseMariaDbConnector(this GlobalConfiguration globalConfiguration,
+            MariaDbDbSetting dbSetting)
+        {
+            if (dbSetting == null)
+            {
+                throw new System.ArgumentNullException(nameof(dbSetting));
+            }
+
+            MariaDbBootstrap.InitializeInternal(dbSetting);
             return globalConfiguration;
         }
     }

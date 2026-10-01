@@ -7,6 +7,7 @@
 #endregion
 
 using Vertica.Data.VerticaClient;
+using RepoDb.DbSettings;
 
 namespace RepoDb
 {
@@ -26,6 +27,28 @@ namespace RepoDb
             bool useInvariantCulture = false)
         {
             VerticaBootstrap.InitializeInternal(useInvariantCulture);
+            return globalConfiguration;
+        }
+
+        /// <summary>
+        /// Initializes all the necessary settings for Vertica, with the given setting. It accepts any class that inherits the
+        /// <see cref="VerticaDbSetting"/>, i.e. the VerticaBulkOperationsDbSetting of RepoDb.Vertica.BulkOperations. The given
+        /// setting is always applied, even if Vertica was already initialized.
+        /// </summary>
+        /// <param name="globalConfiguration">The instance of the global configuration in used.</param>
+        /// <param name="dbSetting">The setting to be used.</param>
+        /// <param name="useInvariantCulture">The flag that defines whether the invariant culture will be used.</param>
+        /// <returns>The used global configuration instance itself.</returns>
+        public static GlobalConfiguration UseVertica(this GlobalConfiguration globalConfiguration,
+            VerticaDbSetting dbSetting,
+            bool useInvariantCulture = false)
+        {
+            if (dbSetting == null)
+            {
+                throw new System.ArgumentNullException(nameof(dbSetting));
+            }
+
+            VerticaBootstrap.InitializeInternal(dbSetting, useInvariantCulture);
             return globalConfiguration;
         }
     }

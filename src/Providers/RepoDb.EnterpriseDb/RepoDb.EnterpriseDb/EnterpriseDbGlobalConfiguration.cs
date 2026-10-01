@@ -7,6 +7,7 @@
 #endregion
 
 using RepoDb.Connector.EnterpriseDb;
+using RepoDb.DbSettings;
 
 namespace RepoDb
 {
@@ -23,6 +24,26 @@ namespace RepoDb
         public static GlobalConfiguration UseEnterpriseDb(this GlobalConfiguration globalConfiguration)
         {
             EnterpriseDbBootstrap.InitializeInternal();
+            return globalConfiguration;
+        }
+
+        /// <summary>
+        /// Initializes all the necessary settings for EnterpriseDB, with the given setting. It accepts any class that inherits the
+        /// <see cref="EnterpriseDbDbSetting"/>, i.e. the EDBBulkOperationsDbSetting of RepoDb.EnterpriseDb.BulkOperations. The given
+        /// setting is always applied, even if EnterpriseDB was already initialized.
+        /// </summary>
+        /// <param name="globalConfiguration">The instance of the global configuration in used.</param>
+        /// <param name="dbSetting">The setting to be used.</param>
+        /// <returns>The used global configuration instance itself.</returns>
+        public static GlobalConfiguration UseEnterpriseDb(this GlobalConfiguration globalConfiguration,
+            EnterpriseDbDbSetting dbSetting)
+        {
+            if (dbSetting == null)
+            {
+                throw new System.ArgumentNullException(nameof(dbSetting));
+            }
+
+            EnterpriseDbBootstrap.InitializeInternal(dbSetting);
             return globalConfiguration;
         }
     }

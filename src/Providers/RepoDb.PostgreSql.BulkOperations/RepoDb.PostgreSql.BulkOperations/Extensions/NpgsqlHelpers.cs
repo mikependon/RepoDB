@@ -153,7 +153,7 @@ namespace RepoDb
         /// <param name="includeIdentity"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static IEnumerable<PostgreSqlBulkInsertMapItem> GetMappings(DbFieldCollection dbFields,
+        private static IEnumerable<PostgreSqlBulkInsertMapItem> GetMappingItems(DbFieldCollection dbFields,
             IEnumerable<ClassProperty> properties,
             bool includePrimary,
             bool includeIdentity,
@@ -192,7 +192,7 @@ namespace RepoDb
         /// <param name="includeIdentity"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static IEnumerable<PostgreSqlBulkInsertMapItem> GetMappings(IDictionary<string, object> dictionary,
+        private static IEnumerable<PostgreSqlBulkInsertMapItem> GetMappingItems(IDictionary<string, object> dictionary,
             DbFieldCollection dbFields,
             bool includePrimary,
             bool includeIdentity,
@@ -225,7 +225,7 @@ namespace RepoDb
         /// <param name="includeIdentity"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static IEnumerable<PostgreSqlBulkInsertMapItem> GetMappings(DataTable table,
+        private static IEnumerable<PostgreSqlBulkInsertMapItem> GetMappingItems(DataTable table,
             DbFieldCollection dbFields,
             bool includePrimary,
             bool includeIdentity,
@@ -258,7 +258,7 @@ namespace RepoDb
         /// <param name="includeIdentity"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static IEnumerable<PostgreSqlBulkInsertMapItem> GetMappings(IDataReader reader,
+        private static IEnumerable<PostgreSqlBulkInsertMapItem> GetMappingItems(IDataReader reader,
             DbFieldCollection dbFields,
             bool includePrimary,
             bool includeIdentity,
@@ -282,6 +282,59 @@ namespace RepoDb
                 }
             }
         }
+
+        #region GetMappings (validated)
+
+        /*
+         * The GetMappingItems overloads are lazy (iterators), so the column mappings behavior is validated eagerly in
+         * these wrappers, before any statement is executed against the database.
+         */
+
+        private static IEnumerable<PostgreSqlBulkInsertMapItem> GetMappings(DbFieldCollection dbFields,
+            IEnumerable<ClassProperty> properties,
+            bool includePrimary,
+            bool includeIdentity,
+            IDbSetting dbSetting,
+            string tableName)
+        {
+            ValidateColumnMappings(tableName, dbFields, properties?.Select(property => property.GetMappedName()), dbSetting);
+            return GetMappingItems(dbFields, properties, includePrimary, includeIdentity, dbSetting);
+        }
+
+        private static IEnumerable<PostgreSqlBulkInsertMapItem> GetMappings(IDictionary<string, object> dictionary,
+            DbFieldCollection dbFields,
+            bool includePrimary,
+            bool includeIdentity,
+            IDbSetting dbSetting,
+            string tableName)
+        {
+            ValidateColumnMappings(tableName, dbFields, dictionary?.Keys, dbSetting);
+            return GetMappingItems(dictionary, dbFields, includePrimary, includeIdentity, dbSetting);
+        }
+
+        private static IEnumerable<PostgreSqlBulkInsertMapItem> GetMappings(DataTable table,
+            DbFieldCollection dbFields,
+            bool includePrimary,
+            bool includeIdentity,
+            IDbSetting dbSetting,
+            string tableName)
+        {
+            ValidateColumnMappings(tableName, dbFields, table?.Columns.Cast<DataColumn>().Select(column => column.ColumnName), dbSetting);
+            return GetMappingItems(table, dbFields, includePrimary, includeIdentity, dbSetting);
+        }
+
+        private static IEnumerable<PostgreSqlBulkInsertMapItem> GetMappings(IDataReader reader,
+            DbFieldCollection dbFields,
+            bool includePrimary,
+            bool includeIdentity,
+            IDbSetting dbSetting,
+            string tableName)
+        {
+            ValidateColumnMappings(tableName, dbFields, Enumerable.Range(0, reader?.FieldCount ?? 0).Select(index => reader.GetName(index)), dbSetting);
+            return GetMappingItems(reader, dbFields, includePrimary, includeIdentity, dbSetting);
+        }
+
+        #endregion
 
         /// <summary>
         /// 

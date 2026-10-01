@@ -168,13 +168,8 @@ namespace RepoDb
                 }
                 else
                 {
-                    // Filter the fields (based on the data reader)
-                    if (readerFields.Any() == true)
-                    {
-                        fields = fields
-                            .Where(e =>
-                                readerFields.Any(fieldName => string.Equals(fieldName, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
-                    }
+                    // Filter the fields (based on the data reader and the column mappings behavior)
+                    fields = GetFieldsForColumnMappings(connection, tableName, fields, readerFields);
 
                     // Filter the fields (based on the data table)
                     mappings = fields?
@@ -332,13 +327,8 @@ namespace RepoDb
                 }
                 else
                 {
-                    // Filter the fields (based on the data table)
-                    if (tableFields?.Any() == true)
-                    {
-                        fields = fields
-                            .Where(e =>
-                                tableFields.Any(fieldName => string.Equals(fieldName, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
-                    }
+                    // Filter the fields (based on the data table and the column mappings behavior)
+                    fields = GetFieldsForColumnMappings(connection, tableName, fields, tableFields);
 
                     // Filter the fields (based on the data table)
                     mappings = fields?
@@ -555,13 +545,8 @@ namespace RepoDb
                 }
                 else
                 {
-                    // Filter the fields (based on the data reader)
-                    if (readerFields.Any() == true)
-                    {
-                        fields = fields
-                            .Where(e =>
-                                readerFields.Any(fieldName => string.Equals(fieldName, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
-                    }
+                    // Filter the fields (based on the data reader and the column mappings behavior)
+                    fields = GetFieldsForColumnMappings(connection, tableName, fields, readerFields);
 
                     // Filter the fields (based on the data table)
                     mappings = fields?
@@ -722,13 +707,8 @@ namespace RepoDb
                 }
                 else
                 {
-                    // Filter the fields (based on the data table)
-                    if (tableFields?.Any() == true)
-                    {
-                        fields = fields
-                            .Where(e =>
-                                tableFields.Any(fieldName => string.Equals(fieldName, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
-                    }
+                    // Filter the fields (based on the data table and the column mappings behavior)
+                    fields = GetFieldsForColumnMappings(connection, tableName, fields, tableFields);
 
                     // Filter the fields (based on the data table)
                     mappings = fields?

@@ -31,6 +31,7 @@ An extension library of RepoDB that does bulk operations towards a Firebird data
 - [BulkUpdate](#bulkupdate)
 - [BulkDelete](#bulkdelete)
 - [BulkDeleteByKey](#bulkdeletebykey)
+- [Column Mappings Behavior](#column-mappings-behavior)
 
 ## Community
 
@@ -230,3 +231,45 @@ using (var connection = new FbConnection(ConnectionString))
     var deletedRows = connection.BulkDeleteByKey("Customer", primaryKeys);
 }
 ```
+
+## Column Mappings Behavior
+
+When no `mappings` are passed to `BulkInsert`, `BulkMerge`, or `BulkUpdate` (or their async variants), and for `BulkDelete` (which has no `mappings` argument), the columns of the source (entities, `DataTable`, or `DbDataReader`) are aligned with the columns of the destination table based on the `BulkColumnMappingsBehavior` setting:
+
+| Value | Column names must match | Column order must match | Destination columns missing from the source | Source columns missing from the destination |
+|---|---|---|---|---|
+| `Automatic` (default) | Only the matching ones | No | Bypassed | Ignored |
+| `Strict` | Yes | Yes | Throws | Throws |
+| `StrictBypass` | Yes | No | Bypassed | Throws |
+
+`Automatic` is the default and is the behavior of the earlier versions. `FirebirdBulkOperationsDbSetting` inherits `FirebirdDbSetting`, and `UseFirebird(...)` registers it as the setting of the connection in place of the default one. `Strict` and `StrictBypass` throw a `FirebirdBulkColumnMappingsException` (naming the offending columns) before any data is written.
+
+```csharp
+GlobalConfiguration
+    .Setup()
+    .UseFirebird(new FirebirdBulkOperationsDbSetting
+    {
+        BulkColumnMappingsBehavior = FirebirdBulkColumnMappingsBehavior.StrictBypass
+    });
+```
+
+For example, with a `Customer` table that has the `Id`, `Name`, `Email`, and `CreatedDateUtc` columns, and a list of entities (the source) with the `Email`, `Name`, and `Nickname` properties:
+
+- `Strict` throws, because the order differs, `Id`/`CreatedDateUtc` are missing, and `Nickname` does not exist in the destination.
+- `StrictBypass` throws, because `Nickname` does not exist in the destination.
+- `Automatic` inserts `Name` and `Email`, and ignores `Nickname`.
+
+```csharp
+try
+{
+    await connection.BulkInsertAsync("Customer", customers);
+}
+catch (FirebirdBulkColumnMappingsException ex)
+{
+    // e.g. "... Source column(s) that do not exist on the destination table: 'Nickname'."
+    logger.LogError(ex, "Bulk insert rejected due to column misalignment.");
+    throw;
+}
+```
+
+Explicitly passed `mappings` always take precedence: the setting is not applied to them. `BulkDeleteByKey` is not affected, as its source is a list of key values rather than a set of columns.

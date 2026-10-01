@@ -75,7 +75,8 @@ namespace RepoDb.DbHelpers
                        CASE
                            WHEN C.column_default IS NOT NULL THEN TRUE
                            ELSE FALSE
-                       END AS HasDefaultValue
+                       END AS HasDefaultValue,
+                       C.ordinal_position AS OrdinalPosition
                    FROM information_schema.columns C
                    LEFT JOIN pg_index I ON I.indrelid = (quote_ident(C.table_schema) || '.' || quote_ident(C.table_name))::regclass
                    AND C.ordinal_position = ANY (I.indkey)
@@ -83,7 +84,8 @@ namespace RepoDb.DbHelpers
                      AND (
                          C.table_schema = @Schema
                          OR C.table_schema = (SELECT nspname FROM pg_namespace WHERE oid = pg_my_temp_schema())
-                     );
+                     )
+                   ORDER BY C.ordinal_position;
                    """;
         }
 

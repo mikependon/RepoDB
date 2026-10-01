@@ -80,6 +80,9 @@ namespace RepoDb
             OracleTransaction transaction = null)
             where TEntity : class
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, entities, mappings?.Any() == true, transaction);
+
             // Identify the columns
             var entityList = entities.AsList();
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
@@ -165,6 +168,9 @@ namespace RepoDb
             string traceKey = OracleTraceKeys.OracleBulkUpdate,
             OracleTransaction transaction = null)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, table, mappings?.Any() == true, transaction);
+
             if (table == null)
             {
                 throw new ArgumentNullException(nameof(table));
@@ -264,6 +270,9 @@ namespace RepoDb
             string traceKey = OracleTraceKeys.OracleBulkUpdate,
             OracleTransaction transaction = null)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
+
             // Identify the columns - row count is unknown for a streaming reader (see the remarks on the
             // DbDataReader BulkMerge overload); Auto-resolution is currently a no-op regardless.
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
@@ -353,6 +362,9 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, entities, mappings?.Any() == true, transaction);
+
             // Identify the columns
             var entityList = entities.AsList();
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
@@ -438,6 +450,9 @@ namespace RepoDb
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, table, mappings?.Any() == true, transaction);
+
             if (table == null)
             {
                 throw new ArgumentNullException(nameof(table));
@@ -525,6 +540,9 @@ namespace RepoDb
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
+
             // Identify the columns
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);

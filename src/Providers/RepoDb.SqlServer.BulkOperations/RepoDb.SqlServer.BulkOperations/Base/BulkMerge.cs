@@ -118,13 +118,8 @@ namespace RepoDb
                 }
                 else
                 {
-                    // Filter the fields (based on the data entity)
-                    if (entityFields?.Any() == true)
-                    {
-                        fields = fields
-                            .Where(e =>
-                                entityFields.Any(f => string.Equals(f.Name, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
-                    }
+                    // Filter the fields (based on the data entity and the column mappings behavior)
+                    fields = GetFieldsForColumnMappings(connection, tableName, fields, entityFields?.Select(field => field.Name));
 
                     // Explicitly define the mappings
                     mappings = fields?
@@ -295,13 +290,8 @@ namespace RepoDb
                 }
                 else
                 {
-                    // Filter the fields (based on the data reader)
-                    if (readerFields.Any() == true)
-                    {
-                        fields = fields
-                            .Where(e =>
-                                readerFields.Any(fieldName => string.Equals(fieldName, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
-                    }
+                    // Filter the fields (based on the data reader and the column mappings behavior)
+                    fields = GetFieldsForColumnMappings(connection, tableName, fields, readerFields);
 
                     // Explicitly define the mappings
                     mappings = fields?
@@ -460,13 +450,8 @@ namespace RepoDb
                 }
                 else
                 {
-                    // Filter the fields (based on the data table)
-                    if (tableFields?.Any() == true)
-                    {
-                        fields = fields
-                            .Where(e =>
-                                tableFields.Any(fieldName => string.Equals(fieldName, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
-                    }
+                    // Filter the fields (based on the data table and the column mappings behavior)
+                    fields = GetFieldsForColumnMappings(connection, tableName, fields, tableFields);
 
                     // Explicitly define the mappings
                     mappings = fields?
@@ -647,13 +632,8 @@ namespace RepoDb
                 }
                 else
                 {
-                    // Filter the fields (based on the data entity)
-                    if (entityFields?.Any() == true)
-                    {
-                        fields = fields
-                            .Where(e =>
-                                entityFields.Any(f => string.Equals(f.Name, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
-                    }
+                    // Filter the fields (based on the data entity and the column mappings behavior)
+                    fields = GetFieldsForColumnMappings(connection, tableName, fields, entityFields?.Select(field => field.Name));
 
                     // Explicitly define the mappings
                     mappings = fields?
@@ -829,13 +809,8 @@ namespace RepoDb
                 }
                 else
                 {
-                    // Filter the fields (based on the data reader)
-                    if (readerFields.Any() == true)
-                    {
-                        fields = fields
-                            .Where(e =>
-                                readerFields.Any(fieldName => string.Equals(fieldName, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
-                    }
+                    // Filter the fields (based on the data reader and the column mappings behavior)
+                    fields = GetFieldsForColumnMappings(connection, tableName, fields, readerFields);
 
                     // Explicitly define the mappings
                     mappings = fields?
@@ -997,13 +972,8 @@ namespace RepoDb
                 }
                 else
                 {
-                    // Filter the fields (based on the data table)
-                    if (tableFields?.Any() == true)
-                    {
-                        fields = fields
-                            .Where(e =>
-                                tableFields.Any(fieldName => string.Equals(fieldName, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
-                    }
+                    // Filter the fields (based on the data table and the column mappings behavior)
+                    fields = GetFieldsForColumnMappings(connection, tableName, fields, tableFields);
 
                     // Explicitly define the mappings
                     mappings = fields?

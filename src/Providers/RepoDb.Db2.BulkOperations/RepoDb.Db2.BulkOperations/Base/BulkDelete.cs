@@ -63,6 +63,9 @@ namespace RepoDb
             DB2Transaction transaction = null)
             where TEntity : class
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, entities, hasMappings: false, transaction);
+
             var entityList = entities.AsList();
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
             var pseudoTableName = Db2Text.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
@@ -145,6 +148,9 @@ namespace RepoDb
             string traceKey = Db2TraceKeys.Db2BulkDelete,
             DB2Transaction transaction = null)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, table, hasMappings: false, transaction);
+
             if (table == null)
             {
                 throw new ArgumentNullException(nameof(table));
@@ -220,6 +226,9 @@ namespace RepoDb
             string traceKey = Db2TraceKeys.Db2BulkDelete,
             DB2Transaction transaction = null)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, reader, hasMappings: false, transaction);
+
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
             var pseudoTableName = Db2Text.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
@@ -298,6 +307,9 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, entities, hasMappings: false, transaction);
+
             var entityList = entities.AsList();
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
             var pseudoTableName = Db2Text.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
@@ -382,6 +394,9 @@ namespace RepoDb
             DB2Transaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, table, hasMappings: false, transaction);
+
             if (table == null)
             {
                 throw new ArgumentNullException(nameof(table));
@@ -459,6 +474,9 @@ namespace RepoDb
             DB2Transaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, reader, hasMappings: false, transaction);
+
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
             var pseudoTableName = Db2Text.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);

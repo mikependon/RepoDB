@@ -60,6 +60,9 @@ namespace RepoDb
             FbTransaction transaction = null)
             where TEntity : class
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, entities, mappings?.Any() == true, transaction);
+
             var entityList = entities.AsList();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
@@ -200,6 +203,9 @@ namespace RepoDb
             string traceKey = FirebirdTraceKeys.FirebirdBulkInsert,
             FbTransaction transaction = null)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, table, mappings?.Any() == true, transaction);
+
             if (table == null)
             {
                 throw new ArgumentNullException(nameof(table));
@@ -335,6 +341,9 @@ namespace RepoDb
             string traceKey = FirebirdTraceKeys.FirebirdBulkInsert,
             FbTransaction transaction = null)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
+
             using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
             var traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command);
 
@@ -384,6 +393,9 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, entities, mappings?.Any() == true, transaction);
+
             var entityList = entities.AsList();
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
             var identityField = dbFields.GetIdentity();
@@ -530,6 +542,9 @@ namespace RepoDb
             FbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, table, mappings?.Any() == true, transaction);
+
             if (table == null)
             {
                 throw new ArgumentNullException(nameof(table));
@@ -671,6 +686,9 @@ namespace RepoDb
             FbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
+
             using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
             var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 

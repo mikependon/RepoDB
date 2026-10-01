@@ -7,6 +7,7 @@
 #endregion
 
 using MySql.Data.MySqlClient;
+using RepoDb.DbSettings;
 
 namespace RepoDb
 {
@@ -23,6 +24,26 @@ namespace RepoDb
         public static GlobalConfiguration UseMySql(this GlobalConfiguration globalConfiguration)
         {
             MySqlBootstrap.InitializeInternal();
+            return globalConfiguration;
+        }
+
+        /// <summary>
+        /// Initializes all the necessary settings for MySQL, with the given setting. It accepts any class that inherits the
+        /// <see cref="MySqlDbSetting"/>, i.e. the MySqlBulkOperationsDbSetting of RepoDb.MySql.BulkOperations. The given
+        /// setting is always applied, even if MySQL was already initialized.
+        /// </summary>
+        /// <param name="globalConfiguration">The instance of the global configuration in used.</param>
+        /// <param name="dbSetting">The setting to be used.</param>
+        /// <returns>The used global configuration instance itself.</returns>
+        public static GlobalConfiguration UseMySql(this GlobalConfiguration globalConfiguration,
+            MySqlDbSetting dbSetting)
+        {
+            if (dbSetting == null)
+            {
+                throw new System.ArgumentNullException(nameof(dbSetting));
+            }
+
+            MySqlBootstrap.InitializeInternal(dbSetting);
             return globalConfiguration;
         }
     }

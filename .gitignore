@@ -4,6 +4,9 @@
 # Local fixes/scratch folder
 /Fixes/
 
+# Local-only Claude Code skills
+/.claude/skills/
+
 # User-specific files
 *.suo
 *.user

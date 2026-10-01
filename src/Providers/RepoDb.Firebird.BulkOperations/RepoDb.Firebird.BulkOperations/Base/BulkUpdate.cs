@@ -41,6 +41,9 @@ namespace RepoDb
             FbTransaction transaction = null)
             where TEntity : class
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, entities, mappings?.Any() == true, transaction);
+
             var entityList = entities.AsList();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
@@ -95,6 +98,9 @@ namespace RepoDb
             string traceKey = FirebirdTraceKeys.FirebirdBulkUpdate,
             FbTransaction transaction = null)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, table, mappings?.Any() == true, transaction);
+
             if (table == null)
             {
                 throw new ArgumentNullException(nameof(table));
@@ -149,6 +155,9 @@ namespace RepoDb
             string traceKey = FirebirdTraceKeys.FirebirdBulkUpdate,
             FbTransaction transaction = null)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
+
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
             var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields).AsList();
@@ -204,6 +213,9 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, entities, mappings?.Any() == true, transaction);
+
             var entityList = entities.AsList();
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
@@ -259,6 +271,9 @@ namespace RepoDb
             FbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, table, mappings?.Any() == true, transaction);
+
             if (table == null)
             {
                 throw new ArgumentNullException(nameof(table));
@@ -314,6 +329,9 @@ namespace RepoDb
             FbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
+
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
             var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields).AsList();

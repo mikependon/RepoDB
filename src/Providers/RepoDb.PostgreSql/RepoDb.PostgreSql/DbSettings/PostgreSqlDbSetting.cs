@@ -12,9 +12,10 @@ using Npgsql;
 namespace RepoDb.DbSettings
 {
     /// <summary>
-    /// A setting class used for <see cref="NpgsqlConnection"/> data provider.
+    /// A setting class used for <see cref="NpgsqlConnection"/> data provider. It can be inherited by the settings of the
+    /// extension libraries (i.e. the PostgreSqlBulkOperationsDbSetting of RepoDb.PostgreSql.BulkOperations).
     /// </summary>
-    public sealed class PostgreSqlDbSetting : BaseDbSetting
+    public class PostgreSqlDbSetting : BaseDbSetting
     {
         /// <summary>
         /// Creates a new instance of <see cref="PostgreSqlDbSetting"/> class.

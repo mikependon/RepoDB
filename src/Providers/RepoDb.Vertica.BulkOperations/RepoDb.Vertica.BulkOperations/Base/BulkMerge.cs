@@ -59,6 +59,9 @@ namespace RepoDb
             VerticaTransaction transaction = null)
             where TEntity : class
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, entities, mappings?.Any() == true, transaction);
+
             var entityList = entities.AsList();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
@@ -129,6 +132,9 @@ namespace RepoDb
             string traceKey = VerticaTraceKeys.VerticaBulkMerge,
             VerticaTransaction transaction = null)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, table, mappings?.Any() == true, transaction);
+
             if (table == null)
             {
                 throw new ArgumentNullException(nameof(table));
@@ -199,6 +205,9 @@ namespace RepoDb
             string traceKey = VerticaTraceKeys.VerticaBulkMerge,
             VerticaTransaction transaction = null)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
+
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
             var pseudoTableName = VerticaText.CreatePseudoTableName("M");
@@ -268,6 +277,9 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, entities, mappings?.Any() == true, transaction);
+
             var entityList = entities.AsList();
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
             var identityField = dbFields.GetIdentity();
@@ -340,6 +352,9 @@ namespace RepoDb
             VerticaTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, table, mappings?.Any() == true, transaction);
+
             if (table == null)
             {
                 throw new ArgumentNullException(nameof(table));
@@ -412,6 +427,9 @@ namespace RepoDb
             VerticaTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
+
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
             var identityField = dbFields.GetIdentity();
             var pseudoTableName = VerticaText.CreatePseudoTableName("M");

@@ -13,7 +13,7 @@ namespace RepoDb.DbSettings
     /// <summary>
     /// A setting class used for <see cref="DuckDBConnection"/> data provider.
     /// </summary>
-    public sealed class DuckDbDbSetting : BaseDbSetting
+    public class DuckDbDbSetting : BaseDbSetting
     {
         /// <summary>
         /// Creates a new instance of <see cref="DuckDbDbSetting"/> class.

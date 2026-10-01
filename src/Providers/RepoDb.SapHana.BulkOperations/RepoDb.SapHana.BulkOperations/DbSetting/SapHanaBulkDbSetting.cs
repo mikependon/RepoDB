@@ -27,5 +27,12 @@ namespace RepoDb.DbSettings
         /// Gets or sets a value indicating whether the <see cref="SapHanaBulkCopy"/> class should use the <see cref="SapHanaCommandBatcher"/> class to batch the commands instead of executing them one by one.
         /// </summary>
         public SapHanaWriteToServerExecution WriteToServerExecution { get; set; } = SapHanaWriteToServerExecution.SapHanaCommandBatcher;
+
+        /// <summary>
+        /// Gets or sets the value that defines how the columns of the source are aligned with the columns of the destination
+        /// table when no explicit mappings were passed to a bulk operation. Explicit mappings always take precedence over this
+        /// setting. The default value is <see cref="SapHanaBulkColumnMappingsBehavior.Automatic"/>.
+        /// </summary>
+        public SapHanaBulkColumnMappingsBehavior BulkColumnMappingsBehavior { get; set; } = SapHanaBulkColumnMappingsBehavior.Automatic;
     }
 }

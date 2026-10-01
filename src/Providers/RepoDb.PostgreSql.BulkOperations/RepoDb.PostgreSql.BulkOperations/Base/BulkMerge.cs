@@ -86,12 +86,14 @@ namespace RepoDb
                             dbFields,
                             includePrimary,
                             includeIdentity,
-                            dbSetting) :
+                            dbSetting,
+                            tableName) :
                         GetMappings(dbFields,
                             PropertyCache.Get(entityType),
                             includePrimary,
                             includeIdentity,
-                            dbSetting);
+                            dbSetting,
+                            tableName);
                 },
 
                 // binaryImport
@@ -197,7 +199,8 @@ namespace RepoDb
                             dbFields,
                             includePrimary,
                             includeIdentity,
-                            dbSetting);
+                            dbSetting,
+                            tableName);
                 },
 
                 // binaryImport
@@ -295,7 +298,8 @@ namespace RepoDb
                             dbFields,
                             includePrimary,
                             includeIdentity,
-                            dbSetting);
+                            dbSetting,
+                            tableName);
                 },
 
                 // binaryImport
@@ -403,12 +407,14 @@ namespace RepoDb
                             dbFields,
                             includePrimary,
                             includeIdentity,
-                            dbSetting) :
+                            dbSetting,
+                            tableName) :
                         GetMappings(dbFields,
                             PropertyCache.Get(entityType),
                             includePrimary,
                             includeIdentity,
-                            dbSetting);
+                            dbSetting,
+                            tableName);
                 },
 
                 // binaryImport
@@ -518,7 +524,8 @@ namespace RepoDb
                             dbFields,
                             includePrimary,
                             includeIdentity,
-                            dbSetting);
+                            dbSetting,
+                            tableName);
                 },
 
                 // binaryImport
@@ -620,7 +627,8 @@ namespace RepoDb
                             dbFields,
                             includePrimary,
                             includeIdentity,
-                            dbSetting);
+                            dbSetting,
+                            tableName);
                 },
 
                 // binaryImport

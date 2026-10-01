@@ -7,6 +7,7 @@
 #endregion
 
 using RepoDb.Connector.CockroachDb;
+using RepoDb.DbSettings;
 
 namespace RepoDb
 {
@@ -23,6 +24,26 @@ namespace RepoDb
         public static GlobalConfiguration UseCockroachDb(this GlobalConfiguration globalConfiguration)
         {
             CockroachDbBootstrap.InitializeInternal();
+            return globalConfiguration;
+        }
+
+        /// <summary>
+        /// Initializes all the necessary settings for CockroachDB, with the given setting. It accepts any class that inherits the
+        /// <see cref="CockroachDbDbSetting"/>, i.e. the CockroachDbBulkOperationsDbSetting of RepoDb.CockroachDb.BulkOperations. The given
+        /// setting is always applied, even if CockroachDB was already initialized.
+        /// </summary>
+        /// <param name="globalConfiguration">The instance of the global configuration in used.</param>
+        /// <param name="dbSetting">The setting to be used.</param>
+        /// <returns>The used global configuration instance itself.</returns>
+        public static GlobalConfiguration UseCockroachDb(this GlobalConfiguration globalConfiguration,
+            CockroachDbDbSetting dbSetting)
+        {
+            if (dbSetting == null)
+            {
+                throw new System.ArgumentNullException(nameof(dbSetting));
+            }
+
+            CockroachDbBootstrap.InitializeInternal(dbSetting);
             return globalConfiguration;
         }
     }

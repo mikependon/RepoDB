@@ -11,7 +11,7 @@ namespace RepoDb.DbSettings
     /// <summary>
     /// A setting class used for Oracle data provider.
     /// </summary>
-    public sealed class OracleDbSetting : BaseDbSetting
+    public class OracleDbSetting : BaseDbSetting
     {
         /// <summary>
         /// Creates a new instance of <see cref="OracleDbSetting"/> class.

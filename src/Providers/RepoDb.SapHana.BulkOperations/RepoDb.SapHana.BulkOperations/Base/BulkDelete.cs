@@ -58,6 +58,9 @@ namespace RepoDb
             HanaTransaction transaction = null)
             where TEntity : class
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, entities, hasMappings: false, transaction);
+
             var entityList = entities.AsList();
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
             var pseudoTableName = SapHanaText.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
@@ -128,6 +131,9 @@ namespace RepoDb
             string traceKey = SapHanaTraceKeys.SapHanaBulkDelete,
             HanaTransaction transaction = null)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, table, hasMappings: false, transaction);
+
             if (table == null)
             {
                 throw new ArgumentNullException(nameof(table));
@@ -200,6 +206,9 @@ namespace RepoDb
             string traceKey = SapHanaTraceKeys.SapHanaBulkDelete,
             HanaTransaction transaction = null)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, reader, hasMappings: false, transaction);
+
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
             var pseudoTableName = SapHanaText.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
 
@@ -275,6 +284,9 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, entities, hasMappings: false, transaction);
+
             var entityList = entities.AsList();
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
             var pseudoTableName = SapHanaText.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
@@ -347,6 +359,9 @@ namespace RepoDb
             HanaTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, table, hasMappings: false, transaction);
+
             if (table == null)
             {
                 throw new ArgumentNullException(nameof(table));
@@ -421,6 +436,9 @@ namespace RepoDb
             HanaTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, reader, hasMappings: false, transaction);
+
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
             var pseudoTableName = SapHanaText.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
 

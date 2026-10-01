@@ -30,18 +30,27 @@ namespace RepoDb
         #region Methods
 
         /// <summary>
-        ///
+        /// Initializes the necessary objects with the default <see cref="FirebirdDbSetting"/>. It is skipped if already initialized.
         /// </summary>
-        internal static void InitializeInternal()
+        internal static void InitializeInternal() =>
+            InitializeInternal(null);
+
+        /// <summary>
+        /// Initializes the necessary objects with the given setting. Unlike the parameterless call, a given setting is always
+        /// applied (replacing the setting of an earlier initialization), as it is an explicit request of the caller.
+        /// </summary>
+        /// <param name="dbSetting">The setting to be used, or null to use the default <see cref="FirebirdDbSetting"/>.</param>
+        internal static void InitializeInternal(FirebirdDbSetting dbSetting)
         {
-            // Skip if already initialized
-            if (IsInitialized == true)
+            // Skip if already initialized (and no explicit setting was given)
+            if (IsInitialized == true && dbSetting == null)
             {
                 return;
             }
 
             // Map the DbSetting
-            DbSettingMapper.Add<FbConnection>(new FirebirdDbSetting(), true);
+            dbSetting ??= new FirebirdDbSetting();
+            DbSettingMapper.Add<FbConnection>(dbSetting, true);
 
             // Map the DbHelper
             DbHelperMapper.Add<FbConnection>(new FirebirdDbHelper(), true);
