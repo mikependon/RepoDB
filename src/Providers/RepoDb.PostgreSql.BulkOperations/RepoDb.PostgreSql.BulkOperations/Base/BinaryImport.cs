@@ -207,12 +207,14 @@ namespace RepoDb
                     dbFields,
                     includePrimary,
                     includeIdentity,
-                    dbSetting) :
+                    dbSetting,
+                    tableName) :
                 GetMappings(dbFields,
                     PropertyCache.Get(entityType),
                     includePrimary,
                     includeIdentity,
-                    dbSetting);
+                    dbSetting,
+                    tableName);
 
             // Execution
             int execute()
@@ -437,7 +439,8 @@ namespace RepoDb
                     dbFields,
                     includePrimary,
                     includeIdentity,
-                    dbSetting);
+                    dbSetting,
+                    tableName);
 
             // Execution
             int execute()
@@ -567,7 +570,8 @@ namespace RepoDb
                     dbFields,
                     includePrimary,
                     includeIdentity,
-                    dbSetting);
+                    dbSetting,
+                    tableName);
 
             // Execution
             int execute()
@@ -794,12 +798,14 @@ namespace RepoDb
                     dbFields,
                     includePrimary,
                     includeIdentity,
-                    dbSetting) :
+                    dbSetting,
+                    tableName) :
                 GetMappings(dbFields,
                     PropertyCache.Get(entityType),
                     includePrimary,
                     includeIdentity,
-                    dbSetting);
+                    dbSetting,
+                    tableName);
 
             // Execution
             async Task<int> executeAsync()
@@ -1041,7 +1047,8 @@ namespace RepoDb
                     dbFields,
                     includePrimary,
                     includeIdentity,
-                    dbSetting);
+                    dbSetting,
+                    tableName);
 
             // Execution
             async Task<int> executeAsync()
@@ -1181,7 +1188,8 @@ namespace RepoDb
                     dbFields,
                     includePrimary,
                     includeIdentity,
-                    dbSetting).ToList();
+                    dbSetting,
+                    tableName).ToList();
 
             // Execution
             async Task<int> execute()

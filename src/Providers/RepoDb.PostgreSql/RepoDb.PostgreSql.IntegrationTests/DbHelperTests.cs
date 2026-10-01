@@ -75,6 +75,46 @@ namespace RepoDb.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
+        public void TestDbHelperGetFieldsAreInTheOrderOfTheTableColumns()
+        {
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var helper = connection.GetDbHelper();
+                var expected = connection.ExecuteQuery<string>(@"SELECT COLUMN_NAME
+                    FROM INFORMATION_SCHEMA.COLUMNS
+                    WHERE TABLE_NAME = @TableName
+                    ORDER BY ORDINAL_POSITION;", new { TableName = "CompleteTable" }).ToList();
+
+                // Act
+                var fields = helper.GetFields(connection, "CompleteTable", null);
+
+                // Assert
+                CollectionAssert.AreEqual(expected, fields.Select(f => f.Name).ToList());
+            }
+        }
+
+        [TestMethod]
+        public async Task TestDbHelperGetFieldsAsyncAreInTheOrderOfTheTableColumns()
+        {
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var helper = connection.GetDbHelper();
+                var expected = connection.ExecuteQuery<string>(@"SELECT COLUMN_NAME
+                    FROM INFORMATION_SCHEMA.COLUMNS
+                    WHERE TABLE_NAME = @TableName
+                    ORDER BY ORDINAL_POSITION;", new { TableName = "CompleteTable" }).ToList();
+
+                // Act
+                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null);
+
+                // Assert
+                CollectionAssert.AreEqual(expected, fields.Select(f => f.Name).ToList());
+            }
+        }
+
+        [TestMethod]
         public void TestDbHelperGetFieldsPrimary()
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionString))

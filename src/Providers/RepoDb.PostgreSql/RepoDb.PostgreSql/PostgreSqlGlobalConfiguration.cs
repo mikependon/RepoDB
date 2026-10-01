@@ -7,6 +7,7 @@
 #endregion
 
 using Npgsql;
+using RepoDb.DbSettings;
 
 namespace RepoDb
 {
@@ -23,6 +24,26 @@ namespace RepoDb
         public static GlobalConfiguration UsePostgreSql(this GlobalConfiguration globalConfiguration)
         {
             PostgreSqlBootstrap.InitializeInternal();
+            return globalConfiguration;
+        }
+
+        /// <summary>
+        /// Initializes all the necessary settings for PostgreSql, with the given setting. It accepts any class that inherits the
+        /// <see cref="PostgreSqlDbSetting"/>, i.e. the PostgreSqlBulkOperationsDbSetting of RepoDb.PostgreSql.BulkOperations. The given
+        /// setting is always applied, even if PostgreSql was already initialized.
+        /// </summary>
+        /// <param name="globalConfiguration">The instance of the global configuration in used.</param>
+        /// <param name="dbSetting">The setting to be used.</param>
+        /// <returns>The used global configuration instance itself.</returns>
+        public static GlobalConfiguration UsePostgreSql(this GlobalConfiguration globalConfiguration,
+            PostgreSqlDbSetting dbSetting)
+        {
+            if (dbSetting == null)
+            {
+                throw new System.ArgumentNullException(nameof(dbSetting));
+            }
+
+            PostgreSqlBootstrap.InitializeInternal(dbSetting);
             return globalConfiguration;
         }
     }
