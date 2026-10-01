@@ -14,6 +14,7 @@ using RepoDb.AuroraDb.PostgreSql.BulkOperations;
 using RepoDb.AuroraDb.PostgreSql.BulkOperations.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
@@ -56,6 +57,9 @@ namespace RepoDb
             AuroraDbTransaction transaction = null)
             where TEntity : class
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, entities, hasMappings: false, transaction);
+
             var entityList = entities.AsList();
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
             var pseudoTableName = AuroraDbText.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
@@ -126,6 +130,9 @@ namespace RepoDb
             string traceKey = AuroraDbTraceKeys.AuroraDbBulkDelete,
             AuroraDbTransaction transaction = null)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, table, hasMappings: false, transaction);
+
             if (table == null)
             {
                 throw new ArgumentNullException(nameof(table));
@@ -198,6 +205,9 @@ namespace RepoDb
             string traceKey = AuroraDbTraceKeys.AuroraDbBulkDelete,
             AuroraDbTransaction transaction = null)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, reader, hasMappings: false, transaction);
+
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
             var pseudoTableName = AuroraDbText.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
 
@@ -273,6 +283,9 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, entities, hasMappings: false, transaction);
+
             var entityList = entities.AsList();
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
             var pseudoTableName = AuroraDbText.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
@@ -345,6 +358,9 @@ namespace RepoDb
             AuroraDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, table, hasMappings: false, transaction);
+
             if (table == null)
             {
                 throw new ArgumentNullException(nameof(table));
@@ -419,6 +435,9 @@ namespace RepoDb
             AuroraDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, reader, hasMappings: false, transaction);
+
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
             var pseudoTableName = AuroraDbText.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
 

@@ -13,7 +13,7 @@ namespace RepoDb.DbSettings
     /// <summary>
     /// A setting class used for <see cref="VerticaConnection"/> data provider.
     /// </summary>
-    public sealed class VerticaDbSetting : BaseDbSetting
+    public class VerticaDbSetting : BaseDbSetting
     {
         /// <summary>
         /// Creates a new instance of <see cref="VerticaDbSetting"/> class.

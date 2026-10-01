@@ -13,7 +13,7 @@ namespace RepoDb.DbSettings
     /// <summary>
     /// A setting class used for <see cref="FbConnection"/> data provider.
     /// </summary>
-    public sealed class FirebirdDbSetting : BaseDbSetting
+    public class FirebirdDbSetting : BaseDbSetting
     {
         /// <summary>
         /// Creates a new instance of <see cref="FirebirdDbSetting"/> class.

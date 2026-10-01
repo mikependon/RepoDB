@@ -57,6 +57,9 @@ namespace RepoDb
             DuckDBTransaction transaction = null)
             where TEntity : class
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, entities, hasMappings: false, transaction);
+
             var entityList = entities.AsList();
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
             var pseudoTableName = DuckDbText.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
@@ -136,6 +139,9 @@ namespace RepoDb
             string traceKey = DuckDbTraceKeys.DuckDbBulkDelete,
             DuckDBTransaction transaction = null)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, table, hasMappings: false, transaction);
+
             if (table == null)
             {
                 throw new ArgumentNullException(nameof(table));
@@ -207,6 +213,9 @@ namespace RepoDb
             string traceKey = DuckDbTraceKeys.DuckDbBulkDelete,
             DuckDBTransaction transaction = null)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, reader, hasMappings: false, transaction);
+
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
             var pseudoTableName = DuckDbText.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
@@ -281,6 +290,9 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, entities, hasMappings: false, transaction);
+
             var entityList = entities.AsList();
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
             var pseudoTableName = DuckDbText.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
@@ -362,6 +374,9 @@ namespace RepoDb
             DuckDBTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, table, hasMappings: false, transaction);
+
             if (table == null)
             {
                 throw new ArgumentNullException(nameof(table));
@@ -435,6 +450,9 @@ namespace RepoDb
             DuckDBTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, reader, hasMappings: false, transaction);
+
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
             var pseudoTableName = DuckDbText.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);

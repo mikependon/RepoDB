@@ -8,6 +8,7 @@
 
 using ClickHouse.Driver.ADO;
 using RepoDb.ClickHouse.Interfaces;
+using RepoDb.Enumerations.ClickHouse;
 
 namespace RepoDb.DbSettings
 {
@@ -27,5 +28,12 @@ namespace RepoDb.DbSettings
         /// Gets or sets a value indicating whether waiting for mutations to complete is enabled for the ClickHouse database.
         /// </summary>
         public bool IsWaitForMutationsEnabled { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets the value that defines how the columns of the source are aligned with the columns of the destination
+        /// table when no explicit mappings were passed to a bulk operation. Explicit mappings always take precedence over this
+        /// setting. The default value is <see cref="ClickHouseBulkColumnMappingsBehavior.Automatic"/>.
+        /// </summary>
+        public ClickHouseBulkColumnMappingsBehavior BulkColumnMappingsBehavior { get; set; } = ClickHouseBulkColumnMappingsBehavior.Automatic;
     }
 }

@@ -62,6 +62,9 @@ namespace RepoDb
             EDBTransaction transaction = null)
             where TEntity : class
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, entities, mappings?.Any() == true, transaction);
+
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
             var returnIdentity = identityBehavior == EDBBulkImportIdentityBehavior.ReturnIdentity && identityField != null;
@@ -273,6 +276,9 @@ namespace RepoDb
             string traceKey = EDBTraceKeys.EDBBulkMerge,
             EDBTransaction transaction = null)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, table, mappings?.Any() == true, transaction);
+
             if (table == null)
             {
                 throw new ArgumentNullException(nameof(table));
@@ -486,6 +492,9 @@ namespace RepoDb
             string traceKey = EDBTraceKeys.EDBBulkMerge,
             EDBTransaction transaction = null)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
+
             // Identify the columns
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
             var pseudoTableName = EDBText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
@@ -568,6 +577,9 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, entities, mappings?.Any() == true, transaction);
+
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
             var returnIdentity = identityBehavior == EDBBulkImportIdentityBehavior.ReturnIdentity && identityField != null;
@@ -787,6 +799,9 @@ namespace RepoDb
             EDBTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, table, mappings?.Any() == true, transaction);
+
             if (table == null)
             {
                 throw new ArgumentNullException(nameof(table));
@@ -1008,6 +1023,9 @@ namespace RepoDb
             EDBTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
+
             // Identify the columns
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
             var pseudoTableName = EDBText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());

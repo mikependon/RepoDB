@@ -13,7 +13,7 @@ namespace RepoDb.DbSettings
     /// <summary>
     /// A setting class used for <see cref="AuroraDbConnection"/> data provider.
     /// </summary>
-    public sealed class AuroraDbDbSetting : BaseDbSetting
+    public class AuroraDbDbSetting : BaseDbSetting
     {
         /// <summary>
         /// Creates a new instance of <see cref="AuroraDbDbSetting"/> class.

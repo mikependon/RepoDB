@@ -13,7 +13,7 @@ namespace RepoDb.DbSettings
     /// <summary>
     /// A setting class used for <see cref="CockroachDbConnection"/> data provider.
     /// </summary>
-    public sealed class CockroachDbDbSetting : BaseDbSetting
+    public class CockroachDbDbSetting : BaseDbSetting
     {
         /// <summary>
         /// Creates a new instance of <see cref="CockroachDbDbSetting"/> class.

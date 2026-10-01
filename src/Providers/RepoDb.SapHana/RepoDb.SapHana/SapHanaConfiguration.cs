@@ -24,7 +24,7 @@ namespace RepoDb
         /// <returns>The used global configuration instance itself.</returns>
         public static GlobalConfiguration UseSapHana(this GlobalConfiguration globalConfiguration)
         {
-            UseSapHana(globalConfiguration, new SapHanaDbSetting());
+            SapHanaBootstrap.InitializeInternal();
             return globalConfiguration;
         }
 

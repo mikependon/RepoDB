@@ -74,6 +74,9 @@ namespace RepoDb
             OracleTransaction transaction = null)
             where TEntity : class
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, entities, hasMappings: false, transaction);
+
             var entityList = entities.AsList();
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
             var pseudoTableName = OracleText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
@@ -149,6 +152,9 @@ namespace RepoDb
             string traceKey = OracleTraceKeys.OracleBulkDelete,
             OracleTransaction transaction = null)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, table, hasMappings: false, transaction);
+
             if (table == null)
             {
                 throw new ArgumentNullException(nameof(table));
@@ -228,6 +234,9 @@ namespace RepoDb
             string traceKey = OracleTraceKeys.OracleBulkDelete,
             OracleTransaction transaction = null)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, reader, hasMappings: false, transaction);
+
             // Row count is unknown for a streaming reader (see the remarks on the DbDataReader BulkMerge
             // overload); Auto-resolution is currently a no-op regardless.
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
@@ -308,6 +317,9 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, entities, hasMappings: false, transaction);
+
             var entityList = entities.AsList();
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
             var pseudoTableName = OracleText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
@@ -383,6 +395,9 @@ namespace RepoDb
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, table, hasMappings: false, transaction);
+
             if (table == null)
             {
                 throw new ArgumentNullException(nameof(table));
@@ -460,6 +475,9 @@ namespace RepoDb
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, reader, hasMappings: false, transaction);
+
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
             var pseudoTableName = OracleText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
 

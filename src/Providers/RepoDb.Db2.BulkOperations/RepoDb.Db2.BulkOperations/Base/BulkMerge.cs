@@ -65,6 +65,9 @@ namespace RepoDb
             DB2Transaction transaction = null)
             where TEntity : class
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, entities, mappings?.Any() == true, transaction);
+
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
             var returnIdentity = identityBehavior == Db2BulkImportIdentityBehavior.ReturnIdentity && identityField != null;
@@ -292,6 +295,9 @@ namespace RepoDb
             string traceKey = Db2TraceKeys.Db2BulkMerge,
             DB2Transaction transaction = null)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, table, mappings?.Any() == true, transaction);
+
             if (table == null)
             {
                 throw new ArgumentNullException(nameof(table));
@@ -512,6 +518,9 @@ namespace RepoDb
             string traceKey = Db2TraceKeys.Db2BulkMerge,
             DB2Transaction transaction = null)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
+
             // Identify the columns
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
             var pseudoTableName = Db2Text.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
@@ -596,6 +605,9 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, entities, mappings?.Any() == true, transaction);
+
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
             var returnIdentity = identityBehavior == Db2BulkImportIdentityBehavior.ReturnIdentity && identityField != null;
@@ -831,6 +843,9 @@ namespace RepoDb
             DB2Transaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, table, mappings?.Any() == true, transaction);
+
             if (table == null)
             {
                 throw new ArgumentNullException(nameof(table));
@@ -1059,6 +1074,9 @@ namespace RepoDb
             DB2Transaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            // Validate the source columns (based on the column mappings behavior), before any data is written
+            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
+
             // Identify the columns
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
             var pseudoTableName = Db2Text.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
