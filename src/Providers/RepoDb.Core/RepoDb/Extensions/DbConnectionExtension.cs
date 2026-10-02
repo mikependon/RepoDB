@@ -4783,6 +4783,33 @@ isDisposeConnection: false,
         }
 
         /// <summary>
+        /// Expands the key-based <paramref name="where"/> to all the columns of a composite primary key (if the table has one).
+        /// </summary>
+        /// <param name="where">The where created from the single primary/identity key.</param>
+        /// <param name="entity">The entity (or dictionary) that holds the key values.</param>
+        /// <param name="dbFields">The fields of the table.</param>
+        /// <returns></returns>
+        internal static QueryGroup ExpandToCompositePrimaryKey(QueryGroup where,
+            object entity,
+            DbFieldCollection dbFields)
+        {
+            var primaryDbFields = dbFields?.GetItems().Where(dbField => dbField.IsPrimary).AsList();
+            if (where == null || entity == null || primaryDbFields == null || primaryDbFields.Count <= 1)
+            {
+                return where;
+            }
+            var queryFields = new List<QueryField>();
+            foreach (var primaryDbField in primaryDbFields)
+            {
+                var field = new Field(primaryDbField.Name);
+                queryFields.AddRange(entity is IDictionary<string, object> dictionary ?
+                    ToQueryGroup(field, dictionary).GetFields(true) :
+                    ToQueryGroup(primaryDbField, entity).GetFields(true));
+            }
+            return new QueryGroup(queryFields);
+        }
+
+        /// <summary>
         ///
         /// </summary>
         /// <param name="dbField"></param>

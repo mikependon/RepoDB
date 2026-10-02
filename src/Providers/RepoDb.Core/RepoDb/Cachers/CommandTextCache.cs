@@ -1042,6 +1042,22 @@ namespace RepoDb
             DbField identityField)
         {
             var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
+
+            // The builder only excludes the single primary field, so exclude all the columns of a composite
+            // primary key here, to be consistent with the input fields of the UpdateExecutionContext.
+            var dbFields = DbFieldCache.Get(request.Connection, request.Name, request.Transaction);
+            var dbSetting = request.Connection.GetDbSetting();
+            var primaryNames = dbFields?.GetItems()
+                .Where(dbField => dbField.IsPrimary)
+                .Select(dbField => dbField.Name.AsUnquoted(trim: true, dbSetting))
+                .ToList();
+            if (primaryNames?.Count > 1)
+            {
+                fields = fields
+                    .Where(field => !primaryNames.Contains(field.Name.AsUnquoted(trim: true, dbSetting), StringComparer.OrdinalIgnoreCase))
+                    .ToList();
+            }
+
             return statementBuilder.CreateUpdate(request.Name,
                 fields,
                 request.Where,
