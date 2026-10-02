@@ -80,7 +80,7 @@ We want the .NET community to understand this library's limitations before using
   - [QueryMultiple / InsertAll / MergeAll Batching](#querymultiple--insertall--mergeall-batching-1)
   - [Identity/Primary Key Retrieval](#identityprimary-key-retrieval-2)
   - [GUID/UNIQUEIDENTIFIER](#guiduniqueidentifier-3)
-  - [Bulk Operations Have No Native Bulk-Copy Path](#bulk-operations-have-no-native-bulk-copy-path)
+  - [Async Bulk Writes Have No True Async Driver API](#async-bulk-writes-have-no-true-async-driver-api)
   - [Bulk Operations Staging Table](#bulk-operations-staging-table-6)
   - [Bulk Insert and Merge Identity Correlation](#bulk-insert-and-merge-identity-correlation-1)
   - [Bulk Operations and Transactions](#bulk-operations-and-transactions-3)
@@ -1277,7 +1277,7 @@ These limitations are specific to the `RepoDb.SapHana` and `RepoDb.SapHana.BulkO
 
 **Alternative Solution**
 
-No workaround needed functionally. If round-trip count matters at scale, see [Bulk Operations Have No Native Bulk-Copy Path](#bulk-operations-have-no-native-bulk-copy-path) below before assuming `RepoDb.SapHana.BulkOperations` avoids the same cost.
+No workaround needed functionally. `RepoDb.SapHana.BulkOperations` does avoid this cost for its physical writes — see [Async Bulk Writes Have No True Async Driver API](#async-bulk-writes-have-no-true-async-driver-api) below for the one remaining caveat on the async path.
 
 ### Identity/Primary Key Retrieval
 
@@ -1300,27 +1300,20 @@ Without this registration, binding a raw `System.Guid` property against a `HanaP
 
 Register the handler per property rather than globally for `typeof(Guid)` if your process also uses another RepoDb provider that handles `Guid` natively — a type-level registration applies process-wide, across all connections.
 
-### Bulk Operations Have No Native Bulk-Copy Path
+### Async Bulk Writes Have No True Async Driver API
 
-Unlike `SqlBulkCopy`, `OracleBulkCopy`, or Npgsql's binary `COPY`, `Sap.Data.Hana` has no bulk-copy API. The `RepoDb.SapHana.BulkOperations` README acknowledges this directly ("SAP HANA has no native bulk-copy API equivalent to `SqlBulkCopy`/`MySqlBulkCopy`") and describes the fallback as "chunked, parameterized multi-row `INSERT` statements." The actual implementation in `WriteToServer.cs` is narrower than that description: `BuildRowInsertText` always builds a **single-row** `INSERT INTO tbl (...) VALUES (:p0, :p1, ...)` — never a multi-row `VALUES (row0), (row1), ...` list — and `FlushBatch`/`FlushBatchAsync` prepare that command once per chunk of `batchSize` rows (`500` by default), then call `command.ExecuteNonQuery()` once per row inside the chunk, reusing the same `HanaParameter` objects:
+`Sap.Data.Hana` does ship a genuine native bulk-copy API, `HanaBulkCopy` (`WriteToServer(DataTable)`/`(DataRow[])`/`(IDataReader)`), and every synchronous `Bulk*` call in this package already routes its physical write through it — this is a real set-based bulk load, not a loop of ordinary `Insert` calls, despite an earlier, now-superseded implementation of this package having worked that way.
 
-```csharp
-var affected = 0;
-foreach (var row in buffer)
-{
-    for (var c = 0; c < destinationColumns.Length; c++)
-    {
-        parameters[c].Value = NormalizeParameterValue(row[c]);
-    }
-    affected += command.ExecuteNonQuery();
-}
-```
+The limitation is that `HanaBulkCopy` has **no asynchronous methods at all**, and `HanaCommand` overrides none of `DbCommand`'s async members either (confirmed by reflecting over `Sap.Data.Hana.Net.v6.0` 2.29.25 — `HanaCommand.ExecuteNonQueryAsync`/`PrepareAsync` are the BCL's default thread-pool-wrapped fallbacks, not real non-blocking I/O). There is consequently no way to get a `Bulk*Async` call that is both backed by the genuine bulk copy *and* genuinely non-blocking I/O — every option trades one for the other. `SapHanaBulkDbSetting.WriteToServerExecution` exposes the choice:
 
-So every `Bulk*` call in this package issues one round trip per row — reusing the same prepared statement/parameter objects across a chunk avoids re-preparing and re-allocating them, but it does not reduce the number of round trips. This is functionally closer to a loop of ordinary `Insert` calls than to a bulk-copy load, despite the "high-performant" framing in the package README.
+- **`AsyncOverSync`** *(default)* — offloads the real, synchronous `HanaBulkCopy` call onto a background thread via `Task.Run`. The calling thread isn't blocked, but a thread-pool thread is held for the duration of the whole load. By far the fastest option for any non-trivial row count.
+- **`SapHanaCommandBatcher`** — a compatibility fallback that executes one parameterized `INSERT` round trip per row (via `SapHanaCommandBatcher`). Its own "async" methods are the same BCL thread-pool fallback, once per row, so this option is both slower and no more genuinely non-blocking than the default — it exists only for environments where `HanaBulkCopy` itself cannot be used.
+
+Separately, the reader-based overloads of `BulkInsert`/`BulkUpdate`/`BulkDelete`/`BulkMerge` always materialize the full source into an in-memory `DataTable` (`BuildDataTableFromReader` in `Base/WriteToServer.cs`) before handing it to `HanaBulkCopy`, rather than passing the `IDataReader` straight through to `HanaBulkCopy.WriteToServer(IDataReader)`. For a very large source, this means the entire batch is held in memory at once rather than streamed.
 
 **Alternative Solution**
 
-Do not assume `RepoDb.SapHana.BulkOperations` avoids per-row round trips the way `RepoDb.SqlServer.BulkOperations` does. For very large loads where round-trip count dominates cost, benchmark against your own HANA deployment before assuming a throughput advantage over plain `InsertAll`.
+Leave `WriteToServerExecution` at its default (`AsyncOverSync`) unless your environment specifically cannot tolerate a bulk operation holding a thread-pool thread for its duration — select `SapHanaCommandBatcher` explicitly only then, and expect it to be substantially slower for any non-trivial row count. For extremely large sources where the in-memory `DataTable` materialization is itself a concern, benchmark against your own HANA deployment and consider chunking the source yourself via `batchSize`.
 
 ### Bulk Operations Staging Table
 
@@ -1367,7 +1360,7 @@ Avoid concurrent writers against the same target table while relying on `SapHana
 
 ### Bulk Operations and Transactions
 
-Every `Bulk*` method creates its pseudo table (`DropPseudoTable` then `CREATE [LOCAL TEMPORARY] TABLE`) at the start of the call and drops it again in a `finally` block at the end — on every single call, unlike `RepoDb.Oracle.BulkOperations`, which reuses one staging table per (table, pseudo table type). None of the pseudo-table DDL, the per-row `INSERT`s described in [Bulk Operations Have No Native Bulk-Copy Path](#bulk-operations-have-no-native-bulk-copy-path), or the final drop receives special transactional handling beyond whatever `HanaTransaction transaction` argument the caller already passed through `connection.ExecuteNonQuery(..., transaction: transaction)` — there is no internal `BeginTransaction`/`Commit` wrapping. If the caller doesn't supply a transaction, each step in the sequence (drop old pseudo table, create it, populate it row-by-row, run the real statement, drop it again) commits independently under HANA's default autocommit behavior.
+Every `Bulk*` method creates its pseudo table (`DropPseudoTable` then `CREATE [LOCAL TEMPORARY] TABLE`) at the start of the call and drops it again in a `finally` block at the end — on every single call, unlike `RepoDb.Oracle.BulkOperations`, which reuses one staging table per (table, pseudo table type). None of the pseudo-table DDL, the bulk load into it described in [Async Bulk Writes Have No True Async Driver API](#async-bulk-writes-have-no-true-async-driver-api), or the final drop receives special transactional handling beyond whatever `HanaTransaction transaction` argument the caller already passed through `connection.ExecuteNonQuery(..., transaction: transaction)` — there is no internal `BeginTransaction`/`Commit` wrapping. If the caller doesn't supply a transaction, each step in the sequence (drop old pseudo table, create it, bulk-load it, run the real statement, drop it again) commits independently under HANA's default autocommit behavior.
 
 SAP HANA's DDL-and-transactions semantics also differ from the "DDL always force-commits" behavior documented for Oracle/Db2 elsewhere in this document — HANA's `autocommit_ddl` session setting can make `CREATE`/`DROP TABLE` participate in (and be rolled back by) the ambient transaction rather than always committing immediately. Whether `Sap.Data.Hana`'s default connection settings leave `autocommit_ddl` on or off — and therefore whether a caller-supplied transaction that gets rolled back also undoes an interrupted bulk operation's staging-table DDL — isn't asserted anywhere in this codebase.
 
@@ -1377,7 +1370,7 @@ If a rollback needs to also undo a bulk operation's target-table changes, pass a
 
 ### Verification Status
 
-`RepoDb.SapHana` has unit test coverage (`DbSettingTest.cs`, `StatementBuilderTest.cs`, `MappingTest.cs`, `QuotationTest.cs`, plus resolver/attribute tests) and a full integration test suite (`RepoDb.SapHana.IntegrationTests`, including `TransactionTests.cs`). `RepoDb.SapHana.BulkOperations` has an integration test suite (`BulkInsertTest.cs`/`BulkMergeTest.cs`/`BulkUpdateTest.cs`/`BulkDeleteTest.cs`/`BulkDeleteByKeyTest.cs`) but, unlike every sibling `*.BulkOperations` package covered elsewhere in this document, no unit test project of its own — there is no `StatementBuilderTest`-equivalent asserting the generated SQL text for the pseudo-table pipeline in isolation.
+`RepoDb.SapHana` has unit test coverage (`DbSettingTest.cs`, `StatementBuilderTest.cs`, `MappingTest.cs`, `QuotationTest.cs`, plus resolver/attribute tests) and a full integration test suite (`RepoDb.SapHana.IntegrationTests`, including `TransactionTests.cs`). `RepoDb.SapHana.BulkOperations` has an integration test suite (`BulkInsertTest.cs`/`BulkMergeTest.cs`/`BulkUpdateTest.cs`/`BulkDeleteTest.cs`/`BulkDeleteByKeyTest.cs`) and a `RepoDb.SapHana.BulkOperations.UnitTests` project, but the latter currently only locks in `SapHanaBulkDbSetting.WriteToServerExecution`'s default and the `SapHanaWriteToServerExecution` enum's ordinals — there is still no `StatementBuilderTest`-equivalent asserting the generated SQL text for the pseudo-table pipeline in isolation.
 
 Both packages' CI jobs (`build-saphana`/`build-saphana-bulk`, `build-pr-saphana`/`build-pr-saphana-bulk`) start a real `saplabs/hanaexpress` container and run `dotnet test` against it across .NET 8/9/10 — the same pattern used for every DB-backed provider in this repository. This sits oddly next to each package's own README, which states the provider "has not been verified against a live SAP HANA instance." Which claim is current can't be determined from the source alone — the README text may be stale boilerplate carried over from an earlier, genuinely-unverified provider, or the CI job may not yet have been run to completion since this was written. Check the actual CI run history for the `saphana-support` branch before trusting either claim, and in particular verify the two behaviors flagged above as needing the most scrutiny — the [Bulk Insert and Merge Identity Correlation](#bulk-insert-and-merge-identity-correlation-1) race/`GENERATED ALWAYS` gap, and the [Bulk Operations Staging Table](#bulk-operations-staging-table-6) concurrent-caller collision — neither of which a single-connection test run would surface.
 

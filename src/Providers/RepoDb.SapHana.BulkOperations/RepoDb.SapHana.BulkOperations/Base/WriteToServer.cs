@@ -171,7 +171,7 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
             if (dbSetting is SapHanaBulkDbSetting bulkDbSetting && bulkDbSetting.WriteToServerExecution == SapHanaWriteToServerExecution.AsyncOverSync)
             {
-                return WriteToServerInternal(connection, tableName, entities, mappings, bulkCopyTimeout, batchSize, transaction, excludeField);
+                return await Task.Run(() => WriteToServerInternal(connection, tableName, entities, mappings, bulkCopyTimeout, batchSize, transaction, excludeField), cancellationToken).ConfigureAwait(false);
             }
             using var reader = new DataEntityDataReader<TEntity>(entities);
             var resolvedMappings = ResolveMappings(connection, tableName, reader, mappings, transaction, excludeField, dbSetting);
@@ -211,7 +211,7 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
             if (dbSetting is SapHanaBulkDbSetting bulkDbSetting && bulkDbSetting.WriteToServerExecution == SapHanaWriteToServerExecution.AsyncOverSync)
             {
-                return WriteToServerInternal(connection, tableName, table, rowState, mappings, bulkCopyTimeout, batchSize, excludeField);
+                return await Task.Run(() => WriteToServerInternal(connection, tableName, table, rowState, mappings, bulkCopyTimeout, batchSize, excludeField), cancellationToken).ConfigureAwait(false);
             }
             var rows = GetDataRows(table, rowState)?.ToArray();
             using var tableReader = new DataTableReader(table);
@@ -252,7 +252,7 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
             if (dbSetting is SapHanaBulkDbSetting bulkDbSetting && bulkDbSetting.WriteToServerExecution == SapHanaWriteToServerExecution.AsyncOverSync)
             {
-                return WriteToServerInternal(connection, tableName, reader, mappings, bulkCopyTimeout, batchSize, transaction, excludeField);
+                return await Task.Run(() => WriteToServerInternal(connection, tableName, reader, mappings, bulkCopyTimeout, batchSize, transaction, excludeField), cancellationToken).ConfigureAwait(false);
             }
             var resolvedMappings = ResolveMappings(connection, tableName, reader, mappings, transaction, excludeField, dbSetting);
             if (resolvedMappings.Count == 0)
@@ -351,9 +351,10 @@ namespace RepoDb
 
         /// <summary>
         /// Builds a <see cref="SapHanaCommandBatcher"/> from already-resolved mappings, mirroring
-        /// <see cref="CreateHanaBulkCopy"/>. Used only by the async WriteToServerAsyncInternal overloads -
-        /// see the remarks on <see cref="SapHanaCommandBatcher"/> for why they use this instead of
-        /// <see cref="HanaBulkCopy"/>.
+        /// <see cref="CreateHanaBulkCopy"/>. Used only by the async WriteToServerAsyncInternal overloads, and only
+        /// when <see cref="SapHanaBulkDbSetting.WriteToServerExecution"/> is explicitly set to the
+        /// <see cref="SapHanaWriteToServerExecution.SapHanaCommandBatcher"/> fallback - see the remarks on
+        /// <see cref="SapHanaCommandBatcher"/> for why that fallback is dramatically slower than the default.
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>

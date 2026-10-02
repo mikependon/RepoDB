@@ -24,9 +24,14 @@ namespace RepoDb.DbSettings
         { }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the <see cref="SapHanaBulkCopy"/> class should use the <see cref="SapHanaCommandBatcher"/> class to batch the commands instead of executing them one by one.
+        /// Gets or sets how the asynchronous <c>Bulk*Async</c> operations write rows into the destination (or pseudo/staging)
+        /// table. The default, <see cref="SapHanaWriteToServerExecution.AsyncOverSync"/>, offloads the genuine, native
+        /// <see cref="HanaBulkCopy"/> load onto a background thread - by far the fastest option, since the SAP HANA ADO.NET
+        /// driver has no asynchronous bulk-copy API of its own to call into directly. <see cref="SapHanaWriteToServerExecution.SapHanaCommandBatcher"/>
+        /// falls back to one parameterized <c>INSERT</c> round trip per row and should only be selected for environments
+        /// where <see cref="HanaBulkCopy"/> itself cannot be used.
         /// </summary>
-        public SapHanaWriteToServerExecution WriteToServerExecution { get; set; } = SapHanaWriteToServerExecution.SapHanaCommandBatcher;
+        public SapHanaWriteToServerExecution WriteToServerExecution { get; set; } = SapHanaWriteToServerExecution.AsyncOverSync;
 
         /// <summary>
         /// Gets or sets the value that defines how the columns of the source are aligned with the columns of the destination

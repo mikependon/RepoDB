@@ -16,7 +16,7 @@
 
 # [RepoDb.SapHana.BulkOperations](https://www.nuget.org/packages/RepoDb.SapHana.BulkOperations)
 
-A high-performant extension library of RepoDB that does bulk operations towards a SAP HANA database. It uses chunked, parameterized multi-row `INSERT` statements under the hood (SAP HANA has no native bulk-copy API equivalent to `SqlBulkCopy`/`MySqlBulkCopy`).
+A high-performant extension library of RepoDB that does bulk operations towards a SAP HANA database. It uses the native `HanaBulkCopy` bulk-load API under the hood for the physical write (the SAP HANA ADO.NET driver's equivalent to `SqlBulkCopy`/`MySqlBulkCopy`) — see [Async Write Strategy](#async-write-strategy) below for the one caveat on the asynchronous methods, since the driver's `HanaBulkCopy` has no async API of its own.
 
 > This provider has not been verified against a live SAP HANA instance — see the code comments in this project (particularly `Helpers/SapHanaText.cs` and `Base/WriteToServer.cs`) for the specific assumptions made, and verify them before relying on this in production.
 
@@ -28,6 +28,7 @@ A high-performant extension library of RepoDB that does bulk operations towards 
 ## Core Features
 
 - [Async Methods](#async-methods)
+- [Async Write Strategy](#async-write-strategy)
 - [BulkInsert](#bulkinsert)
 - [BulkMerge](#bulkmerge)
 - [BulkUpdate](#bulkupdate)
@@ -65,6 +66,24 @@ GlobalConfiguration
 ## Async Methods
 
 Every synchronous operation has a corresponding `Async` overload.
+
+## Async Write Strategy
+
+The SAP HANA ADO.NET driver's native bulk-load API, `HanaBulkCopy`, has no asynchronous methods of its own. Every synchronous `Bulk*` call already routes its physical write through it directly. For the `Async` overloads, `SapHanaBulkDbSetting.WriteToServerExecution` controls how that gap is bridged:
+
+| Value | Behavior |
+|---|---|
+| `AsyncOverSync` (default) | Offloads the real, synchronous `HanaBulkCopy` call onto a background thread via `Task.Run`. The calling thread isn't blocked, at the cost of holding a thread-pool thread for the duration of the load. By far the fastest option for any non-trivial row count. |
+| `SapHanaCommandBatcher` | A compatibility fallback that executes one parameterized `INSERT` round trip per row instead. Only select this explicitly for environments where `HanaBulkCopy` itself cannot be used — it is substantially slower than the default for any non-trivial row count. |
+
+```csharp
+GlobalConfiguration
+    .Setup()
+    .UseSapHana(new SapHanaBulkDbSetting
+    {
+        WriteToServerExecution = SapHanaWriteToServerExecution.SapHanaCommandBatcher
+    });
+```
 
 ## BulkInsert
 

@@ -31,21 +31,22 @@ namespace RepoDb.SapHana.BulkOperations.IntegrationTests.DbSettings
             // Setup
             var setting = new SapHanaBulkDbSetting();
 
-            // Assert
-            Assert.AreEqual(SapHanaWriteToServerExecution.SapHanaCommandBatcher, setting.WriteToServerExecution);
+            // Assert - async Bulk*Async calls must default to the genuine HanaBulkCopy-backed path
+            // (issue #1363); the row-by-row SapHanaCommandBatcher fallback must be opt-in only.
+            Assert.AreEqual(SapHanaWriteToServerExecution.AsyncOverSync, setting.WriteToServerExecution);
         }
 
         [TestMethod]
-        public void TestSapHanaBulkDbSettingWriteToServerExecutionPropertyCanBeSetToAsyncOverSync()
+        public void TestSapHanaBulkDbSettingWriteToServerExecutionPropertyCanBeSetToSapHanaCommandBatcher()
         {
             // Setup
             var setting = new SapHanaBulkDbSetting
             {
-                WriteToServerExecution = SapHanaWriteToServerExecution.AsyncOverSync
+                WriteToServerExecution = SapHanaWriteToServerExecution.SapHanaCommandBatcher
             };
 
             // Assert
-            Assert.AreEqual(SapHanaWriteToServerExecution.AsyncOverSync, setting.WriteToServerExecution);
+            Assert.AreEqual(SapHanaWriteToServerExecution.SapHanaCommandBatcher, setting.WriteToServerExecution);
         }
 
         [TestMethod]

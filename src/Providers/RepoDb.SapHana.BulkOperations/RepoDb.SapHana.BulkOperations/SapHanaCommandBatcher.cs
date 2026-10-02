@@ -20,9 +20,7 @@ using RepoDb.Extensions;
 namespace RepoDb.SapHana.BulkOperations
 {
     /// <summary>
-    /// A <see cref="HanaCommand"/>-based row-by-row batch-insert class, following the same
-    /// conventions as <see cref="HanaBulkCopy"/>. This class is present to support the same API
-    /// as <see cref="HanaBulkCopy"/> but with a genuine async implementation.
+    /// An implementation of a command batcher that executes every row of a source <see cref="IDataReader"/> or <see cref="DataRow"/> array as its own <c>INSERT</c> round trip against a target table in SAP HANA.
     /// </summary>
     public class SapHanaCommandBatcher : IDisposable
     {
