@@ -183,7 +183,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             WithBehavior(behavior, () =>
             {
                 using var connection = new DB2Connection(Database.ConnectionString);
-                var result = ToLong(connection.Merge(tableName, entity, fields: Field.From("Code", "Name"), qualifiers: Field.From("Code")));
+                var result = ToLong(connection.Merge(tableName, entity, qualifiers: Field.From("Code")));
 
                 if (ReturnsPrimary(behavior))
                 {
@@ -209,7 +209,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             WithBehavior(behavior, () =>
             {
                 using var connection = new DB2Connection(Database.ConnectionString);
-                Assert.AreEqual(1, connection.MergeAll(tableName, new[] { entity }, fields: Field.From("Code", "Name"), qualifiers: Field.From("Code")));
+                Assert.AreEqual(1, connection.MergeAll(tableName, new[] { entity }, qualifiers: Field.From("Code")));
             });
 
             AssertEntityKeys(behavior, entity);
