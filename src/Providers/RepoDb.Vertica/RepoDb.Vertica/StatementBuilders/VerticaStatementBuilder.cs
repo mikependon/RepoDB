@@ -291,13 +291,11 @@ namespace RepoDb.StatementBuilders
             DbField identityField = null,
             string hints = null)
         {
-            var insertStatement = TrimTrailingSemicolon(base.CreateInsert(tableName,
+            return TrimTrailingSemicolon(base.CreateInsert(tableName,
                 fields,
                 primaryField,
                 identityField,
                 hints));
-
-            return AppendReturnKeyColumnSelect(insertStatement, primaryField, identityField);
         }
 
         #endregion
@@ -367,7 +365,7 @@ namespace RepoDb.StatementBuilders
             }
 
             // Return the query. Deliberately no ".End()" - see CreateExists.
-            return AppendReturnKeyColumnSelectForBatch(builder.GetString(), batchSize, primaryField, identityField);
+            return builder.GetString();
         }
 
         #endregion
@@ -808,66 +806,6 @@ namespace RepoDb.StatementBuilders
             }
 
             return string.Concat(mergeStatement, "; SELECT LAST_INSERT_ID() AS ", resultAlias);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="statement"></param>
-        /// <param name="primaryField"></param>
-        /// <param name="identityField"></param>
-        /// <returns></returns>
-        private string AppendReturnKeyColumnSelect(string statement,
-            DbField primaryField,
-            DbField identityField)
-        {
-            var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
-            if (keyColumn == null)
-            {
-                return statement;
-            }
-
-            var isIdentityKeyColumn = identityField != null &&
-                string.Equals(keyColumn.Name, identityField.Name, StringComparison.OrdinalIgnoreCase);
-
-            return isIdentityKeyColumn
-                ? string.Concat(statement, "; SELECT LAST_INSERT_ID() AS ", "Result".AsQuoted(DbSetting))
-                : AppendEchoedKeyColumnSelect(statement, keyColumn);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="statement"></param>
-        /// <param name="batchSize"></param>
-        /// <param name="primaryField"></param>
-        /// <param name="identityField"></param>
-        /// <returns></returns>
-        private string AppendReturnKeyColumnSelectForBatch(string statement,
-            int batchSize,
-            DbField primaryField,
-            DbField identityField)
-        {
-            var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
-            if (keyColumn == null)
-            {
-                return statement;
-            }
-
-            var isIdentityKeyColumn = identityField != null &&
-                string.Equals(keyColumn.Name, identityField.Name, StringComparison.OrdinalIgnoreCase);
-            if (isIdentityKeyColumn)
-            {
-                return statement;
-            }
-
-            var resultAlias = "Result".AsQuoted(DbSetting);
-            var indexAlias = "Index".AsQuoted(DbSetting);
-            var selects = Enumerable.Range(0, batchSize)
-                .Select(index => string.Concat("SELECT ", keyColumn.Name.AsParameter(index, DbSetting),
-                    " AS ", resultAlias, ", ", index, " AS ", indexAlias));
-
-            return string.Concat(statement, "; ", selects.Join(" UNION ALL "));
         }
 
         /// <summary>
