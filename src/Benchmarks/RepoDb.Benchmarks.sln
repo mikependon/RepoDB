@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
 VisualStudioVersion = 18.7.11911.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqlServer", "..\..\Providers\RepoDb.SqlServer\RepoDb.SqlServer\RepoDb.SqlServer.csproj", "{6D196ABF-4A38-43C1-8D31-2C5CECC0F2AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqlServer", "..\Providers\RepoDb.SqlServer\RepoDb.SqlServer\RepoDb.SqlServer.csproj", "{6D196ABF-4A38-43C1-8D31-2C5CECC0F2AF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "..\..\Providers\RepoDb.Core\RepoDb\RepoDb.csproj", "{9313409F-467E-40D7-874E-9105BBDDFA53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "..\Providers\RepoDb.Core\RepoDb\RepoDb.csproj", "{9313409F-467E-40D7-874E-9105BBDDFA53}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqlServer.BulkOperations", "..\..\Providers\RepoDb.SqlServer.BulkOperations\RepoDb.SqlServer.BulkOperations\RepoDb.SqlServer.BulkOperations.csproj", "{4B11CD99-AF04-415B-99FF-E52278CFA7FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqlServer.BulkOperations", "..\Providers\RepoDb.SqlServer.BulkOperations\RepoDb.SqlServer.BulkOperations\RepoDb.SqlServer.BulkOperations.csproj", "{4B11CD99-AF04-415B-99FF-E52278CFA7FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.PostgreSql", "..\..\Providers\RepoDb.PostgreSql\RepoDb.PostgreSql\RepoDb.PostgreSql.csproj", "{6DC2760A-B41C-459A-8ABB-867F03B90AEC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.PostgreSql", "..\Providers\RepoDb.PostgreSql\RepoDb.PostgreSql\RepoDb.PostgreSql.csproj", "{6DC2760A-B41C-459A-8ABB-867F03B90AEC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Benchmarks.SqlServer", "RepoDb.Benchmarks.SqlServer\RepoDb.Benchmarks.SqlServer.csproj", "{C387EF36-8ED2-4056-94A0-F3347D681F56}"
 EndProject
@@ -25,81 +25,79 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Benchmarks.Core", "R
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Benchmarks.MySql", "RepoDb.Benchmarks.MySql\RepoDb.Benchmarks.MySql.csproj", "{5817245D-929C-E5F3-1CAD-44730B7066FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.MySql", "..\..\Providers\RepoDb.MySql\RepoDb.MySql\RepoDb.MySql.csproj", "{D9BC7ACA-33A7-9DF7-120C-ED8F3C5DDC41}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.MySql", "..\Providers\RepoDb.MySql\RepoDb.MySql\RepoDb.MySql.csproj", "{D9BC7ACA-33A7-9DF7-120C-ED8F3C5DDC41}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.MySql.BulkOperations", "..\..\Providers\RepoDb.MySql.BulkOperations\RepoDb.MySql.BulkOperations\RepoDb.MySql.BulkOperations.csproj", "{0BE98D4E-5715-7564-A3FB-0E351F6911E4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.MySql.BulkOperations", "..\Providers\RepoDb.MySql.BulkOperations\RepoDb.MySql.BulkOperations\RepoDb.MySql.BulkOperations.csproj", "{0BE98D4E-5715-7564-A3FB-0E351F6911E4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Benchmarks.Oracle", "RepoDb.Benchmarks.Oracle\RepoDb.Benchmarks.Oracle.csproj", "{394AD70B-357F-4EEA-BC5B-D24CF6B407E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Oracle", "..\..\Providers\RepoDb.Oracle\RepoDb.Oracle\RepoDb.Oracle.csproj", "{C94260C2-DA26-4C1B-A619-D9BAFB91F0D9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Oracle", "..\Providers\RepoDb.Oracle\RepoDb.Oracle\RepoDb.Oracle.csproj", "{C94260C2-DA26-4C1B-A619-D9BAFB91F0D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Oracle.BulkOperations", "..\..\Providers\RepoDb.Oracle.BulkOperations\RepoDb.Oracle.BulkOperations\RepoDb.Oracle.BulkOperations.csproj", "{100102A1-4134-41FC-82A1-308E0A21769B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Oracle.BulkOperations", "..\Providers\RepoDb.Oracle.BulkOperations\RepoDb.Oracle.BulkOperations\RepoDb.Oracle.BulkOperations.csproj", "{100102A1-4134-41FC-82A1-308E0A21769B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.PostgreSql.BulkOperations", "..\..\Providers\RepoDb.PostgreSql.BulkOperations\RepoDb.PostgreSql.BulkOperations\RepoDb.PostgreSql.BulkOperations.csproj", "{E6E7E09B-19B0-A434-6097-AC7943F8DAA2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.PostgreSql.BulkOperations", "..\Providers\RepoDb.PostgreSql.BulkOperations\RepoDb.PostgreSql.BulkOperations\RepoDb.PostgreSql.BulkOperations.csproj", "{E6E7E09B-19B0-A434-6097-AC7943F8DAA2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Benchmarks.MySqlConnector", "RepoDb.Benchmarks.MySqlConnector\RepoDb.Benchmarks.MySqlConnector.csproj", "{4755D6CC-D12A-49D3-8DDD-C3216978F21E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.MySqlConnector", "..\..\Providers\RepoDb.MySqlConnector\RepoDb.MySqlConnector\RepoDb.MySqlConnector.csproj", "{4E6D2570-DCC1-49A4-A5D4-3C1789B89D9F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.MySqlConnector", "..\Providers\RepoDb.MySqlConnector\RepoDb.MySqlConnector\RepoDb.MySqlConnector.csproj", "{4E6D2570-DCC1-49A4-A5D4-3C1789B89D9F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.MySqlConnector.BulkOperations", "..\..\Providers\RepoDb.MySqlConnector.BulkOperations\RepoDb.MySqlConnector.BulkOperations\RepoDb.MySqlConnector.BulkOperations.csproj", "{E6ED5B90-7332-41E2-BA5D-45906A3CBA00}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.MySqlConnector.BulkOperations", "..\Providers\RepoDb.MySqlConnector.BulkOperations\RepoDb.MySqlConnector.BulkOperations\RepoDb.MySqlConnector.BulkOperations.csproj", "{E6ED5B90-7332-41E2-BA5D-45906A3CBA00}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Benchmarks.MariaDb", "RepoDb.Benchmarks.MariaDb\RepoDb.Benchmarks.MariaDb.csproj", "{D6D9D6B7-4EEF-4558-BB1C-7D305F974F90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.MariaDb", "..\..\Providers\RepoDb.MariaDb\RepoDb.MariaDb\RepoDb.MariaDb.csproj", "{56636F57-3891-4745-9A35-A2CA80236663}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.MariaDb", "..\Providers\RepoDb.MariaDb\RepoDb.MariaDb\RepoDb.MariaDb.csproj", "{56636F57-3891-4745-9A35-A2CA80236663}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.MariaDb.BulkOperations", "..\..\Providers\RepoDb.MariaDb.BulkOperations\RepoDb.MariaDb.BulkOperations\RepoDb.MariaDb.BulkOperations.csproj", "{F952B62C-2D14-4A21-8270-BA79A20B823B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.MariaDb.BulkOperations", "..\Providers\RepoDb.MariaDb.BulkOperations\RepoDb.MariaDb.BulkOperations\RepoDb.MariaDb.BulkOperations.csproj", "{F952B62C-2D14-4A21-8270-BA79A20B823B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Benchmarks.MariaDbConnector", "RepoDb.Benchmarks.MariaDbConnector\RepoDb.Benchmarks.MariaDbConnector.csproj", "{B2698931-77AF-4E32-B833-0754297F120E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.MariaDbConnector", "..\..\Providers\RepoDb.MariaDbConnector\RepoDb.MariaDbConnector\RepoDb.MariaDbConnector.csproj", "{1BA5A02C-12ED-4689-940E-20A71818FC53}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.MariaDbConnector", "..\Providers\RepoDb.MariaDbConnector\RepoDb.MariaDbConnector\RepoDb.MariaDbConnector.csproj", "{1BA5A02C-12ED-4689-940E-20A71818FC53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.MariaDbConnector.BulkOperations", "..\..\Providers\RepoDb.MariaDbConnector.BulkOperations\RepoDb.MariaDbConnector.BulkOperations\RepoDb.MariaDbConnector.BulkOperations.csproj", "{27206F43-DDD2-4348-9B56-6E5E3239958C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.MariaDbConnector.BulkOperations", "..\Providers\RepoDb.MariaDbConnector.BulkOperations\RepoDb.MariaDbConnector.BulkOperations\RepoDb.MariaDbConnector.BulkOperations.csproj", "{27206F43-DDD2-4348-9B56-6E5E3239958C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Benchmarks.Db2", "RepoDb.Benchmarks.Db2\RepoDb.Benchmarks.Db2.csproj", "{EDA34BF2-ACED-4690-8CC6-65BF2CC700F2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Db2", "..\..\Providers\RepoDb.Db2\RepoDb.Db2\RepoDb.Db2.csproj", "{02ABC980-DC7B-4F95-B0A7-582716ABCAAE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Db2", "..\Providers\RepoDb.Db2\RepoDb.Db2\RepoDb.Db2.csproj", "{02ABC980-DC7B-4F95-B0A7-582716ABCAAE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Db2.BulkOperations", "..\..\Providers\RepoDb.Db2.BulkOperations\RepoDb.Db2.BulkOperations\RepoDb.Db2.BulkOperations.csproj", "{985EAA89-D057-47F8-B217-058C997A5C3C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Db2.BulkOperations", "..\Providers\RepoDb.Db2.BulkOperations\RepoDb.Db2.BulkOperations\RepoDb.Db2.BulkOperations.csproj", "{985EAA89-D057-47F8-B217-058C997A5C3C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Benchmarks.ClickHouse", "RepoDb.Benchmarks.ClickHouse\RepoDb.Benchmarks.ClickHouse.csproj", "{05E13C47-A20A-450B-B8FF-923DA7E51717}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.ClickHouse", "..\..\Providers\RepoDb.ClickHouse\RepoDb.ClickHouse\RepoDb.ClickHouse.csproj", "{A9C1948F-986F-4B31-B8C0-A18E9D323977}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.ClickHouse", "..\Providers\RepoDb.ClickHouse\RepoDb.ClickHouse\RepoDb.ClickHouse.csproj", "{A9C1948F-986F-4B31-B8C0-A18E9D323977}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.ClickHouse.BulkOperations", "..\..\Providers\RepoDb.ClickHouse.BulkOperations\RepoDb.ClickHouse.BulkOperations\RepoDb.ClickHouse.BulkOperations.csproj", "{9E368E1D-2CE0-4618-94C5-7D8A493DDBFF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.ClickHouse.BulkOperations", "..\Providers\RepoDb.ClickHouse.BulkOperations\RepoDb.ClickHouse.BulkOperations\RepoDb.ClickHouse.BulkOperations.csproj", "{9E368E1D-2CE0-4618-94C5-7D8A493DDBFF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Benchmarks.Firebird", "RepoDb.Benchmarks.Firebird\RepoDb.Benchmarks.Firebird.csproj", "{652F23B0-953E-4022-ADC8-02BDE3038B72}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Firebird", "..\..\Providers\RepoDb.Firebird\RepoDb.Firebird\RepoDb.Firebird.csproj", "{FB972892-6B78-428E-A173-824B87872BC1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Firebird", "..\Providers\RepoDb.Firebird\RepoDb.Firebird\RepoDb.Firebird.csproj", "{FB972892-6B78-428E-A173-824B87872BC1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Firebird.BulkOperations", "..\..\Providers\RepoDb.Firebird.BulkOperations\RepoDb.Firebird.BulkOperations\RepoDb.Firebird.BulkOperations.csproj", "{F34EEE27-08EE-4C3E-A8C0-BC00A7F29E14}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Firebird.BulkOperations", "..\Providers\RepoDb.Firebird.BulkOperations\RepoDb.Firebird.BulkOperations\RepoDb.Firebird.BulkOperations.csproj", "{F34EEE27-08EE-4C3E-A8C0-BC00A7F29E14}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Benchmarks.Vertica", "RepoDb.Benchmarks.Vertica\RepoDb.Benchmarks.Vertica.csproj", "{AE5CEB40-3967-45A2-B9CE-F6E07291E3D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Vertica", "..\..\Providers\RepoDb.Vertica\RepoDb.Vertica\RepoDb.Vertica.csproj", "{F1D4DE2B-9F72-44F9-B732-E6DB1F6B9CB5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Vertica", "..\Providers\RepoDb.Vertica\RepoDb.Vertica\RepoDb.Vertica.csproj", "{F1D4DE2B-9F72-44F9-B732-E6DB1F6B9CB5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Vertica.BulkOperations", "..\..\Providers\RepoDb.Vertica.BulkOperations\RepoDb.Vertica.BulkOperations\RepoDb.Vertica.BulkOperations.csproj", "{8A703B8D-9047-4F33-91F5-3C8294BD48AD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Vertica.BulkOperations", "..\Providers\RepoDb.Vertica.BulkOperations\RepoDb.Vertica.BulkOperations\RepoDb.Vertica.BulkOperations.csproj", "{8A703B8D-9047-4F33-91F5-3C8294BD48AD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Benchmarks.EnterpriseDb", "RepoDb.Benchmarks.EnterpriseDb\RepoDb.Benchmarks.EnterpriseDb.csproj", "{8471DE75-69E3-4F07-9734-9E8CB6030738}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.EnterpriseDb", "..\..\Providers\RepoDb.EnterpriseDb\RepoDb.EnterpriseDb\RepoDb.EnterpriseDb.csproj", "{CC8F8A5F-6E88-4AA0-8463-17C88DB0562E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.EnterpriseDb", "..\Providers\RepoDb.EnterpriseDb\RepoDb.EnterpriseDb\RepoDb.EnterpriseDb.csproj", "{CC8F8A5F-6E88-4AA0-8463-17C88DB0562E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.EnterpriseDb.BulkOperations", "..\..\Providers\RepoDb.EnterpriseDb.BulkOperations\RepoDb.EnterpriseDb.BulkOperations\RepoDb.EnterpriseDb.BulkOperations.csproj", "{9A22CF86-A082-47EC-A1A8-1341237EDD8E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.EnterpriseDb.BulkOperations", "..\Providers\RepoDb.EnterpriseDb.BulkOperations\RepoDb.EnterpriseDb.BulkOperations\RepoDb.EnterpriseDb.BulkOperations.csproj", "{9A22CF86-A082-47EC-A1A8-1341237EDD8E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Benchmarks.SapHana", "RepoDb.Benchmarks.SapHana\RepoDb.Benchmarks.SapHana.csproj", "{BFE68C3B-1EC7-40CA-ADE4-0100D284B24D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.SapHana", "..\..\Providers\RepoDb.SapHana\RepoDb.SapHana\RepoDb.SapHana.csproj", "{AC7277F3-C38A-4639-8FBA-348EA0D87627}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.SapHana", "..\Providers\RepoDb.SapHana\RepoDb.SapHana\RepoDb.SapHana.csproj", "{AC7277F3-C38A-4639-8FBA-348EA0D87627}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.SapHana.BulkOperations", "..\..\Providers\RepoDb.SapHana.BulkOperations\RepoDb.SapHana.BulkOperations\RepoDb.SapHana.BulkOperations.csproj", "{DF4C5338-CC88-45DE-AE94-ED42C39E65A6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.SapHana.BulkOperations", "..\Providers\RepoDb.SapHana.BulkOperations\RepoDb.SapHana.BulkOperations\RepoDb.SapHana.BulkOperations.csproj", "{DF4C5338-CC88-45DE-AE94-ED42C39E65A6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Benchmarks.Sqlite.Microsoft", "RepoDb.Benchmarks.Sqlite.Microsoft\RepoDb.Benchmarks.Sqlite.Microsoft.csproj", "{1CF10497-38A9-4AB6-967B-72E28CE15FFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Sqlite.Microsoft", "..\..\Providers\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.csproj", "{A9254E7C-DE18-4C99-A8B3-A47D6CE72975}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Sqlite.Microsoft", "..\Providers\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.csproj", "{A9254E7C-DE18-4C99-A8B3-A47D6CE72975}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Benchmarks.AuroraDb.MySqlConnector", "RepoDb.Benchmarks.AuroraDb.MySqlConnector\RepoDb.Benchmarks.AuroraDb.MySqlConnector.csproj", "{EC29F8AF-040E-4A6B-9C62-34B4C5A8E183}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.AuroraDb.MySqlConnector", "..\Providers\RepoDb.AuroraDb.MySqlConnector\RepoDb.AuroraDb.MySqlConnector\RepoDb.AuroraDb.MySqlConnector.csproj", "{7459FAA4-6840-4691-B721-C24210EE439F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb", "..\Providers\RepoDb.Core\RepoDb\RepoDb.csproj", "{12863452-9582-46E4-BE44-41CF3E3425B8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.AuroraDb.MySqlConnector.BulkOperations", "..\Providers\RepoDb.AuroraDb.MySqlConnector.BulkOperations\RepoDb.AuroraDb.MySqlConnector.BulkOperations\RepoDb.AuroraDb.MySqlConnector.BulkOperations.csproj", "{4D99AB71-4752-49E3-AE8C-35BC948B65CA}"
 EndProject
@@ -671,18 +669,6 @@ Global
 		{7459FAA4-6840-4691-B721-C24210EE439F}.Release|x64.Build.0 = Release|Any CPU
 		{7459FAA4-6840-4691-B721-C24210EE439F}.Release|x86.ActiveCfg = Release|Any CPU
 		{7459FAA4-6840-4691-B721-C24210EE439F}.Release|x86.Build.0 = Release|Any CPU
-		{12863452-9582-46E4-BE44-41CF3E3425B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{12863452-9582-46E4-BE44-41CF3E3425B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{12863452-9582-46E4-BE44-41CF3E3425B8}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{12863452-9582-46E4-BE44-41CF3E3425B8}.Debug|x64.Build.0 = Debug|Any CPU
-		{12863452-9582-46E4-BE44-41CF3E3425B8}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{12863452-9582-46E4-BE44-41CF3E3425B8}.Debug|x86.Build.0 = Debug|Any CPU
-		{12863452-9582-46E4-BE44-41CF3E3425B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{12863452-9582-46E4-BE44-41CF3E3425B8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{12863452-9582-46E4-BE44-41CF3E3425B8}.Release|x64.ActiveCfg = Release|Any CPU
-		{12863452-9582-46E4-BE44-41CF3E3425B8}.Release|x64.Build.0 = Release|Any CPU
-		{12863452-9582-46E4-BE44-41CF3E3425B8}.Release|x86.ActiveCfg = Release|Any CPU
-		{12863452-9582-46E4-BE44-41CF3E3425B8}.Release|x86.Build.0 = Release|Any CPU
 		{4D99AB71-4752-49E3-AE8C-35BC948B65CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4D99AB71-4752-49E3-AE8C-35BC948B65CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D99AB71-4752-49E3-AE8C-35BC948B65CA}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -851,6 +837,18 @@ Global
 		{DF4C5338-CC88-45DE-AE94-ED42C39E65A6} = {DFC5265D-6BEC-4073-9302-4F9FF6319C02}
 		{1CF10497-38A9-4AB6-967B-72E28CE15FFC} = {11557363-B92A-4C24-8D03-80FE7219704A}
 		{A9254E7C-DE18-4C99-A8B3-A47D6CE72975} = {DFC5265D-6BEC-4073-9302-4F9FF6319C02}
+		{EC29F8AF-040E-4A6B-9C62-34B4C5A8E183} = {11557363-B92A-4C24-8D03-80FE7219704A}
+		{2BB24B98-2401-4B63-9C5C-50928D41F22B} = {11557363-B92A-4C24-8D03-80FE7219704A}
+		{0439302F-F140-48FC-8C95-B044570E7646} = {11557363-B92A-4C24-8D03-80FE7219704A}
+		{C7E81441-C9A3-407F-A44A-D9510B6AD990} = {11557363-B92A-4C24-8D03-80FE7219704A}
+		{7459FAA4-6840-4691-B721-C24210EE439F} = {DFC5265D-6BEC-4073-9302-4F9FF6319C02}
+		{4D99AB71-4752-49E3-AE8C-35BC948B65CA} = {DFC5265D-6BEC-4073-9302-4F9FF6319C02}
+		{F27D9D02-973B-403A-9CDD-3CD94E21C902} = {DFC5265D-6BEC-4073-9302-4F9FF6319C02}
+		{34444E29-E324-496F-BD17-589C8922EB93} = {DFC5265D-6BEC-4073-9302-4F9FF6319C02}
+		{E47A298A-4078-4B35-BDC3-9ED484A634F6} = {DFC5265D-6BEC-4073-9302-4F9FF6319C02}
+		{18CB6932-800D-4A53-9532-554072583CEE} = {DFC5265D-6BEC-4073-9302-4F9FF6319C02}
+		{04A1B2D9-D070-4220-9AD9-921575FC1D65} = {DFC5265D-6BEC-4073-9302-4F9FF6319C02}
+		{835C61CF-B4DD-44DD-9FBD-444F43B6B8A3} = {DFC5265D-6BEC-4073-9302-4F9FF6319C02}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5229CEA0-E4C0-482B-8BC3-FD9C540F583C}
