@@ -38,8 +38,12 @@ Each supported database provider has its own dedicated benchmark project. This l
 
 | Provider | Project | Status |
 |---|---|---|
+| 🌅 Amazon Aurora MySQL | [RepoDb.Benchmarks.AuroraDb.MySqlConnector](RepoDb.Benchmarks.AuroraDb.MySqlConnector) | ✅ Available |
+| 🌅 Amazon Aurora PostgreSQL | [RepoDb.Benchmarks.AuroraDb.PostgreSql](RepoDb.Benchmarks.AuroraDb.PostgreSql) | ✅ Available |
 | 📈 ClickHouse | [RepoDb.Benchmarks.ClickHouse](RepoDb.Benchmarks.ClickHouse) | ✅ Available |
+| 🪳 CockroachDB | [RepoDb.Benchmarks.CockroachDb](RepoDb.Benchmarks.CockroachDb) | ✅ Available |
 | 🐳 IBM Db2 | [RepoDb.Benchmarks.Db2](RepoDb.Benchmarks.Db2) | ✅ Available |
+| 🦆 DuckDB | [RepoDb.Benchmarks.DuckDb](RepoDb.Benchmarks.DuckDb) | ✅ Available |
 | 🐘 EnterpriseDB | [RepoDb.Benchmarks.EnterpriseDb](RepoDb.Benchmarks.EnterpriseDb) | ✅ Available |
 | 🔥 Firebird | [RepoDb.Benchmarks.Firebird](RepoDb.Benchmarks.Firebird) | ✅ Available |
 | 🦭 MariaDB | [RepoDb.Benchmarks.MariaDb](RepoDb.Benchmarks.MariaDb) | ✅ Available |
@@ -69,6 +73,16 @@ All benchmarks are built on top of [BenchmarkDotNet](https://github.com/dotnet/B
 To run a benchmark project yourself, spin up the target database provider with the repository's root [docker-compose.yml](../../../docker-compose.yml), then run the matching benchmark project:
 
 ```bash
+# 🌅 Amazon Aurora MySQL
+docker compose up -d auroradbmysql
+cd RepoDb.Benchmarks.AuroraDb.MySqlConnector
+dotnet run -c Release
+
+# 🌅 Amazon Aurora PostgreSQL
+docker compose up -d auroradbnpgsql
+cd RepoDb.Benchmarks.AuroraDb.PostgreSql
+dotnet run -c Release
+
 # 📈 ClickHouse
 docker compose up -d clickhouse
 cd RepoDb.Benchmarks.ClickHouse
@@ -109,9 +123,18 @@ docker compose up -d mariadb
 cd RepoDb.Benchmarks.MariaDbConnector
 dotnet run -c Release
 
+# 🪳 CockroachDB
+docker compose up -d cockroachdb
+cd RepoDb.Benchmarks.CockroachDb
+dotnet run -c Release
+
 # 🐳 IBM Db2
 docker compose up -d db2
 cd RepoDb.Benchmarks.Db2
+dotnet run -c Release
+
+# 🦆 DuckDB (embedded - no container needed)
+cd RepoDb.Benchmarks.DuckDb
 dotnet run -c Release
 
 # 🐘 EnterpriseDB
@@ -155,7 +178,7 @@ Connection strings default to a local Dockerized instance, but can be overridden
 
 Each ORM is exercised through its own idiomatic API (e.g., `DbContext` for EF Core, `Connection.Query` for Dapper, `Connection.QueryAll` for RepoDB) rather than forcing a shared abstraction, so every library is measured doing what it does best.
 
-> 📌 Not every ORM supports every database provider. Only the ORMs that officially support a given provider are included in that provider's benchmark project — so the list above may vary slightly from one provider to another. For example, [RepoDb.Benchmarks.MariaDb](RepoDb.Benchmarks.MariaDb) and [RepoDb.Benchmarks.MariaDbConnector](RepoDb.Benchmarks.MariaDbConnector) both exclude NHibernate, which ships no MariaDB-specific dialect or driver, [RepoDb.Benchmarks.ClickHouse](RepoDb.Benchmarks.ClickHouse) excludes it too for the same reason, [RepoDb.Benchmarks.SapHana](RepoDb.Benchmarks.SapHana) excludes it because its shipped HANA driver classes are hardcoded to an assembly from the legacy, Windows/.NET-Framework-only HANA client rather than the modern one this repo targets, [RepoDb.Benchmarks.Sqlite.Microsoft](RepoDb.Benchmarks.Sqlite.Microsoft) excludes it for the same class of reason (its shipped SQLite driver is hardcoded to `System.Data.SQLite`, not the `Microsoft.Data.Sqlite` client this benchmark and [RepoDb.Sqlite.Microsoft](../../Providers/RepoDb.Sqlite.Microsoft) are built on), and [RepoDb.Benchmarks.Vertica](RepoDb.Benchmarks.Vertica) goes further still — only RepoDb and Dapper (which is provider-agnostic) have anything to run against Vertica at all. [RepoDb.Benchmarks.EnterpriseDb](RepoDb.Benchmarks.EnterpriseDb) is the exception in the other direction — since EDB Postgres Advanced Server is a wire-protocol-compatible superset of PostgreSQL, all five ORMs work against it through standard Postgres-compatible tooling.
+> 📌 Not every ORM supports every database provider. Only the ORMs that officially support a given provider are included in that provider's benchmark project — so the list above may vary slightly from one provider to another. For example, [RepoDb.Benchmarks.MariaDb](RepoDb.Benchmarks.MariaDb) and [RepoDb.Benchmarks.MariaDbConnector](RepoDb.Benchmarks.MariaDbConnector) both exclude NHibernate, which ships no MariaDB-specific dialect or driver, [RepoDb.Benchmarks.ClickHouse](RepoDb.Benchmarks.ClickHouse) excludes it too for the same reason, [RepoDb.Benchmarks.SapHana](RepoDb.Benchmarks.SapHana) excludes it because its shipped HANA driver classes are hardcoded to an assembly from the legacy, Windows/.NET-Framework-only HANA client rather than the modern one this repo targets, [RepoDb.Benchmarks.Sqlite.Microsoft](RepoDb.Benchmarks.Sqlite.Microsoft) excludes it for the same class of reason (its shipped SQLite driver is hardcoded to `System.Data.SQLite`, not the `Microsoft.Data.Sqlite` client this benchmark and [RepoDb.Sqlite.Microsoft](../../Providers/RepoDb.Sqlite.Microsoft) are built on), and [RepoDb.Benchmarks.Vertica](RepoDb.Benchmarks.Vertica) goes further still — only RepoDb and Dapper (which is provider-agnostic) have anything to run against Vertica at all. [RepoDb.Benchmarks.DuckDb](RepoDb.Benchmarks.DuckDb) benchmarks only RepoDb, Dapper, and Linq2Db since neither Entity Framework Core nor NHibernate ships a DuckDB provider. [RepoDb.Benchmarks.AuroraDb.PostgreSql](RepoDb.Benchmarks.AuroraDb.PostgreSql), [RepoDb.Benchmarks.AuroraDb.MySqlConnector](RepoDb.Benchmarks.AuroraDb.MySqlConnector), and [RepoDb.Benchmarks.CockroachDb](RepoDb.Benchmarks.CockroachDb) reuse the PostgreSQL/MySQL tooling of the engines they are wire-compatible with. [RepoDb.Benchmarks.EnterpriseDb](RepoDb.Benchmarks.EnterpriseDb) is the exception in the other direction — since EDB Postgres Advanced Server is a wire-protocol-compatible superset of PostgreSQL, all five ORMs work against it through standard Postgres-compatible tooling.
 
 ## 🛠️ Operations
 
@@ -187,7 +210,7 @@ No ORM is universally "best" — each makes different trade-offs. Here's how the
 
 Found a way to make a comparison fairer, more complete, or want to add a new provider? Contributions are very welcome.
 
-- Add a new provider by following the pattern in [RepoDb.Benchmarks.SqlServer](RepoDb.Benchmarks.SqlServer), [RepoDb.Benchmarks.PostgreSql](RepoDb.Benchmarks.PostgreSql), [RepoDb.Benchmarks.MySql](RepoDb.Benchmarks.MySql), [RepoDb.Benchmarks.MySqlConnector](RepoDb.Benchmarks.MySqlConnector), [RepoDb.Benchmarks.Oracle](RepoDb.Benchmarks.Oracle), [RepoDb.Benchmarks.MariaDb](RepoDb.Benchmarks.MariaDb), [RepoDb.Benchmarks.MariaDbConnector](RepoDb.Benchmarks.MariaDbConnector), [RepoDb.Benchmarks.Db2](RepoDb.Benchmarks.Db2), [RepoDb.Benchmarks.ClickHouse](RepoDb.Benchmarks.ClickHouse), [RepoDb.Benchmarks.Firebird](RepoDb.Benchmarks.Firebird), [RepoDb.Benchmarks.Vertica](RepoDb.Benchmarks.Vertica), [RepoDb.Benchmarks.EnterpriseDb](RepoDb.Benchmarks.EnterpriseDb), [RepoDb.Benchmarks.SapHana](RepoDb.Benchmarks.SapHana), or [RepoDb.Benchmarks.Sqlite.Microsoft](RepoDb.Benchmarks.Sqlite.Microsoft).
+- Add a new provider by following the pattern in [RepoDb.Benchmarks.SqlServer](RepoDb.Benchmarks.SqlServer), [RepoDb.Benchmarks.PostgreSql](RepoDb.Benchmarks.PostgreSql), [RepoDb.Benchmarks.MySql](RepoDb.Benchmarks.MySql), [RepoDb.Benchmarks.MySqlConnector](RepoDb.Benchmarks.MySqlConnector), [RepoDb.Benchmarks.Oracle](RepoDb.Benchmarks.Oracle), [RepoDb.Benchmarks.MariaDb](RepoDb.Benchmarks.MariaDb), [RepoDb.Benchmarks.MariaDbConnector](RepoDb.Benchmarks.MariaDbConnector), [RepoDb.Benchmarks.Db2](RepoDb.Benchmarks.Db2), [RepoDb.Benchmarks.AuroraDb.PostgreSql](RepoDb.Benchmarks.AuroraDb.PostgreSql), [RepoDb.Benchmarks.AuroraDb.MySqlConnector](RepoDb.Benchmarks.AuroraDb.MySqlConnector), [RepoDb.Benchmarks.CockroachDb](RepoDb.Benchmarks.CockroachDb), [RepoDb.Benchmarks.DuckDb](RepoDb.Benchmarks.DuckDb), [RepoDb.Benchmarks.ClickHouse](RepoDb.Benchmarks.ClickHouse), [RepoDb.Benchmarks.Firebird](RepoDb.Benchmarks.Firebird), [RepoDb.Benchmarks.Vertica](RepoDb.Benchmarks.Vertica), [RepoDb.Benchmarks.EnterpriseDb](RepoDb.Benchmarks.EnterpriseDb), [RepoDb.Benchmarks.SapHana](RepoDb.Benchmarks.SapHana), or [RepoDb.Benchmarks.Sqlite.Microsoft](RepoDb.Benchmarks.Sqlite.Microsoft).
 - File a [new issue](https://github.com/mikependon/RepoDb/issues/new) if you spot a methodology concern.
 - Read the main [contributing guide](../../../CONTRIBUTING.md) before submitting a PR.
 
