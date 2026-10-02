@@ -284,7 +284,8 @@ namespace RepoDb.Vertica.UnitTests
                 Field.From("Id", "Name", "Address"),
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null),
                 null);
-            var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id, @Name, @Address )";
+            var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id, @Name, @Address ); " +
+                "SELECT @Id AS \"Result\"";
 
             // Assert
             Assert.AreEqual(expected, query, StringComparer.Ordinal);
@@ -301,7 +302,8 @@ namespace RepoDb.Vertica.UnitTests
                 Field.From("Id", "Name", "Address"),
                 null,
                 new DbField("Id", false, true, false, typeof(int), null, null, null, null));
-            var expected = "INSERT INTO \"Table\" ( \"Name\", \"Address\" ) VALUES ( @Name, @Address )";
+            var expected = "INSERT INTO \"Table\" ( \"Name\", \"Address\" ) VALUES ( @Name, @Address ); " +
+                "SELECT LAST_INSERT_ID() AS \"Result\"";
 
             // Assert
             Assert.AreEqual(expected, query, StringComparer.Ordinal);
@@ -352,7 +354,8 @@ namespace RepoDb.Vertica.UnitTests
                 1,
                 null,
                 new DbField("Id", false, true, false, typeof(int), null, null, null, null));
-            var expected = "INSERT INTO \"Table\" ( \"Name\", \"Address\" ) VALUES ( @Name, @Address )";
+            var expected = "INSERT INTO \"Table\" ( \"Name\", \"Address\" ) VALUES ( @Name, @Address ); " +
+                "SELECT LAST_INSERT_ID() AS \"Result\"";
 
             // Assert
             Assert.AreEqual(expected, query, StringComparer.Ordinal);
@@ -372,6 +375,27 @@ namespace RepoDb.Vertica.UnitTests
                 null);
             var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES " +
                 "( @Id, @Name, @Address ) , ( @Id_1, @Name_1, @Address_1 ) , ( @Id_2, @Name_2, @Address_2 )";
+
+            // Assert
+            Assert.AreEqual(expected, query, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestVerticaStatementBuilderCreateInsertAllWithBatchSizeGreaterThanOneAndPrimary()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<VerticaConnection>();
+
+            // Act
+            var query = builder.CreateInsertAll("Table",
+                Field.From("Id", "Name", "Address"),
+                3,
+                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+                null);
+            var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES " +
+                "( @Id, @Name, @Address ) , ( @Id_1, @Name_1, @Address_1 ) , ( @Id_2, @Name_2, @Address_2 ); " +
+                "SELECT @Id AS \"Result\", 0 AS \"Index\" UNION ALL SELECT @Id_1 AS \"Result\", 1 AS \"Index\" " +
+                "UNION ALL SELECT @Id_2 AS \"Result\", 2 AS \"Index\"";
 
             // Assert
             Assert.AreEqual(expected, query, StringComparer.Ordinal);
@@ -741,7 +765,7 @@ namespace RepoDb.Vertica.UnitTests
                 null);
             var expected = "UPDATE \"Table\" SET \"Name\" = @Name, \"Address\" = @Address WHERE \"Id\" = @Id; " +
                 "INSERT INTO \"Table\" (\"Id\", \"Name\", \"Address\") SELECT @Id, @Name, @Address " +
-                "WHERE NOT EXISTS (SELECT 1 FROM \"Table\" WHERE \"Id\" = @Id)";
+                "WHERE NOT EXISTS (SELECT 1 FROM \"Table\" WHERE \"Id\" = @Id); SELECT @Id AS \"Result\"";
 
             // Assert
             Assert.AreEqual(expected, query, StringComparer.Ordinal);
@@ -761,7 +785,7 @@ namespace RepoDb.Vertica.UnitTests
                 null);
             var expected = "UPDATE \"Table\" SET \"Name\" = @Name, \"Address\" = @Address WHERE \"Id\" = @Id; " +
                 "INSERT INTO \"Table\" (\"Id\", \"Name\", \"Address\") SELECT @Id, @Name, @Address " +
-                "WHERE NOT EXISTS (SELECT 1 FROM \"Table\" WHERE \"Id\" = @Id)";
+                "WHERE NOT EXISTS (SELECT 1 FROM \"Table\" WHERE \"Id\" = @Id); SELECT @Id AS \"Result\"";
 
             // Assert
             Assert.AreEqual(expected, query, StringComparer.Ordinal);
@@ -802,7 +826,7 @@ namespace RepoDb.Vertica.UnitTests
                 null);
             var expected = "UPDATE \"Table\" SET \"Id\" = @Id, \"Address\" = @Address WHERE \"Name\" = @Name; " +
                 "INSERT INTO \"Table\" (\"Id\", \"Name\", \"Address\") SELECT @Id, @Name, @Address " +
-                "WHERE NOT EXISTS (SELECT 1 FROM \"Table\" WHERE \"Name\" = @Name)";
+                "WHERE NOT EXISTS (SELECT 1 FROM \"Table\" WHERE \"Name\" = @Name); SELECT @Id AS \"Result\"";
 
             // Assert
             Assert.AreEqual(expected, query, StringComparer.Ordinal);
@@ -858,7 +882,7 @@ namespace RepoDb.Vertica.UnitTests
                 null);
             var expected = "UPDATE \"Table\" SET \"Name\" = @Name, \"Address\" = @Address WHERE \"Id\" = @Id; " +
                 "INSERT INTO \"Table\" (\"Id\", \"Name\", \"Address\") SELECT @Id, @Name, @Address " +
-                "WHERE NOT EXISTS (SELECT 1 FROM \"Table\" WHERE \"Id\" = @Id)";
+                "WHERE NOT EXISTS (SELECT 1 FROM \"Table\" WHERE \"Id\" = @Id); SELECT @Id AS \"Result\"";
 
             // Assert
             Assert.AreEqual(expected, query, StringComparer.Ordinal);

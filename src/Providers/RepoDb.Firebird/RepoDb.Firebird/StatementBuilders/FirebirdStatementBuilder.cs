@@ -406,7 +406,7 @@ namespace RepoDb.StatementBuilders
                 qualifiers.Any(qf => string.Equals(qf.Name, identityField.Name, StringComparison.OrdinalIgnoreCase));
             if (identityIsQualifier)
             {
-                return BuildMergeExecuteBlock(tableName, fields, qualifiers, identityField, keyColumn ?? identityField);
+                return BuildMergeExecuteBlock(tableName, fields, qualifiers, identityField, keyColumn);
             }
             var insertableFields = identityField == null
                 ? fields
