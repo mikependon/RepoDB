@@ -14,18 +14,17 @@ using System.Threading;
 using System.Threading.Tasks;
 using RepoDb.Data.Interfaces;
 using RepoDb.Interfaces;
-using RepoDb.Schema;
 
 namespace RepoDb.Data
 {
     /// <summary>
     /// Contains the extension methods of <see cref="IDbConnection"/> object for moving data between databases.
     /// </summary>
-    public static class MoveToExtension
+    public static class MoveDataToExtension
     {
         #region Public Methods
 
-        #region MoveTo (Registered Connection, Sync)
+        #region MoveDataTo (Registered Connection, Sync)
 
         /// <summary>
         /// Moves all the rows of the table mapped to the <typeparamref name="TEntity"/> type of the current connection
@@ -39,25 +38,23 @@ namespace RepoDb.Data
         /// <param name="batchSize">The number of rows to be inserted into the destination table per batch. The default is 1000.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="schemaProvider">The schema provider to be used. The default is <c>null</c>.</param>
-        /// <param name="callback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
-        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveTo"/>.</param>
+        /// <param name="callback">The callback that receives the <see cref="CopyDataProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <returns>The number of rows inserted into the destination table.</returns>
-        public static int MoveTo<TEntity>(this IDbConnection connection,
+        public static int MoveDataTo<TEntity>(this IDbConnection connection,
             string destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
             int batchSize = 1000,
             int? commandTimeout = null,
             IList<ICopyDataInterceptor> dataInterceptors = null,
-            ISchemaProvider schemaProvider = null,
-            Action<CopyProgress> callback = null,
-            string traceKey = DataTraceKeys.MoveTo,
+            Action<CopyDataProgress> callback = null,
+            string traceKey = DataTraceKeys.MoveDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.MoveTo(ConnectionManager.Get(destinationConnection), where, batchSize, commandTimeout, dataInterceptors, schemaProvider, callback, traceKey, trace, transaction);
+            connection.MoveDataTo(ConnectionManager.Get(destinationConnection), where, batchSize, commandTimeout, dataInterceptors, callback, traceKey, trace, transaction);
 
         /// <summary>
         /// Moves all the rows of the table mapped to the <typeparamref name="TEntity"/> type of the current connection
@@ -73,26 +70,24 @@ namespace RepoDb.Data
         /// <param name="batchSize">The number of rows to be inserted into the destination table per batch. The default is 1000.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="schemaProvider">The schema provider to be used. The default is <c>null</c>.</param>
-        /// <param name="callback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
-        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveTo"/>.</param>
+        /// <param name="callback">The callback that receives the <see cref="CopyDataProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <returns>The number of rows inserted into the target table.</returns>
-        public static int MoveTo<TEntity>(this IDbConnection connection,
+        public static int MoveDataTo<TEntity>(this IDbConnection connection,
             string targetTable,
             string destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
             int batchSize = 1000,
             int? commandTimeout = null,
             IList<ICopyDataInterceptor> dataInterceptors = null,
-            ISchemaProvider schemaProvider = null,
-            Action<CopyProgress> callback = null,
-            string traceKey = DataTraceKeys.MoveTo,
+            Action<CopyDataProgress> callback = null,
+            string traceKey = DataTraceKeys.MoveDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.MoveTo(targetTable, ConnectionManager.Get(destinationConnection), where, batchSize, commandTimeout, dataInterceptors, schemaProvider, callback, traceKey, trace, transaction);
+            connection.MoveDataTo(targetTable, ConnectionManager.Get(destinationConnection), where, batchSize, commandTimeout, dataInterceptors, callback, traceKey, trace, transaction);
 
         /// <summary>
         /// Moves all the rows of the source table of the current connection into the same-named table of the destination connection
@@ -106,25 +101,23 @@ namespace RepoDb.Data
         /// <param name="batchSize">The number of rows to be inserted into the destination table per batch. The default is 1000.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="schemaProvider">The schema provider to be used. The default is <c>null</c>.</param>
-        /// <param name="callback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
-        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveTo"/>.</param>
+        /// <param name="callback">The callback that receives the <see cref="CopyDataProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <returns>The number of rows inserted into the destination table.</returns>
-        public static int MoveTo(this IDbConnection connection,
+        public static int MoveDataTo(this IDbConnection connection,
             string tableName,
             string destinationConnection,
             QueryGroup where = null,
             int batchSize = 1000,
             int? commandTimeout = null,
             IList<ICopyDataInterceptor> dataInterceptors = null,
-            ISchemaProvider schemaProvider = null,
-            Action<CopyProgress> callback = null,
-            string traceKey = DataTraceKeys.MoveTo,
+            Action<CopyDataProgress> callback = null,
+            string traceKey = DataTraceKeys.MoveDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null) =>
-            connection.MoveTo(tableName, ConnectionManager.Get(destinationConnection), where, batchSize, commandTimeout, dataInterceptors, schemaProvider, callback, traceKey, trace, transaction);
+            connection.MoveDataTo(tableName, ConnectionManager.Get(destinationConnection), where, batchSize, commandTimeout, dataInterceptors, callback, traceKey, trace, transaction);
 
         /// <summary>
         /// Moves all the rows of the source table of the current connection into the target table of the destination connection
@@ -140,13 +133,12 @@ namespace RepoDb.Data
         /// <param name="batchSize">The number of rows to be inserted into the destination table per batch. The default is 1000.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="schemaProvider">The schema provider to be used. The default is <c>null</c>.</param>
-        /// <param name="callback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
-        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveTo"/>.</param>
+        /// <param name="callback">The callback that receives the <see cref="CopyDataProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <returns>The number of rows inserted into the target table.</returns>
-        public static int MoveTo(this IDbConnection connection,
+        public static int MoveDataTo(this IDbConnection connection,
             string sourceTable,
             string targetTable,
             string destinationConnection,
@@ -154,16 +146,15 @@ namespace RepoDb.Data
             int batchSize = 1000,
             int? commandTimeout = null,
             IList<ICopyDataInterceptor> dataInterceptors = null,
-            ISchemaProvider schemaProvider = null,
-            Action<CopyProgress> callback = null,
-            string traceKey = DataTraceKeys.MoveTo,
+            Action<CopyDataProgress> callback = null,
+            string traceKey = DataTraceKeys.MoveDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null) =>
-            connection.MoveTo(sourceTable, targetTable, ConnectionManager.Get(destinationConnection), where, batchSize, commandTimeout, dataInterceptors, schemaProvider, callback, traceKey, trace, transaction);
+            connection.MoveDataTo(sourceTable, targetTable, ConnectionManager.Get(destinationConnection), where, batchSize, commandTimeout, dataInterceptors, callback, traceKey, trace, transaction);
 
         #endregion
 
-        #region MoveTo (IDbConnection, Sync)
+        #region MoveDataTo (IDbConnection, Sync)
 
         /// <summary>
         /// Moves all the rows of the table mapped to the <typeparamref name="TEntity"/> type of the current connection
@@ -177,25 +168,23 @@ namespace RepoDb.Data
         /// <param name="batchSize">The number of rows to be inserted into the destination table per batch. The default is 1000.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="schemaProvider">The schema provider to be used. The default is <c>null</c>.</param>
-        /// <param name="callback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
-        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveTo"/>.</param>
+        /// <param name="callback">The callback that receives the <see cref="CopyDataProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <returns>The number of rows inserted into the destination table.</returns>
-        public static int MoveTo<TEntity>(this IDbConnection connection,
+        public static int MoveDataTo<TEntity>(this IDbConnection connection,
             IDbConnection destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
             int batchSize = 1000,
             int? commandTimeout = null,
             IList<ICopyDataInterceptor> dataInterceptors = null,
-            ISchemaProvider schemaProvider = null,
-            Action<CopyProgress> callback = null,
-            string traceKey = DataTraceKeys.MoveTo,
+            Action<CopyDataProgress> callback = null,
+            string traceKey = DataTraceKeys.MoveDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.MoveTo(ClassMappedNameCache.Get<TEntity>(), destinationConnection, where == null ? null : QueryGroup.Parse(where), batchSize, commandTimeout, dataInterceptors, schemaProvider, callback, traceKey, trace, transaction);
+            connection.MoveDataTo(ClassMappedNameCache.Get<TEntity>(), destinationConnection, where == null ? null : QueryGroup.Parse(where), batchSize, commandTimeout, dataInterceptors, callback, traceKey, trace, transaction);
 
         /// <summary>
         /// Moves all the rows of the table mapped to the <typeparamref name="TEntity"/> type of the current connection
@@ -211,26 +200,24 @@ namespace RepoDb.Data
         /// <param name="batchSize">The number of rows to be inserted into the destination table per batch. The default is 1000.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="schemaProvider">The schema provider to be used. The default is <c>null</c>.</param>
-        /// <param name="callback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
-        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveTo"/>.</param>
+        /// <param name="callback">The callback that receives the <see cref="CopyDataProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <returns>The number of rows inserted into the target table.</returns>
-        public static int MoveTo<TEntity>(this IDbConnection connection,
+        public static int MoveDataTo<TEntity>(this IDbConnection connection,
             string targetTable,
             IDbConnection destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
             int batchSize = 1000,
             int? commandTimeout = null,
             IList<ICopyDataInterceptor> dataInterceptors = null,
-            ISchemaProvider schemaProvider = null,
-            Action<CopyProgress> callback = null,
-            string traceKey = DataTraceKeys.MoveTo,
+            Action<CopyDataProgress> callback = null,
+            string traceKey = DataTraceKeys.MoveDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.MoveTo(ClassMappedNameCache.Get<TEntity>(), targetTable, destinationConnection, where == null ? null : QueryGroup.Parse(where), batchSize, commandTimeout, dataInterceptors, schemaProvider, callback, traceKey, trace, transaction);
+            connection.MoveDataTo(ClassMappedNameCache.Get<TEntity>(), targetTable, destinationConnection, where == null ? null : QueryGroup.Parse(where), batchSize, commandTimeout, dataInterceptors, callback, traceKey, trace, transaction);
 
         /// <summary>
         /// Moves all the rows of the source table of the current connection into the same-named table of the destination connection.
@@ -243,25 +230,23 @@ namespace RepoDb.Data
         /// <param name="batchSize">The number of rows to be inserted into the destination table per batch. The default is 1000.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="schemaProvider">The schema provider to be used. The default is <c>null</c>.</param>
-        /// <param name="callback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
-        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveTo"/>.</param>
+        /// <param name="callback">The callback that receives the <see cref="CopyDataProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <returns>The number of rows inserted into the destination table.</returns>
-        public static int MoveTo(this IDbConnection connection,
+        public static int MoveDataTo(this IDbConnection connection,
             string tableName,
             IDbConnection destinationConnection,
             QueryGroup where = null,
             int batchSize = 1000,
             int? commandTimeout = null,
             IList<ICopyDataInterceptor> dataInterceptors = null,
-            ISchemaProvider schemaProvider = null,
-            Action<CopyProgress> callback = null,
-            string traceKey = DataTraceKeys.MoveTo,
+            Action<CopyDataProgress> callback = null,
+            string traceKey = DataTraceKeys.MoveDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null) =>
-            connection.MoveTo(tableName, tableName, destinationConnection, where, batchSize, commandTimeout, dataInterceptors, schemaProvider, callback, traceKey, trace, transaction);
+            connection.MoveDataTo(tableName, tableName, destinationConnection, where, batchSize, commandTimeout, dataInterceptors, callback, traceKey, trace, transaction);
 
         /// <summary>
         /// Moves all the rows of the source table of the current connection into the target table of the destination connection.
@@ -276,13 +261,12 @@ namespace RepoDb.Data
         /// <param name="batchSize">The number of rows to be inserted into the destination table per batch. The default is 1000.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="schemaProvider">The schema provider to be used. The default is <c>null</c>.</param>
-        /// <param name="callback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
-        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveTo"/>.</param>
+        /// <param name="callback">The callback that receives the <see cref="CopyDataProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <returns>The number of rows inserted into the target table.</returns>
-        public static int MoveTo(this IDbConnection connection,
+        public static int MoveDataTo(this IDbConnection connection,
             string sourceTable,
             string targetTable,
             IDbConnection destinationConnection,
@@ -290,20 +274,19 @@ namespace RepoDb.Data
             int batchSize = 1000,
             int? commandTimeout = null,
             IList<ICopyDataInterceptor> dataInterceptors = null,
-            ISchemaProvider schemaProvider = null,
-            Action<CopyProgress> callback = null,
-            string traceKey = DataTraceKeys.MoveTo,
+            Action<CopyDataProgress> callback = null,
+            string traceKey = DataTraceKeys.MoveDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null)
         {
             Validate(connection, sourceTable, targetTable, destinationConnection, batchSize);
 
-            return connection.CopyTo(sourceTable, targetTable, destinationConnection, where, batchSize, commandTimeout, dataInterceptors, schemaProvider, callback, traceKey, trace, transaction);
+            return connection.CopyDataTo(sourceTable, targetTable, destinationConnection, where, batchSize, commandTimeout, dataInterceptors, callback, traceKey, trace, transaction);
         }
 
         #endregion
 
-        #region MoveTo (Registered Connection, Async)
+        #region MoveDataTo (Registered Connection, Async)
 
         /// <summary>
         /// Moves all the rows of the table mapped to the <typeparamref name="TEntity"/> type of the current connection
@@ -317,27 +300,25 @@ namespace RepoDb.Data
         /// <param name="batchSize">The number of rows to be inserted into the destination table per batch. The default is 1000.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="schemaProvider">The schema provider to be used. The default is <c>null</c>.</param>
-        /// <param name="callback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
-        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveTo"/>.</param>
+        /// <param name="callback">The callback that receives the <see cref="CopyDataProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the number of rows inserted into the destination table.</returns>
-        public static Task<int> MoveToAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> MoveDataToAsync<TEntity>(this IDbConnection connection,
             string destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
             int batchSize = 1000,
             int? commandTimeout = null,
             IList<ICopyDataInterceptor> dataInterceptors = null,
-            ISchemaProvider schemaProvider = null,
-            Action<CopyProgress> callback = null,
-            string traceKey = DataTraceKeys.MoveTo,
+            Action<CopyDataProgress> callback = null,
+            string traceKey = DataTraceKeys.MoveDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.MoveToAsync(ConnectionManager.Get(destinationConnection), where, batchSize, commandTimeout, dataInterceptors, schemaProvider, callback, traceKey, trace, transaction, cancellationToken);
+            connection.MoveDataToAsync(ConnectionManager.Get(destinationConnection), where, batchSize, commandTimeout, dataInterceptors, callback, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Moves all the rows of the table mapped to the <typeparamref name="TEntity"/> type of the current connection
@@ -353,28 +334,26 @@ namespace RepoDb.Data
         /// <param name="batchSize">The number of rows to be inserted into the destination table per batch. The default is 1000.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="schemaProvider">The schema provider to be used. The default is <c>null</c>.</param>
-        /// <param name="callback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
-        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveTo"/>.</param>
+        /// <param name="callback">The callback that receives the <see cref="CopyDataProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the number of rows inserted into the target table.</returns>
-        public static Task<int> MoveToAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> MoveDataToAsync<TEntity>(this IDbConnection connection,
             string targetTable,
             string destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
             int batchSize = 1000,
             int? commandTimeout = null,
             IList<ICopyDataInterceptor> dataInterceptors = null,
-            ISchemaProvider schemaProvider = null,
-            Action<CopyProgress> callback = null,
-            string traceKey = DataTraceKeys.MoveTo,
+            Action<CopyDataProgress> callback = null,
+            string traceKey = DataTraceKeys.MoveDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.MoveToAsync(targetTable, ConnectionManager.Get(destinationConnection), where, batchSize, commandTimeout, dataInterceptors, schemaProvider, callback, traceKey, trace, transaction, cancellationToken);
+            connection.MoveDataToAsync(targetTable, ConnectionManager.Get(destinationConnection), where, batchSize, commandTimeout, dataInterceptors, callback, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Moves all the rows of the source table of the current connection into the same-named table of the destination connection
@@ -388,27 +367,25 @@ namespace RepoDb.Data
         /// <param name="batchSize">The number of rows to be inserted into the destination table per batch. The default is 1000.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="schemaProvider">The schema provider to be used. The default is <c>null</c>.</param>
-        /// <param name="callback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
-        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveTo"/>.</param>
+        /// <param name="callback">The callback that receives the <see cref="CopyDataProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the number of rows inserted into the destination table.</returns>
-        public static Task<int> MoveToAsync(this IDbConnection connection,
+        public static Task<int> MoveDataToAsync(this IDbConnection connection,
             string tableName,
             string destinationConnection,
             QueryGroup where = null,
             int batchSize = 1000,
             int? commandTimeout = null,
             IList<ICopyDataInterceptor> dataInterceptors = null,
-            ISchemaProvider schemaProvider = null,
-            Action<CopyProgress> callback = null,
-            string traceKey = DataTraceKeys.MoveTo,
+            Action<CopyDataProgress> callback = null,
+            string traceKey = DataTraceKeys.MoveDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            connection.MoveToAsync(tableName, ConnectionManager.Get(destinationConnection), where, batchSize, commandTimeout, dataInterceptors, schemaProvider, callback, traceKey, trace, transaction, cancellationToken);
+            connection.MoveDataToAsync(tableName, ConnectionManager.Get(destinationConnection), where, batchSize, commandTimeout, dataInterceptors, callback, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Moves all the rows of the source table of the current connection into the target table of the destination connection
@@ -424,14 +401,13 @@ namespace RepoDb.Data
         /// <param name="batchSize">The number of rows to be inserted into the destination table per batch. The default is 1000.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="schemaProvider">The schema provider to be used. The default is <c>null</c>.</param>
-        /// <param name="callback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
-        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveTo"/>.</param>
+        /// <param name="callback">The callback that receives the <see cref="CopyDataProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the number of rows inserted into the target table.</returns>
-        public static Task<int> MoveToAsync(this IDbConnection connection,
+        public static Task<int> MoveDataToAsync(this IDbConnection connection,
             string sourceTable,
             string targetTable,
             string destinationConnection,
@@ -439,17 +415,16 @@ namespace RepoDb.Data
             int batchSize = 1000,
             int? commandTimeout = null,
             IList<ICopyDataInterceptor> dataInterceptors = null,
-            ISchemaProvider schemaProvider = null,
-            Action<CopyProgress> callback = null,
-            string traceKey = DataTraceKeys.MoveTo,
+            Action<CopyDataProgress> callback = null,
+            string traceKey = DataTraceKeys.MoveDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            connection.MoveToAsync(sourceTable, targetTable, ConnectionManager.Get(destinationConnection), where, batchSize, commandTimeout, dataInterceptors, schemaProvider, callback, traceKey, trace, transaction, cancellationToken);
+            connection.MoveDataToAsync(sourceTable, targetTable, ConnectionManager.Get(destinationConnection), where, batchSize, commandTimeout, dataInterceptors, callback, traceKey, trace, transaction, cancellationToken);
 
         #endregion
 
-        #region MoveTo (IDbConnection, Async)
+        #region MoveDataTo (IDbConnection, Async)
 
         /// <summary>
         /// Moves all the rows of the table mapped to the <typeparamref name="TEntity"/> type of the current connection
@@ -463,27 +438,25 @@ namespace RepoDb.Data
         /// <param name="batchSize">The number of rows to be inserted into the destination table per batch. The default is 1000.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="schemaProvider">The schema provider to be used. The default is <c>null</c>.</param>
-        /// <param name="callback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
-        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveTo"/>.</param>
+        /// <param name="callback">The callback that receives the <see cref="CopyDataProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the number of rows inserted into the destination table.</returns>
-        public static Task<int> MoveToAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> MoveDataToAsync<TEntity>(this IDbConnection connection,
             IDbConnection destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
             int batchSize = 1000,
             int? commandTimeout = null,
             IList<ICopyDataInterceptor> dataInterceptors = null,
-            ISchemaProvider schemaProvider = null,
-            Action<CopyProgress> callback = null,
-            string traceKey = DataTraceKeys.MoveTo,
+            Action<CopyDataProgress> callback = null,
+            string traceKey = DataTraceKeys.MoveDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.MoveToAsync(ClassMappedNameCache.Get<TEntity>(), destinationConnection, where == null ? null : QueryGroup.Parse(where), batchSize, commandTimeout, dataInterceptors, schemaProvider, callback, traceKey, trace, transaction, cancellationToken);
+            connection.MoveDataToAsync(ClassMappedNameCache.Get<TEntity>(), destinationConnection, where == null ? null : QueryGroup.Parse(where), batchSize, commandTimeout, dataInterceptors, callback, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Moves all the rows of the table mapped to the <typeparamref name="TEntity"/> type of the current connection
@@ -499,28 +472,26 @@ namespace RepoDb.Data
         /// <param name="batchSize">The number of rows to be inserted into the destination table per batch. The default is 1000.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="schemaProvider">The schema provider to be used. The default is <c>null</c>.</param>
-        /// <param name="callback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
-        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveTo"/>.</param>
+        /// <param name="callback">The callback that receives the <see cref="CopyDataProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the number of rows inserted into the target table.</returns>
-        public static Task<int> MoveToAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> MoveDataToAsync<TEntity>(this IDbConnection connection,
             string targetTable,
             IDbConnection destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
             int batchSize = 1000,
             int? commandTimeout = null,
             IList<ICopyDataInterceptor> dataInterceptors = null,
-            ISchemaProvider schemaProvider = null,
-            Action<CopyProgress> callback = null,
-            string traceKey = DataTraceKeys.MoveTo,
+            Action<CopyDataProgress> callback = null,
+            string traceKey = DataTraceKeys.MoveDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.MoveToAsync(ClassMappedNameCache.Get<TEntity>(), targetTable, destinationConnection, where == null ? null : QueryGroup.Parse(where), batchSize, commandTimeout, dataInterceptors, schemaProvider, callback, traceKey, trace, transaction, cancellationToken);
+            connection.MoveDataToAsync(ClassMappedNameCache.Get<TEntity>(), targetTable, destinationConnection, where == null ? null : QueryGroup.Parse(where), batchSize, commandTimeout, dataInterceptors, callback, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Moves all the rows of the source table of the current connection into the same-named table of the destination connection.
@@ -533,27 +504,25 @@ namespace RepoDb.Data
         /// <param name="batchSize">The number of rows to be inserted into the destination table per batch. The default is 1000.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="schemaProvider">The schema provider to be used. The default is <c>null</c>.</param>
-        /// <param name="callback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
-        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveTo"/>.</param>
+        /// <param name="callback">The callback that receives the <see cref="CopyDataProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the number of rows inserted into the destination table.</returns>
-        public static Task<int> MoveToAsync(this IDbConnection connection,
+        public static Task<int> MoveDataToAsync(this IDbConnection connection,
             string tableName,
             IDbConnection destinationConnection,
             QueryGroup where = null,
             int batchSize = 1000,
             int? commandTimeout = null,
             IList<ICopyDataInterceptor> dataInterceptors = null,
-            ISchemaProvider schemaProvider = null,
-            Action<CopyProgress> callback = null,
-            string traceKey = DataTraceKeys.MoveTo,
+            Action<CopyDataProgress> callback = null,
+            string traceKey = DataTraceKeys.MoveDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            connection.MoveToAsync(tableName, tableName, destinationConnection, where, batchSize, commandTimeout, dataInterceptors, schemaProvider, callback, traceKey, trace, transaction, cancellationToken);
+            connection.MoveDataToAsync(tableName, tableName, destinationConnection, where, batchSize, commandTimeout, dataInterceptors, callback, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Moves all the rows of the source table of the current connection into the target table of the destination connection.
@@ -568,14 +537,13 @@ namespace RepoDb.Data
         /// <param name="batchSize">The number of rows to be inserted into the destination table per batch. The default is 1000.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="schemaProvider">The schema provider to be used. The default is <c>null</c>.</param>
-        /// <param name="callback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
-        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveTo"/>.</param>
+        /// <param name="callback">The callback that receives the <see cref="CopyDataProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.MoveDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the number of rows inserted into the target table.</returns>
-        public static async Task<int> MoveToAsync(this IDbConnection connection,
+        public static async Task<int> MoveDataToAsync(this IDbConnection connection,
             string sourceTable,
             string targetTable,
             IDbConnection destinationConnection,
@@ -583,16 +551,15 @@ namespace RepoDb.Data
             int batchSize = 1000,
             int? commandTimeout = null,
             IList<ICopyDataInterceptor> dataInterceptors = null,
-            ISchemaProvider schemaProvider = null,
-            Action<CopyProgress> callback = null,
-            string traceKey = DataTraceKeys.MoveTo,
+            Action<CopyDataProgress> callback = null,
+            string traceKey = DataTraceKeys.MoveDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             Validate(connection, sourceTable, targetTable, destinationConnection, batchSize);
 
-            return await connection.CopyToAsync(sourceTable, targetTable, destinationConnection, where, batchSize, commandTimeout, dataInterceptors, schemaProvider, callback, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
+            return await connection.CopyDataToAsync(sourceTable, targetTable, destinationConnection, where, batchSize, commandTimeout, dataInterceptors, callback, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
         }
 
         #endregion

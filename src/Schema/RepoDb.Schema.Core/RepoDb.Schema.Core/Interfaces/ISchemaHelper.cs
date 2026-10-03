@@ -6,20 +6,15 @@
 
 #endregion
 
+using System;
+
 namespace RepoDb.Schema
 {
     /// <summary>
-    /// An interface that is used to define the extractor of the schema of a table.
+    /// An interface that is used to define the schema helper of the library.
     /// </summary>
-    public interface ISchemaExtractor
+    public interface ISchemaHelper
     {
-        /// <summary>
-        /// Gets the fields of the table.
-        /// </summary>
-        /// <param name="tableName">The name of the table.</param>
-        /// <returns>An array of <see cref="DbField"/> objects that represents the fields of the table.</returns>
-        DbField[] GetFields(string tableName);
-
         /// <summary>
         /// Extracts the schema of the table.
         /// </summary>

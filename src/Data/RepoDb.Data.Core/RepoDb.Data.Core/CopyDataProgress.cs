@@ -13,7 +13,7 @@ namespace RepoDb.Data
     /// <summary>
     /// A class that holds the details of a copy operation.
     /// </summary>
-    public class CopyProgress
+    public class CopyDataProgress
     {
         #region Properties
 

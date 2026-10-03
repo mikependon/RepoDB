@@ -14,13 +14,13 @@ namespace RepoDb.Data
     public static class DataTraceKeys
     {
         /// <summary>
-        /// The trace key for the 'CopyTo' operation.
+        /// The trace key for the 'CopyDataTo' operation.
         /// </summary>
-        public const string CopyTo = "CopyTo";
+        public const string CopyDataTo = "CopyDataTo";
 
         /// <summary>
-        /// The trace key for the 'MoveTo' operation.
+        /// The trace key for the 'MoveDataTo' operation.
         /// </summary>
-        public const string MoveTo = "MoveTo";
+        public const string MoveDataTo = "MoveDataTo";
     }
 }
