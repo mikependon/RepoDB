@@ -7,6 +7,8 @@
 #endregion
 
 using System;
+using RepoDb.Data.Interfaces;
+using RepoDb.Data.Options;
 
 namespace RepoDb.Data
 {

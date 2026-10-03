@@ -8,6 +8,8 @@
 
 using System;
 using System.Data;
+using RepoDb.Data.Interfaces;
+using RepoDb.Data.Options;
 
 namespace RepoDb.Data
 {

@@ -6,7 +6,7 @@
 
 #endregion
 
-namespace RepoDb.Data
+namespace RepoDb.Data.Enumerations
 {
     /// <summary>
     /// An enumeration that is used to define the level at which the data is intercepted while being copied.

@@ -6,7 +6,7 @@
 
 #endregion
 
-namespace RepoDb.Data
+namespace RepoDb.Data.Interfaces
 {
     /// <summary>
     /// An interface that is used to transform the data of the specified type.

@@ -6,14 +6,15 @@
 
 #endregion
 
-namespace RepoDb.Data.Interfaces
+using RepoDb.Data.Enumerations;
+using RepoDb.Options;
+
+namespace RepoDb.Data.Options
 {
     /// <summary>
-    /// An interface that is used to transform the data being copied, either per row or as a whole table.
+    /// A class that is being used to define the globalized configurations of the data operations.
     /// </summary>
-    public interface ICopyDataInterceptor :
-        IDataInterceptor<CopyDataRow>,
-        IDataInterceptor<CopyDataTable>
+    public class DataGlobalConfigurationOptions : GlobalConfigurationOptions
     {
     }
 }
