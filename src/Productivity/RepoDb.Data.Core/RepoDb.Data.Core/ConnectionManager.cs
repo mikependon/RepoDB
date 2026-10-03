@@ -17,10 +17,14 @@ namespace RepoDb.Data
     /// </summary>
     public static class ConnectionManager
     {
+        #region Private Variables
+
         private static readonly ConcurrentDictionary<string, IDbConnection> _connections =
             new ConcurrentDictionary<string, IDbConnection>(StringComparer.Ordinal);
 
-        #region Methods
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// Registers a connection with the specified name. The same <see cref="IDbConnection"/> instance
