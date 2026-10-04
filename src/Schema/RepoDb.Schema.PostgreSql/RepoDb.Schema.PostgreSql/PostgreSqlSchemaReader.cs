@@ -33,91 +33,6 @@ namespace RepoDb.Schema
         private readonly IDbTransaction _transaction;
         private readonly PostgreSqlDbTypeNameToClientTypeResolver _typeResolver = new PostgreSqlDbTypeNameToClientTypeResolver();
 
-        private const string ResolveSchemaSql = @"SELECT n.nspname
-            FROM pg_class c
-            INNER JOIN pg_namespace n ON n.oid = c.relnamespace
-            WHERE c.relname = @TableName AND c.relkind IN ('r', 'p')
-            ORDER BY (n.nspname = current_schema()) DESC, n.nspname
-            LIMIT 1;";
-
-        private const string TableExistsSql = @"SELECT CASE WHEN EXISTS (SELECT 1 FROM pg_class
-                WHERE oid = to_regclass(@FullName) AND relkind IN ('r', 'p')) THEN 1 ELSE 0 END;";
-
-        private const string ColumnsSql = @"SELECT a.attnum AS Ordinal,
-                a.attname AS Name,
-                format_type(a.atttypid, NULL) AS TypeName,
-                a.atttypmod AS TypeModifier,
-                NOT a.attnotnull AS IsNullable,
-                a.attidentity <> '' AS IsIdentity,
-                CASE WHEN a.attgenerated = '' THEN pg_get_expr(d.adbin, d.adrelid) END AS DefaultDefinition,
-                CASE WHEN a.attgenerated <> '' THEN pg_get_expr(d.adbin, d.adrelid) END AS ComputedDefinition,
-                s.seqstart AS IdentitySeed,
-                s.seqincrement AS IdentityIncrement,
-                col_description(a.attrelid, a.attnum) AS Comment,
-                EXISTS (SELECT 1 FROM pg_index i WHERE i.indrelid = a.attrelid AND i.indisprimary AND a.attnum = ANY (i.indkey)) AS IsPrimary
-            FROM pg_attribute a
-            LEFT JOIN pg_attrdef d ON d.adrelid = a.attrelid AND d.adnum = a.attnum
-            LEFT JOIN pg_sequence s ON s.seqrelid = NULLIF(pg_get_serial_sequence(@FullName, a.attname), '')::regclass
-            WHERE a.attrelid = to_regclass(@FullName) AND a.attnum > 0 AND NOT a.attisdropped
-            ORDER BY a.attnum;";
-
-        private const string KeyConstraintSql = @"SELECT c.conname AS ConstraintName,
-                a.attname AS ColumnName
-            FROM pg_constraint c
-            CROSS JOIN LATERAL unnest(c.conkey) WITH ORDINALITY AS k(attnum, ord)
-            INNER JOIN pg_attribute a ON a.attrelid = c.conrelid AND a.attnum = k.attnum
-            WHERE c.conrelid = to_regclass(@FullName) AND c.contype::text = @Type
-            ORDER BY c.conname, k.ord;";
-
-        private const string IndexesSql = @"SELECT ic.relname AS IndexName,
-                i.indisunique AS IsUnique,
-                pg_get_expr(i.indpred, i.indrelid) AS FilterDefinition,
-                a.attname AS ColumnName,
-                k.ord > i.indnkeyatts AS IsIncluded,
-                (k.opt & 1) = 1 AS IsDescending
-            FROM pg_index i
-            INNER JOIN pg_class ic ON ic.oid = i.indexrelid
-            INNER JOIN pg_am am ON am.oid = ic.relam AND am.amname = 'btree'
-            CROSS JOIN LATERAL unnest(i.indkey::int2[], i.indoption::int2[]) WITH ORDINALITY AS k(attnum, opt, ord)
-            INNER JOIN pg_attribute a ON a.attrelid = i.indrelid AND a.attnum = k.attnum
-            WHERE i.indrelid = to_regclass(@FullName)
-                AND NOT i.indisprimary
-                AND 0 <> ALL (i.indkey::int2[])
-                AND NOT EXISTS (SELECT 1 FROM pg_constraint c WHERE c.conindid = i.indexrelid AND c.contype IN ('p', 'u', 'x'))
-            ORDER BY ic.relname, k.ord;";
-
-        private const string ForeignKeysSql = @"SELECT c.conname AS ForeignKeyName,
-                a.attname AS ColumnName,
-                rn.nspname AS ReferencedSchema,
-                rt.relname AS ReferencedTable,
-                ra.attname AS ReferencedColumn,
-                c.confupdtype::text AS UpdateAction,
-                c.confdeltype::text AS DeleteAction
-            FROM pg_constraint c
-            CROSS JOIN LATERAL unnest(c.conkey, c.confkey) WITH ORDINALITY AS k(attnum, refattnum, ord)
-            INNER JOIN pg_attribute a ON a.attrelid = c.conrelid AND a.attnum = k.attnum
-            INNER JOIN pg_class rt ON rt.oid = c.confrelid
-            INNER JOIN pg_namespace rn ON rn.oid = rt.relnamespace
-            INNER JOIN pg_attribute ra ON ra.attrelid = c.confrelid AND ra.attnum = k.refattnum
-            WHERE c.conrelid = to_regclass(@FullName) AND c.contype = 'f'
-            ORDER BY c.conname, k.ord;";
-
-        private const string CheckConstraintsSql = @"SELECT c.conname AS ConstraintName,
-                pg_get_expr(c.conbin, c.conrelid) AS Definition
-            FROM pg_constraint c
-            WHERE c.conrelid = to_regclass(@FullName) AND c.contype = 'c'
-            ORDER BY c.conname;";
-
-        private const string TablesSql = @"SELECT n.nspname AS SchemaName,
-                c.relname AS TableName
-            FROM pg_class c
-            INNER JOIN pg_namespace n ON n.oid = c.relnamespace
-            WHERE c.relkind IN ('r', 'p')
-                AND n.nspname NOT IN ('pg_catalog', 'information_schema')
-                AND n.nspname NOT LIKE 'pg\_toast%'
-                AND (CAST(@SchemaName AS text) IS NULL OR n.nspname = @SchemaName)
-            ORDER BY n.nspname, c.relname;";
-
         #endregion
 
         #region Constructors
@@ -154,12 +69,12 @@ namespace RepoDb.Schema
             {
                 TableName = table,
                 SchemaName = schema,
-                Columns = Query(ColumnsSql, SchemaTraceKeys.GetColumns, MapColumn, FullNameParameter(fullName)),
-                PrimaryKey = MapPrimaryKey(Query(KeyConstraintSql, SchemaTraceKeys.GetPrimaryKey, MapKeyColumn, FullNameParameter(fullName), Parameter("Type", "p"))),
-                Indexes = MapIndexes(Query(IndexesSql, SchemaTraceKeys.GetIndexes, MapIndexColumn, FullNameParameter(fullName))),
-                ForeignKeys = MapForeignKeys(Query(ForeignKeysSql, SchemaTraceKeys.GetForeignKeys, MapForeignKeyColumn, FullNameParameter(fullName))),
-                UniqueConstraints = MapUniqueConstraints(Query(KeyConstraintSql, SchemaTraceKeys.GetUniqueConstraints, MapKeyColumn, FullNameParameter(fullName), Parameter("Type", "u"))),
-                CheckConstraints = Query(CheckConstraintsSql, SchemaTraceKeys.GetCheckConstraints, MapCheckConstraint, FullNameParameter(fullName))
+                Columns = Query(PostgreSqlSchemaText.ColumnsSql, SchemaTraceKeys.GetColumns, MapColumn, FullNameParameter(fullName)),
+                PrimaryKey = MapPrimaryKey(Query(PostgreSqlSchemaText.KeyConstraintSql, SchemaTraceKeys.GetPrimaryKey, MapKeyColumn, FullNameParameter(fullName), Parameter("Type", "p"))),
+                Indexes = MapIndexes(Query(PostgreSqlSchemaText.IndexesSql, SchemaTraceKeys.GetIndexes, MapIndexColumn, FullNameParameter(fullName))),
+                ForeignKeys = MapForeignKeys(Query(PostgreSqlSchemaText.ForeignKeysSql, SchemaTraceKeys.GetForeignKeys, MapForeignKeyColumn, FullNameParameter(fullName))),
+                UniqueConstraints = MapUniqueConstraints(Query(PostgreSqlSchemaText.KeyConstraintSql, SchemaTraceKeys.GetUniqueConstraints, MapKeyColumn, FullNameParameter(fullName), Parameter("Type", "u"))),
+                CheckConstraints = Query(PostgreSqlSchemaText.CheckConstraintsSql, SchemaTraceKeys.GetCheckConstraints, MapCheckConstraint, FullNameParameter(fullName))
             };
         }
 
@@ -172,7 +87,7 @@ namespace RepoDb.Schema
         {
             var (schema, table) = ParseTableName(tableName);
             schema = schema ?? ResolveSchemaName(table) ?? DefaultSchema;
-            return Query(TableExistsSql, SchemaTraceKeys.TableExists, r => Convert.ToInt32(r[0]), FullNameParameter(FullName(schema, table))).FirstOrDefault() == 1;
+            return Query(PostgreSqlSchemaText.TableExistsSql, SchemaTraceKeys.TableExists, r => Convert.ToInt32(r[0]), FullNameParameter(FullName(schema, table))).FirstOrDefault() == 1;
         }
 
         /// <summary>
@@ -189,7 +104,7 @@ namespace RepoDb.Schema
         /// <param name="tableName">The name of the table.</param>
         /// <returns>The <see cref="ColumnInfo"/> objects of the table.</returns>
         public IEnumerable<ColumnInfo> GetColumns(string tableName) =>
-            Query(ColumnsSql, SchemaTraceKeys.GetColumns, MapColumn, FullNameParameter(Resolve(tableName)));
+            Query(PostgreSqlSchemaText.ColumnsSql, SchemaTraceKeys.GetColumns, MapColumn, FullNameParameter(Resolve(tableName)));
 
         /// <summary>
         /// Gets the primary key of the table.
@@ -197,7 +112,7 @@ namespace RepoDb.Schema
         /// <param name="tableName">The name of the table.</param>
         /// <returns>The <see cref="PrimaryKeyInfo"/> of the table, or <c>null</c> if the table has no primary key.</returns>
         public PrimaryKeyInfo GetPrimaryKey(string tableName) =>
-            MapPrimaryKey(Query(KeyConstraintSql, SchemaTraceKeys.GetPrimaryKey, MapKeyColumn, FullNameParameter(Resolve(tableName)), Parameter("Type", "p")));
+            MapPrimaryKey(Query(PostgreSqlSchemaText.KeyConstraintSql, SchemaTraceKeys.GetPrimaryKey, MapKeyColumn, FullNameParameter(Resolve(tableName)), Parameter("Type", "p")));
 
         /// <summary>
         /// Gets the indexes of the table. The primary key and the unique constraints are not included.
@@ -205,7 +120,7 @@ namespace RepoDb.Schema
         /// <param name="tableName">The name of the table.</param>
         /// <returns>The <see cref="IndexInfo"/> objects of the table.</returns>
         public IEnumerable<IndexInfo> GetIndexes(string tableName) =>
-            MapIndexes(Query(IndexesSql, SchemaTraceKeys.GetIndexes, MapIndexColumn, FullNameParameter(Resolve(tableName))));
+            MapIndexes(Query(PostgreSqlSchemaText.IndexesSql, SchemaTraceKeys.GetIndexes, MapIndexColumn, FullNameParameter(Resolve(tableName))));
 
         /// <summary>
         /// Gets the foreign keys of the table.
@@ -213,7 +128,7 @@ namespace RepoDb.Schema
         /// <param name="tableName">The name of the table.</param>
         /// <returns>The <see cref="ForeignKeyInfo"/> objects of the table.</returns>
         public IEnumerable<ForeignKeyInfo> GetForeignKeys(string tableName) =>
-            MapForeignKeys(Query(ForeignKeysSql, SchemaTraceKeys.GetForeignKeys, MapForeignKeyColumn, FullNameParameter(Resolve(tableName))));
+            MapForeignKeys(Query(PostgreSqlSchemaText.ForeignKeysSql, SchemaTraceKeys.GetForeignKeys, MapForeignKeyColumn, FullNameParameter(Resolve(tableName))));
 
         /// <summary>
         /// Gets the unique constraints of the table.
@@ -221,7 +136,7 @@ namespace RepoDb.Schema
         /// <param name="tableName">The name of the table.</param>
         /// <returns>The <see cref="UniqueConstraintInfo"/> objects of the table.</returns>
         public IEnumerable<UniqueConstraintInfo> GetUniqueConstraints(string tableName) =>
-            MapUniqueConstraints(Query(KeyConstraintSql, SchemaTraceKeys.GetUniqueConstraints, MapKeyColumn, FullNameParameter(Resolve(tableName)), Parameter("Type", "u")));
+            MapUniqueConstraints(Query(PostgreSqlSchemaText.KeyConstraintSql, SchemaTraceKeys.GetUniqueConstraints, MapKeyColumn, FullNameParameter(Resolve(tableName)), Parameter("Type", "u")));
 
         /// <summary>
         /// Gets the check constraints of the table.
@@ -229,7 +144,7 @@ namespace RepoDb.Schema
         /// <param name="tableName">The name of the table.</param>
         /// <returns>The <see cref="CheckConstraintInfo"/> objects of the table.</returns>
         public IEnumerable<CheckConstraintInfo> GetCheckConstraints(string tableName) =>
-            Query(CheckConstraintsSql, SchemaTraceKeys.GetCheckConstraints, MapCheckConstraint, FullNameParameter(Resolve(tableName)));
+            Query(PostgreSqlSchemaText.CheckConstraintsSql, SchemaTraceKeys.GetCheckConstraints, MapCheckConstraint, FullNameParameter(Resolve(tableName)));
 
         /// <summary>
         /// Gets the names of the tables of the database.
@@ -237,7 +152,7 @@ namespace RepoDb.Schema
         /// <param name="schemaName">The name of the schema to be read. The default is <c>null</c>, which reads all the schemas.</param>
         /// <returns>The names of the tables.</returns>
         public IEnumerable<string> GetTables(string schemaName = null) =>
-            Query(TablesSql, SchemaTraceKeys.GetTables, r => Helper.Format(r.GetString(0), r.GetString(1)), Parameter("SchemaName", schemaName));
+            Query(PostgreSqlSchemaText.TablesSql, SchemaTraceKeys.GetTables, r => Helper.Format(r.GetString(0), r.GetString(1)), Parameter("SchemaName", schemaName));
 
         /// <summary>
         /// Gets the relationships of the tables (as defined by their foreign keys), ordered so that a table always comes after the tables that it references.
@@ -269,12 +184,12 @@ namespace RepoDb.Schema
             {
                 TableName = table,
                 SchemaName = schema,
-                Columns = await QueryAsync(ColumnsSql, SchemaTraceKeys.GetColumns, MapColumn, cancellationToken, FullNameParameter(fullName)).ConfigureAwait(false),
-                PrimaryKey = MapPrimaryKey(await QueryAsync(KeyConstraintSql, SchemaTraceKeys.GetPrimaryKey, MapKeyColumn, cancellationToken, FullNameParameter(fullName), Parameter("Type", "p")).ConfigureAwait(false)),
-                Indexes = MapIndexes(await QueryAsync(IndexesSql, SchemaTraceKeys.GetIndexes, MapIndexColumn, cancellationToken, FullNameParameter(fullName)).ConfigureAwait(false)),
-                ForeignKeys = MapForeignKeys(await QueryAsync(ForeignKeysSql, SchemaTraceKeys.GetForeignKeys, MapForeignKeyColumn, cancellationToken, FullNameParameter(fullName)).ConfigureAwait(false)),
-                UniqueConstraints = MapUniqueConstraints(await QueryAsync(KeyConstraintSql, SchemaTraceKeys.GetUniqueConstraints, MapKeyColumn, cancellationToken, FullNameParameter(fullName), Parameter("Type", "u")).ConfigureAwait(false)),
-                CheckConstraints = await QueryAsync(CheckConstraintsSql, SchemaTraceKeys.GetCheckConstraints, MapCheckConstraint, cancellationToken, FullNameParameter(fullName)).ConfigureAwait(false)
+                Columns = await QueryAsync(PostgreSqlSchemaText.ColumnsSql, SchemaTraceKeys.GetColumns, MapColumn, cancellationToken, FullNameParameter(fullName)).ConfigureAwait(false),
+                PrimaryKey = MapPrimaryKey(await QueryAsync(PostgreSqlSchemaText.KeyConstraintSql, SchemaTraceKeys.GetPrimaryKey, MapKeyColumn, cancellationToken, FullNameParameter(fullName), Parameter("Type", "p")).ConfigureAwait(false)),
+                Indexes = MapIndexes(await QueryAsync(PostgreSqlSchemaText.IndexesSql, SchemaTraceKeys.GetIndexes, MapIndexColumn, cancellationToken, FullNameParameter(fullName)).ConfigureAwait(false)),
+                ForeignKeys = MapForeignKeys(await QueryAsync(PostgreSqlSchemaText.ForeignKeysSql, SchemaTraceKeys.GetForeignKeys, MapForeignKeyColumn, cancellationToken, FullNameParameter(fullName)).ConfigureAwait(false)),
+                UniqueConstraints = MapUniqueConstraints(await QueryAsync(PostgreSqlSchemaText.KeyConstraintSql, SchemaTraceKeys.GetUniqueConstraints, MapKeyColumn, cancellationToken, FullNameParameter(fullName), Parameter("Type", "u")).ConfigureAwait(false)),
+                CheckConstraints = await QueryAsync(PostgreSqlSchemaText.CheckConstraintsSql, SchemaTraceKeys.GetCheckConstraints, MapCheckConstraint, cancellationToken, FullNameParameter(fullName)).ConfigureAwait(false)
             };
         }
 
@@ -289,7 +204,7 @@ namespace RepoDb.Schema
         {
             var (schema, table) = ParseTableName(tableName);
             schema = schema ?? await ResolveSchemaNameAsync(table, cancellationToken).ConfigureAwait(false) ?? DefaultSchema;
-            var result = await QueryAsync(TableExistsSql, SchemaTraceKeys.TableExists, r => Convert.ToInt32(r[0]), cancellationToken, FullNameParameter(FullName(schema, table))).ConfigureAwait(false);
+            var result = await QueryAsync(PostgreSqlSchemaText.TableExistsSql, SchemaTraceKeys.TableExists, r => Convert.ToInt32(r[0]), cancellationToken, FullNameParameter(FullName(schema, table))).ConfigureAwait(false);
             return result.FirstOrDefault() == 1;
         }
 
@@ -311,7 +226,7 @@ namespace RepoDb.Schema
         /// <returns>A task that represents the asynchronous operation. The task result contains: the <see cref="ColumnInfo"/> objects of the table.</returns>
         public async Task<IEnumerable<ColumnInfo>> GetColumnsAsync(string tableName,
             CancellationToken cancellationToken = default) =>
-            await QueryAsync(ColumnsSql, SchemaTraceKeys.GetColumns, MapColumn, cancellationToken, await ResolveFullNameParameterAsync(tableName, cancellationToken).ConfigureAwait(false)).ConfigureAwait(false);
+            await QueryAsync(PostgreSqlSchemaText.ColumnsSql, SchemaTraceKeys.GetColumns, MapColumn, cancellationToken, await ResolveFullNameParameterAsync(tableName, cancellationToken).ConfigureAwait(false)).ConfigureAwait(false);
 
         /// <summary>
         /// Gets the primary key of the table.
@@ -321,7 +236,7 @@ namespace RepoDb.Schema
         /// <returns>A task that represents the asynchronous operation. The task result contains: the <see cref="PrimaryKeyInfo"/> of the table, or <c>null</c> if the table has no primary key.</returns>
         public async Task<PrimaryKeyInfo> GetPrimaryKeyAsync(string tableName,
             CancellationToken cancellationToken = default) =>
-            MapPrimaryKey(await QueryAsync(KeyConstraintSql, SchemaTraceKeys.GetPrimaryKey, MapKeyColumn, cancellationToken, await ResolveFullNameParameterAsync(tableName, cancellationToken).ConfigureAwait(false), Parameter("Type", "p")).ConfigureAwait(false));
+            MapPrimaryKey(await QueryAsync(PostgreSqlSchemaText.KeyConstraintSql, SchemaTraceKeys.GetPrimaryKey, MapKeyColumn, cancellationToken, await ResolveFullNameParameterAsync(tableName, cancellationToken).ConfigureAwait(false), Parameter("Type", "p")).ConfigureAwait(false));
 
         /// <summary>
         /// Gets the indexes of the table. The primary key and the unique constraints are not included.
@@ -331,7 +246,7 @@ namespace RepoDb.Schema
         /// <returns>A task that represents the asynchronous operation. The task result contains: the <see cref="IndexInfo"/> objects of the table.</returns>
         public async Task<IEnumerable<IndexInfo>> GetIndexesAsync(string tableName,
             CancellationToken cancellationToken = default) =>
-            MapIndexes(await QueryAsync(IndexesSql, SchemaTraceKeys.GetIndexes, MapIndexColumn, cancellationToken, await ResolveFullNameParameterAsync(tableName, cancellationToken).ConfigureAwait(false)).ConfigureAwait(false));
+            MapIndexes(await QueryAsync(PostgreSqlSchemaText.IndexesSql, SchemaTraceKeys.GetIndexes, MapIndexColumn, cancellationToken, await ResolveFullNameParameterAsync(tableName, cancellationToken).ConfigureAwait(false)).ConfigureAwait(false));
 
         /// <summary>
         /// Gets the foreign keys of the table.
@@ -341,7 +256,7 @@ namespace RepoDb.Schema
         /// <returns>A task that represents the asynchronous operation. The task result contains: the <see cref="ForeignKeyInfo"/> objects of the table.</returns>
         public async Task<IEnumerable<ForeignKeyInfo>> GetForeignKeysAsync(string tableName,
             CancellationToken cancellationToken = default) =>
-            MapForeignKeys(await QueryAsync(ForeignKeysSql, SchemaTraceKeys.GetForeignKeys, MapForeignKeyColumn, cancellationToken, await ResolveFullNameParameterAsync(tableName, cancellationToken).ConfigureAwait(false)).ConfigureAwait(false));
+            MapForeignKeys(await QueryAsync(PostgreSqlSchemaText.ForeignKeysSql, SchemaTraceKeys.GetForeignKeys, MapForeignKeyColumn, cancellationToken, await ResolveFullNameParameterAsync(tableName, cancellationToken).ConfigureAwait(false)).ConfigureAwait(false));
 
         /// <summary>
         /// Gets the unique constraints of the table.
@@ -351,7 +266,7 @@ namespace RepoDb.Schema
         /// <returns>A task that represents the asynchronous operation. The task result contains: the <see cref="UniqueConstraintInfo"/> objects of the table.</returns>
         public async Task<IEnumerable<UniqueConstraintInfo>> GetUniqueConstraintsAsync(string tableName,
             CancellationToken cancellationToken = default) =>
-            MapUniqueConstraints(await QueryAsync(KeyConstraintSql, SchemaTraceKeys.GetUniqueConstraints, MapKeyColumn, cancellationToken, await ResolveFullNameParameterAsync(tableName, cancellationToken).ConfigureAwait(false), Parameter("Type", "u")).ConfigureAwait(false));
+            MapUniqueConstraints(await QueryAsync(PostgreSqlSchemaText.KeyConstraintSql, SchemaTraceKeys.GetUniqueConstraints, MapKeyColumn, cancellationToken, await ResolveFullNameParameterAsync(tableName, cancellationToken).ConfigureAwait(false), Parameter("Type", "u")).ConfigureAwait(false));
 
         /// <summary>
         /// Gets the check constraints of the table.
@@ -361,7 +276,7 @@ namespace RepoDb.Schema
         /// <returns>A task that represents the asynchronous operation. The task result contains: the <see cref="CheckConstraintInfo"/> objects of the table.</returns>
         public async Task<IEnumerable<CheckConstraintInfo>> GetCheckConstraintsAsync(string tableName,
             CancellationToken cancellationToken = default) =>
-            await QueryAsync(CheckConstraintsSql, SchemaTraceKeys.GetCheckConstraints, MapCheckConstraint, cancellationToken, await ResolveFullNameParameterAsync(tableName, cancellationToken).ConfigureAwait(false)).ConfigureAwait(false);
+            await QueryAsync(PostgreSqlSchemaText.CheckConstraintsSql, SchemaTraceKeys.GetCheckConstraints, MapCheckConstraint, cancellationToken, await ResolveFullNameParameterAsync(tableName, cancellationToken).ConfigureAwait(false)).ConfigureAwait(false);
 
         /// <summary>
         /// Gets the names of the tables of the database.
@@ -371,7 +286,7 @@ namespace RepoDb.Schema
         /// <returns>A task that represents the asynchronous operation. The task result contains: the names of the tables.</returns>
         public async Task<IEnumerable<string>> GetTablesAsync(string schemaName = null,
             CancellationToken cancellationToken = default) =>
-            await QueryAsync(TablesSql, SchemaTraceKeys.GetTables, r => Helper.Format(r.GetString(0), r.GetString(1)), cancellationToken, Parameter("SchemaName", schemaName)).ConfigureAwait(false);
+            await QueryAsync(PostgreSqlSchemaText.TablesSql, SchemaTraceKeys.GetTables, r => Helper.Format(r.GetString(0), r.GetString(1)), cancellationToken, Parameter("SchemaName", schemaName)).ConfigureAwait(false);
 
         /// <summary>
         /// Gets the relationships of the tables (as defined by their foreign keys), ordered so that a table always comes after the tables that it references.
@@ -459,7 +374,7 @@ namespace RepoDb.Schema
         /// <param name="table"></param>
         /// <returns></returns>
         private string ResolveSchemaName(string table) =>
-            Query(ResolveSchemaSql, SchemaTraceKeys.ResolveSchemaName, r => r.GetString(0), Parameter("TableName", table)).FirstOrDefault();
+            Query(PostgreSqlSchemaText.ResolveSchemaSql, SchemaTraceKeys.ResolveSchemaName, r => r.GetString(0), Parameter("TableName", table)).FirstOrDefault();
 
         /// <summary>
         ///
@@ -469,7 +384,7 @@ namespace RepoDb.Schema
         /// <returns></returns>
         private async Task<string> ResolveSchemaNameAsync(string table,
             CancellationToken cancellationToken) =>
-            (await QueryAsync(ResolveSchemaSql, SchemaTraceKeys.ResolveSchemaName, r => r.GetString(0), cancellationToken, Parameter("TableName", table)).ConfigureAwait(false)).FirstOrDefault();
+            (await QueryAsync(PostgreSqlSchemaText.ResolveSchemaSql, SchemaTraceKeys.ResolveSchemaName, r => r.GetString(0), cancellationToken, Parameter("TableName", table)).ConfigureAwait(false)).FirstOrDefault();
 
         // Parameters
 

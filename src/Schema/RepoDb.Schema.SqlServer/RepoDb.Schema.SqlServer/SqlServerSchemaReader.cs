@@ -33,94 +33,6 @@ namespace RepoDb.Schema
         private readonly IDbTransaction _transaction;
         private readonly SqlServerDbTypeNameToClientTypeResolver _typeResolver = new SqlServerDbTypeNameToClientTypeResolver();
 
-        private const string ResolveSchemaSql = @"SELECT TOP 1 SCHEMA_NAME(t.schema_id)
-            FROM sys.tables t
-            WHERE t.name = @TableName
-            ORDER BY CASE WHEN t.schema_id = SCHEMA_ID() THEN 0 ELSE 1 END;";
-
-        private const string TableExistsSql = "SELECT CASE WHEN OBJECT_ID(@FullName, N'U') IS NULL THEN 0 ELSE 1 END;";
-
-        private const string ColumnsSql = @"SELECT c.column_id AS Ordinal,
-                c.name AS Name,
-                ty.name AS TypeName,
-                c.max_length AS MaxLength,
-                c.precision AS [Precision],
-                c.scale AS [Scale],
-                c.is_nullable AS IsNullable,
-                c.is_identity AS IsIdentity,
-                c.collation_name AS Collation,
-                dc.definition AS DefaultDefinition,
-                cc.definition AS ComputedDefinition,
-                CAST(idc.seed_value AS bigint) AS IdentitySeed,
-                CAST(idc.increment_value AS bigint) AS IdentityIncrement,
-                CAST(ep.value AS nvarchar(4000)) AS Comment,
-                CAST(CASE WHEN EXISTS (SELECT 1
-                    FROM sys.indexes i
-                    INNER JOIN sys.index_columns ic ON ic.object_id = i.object_id AND ic.index_id = i.index_id
-                    WHERE i.object_id = c.object_id AND i.is_primary_key = 1 AND ic.column_id = c.column_id) THEN 1 ELSE 0 END AS bit) AS IsPrimary
-            FROM sys.columns c
-            INNER JOIN sys.types ty ON ty.user_type_id = c.user_type_id
-            LEFT JOIN sys.default_constraints dc ON dc.object_id = c.default_object_id
-            LEFT JOIN sys.computed_columns cc ON cc.object_id = c.object_id AND cc.column_id = c.column_id
-            LEFT JOIN sys.identity_columns idc ON idc.object_id = c.object_id AND idc.column_id = c.column_id
-            LEFT JOIN sys.extended_properties ep ON ep.class = 1 AND ep.major_id = c.object_id AND ep.minor_id = c.column_id AND ep.name = N'MS_Description'
-            WHERE c.object_id = OBJECT_ID(@FullName)
-            ORDER BY c.column_id;";
-
-        private const string KeyConstraintSql = @"SELECT kc.name AS ConstraintName,
-                col.name AS ColumnName,
-                CAST(CASE WHEN i.type = 1 THEN 1 ELSE 0 END AS bit) AS IsClustered
-            FROM sys.key_constraints kc
-            INNER JOIN sys.indexes i ON i.object_id = kc.parent_object_id AND i.index_id = kc.unique_index_id
-            INNER JOIN sys.index_columns ic ON ic.object_id = i.object_id AND ic.index_id = i.index_id
-            INNER JOIN sys.columns col ON col.object_id = ic.object_id AND col.column_id = ic.column_id
-            WHERE kc.parent_object_id = OBJECT_ID(@FullName) AND kc.type = @Type
-            ORDER BY kc.name, ic.key_ordinal;";
-
-        private const string IndexesSql = @"SELECT i.name AS IndexName,
-                i.is_unique AS IsUnique,
-                CAST(CASE WHEN i.type = 1 THEN 1 ELSE 0 END AS bit) AS IsClustered,
-                i.filter_definition AS FilterDefinition,
-                col.name AS ColumnName,
-                ic.is_included_column AS IsIncluded,
-                ic.is_descending_key AS IsDescending
-            FROM sys.indexes i
-            INNER JOIN sys.index_columns ic ON ic.object_id = i.object_id AND ic.index_id = i.index_id
-            INNER JOIN sys.columns col ON col.object_id = ic.object_id AND col.column_id = ic.column_id
-            WHERE i.object_id = OBJECT_ID(@FullName)
-                AND i.is_primary_key = 0
-                AND i.is_unique_constraint = 0
-                AND i.type IN (1, 2)
-                AND i.name IS NOT NULL
-            ORDER BY i.name, ic.is_included_column, ic.key_ordinal, ic.index_column_id;";
-
-        private const string ForeignKeysSql = @"SELECT fk.name AS ForeignKeyName,
-                pcol.name AS ColumnName,
-                SCHEMA_NAME(rt.schema_id) AS ReferencedSchema,
-                rt.name AS ReferencedTable,
-                rcol.name AS ReferencedColumn,
-                fk.update_referential_action AS UpdateAction,
-                fk.delete_referential_action AS DeleteAction
-            FROM sys.foreign_keys fk
-            INNER JOIN sys.foreign_key_columns fkc ON fkc.constraint_object_id = fk.object_id
-            INNER JOIN sys.columns pcol ON pcol.object_id = fkc.parent_object_id AND pcol.column_id = fkc.parent_column_id
-            INNER JOIN sys.tables rt ON rt.object_id = fkc.referenced_object_id
-            INNER JOIN sys.columns rcol ON rcol.object_id = fkc.referenced_object_id AND rcol.column_id = fkc.referenced_column_id
-            WHERE fk.parent_object_id = OBJECT_ID(@FullName)
-            ORDER BY fk.name, fkc.constraint_column_id;";
-
-        private const string CheckConstraintsSql = @"SELECT cc.name AS ConstraintName,
-                cc.definition AS Definition
-            FROM sys.check_constraints cc
-            WHERE cc.parent_object_id = OBJECT_ID(@FullName)
-            ORDER BY cc.name;";
-
-        private const string TablesSql = @"SELECT SCHEMA_NAME(t.schema_id) AS SchemaName,
-                t.name AS TableName
-            FROM sys.tables t
-            WHERE @SchemaName IS NULL OR SCHEMA_NAME(t.schema_id) = @SchemaName
-            ORDER BY SCHEMA_NAME(t.schema_id), t.name;";
-
         #endregion
 
         #region Constructors
@@ -157,12 +69,12 @@ namespace RepoDb.Schema
             {
                 TableName = table,
                 SchemaName = schema,
-                Columns = Query(ColumnsSql, SchemaTraceKeys.GetColumns, MapColumn, FullNameParameter(fullName)),
-                PrimaryKey = MapPrimaryKey(Query(KeyConstraintSql, SchemaTraceKeys.GetPrimaryKey, MapKeyColumn, FullNameParameter(fullName), Parameter("Type", "PK"))),
-                Indexes = MapIndexes(Query(IndexesSql, SchemaTraceKeys.GetIndexes, MapIndexColumn, FullNameParameter(fullName))),
-                ForeignKeys = MapForeignKeys(Query(ForeignKeysSql, SchemaTraceKeys.GetForeignKeys, MapForeignKeyColumn, FullNameParameter(fullName))),
-                UniqueConstraints = MapUniqueConstraints(Query(KeyConstraintSql, SchemaTraceKeys.GetUniqueConstraints, MapKeyColumn, FullNameParameter(fullName), Parameter("Type", "UQ"))),
-                CheckConstraints = Query(CheckConstraintsSql, SchemaTraceKeys.GetCheckConstraints, MapCheckConstraint, FullNameParameter(fullName))
+                Columns = Query(SqlServerSchemaText.ColumnsSql, SchemaTraceKeys.GetColumns, MapColumn, FullNameParameter(fullName)),
+                PrimaryKey = MapPrimaryKey(Query(SqlServerSchemaText.KeyConstraintSql, SchemaTraceKeys.GetPrimaryKey, MapKeyColumn, FullNameParameter(fullName), Parameter("Type", "PK"))),
+                Indexes = MapIndexes(Query(SqlServerSchemaText.IndexesSql, SchemaTraceKeys.GetIndexes, MapIndexColumn, FullNameParameter(fullName))),
+                ForeignKeys = MapForeignKeys(Query(SqlServerSchemaText.ForeignKeysSql, SchemaTraceKeys.GetForeignKeys, MapForeignKeyColumn, FullNameParameter(fullName))),
+                UniqueConstraints = MapUniqueConstraints(Query(SqlServerSchemaText.KeyConstraintSql, SchemaTraceKeys.GetUniqueConstraints, MapKeyColumn, FullNameParameter(fullName), Parameter("Type", "UQ"))),
+                CheckConstraints = Query(SqlServerSchemaText.CheckConstraintsSql, SchemaTraceKeys.GetCheckConstraints, MapCheckConstraint, FullNameParameter(fullName))
             };
         }
 
@@ -178,7 +90,7 @@ namespace RepoDb.Schema
             {
                 schema = ResolveSchemaName(table) ?? DefaultSchema;
             }
-            return Query(TableExistsSql, SchemaTraceKeys.TableExists, r => Convert.ToInt32(r[0]), FullNameParameter(FullName(schema, table))).FirstOrDefault() == 1;
+            return Query(SqlServerSchemaText.TableExistsSql, SchemaTraceKeys.TableExists, r => Convert.ToInt32(r[0]), FullNameParameter(FullName(schema, table))).FirstOrDefault() == 1;
         }
 
         /// <summary>
@@ -195,7 +107,7 @@ namespace RepoDb.Schema
         /// <param name="tableName">The name of the table.</param>
         /// <returns>The <see cref="ColumnInfo"/> objects of the table.</returns>
         public IEnumerable<ColumnInfo> GetColumns(string tableName) =>
-            Query(ColumnsSql, SchemaTraceKeys.GetColumns, MapColumn, FullNameParameter(Resolve(tableName)));
+            Query(SqlServerSchemaText.ColumnsSql, SchemaTraceKeys.GetColumns, MapColumn, FullNameParameter(Resolve(tableName)));
 
         /// <summary>
         /// Gets the primary key of the table.
@@ -203,7 +115,7 @@ namespace RepoDb.Schema
         /// <param name="tableName">The name of the table.</param>
         /// <returns>The <see cref="PrimaryKeyInfo"/> of the table, or <c>null</c> if the table has no primary key.</returns>
         public PrimaryKeyInfo GetPrimaryKey(string tableName) =>
-            MapPrimaryKey(Query(KeyConstraintSql, SchemaTraceKeys.GetPrimaryKey, MapKeyColumn, FullNameParameter(Resolve(tableName)), Parameter("Type", "PK")));
+            MapPrimaryKey(Query(SqlServerSchemaText.KeyConstraintSql, SchemaTraceKeys.GetPrimaryKey, MapKeyColumn, FullNameParameter(Resolve(tableName)), Parameter("Type", "PK")));
 
         /// <summary>
         /// Gets the indexes of the table. The primary key and the unique constraints are not included.
@@ -211,7 +123,7 @@ namespace RepoDb.Schema
         /// <param name="tableName">The name of the table.</param>
         /// <returns>The <see cref="IndexInfo"/> objects of the table.</returns>
         public IEnumerable<IndexInfo> GetIndexes(string tableName) =>
-            MapIndexes(Query(IndexesSql, SchemaTraceKeys.GetIndexes, MapIndexColumn, FullNameParameter(Resolve(tableName))));
+            MapIndexes(Query(SqlServerSchemaText.IndexesSql, SchemaTraceKeys.GetIndexes, MapIndexColumn, FullNameParameter(Resolve(tableName))));
 
         /// <summary>
         /// Gets the foreign keys of the table.
@@ -219,7 +131,7 @@ namespace RepoDb.Schema
         /// <param name="tableName">The name of the table.</param>
         /// <returns>The <see cref="ForeignKeyInfo"/> objects of the table.</returns>
         public IEnumerable<ForeignKeyInfo> GetForeignKeys(string tableName) =>
-            MapForeignKeys(Query(ForeignKeysSql, SchemaTraceKeys.GetForeignKeys, MapForeignKeyColumn, FullNameParameter(Resolve(tableName))));
+            MapForeignKeys(Query(SqlServerSchemaText.ForeignKeysSql, SchemaTraceKeys.GetForeignKeys, MapForeignKeyColumn, FullNameParameter(Resolve(tableName))));
 
         /// <summary>
         /// Gets the unique constraints of the table.
@@ -227,7 +139,7 @@ namespace RepoDb.Schema
         /// <param name="tableName">The name of the table.</param>
         /// <returns>The <see cref="UniqueConstraintInfo"/> objects of the table.</returns>
         public IEnumerable<UniqueConstraintInfo> GetUniqueConstraints(string tableName) =>
-            MapUniqueConstraints(Query(KeyConstraintSql, SchemaTraceKeys.GetUniqueConstraints, MapKeyColumn, FullNameParameter(Resolve(tableName)), Parameter("Type", "UQ")));
+            MapUniqueConstraints(Query(SqlServerSchemaText.KeyConstraintSql, SchemaTraceKeys.GetUniqueConstraints, MapKeyColumn, FullNameParameter(Resolve(tableName)), Parameter("Type", "UQ")));
 
         /// <summary>
         /// Gets the check constraints of the table.
@@ -235,7 +147,7 @@ namespace RepoDb.Schema
         /// <param name="tableName">The name of the table.</param>
         /// <returns>The <see cref="CheckConstraintInfo"/> objects of the table.</returns>
         public IEnumerable<CheckConstraintInfo> GetCheckConstraints(string tableName) =>
-            Query(CheckConstraintsSql, SchemaTraceKeys.GetCheckConstraints, MapCheckConstraint, FullNameParameter(Resolve(tableName)));
+            Query(SqlServerSchemaText.CheckConstraintsSql, SchemaTraceKeys.GetCheckConstraints, MapCheckConstraint, FullNameParameter(Resolve(tableName)));
 
         /// <summary>
         /// Gets the names of the tables of the database.
@@ -243,7 +155,7 @@ namespace RepoDb.Schema
         /// <param name="schemaName">The name of the schema to be read. The default is <c>null</c>, which reads all the schemas.</param>
         /// <returns>The names of the tables.</returns>
         public IEnumerable<string> GetTables(string schemaName = null) =>
-            Query(TablesSql, SchemaTraceKeys.GetTables, r => Helper.Format(r.GetString(0), r.GetString(1)), Parameter("SchemaName", schemaName));
+            Query(SqlServerSchemaText.TablesSql, SchemaTraceKeys.GetTables, r => Helper.Format(r.GetString(0), r.GetString(1)), Parameter("SchemaName", schemaName));
 
         /// <summary>
         /// Orders the tables so that a table always comes after the tables that its foreign keys reference. Use the order to create the tables, and the reverse of it to drop them.
@@ -276,12 +188,12 @@ namespace RepoDb.Schema
             {
                 TableName = table,
                 SchemaName = schema,
-                Columns = await QueryAsync(ColumnsSql, SchemaTraceKeys.GetColumns, MapColumn, cancellationToken, FullNameParameter(fullName)).ConfigureAwait(false),
-                PrimaryKey = MapPrimaryKey(await QueryAsync(KeyConstraintSql, SchemaTraceKeys.GetPrimaryKey, MapKeyColumn, cancellationToken, FullNameParameter(fullName), Parameter("Type", "PK")).ConfigureAwait(false)),
-                Indexes = MapIndexes(await QueryAsync(IndexesSql, SchemaTraceKeys.GetIndexes, MapIndexColumn, cancellationToken, FullNameParameter(fullName)).ConfigureAwait(false)),
-                ForeignKeys = MapForeignKeys(await QueryAsync(ForeignKeysSql, SchemaTraceKeys.GetForeignKeys, MapForeignKeyColumn, cancellationToken, FullNameParameter(fullName)).ConfigureAwait(false)),
-                UniqueConstraints = MapUniqueConstraints(await QueryAsync(KeyConstraintSql, SchemaTraceKeys.GetUniqueConstraints, MapKeyColumn, cancellationToken, FullNameParameter(fullName), Parameter("Type", "UQ")).ConfigureAwait(false)),
-                CheckConstraints = await QueryAsync(CheckConstraintsSql, SchemaTraceKeys.GetCheckConstraints, MapCheckConstraint, cancellationToken, FullNameParameter(fullName)).ConfigureAwait(false)
+                Columns = await QueryAsync(SqlServerSchemaText.ColumnsSql, SchemaTraceKeys.GetColumns, MapColumn, cancellationToken, FullNameParameter(fullName)).ConfigureAwait(false),
+                PrimaryKey = MapPrimaryKey(await QueryAsync(SqlServerSchemaText.KeyConstraintSql, SchemaTraceKeys.GetPrimaryKey, MapKeyColumn, cancellationToken, FullNameParameter(fullName), Parameter("Type", "PK")).ConfigureAwait(false)),
+                Indexes = MapIndexes(await QueryAsync(SqlServerSchemaText.IndexesSql, SchemaTraceKeys.GetIndexes, MapIndexColumn, cancellationToken, FullNameParameter(fullName)).ConfigureAwait(false)),
+                ForeignKeys = MapForeignKeys(await QueryAsync(SqlServerSchemaText.ForeignKeysSql, SchemaTraceKeys.GetForeignKeys, MapForeignKeyColumn, cancellationToken, FullNameParameter(fullName)).ConfigureAwait(false)),
+                UniqueConstraints = MapUniqueConstraints(await QueryAsync(SqlServerSchemaText.KeyConstraintSql, SchemaTraceKeys.GetUniqueConstraints, MapKeyColumn, cancellationToken, FullNameParameter(fullName), Parameter("Type", "UQ")).ConfigureAwait(false)),
+                CheckConstraints = await QueryAsync(SqlServerSchemaText.CheckConstraintsSql, SchemaTraceKeys.GetCheckConstraints, MapCheckConstraint, cancellationToken, FullNameParameter(fullName)).ConfigureAwait(false)
             };
         }
 
@@ -299,7 +211,7 @@ namespace RepoDb.Schema
             {
                 schema = await ResolveSchemaNameAsync(table, cancellationToken).ConfigureAwait(false) ?? DefaultSchema;
             }
-            var result = await QueryAsync(TableExistsSql, SchemaTraceKeys.TableExists, r => Convert.ToInt32(r[0]), cancellationToken, FullNameParameter(FullName(schema, table))).ConfigureAwait(false);
+            var result = await QueryAsync(SqlServerSchemaText.TableExistsSql, SchemaTraceKeys.TableExists, r => Convert.ToInt32(r[0]), cancellationToken, FullNameParameter(FullName(schema, table))).ConfigureAwait(false);
             return result.FirstOrDefault() == 1;
         }
 
@@ -321,7 +233,7 @@ namespace RepoDb.Schema
         /// <returns>A task that represents the asynchronous operation. The task result contains: the <see cref="ColumnInfo"/> objects of the table.</returns>
         public async Task<IEnumerable<ColumnInfo>> GetColumnsAsync(string tableName,
             CancellationToken cancellationToken = default) =>
-            await QueryAsync(ColumnsSql, SchemaTraceKeys.GetColumns, MapColumn, cancellationToken, FullNameParameter(await ResolveFullNameAsync(tableName, cancellationToken).ConfigureAwait(false))).ConfigureAwait(false);
+            await QueryAsync(SqlServerSchemaText.ColumnsSql, SchemaTraceKeys.GetColumns, MapColumn, cancellationToken, FullNameParameter(await ResolveFullNameAsync(tableName, cancellationToken).ConfigureAwait(false))).ConfigureAwait(false);
 
         /// <summary>
         /// Gets the primary key of the table.
@@ -331,7 +243,7 @@ namespace RepoDb.Schema
         /// <returns>A task that represents the asynchronous operation. The task result contains: the <see cref="PrimaryKeyInfo"/> of the table, or <c>null</c> if the table has no primary key.</returns>
         public async Task<PrimaryKeyInfo> GetPrimaryKeyAsync(string tableName,
             CancellationToken cancellationToken = default) =>
-            MapPrimaryKey(await QueryAsync(KeyConstraintSql, SchemaTraceKeys.GetPrimaryKey, MapKeyColumn, cancellationToken, FullNameParameter(await ResolveFullNameAsync(tableName, cancellationToken).ConfigureAwait(false)), Parameter("Type", "PK")).ConfigureAwait(false));
+            MapPrimaryKey(await QueryAsync(SqlServerSchemaText.KeyConstraintSql, SchemaTraceKeys.GetPrimaryKey, MapKeyColumn, cancellationToken, FullNameParameter(await ResolveFullNameAsync(tableName, cancellationToken).ConfigureAwait(false)), Parameter("Type", "PK")).ConfigureAwait(false));
 
         /// <summary>
         /// Gets the indexes of the table. The primary key and the unique constraints are not included.
@@ -341,7 +253,7 @@ namespace RepoDb.Schema
         /// <returns>A task that represents the asynchronous operation. The task result contains: the <see cref="IndexInfo"/> objects of the table.</returns>
         public async Task<IEnumerable<IndexInfo>> GetIndexesAsync(string tableName,
             CancellationToken cancellationToken = default) =>
-            MapIndexes(await QueryAsync(IndexesSql, SchemaTraceKeys.GetIndexes, MapIndexColumn, cancellationToken, FullNameParameter(await ResolveFullNameAsync(tableName, cancellationToken).ConfigureAwait(false))).ConfigureAwait(false));
+            MapIndexes(await QueryAsync(SqlServerSchemaText.IndexesSql, SchemaTraceKeys.GetIndexes, MapIndexColumn, cancellationToken, FullNameParameter(await ResolveFullNameAsync(tableName, cancellationToken).ConfigureAwait(false))).ConfigureAwait(false));
 
         /// <summary>
         /// Gets the foreign keys of the table.
@@ -351,7 +263,7 @@ namespace RepoDb.Schema
         /// <returns>A task that represents the asynchronous operation. The task result contains: the <see cref="ForeignKeyInfo"/> objects of the table.</returns>
         public async Task<IEnumerable<ForeignKeyInfo>> GetForeignKeysAsync(string tableName,
             CancellationToken cancellationToken = default) =>
-            MapForeignKeys(await QueryAsync(ForeignKeysSql, SchemaTraceKeys.GetForeignKeys, MapForeignKeyColumn, cancellationToken, FullNameParameter(await ResolveFullNameAsync(tableName, cancellationToken).ConfigureAwait(false))).ConfigureAwait(false));
+            MapForeignKeys(await QueryAsync(SqlServerSchemaText.ForeignKeysSql, SchemaTraceKeys.GetForeignKeys, MapForeignKeyColumn, cancellationToken, FullNameParameter(await ResolveFullNameAsync(tableName, cancellationToken).ConfigureAwait(false))).ConfigureAwait(false));
 
         /// <summary>
         /// Gets the unique constraints of the table.
@@ -361,7 +273,7 @@ namespace RepoDb.Schema
         /// <returns>A task that represents the asynchronous operation. The task result contains: the <see cref="UniqueConstraintInfo"/> objects of the table.</returns>
         public async Task<IEnumerable<UniqueConstraintInfo>> GetUniqueConstraintsAsync(string tableName,
             CancellationToken cancellationToken = default) =>
-            MapUniqueConstraints(await QueryAsync(KeyConstraintSql, SchemaTraceKeys.GetUniqueConstraints, MapKeyColumn, cancellationToken, FullNameParameter(await ResolveFullNameAsync(tableName, cancellationToken).ConfigureAwait(false)), Parameter("Type", "UQ")).ConfigureAwait(false));
+            MapUniqueConstraints(await QueryAsync(SqlServerSchemaText.KeyConstraintSql, SchemaTraceKeys.GetUniqueConstraints, MapKeyColumn, cancellationToken, FullNameParameter(await ResolveFullNameAsync(tableName, cancellationToken).ConfigureAwait(false)), Parameter("Type", "UQ")).ConfigureAwait(false));
 
         /// <summary>
         /// Gets the check constraints of the table.
@@ -371,7 +283,7 @@ namespace RepoDb.Schema
         /// <returns>A task that represents the asynchronous operation. The task result contains: the <see cref="CheckConstraintInfo"/> objects of the table.</returns>
         public async Task<IEnumerable<CheckConstraintInfo>> GetCheckConstraintsAsync(string tableName,
             CancellationToken cancellationToken = default) =>
-            await QueryAsync(CheckConstraintsSql, SchemaTraceKeys.GetCheckConstraints, MapCheckConstraint, cancellationToken, FullNameParameter(await ResolveFullNameAsync(tableName, cancellationToken).ConfigureAwait(false))).ConfigureAwait(false);
+            await QueryAsync(SqlServerSchemaText.CheckConstraintsSql, SchemaTraceKeys.GetCheckConstraints, MapCheckConstraint, cancellationToken, FullNameParameter(await ResolveFullNameAsync(tableName, cancellationToken).ConfigureAwait(false))).ConfigureAwait(false);
 
         /// <summary>
         /// Gets the names of the tables of the database.
@@ -381,7 +293,7 @@ namespace RepoDb.Schema
         /// <returns>A task that represents the asynchronous operation. The task result contains: the names of the tables.</returns>
         public async Task<IEnumerable<string>> GetTablesAsync(string schemaName = null,
             CancellationToken cancellationToken = default) =>
-            await QueryAsync(TablesSql, SchemaTraceKeys.GetTables, r => Helper.Format(r.GetString(0), r.GetString(1)), cancellationToken, Parameter("SchemaName", schemaName)).ConfigureAwait(false);
+            await QueryAsync(SqlServerSchemaText.TablesSql, SchemaTraceKeys.GetTables, r => Helper.Format(r.GetString(0), r.GetString(1)), cancellationToken, Parameter("SchemaName", schemaName)).ConfigureAwait(false);
 
         /// <summary>
         /// Orders the tables so that a table always comes after the tables that its foreign keys reference. Use the order to create the tables, and the reverse of it to drop them.
@@ -479,7 +391,7 @@ namespace RepoDb.Schema
         /// <param name="table"></param>
         /// <returns></returns>
         private string ResolveSchemaName(string table) =>
-            Query(ResolveSchemaSql, SchemaTraceKeys.ResolveSchemaName, r => r.GetString(0), Parameter("TableName", table)).FirstOrDefault();
+            Query(SqlServerSchemaText.ResolveSchemaSql, SchemaTraceKeys.ResolveSchemaName, r => r.GetString(0), Parameter("TableName", table)).FirstOrDefault();
 
         /// <summary>
         /// 
@@ -489,7 +401,7 @@ namespace RepoDb.Schema
         /// <returns></returns>
         private async Task<string> ResolveSchemaNameAsync(string table,
             CancellationToken cancellationToken) =>
-            (await QueryAsync(ResolveSchemaSql, SchemaTraceKeys.ResolveSchemaName, r => r.GetString(0), cancellationToken, Parameter("TableName", table)).ConfigureAwait(false)).FirstOrDefault();
+            (await QueryAsync(SqlServerSchemaText.ResolveSchemaSql, SchemaTraceKeys.ResolveSchemaName, r => r.GetString(0), cancellationToken, Parameter("TableName", table)).ConfigureAwait(false)).FirstOrDefault();
 
         // Parameters
 
