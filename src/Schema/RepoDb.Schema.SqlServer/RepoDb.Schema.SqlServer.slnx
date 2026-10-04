@@ -8,4 +8,6 @@
   <Project Path="../../Providers/RepoDb.SqlServer/RepoDb.SqlServer/RepoDb.SqlServer.csproj" />
   <Project Path="../RepoDb.Schema.Core/RepoDb.Schema.Core/RepoDb.Schema.Core.csproj" />
   <Project Path="RepoDb.Schema.SqlServer/RepoDb.Schema.SqlServer.csproj" />
+  <Project Path="RepoDb.Schema.SqlServer.UnitTests/RepoDb.Schema.SqlServer.UnitTests.csproj" />
+  <Project Path="RepoDb.Schema.SqlServer.IntegrationTests/RepoDb.Schema.SqlServer.IntegrationTests.csproj" />
 </Solution>

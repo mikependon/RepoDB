@@ -1,0 +1,184 @@
+#region Copyright Attributions
+
+// Copyright (c) 2026 Michael Camara Pendon.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Data.SqlClient;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Schema.Models;
+using RepoDb.Schema.SqlServer.IntegrationTests.Setup;
+
+namespace RepoDb.Schema.SqlServer.IntegrationTests
+{
+    public static class Helper
+    {
+        /// <summary>
+        /// Reads the schema of the table from the source database.
+        /// </summary>
+        /// <param name="tableName">The name of the table.</param>
+        /// <returns>The <see cref="TableSchema"/> of the table.</returns>
+        public static TableSchema GetSourceSchema(string tableName)
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForSource))
+            {
+                return new SqlServerSchemaReader(connection).GetTableSchema(tableName);
+            }
+        }
+
+        /// <summary>
+        /// Reads the schema of the table from the target database.
+        /// </summary>
+        /// <param name="tableName">The name of the table.</param>
+        /// <returns>The <see cref="TableSchema"/> of the table.</returns>
+        public static TableSchema GetTargetSchema(string tableName)
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForTarget))
+            {
+                return new SqlServerSchemaReader(connection).GetTableSchema(tableName);
+            }
+        }
+
+        /// <summary>
+        /// Checks whether the table exists in the target database.
+        /// </summary>
+        /// <param name="tableName">The name of the table.</param>
+        /// <returns><c>true</c> if the table exists; otherwise, <c>false</c>.</returns>
+        public static bool TargetTableExists(string tableName)
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForTarget))
+            {
+                return new SqlServerSchemaReader(connection).TableExists(tableName);
+            }
+        }
+
+        /// <summary>
+        /// Reads the schema of the tables from the source database, composes it and creates it in the target database.
+        /// The tables must be given in the order that they can be created (the referenced tables first).
+        /// </summary>
+        /// <param name="tableNames">The names of the tables.</param>
+        public static void CopyToTarget(params string[] tableNames)
+        {
+            var composer = new SqlServerSchemaComposer();
+            using (var source = new SqlConnection(Database.ConnectionStringForSource))
+            using (var target = new SqlConnection(Database.ConnectionStringForTarget))
+            {
+                var reader = new SqlServerSchemaReader(source);
+                foreach (var tableName in tableNames)
+                {
+                    foreach (var statement in composer.ComposeSchema(reader.GetTableSchema(tableName)))
+                    {
+                        target.ExecuteNonQuery(statement);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Asserts the equality of the 2 schemas of a table. The comments of the columns and the names of the unnamed constraints are not compared.
+        /// </summary>
+        /// <param name="expected">The expected schema.</param>
+        /// <param name="actual">The actual schema.</param>
+        public static void AssertSchemaEquality(TableSchema expected,
+            TableSchema actual)
+        {
+            Assert.AreEqual(expected.TableName, actual.TableName, StringComparer.Ordinal);
+            Assert.AreEqual(expected.SchemaName, actual.SchemaName, StringComparer.Ordinal);
+
+            // Columns
+            Assert.AreEqual(expected.Columns.Count, actual.Columns.Count);
+            for (var i = 0; i < expected.Columns.Count; i++)
+            {
+                AssertColumnEquality(expected.Columns[i], actual.Columns[i]);
+            }
+
+            // Primary key
+            if (expected.PrimaryKey == null)
+            {
+                Assert.IsNull(actual.PrimaryKey);
+            }
+            else
+            {
+                Assert.IsNotNull(actual.PrimaryKey);
+                Assert.AreEqual(expected.PrimaryKey.Name, actual.PrimaryKey.Name, StringComparer.Ordinal);
+                CollectionAssert.AreEqual(expected.PrimaryKey.Columns.ToArray(), actual.PrimaryKey.Columns.ToArray());
+            }
+
+            // Indexes
+            Assert.AreEqual(expected.Indexes.Count, actual.Indexes.Count);
+            foreach (var index in expected.Indexes)
+            {
+                var other = actual.Indexes.Single(x => string.Equals(x.Name, index.Name, StringComparison.Ordinal));
+                Assert.AreEqual(index.IsUnique, other.IsUnique);
+                CollectionAssert.AreEqual(index.Columns.ToArray(), other.Columns.ToArray());
+                CollectionAssert.AreEqual(index.IncludedColumns.ToArray(), other.IncludedColumns.ToArray());
+            }
+
+            // Foreign keys
+            Assert.AreEqual(expected.ForeignKeys.Count, actual.ForeignKeys.Count);
+            foreach (var foreignKey in expected.ForeignKeys)
+            {
+                var other = actual.ForeignKeys.Single(x => string.Equals(x.Name, foreignKey.Name, StringComparison.Ordinal));
+                CollectionAssert.AreEqual(foreignKey.Columns.ToArray(), other.Columns.ToArray());
+                Assert.AreEqual(foreignKey.ReferencedTable, other.ReferencedTable, StringComparer.Ordinal);
+                CollectionAssert.AreEqual(foreignKey.ReferencedColumns.ToArray(), other.ReferencedColumns.ToArray());
+                Assert.AreEqual(foreignKey.UpdateRule, other.UpdateRule);
+                Assert.AreEqual(foreignKey.DeleteRule, other.DeleteRule);
+            }
+
+            // Unique constraints
+            Assert.AreEqual(expected.UniqueConstraints.Count, actual.UniqueConstraints.Count);
+            foreach (var constraint in expected.UniqueConstraints)
+            {
+                var other = actual.UniqueConstraints.Single(x => string.Equals(x.Name, constraint.Name, StringComparison.Ordinal));
+                CollectionAssert.AreEqual(constraint.Columns.ToArray(), other.Columns.ToArray());
+            }
+
+            // Check constraints
+            Assert.AreEqual(expected.CheckConstraints.Count, actual.CheckConstraints.Count);
+            foreach (var constraint in expected.CheckConstraints)
+            {
+                var other = actual.CheckConstraints.Single(x => string.Equals(x.Name, constraint.Name, StringComparison.Ordinal));
+                Assert.AreEqual(constraint.Expression, other.Expression, StringComparer.Ordinal);
+            }
+        }
+
+        /// <summary>
+        /// Asserts the equality of the 2 columns. The comments are not compared.
+        /// </summary>
+        /// <param name="expected">The expected column.</param>
+        /// <param name="actual">The actual column.</param>
+        public static void AssertColumnEquality(ColumnInfo expected,
+            ColumnInfo actual)
+        {
+            var name = expected.Field.Name;
+            Assert.AreEqual(expected.Field.Name, actual.Field.Name, StringComparer.Ordinal);
+            Assert.AreEqual(expected.Ordinal, actual.Ordinal, $"Ordinal of '{name}'.");
+            Assert.AreEqual(expected.Field.DatabaseType, actual.Field.DatabaseType, StringComparer.Ordinal, $"Type of '{name}'.");
+            Assert.AreEqual(expected.Field.Size, actual.Field.Size, $"Size of '{name}'.");
+            Assert.AreEqual(expected.Field.Precision, actual.Field.Precision, $"Precision of '{name}'.");
+            Assert.AreEqual(expected.Field.Scale, actual.Field.Scale, $"Scale of '{name}'.");
+            Assert.AreEqual(expected.Field.IsNullable, actual.Field.IsNullable, $"Nullability of '{name}'.");
+            Assert.AreEqual(expected.Field.IsIdentity, actual.Field.IsIdentity, $"Identity of '{name}'.");
+            Assert.AreEqual(expected.Field.IsPrimary, actual.Field.IsPrimary, $"Primary of '{name}'.");
+            Assert.AreEqual(expected.IdentitySeed, actual.IdentitySeed, $"Identity seed of '{name}'.");
+            Assert.AreEqual(expected.IdentityIncrement, actual.IdentityIncrement, $"Identity increment of '{name}'.");
+            Assert.AreEqual(expected.DefaultExpression, actual.DefaultExpression, StringComparer.Ordinal, $"Default of '{name}'.");
+            Assert.AreEqual(expected.ComputedExpression, actual.ComputedExpression, StringComparer.Ordinal, $"Computed expression of '{name}'.");
+            Assert.AreEqual(expected.Collation, actual.Collation, StringComparer.Ordinal, $"Collation of '{name}'.");
+        }
+
+        /// <summary>
+        /// Gets the names of the columns.
+        /// </summary>
+        /// <param name="columns">The columns.</param>
+        /// <returns>The names of the columns.</returns>
+        public static string[] GetNames(IEnumerable<ColumnInfo> columns) =>
+            columns.Select(c => c.Field.Name).ToArray();
+    }
+}

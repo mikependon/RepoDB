@@ -1,0 +1,725 @@
+#region Copyright Attributions
+
+// Copyright (c) 2026 Michael Camara Pendon.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+using System;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Schema.Enumerations;
+using RepoDb.Schema.Models;
+
+namespace RepoDb.Schema.SqlServer.UnitTests
+{
+    [TestClass]
+    public class SqlServerSchemaComposerTest
+    {
+        #region Helpers
+
+        private static ColumnInfo GetColumn(string name,
+            string databaseType,
+            Type type,
+            int ordinal,
+            bool isNullable = true,
+            int? size = null,
+            byte? precision = null,
+            byte? scale = null) =>
+            new ColumnInfo
+            {
+                Ordinal = ordinal,
+                Field = new DbField(name, false, false, isNullable, type, size, precision, scale, databaseType)
+            };
+
+        private static string ComposeTypeName(string databaseType,
+            Type type,
+            int? size = null,
+            byte? precision = null,
+            byte? scale = null) =>
+            new SqlServerSchemaComposer().ComposeTypeName(GetColumn("Column", databaseType, type, 1, true, size, precision, scale));
+
+        private static TableSchema GetPersonSchema()
+        {
+            var schema = new TableSchema
+            {
+                SchemaName = "dbo",
+                TableName = "Person"
+            };
+            schema.Columns.Add(new ColumnInfo
+            {
+                Ordinal = 1,
+                IdentitySeed = 10,
+                IdentityIncrement = 5,
+                Field = new DbField("Id", true, true, false, typeof(long), 8, 19, 0, "bigint")
+            });
+            schema.Columns.Add(new ColumnInfo
+            {
+                Ordinal = 2,
+                Collation = "Latin1_General_CI_AS",
+                Field = new DbField("Name", false, false, false, typeof(string), 128, 0, 0, "nvarchar")
+            });
+            schema.Columns.Add(new ColumnInfo
+            {
+                Ordinal = 3,
+                DefaultExpression = "((0))",
+                Field = new DbField("Age", false, false, true, typeof(int), 4, 10, 0, "int", true)
+            });
+            schema.PrimaryKey = new PrimaryKeyInfo { Name = "PK_Person", Columns = { "Id" } };
+            schema.UniqueConstraints.Add(new UniqueConstraintInfo { Name = "UQ_Person_Name", Columns = { "Name" } });
+            schema.CheckConstraints.Add(new CheckConstraintInfo { Name = "CK_Person_Age", Expression = "[Age]>=(0)" });
+            schema.Indexes.Add(new IndexInfo { Name = "IX_Person_Name", Columns = { "Name" }, IncludedColumns = { "Age" } });
+            schema.ForeignKeys.Add(new ForeignKeyInfo
+            {
+                Name = "FK_Person_Country",
+                Columns = { "Age" },
+                ReferencedTable = "dbo.Country",
+                ReferencedColumns = { "Id" }
+            });
+            return schema;
+        }
+
+        #endregion
+
+        #region ComposeCreateTable
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeCreateTable()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var schema = GetPersonSchema();
+
+            // Act
+            var actual = composer.ComposeCreateTable(schema);
+            var expected = string.Join(Environment.NewLine,
+                "CREATE TABLE [dbo].[Person] (",
+                "    [Id] bigint IDENTITY(10,5) NOT NULL,",
+                "    [Name] nvarchar(128) COLLATE Latin1_General_CI_AS NOT NULL,",
+                "    [Age] int NULL DEFAULT ((0)),",
+                "    CONSTRAINT [PK_Person] PRIMARY KEY ([Id]),",
+                "    CONSTRAINT [UQ_Person_Name] UNIQUE ([Name]),",
+                "    CONSTRAINT [CK_Person_Age] CHECK ([Age]>=(0))",
+                ");");
+
+            // Assert
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeCreateTableWithoutSchemaName()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var schema = new TableSchema { TableName = "Person" };
+            schema.Columns.Add(GetColumn("Name", "nvarchar", typeof(string), 1, false, 50));
+
+            // Act
+            var actual = composer.ComposeCreateTable(schema);
+            var expected = string.Join(Environment.NewLine,
+                "CREATE TABLE [Person] (",
+                "    [Name] nvarchar(50) NOT NULL",
+                ");");
+
+            // Assert
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeCreateTableOrdersTheColumnsByOrdinal()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var schema = new TableSchema { TableName = "Person" };
+            schema.Columns.Add(GetColumn("Second", "int", typeof(int), 2));
+            schema.Columns.Add(GetColumn("First", "int", typeof(int), 1));
+
+            // Act
+            var actual = composer.ComposeCreateTable(schema);
+
+            // Assert
+            Assert.IsTrue(actual.IndexOf("[First]", StringComparison.Ordinal) < actual.IndexOf("[Second]", StringComparison.Ordinal));
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeCreateTableWithComputedColumn()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var schema = new TableSchema { TableName = "Person" };
+            schema.Columns.Add(new ColumnInfo
+            {
+                Ordinal = 1,
+                ComputedExpression = "(upper([Name]))",
+                Field = new DbField("NameUpper", false, false, true, typeof(string), 128, 0, 0, "nvarchar")
+            });
+
+            // Act
+            var actual = composer.ComposeCreateTable(schema);
+
+            // Assert
+            StringAssert.Contains(actual, "[NameUpper] AS (upper([Name]))", StringComparison.Ordinal);
+            Assert.IsFalse(actual.Contains("nvarchar", StringComparison.Ordinal));
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeCreateTableIgnoresTheDefaultOfAnIdentityColumn()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var schema = new TableSchema { TableName = "Person" };
+            schema.Columns.Add(new ColumnInfo
+            {
+                Ordinal = 1,
+                DefaultExpression = "((0))",
+                Field = new DbField("Id", true, true, false, typeof(int), 4, 10, 0, "int")
+            });
+
+            // Act
+            var actual = composer.ComposeCreateTable(schema);
+
+            // Assert
+            StringAssert.Contains(actual, "[Id] int IDENTITY(1,1) NOT NULL", StringComparison.Ordinal);
+            Assert.IsFalse(actual.Contains("DEFAULT", StringComparison.Ordinal));
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeCreateTableDoesNotCollateTheNonCharacterColumns()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var schema = new TableSchema { TableName = "Person" };
+            schema.Columns.Add(new ColumnInfo
+            {
+                Ordinal = 1,
+                Collation = "Latin1_General_CI_AS",
+                Field = new DbField("Age", false, false, true, typeof(int), 4, 10, 0, "int")
+            });
+
+            // Act
+            var actual = composer.ComposeCreateTable(schema);
+
+            // Assert
+            Assert.IsFalse(actual.Contains("COLLATE", StringComparison.Ordinal));
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeCreateTableWithUnnamedPrimaryKey()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var schema = new TableSchema { TableName = "Person" };
+            schema.Columns.Add(GetColumn("Id", "int", typeof(int), 1, false));
+            schema.PrimaryKey = new PrimaryKeyInfo { Columns = { "Id" } };
+
+            // Act
+            var actual = composer.ComposeCreateTable(schema);
+
+            // Assert
+            StringAssert.Contains(actual, "    PRIMARY KEY ([Id])", StringComparison.Ordinal);
+            Assert.IsFalse(actual.Contains("CONSTRAINT", StringComparison.Ordinal));
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeCreateTableWithCompositePrimaryKey()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var schema = new TableSchema { TableName = "OrderLine" };
+            schema.Columns.Add(GetColumn("OrderId", "int", typeof(int), 1, false));
+            schema.Columns.Add(GetColumn("LineNumber", "int", typeof(int), 2, false));
+            schema.PrimaryKey = new PrimaryKeyInfo { Name = "PK_OrderLine", Columns = { "OrderId", "LineNumber" } };
+
+            // Act
+            var actual = composer.ComposeCreateTable(schema);
+
+            // Assert
+            StringAssert.Contains(actual, "CONSTRAINT [PK_OrderLine] PRIMARY KEY ([OrderId], [LineNumber])", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeCreateTableWithoutPrimaryKey()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var schema = new TableSchema { TableName = "NoKey" };
+            schema.Columns.Add(GetColumn("Value", "nvarchar", typeof(string), 1));
+
+            // Act
+            var actual = composer.ComposeCreateTable(schema);
+
+            // Assert
+            Assert.IsFalse(actual.Contains("PRIMARY KEY", StringComparison.Ordinal));
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeCreateTableQuotesTheIdentifiers()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var schema = new TableSchema { TableName = "Odd]Table" };
+            schema.Columns.Add(GetColumn("Odd]Column", "int", typeof(int), 1));
+
+            // Act
+            var actual = composer.ComposeCreateTable(schema);
+
+            // Assert
+            StringAssert.Contains(actual, "[Odd]]Table]", StringComparison.Ordinal);
+            StringAssert.Contains(actual, "[Odd]]Column]", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnSqlServerSchemaComposerComposeCreateTableIfTheSchemaIsNull()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+
+            // Act/Assert
+            Assert.Throws<ArgumentNullException>(() => composer.ComposeCreateTable(null));
+        }
+
+        #endregion
+
+        #region ComposeCreateIndex
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeCreateIndex()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var index = new IndexInfo { Name = "IX_Person_Name", Columns = { "Name" } };
+
+            // Act
+            var actual = composer.ComposeCreateIndex("dbo.Person", index);
+
+            // Assert
+            Assert.AreEqual("CREATE INDEX [IX_Person_Name] ON [dbo].[Person] ([Name]);", actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeCreateIndexWithUniqueAndIncludedColumns()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var index = new IndexInfo
+            {
+                Name = "IX_Person_Name",
+                IsUnique = true,
+                Columns = { "Name", "Age" },
+                IncludedColumns = { "Salary", "CountryId" }
+            };
+
+            // Act
+            var actual = composer.ComposeCreateIndex("[dbo].[Person]", index);
+            var expected = "CREATE UNIQUE INDEX [IX_Person_Name] ON [dbo].[Person] ([Name], [Age]) INCLUDE ([Salary], [CountryId]);";
+
+            // Assert
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnSqlServerSchemaComposerComposeCreateIndexIfTheIndexIsNull()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+
+            // Act/Assert
+            Assert.Throws<ArgumentNullException>(() => composer.ComposeCreateIndex("Person", null));
+        }
+
+        #endregion
+
+        #region ComposeAddForeignKey
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeAddForeignKey()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var foreignKey = new ForeignKeyInfo
+            {
+                Name = "FK_Person_Country",
+                Columns = { "CountryId" },
+                ReferencedTable = "dbo.Country",
+                ReferencedColumns = { "Id" }
+            };
+
+            // Act
+            var actual = composer.ComposeAddForeignKey("dbo.Person", foreignKey);
+            var expected = "ALTER TABLE [dbo].[Person] ADD CONSTRAINT [FK_Person_Country] FOREIGN KEY ([CountryId]) REFERENCES [dbo].[Country] ([Id]);";
+
+            // Assert
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeAddForeignKeyWithRules()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var foreignKey = new ForeignKeyInfo
+            {
+                Name = "FK_Person_Country",
+                Columns = { "CountryId" },
+                ReferencedTable = "dbo.Country",
+                ReferencedColumns = { "Id" },
+                DeleteRule = ForeignKeyRule.SetNull,
+                UpdateRule = ForeignKeyRule.Cascade
+            };
+
+            // Act
+            var actual = composer.ComposeAddForeignKey("dbo.Person", foreignKey);
+
+            // Assert
+            StringAssert.EndsWith(actual, "ON DELETE SET NULL ON UPDATE CASCADE;", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeAddForeignKeyWithSetDefaultRule()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var foreignKey = new ForeignKeyInfo
+            {
+                Name = "FK",
+                Columns = { "CountryId" },
+                ReferencedTable = "Country",
+                ReferencedColumns = { "Id" },
+                DeleteRule = ForeignKeyRule.SetDefault
+            };
+
+            // Act
+            var actual = composer.ComposeAddForeignKey("Person", foreignKey);
+
+            // Assert
+            StringAssert.Contains(actual, "ON DELETE SET DEFAULT", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeAddForeignKeyIgnoresTheRestrictRule()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var foreignKey = new ForeignKeyInfo
+            {
+                Name = "FK",
+                Columns = { "CountryId" },
+                ReferencedTable = "Country",
+                ReferencedColumns = { "Id" },
+                DeleteRule = ForeignKeyRule.Restrict,
+                UpdateRule = ForeignKeyRule.Restrict
+            };
+
+            // Act
+            var actual = composer.ComposeAddForeignKey("Person", foreignKey);
+
+            // Assert
+            Assert.IsFalse(actual.Contains("ON DELETE", StringComparison.Ordinal));
+            Assert.IsFalse(actual.Contains("ON UPDATE", StringComparison.Ordinal));
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeAddForeignKeyWithCompositeColumns()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var foreignKey = new ForeignKeyInfo
+            {
+                Name = "FK_Line_Order",
+                Columns = { "OrderId", "LineNumber" },
+                ReferencedTable = "dbo.OrderLine",
+                ReferencedColumns = { "OrderId", "LineNumber" }
+            };
+
+            // Act
+            var actual = composer.ComposeAddForeignKey("dbo.Shipment", foreignKey);
+
+            // Assert
+            StringAssert.Contains(actual, "FOREIGN KEY ([OrderId], [LineNumber]) REFERENCES [dbo].[OrderLine] ([OrderId], [LineNumber])", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnSqlServerSchemaComposerComposeAddForeignKeyIfTheForeignKeyIsNull()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+
+            // Act/Assert
+            Assert.Throws<ArgumentNullException>(() => composer.ComposeAddForeignKey("Person", null));
+        }
+
+        #endregion
+
+        #region ComposeAddColumn
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeAddColumn()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var column = GetColumn("Nickname", "nvarchar", typeof(string), 1, true, 50);
+
+            // Act
+            var actual = composer.ComposeAddColumn("dbo.Person", column);
+
+            // Assert
+            Assert.AreEqual("ALTER TABLE [dbo].[Person] ADD [Nickname] nvarchar(50) NULL;", actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeAddColumnWithDefault()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var column = GetColumn("Age", "int", typeof(int), 1, false);
+            column.DefaultExpression = "((0))";
+
+            // Act
+            var actual = composer.ComposeAddColumn("Person", column);
+
+            // Assert
+            Assert.AreEqual("ALTER TABLE [Person] ADD [Age] int NOT NULL DEFAULT ((0));", actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnSqlServerSchemaComposerComposeAddColumnIfTheColumnIsNull()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+
+            // Act/Assert
+            Assert.Throws<ArgumentNullException>(() => composer.ComposeAddColumn("Person", null));
+        }
+
+        #endregion
+
+        #region ComposeDropTable
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeDropTable()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+
+            // Act
+            var actual = composer.ComposeDropTable("dbo.Person");
+
+            // Assert
+            Assert.AreEqual("DROP TABLE IF EXISTS [dbo].[Person];", actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeDropTableWithQuotedName()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+
+            // Act
+            var actual = composer.ComposeDropTable("[Sales].[Invoice]");
+
+            // Assert
+            Assert.AreEqual("DROP TABLE IF EXISTS [Sales].[Invoice];", actual, StringComparer.Ordinal);
+        }
+
+        #endregion
+
+        #region ComposeSchema
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeSchema()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var schema = GetPersonSchema();
+
+            // Act
+            var actual = composer.ComposeSchema(schema).ToList();
+
+            // Assert
+            Assert.AreEqual(3, actual.Count);
+            StringAssert.StartsWith(actual[0], "CREATE TABLE [dbo].[Person]", StringComparison.Ordinal);
+            StringAssert.StartsWith(actual[1], "CREATE INDEX [IX_Person_Name] ON [dbo].[Person]", StringComparison.Ordinal);
+            StringAssert.StartsWith(actual[2], "ALTER TABLE [dbo].[Person] ADD CONSTRAINT [FK_Person_Country]", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeSchemaWithOnlyColumns()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var schema = new TableSchema { TableName = "NoKey" };
+            schema.Columns.Add(GetColumn("Value", "nvarchar", typeof(string), 1));
+
+            // Act
+            var actual = composer.ComposeSchema(schema).ToList();
+
+            // Assert
+            Assert.AreEqual(1, actual.Count);
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnSqlServerSchemaComposerComposeSchemaIfTheSchemaIsNull()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+
+            // Act/Assert
+            Assert.Throws<ArgumentNullException>(() => composer.ComposeSchema(null));
+        }
+
+        #endregion
+
+        #region ComposeTypeName
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeTypeNameForSizedUnicodeString()
+        {
+            Assert.AreEqual("nvarchar(128)", ComposeTypeName("nvarchar", typeof(string), 128), StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeTypeNameForUnicodeStringWithMaxSize()
+        {
+            Assert.AreEqual("nvarchar(MAX)", ComposeTypeName("nvarchar", typeof(string), -1), StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeTypeNameForUnicodeStringWithoutSize()
+        {
+            Assert.AreEqual("nvarchar(MAX)", ComposeTypeName("nvarchar", typeof(string)), StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeTypeNameForVarChar()
+        {
+            Assert.AreEqual("varchar(50)", ComposeTypeName("varchar", typeof(string), 50), StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeTypeNameForFixedLengthCharacters()
+        {
+            Assert.AreEqual("char(10)", ComposeTypeName("char", typeof(string), 10), StringComparer.Ordinal);
+            Assert.AreEqual("nchar(4)", ComposeTypeName("nchar", typeof(string), 4), StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeTypeNameForFixedLengthCharactersWithoutSize()
+        {
+            Assert.AreEqual("char(1)", ComposeTypeName("char", typeof(string)), StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeTypeNameForBinary()
+        {
+            Assert.AreEqual("binary(16)", ComposeTypeName("binary", typeof(byte[]), 16), StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeTypeNameForVarBinary()
+        {
+            Assert.AreEqual("varbinary(256)", ComposeTypeName("varbinary", typeof(byte[]), 256), StringComparer.Ordinal);
+            Assert.AreEqual("varbinary(MAX)", ComposeTypeName("varbinary", typeof(byte[]), -1), StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeTypeNameForDecimal()
+        {
+            Assert.AreEqual("decimal(18,2)", ComposeTypeName("decimal", typeof(decimal), 9, 18, 2), StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeTypeNameForNumericWithoutPrecision()
+        {
+            Assert.AreEqual("numeric(18,0)", ComposeTypeName("numeric", typeof(decimal)), StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeTypeNameForTemporalTypesWithScale()
+        {
+            Assert.AreEqual("datetime2(3)", ComposeTypeName("datetime2", typeof(DateTime), scale: 3), StringComparer.Ordinal);
+            Assert.AreEqual("datetimeoffset(7)", ComposeTypeName("datetimeoffset", typeof(DateTimeOffset), scale: 7), StringComparer.Ordinal);
+            Assert.AreEqual("time(5)", ComposeTypeName("time", typeof(TimeSpan), scale: 5), StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeTypeNameForTemporalTypesWithoutScale()
+        {
+            Assert.AreEqual("datetime2", ComposeTypeName("datetime2", typeof(DateTime)), StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeTypeNameForSimpleTypes()
+        {
+            Assert.AreEqual("int", ComposeTypeName("int", typeof(int)), StringComparer.Ordinal);
+            Assert.AreEqual("bigint", ComposeTypeName("bigint", typeof(long)), StringComparer.Ordinal);
+            Assert.AreEqual("bit", ComposeTypeName("bit", typeof(bool)), StringComparer.Ordinal);
+            Assert.AreEqual("uniqueidentifier", ComposeTypeName("uniqueidentifier", typeof(Guid)), StringComparer.Ordinal);
+            Assert.AreEqual("money", ComposeTypeName("money", typeof(decimal)), StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeTypeNameIsCaseInsensitive()
+        {
+            Assert.AreEqual("int", ComposeTypeName("INT", typeof(int)), StringComparer.Ordinal);
+            Assert.AreEqual("nvarchar(20)", ComposeTypeName("NVarChar", typeof(string), 20), StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeTypeNameForTheTypesOfOtherDatabaseEngines()
+        {
+            Assert.AreEqual("int", ComposeTypeName("int4", typeof(int)), StringComparer.Ordinal);
+            Assert.AreEqual("bigint", ComposeTypeName("int8", typeof(long)), StringComparer.Ordinal);
+            Assert.AreEqual("bit", ComposeTypeName("boolean", typeof(bool)), StringComparer.Ordinal);
+            Assert.AreEqual("uniqueidentifier", ComposeTypeName("uuid", typeof(Guid)), StringComparer.Ordinal);
+            Assert.AreEqual("nvarchar(MAX)", ComposeTypeName("text", typeof(string)), StringComparer.Ordinal);
+            Assert.AreEqual("varbinary(MAX)", ComposeTypeName("bytea", typeof(byte[])), StringComparer.Ordinal);
+            Assert.AreEqual("float", ComposeTypeName("double precision", typeof(double)), StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeTypeNameFallsBackToTheClientTypeIfThereIsNoDatabaseType()
+        {
+            Assert.AreEqual("bigint", ComposeTypeName(null, typeof(long)), StringComparer.Ordinal);
+            Assert.AreEqual("datetime2", ComposeTypeName(null, typeof(DateTime)), StringComparer.Ordinal);
+            Assert.AreEqual("nvarchar(20)", ComposeTypeName(null, typeof(string), 20), StringComparer.Ordinal);
+            Assert.AreEqual("sql_variant", ComposeTypeName(null, typeof(object)), StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnSqlServerSchemaComposerComposeTypeNameIfTheColumnIsNull()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+
+            // Act/Assert
+            Assert.Throws<ArgumentNullException>(() => composer.ComposeTypeName(null));
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnSqlServerSchemaComposerComposeTypeNameIfTheColumnHasNoField()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+
+            // Act/Assert
+            Assert.Throws<ArgumentException>(() => composer.ComposeTypeName(new ColumnInfo()));
+        }
+
+        #endregion
+
+        #region Interface
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerIsASchemaComposer()
+        {
+            // Act
+            var composer = new SqlServerSchemaComposer();
+
+            // Assert
+            Assert.IsInstanceOfType<ISchemaComposer>(composer);
+        }
+
+        #endregion
+    }
+}
