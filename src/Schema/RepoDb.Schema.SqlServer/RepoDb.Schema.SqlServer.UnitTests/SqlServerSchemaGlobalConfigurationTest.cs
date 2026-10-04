@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -8,30 +8,29 @@
 
 using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RepoDb.Schema;
 
 namespace RepoDb.Schema.SqlServer.UnitTests
 {
     [TestClass]
-    public class SqlServerSchemaBootstrapTest
+    public class SqlServerSchemaGlobalConfigurationTest
     {
         #region Methods
 
         [TestMethod]
-        public void TestSqlServerSchemaBootstrapIsInitializedAfterInitialize()
+        public void TestSqlServerSchemaGlobalConfigurationReturnsTheGlobalConfiguration()
         {
             // Act
-            SqlServerSchemaBootstrap.Initialize();
+            var actual = GlobalConfiguration.Setup().UseSqlServerSchema();
 
             // Assert
-            Assert.IsTrue(SqlServerSchemaBootstrap.IsInitialized);
+            Assert.AreSame(GlobalConfiguration.Setup(), actual);
         }
 
         [TestMethod]
-        public void TestSqlServerSchemaBootstrapRegistersTheSchemaComposer()
+        public void TestSqlServerSchemaGlobalConfigurationRegistersTheSchemaComposer()
         {
             // Act
-            SqlServerSchemaBootstrap.Initialize();
+            GlobalConfiguration.Setup().UseSqlServerSchema();
             var actual = SchemaComposerMapper.Get<SqlConnection>();
 
             // Assert
@@ -40,23 +39,24 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         }
 
         [TestMethod]
-        public void TestSqlServerSchemaBootstrapCanBeInitializedMoreThanOnce()
+        public void TestSqlServerSchemaGlobalConfigurationCanBeCalledMoreThanOnce()
         {
             // Act
-            SqlServerSchemaBootstrap.Initialize();
+            GlobalConfiguration.Setup().UseSqlServerSchema();
             var first = SchemaComposerMapper.Get<SqlConnection>();
-            SqlServerSchemaBootstrap.Initialize();
+            GlobalConfiguration.Setup().UseSqlServerSchema();
             var second = SchemaComposerMapper.Get<SqlConnection>();
 
             // Assert
-            Assert.AreSame(first, second);
+            Assert.IsNotNull(second);
+            Assert.IsInstanceOfType<SqlServerSchemaComposer>(second);
         }
 
         [TestMethod]
-        public void TestSqlServerSchemaBootstrapDoesNotRegisterASchemaReader()
+        public void TestSqlServerSchemaGlobalConfigurationDoesNotRegisterASchemaReader()
         {
             // Act
-            SqlServerSchemaBootstrap.Initialize();
+            GlobalConfiguration.Setup().UseSqlServerSchema();
             var actual = SchemaReaderMapper.Get<SqlConnection>();
 
             // Assert

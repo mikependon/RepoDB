@@ -133,6 +133,12 @@ namespace RepoDb.Schema
 
         #region Helpers
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parts"></param>
+        /// <param name="current"></param>
+        /// <param name="quoted"></param>
         private static void Add(List<string> parts, StringBuilder current, bool quoted)
         {
             var part = quoted ? current.ToString() : current.ToString().Trim();
@@ -143,6 +149,11 @@ namespace RepoDb.Schema
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="part"></param>
+        /// <returns></returns>
         private static bool IsPlain(string part) =>
             part.Length > 0 &&
             !char.IsDigit(part[0]) &&

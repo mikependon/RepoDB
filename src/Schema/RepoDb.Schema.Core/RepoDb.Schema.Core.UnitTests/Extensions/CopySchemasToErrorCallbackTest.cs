@@ -88,7 +88,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var errors = new List<CopySchemaError>();
 
             // Act
-            new CustomDbConnection().CopySchemasTo(new[] { "Country", "Person", "Solo" }, new CustomDbConnection(), errorCallback: errors.Add);
+            new CustomDbConnection().CopySchemaTo(new[] { "Country", "Person", "Solo" }, new CustomDbConnection(), errorCallback: errors.Add);
 
             // Assert
             Assert.AreEqual(0, errors.Count);
@@ -103,7 +103,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Act/Assert
             Assert.Throws<InvalidOperationException>(() =>
-                new CustomDbConnection().CopySchemasTo(new[] { "Country", "Person", "Solo" }, destination));
+                new CustomDbConnection().CopySchemaTo(new[] { "Country", "Person", "Solo" }, destination));
         }
 
         [TestMethod]
@@ -115,7 +115,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var errors = new List<CopySchemaError>();
 
             // Act
-            new CustomDbConnection().CopySchemasTo(new[] { "Country", "Person", "Solo" }, destination, errorCallback: errors.Add);
+            new CustomDbConnection().CopySchemaTo(new[] { "Country", "Person", "Solo" }, destination, errorCallback: errors.Add);
 
             // Assert
             Assert.AreEqual(1, errors.Count);
@@ -138,7 +138,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var errors = new List<CopySchemaError>();
 
             // Act
-            new CustomDbConnection().CopySchemasTo(new[] { "Country", "Person", "Solo" }, destination, errorCallback: errors.Add);
+            new CustomDbConnection().CopySchemaTo(new[] { "Country", "Person", "Solo" }, destination, errorCallback: errors.Add);
 
             // Assert
             Assert.AreEqual(3, errors.Count);
@@ -155,7 +155,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var created = new List<CopySchemaResult>();
 
             // Act
-            new CustomDbConnection().CopySchemasTo(
+            new CustomDbConnection().CopySchemaTo(
                 new[] { "Country", "Person", "Solo" },
                 destination,
                 createdCallback: created.Add,
@@ -179,7 +179,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var created = new List<CopySchemaResult>();
 
             // Act
-            new CustomDbConnection().CopySchemasTo(
+            new CustomDbConnection().CopySchemaTo(
                 new[] { "Country", "Person", "Solo" },
                 destination,
                 createdCallback: created.Add,
@@ -203,7 +203,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var errors = new List<CopySchemaError>();
 
             // Act
-            new CustomDbConnection().CopySchemasTo(new[] { "Country", "Person", "Solo" }, destination, errorCallback: errors.Add);
+            new CustomDbConnection().CopySchemaTo(new[] { "Country", "Person", "Solo" }, destination, errorCallback: errors.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Country", "Person", "Solo" }, errors.Where(e => e.StatementIndex < 3).Select(e => e.TableName).ToArray());
@@ -219,7 +219,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Act
             var exception = Assert.Throws<InvalidOperationException>(() =>
-                new CustomDbConnection().CopySchemasTo(new[] { "Country", "Person", "Solo" }, destination, errorCallback: e =>
+                new CustomDbConnection().CopySchemaTo(new[] { "Country", "Person", "Solo" }, destination, errorCallback: e =>
                 {
                     raised = e;
                     throw e.Exception;
@@ -239,7 +239,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Act/Assert
             Assert.Throws<NotSupportedException>(() =>
-                new CustomDbConnection().CopySchemasTo(
+                new CustomDbConnection().CopySchemaTo(
                     new[] { "Country", "Person", "Solo" },
                     destination,
                     createdCallback: r => created.Add(r.TableName),
@@ -260,7 +260,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Act/Assert
             Assert.Throws<NotSupportedException>(() =>
-                new CustomDbConnection().CopySchemasTo(
+                new CustomDbConnection().CopySchemaTo(
                     new[] { "Country", "Person", "Solo" },
                     destination,
                     createdCallback: r => created.Add(r.TableName),
@@ -282,7 +282,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var created = new List<CopySchemaResult>();
 
             // Act
-            new CustomDbConnection().CopySchemasTo(
+            new CustomDbConnection().CopySchemaTo(
                 new[] { "Country", "Person" },
                 destination,
                 createdCallback: created.Add,
@@ -306,7 +306,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var created = new List<CopySchemaResult>();
 
             // Act
-            new CustomDbConnection().CopySchemasTo(
+            new CustomDbConnection().CopySchemaTo(
                 new[] { "Country", "Person", "Solo" },
                 destination,
                 createdCallback: created.Add,
@@ -327,7 +327,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var created = new List<CopySchemaResult>();
 
             // Act
-            new CustomDbConnection().CopySchemasTo(
+            new CustomDbConnection().CopySchemaTo(
                 new[] { "Country", "Person", "Solo" },
                 new CustomDbConnection(),
                 createdCallback: created.Add,
@@ -347,7 +347,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Act/Assert
             Assert.Throws<RepoDb.Exceptions.MissingMappingException>(() =>
-                new CustomDbConnection().CopySchemasTo(new[] { "Person" }, new CustomDbConnection(), errorCallback: e => errors++));
+                new CustomDbConnection().CopySchemaTo(new[] { "Person" }, new CustomDbConnection(), errorCallback: e => errors++));
             Assert.AreEqual(0, errors);
         }
 
@@ -359,7 +359,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Act/Assert
             Assert.Throws<ArgumentNullException>(() =>
-                new CustomDbConnection().CopySchemasTo(null, new CustomDbConnection(), errorCallback: e => errors++));
+                new CustomDbConnection().CopySchemaTo(null, new CustomDbConnection(), errorCallback: e => errors++));
             Assert.AreEqual(0, errors);
         }
 
@@ -375,7 +375,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var errors = new List<CopySchemaError>();
 
             // Act
-            await new CustomDbConnection().CopySchemasToAsync(new[] { "Country", "Person", "Solo" }, new CustomDbConnection(), errorCallback: errors.Add);
+            await new CustomDbConnection().CopySchemaToAsync(new[] { "Country", "Person", "Solo" }, new CustomDbConnection(), errorCallback: errors.Add);
 
             // Assert
             Assert.AreEqual(0, errors.Count);
@@ -390,7 +390,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Act/Assert
             await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                new CustomDbConnection().CopySchemasToAsync(new[] { "Country", "Person", "Solo" }, destination));
+                new CustomDbConnection().CopySchemaToAsync(new[] { "Country", "Person", "Solo" }, destination));
         }
 
         [TestMethod]
@@ -402,7 +402,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var errors = new List<CopySchemaError>();
 
             // Act
-            await new CustomDbConnection().CopySchemasToAsync(new[] { "Country", "Person", "Solo" }, destination, errorCallback: errors.Add);
+            await new CustomDbConnection().CopySchemaToAsync(new[] { "Country", "Person", "Solo" }, destination, errorCallback: errors.Add);
 
             // Assert
             Assert.AreEqual(1, errors.Count);
@@ -421,7 +421,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var created = new List<CopySchemaResult>();
 
             // Act
-            await new CustomDbConnection().CopySchemasToAsync(
+            await new CustomDbConnection().CopySchemaToAsync(
                 new[] { "Country", "Person", "Solo" },
                 destination,
                 createdCallback: created.Add,
@@ -444,7 +444,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Act
             var exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                new CustomDbConnection().CopySchemasToAsync(new[] { "Country", "Person", "Solo" }, destination, errorCallback: e =>
+                new CustomDbConnection().CopySchemaToAsync(new[] { "Country", "Person", "Solo" }, destination, errorCallback: e =>
                 {
                     raised = e;
                     throw e.Exception;
@@ -464,7 +464,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Act/Assert
             await Assert.ThrowsAsync<NotSupportedException>(() =>
-                new CustomDbConnection().CopySchemasToAsync(
+                new CustomDbConnection().CopySchemaToAsync(
                     new[] { "Country", "Person", "Solo" },
                     destination,
                     createdCallback: r => created.Add(r.TableName),
@@ -487,7 +487,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
                 // Act/Assert (a cancellation is not an error of the statements)
                 await Assert.ThrowsAsync<OperationCanceledException>(() =>
-                    new CustomDbConnection().CopySchemasToAsync(
+                    new CustomDbConnection().CopySchemaToAsync(
                         new[] { "Country", "Person", "Solo" },
                         new CustomDbConnection(),
                         errorCallback: e => errors++,

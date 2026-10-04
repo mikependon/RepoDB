@@ -35,7 +35,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         #region Helpers
 
         // The reader owns the connection it reads from, so it is mapped for the connection that is used as the source of the copy.
-        private static void MapReader(SqlConnection source) =>
+        private static void MapSchemaReaderConnection(SqlConnection source) =>
             SchemaReaderMapper.Add<SqlConnection>(new SqlServerSchemaReader(source), true);
 
         #endregion
@@ -51,7 +51,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
-                MapReader(source);
+                MapSchemaReaderConnection(source);
 
                 // Act
                 var result = source.CopySchemaTo("Country", target);
@@ -70,7 +70,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
-                MapReader(source);
+                MapSchemaReaderConnection(source);
                 source.CopySchemaTo("Country", target);
 
                 // Act
@@ -104,7 +104,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
-                MapReader(source);
+                MapSchemaReaderConnection(source);
                 source.CopySchemaTo("Country", target);
 
                 // Act
@@ -122,7 +122,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
-                MapReader(source);
+                MapSchemaReaderConnection(source);
 
                 // Act
                 var result = source.CopySchemaTo("Sales.Invoice", target);
@@ -140,7 +140,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
-                MapReader(source);
+                MapSchemaReaderConnection(source);
 
                 // Act
                 var result = source.CopySchemaTo("NoKey", target, CopySchemaExistsBehavior.DropOnExists);
@@ -157,7 +157,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             using (var target = new SqlConnection(Database.ConnectionStringForTarget).EnsureOpen())
             {
                 // Setup
-                MapReader(source);
+                MapSchemaReaderConnection(source);
 
                 // Act
                 using (var transaction = target.BeginTransaction())
@@ -178,7 +178,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
-                MapReader(source);
+                MapSchemaReaderConnection(source);
 
                 // Act
                 source.CopySchemaTo("OrderLine", target);
@@ -197,7 +197,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
-                MapReader(source);
+                MapSchemaReaderConnection(source);
                 source.CopySchemaTo("NoKey", target);
 
                 // Act/Assert (the existence behavior is not enforced yet, so the creation of the existing table fails)
@@ -216,7 +216,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
-                MapReader(source);
+                MapSchemaReaderConnection(source);
 
                 // Act
                 var result = await source.CopySchemaToAsync("Country", target);
@@ -235,7 +235,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
-                MapReader(source);
+                MapSchemaReaderConnection(source);
                 await source.CopySchemaToAsync("Country", target);
 
                 // Act
@@ -255,7 +255,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
-                MapReader(source);
+                MapSchemaReaderConnection(source);
 
                 // Act
                 await source.CopySchemaToAsync("Sales.Invoice", target);
@@ -272,7 +272,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
-                MapReader(source);
+                MapSchemaReaderConnection(source);
                 await source.CopySchemaToAsync("NoKey", target);
 
                 // Act/Assert (the existence behavior is not enforced yet, so the creation of the existing table fails)

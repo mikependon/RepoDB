@@ -6,6 +6,7 @@
 
 #endregion
 
+using RepoDb.Schema.SqlServer;
 using System;
 using Microsoft.Data.SqlClient;
 
@@ -54,10 +55,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests.Setup
             // Initialize the SqlServer
             GlobalConfiguration
                 .Setup()
-                .UseSqlServer();
-
-            // Initialize the SqlServer schema objects
-            SqlServerSchemaBootstrap.Initialize();
+                .UseSqlServerSchema();
 
             // Create databases
             CreateDatabases();

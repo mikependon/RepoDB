@@ -10,4 +10,4 @@
 
 - `SqlServerSchemaReader` (`ISchemaReader`) reads the schema of a table (columns, primary key, indexes, foreign keys, unique and check constraints) from the `sys.*` catalog views of the connection it is created with.
 - `SqlServerSchemaComposer` (`ISchemaComposer`) composes the T-SQL statements that create the equivalent objects.
-- `SqlServerSchemaBootstrap.Initialize()` registers the composer for `SqlConnection`.
+- `GlobalConfiguration.Setup().UseSqlServerSchema()` (`SqlServerSchemaGlobalConfiguration`) registers the composer for `SqlConnection`.

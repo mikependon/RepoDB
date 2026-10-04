@@ -7,6 +7,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading;
@@ -58,8 +59,9 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         private static Mock<ISchemaReader> MapReader(TableSchema schema)
         {
             var reader = new Mock<ISchemaReader>();
-            reader.Setup(r => r.GetTableSchema(It.IsAny<string>())).Returns(schema);
-            reader.Setup(r => r.GetTableSchemaAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(schema);
+            var relationships = new List<RelationshipInfo> { new RelationshipInfo { Table = schema } };
+            reader.Setup(r => r.GetDependencyOrder(It.IsAny<IEnumerable<string>>())).Returns(relationships);
+            reader.Setup(r => r.GetDependencyOrderAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(relationships);
             SchemaReaderMapper.Add<CustomDbConnection>(reader.Object, true);
             return reader;
         }
@@ -68,6 +70,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         {
             var composer = new Mock<ISchemaComposer>();
             composer.Setup(c => c.ComposeSchema(It.IsAny<TableSchema>())).Returns(statements);
+            composer.Setup(c => c.ComposeSchemas(It.IsAny<IEnumerable<TableSchema>>())).Returns(statements);
             SchemaComposerMapper.Add<CustomDbConnection>(composer.Object, true);
             return composer;
         }
@@ -92,7 +95,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         {
             // Act/Assert
             Assert.Throws<ArgumentNullException>(() =>
-                new CustomDbConnection().CopySchemaTo(null, new CustomDbConnection()));
+                new CustomDbConnection().CopySchemaTo((string)null, new CustomDbConnection()));
         }
 
         [TestMethod]
@@ -161,7 +164,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             new CustomDbConnection().CopySchemaTo("dbo.Person", new CustomDbConnection());
 
             // Assert
-            reader.Verify(r => r.GetTableSchema("dbo.Person"), Times.Once);
+            reader.Verify(r => r.GetDependencyOrder(It.Is<IEnumerable<string>>(n => n.SequenceEqual(new[] { "dbo.Person" }))), Times.Once);
         }
 
         [TestMethod]
@@ -176,7 +179,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             new CustomDbConnection().CopySchemaTo("Person", new CustomDbConnection());
 
             // Assert
-            composer.Verify(c => c.ComposeSchema(schema), Times.Once);
+            composer.Verify(c => c.ComposeSchemas(It.Is<IEnumerable<TableSchema>>(t => t.SequenceEqual(new[] { schema }))), Times.Once);
         }
 
         [TestMethod]
@@ -246,7 +249,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             new CustomDbConnection().CopySchemaTo<CopySchemaToTestEntity>(new CustomDbConnection());
 
             // Assert
-            reader.Verify(r => r.GetTableSchema(nameof(CopySchemaToTestEntity)), Times.Once);
+            reader.Verify(r => r.GetDependencyOrder(It.Is<IEnumerable<string>>(n => n.SequenceEqual(new[] { nameof(CopySchemaToTestEntity) }))), Times.Once);
         }
 
         #endregion
@@ -269,7 +272,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         {
             // Act/Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                new CustomDbConnection().CopySchemaToAsync(null, new CustomDbConnection()));
+                new CustomDbConnection().CopySchemaToAsync((string)null, new CustomDbConnection()));
         }
 
         [TestMethod]
@@ -330,7 +333,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             await new CustomDbConnection().CopySchemaToAsync("dbo.Person", new CustomDbConnection());
 
             // Assert
-            reader.Verify(r => r.GetTableSchemaAsync("dbo.Person", It.IsAny<CancellationToken>()), Times.Once);
+            reader.Verify(r => r.GetDependencyOrderAsync(It.Is<IEnumerable<string>>(n => n.SequenceEqual(new[] { "dbo.Person" })), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [TestMethod]
@@ -381,7 +384,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             await new CustomDbConnection().CopySchemaToAsync<CopySchemaToTestEntity>(new CustomDbConnection());
 
             // Assert
-            reader.Verify(r => r.GetTableSchemaAsync(nameof(CopySchemaToTestEntity), It.IsAny<CancellationToken>()), Times.Once);
+            reader.Verify(r => r.GetDependencyOrderAsync(It.Is<IEnumerable<string>>(n => n.SequenceEqual(new[] { nameof(CopySchemaToTestEntity) })), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         #endregion
