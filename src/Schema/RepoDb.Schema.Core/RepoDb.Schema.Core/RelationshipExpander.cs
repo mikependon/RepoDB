@@ -43,64 +43,81 @@ namespace RepoDb.Schema
                 throw new ArgumentOutOfRangeException(nameof(relationshipBehavior));
             }
 
-            // The given tables first (the first one wins if a table is given more than once)
-            var result = new List<TableInfo>();
-            var seen = new HashSet<string>();
-            foreach (var table in tables)
-            {
-                if (seen.Add(tableKey(table)))
-                {
-                    result.Add(table);
-                }
-            }
-            if (relationshipBehavior == CopySchemaRelationshipBehavior.TableOnly)
-            {
-                return result;
-            }
-
-            // The neighbors of each table, by the key of the table
-            var goUp = relationshipBehavior == CopySchemaRelationshipBehavior.Parents || relationshipBehavior == CopySchemaRelationshipBehavior.ParentsAndChildren;
-            var goDown = relationshipBehavior == CopySchemaRelationshipBehavior.Children || relationshipBehavior == CopySchemaRelationshipBehavior.ParentsAndChildren;
-            var neighbors = new Dictionary<string, List<TableInfo>>();
-            foreach (var (child, parent) in foreignKeys)
-            {
-                var childKey = tableKey(child);
-                var parentKey = tableKey(parent);
-                if (childKey == parentKey)
-                {
-                    continue;
-                }
-                if (goUp)
-                {
-                    Add(neighbors, childKey, parent);
-                }
-                if (goDown)
-                {
-                    Add(neighbors, parentKey, child);
-                }
-            }
-
-            // Breadth-first, so the nearest relatives come first and a cycle ends as soon as it comes back to a known table
-            for (var i = 0; i < result.Count; i++)
-            {
-                if (!neighbors.TryGetValue(tableKey(result[i]), out var related))
-                {
-                    continue;
-                }
-                foreach (var table in related)
-                {
-                    if (seen.Add(tableKey(table)))
-                    {
-                        result.Add(table);
-                    }
-                }
-            }
-            return result;
+            var result = tables.GroupBy(tableKey).Select(g => g.First()).ToList();
+            return relationshipBehavior == CopySchemaRelationshipBehavior.TableOnly
+                ? result
+                : Walk(result, GetNeighbors(foreignKeys, relationshipBehavior, tableKey), tableKey);
         }
 
         #endregion
 
         #region Helpers
+
+        /// <summary>
+        /// Gets the neighbors of each table, by the key of the table: its parents and/or its children, depending on the behavior.
+        /// A table that references itself is not a neighbor of itself.
+        /// </summary>
+        /// <param name="foreignKeys"></param>
+        /// <param name="relationshipBehavior"></param>
+        /// <param name="tableKey"></param>
+        /// <returns></returns>
+        private static Dictionary<string, List<TableInfo>> GetNeighbors(IEnumerable<(TableInfo Child, TableInfo Parent)> foreignKeys,
+            CopySchemaRelationshipBehavior relationshipBehavior,
+            Func<TableInfo, string> tableKey)
+        {
+            var neighbors = new Dictionary<string, List<TableInfo>>();
+            foreach (var (child, parent) in foreignKeys.Where(fk => tableKey(fk.Child) != tableKey(fk.Parent)))
+            {
+                if (FollowsParents(relationshipBehavior))
+                {
+                    Add(neighbors, tableKey(child), parent);
+                }
+                if (FollowsChildren(relationshipBehavior))
+                {
+                    Add(neighbors, tableKey(parent), child);
+                }
+            }
+            return neighbors;
+        }
+
+        /// <summary>
+        /// Adds the neighbors of the tables that are already in the list, and then the neighbors of those, until no new table is found.
+        /// It is breadth-first, so the nearest relatives come first and a cycle ends as soon as it comes back to a known table.
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="neighbors"></param>
+        /// <param name="tableKey"></param>
+        /// <returns></returns>
+        private static IList<TableInfo> Walk(List<TableInfo> result,
+            IDictionary<string, List<TableInfo>> neighbors,
+            Func<TableInfo, string> tableKey)
+        {
+            var seen = new HashSet<string>(result.Select(tableKey));
+            for (var i = 0; i < result.Count; i++)
+            {
+                var related = neighbors.TryGetValue(tableKey(result[i]), out var list) ? list : Enumerable.Empty<TableInfo>();
+                result.AddRange(related.Where(table => seen.Add(tableKey(table))).ToList());
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Checks whether the behavior follows the parents of a table.
+        /// </summary>
+        /// <param name="relationshipBehavior"></param>
+        /// <returns></returns>
+        private static bool FollowsParents(CopySchemaRelationshipBehavior relationshipBehavior) =>
+            relationshipBehavior == CopySchemaRelationshipBehavior.Parents ||
+            relationshipBehavior == CopySchemaRelationshipBehavior.ParentsAndChildren;
+
+        /// <summary>
+        /// Checks whether the behavior follows the children of a table.
+        /// </summary>
+        /// <param name="relationshipBehavior"></param>
+        /// <returns></returns>
+        private static bool FollowsChildren(CopySchemaRelationshipBehavior relationshipBehavior) =>
+            relationshipBehavior == CopySchemaRelationshipBehavior.Children ||
+            relationshipBehavior == CopySchemaRelationshipBehavior.ParentsAndChildren;
 
         /// <summary>
         ///

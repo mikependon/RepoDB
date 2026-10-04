@@ -108,8 +108,6 @@ namespace RepoDb.Schema
             {
                 throw new ArgumentNullException(nameof(index));
             }
-
-            // The key columns, each one with its sort order (PostgreSQL has no clustered index)
             var keys = string.Join(", ", index.Columns.Select(column =>
                 index.DescendingColumns != null && index.DescendingColumns.Contains(column, StringComparer.Ordinal)
                     ? $"{Quote(column)} DESC"
@@ -279,8 +277,6 @@ namespace RepoDb.Schema
         {
             var field = column.Field;
             var definition = new StringBuilder(Quote(field.Name)).Append(' ').Append(ComposeTypeName(column));
-
-            // A computed column is stored, and it is always generated from its expression
             if (!string.IsNullOrWhiteSpace(column.ComputedExpression))
             {
                 return definition.Append($" GENERATED ALWAYS AS ({column.ComputedExpression}) STORED").ToString();

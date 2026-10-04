@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -34,22 +34,43 @@ namespace RepoDb.Schema
             Func<TableSchema, string> tableKey,
             Func<TableInfo, string> referenceKey)
         {
-            // One relationship per table (the first one wins if a table is given more than once)
-            var keys = new List<string>();
-            var relationships = new Dictionary<string, RelationshipInfo>();
-            foreach (var schema in schemas)
-            {
-                var key = tableKey(schema);
-                if (!relationships.ContainsKey(key))
-                {
-                    keys.Add(key);
-                    relationships[key] = new RelationshipInfo { Schema = schema };
-                }
-            }
+            var keys = schemas.Select(tableKey).Distinct().ToList();
+            var relationships = CreateRelationships(schemas, tableKey);
             var position = keys.Select((key, index) => new { key, index }).ToDictionary(x => x.key, x => x.index);
+            var parentKeys = GetParentKeys(keys, relationships, position, referenceKey);
+            Link(keys, parentKeys, relationships);
+            return OrderKeys(keys, parentKeys, position).Select(key => relationships[key]).ToList();
+        }
 
-            // The parents of each table: the (other) given tables that its foreign keys reference
-            var parentKeys = keys.ToDictionary(
+        #endregion
+
+        #region Helpers
+
+        // Relationships
+
+        /// <summary>
+        /// Creates one relationship per table (the first one wins if a table is given more than once).
+        /// </summary>
+        /// <param name="schemas"></param>
+        /// <param name="tableKey"></param>
+        /// <returns></returns>
+        private static Dictionary<string, RelationshipInfo> CreateRelationships(IEnumerable<TableSchema> schemas,
+            Func<TableSchema, string> tableKey) =>
+            schemas.GroupBy(tableKey).ToDictionary(g => g.Key, g => new RelationshipInfo { Schema = g.First() });
+
+        /// <summary>
+        /// Gets the parents of each table: the (other) given tables that its foreign keys reference.
+        /// </summary>
+        /// <param name="keys"></param>
+        /// <param name="relationships"></param>
+        /// <param name="position"></param>
+        /// <param name="referenceKey"></param>
+        /// <returns></returns>
+        private static Dictionary<string, List<string>> GetParentKeys(IEnumerable<string> keys,
+            IDictionary<string, RelationshipInfo> relationships,
+            IDictionary<string, int> position,
+            Func<TableInfo, string> referenceKey) =>
+            keys.ToDictionary(
                 key => key,
                 key => relationships[key].Schema.ForeignKeys
                     .Select(fk => referenceKey(fk.ReferencedTable))
@@ -57,6 +78,17 @@ namespace RepoDb.Schema
                     .Distinct()
                     .OrderBy(parent => position[parent])
                     .ToList());
+
+        /// <summary>
+        /// Links each relationship with its parents, and each parent with its children.
+        /// </summary>
+        /// <param name="keys"></param>
+        /// <param name="parentKeys"></param>
+        /// <param name="relationships"></param>
+        private static void Link(IList<string> keys,
+            IDictionary<string, List<string>> parentKeys,
+            IDictionary<string, RelationshipInfo> relationships)
+        {
             foreach (var key in keys)
             {
                 foreach (var parent in parentKeys[key])
@@ -71,27 +103,29 @@ namespace RepoDb.Schema
                     relationships[parent].Children.Add(relationships[key]);
                 }
             }
+        }
 
-            // The tables that reference each other (directly or not) form a group, so find the groups first
+        // Ordering
+
+        /// <summary>
+        /// Orders the keys so that the tables of a group always come after the tables of the groups that they reference.
+        /// </summary>
+        /// <param name="keys"></param>
+        /// <param name="parentKeys"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        private static IList<string> OrderKeys(IList<string> keys,
+            IDictionary<string, List<string>> parentKeys,
+            IDictionary<string, int> position)
+        {
             var groupOf = FindGroups(keys, parentKeys);
             var groups = keys.GroupBy(key => groupOf[key]).ToDictionary(g => g.Key, g => g.ToList());
-            var pending = groups.ToDictionary(
-                group => group.Key,
-                group => new HashSet<int>(group.Value
-                    .SelectMany(key => parentKeys[key])
-                    .Select(parent => groupOf[parent])
-                    .Where(parent => parent != group.Key)));
-
-            // Take the groups, one by one, whose parent groups are all taken (the one with the table that was given first comes first)
-            var ordered = new List<RelationshipInfo>();
+            var pending = GetPendingGroups(groups, parentKeys, groupOf);
+            var ordered = new List<string>();
             while (pending.Count > 0)
             {
-                var next = pending
-                    .Where(p => p.Value.Count == 0)
-                    .OrderBy(p => groups[p.Key].Min(key => position[key]))
-                    .First()
-                    .Key;
-                ordered.AddRange(groups[next].OrderBy(key => position[key]).Select(key => relationships[key]));
+                var next = NextGroup(pending, groups, position);
+                ordered.AddRange(groups[next].OrderBy(key => position[key]));
                 pending.Remove(next);
                 foreach (var parents in pending.Values)
                 {
@@ -101,67 +135,127 @@ namespace RepoDb.Schema
             return ordered;
         }
 
-        #endregion
-
-        #region Helpers
+        /// <summary>
+        /// Gets the groups that each group is still waiting for (the groups of the parents of its tables).
+        /// </summary>
+        /// <param name="groups"></param>
+        /// <param name="parentKeys"></param>
+        /// <param name="groupOf"></param>
+        /// <returns></returns>
+        private static Dictionary<int, HashSet<int>> GetPendingGroups(IDictionary<int, List<string>> groups,
+            IDictionary<string, List<string>> parentKeys,
+            IDictionary<string, int> groupOf) =>
+            groups.ToDictionary(
+                group => group.Key,
+                group => new HashSet<int>(group.Value
+                    .SelectMany(key => parentKeys[key])
+                    .Select(parent => groupOf[parent])
+                    .Where(parent => parent != group.Key)));
 
         /// <summary>
-        ///
+        /// Gets the next group to take: the one that is not waiting for any group, and that has the table that was given first.
+        /// </summary>
+        /// <param name="pending"></param>
+        /// <param name="groups"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        private static int NextGroup(IDictionary<int, HashSet<int>> pending,
+            IDictionary<int, List<string>> groups,
+            IDictionary<string, int> position) =>
+            pending
+                .Where(p => p.Value.Count == 0)
+                .OrderBy(p => groups[p.Key].Min(key => position[key]))
+                .First()
+                .Key;
+
+        /// <summary>
+        /// Finds the groups of the tables that can reach each other.
         /// </summary>
         /// <param name="keys"></param>
         /// <param name="parentKeys"></param>
         /// <returns></returns>
-        private static Dictionary<string, int> FindGroups(IList<string> keys,
-            IDictionary<string, List<string>> parentKeys)
-        {
-            // Tarjan's algorithm: the tables that can reach each other belong to the same group
-            var groupOf = new Dictionary<string, int>();
-            var indexes = new Dictionary<string, int>();
-            var lowLinks = new Dictionary<string, int>();
-            var stack = new Stack<string>();
-            var onStack = new HashSet<string>();
-            var counter = 0;
-            var groups = 0;
+        private static Dictionary<string, int> FindGroups(IEnumerable<string> keys,
+            IDictionary<string, List<string>> parentKeys) =>
+            new GroupFinder(parentKeys).Find(keys);
 
-            void Visit(string key)
+        #endregion
+
+        #region GroupFinder
+
+        /// <summary>
+        /// Finds the groups of the tables that can reach each other (Tarjan's algorithm).
+        /// </summary>
+        private sealed class GroupFinder
+        {
+            private readonly IDictionary<string, List<string>> _parentKeys;
+            private readonly Dictionary<string, int> _groupOf = new Dictionary<string, int>();
+            private readonly Dictionary<string, int> _indexes = new Dictionary<string, int>();
+            private readonly Dictionary<string, int> _lowLinks = new Dictionary<string, int>();
+            private readonly Stack<string> _stack = new Stack<string>();
+            private readonly HashSet<string> _onStack = new HashSet<string>();
+            private int _counter;
+            private int _groups;
+
+            public GroupFinder(IDictionary<string, List<string>> parentKeys)
             {
-                indexes[key] = lowLinks[key] = counter++;
-                stack.Push(key);
-                onStack.Add(key);
-                foreach (var parent in parentKeys[key])
-                {
-                    if (!indexes.ContainsKey(parent))
-                    {
-                        Visit(parent);
-                        lowLinks[key] = Math.Min(lowLinks[key], lowLinks[parent]);
-                    }
-                    else if (onStack.Contains(parent))
-                    {
-                        lowLinks[key] = Math.Min(lowLinks[key], indexes[parent]);
-                    }
-                }
-                if (lowLinks[key] == indexes[key])
-                {
-                    string member;
-                    do
-                    {
-                        member = stack.Pop();
-                        onStack.Remove(member);
-                        groupOf[member] = groups;
-                    }
-                    while (member != key);
-                    groups++;
-                }
+                _parentKeys = parentKeys;
             }
 
-            foreach (var key in keys)
+            /// <summary>
+            /// Gets the group of each table.
+            /// </summary>
+            /// <param name="keys"></param>
+            /// <returns></returns>
+            public Dictionary<string, int> Find(IEnumerable<string> keys)
             {
-                if (!indexes.ContainsKey(key))
+                foreach (var key in keys.Where(key => !_indexes.ContainsKey(key)))
                 {
                     Visit(key);
                 }
+                return _groupOf;
             }
-            return groupOf;
+
+            private void Visit(string key)
+            {
+                _indexes[key] = _lowLinks[key] = _counter++;
+                _stack.Push(key);
+                _onStack.Add(key);
+                foreach (var parent in _parentKeys[key])
+                {
+                    VisitParent(key, parent);
+                }
+                if (_lowLinks[key] == _indexes[key])
+                {
+                    TakeGroup(key);
+                }
+            }
+
+            private void VisitParent(string key,
+                string parent)
+            {
+                if (!_indexes.ContainsKey(parent))
+                {
+                    Visit(parent);
+                    _lowLinks[key] = Math.Min(_lowLinks[key], _lowLinks[parent]);
+                }
+                else if (_onStack.Contains(parent))
+                {
+                    _lowLinks[key] = Math.Min(_lowLinks[key], _indexes[parent]);
+                }
+            }
+
+            private void TakeGroup(string root)
+            {
+                string member;
+                do
+                {
+                    member = _stack.Pop();
+                    _onStack.Remove(member);
+                    _groupOf[member] = _groups;
+                }
+                while (member != root);
+                _groups++;
+            }
         }
 
         #endregion

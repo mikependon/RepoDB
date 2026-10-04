@@ -94,10 +94,8 @@ namespace RepoDb.Schema
             {
                 throw new ArgumentNullException(nameof(schema));
             }
-
             var definitions = new List<string>();
             definitions.AddRange(schema.Columns.OrderBy(c => c.Ordinal).Select(Column));
-
             if (schema.PrimaryKey != null && schema.PrimaryKey.Columns.Count > 0)
             {
                 definitions.Add($"{ConstraintName(schema.PrimaryKey.Name)}PRIMARY KEY {(schema.PrimaryKey.IsClustered ? string.Empty : "NONCLUSTERED ")}({Columns(schema.PrimaryKey.Columns)})");
@@ -123,7 +121,6 @@ namespace RepoDb.Schema
             {
                 throw new ArgumentNullException(nameof(index));
             }
-
             var statement = new StringBuilder("CREATE ");
             if (index.IsUnique)
             {
@@ -133,8 +130,6 @@ namespace RepoDb.Schema
             {
                 statement.Append("CLUSTERED ");
             }
-
-            // The key columns, each one with its sort order
             var keys = string.Join(", ", index.Columns.Select(column =>
                 index.DescendingColumns != null && index.DescendingColumns.Contains(column, StringComparer.Ordinal)
                     ? $"{Quote(column)} DESC"
@@ -164,11 +159,9 @@ namespace RepoDb.Schema
             {
                 throw new ArgumentNullException(nameof(foreignKey));
             }
-
             var statement = new StringBuilder(
                 $"ALTER TABLE {Name(tableName)} ADD {ConstraintName(foreignKey.Name)}FOREIGN KEY ({Columns(foreignKey.Columns)}) " +
                 $"REFERENCES {Name(TableName(foreignKey.ReferencedTable))} ({Columns(foreignKey.ReferencedColumns)})");
-
             var onDelete = Rule(foreignKey.DeleteRule);
             if (onDelete != null)
             {
@@ -309,8 +302,6 @@ namespace RepoDb.Schema
                 case CopySchemaForeignKeyRule.Cascade: return "CASCADE";
                 case CopySchemaForeignKeyRule.SetNull: return "SET NULL";
                 case CopySchemaForeignKeyRule.SetDefault: return "SET DEFAULT";
-
-                // SQL Server has no RESTRICT; NO ACTION is its (default) equivalent
                 default: return null;
             }
         }
