@@ -161,9 +161,9 @@ namespace RepoDb
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
         {
-            if (this.hashCode != null)
+            if (hashCode != null)
             {
-                return this.hashCode.Value;
+                return hashCode.Value;
             }
 
             // Set the hashcode
