@@ -9,6 +9,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using RepoDb.Schema.Enumerations;
 using RepoDb.Schema.Models;
 
 namespace RepoDb.Schema
@@ -99,6 +100,16 @@ namespace RepoDb.Schema
         /// <param name="tableNames">The names of the tables.</param>
         /// <returns>The ordered <see cref="RelationshipInfo"/> objects, one per table.</returns>
         IEnumerable<RelationshipInfo> GetDependencyOrder(IEnumerable<string> tableNames);
+
+        /// <summary>
+        /// Gets the names of the given tables together with the names of the tables that are related to them, as defined by the foreign keys.
+        /// Only the foreign keys are read (not the schema of the tables), so it is cheap to expand a table with its relationships.
+        /// </summary>
+        /// <param name="tableNames">The names of the tables.</param>
+        /// <param name="relationshipBehavior">Defines which of the related tables are included. <see cref="CopySchemaRelationshipBehavior.TableOnly"/> returns only the given tables.</param>
+        /// <returns>The names of the given tables (in the order that they were given), followed by the names of their related tables.</returns>
+        IEnumerable<string> GetRelatedTables(IEnumerable<string> tableNames,
+            CopySchemaRelationshipBehavior relationshipBehavior);
 
         #endregion
 
@@ -203,6 +214,18 @@ namespace RepoDb.Schema
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains: the ordered <see cref="RelationshipInfo"/> objects, one per table.</returns>
         Task<IEnumerable<RelationshipInfo>> GetDependencyOrderAsync(IEnumerable<string> tableNames,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Gets the names of the given tables together with the names of the tables that are related to them, as defined by the foreign keys.
+        /// Only the foreign keys are read (not the schema of the tables), so it is cheap to expand a table with its relationships.
+        /// </summary>
+        /// <param name="tableNames">The names of the tables.</param>
+        /// <param name="relationshipBehavior">Defines which of the related tables are included. <see cref="CopySchemaRelationshipBehavior.TableOnly"/> returns only the given tables.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains: the names of the given tables (in the order that they were given), followed by the names of their related tables.</returns>
+        Task<IEnumerable<string>> GetRelatedTablesAsync(IEnumerable<string> tableNames,
+            CopySchemaRelationshipBehavior relationshipBehavior,
             CancellationToken cancellationToken = default);
 
         #endregion

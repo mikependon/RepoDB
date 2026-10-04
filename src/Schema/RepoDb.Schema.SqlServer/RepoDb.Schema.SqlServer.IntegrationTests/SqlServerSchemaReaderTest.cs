@@ -13,6 +13,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Schema.Enumerations;
 using RepoDb.Schema.SqlServer.IntegrationTests.Setup;
+using RepoDb.Schema.Models;
 
 namespace RepoDb.Schema.SqlServer.IntegrationTests
 {
@@ -653,7 +654,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 Assert.AreEqual(1, actual.Count);
                 Assert.AreEqual("FK_Person_Country", actual[0].Name, StringComparer.Ordinal);
                 CollectionAssert.AreEqual(new[] { "CountryId" }, actual[0].Columns.ToArray());
-                Assert.AreEqual("dbo.Country", actual[0].ReferencedTable, StringComparer.Ordinal);
+                Assert.AreEqual(new TableInfo("Country", "dbo"), actual[0].ReferencedTable);
                 CollectionAssert.AreEqual(new[] { "Id" }, actual[0].ReferencedColumns.ToArray());
                 Assert.AreEqual(ForeignKeyRule.Cascade, actual[0].UpdateRule);
                 Assert.AreEqual(ForeignKeyRule.SetNull, actual[0].DeleteRule);
@@ -711,7 +712,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
 
                 // Assert
                 Assert.AreEqual("FK_Person_Country", actual.Name, StringComparer.Ordinal);
-                Assert.AreEqual("dbo.Country", actual.ReferencedTable, StringComparer.Ordinal);
+                Assert.AreEqual(new TableInfo("Country", "dbo"), actual.ReferencedTable);
             }
         }
 

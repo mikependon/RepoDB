@@ -232,7 +232,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
 
             // Assert
             Assert.AreEqual("odd name", schema.Table.Name);
-            Assert.AreEqual("public.\"odd.name\"", schema.ForeignKeys.Single().ReferencedTable);
+            Assert.AreEqual(new TableInfo("odd.name", "public"), schema.ForeignKeys.Single().ReferencedTable);
         }
 
         [TestMethod]
@@ -365,7 +365,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             // Assert (each foreign key to another given table is a parent, and the parent knows its child)
             foreach (var relationship in relationships)
             {
-                var referenced = relationship.Schema.ForeignKeys.Select(fk => fk.ReferencedTable).Distinct().Count(name => !name.EndsWith("." + relationship.Schema.Table.Name, StringComparison.Ordinal) || name != $"{relationship.Schema.Table.Schema}.{relationship.Schema.Table.Name}");
+                var referenced = relationship.Schema.ForeignKeys.Select(fk => fk.ReferencedTable).Distinct().Count(table => table != relationship.Schema.Table);
                 Assert.AreEqual(referenced, relationship.Parents.Count, relationship.Schema.Table.Name);
                 Assert.IsTrue(relationship.Parents.All(p => p.Children.Contains(relationship)));
             }

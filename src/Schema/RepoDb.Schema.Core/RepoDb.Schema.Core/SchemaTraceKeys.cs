@@ -49,6 +49,11 @@ namespace RepoDb.Schema
         public const string GetPrimaryKey = "GetPrimaryKey";
 
         /// <summary>
+        /// The trace key used when the foreign key relationships between the tables of a database are being read.
+        /// </summary>
+        public const string GetRelationships = "GetRelationships";
+
+        /// <summary>
         /// The trace key used when the tables of a database are being read.
         /// </summary>
         public const string GetTables = "GetTables";

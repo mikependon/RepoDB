@@ -69,7 +69,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             schema.ForeignKeys.Add(new ForeignKeyInfo("FK_Person_Country")
             {
                 Columns = { "Age" },
-                ReferencedTable = "dbo.Country",
+                ReferencedTable = new TableInfo("Country", "dbo"),
                 ReferencedColumns = { "Id" }
             });
             return schema;
@@ -483,7 +483,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             var foreignKey = new ForeignKeyInfo("FK_Person_Country")
             {
                 Columns = { "CountryId" },
-                ReferencedTable = "dbo.Country",
+                ReferencedTable = new TableInfo("Country", "dbo"),
                 ReferencedColumns = { "Id" }
             };
 
@@ -503,7 +503,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             var foreignKey = new ForeignKeyInfo("FK_Person_Country")
             {
                 Columns = { "CountryId" },
-                ReferencedTable = "dbo.Country",
+                ReferencedTable = new TableInfo("Country", "dbo"),
                 ReferencedColumns = { "Id" },
                 DeleteRule = ForeignKeyRule.SetNull,
                 UpdateRule = ForeignKeyRule.Cascade
@@ -524,7 +524,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             var foreignKey = new ForeignKeyInfo("FK")
             {
                 Columns = { "CountryId" },
-                ReferencedTable = "Country",
+                ReferencedTable = new TableInfo("Country", null),
                 ReferencedColumns = { "Id" },
                 DeleteRule = ForeignKeyRule.SetDefault
             };
@@ -544,7 +544,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             var foreignKey = new ForeignKeyInfo("FK")
             {
                 Columns = { "CountryId" },
-                ReferencedTable = "Country",
+                ReferencedTable = new TableInfo("Country", null),
                 ReferencedColumns = { "Id" },
                 DeleteRule = ForeignKeyRule.Restrict,
                 UpdateRule = ForeignKeyRule.Restrict
@@ -566,7 +566,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             var foreignKey = new ForeignKeyInfo("FK_Line_Order")
             {
                 Columns = { "OrderId", "LineNumber" },
-                ReferencedTable = "dbo.OrderLine",
+                ReferencedTable = new TableInfo("OrderLine", "dbo"),
                 ReferencedColumns = { "OrderId", "LineNumber" }
             };
 
@@ -736,11 +736,11 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             var a = new TableSchema("CycleA", "dbo");
             a.Columns.Add(GetColumn("Id", "int", typeof(int), 1, false));
             a.Columns.Add(GetColumn("BId", "int", typeof(int), 2));
-            a.ForeignKeys.Add(new ForeignKeyInfo("FK_CycleA_CycleB") { Columns = { "BId" }, ReferencedTable = "dbo.CycleB", ReferencedColumns = { "Id" } });
+            a.ForeignKeys.Add(new ForeignKeyInfo("FK_CycleA_CycleB") { Columns = { "BId" }, ReferencedTable = new TableInfo("CycleB", "dbo"), ReferencedColumns = { "Id" } });
             var b = new TableSchema("CycleB", "dbo");
             b.Columns.Add(GetColumn("Id", "int", typeof(int), 1, false));
             b.Columns.Add(GetColumn("AId", "int", typeof(int), 2));
-            b.ForeignKeys.Add(new ForeignKeyInfo("FK_CycleB_CycleA") { Columns = { "AId" }, ReferencedTable = "dbo.CycleA", ReferencedColumns = { "Id" } });
+            b.ForeignKeys.Add(new ForeignKeyInfo("FK_CycleB_CycleA") { Columns = { "AId" }, ReferencedTable = new TableInfo("CycleA", "dbo"), ReferencedColumns = { "Id" } });
 
             // Act
             var actual = composer.ComposeSchemas(new[] { a, b }).ToList();
@@ -830,7 +830,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             var foreignKey = new ForeignKeyInfo("FK_OddChild_OddName")
             {
                 Columns = { "ParentId" },
-                ReferencedTable = "[dbo].[Odd.Name]",
+                ReferencedTable = new TableInfo("Odd.Name", "dbo"),
                 ReferencedColumns = { "Id" }
             };
 
@@ -855,7 +855,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             child.ForeignKeys.Add(new ForeignKeyInfo("FK_OddChild_OddName")
             {
                 Columns = { "ParentId" },
-                ReferencedTable = Helper.Format("dbo", "Odd.Name"),
+                ReferencedTable = new TableInfo("Odd.Name", "dbo"),
                 ReferencedColumns = { "Id" }
             });
 

@@ -61,7 +61,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
                 schema.ForeignKeys.Add(new ForeignKeyInfo($"FK_{tableName}_{referenceName}")
                 {
                     Columns = { $"{referenceName}Id" },
-                    ReferencedTable = reference,
+                    ReferencedTable = Reference(reference),
                     ReferencedColumns = { "Id" }
                 });
             }
@@ -465,7 +465,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             var results = new List<CopySchemaResult>();
 
             // Act
-            await new CustomDbConnection().CopySchemaToAsync(new[] { "Person", "Country" }, new CustomDbConnection(), CopySchemaExistsBehavior.ThrowOnExists, results.Add);
+            await new CustomDbConnection().CopySchemaToAsync(new[] { "Person", "Country" }, new CustomDbConnection(), CopySchemaExistsBehavior.ThrowOnExists, createdCallback: results.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.TableName).ToArray());
@@ -474,5 +474,11 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         }
 
         #endregion
+
+        private static TableInfo Reference(string name)
+        {
+            var (schema, table) = Helper.Parse(name);
+            return new TableInfo(table, schema);
+        }
     }
 }

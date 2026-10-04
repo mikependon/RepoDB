@@ -7,9 +7,11 @@
 #endregion
 
 using System;
+using System.Threading.Tasks;
 using Npgsql;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Schema;
+using RepoDb.Schema.Enumerations;
 
 namespace RepoDb.Schema.PostgreSql.UnitTests
 {
@@ -63,6 +65,27 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
 
             // Act/Assert
             Assert.Throws<ArgumentNullException>(() => reader.TableExists(null));
+        }
+
+
+        [TestMethod]
+        public void ThrowExceptionOnPostgreSqlSchemaReaderGetRelatedTablesIfTheTableNamesAreNull()
+        {
+            // Setup
+            var reader = new PostgreSqlSchemaReader(new NpgsqlConnection());
+
+            // Act/Assert
+            Assert.Throws<ArgumentNullException>(() => reader.GetRelatedTables(null, CopySchemaRelationshipBehavior.EndToEnd));
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnPostgreSqlSchemaReaderGetRelatedTablesAsyncIfTheTableNamesAreNull()
+        {
+            // Setup
+            var reader = new PostgreSqlSchemaReader(new NpgsqlConnection());
+
+            // Act/Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(() => reader.GetRelatedTablesAsync(null, CopySchemaRelationshipBehavior.EndToEnd));
         }
 
         #endregion

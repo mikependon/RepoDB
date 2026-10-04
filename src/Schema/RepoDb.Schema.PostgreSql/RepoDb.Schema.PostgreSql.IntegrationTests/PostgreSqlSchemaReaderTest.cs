@@ -13,6 +13,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
 using RepoDb.Schema.Enumerations;
 using RepoDb.Schema.PostgreSql.IntegrationTests.Setup;
+using RepoDb.Schema.Models;
 
 namespace RepoDb.Schema.PostgreSql.IntegrationTests
 {
@@ -124,7 +125,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
 
             // Assert
             Assert.AreEqual("fk_person_country", foreignKey.Name);
-            Assert.AreEqual("public.country", foreignKey.ReferencedTable);
+            Assert.AreEqual(new TableInfo("country", "public"), foreignKey.ReferencedTable);
             CollectionAssert.AreEqual(new[] { "CountryId" }, foreignKey.Columns.ToArray());
             CollectionAssert.AreEqual(new[] { "id" }, foreignKey.ReferencedColumns.ToArray());
             Assert.AreEqual(ForeignKeyRule.Cascade, foreignKey.DeleteRule);
@@ -157,7 +158,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             Assert.AreEqual("sales", orderLine.Table.Schema);
             Assert.AreEqual("public", person.Table.Schema);
             Assert.AreEqual("Person", person.Table.Name);
-            Assert.AreEqual("public.\"Person\"", reader.GetForeignKeys("sales.order_line").Single().ReferencedTable);
+            Assert.AreEqual(new TableInfo("Person", "public"), reader.GetForeignKeys("sales.order_line").Single().ReferencedTable);
         }
 
         #endregion

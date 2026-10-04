@@ -141,7 +141,7 @@ namespace RepoDb.Schema
             }
 
             return $"ALTER TABLE {Name(tableName)} ADD {ConstraintName(foreignKey.Name)}FOREIGN KEY ({Columns(foreignKey.Columns)}) " +
-                $"REFERENCES {Name(foreignKey.ReferencedTable)} ({Columns(foreignKey.ReferencedColumns)})" +
+                $"REFERENCES {Name(TableName(foreignKey.ReferencedTable))} ({Columns(foreignKey.ReferencedColumns)})" +
                 $"{Rule("DELETE", foreignKey.DeleteRule)}{Rule("UPDATE", foreignKey.UpdateRule)};";
         }
 
@@ -225,6 +225,14 @@ namespace RepoDb.Schema
         /// <returns></returns>
         private static string TableName(TableSchema schema) =>
             Helper.Format(schema.Table.Schema, schema.Table.Name);
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="table"></param>
+        /// <returns></returns>
+        private static string TableName(TableInfo table) =>
+            Helper.Format(table.Schema, table.Name);
 
         /// <summary>
         ///

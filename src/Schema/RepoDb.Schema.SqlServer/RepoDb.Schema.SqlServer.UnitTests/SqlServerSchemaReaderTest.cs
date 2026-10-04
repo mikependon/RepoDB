@@ -7,9 +7,11 @@
 #endregion
 
 using System;
+using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Schema;
+using RepoDb.Schema.Enumerations;
 
 namespace RepoDb.Schema.SqlServer.UnitTests
 {
@@ -63,6 +65,27 @@ namespace RepoDb.Schema.SqlServer.UnitTests
 
             // Act/Assert
             Assert.Throws<ArgumentNullException>(() => reader.TableExists(null));
+        }
+
+
+        [TestMethod]
+        public void ThrowExceptionOnSqlServerSchemaReaderGetRelatedTablesIfTheTableNamesAreNull()
+        {
+            // Setup
+            var reader = new SqlServerSchemaReader(new SqlConnection());
+
+            // Act/Assert
+            Assert.Throws<ArgumentNullException>(() => reader.GetRelatedTables(null, CopySchemaRelationshipBehavior.EndToEnd));
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnSqlServerSchemaReaderGetRelatedTablesAsyncIfTheTableNamesAreNull()
+        {
+            // Setup
+            var reader = new SqlServerSchemaReader(new SqlConnection());
+
+            // Act/Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(() => reader.GetRelatedTablesAsync(null, CopySchemaRelationshipBehavior.EndToEnd));
         }
 
         #endregion

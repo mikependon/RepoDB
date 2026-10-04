@@ -71,7 +71,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
 
             // Assert
             CollectionAssert.AreEqual(new[] { "OrderId", "LineNumber" }, actual.Columns.ToArray());
-            Assert.AreEqual("dbo.OrderLine", actual.ReferencedTable, StringComparer.Ordinal);
+            Assert.AreEqual(new TableInfo("OrderLine", "dbo"), actual.ReferencedTable);
             CollectionAssert.AreEqual(new[] { "OrderId", "LineNumber" }, actual.ReferencedColumns.ToArray());
             Assert.AreEqual(ForeignKeyRule.NoAction, actual.UpdateRule);
             Assert.AreEqual(ForeignKeyRule.NoAction, actual.DeleteRule);
@@ -107,7 +107,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
 
             // Assert
             CollectionAssert.AreEqual(new[] { "ManagerId" }, actual.Columns.ToArray());
-            Assert.AreEqual("dbo.Employee", actual.ReferencedTable, StringComparer.Ordinal);
+            Assert.AreEqual(new TableInfo("Employee", "dbo"), actual.ReferencedTable);
             CollectionAssert.AreEqual(new[] { "Id" }, actual.ReferencedColumns.ToArray());
         }
 
@@ -118,7 +118,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             var actual = GetForeignKey("Ledger", "FK_Ledger_Invoice");
 
             // Assert
-            Assert.AreEqual("Sales.Invoice", actual.ReferencedTable, StringComparer.Ordinal);
+            Assert.AreEqual(new TableInfo("Invoice", "Sales"), actual.ReferencedTable);
             Assert.AreEqual(ForeignKeyRule.Cascade, actual.DeleteRule);
         }
 
@@ -129,7 +129,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             var actual = GetForeignKey("Sales.InvoiceLine", "FK_InvoiceLine_Invoice");
 
             // Assert
-            Assert.AreEqual("Sales.Invoice", actual.ReferencedTable, StringComparer.Ordinal);
+            Assert.AreEqual(new TableInfo("Invoice", "Sales"), actual.ReferencedTable);
         }
 
         [TestMethod]
@@ -145,8 +145,8 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 var b = reader.GetForeignKeys("CycleB").Single();
 
                 // Assert
-                Assert.AreEqual("dbo.CycleB", a.ReferencedTable, StringComparer.Ordinal);
-                Assert.AreEqual("dbo.CycleA", b.ReferencedTable, StringComparer.Ordinal);
+                Assert.AreEqual(new TableInfo("CycleB", "dbo"), a.ReferencedTable);
+                Assert.AreEqual(new TableInfo("CycleA", "dbo"), b.ReferencedTable);
             }
         }
 

@@ -470,7 +470,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
 
                 // Act
                 var results = new List<CopySchemaResult>();
-                source.CopySchemaTo(new[] { "NoKey" }, target, CopySchemaExistsBehavior.DropOnExists, results.Add);
+                source.CopySchemaTo(new[] { "NoKey" }, target, CopySchemaExistsBehavior.DropOnExists, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(CopySchemaExistsBehavior.DropOnExists, results.Single().Action);
@@ -710,7 +710,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
 
                 // Act
                 var results = new List<CopySchemaResult>();
-                await source.CopySchemaToAsync(new[] { "Person", "Country" }, target, CopySchemaExistsBehavior.AlignOnExists, results.Add);
+                await source.CopySchemaToAsync(new[] { "Person", "Country" }, target, CopySchemaExistsBehavior.AlignOnExists, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(2, results.Count);

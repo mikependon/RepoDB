@@ -13,6 +13,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
 using RepoDb.Schema.Enumerations;
 using RepoDb.Schema.PostgreSql.IntegrationTests.Setup;
+using RepoDb.Schema.Models;
 
 namespace RepoDb.Schema.PostgreSql.IntegrationTests
 {
@@ -63,7 +64,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
 
             // Assert
             Assert.AreEqual(2, foreignKeys.Count);
-            Assert.IsTrue(foreignKeys.All(x => x.ReferencedTable == "public.account"));
+            Assert.IsTrue(foreignKeys.All(x => x.ReferencedTable == new TableInfo("account", "public")));
             CollectionAssert.AreEqual(new[] { "from_id" }, foreignKeys[0].Columns.ToArray());
             CollectionAssert.AreEqual(new[] { "to_id" }, foreignKeys[1].Columns.ToArray());
         }
@@ -76,7 +77,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
 
             // Assert
             Assert.AreEqual("fk_shipment_region", foreignKey.Name);
-            Assert.AreEqual("public.region_code", foreignKey.ReferencedTable);
+            Assert.AreEqual(new TableInfo("region_code", "public"), foreignKey.ReferencedTable);
             CollectionAssert.AreEqual(new[] { "country_code", "region" }, foreignKey.Columns.ToArray());
             CollectionAssert.AreEqual(new[] { "country_code", "code" }, foreignKey.ReferencedColumns.ToArray());
         }
@@ -128,7 +129,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             var foreignKey = CreateReader().GetForeignKeys("employee").Single();
 
             // Assert
-            Assert.AreEqual("public.employee", foreignKey.ReferencedTable);
+            Assert.AreEqual(new TableInfo("employee", "public"), foreignKey.ReferencedTable);
             CollectionAssert.AreEqual(new[] { "manager_id" }, foreignKey.Columns.ToArray());
         }
 
@@ -136,10 +137,10 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
         public void TestPostgreSqlSchemaReaderGetForeignKeysAcrossSchemas()
         {
             // Act
-            var foreignKeys = CreateReader().GetForeignKeys("item_ref").OrderBy(x => x.ReferencedTable).ToList();
+            var foreignKeys = CreateReader().GetForeignKeys("item_ref").OrderBy(x => x.ReferencedTable.Schema, StringComparer.Ordinal).ToList();
 
             // Assert
-            CollectionAssert.AreEqual(new[] { "public.item", "sales.item" }, foreignKeys.Select(x => x.ReferencedTable).ToArray());
+            CollectionAssert.AreEqual(new[] { new TableInfo("item", "public"), new TableInfo("item", "sales") }, foreignKeys.Select(x => x.ReferencedTable).ToArray());
         }
 
         [TestMethod]
@@ -149,9 +150,9 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             var reader = CreateReader();
 
             // Assert
-            Assert.AreEqual("public.ring_2", reader.GetForeignKeys("ring_1").Single().ReferencedTable);
-            Assert.AreEqual("public.ring_3", reader.GetForeignKeys("ring_2").Single().ReferencedTable);
-            Assert.AreEqual("public.ring_1", reader.GetForeignKeys("ring_3").Single().ReferencedTable);
+            Assert.AreEqual(new TableInfo("ring_2", "public"), reader.GetForeignKeys("ring_1").Single().ReferencedTable);
+            Assert.AreEqual(new TableInfo("ring_3", "public"), reader.GetForeignKeys("ring_2").Single().ReferencedTable);
+            Assert.AreEqual(new TableInfo("ring_1", "public"), reader.GetForeignKeys("ring_3").Single().ReferencedTable);
         }
 
         [TestMethod]

@@ -106,6 +106,17 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
+        public void TestSchemaTraceKeysGetRelationships()
+        {
+            // Act
+            var actual = SchemaTraceKeys.GetRelationships;
+            var expected = "GetRelationships";
+
+            // Assert
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
         public void TestSchemaTraceKeysGetTables()
         {
             // Act

@@ -386,7 +386,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             // Assert
             CollectionAssert.AreEqual(new[] { "dbo.[Odd.Name]", "dbo.[Odd.Child]" }, Helper.GetTableNames(actual));
             Assert.AreSame(actual[0], actual[1].Parents.Single());
-            Assert.AreEqual("dbo.[Odd.Name]", actual[1].Schema.ForeignKeys.Single().ReferencedTable, StringComparer.Ordinal);
+            Assert.AreEqual(new TableInfo("Odd.Name", "dbo"), actual[1].Schema.ForeignKeys.Single().ReferencedTable);
         }
 
         [TestMethod]
@@ -487,7 +487,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             {
                 var self = Helper.FormatName(relationship.Schema.Table.Schema, relationship.Schema.Table.Name);
                 var referenced = relationship.Schema.ForeignKeys
-                    .Select(fk => fk.ReferencedTable)
+                    .Select(fk => Helper.FormatName(fk.ReferencedTable.Schema, fk.ReferencedTable.Name))
                     .Where(t => !string.Equals(t, self, StringComparison.OrdinalIgnoreCase))
                     .Distinct(StringComparer.OrdinalIgnoreCase)
                     .OrderBy(t => t, StringComparer.OrdinalIgnoreCase)

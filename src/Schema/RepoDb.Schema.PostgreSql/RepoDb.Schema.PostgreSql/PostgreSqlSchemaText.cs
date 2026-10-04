@@ -97,5 +97,19 @@ namespace RepoDb.Schema
                 AND n.nspname NOT LIKE 'pg\_toast%'
                 AND (CAST(@SchemaName AS text) IS NULL OR n.nspname = @SchemaName)
             ORDER BY n.nspname, c.relname;";
+
+        internal const string ForeignKeyRelationshipsSql = @"SELECT DISTINCT cn.nspname AS ChildSchema,
+                ct.relname AS ChildTable,
+                pn.nspname AS ParentSchema,
+                pt.relname AS ParentTable
+            FROM pg_constraint c
+            INNER JOIN pg_class ct ON ct.oid = c.conrelid
+            INNER JOIN pg_namespace cn ON cn.oid = ct.relnamespace
+            INNER JOIN pg_class pt ON pt.oid = c.confrelid
+            INNER JOIN pg_namespace pn ON pn.oid = pt.relnamespace
+            WHERE c.contype = 'f'
+                AND ct.relkind IN ('r', 'p')
+                AND pt.relkind IN ('r', 'p');";
+
     }
 }

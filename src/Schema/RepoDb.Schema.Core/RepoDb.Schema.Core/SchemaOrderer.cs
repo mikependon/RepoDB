@@ -28,11 +28,11 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="schemas">The schemas of the tables.</param>
         /// <param name="tableKey">Gets the key that identifies a table (the same table must always have the same key).</param>
-        /// <param name="referenceKey">Gets the key of a table from the name that a foreign key uses to reference it (see <see cref="ForeignKeyInfo.ReferencedTable"/>).</param>
+        /// <param name="referenceKey">Gets the key of a table from the identity that a foreign key uses to reference it (see <see cref="ForeignKeyInfo.ReferencedTable"/>).</param>
         /// <returns>The ordered relationships, one per table.</returns>
         internal static IList<RelationshipInfo> Order(IList<TableSchema> schemas,
             Func<TableSchema, string> tableKey,
-            Func<string, string> referenceKey)
+            Func<TableInfo, string> referenceKey)
         {
             // One relationship per table (the first one wins if a table is given more than once)
             var keys = new List<string>();

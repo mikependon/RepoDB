@@ -100,5 +100,14 @@ namespace RepoDb.Schema
             FROM sys.tables t
             WHERE @SchemaName IS NULL OR SCHEMA_NAME(t.schema_id) = @SchemaName
             ORDER BY SCHEMA_NAME(t.schema_id), t.name;";
+
+        internal const string ForeignKeyRelationshipsSql = @"SELECT DISTINCT SCHEMA_NAME(ct.schema_id) AS ChildSchema,
+                ct.name AS ChildTable,
+                SCHEMA_NAME(pt.schema_id) AS ParentSchema,
+                pt.name AS ParentTable
+            FROM sys.foreign_keys fk
+            INNER JOIN sys.tables ct ON ct.object_id = fk.parent_object_id
+            INNER JOIN sys.tables pt ON pt.object_id = fk.referenced_object_id;";
+
     }
 }

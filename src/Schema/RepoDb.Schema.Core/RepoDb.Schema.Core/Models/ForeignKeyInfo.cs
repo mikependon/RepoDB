@@ -44,9 +44,9 @@ namespace RepoDb.Schema.Models
         public IList<string> Columns { get; internal set; } = new List<string>();
 
         /// <summary>
-        /// Gets or sets the name of the table that is referenced by the foreign key.
+        /// Gets or sets the identity (name and schema) of the table that is referenced by the foreign key.
         /// </summary>
-        public string ReferencedTable { get; internal set; }
+        public TableInfo ReferencedTable { get; internal set; }
 
         /// <summary>
         /// Gets or sets the ordered names of the referenced columns.

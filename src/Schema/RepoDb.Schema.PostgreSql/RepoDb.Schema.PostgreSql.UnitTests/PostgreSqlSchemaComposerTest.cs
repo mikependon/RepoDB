@@ -50,7 +50,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
                 UniqueConstraints = { new UniqueConstraintInfo("uq_person_name") { Columns = { "Name" } } },
                 CheckConstraints = { new CheckConstraintInfo("ck_person_age") { Expression = "\"Age\" >= 0" } },
                 Indexes = { new IndexInfo("ix_person_name") { Columns = { "Name", "Age" }, DescendingColumns = { "Name" }, IncludedColumns = { "Double" }, IsUnique = true, Filter = "\"Age\" > 0" } },
-                ForeignKeys = { new ForeignKeyInfo("fk_person_country") { Columns = { "Id" }, ReferencedTable = "public.country", ReferencedColumns = { "id" }, DeleteRule = ForeignKeyRule.Cascade, UpdateRule = ForeignKeyRule.SetNull } }
+                ForeignKeys = { new ForeignKeyInfo("fk_person_country") { Columns = { "Id" }, ReferencedTable = new TableInfo("country", "public"), ReferencedColumns = { "id" }, DeleteRule = ForeignKeyRule.Cascade, UpdateRule = ForeignKeyRule.SetNull } }
             };
 
         #endregion
@@ -203,7 +203,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
         public void TestPostgreSqlSchemaComposerComposeAddForeignKeyRules(ForeignKeyRule rule, string expected)
         {
             // Setup
-            var foreignKey = new ForeignKeyInfo(null) { Columns = { "a" }, ReferencedTable = "b", ReferencedColumns = { "id" }, DeleteRule = rule, UpdateRule = rule };
+            var foreignKey = new ForeignKeyInfo(null) { Columns = { "a" }, ReferencedTable = new TableInfo("b", null), ReferencedColumns = { "id" }, DeleteRule = rule, UpdateRule = rule };
 
             // Act
             var actual = new PostgreSqlSchemaComposer().ComposeAddForeignKey("t", foreignKey);
@@ -449,7 +449,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
             var actual = new PostgreSqlSchemaComposer().ComposeAddForeignKey("t", new ForeignKeyInfo("fk")
             {
                 Columns = { "a", "b" },
-                ReferencedTable = "public.r",
+                ReferencedTable = new TableInfo("r", "public"),
                 ReferencedColumns = { "x", "y" }
             });
 
@@ -464,7 +464,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
             var actual = new PostgreSqlSchemaComposer().ComposeAddForeignKey("public.\"Odd Child\"", new ForeignKeyInfo(null)
             {
                 Columns = { "a" },
-                ReferencedTable = "public.\"Odd.Name\"",
+                ReferencedTable = new TableInfo("Odd.Name", "public"),
                 ReferencedColumns = { "id" }
             });
 
@@ -526,7 +526,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
         {
             // Setup
             var schema = new TableSchema("Odd Child", "public") { Columns = { Column("a", "integer") } };
-            schema.ForeignKeys.Add(new ForeignKeyInfo(null) { Columns = { "a" }, ReferencedTable = "public.\"Odd.Name\"", ReferencedColumns = { "id" } });
+            schema.ForeignKeys.Add(new ForeignKeyInfo(null) { Columns = { "a" }, ReferencedTable = new TableInfo("Odd.Name", "public"), ReferencedColumns = { "id" } });
             var parent = new TableSchema("Odd.Name", "public") { Columns = { Column("id", "integer") } };
 
             // Act

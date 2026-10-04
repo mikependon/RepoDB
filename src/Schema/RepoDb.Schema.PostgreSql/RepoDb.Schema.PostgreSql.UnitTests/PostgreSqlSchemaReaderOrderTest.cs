@@ -32,7 +32,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
                 tableSchema.ForeignKeys.Add(new ForeignKeyInfo($"FK_{table}_{reference}")
                 {
                     Columns = { "Id" },
-                    ReferencedTable = reference,
+                    ReferencedTable = Reference(reference),
                     ReferencedColumns = { "Id" }
                 });
             }
@@ -473,5 +473,11 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
         }
 
         #endregion
+
+        private static TableInfo Reference(string name)
+        {
+            var (schema, table) = Helper.Parse(name);
+            return new TableInfo(table, schema);
+        }
     }
 }

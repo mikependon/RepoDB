@@ -12,6 +12,7 @@ using System.Linq;
 using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Schema.SqlServer.IntegrationTests.Setup;
+using RepoDb.Schema.Models;
 
 namespace RepoDb.Schema.SqlServer.IntegrationTests
 {
@@ -96,8 +97,8 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             Helper.CopyAllToTarget("Parent", "Child", "GrandChild");
 
             // Assert
-            Assert.AreEqual("dbo.Parent", Helper.GetTargetSchema("Child").ForeignKeys.Single().ReferencedTable, StringComparer.Ordinal);
-            Assert.AreEqual("dbo.Child", Helper.GetTargetSchema("GrandChild").ForeignKeys.Single().ReferencedTable, StringComparer.Ordinal);
+            Assert.AreEqual(new TableInfo("Parent", "dbo"), Helper.GetTargetSchema("Child").ForeignKeys.Single().ReferencedTable);
+            Assert.AreEqual(new TableInfo("Child", "dbo"), Helper.GetTargetSchema("GrandChild").ForeignKeys.Single().ReferencedTable);
         }
 
         [TestMethod]
@@ -129,8 +130,8 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             Helper.CopyAllToTarget("CycleB", "CycleA");
 
             // Assert
-            Assert.AreEqual("dbo.CycleB", Helper.GetTargetSchema("CycleA").ForeignKeys.Single().ReferencedTable, StringComparer.Ordinal);
-            Assert.AreEqual("dbo.CycleA", Helper.GetTargetSchema("CycleB").ForeignKeys.Single().ReferencedTable, StringComparer.Ordinal);
+            Assert.AreEqual(new TableInfo("CycleB", "dbo"), Helper.GetTargetSchema("CycleA").ForeignKeys.Single().ReferencedTable);
+            Assert.AreEqual(new TableInfo("CycleA", "dbo"), Helper.GetTargetSchema("CycleB").ForeignKeys.Single().ReferencedTable);
         }
 
         [TestMethod]
@@ -254,14 +255,15 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                     }
                     foreach (var foreignKey in schema.ForeignKeys)
                     {
-                        if (string.Equals(foreignKey.ReferencedTable, name, StringComparison.OrdinalIgnoreCase))
+                        var referenced = Helper.FormatName(foreignKey.ReferencedTable.Schema, foreignKey.ReferencedTable.Name);
+                        if (string.Equals(referenced, name, StringComparison.OrdinalIgnoreCase))
                         {
                             continue;
                         }
                         Assert.IsTrue(
-                            order.FindIndex(t => string.Equals(t, foreignKey.ReferencedTable, StringComparison.OrdinalIgnoreCase)) <
+                            order.FindIndex(t => string.Equals(t, referenced, StringComparison.OrdinalIgnoreCase)) <
                             order.FindIndex(t => string.Equals(t, name, StringComparison.OrdinalIgnoreCase)),
-                            $"'{foreignKey.ReferencedTable}' must come before '{name}'.");
+                            $"'{referenced}' must come before '{name}'.");
                     }
                 }
             }

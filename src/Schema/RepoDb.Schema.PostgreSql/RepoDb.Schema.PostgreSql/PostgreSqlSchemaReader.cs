@@ -162,6 +162,31 @@ namespace RepoDb.Schema
         public IEnumerable<RelationshipInfo> GetDependencyOrder(IEnumerable<string> tableNames) =>
             Order((tableNames ?? throw new ArgumentNullException(nameof(tableNames))).Select(GetTableSchema).ToList());
 
+        /// <summary>
+        /// Gets the names of the given tables together with the names of the tables that are related to them, as defined by the foreign keys.
+        /// Only the foreign keys are read (not the schema of the tables), so it is cheap to expand a table with its relationships.
+        /// </summary>
+        /// <param name="tableNames">The names of the tables.</param>
+        /// <param name="relationshipBehavior">Defines which of the related tables are included. <see cref="CopySchemaRelationshipBehavior.TableOnly"/> returns only the given tables.</param>
+        /// <returns>The names of the given tables (in the order that they were given), followed by the names of their related tables.</returns>
+        public IEnumerable<string> GetRelatedTables(IEnumerable<string> tableNames,
+            CopySchemaRelationshipBehavior relationshipBehavior)
+        {
+            var tables = (tableNames ?? throw new ArgumentNullException(nameof(tableNames)))
+                .Select(name =>
+                {
+                    var (schema, table) = Resolve(name);
+                    return new TableInfo(table, schema);
+                })
+                .ToList();
+            var foreignKeys = relationshipBehavior == CopySchemaRelationshipBehavior.TableOnly
+                ? new List<(TableInfo Child, TableInfo Parent)>()
+                : Query(PostgreSqlSchemaText.ForeignKeyRelationshipsSql, SchemaTraceKeys.GetRelationships, MapRelationship);
+            return RelationshipExpander.Expand(tables, foreignKeys, relationshipBehavior, Key)
+                .Select(table => Helper.Format(table.Schema, table.Name))
+                .ToList();
+        }
+
         #endregion
 
         #region Async
@@ -304,6 +329,35 @@ namespace RepoDb.Schema
             return Order(schemas);
         }
 
+        /// <summary>
+        /// Gets the names of the given tables together with the names of the tables that are related to them, as defined by the foreign keys.
+        /// Only the foreign keys are read (not the schema of the tables), so it is cheap to expand a table with its relationships.
+        /// </summary>
+        /// <param name="tableNames">The names of the tables.</param>
+        /// <param name="relationshipBehavior">Defines which of the related tables are included. <see cref="CopySchemaRelationshipBehavior.TableOnly"/> returns only the given tables.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains: the names of the given tables (in the order that they were given), followed by the names of their related tables.</returns>
+        public async Task<IEnumerable<string>> GetRelatedTablesAsync(IEnumerable<string> tableNames,
+            CopySchemaRelationshipBehavior relationshipBehavior,
+            CancellationToken cancellationToken = default)
+        {
+            var names = (tableNames ?? throw new ArgumentNullException(nameof(tableNames))).ToList();
+            var tables = new List<TableInfo>();
+            foreach (var name in names)
+            {
+                var (schema, table) = await ResolveAsync(name, cancellationToken).ConfigureAwait(false);
+                tables.Add(new TableInfo(table, schema));
+            }
+            IEnumerable<(TableInfo Child, TableInfo Parent)> foreignKeys = new List<(TableInfo Child, TableInfo Parent)>();
+            if (relationshipBehavior != CopySchemaRelationshipBehavior.TableOnly)
+            {
+                foreignKeys = await QueryAsync(PostgreSqlSchemaText.ForeignKeyRelationshipsSql, SchemaTraceKeys.GetRelationships, MapRelationship, cancellationToken).ConfigureAwait(false);
+            }
+            return RelationshipExpander.Expand(tables, foreignKeys, relationshipBehavior, Key)
+                .Select(table => Helper.Format(table.Schema, table.Name))
+                .ToList();
+        }
+
         #endregion
 
         #endregion
@@ -334,11 +388,8 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="tableName"></param>
         /// <returns></returns>
-        private static string Key(string tableName)
-        {
-            var (schema, table) = ParseTableName(tableName);
-            return $"{schema ?? DefaultSchema}\u0001{table}";
-        }
+        private static string Key(TableInfo table) =>
+            $"{table.Schema ?? DefaultSchema}\u0001{table.Name}";
 
         /// <summary>
         ///
@@ -662,7 +713,7 @@ namespace RepoDb.Schema
                 .Select(g => new ForeignKeyInfo(g.Key)
                 {
                     Columns = g.Select(x => x.Column).ToList(),
-                    ReferencedTable = Helper.Format(g.First().RefSchema, g.First().RefTable),
+                    ReferencedTable = new TableInfo(g.First().RefTable, g.First().RefSchema),
                     ReferencedColumns = g.Select(x => x.RefColumn).ToList(),
                     UpdateRule = ToRule(g.First().Update),
                     DeleteRule = ToRule(g.First().Delete)
@@ -694,6 +745,14 @@ namespace RepoDb.Schema
         private static CheckConstraintInfo MapCheckConstraint(IDataRecord r) =>
             new CheckConstraintInfo(Text(r, "ConstraintName")) { Expression = Text(r, "Definition") };
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="r"></param>
+        /// <returns></returns>
+        private static (TableInfo Child, TableInfo Parent) MapRelationship(IDataRecord r) =>
+            (new TableInfo(Text(r, "ChildTable"), Text(r, "ChildSchema")), new TableInfo(Text(r, "ParentTable"), Text(r, "ParentSchema")));
+
         // Ordering
 
         /// <summary>
@@ -702,7 +761,7 @@ namespace RepoDb.Schema
         /// <param name="schemas">The schemas of the tables.</param>
         /// <returns>The ordered relationships, one per table.</returns>
         internal static IList<RelationshipInfo> Order(IList<TableSchema> schemas) =>
-            SchemaOrderer.Order(schemas, schema => Key(Helper.Format(schema.Table.Schema, schema.Table.Name)), Key);
+            SchemaOrderer.Order(schemas, schema => Key(schema.Table), Key);
 
         #endregion
     }

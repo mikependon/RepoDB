@@ -11,6 +11,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
 using RepoDb.Schema.PostgreSql.IntegrationTests.Setup;
+using RepoDb.Schema.Models;
 
 namespace RepoDb.Schema.PostgreSql.IntegrationTests
 {
@@ -69,8 +70,8 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             Helper.CopyAllToTarget("chain_c", "chain_b", "chain_a");
 
             // Assert
-            Assert.AreEqual("public.chain_a", Helper.GetTargetSchema("chain_b").ForeignKeys.Single().ReferencedTable);
-            Assert.AreEqual("public.chain_b", Helper.GetTargetSchema("chain_c").ForeignKeys.Single().ReferencedTable);
+            Assert.AreEqual(new TableInfo("chain_a", "public"), Helper.GetTargetSchema("chain_b").ForeignKeys.Single().ReferencedTable);
+            Assert.AreEqual(new TableInfo("chain_b", "public"), Helper.GetTargetSchema("chain_c").ForeignKeys.Single().ReferencedTable);
         }
 
         [TestMethod]
@@ -98,8 +99,8 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             Helper.CopyAllToTarget("node_b", "node_a");
 
             // Assert
-            Assert.AreEqual("public.node_a", Helper.GetTargetSchema("node_b").ForeignKeys.Single().ReferencedTable);
-            Assert.AreEqual("public.node_b", Helper.GetTargetSchema("node_a").ForeignKeys.Single().ReferencedTable);
+            Assert.AreEqual(new TableInfo("node_a", "public"), Helper.GetTargetSchema("node_b").ForeignKeys.Single().ReferencedTable);
+            Assert.AreEqual(new TableInfo("node_b", "public"), Helper.GetTargetSchema("node_a").ForeignKeys.Single().ReferencedTable);
         }
 
         [TestMethod]

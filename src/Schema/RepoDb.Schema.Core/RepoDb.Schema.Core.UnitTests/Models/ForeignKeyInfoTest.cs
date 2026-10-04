@@ -105,7 +105,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
             // Act
             var a = Create();
             var b = Create();
-            b.ReferencedTable = "dbo.Other";
+            b.ReferencedTable = new TableInfo("Other", "dbo");
 
             // Assert
             Assert.IsFalse(a.Equals(b));
@@ -195,13 +195,13 @@ namespace RepoDb.Schema.Core.UnitTests.Models
             // Act
             var foreignKey = new ForeignKeyInfo(null)
             {
-                ReferencedTable = "dbo.Country"
+                ReferencedTable = new TableInfo("Country", "dbo")
             };
             var actual = foreignKey.ReferencedTable;
-            var expected = "dbo.Country";
+            var expected = new TableInfo("Country", "dbo");
 
             // Assert
-            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
@@ -313,7 +313,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         #region Helpers
 
         private static ForeignKeyInfo Create() =>
-            new ForeignKeyInfo("FK_Person_Country") { Columns = new List<string> { "CountryId" }, ReferencedTable = "dbo.Country", ReferencedColumns = new List<string> { "Id" }, UpdateRule = ForeignKeyRule.Cascade, DeleteRule = ForeignKeyRule.SetNull };
+            new ForeignKeyInfo("FK_Person_Country") { Columns = new List<string> { "CountryId" }, ReferencedTable = new TableInfo("Country", "dbo"), ReferencedColumns = new List<string> { "Id" }, UpdateRule = ForeignKeyRule.Cascade, DeleteRule = ForeignKeyRule.SetNull };
 
         #endregion
     }

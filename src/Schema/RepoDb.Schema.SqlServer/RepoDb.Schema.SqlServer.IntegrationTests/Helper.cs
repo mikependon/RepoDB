@@ -166,7 +166,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             {
                 var other = actual.ForeignKeys.Single(x => string.Equals(x.Name, foreignKey.Name, StringComparison.Ordinal));
                 CollectionAssert.AreEqual(foreignKey.Columns.ToArray(), other.Columns.ToArray());
-                Assert.AreEqual(foreignKey.ReferencedTable, other.ReferencedTable, StringComparer.Ordinal);
+                Assert.AreEqual(foreignKey.ReferencedTable, other.ReferencedTable);
                 CollectionAssert.AreEqual(foreignKey.ReferencedColumns.ToArray(), other.ReferencedColumns.ToArray());
                 Assert.AreEqual(foreignKey.UpdateRule, other.UpdateRule);
                 Assert.AreEqual(foreignKey.DeleteRule, other.DeleteRule);

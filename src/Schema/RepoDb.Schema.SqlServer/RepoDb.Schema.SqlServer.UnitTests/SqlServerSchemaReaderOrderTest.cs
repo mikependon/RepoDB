@@ -32,7 +32,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
                 tableSchema.ForeignKeys.Add(new ForeignKeyInfo($"FK_{table}_{reference}")
                 {
                     Columns = { "Id" },
-                    ReferencedTable = reference,
+                    ReferencedTable = Reference(reference),
                     ReferencedColumns = { "Id" }
                 });
             }
@@ -472,5 +472,11 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         }
 
         #endregion
+
+        private static TableInfo Reference(string name)
+        {
+            var (schema, table) = Helper.Parse(name);
+            return new TableInfo(table, schema);
+        }
     }
 }
