@@ -62,7 +62,7 @@ namespace RepoDb.Schema.Core.UnitTests
             var actual = result.Action;
 
             // Assert
-            Assert.AreEqual(CopySchemaExistsBehavior.SkipOnExists, actual);
+            Assert.AreEqual(CopySchemaExistsBehavior.Skip, actual);
         }
 
         [TestMethod]
@@ -71,10 +71,10 @@ namespace RepoDb.Schema.Core.UnitTests
             // Act
             var result = new CopySchemaResult
             {
-                Action = CopySchemaExistsBehavior.DropOnExists
+                Action = CopySchemaExistsBehavior.Drop
             };
             var actual = result.Action;
-            var expected = CopySchemaExistsBehavior.DropOnExists;
+            var expected = CopySchemaExistsBehavior.Drop;
 
             // Assert
             Assert.AreEqual(expected, actual);

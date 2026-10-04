@@ -22,7 +22,7 @@ namespace RepoDb.Schema.Core.UnitTests.Enumerations
         {
             // Act
             var actual = default(CopySchemaExistsBehavior);
-            var expected = CopySchemaExistsBehavior.SkipOnExists;
+            var expected = CopySchemaExistsBehavior.Skip;
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -33,7 +33,7 @@ namespace RepoDb.Schema.Core.UnitTests.Enumerations
         {
             // Act
             var actual = Enum.GetNames(typeof(CopySchemaExistsBehavior));
-            var expected = new[] { "SkipOnExists", "AlignOnExists", "ThrowOnExists", "DropOnExists" };
+            var expected = new[] { "Skip", "Align", "Throw", "Drop" };
 
             // Assert
             CollectionAssert.AreEqual(expected, actual);

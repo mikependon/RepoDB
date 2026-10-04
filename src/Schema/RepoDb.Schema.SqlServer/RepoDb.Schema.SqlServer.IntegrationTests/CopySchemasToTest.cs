@@ -125,7 +125,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 Assert.AreEqual("RepoDb_Schema_Target", person.DestinationDatabase, StringComparer.Ordinal);
                 Assert.AreEqual(nameof(SqlConnection), person.SourceDatabaseType, StringComparer.Ordinal);
                 Assert.AreEqual(nameof(SqlConnection), person.DestinationDatabaseType, StringComparer.Ordinal);
-                Assert.AreEqual(CopySchemaExistsBehavior.SkipOnExists, person.Action);
+                Assert.AreEqual(CopySchemaExistsBehavior.Skip, person.Action);
                 Assert.AreEqual(CopySchemaOutcome.Created, person.Outcome);
                 StringAssert.Contains(person.Script, "CREATE TABLE [dbo].[Person]", StringComparison.Ordinal);
                 StringAssert.Contains(person.Script, "FK_Person_Country", StringComparison.Ordinal);
@@ -470,10 +470,10 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
 
                 // Act
                 var results = new List<CopySchemaResult>();
-                source.CopySchemaTo(new[] { "NoKey" }, target, CopySchemaExistsBehavior.DropOnExists, createdCallback: results.Add);
+                source.CopySchemaTo(new[] { "NoKey" }, target, CopySchemaExistsBehavior.Drop, createdCallback: results.Add);
 
                 // Assert
-                Assert.AreEqual(CopySchemaExistsBehavior.DropOnExists, results.Single().Action);
+                Assert.AreEqual(CopySchemaExistsBehavior.Drop, results.Single().Action);
             }
         }
 
@@ -710,11 +710,11 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
 
                 // Act
                 var results = new List<CopySchemaResult>();
-                await source.CopySchemaToAsync(new[] { "Person", "Country" }, target, CopySchemaExistsBehavior.AlignOnExists, createdCallback: results.Add);
+                await source.CopySchemaToAsync(new[] { "Person", "Country" }, target, CopySchemaExistsBehavior.Align, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(2, results.Count);
-                Assert.AreEqual(CopySchemaExistsBehavior.AlignOnExists, results[1].Action);
+                Assert.AreEqual(CopySchemaExistsBehavior.Align, results[1].Action);
                 Assert.AreEqual("RepoDb_Schema_Source", results[1].SourceDatabase, StringComparer.Ordinal);
                 Assert.AreEqual("RepoDb_Schema_Target", results[1].DestinationDatabase, StringComparer.Ordinal);
                 Assert.AreEqual(7, results[1].ColumnCount);

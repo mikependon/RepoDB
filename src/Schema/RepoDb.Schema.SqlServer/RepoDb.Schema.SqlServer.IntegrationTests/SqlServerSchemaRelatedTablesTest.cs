@@ -239,13 +239,13 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
 
         #endregion
 
-        #region All
+        #region ParentsAndChildren
 
         [TestMethod]
-        public void TestSqlServerSchemaRelatedTablesWithAll()
+        public void TestSqlServerSchemaRelatedTablesWithParentsAndChildren()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.All, "Child");
+            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.ParentsAndChildren, "Child");
 
             // Assert
             AssertSame(new[] { "dbo.Child", "dbo.Parent", "dbo.GrandChild" }, actual);
@@ -253,41 +253,41 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlServerSchemaRelatedTablesWithAllGivesTheSameTablesFromAnyTableOfTheTree()
+        public void TestSqlServerSchemaRelatedTablesWithParentsAndChildrenGivesTheSameTablesFromAnyTableOfTheTree()
         {
             // Act
-            var fromTheRoot = GetRelatedTables(CopySchemaRelationshipBehavior.All, "Parent");
-            var fromTheLeaf = GetRelatedTables(CopySchemaRelationshipBehavior.All, "GrandChild");
+            var fromTheRoot = GetRelatedTables(CopySchemaRelationshipBehavior.ParentsAndChildren, "Parent");
+            var fromTheLeaf = GetRelatedTables(CopySchemaRelationshipBehavior.ParentsAndChildren, "GrandChild");
 
             // Assert
             AssertSame(fromTheRoot, fromTheLeaf);
         }
 
         [TestMethod]
-        public void TestSqlServerSchemaRelatedTablesWithAllOfADiamond()
+        public void TestSqlServerSchemaRelatedTablesWithParentsAndChildrenOfADiamond()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.All, "DiamondB");
+            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.ParentsAndChildren, "DiamondB");
 
             // Assert
             AssertSame(new[] { "dbo.DiamondB", "dbo.DiamondA", "dbo.DiamondC", "dbo.DiamondD" }, actual);
         }
 
         [TestMethod]
-        public void TestSqlServerSchemaRelatedTablesWithAllReachesTheOtherBranches()
+        public void TestSqlServerSchemaRelatedTablesWithParentsAndChildrenReachesTheOtherBranches()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.All, "Country");
+            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.ParentsAndChildren, "Country");
 
             // Assert (Shipment is a child of the country, and it references OrderLine, which is a parent that is not related to the country otherwise)
             AssertSame(new[] { "dbo.Country", "dbo.Person", "dbo.Shipment", "dbo.Preference", "dbo.OrderLine" }, actual);
         }
 
         [TestMethod]
-        public void TestSqlServerSchemaRelatedTablesWithAllDoesNotIncludeTheUnrelatedTables()
+        public void TestSqlServerSchemaRelatedTablesWithParentsAndChildrenDoesNotIncludeTheUnrelatedTables()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.All, "Parent");
+            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.ParentsAndChildren, "Parent");
 
             // Assert
             Assert.IsFalse(actual.Contains("dbo.Person"));
@@ -296,10 +296,10 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlServerSchemaRelatedTablesWithAllOfATableWithoutRelationships()
+        public void TestSqlServerSchemaRelatedTablesWithParentsAndChildrenOfATableWithoutRelationships()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.All, "NoKey");
+            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.ParentsAndChildren, "NoKey");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "dbo.NoKey" }, actual);
@@ -312,7 +312,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         [TestMethod]
         public void TestSqlServerSchemaRelatedTablesOfACycle()
         {
-            foreach (var behavior in new[] { CopySchemaRelationshipBehavior.Parents, CopySchemaRelationshipBehavior.Children, CopySchemaRelationshipBehavior.All })
+            foreach (var behavior in new[] { CopySchemaRelationshipBehavior.Parents, CopySchemaRelationshipBehavior.Children, CopySchemaRelationshipBehavior.ParentsAndChildren })
             {
                 // Act
                 var actual = GetRelatedTables(behavior, "CycleA");
@@ -325,7 +325,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         [TestMethod]
         public void TestSqlServerSchemaRelatedTablesOfACycleOfThreeTables()
         {
-            foreach (var behavior in new[] { CopySchemaRelationshipBehavior.Parents, CopySchemaRelationshipBehavior.Children, CopySchemaRelationshipBehavior.All })
+            foreach (var behavior in new[] { CopySchemaRelationshipBehavior.Parents, CopySchemaRelationshipBehavior.Children, CopySchemaRelationshipBehavior.ParentsAndChildren })
             {
                 // Act
                 var actual = GetRelatedTables(behavior, "RingX");
@@ -341,7 +341,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             // Act
             var parents = GetRelatedTables(CopySchemaRelationshipBehavior.Parents, "LoopB");
             var children = GetRelatedTables(CopySchemaRelationshipBehavior.Children, "LoopA");
-            var endToEnd = GetRelatedTables(CopySchemaRelationshipBehavior.All, "LoopA");
+            var endToEnd = GetRelatedTables(CopySchemaRelationshipBehavior.ParentsAndChildren, "LoopA");
 
             // Assert
             AssertSame(new[] { "dbo.LoopB", "dbo.LoopA", "dbo.LoopRoot" }, parents);
@@ -352,7 +352,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         [TestMethod]
         public void TestSqlServerSchemaRelatedTablesOfASelfReference()
         {
-            foreach (var behavior in new[] { CopySchemaRelationshipBehavior.Parents, CopySchemaRelationshipBehavior.Children, CopySchemaRelationshipBehavior.All })
+            foreach (var behavior in new[] { CopySchemaRelationshipBehavior.Parents, CopySchemaRelationshipBehavior.Children, CopySchemaRelationshipBehavior.ParentsAndChildren })
             {
                 // Act
                 var actual = GetRelatedTables(behavior, "Employee");
@@ -381,7 +381,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         public void TestSqlServerSchemaRelatedTablesDoesNotRepeatATable()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.All, "Parent", "Child", "GrandChild");
+            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.ParentsAndChildren, "Parent", "Child", "GrandChild");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "dbo.Parent", "dbo.Child", "dbo.GrandChild" }, actual);
@@ -391,7 +391,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         public void TestSqlServerSchemaRelatedTablesWithoutTables()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.All);
+            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.ParentsAndChildren);
 
             // Assert
             Assert.AreEqual(0, actual.Length);
@@ -434,14 +434,14 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             CollectionAssert.AreEqual(new[] { "dbo.Child" }, await GetRelatedTablesAsync(CopySchemaRelationshipBehavior.TableOnly, "Child"));
             AssertSame(new[] { "dbo.Child", "dbo.Parent" }, await GetRelatedTablesAsync(CopySchemaRelationshipBehavior.Parents, "Child"));
             AssertSame(new[] { "dbo.Child", "dbo.GrandChild" }, await GetRelatedTablesAsync(CopySchemaRelationshipBehavior.Children, "Child"));
-            AssertSame(new[] { "dbo.Child", "dbo.Parent", "dbo.GrandChild" }, await GetRelatedTablesAsync(CopySchemaRelationshipBehavior.All, "Child"));
+            AssertSame(new[] { "dbo.Child", "dbo.Parent", "dbo.GrandChild" }, await GetRelatedTablesAsync(CopySchemaRelationshipBehavior.ParentsAndChildren, "Child"));
         }
 
         [TestMethod]
         public async Task TestSqlServerSchemaRelatedTablesAsyncOfACycle()
         {
             // Act
-            var actual = await GetRelatedTablesAsync(CopySchemaRelationshipBehavior.All, "CycleA");
+            var actual = await GetRelatedTablesAsync(CopySchemaRelationshipBehavior.ParentsAndChildren, "CycleA");
 
             // Assert
             AssertSame(new[] { "dbo.CycleA", "dbo.CycleB" }, actual);
@@ -458,7 +458,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             {
                 // Act/Assert
                 Assert.Throws<ArgumentNullException>(() =>
-                    new SqlServerSchemaReader(connection).GetRelatedTables(null, CopySchemaRelationshipBehavior.All));
+                    new SqlServerSchemaReader(connection).GetRelatedTables(null, CopySchemaRelationshipBehavior.ParentsAndChildren));
             }
         }
 
@@ -512,7 +512,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemaToWithAll()
+        public void TestCopySchemaToWithParentsAndChildren()
         {
             using (var source = new SqlConnection(Database.ConnectionStringForSource))
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
@@ -523,7 +523,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
 
                 // Act
                 source.CopySchemaTo(new[] { "Child" }, target,
-                    relationshipBehavior: CopySchemaRelationshipBehavior.All,
+                    relationshipBehavior: CopySchemaRelationshipBehavior.ParentsAndChildren,
                     createdCallback: r => created.Add(r.TableName));
 
                 // Assert
@@ -548,7 +548,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemaToWithAllOfACycle()
+        public void TestCopySchemaToWithParentsAndChildrenOfACycle()
         {
             using (var source = new SqlConnection(Database.ConnectionStringForSource))
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
@@ -557,7 +557,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 SchemaReaderMapper.Add<SqlConnection>(new SqlServerSchemaReader(source), true);
 
                 // Act
-                source.CopySchemaTo(new[] { "LoopA" }, target, relationshipBehavior: CopySchemaRelationshipBehavior.All);
+                source.CopySchemaTo(new[] { "LoopA" }, target, relationshipBehavior: CopySchemaRelationshipBehavior.ParentsAndChildren);
 
                 // Assert
                 AssertSame(new[] { "dbo.LoopRoot", "dbo.LoopA", "dbo.LoopB", "dbo.LoopLeaf" }, GetTargetTables().ToArray());
@@ -565,7 +565,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestCopySchemaToAsyncWithAll()
+        public async Task TestCopySchemaToAsyncWithParentsAndChildren()
         {
             using (var source = new SqlConnection(Database.ConnectionStringForSource))
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
@@ -574,7 +574,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 SchemaReaderMapper.Add<SqlConnection>(new SqlServerSchemaReader(source), true);
 
                 // Act
-                await source.CopySchemaToAsync(new[] { "Child" }, target, relationshipBehavior: CopySchemaRelationshipBehavior.All);
+                await source.CopySchemaToAsync(new[] { "Child" }, target, relationshipBehavior: CopySchemaRelationshipBehavior.ParentsAndChildren);
 
                 // Assert
                 AssertSame(new[] { "dbo.Parent", "dbo.Child", "dbo.GrandChild" }, GetTargetTables().ToArray());
@@ -602,7 +602,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestCopySchemaToAsyncOfASingleTableWithAll()
+        public async Task TestCopySchemaToAsyncOfASingleTableWithParentsAndChildren()
         {
             using (var source = new SqlConnection(Database.ConnectionStringForSource))
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
@@ -611,7 +611,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 SchemaReaderMapper.Add<SqlConnection>(new SqlServerSchemaReader(source), true);
 
                 // Act
-                var result = await source.CopySchemaToAsync("Child", target, relationshipBehavior: CopySchemaRelationshipBehavior.All);
+                var result = await source.CopySchemaToAsync("Child", target, relationshipBehavior: CopySchemaRelationshipBehavior.ParentsAndChildren);
 
                 // Assert
                 Assert.AreEqual("Child", result.TableName);

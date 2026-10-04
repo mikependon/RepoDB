@@ -16,17 +16,17 @@ namespace RepoDb.Schema.Enumerations
         /// <summary>
         /// Skips the copy if the table is already existing.
         /// </summary>
-        SkipOnExists,
+        Skip,
 
         /// <summary>
         /// If the table is already existing, only the missing columns and indexes are added.
         /// </summary>
-        AlignOnExists,
+        Align,
 
         /// <summary>
         /// Throws an error if the table is already existing.
         /// </summary>
-        ThrowOnExists,
+        Throw,
 
         /// <summary>
         /// Drops the existing table if present and then proceeds with the creation.
@@ -35,6 +35,6 @@ namespace RepoDb.Schema.Enumerations
         /// <b>WARNING:</b> This permanently deletes the existing table together with all of its data in the destination database.
         /// This cannot be undone. Use this only when you are certain the destination table can be discarded.
         /// </remarks>
-        DropOnExists
+        Drop
     }
 }

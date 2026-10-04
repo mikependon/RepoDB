@@ -346,7 +346,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             Assert.AreEqual(nameof(CustomDbConnection), person.SourceDatabaseType, StringComparer.Ordinal);
             Assert.AreEqual(nameof(CustomDbConnection), person.DestinationDatabaseType, StringComparer.Ordinal);
             Assert.AreEqual(CopySchemaOutcome.Created, person.Outcome);
-            Assert.AreEqual(CopySchemaExistsBehavior.SkipOnExists, person.Action);
+            Assert.AreEqual(CopySchemaExistsBehavior.Skip, person.Action);
             Assert.AreEqual(4, person.ColumnCount);
             Assert.AreEqual(1, person.IndexCount);
             Assert.AreEqual(1, person.ForeignKeyCount);
@@ -364,10 +364,10 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var results = new List<CopySchemaResult>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Person" }, new CustomDbConnection(), CopySchemaExistsBehavior.DropOnExists, createdCallback: results.Add);
+            new CustomDbConnection().CopySchemaTo(new[] { "Person" }, new CustomDbConnection(), CopySchemaExistsBehavior.Drop, createdCallback: results.Add);
 
             // Assert
-            Assert.AreEqual(CopySchemaExistsBehavior.DropOnExists, results.Single().Action);
+            Assert.AreEqual(CopySchemaExistsBehavior.Drop, results.Single().Action);
         }
 
         [TestMethod]
@@ -548,12 +548,12 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var results = new List<CopySchemaResult>();
 
             // Act
-            await new CustomDbConnection().CopySchemaToAsync(new[] { "Person", "Country" }, new CustomDbConnection(), CopySchemaExistsBehavior.AlignOnExists, createdCallback: results.Add);
+            await new CustomDbConnection().CopySchemaToAsync(new[] { "Person", "Country" }, new CustomDbConnection(), CopySchemaExistsBehavior.Align, createdCallback: results.Add);
 
             // Assert
             Assert.AreEqual(2, results.Count);
             var person = results.Single(r => r.TableName == "Person");
-            Assert.AreEqual(CopySchemaExistsBehavior.AlignOnExists, person.Action);
+            Assert.AreEqual(CopySchemaExistsBehavior.Align, person.Action);
             Assert.AreEqual(4, person.ColumnCount);
             Assert.AreEqual(1, person.ForeignKeyCount);
             Assert.AreEqual("CREATE TABLE Person;", person.Script, StringComparer.Ordinal);

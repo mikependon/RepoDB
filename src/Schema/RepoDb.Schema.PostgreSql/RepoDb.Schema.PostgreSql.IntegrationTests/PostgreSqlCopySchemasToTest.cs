@@ -105,7 +105,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
                 var person = results.Single(r => r.TableName == "Person");
                 Assert.AreEqual("public", person.SourceSchema);
                 Assert.AreEqual(CopySchemaOutcome.Created, person.Outcome);
-                Assert.AreEqual(CopySchemaExistsBehavior.SkipOnExists, person.Action);
+                Assert.AreEqual(CopySchemaExistsBehavior.Skip, person.Action);
                 Assert.AreEqual(10, person.ColumnCount);
                 Assert.AreEqual(2, person.IndexCount);
                 Assert.AreEqual(1, person.ForeignKeyCount);
@@ -297,10 +297,10 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
                 var results = new List<CopySchemaResult>();
 
                 // Act
-                source.CopySchemaTo(new[] { "country" }, target, CopySchemaExistsBehavior.DropOnExists, createdCallback: results.Add);
+                source.CopySchemaTo(new[] { "country" }, target, CopySchemaExistsBehavior.Drop, createdCallback: results.Add);
 
                 // Assert
-                Assert.AreEqual(CopySchemaExistsBehavior.DropOnExists, results.Single().Action);
+                Assert.AreEqual(CopySchemaExistsBehavior.Drop, results.Single().Action);
             }
         }
 

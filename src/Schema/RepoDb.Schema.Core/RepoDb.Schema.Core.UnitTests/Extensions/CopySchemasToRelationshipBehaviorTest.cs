@@ -110,7 +110,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         [TestMethod]
         public void TestCopySchemasToWithRelationshipBehaviorReadsTheRelatedTablesOfTheGivenTables()
         {
-            foreach (var behavior in new[] { CopySchemaRelationshipBehavior.Parents, CopySchemaRelationshipBehavior.Children, CopySchemaRelationshipBehavior.All })
+            foreach (var behavior in new[] { CopySchemaRelationshipBehavior.Parents, CopySchemaRelationshipBehavior.Children, CopySchemaRelationshipBehavior.ParentsAndChildren })
             {
                 // Setup
                 var reader = MapReader(new[] { "Person", "Country" }, "Country", "Person");
@@ -153,7 +153,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = new CustomDbConnection();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(Enumerable.Empty<string>(), destination, relationshipBehavior: CopySchemaRelationshipBehavior.All);
+            new CustomDbConnection().CopySchemaTo(Enumerable.Empty<string>(), destination, relationshipBehavior: CopySchemaRelationshipBehavior.ParentsAndChildren);
 
             // Assert
             reader.Verify(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), It.IsAny<CopySchemaRelationshipBehavior>()), Times.Never);
@@ -195,7 +195,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         [TestMethod]
         public async Task TestCopySchemasToAsyncWithRelationshipBehaviorReadsTheRelatedTablesOfTheGivenTables()
         {
-            foreach (var behavior in new[] { CopySchemaRelationshipBehavior.Parents, CopySchemaRelationshipBehavior.Children, CopySchemaRelationshipBehavior.All })
+            foreach (var behavior in new[] { CopySchemaRelationshipBehavior.Parents, CopySchemaRelationshipBehavior.Children, CopySchemaRelationshipBehavior.ParentsAndChildren })
             {
                 // Setup
                 var reader = MapReader(new[] { "Person", "Country" }, "Country", "Person");
@@ -292,7 +292,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapComposer("CREATE TABLE Person;");
 
             // Act
-            var result = new CustomDbConnection().CopySchemaTo("Person", new CustomDbConnection(), relationshipBehavior: CopySchemaRelationshipBehavior.All);
+            var result = new CustomDbConnection().CopySchemaTo("Person", new CustomDbConnection(), relationshipBehavior: CopySchemaRelationshipBehavior.ParentsAndChildren);
 
             // Assert
             Assert.AreEqual("Person", result.TableName);
@@ -341,7 +341,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapComposer("CREATE TABLE Person;");
 
             // Act
-            var result = await new CustomDbConnection().CopySchemaToAsync("Person", new CustomDbConnection(), relationshipBehavior: CopySchemaRelationshipBehavior.All);
+            var result = await new CustomDbConnection().CopySchemaToAsync("Person", new CustomDbConnection(), relationshipBehavior: CopySchemaRelationshipBehavior.ParentsAndChildren);
 
             // Assert
             Assert.AreEqual("Person", result.TableName);

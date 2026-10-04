@@ -216,14 +216,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapComposer("CREATE TABLE [Person] ([Id] int);");
 
             // Act
-            var result = new CustomDbConnection().CopySchemaTo("Person", new CustomDbConnection(), CopySchemaExistsBehavior.DropOnExists);
+            var result = new CustomDbConnection().CopySchemaTo("Person", new CustomDbConnection(), CopySchemaExistsBehavior.Drop);
 
             // Assert
-            Assert.AreEqual(CopySchemaExistsBehavior.DropOnExists, result.Action);
+            Assert.AreEqual(CopySchemaExistsBehavior.Drop, result.Action);
         }
 
         [TestMethod]
-        public void TestCopySchemaToResultActionIsSkipOnExistsByDefault()
+        public void TestCopySchemaToResultActionIsSkipByDefault()
         {
             // Setup
             MapReader(GetSchema());
@@ -233,7 +233,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var result = new CustomDbConnection().CopySchemaTo("Person", new CustomDbConnection());
 
             // Assert
-            Assert.AreEqual(CopySchemaExistsBehavior.SkipOnExists, result.Action);
+            Assert.AreEqual(CopySchemaExistsBehavior.Skip, result.Action);
         }
 
         [TestMethod]
@@ -365,10 +365,10 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapComposer("CREATE TABLE [Person] ([Id] int);");
 
             // Act
-            var result = await new CustomDbConnection().CopySchemaToAsync("Person", new CustomDbConnection(), CopySchemaExistsBehavior.AlignOnExists);
+            var result = await new CustomDbConnection().CopySchemaToAsync("Person", new CustomDbConnection(), CopySchemaExistsBehavior.Align);
 
             // Assert
-            Assert.AreEqual(CopySchemaExistsBehavior.AlignOnExists, result.Action);
+            Assert.AreEqual(CopySchemaExistsBehavior.Align, result.Action);
         }
 
         [TestMethod]

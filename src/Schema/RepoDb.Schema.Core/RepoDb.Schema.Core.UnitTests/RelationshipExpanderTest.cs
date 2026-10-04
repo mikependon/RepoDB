@@ -142,13 +142,13 @@ namespace RepoDb.Schema.Core.UnitTests
 
         #endregion
 
-        #region All
+        #region ParentsAndChildren
 
         [TestMethod]
-        public void TestRelationshipExpanderAll()
+        public void TestRelationshipExpanderParentsAndChildren()
         {
             // Act
-            var actual = Expand(new[] { "Mid" }, CopySchemaRelationshipBehavior.All, Tree);
+            var actual = Expand(new[] { "Mid" }, CopySchemaRelationshipBehavior.ParentsAndChildren, Tree);
 
             // Assert (the whole tree, in any direction)
             CollectionAssert.AreEquivalent(new[] { "Mid", "Root", "Other", "Leaf", "Sibling" }, actual);
@@ -156,23 +156,23 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestRelationshipExpanderAllStartingFromTheLeaf()
+        public void TestRelationshipExpanderParentsAndChildrenStartingFromTheLeaf()
         {
             // Act
-            var actual = Expand(new[] { "Leaf" }, CopySchemaRelationshipBehavior.All, Tree);
+            var actual = Expand(new[] { "Leaf" }, CopySchemaRelationshipBehavior.ParentsAndChildren, Tree);
 
             // Assert
             CollectionAssert.AreEquivalent(new[] { "Leaf", "Mid", "Root", "Other", "Sibling" }, actual);
         }
 
         [TestMethod]
-        public void TestRelationshipExpanderAllDoesNotIncludeTheUnrelatedTables()
+        public void TestRelationshipExpanderParentsAndChildrenDoesNotIncludeTheUnrelatedTables()
         {
             // Setup
             var foreignKeys = Tree.Concat(new[] { Fk("Island2", "Island1") }).ToArray();
 
             // Act
-            var actual = Expand(new[] { "Mid" }, CopySchemaRelationshipBehavior.All, foreignKeys);
+            var actual = Expand(new[] { "Mid" }, CopySchemaRelationshipBehavior.ParentsAndChildren, foreignKeys);
 
             // Assert
             Assert.IsFalse(actual.Contains("Island1"));
@@ -180,10 +180,10 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestRelationshipExpanderAllOfATableWithoutRelationships()
+        public void TestRelationshipExpanderParentsAndChildrenOfATableWithoutRelationships()
         {
             // Act
-            var actual = Expand(new[] { "Alone" }, CopySchemaRelationshipBehavior.All, Tree);
+            var actual = Expand(new[] { "Alone" }, CopySchemaRelationshipBehavior.ParentsAndChildren, Tree);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Alone" }, actual);
@@ -202,7 +202,7 @@ namespace RepoDb.Schema.Core.UnitTests
             // Act/Assert
             CollectionAssert.AreEquivalent(new[] { "D", "B", "C", "A" }, Expand(new[] { "D" }, CopySchemaRelationshipBehavior.Parents, diamond));
             CollectionAssert.AreEquivalent(new[] { "A", "B", "C", "D" }, Expand(new[] { "A" }, CopySchemaRelationshipBehavior.Children, diamond));
-            CollectionAssert.AreEquivalent(new[] { "B", "A", "C", "D" }, Expand(new[] { "B" }, CopySchemaRelationshipBehavior.All, diamond));
+            CollectionAssert.AreEquivalent(new[] { "B", "A", "C", "D" }, Expand(new[] { "B" }, CopySchemaRelationshipBehavior.ParentsAndChildren, diamond));
             Assert.AreEqual(4, Expand(new[] { "D" }, CopySchemaRelationshipBehavior.Parents, diamond).Distinct().Count());
         }
 
@@ -213,7 +213,7 @@ namespace RepoDb.Schema.Core.UnitTests
             var ring = new[] { Fk("A", "B"), Fk("B", "C"), Fk("C", "A") };
 
             // Act/Assert
-            foreach (var behavior in new[] { CopySchemaRelationshipBehavior.Parents, CopySchemaRelationshipBehavior.Children, CopySchemaRelationshipBehavior.All })
+            foreach (var behavior in new[] { CopySchemaRelationshipBehavior.Parents, CopySchemaRelationshipBehavior.Children, CopySchemaRelationshipBehavior.ParentsAndChildren })
             {
                 CollectionAssert.AreEquivalent(new[] { "A", "B", "C" }, Expand(new[] { "A" }, behavior, ring));
             }
@@ -228,7 +228,7 @@ namespace RepoDb.Schema.Core.UnitTests
             // Act/Assert
             CollectionAssert.AreEqual(new[] { "Employee" }, Expand(new[] { "Employee" }, CopySchemaRelationshipBehavior.Parents, self));
             CollectionAssert.AreEquivalent(new[] { "Employee", "Badge" }, Expand(new[] { "Employee" }, CopySchemaRelationshipBehavior.Children, self));
-            CollectionAssert.AreEquivalent(new[] { "Employee", "Badge" }, Expand(new[] { "Employee" }, CopySchemaRelationshipBehavior.All, self));
+            CollectionAssert.AreEquivalent(new[] { "Employee", "Badge" }, Expand(new[] { "Employee" }, CopySchemaRelationshipBehavior.ParentsAndChildren, self));
         }
 
         [TestMethod]
@@ -274,7 +274,7 @@ namespace RepoDb.Schema.Core.UnitTests
         public void TestRelationshipExpanderWithNoGivenTables()
         {
             // Act
-            var actual = Expand(new string[0], CopySchemaRelationshipBehavior.All, Tree);
+            var actual = Expand(new string[0], CopySchemaRelationshipBehavior.ParentsAndChildren, Tree);
 
             // Assert
             Assert.AreEqual(0, actual.Length);
@@ -284,7 +284,7 @@ namespace RepoDb.Schema.Core.UnitTests
         public void TestRelationshipExpanderWithNoForeignKeys()
         {
             // Act
-            var actual = Expand(new[] { "Person" }, CopySchemaRelationshipBehavior.All);
+            var actual = Expand(new[] { "Person" }, CopySchemaRelationshipBehavior.ParentsAndChildren);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Person" }, actual);
@@ -297,7 +297,7 @@ namespace RepoDb.Schema.Core.UnitTests
             var chain = new[] { Fk("Mid", "Root"), Fk("Leaf", "Mid") };
 
             // Act
-            var actual = Expand(new[] { "Mid" }, CopySchemaRelationshipBehavior.All, chain);
+            var actual = Expand(new[] { "Mid" }, CopySchemaRelationshipBehavior.ParentsAndChildren, chain);
 
             // Assert
             Assert.AreEqual("Mid", actual[0]);
@@ -315,7 +315,7 @@ namespace RepoDb.Schema.Core.UnitTests
             var foreignKeys = new[] { (T("ItemRef"), T("Item")) };
 
             // Act
-            var actual = RelationshipExpander.Expand(new[] { T("Item", "sales") }, foreignKeys, CopySchemaRelationshipBehavior.All, Key);
+            var actual = RelationshipExpander.Expand(new[] { T("Item", "sales") }, foreignKeys, CopySchemaRelationshipBehavior.ParentsAndChildren, Key);
 
             // Assert
             Assert.AreEqual(1, actual.Count);
@@ -330,7 +330,7 @@ namespace RepoDb.Schema.Core.UnitTests
 
             // Act
             var actual = RelationshipExpander.Expand(new[] { T("PERSON") }, new[] { (T("Person"), T("Country")), (T("Order"), T("PERSON")) },
-                CopySchemaRelationshipBehavior.All, CaseInsensitiveKey);
+                CopySchemaRelationshipBehavior.ParentsAndChildren, CaseInsensitiveKey);
 
             // Assert
             CollectionAssert.AreEquivalent(new[] { "PERSON", "Country", "Order" }, actual.Select(t => t.Name).ToArray());

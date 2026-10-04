@@ -84,7 +84,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 Assert.AreEqual(nameof(SqlConnection), result.SourceDatabaseType, StringComparer.Ordinal);
                 Assert.AreEqual(nameof(SqlConnection), result.DestinationDatabaseType, StringComparer.Ordinal);
                 Assert.AreEqual(CopySchemaOutcome.Created, result.Outcome);
-                Assert.AreEqual(CopySchemaExistsBehavior.SkipOnExists, result.Action);
+                Assert.AreEqual(CopySchemaExistsBehavior.Skip, result.Action);
                 Assert.AreEqual(7, result.ColumnCount);
                 Assert.AreEqual(1, result.IndexCount);
                 Assert.AreEqual(1, result.ForeignKeyCount);
@@ -143,10 +143,10 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var result = source.CopySchemaTo("NoKey", target, CopySchemaExistsBehavior.DropOnExists);
+                var result = source.CopySchemaTo("NoKey", target, CopySchemaExistsBehavior.Drop);
 
                 // Assert
-                Assert.AreEqual(CopySchemaExistsBehavior.DropOnExists, result.Action);
+                Assert.AreEqual(CopySchemaExistsBehavior.Drop, result.Action);
             }
         }
 

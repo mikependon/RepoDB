@@ -59,8 +59,8 @@ namespace RepoDb.Schema
             }
 
             // The neighbors of each table, by the key of the table
-            var goUp = relationshipBehavior == CopySchemaRelationshipBehavior.Parents || relationshipBehavior == CopySchemaRelationshipBehavior.All;
-            var goDown = relationshipBehavior == CopySchemaRelationshipBehavior.Children || relationshipBehavior == CopySchemaRelationshipBehavior.All;
+            var goUp = relationshipBehavior == CopySchemaRelationshipBehavior.Parents || relationshipBehavior == CopySchemaRelationshipBehavior.ParentsAndChildren;
+            var goDown = relationshipBehavior == CopySchemaRelationshipBehavior.Children || relationshipBehavior == CopySchemaRelationshipBehavior.ParentsAndChildren;
             var neighbors = new Dictionary<string, List<TableInfo>>();
             foreach (var (child, parent) in foreignKeys)
             {
