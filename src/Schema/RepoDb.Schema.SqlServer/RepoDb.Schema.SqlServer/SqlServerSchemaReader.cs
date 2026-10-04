@@ -733,14 +733,14 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="action"></param>
         /// <returns></returns>
-        private static ForeignKeyRule ToRule(int action)
+        private static CopySchemaForeignKeyRule ToRule(int action)
         {
             switch (action)
             {
-                case 1: return ForeignKeyRule.Cascade;
-                case 2: return ForeignKeyRule.SetNull;
-                case 3: return ForeignKeyRule.SetDefault;
-                default: return ForeignKeyRule.NoAction;
+                case 1: return CopySchemaForeignKeyRule.Cascade;
+                case 2: return CopySchemaForeignKeyRule.SetNull;
+                case 3: return CopySchemaForeignKeyRule.SetDefault;
+                default: return CopySchemaForeignKeyRule.NoAction;
             }
         }
 

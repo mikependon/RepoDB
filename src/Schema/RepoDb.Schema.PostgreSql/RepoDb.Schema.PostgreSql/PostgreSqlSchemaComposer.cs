@@ -256,14 +256,14 @@ namespace RepoDb.Schema
         /// <param name="action"></param>
         /// <param name="rule"></param>
         /// <returns></returns>
-        private static string Rule(string action, ForeignKeyRule rule)
+        private static string Rule(string action, CopySchemaForeignKeyRule rule)
         {
             switch (rule)
             {
-                case ForeignKeyRule.Cascade: return $" ON {action} CASCADE";
-                case ForeignKeyRule.SetNull: return $" ON {action} SET NULL";
-                case ForeignKeyRule.SetDefault: return $" ON {action} SET DEFAULT";
-                case ForeignKeyRule.Restrict: return $" ON {action} RESTRICT";
+                case CopySchemaForeignKeyRule.Cascade: return $" ON {action} CASCADE";
+                case CopySchemaForeignKeyRule.SetNull: return $" ON {action} SET NULL";
+                case CopySchemaForeignKeyRule.SetDefault: return $" ON {action} SET DEFAULT";
+                case CopySchemaForeignKeyRule.Restrict: return $" ON {action} RESTRICT";
                 default: return string.Empty;
             }
         }

@@ -725,15 +725,15 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="action"></param>
         /// <returns></returns>
-        private static ForeignKeyRule ToRule(string action)
+        private static CopySchemaForeignKeyRule ToRule(string action)
         {
             switch (action)
             {
-                case "r": return ForeignKeyRule.Restrict;
-                case "c": return ForeignKeyRule.Cascade;
-                case "n": return ForeignKeyRule.SetNull;
-                case "d": return ForeignKeyRule.SetDefault;
-                default: return ForeignKeyRule.NoAction;
+                case "r": return CopySchemaForeignKeyRule.Restrict;
+                case "c": return CopySchemaForeignKeyRule.Cascade;
+                case "n": return CopySchemaForeignKeyRule.SetNull;
+                case "d": return CopySchemaForeignKeyRule.SetDefault;
+                default: return CopySchemaForeignKeyRule.NoAction;
             }
         }
 

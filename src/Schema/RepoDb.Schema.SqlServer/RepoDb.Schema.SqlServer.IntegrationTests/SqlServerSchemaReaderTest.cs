@@ -656,8 +656,8 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 CollectionAssert.AreEqual(new[] { "CountryId" }, actual[0].Columns.ToArray());
                 Assert.AreEqual(new TableInfo("Country", "dbo"), actual[0].ReferencedTable);
                 CollectionAssert.AreEqual(new[] { "Id" }, actual[0].ReferencedColumns.ToArray());
-                Assert.AreEqual(ForeignKeyRule.Cascade, actual[0].UpdateRule);
-                Assert.AreEqual(ForeignKeyRule.SetNull, actual[0].DeleteRule);
+                Assert.AreEqual(CopySchemaForeignKeyRule.Cascade, actual[0].UpdateRule);
+                Assert.AreEqual(CopySchemaForeignKeyRule.SetNull, actual[0].DeleteRule);
             }
         }
 
@@ -674,8 +674,8 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
 
                 // Assert
                 Assert.AreEqual("FK_Child_Parent", actual.Name, StringComparer.Ordinal);
-                Assert.AreEqual(ForeignKeyRule.NoAction, actual.UpdateRule);
-                Assert.AreEqual(ForeignKeyRule.NoAction, actual.DeleteRule);
+                Assert.AreEqual(CopySchemaForeignKeyRule.NoAction, actual.UpdateRule);
+                Assert.AreEqual(CopySchemaForeignKeyRule.NoAction, actual.DeleteRule);
             }
         }
 

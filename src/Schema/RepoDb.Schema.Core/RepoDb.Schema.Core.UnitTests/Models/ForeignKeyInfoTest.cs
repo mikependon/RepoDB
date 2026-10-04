@@ -133,7 +133,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
             // Act
             var a = Create();
             var b = Create();
-            b.UpdateRule = ForeignKeyRule.NoAction;
+            b.UpdateRule = CopySchemaForeignKeyRule.NoAction;
 
             // Assert
             Assert.IsFalse(a.Equals(b));
@@ -147,7 +147,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
             // Act
             var a = Create();
             var b = Create();
-            b.DeleteRule = ForeignKeyRule.NoAction;
+            b.DeleteRule = CopySchemaForeignKeyRule.NoAction;
 
             // Assert
             Assert.IsFalse(a.Equals(b));
@@ -264,7 +264,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
             var actual = foreignKey.UpdateRule;
 
             // Assert
-            Assert.AreEqual(ForeignKeyRule.NoAction, actual);
+            Assert.AreEqual(CopySchemaForeignKeyRule.NoAction, actual);
         }
 
         [TestMethod]
@@ -273,10 +273,10 @@ namespace RepoDb.Schema.Core.UnitTests.Models
             // Act
             var foreignKey = new ForeignKeyInfo(null)
             {
-                UpdateRule = ForeignKeyRule.Cascade
+                UpdateRule = CopySchemaForeignKeyRule.Cascade
             };
             var actual = foreignKey.UpdateRule;
-            var expected = ForeignKeyRule.Cascade;
+            var expected = CopySchemaForeignKeyRule.Cascade;
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -290,7 +290,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
             var actual = foreignKey.DeleteRule;
 
             // Assert
-            Assert.AreEqual(ForeignKeyRule.NoAction, actual);
+            Assert.AreEqual(CopySchemaForeignKeyRule.NoAction, actual);
         }
 
         [TestMethod]
@@ -299,10 +299,10 @@ namespace RepoDb.Schema.Core.UnitTests.Models
             // Act
             var foreignKey = new ForeignKeyInfo(null)
             {
-                DeleteRule = ForeignKeyRule.SetNull
+                DeleteRule = CopySchemaForeignKeyRule.SetNull
             };
             var actual = foreignKey.DeleteRule;
-            var expected = ForeignKeyRule.SetNull;
+            var expected = CopySchemaForeignKeyRule.SetNull;
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -313,7 +313,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         #region Helpers
 
         private static ForeignKeyInfo Create() =>
-            new ForeignKeyInfo("FK_Person_Country") { Columns = new List<string> { "CountryId" }, ReferencedTable = new TableInfo("Country", "dbo"), ReferencedColumns = new List<string> { "Id" }, UpdateRule = ForeignKeyRule.Cascade, DeleteRule = ForeignKeyRule.SetNull };
+            new ForeignKeyInfo("FK_Person_Country") { Columns = new List<string> { "CountryId" }, ReferencedTable = new TableInfo("Country", "dbo"), ReferencedColumns = new List<string> { "Id" }, UpdateRule = CopySchemaForeignKeyRule.Cascade, DeleteRule = CopySchemaForeignKeyRule.SetNull };
 
         #endregion
     }

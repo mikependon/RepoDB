@@ -13,7 +13,7 @@ using RepoDb.Schema.Enumerations;
 namespace RepoDb.Schema.Core.UnitTests.Enumerations
 {
     [TestClass]
-    public class ForeignKeyRuleTest
+    public class CopySchemaForeignKeyRuleTest
     {
         #region Methods
 
@@ -21,8 +21,8 @@ namespace RepoDb.Schema.Core.UnitTests.Enumerations
         public void TestForeignKeyRuleDefaultValue()
         {
             // Act
-            var actual = default(ForeignKeyRule);
-            var expected = ForeignKeyRule.NoAction;
+            var actual = default(CopySchemaForeignKeyRule);
+            var expected = CopySchemaForeignKeyRule.NoAction;
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -32,7 +32,7 @@ namespace RepoDb.Schema.Core.UnitTests.Enumerations
         public void TestForeignKeyRuleValues()
         {
             // Act
-            var actual = Enum.GetNames(typeof(ForeignKeyRule));
+            var actual = Enum.GetNames(typeof(CopySchemaForeignKeyRule));
             var expected = new[] { "NoAction", "Restrict", "Cascade", "SetNull", "SetDefault" };
 
             // Assert

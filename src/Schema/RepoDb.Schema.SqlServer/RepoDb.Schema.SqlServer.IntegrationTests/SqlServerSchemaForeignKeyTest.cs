@@ -73,8 +73,8 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             CollectionAssert.AreEqual(new[] { "OrderId", "LineNumber" }, actual.Columns.ToArray());
             Assert.AreEqual(new TableInfo("OrderLine", "dbo"), actual.ReferencedTable);
             CollectionAssert.AreEqual(new[] { "OrderId", "LineNumber" }, actual.ReferencedColumns.ToArray());
-            Assert.AreEqual(ForeignKeyRule.NoAction, actual.UpdateRule);
-            Assert.AreEqual(ForeignKeyRule.NoAction, actual.DeleteRule);
+            Assert.AreEqual(CopySchemaForeignKeyRule.NoAction, actual.UpdateRule);
+            Assert.AreEqual(CopySchemaForeignKeyRule.NoAction, actual.DeleteRule);
         }
 
         [TestMethod]
@@ -84,8 +84,8 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             var actual = GetForeignKey("Shipment", "FK_Shipment_Country");
 
             // Assert
-            Assert.AreEqual(ForeignKeyRule.Cascade, actual.DeleteRule);
-            Assert.AreEqual(ForeignKeyRule.NoAction, actual.UpdateRule);
+            Assert.AreEqual(CopySchemaForeignKeyRule.Cascade, actual.DeleteRule);
+            Assert.AreEqual(CopySchemaForeignKeyRule.NoAction, actual.UpdateRule);
         }
 
         [TestMethod]
@@ -95,8 +95,8 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             var actual = GetForeignKey("Preference", "FK_Preference_Country");
 
             // Assert
-            Assert.AreEqual(ForeignKeyRule.SetDefault, actual.DeleteRule);
-            Assert.AreEqual(ForeignKeyRule.SetDefault, actual.UpdateRule);
+            Assert.AreEqual(CopySchemaForeignKeyRule.SetDefault, actual.DeleteRule);
+            Assert.AreEqual(CopySchemaForeignKeyRule.SetDefault, actual.UpdateRule);
         }
 
         [TestMethod]
@@ -119,7 +119,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
 
             // Assert
             Assert.AreEqual(new TableInfo("Invoice", "Sales"), actual.ReferencedTable);
-            Assert.AreEqual(ForeignKeyRule.Cascade, actual.DeleteRule);
+            Assert.AreEqual(CopySchemaForeignKeyRule.Cascade, actual.DeleteRule);
         }
 
         [TestMethod]

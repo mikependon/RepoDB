@@ -302,13 +302,13 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="rule"></param>
         /// <returns></returns>
-        private static string Rule(ForeignKeyRule rule)
+        private static string Rule(CopySchemaForeignKeyRule rule)
         {
             switch (rule)
             {
-                case ForeignKeyRule.Cascade: return "CASCADE";
-                case ForeignKeyRule.SetNull: return "SET NULL";
-                case ForeignKeyRule.SetDefault: return "SET DEFAULT";
+                case CopySchemaForeignKeyRule.Cascade: return "CASCADE";
+                case CopySchemaForeignKeyRule.SetNull: return "SET NULL";
+                case CopySchemaForeignKeyRule.SetDefault: return "SET DEFAULT";
 
                 // SQL Server has no RESTRICT; NO ACTION is its (default) equivalent
                 default: return null;

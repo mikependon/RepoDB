@@ -50,7 +50,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
                 UniqueConstraints = { new UniqueConstraintInfo("uq_person_name") { Columns = { "Name" } } },
                 CheckConstraints = { new CheckConstraintInfo("ck_person_age") { Expression = "\"Age\" >= 0" } },
                 Indexes = { new IndexInfo("ix_person_name") { Columns = { "Name", "Age" }, DescendingColumns = { "Name" }, IncludedColumns = { "Double" }, IsUnique = true, Filter = "\"Age\" > 0" } },
-                ForeignKeys = { new ForeignKeyInfo("fk_person_country") { Columns = { "Id" }, ReferencedTable = new TableInfo("country", "public"), ReferencedColumns = { "id" }, DeleteRule = ForeignKeyRule.Cascade, UpdateRule = ForeignKeyRule.SetNull } }
+                ForeignKeys = { new ForeignKeyInfo("fk_person_country") { Columns = { "Id" }, ReferencedTable = new TableInfo("country", "public"), ReferencedColumns = { "id" }, DeleteRule = CopySchemaForeignKeyRule.Cascade, UpdateRule = CopySchemaForeignKeyRule.SetNull } }
             };
 
         #endregion
@@ -197,10 +197,10 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
         }
 
         [TestMethod]
-        [DataRow(ForeignKeyRule.NoAction, "")]
-        [DataRow(ForeignKeyRule.Restrict, " ON DELETE RESTRICT ON UPDATE RESTRICT")]
-        [DataRow(ForeignKeyRule.SetDefault, " ON DELETE SET DEFAULT ON UPDATE SET DEFAULT")]
-        public void TestPostgreSqlSchemaComposerComposeAddForeignKeyRules(ForeignKeyRule rule, string expected)
+        [DataRow(CopySchemaForeignKeyRule.NoAction, "")]
+        [DataRow(CopySchemaForeignKeyRule.Restrict, " ON DELETE RESTRICT ON UPDATE RESTRICT")]
+        [DataRow(CopySchemaForeignKeyRule.SetDefault, " ON DELETE SET DEFAULT ON UPDATE SET DEFAULT")]
+        public void TestPostgreSqlSchemaComposerComposeAddForeignKeyRules(CopySchemaForeignKeyRule rule, string expected)
         {
             // Setup
             var foreignKey = new ForeignKeyInfo(null) { Columns = { "a" }, ReferencedTable = new TableInfo("b", null), ReferencedColumns = { "id" }, DeleteRule = rule, UpdateRule = rule };

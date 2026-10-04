@@ -11,7 +11,7 @@ namespace RepoDb.Schema.Enumerations
     /// <summary>
     /// An enumeration that is used to define the rule applied by a foreign key when the referenced row is updated or deleted.
     /// </summary>
-    public enum ForeignKeyRule
+    public enum CopySchemaForeignKeyRule
     {
         /// <summary>
         /// No action is taken and the operation fails if it violates the foreign key.

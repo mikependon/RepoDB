@@ -505,8 +505,8 @@ namespace RepoDb.Schema.SqlServer.UnitTests
                 Columns = { "CountryId" },
                 ReferencedTable = new TableInfo("Country", "dbo"),
                 ReferencedColumns = { "Id" },
-                DeleteRule = ForeignKeyRule.SetNull,
-                UpdateRule = ForeignKeyRule.Cascade
+                DeleteRule = CopySchemaForeignKeyRule.SetNull,
+                UpdateRule = CopySchemaForeignKeyRule.Cascade
             };
 
             // Act
@@ -526,7 +526,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
                 Columns = { "CountryId" },
                 ReferencedTable = new TableInfo("Country", null),
                 ReferencedColumns = { "Id" },
-                DeleteRule = ForeignKeyRule.SetDefault
+                DeleteRule = CopySchemaForeignKeyRule.SetDefault
             };
 
             // Act
@@ -546,8 +546,8 @@ namespace RepoDb.Schema.SqlServer.UnitTests
                 Columns = { "CountryId" },
                 ReferencedTable = new TableInfo("Country", null),
                 ReferencedColumns = { "Id" },
-                DeleteRule = ForeignKeyRule.Restrict,
-                UpdateRule = ForeignKeyRule.Restrict
+                DeleteRule = CopySchemaForeignKeyRule.Restrict,
+                UpdateRule = CopySchemaForeignKeyRule.Restrict
             };
 
             // Act
