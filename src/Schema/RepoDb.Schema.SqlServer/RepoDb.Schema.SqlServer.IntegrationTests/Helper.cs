@@ -222,6 +222,14 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             AssertSchemaEquality(GetSourceSchema(tableName), GetTargetSchema(tableName));
 
         /// <summary>
+        /// Gets the names (<c>schema.table</c>) of the tables of the relationships, in the same order.
+        /// </summary>
+        /// <param name="relationships">The relationships.</param>
+        /// <returns>The names of the tables.</returns>
+        public static string[] GetTableNames(IEnumerable<RelationshipInfo> relationships) =>
+            relationships.Select(r => $"{r.Table.SchemaName}.{r.Table.TableName}").ToArray();
+
+        /// <summary>
         /// Gets the names of the columns.
         /// </summary>
         /// <param name="columns">The columns.</param>

@@ -74,7 +74,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             // Setup
             using (var connection = new SqlConnection(Database.ConnectionStringForSource))
             {
-                var order = new SqlServerSchemaReader(connection).GetDependencyOrder(new[] { "GrandChild", "Parent", "Child" }).ToArray();
+                var order = Helper.GetTableNames(new SqlServerSchemaReader(connection).GetDependencyOrder(new[] { "GrandChild", "Parent", "Child" }));
 
                 // Act (each table is created on its own, in the order that the reader gave)
                 Helper.CopyToTarget(order);
@@ -213,7 +213,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             var tables = GetSourceTables();
             using (var connection = new SqlConnection(Database.ConnectionStringForSource))
             {
-                var order = new SqlServerSchemaReader(connection).GetDependencyOrder(tables)
+                var order = Helper.GetTableNames(new SqlServerSchemaReader(connection).GetDependencyOrder(tables))
                     .Where(t => !CircularTables.Contains(t, StringComparer.OrdinalIgnoreCase))
                     .ToArray();
 
@@ -238,7 +238,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionStringForSource))
             {
                 // Act
-                var order = new SqlServerSchemaReader(connection).GetDependencyOrder(tables).ToList();
+                var order = Helper.GetTableNames(new SqlServerSchemaReader(connection).GetDependencyOrder(tables)).ToList();
 
                 // Assert (except the tables that reference each other and themselves)
                 Assert.AreEqual(tables.Count, order.Count);

@@ -934,10 +934,10 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 var reader = new SqlServerSchemaReader(connection);
 
                 // Act
-                var actual = reader.GetDependencyOrder(new[] { "GrandChild", "Parent", "Child" }).ToList();
+                var actual = Helper.GetTableNames(reader.GetDependencyOrder(new[] { "GrandChild", "Parent", "Child" }));
 
                 // Assert
-                CollectionAssert.AreEqual(new[] { "Parent", "Child", "GrandChild" }, actual);
+                CollectionAssert.AreEqual(new[] { "dbo.Parent", "dbo.Child", "dbo.GrandChild" }, actual);
             }
         }
 
@@ -950,10 +950,10 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 var reader = new SqlServerSchemaReader(connection);
 
                 // Act
-                var actual = reader.GetDependencyOrder(new[] { "dbo.Person", "Country" }).ToList();
+                var actual = Helper.GetTableNames(reader.GetDependencyOrder(new[] { "dbo.Person", "Country" }));
 
                 // Assert
-                CollectionAssert.AreEqual(new[] { "Country", "dbo.Person" }, actual);
+                CollectionAssert.AreEqual(new[] { "dbo.Country", "dbo.Person" }, actual);
             }
         }
 
@@ -966,10 +966,10 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 var reader = new SqlServerSchemaReader(connection);
 
                 // Act
-                var actual = reader.GetDependencyOrder(new[] { "GrandChild" }).ToList();
+                var actual = Helper.GetTableNames(reader.GetDependencyOrder(new[] { "GrandChild" }));
 
                 // Assert
-                CollectionAssert.AreEqual(new[] { "GrandChild" }, actual);
+                CollectionAssert.AreEqual(new[] { "dbo.GrandChild" }, actual);
             }
         }
 
@@ -982,12 +982,10 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 var reader = new SqlServerSchemaReader(connection);
 
                 // Act
-                var actual = reader.GetDependencyOrder(new[] { "CycleA", "CycleB" }).ToList();
+                var actual = Helper.GetTableNames(reader.GetDependencyOrder(new[] { "CycleA", "CycleB" }));
 
-                // Assert
-                Assert.AreEqual(2, actual.Count);
-                CollectionAssert.Contains(actual, "CycleA");
-                CollectionAssert.Contains(actual, "CycleB");
+                // Assert (the cycle is broken at the table that was given first)
+                CollectionAssert.AreEqual(new[] { "dbo.CycleA", "dbo.CycleB" }, actual);
             }
         }
 
@@ -1004,10 +1002,181 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 var reader = new SqlServerSchemaReader(connection);
 
                 // Act
+                var actual = Helper.GetTableNames(await reader.GetDependencyOrderAsync(new[] { "GrandChild", "Parent", "Child" }));
+
+                // Assert
+                CollectionAssert.AreEqual(new[] { "dbo.Parent", "dbo.Child", "dbo.GrandChild" }, actual);
+            }
+        }
+
+        #endregion
+
+        #region Relationships
+
+        [TestMethod]
+        public void TestSqlServerSchemaReaderGetDependencyOrderRelationshipsOfDependencyChain()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForSource))
+            {
+                // Setup
+                var reader = new SqlServerSchemaReader(connection);
+
+                // Act
+                var actual = reader.GetDependencyOrder(new[] { "GrandChild", "Parent", "Child" }).ToList();
+                var parent = actual[0];
+                var child = actual[1];
+                var grandChild = actual[2];
+
+                // Assert
+                Assert.AreEqual(0, parent.Parents.Count);
+                CollectionAssert.AreEqual(new[] { "Child" }, parent.Children.Select(r => r.Table.TableName).ToArray());
+                CollectionAssert.AreEqual(new[] { "Parent" }, child.Parents.Select(r => r.Table.TableName).ToArray());
+                CollectionAssert.AreEqual(new[] { "GrandChild" }, child.Children.Select(r => r.Table.TableName).ToArray());
+                CollectionAssert.AreEqual(new[] { "Child" }, grandChild.Parents.Select(r => r.Table.TableName).ToArray());
+                Assert.AreEqual(0, grandChild.Children.Count);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaReaderGetDependencyOrderRelationshipsShareTheSameInstances()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForSource))
+            {
+                // Setup
+                var reader = new SqlServerSchemaReader(connection);
+
+                // Act
+                var actual = reader.GetDependencyOrder(new[] { "Child", "Parent" }).ToList();
+
+                // Assert
+                Assert.AreSame(actual[0], actual[1].Parents.Single());
+                Assert.AreSame(actual[1], actual[0].Children.Single());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaReaderGetDependencyOrderRelationshipsHaveTheSchemaOfTheTable()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForSource))
+            {
+                // Setup
+                var reader = new SqlServerSchemaReader(connection);
+
+                // Act
+                var actual = reader.GetDependencyOrder(new[] { "Person", "Country" }).ToList();
+                var person = actual.Single(r => r.Table.TableName == "Person");
+
+                // Assert
+                Assert.AreEqual(7, person.Table.Columns.Count);
+                Assert.AreEqual(1, person.Table.ForeignKeys.Count);
+                Assert.IsNotNull(person.Table.PrimaryKey);
+                CollectionAssert.AreEqual(new[] { "Country" }, person.Parents.Select(r => r.Table.TableName).ToArray());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaReaderGetDependencyOrderRelationshipsOfTableWithMultipleParents()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForSource))
+            {
+                // Setup
+                var reader = new SqlServerSchemaReader(connection);
+
+                // Act
+                var actual = reader.GetDependencyOrder(new[] { "Shipment", "OrderLine", "Country" }).ToList();
+                var shipment = actual.Single(r => r.Table.TableName == "Shipment");
+
+                // Assert
+                Assert.AreEqual("Shipment", actual[2].Table.TableName, StringComparer.Ordinal);
+                CollectionAssert.AreEquivalent(new[] { "OrderLine", "Country" }, shipment.Parents.Select(r => r.Table.TableName).ToArray());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaReaderGetDependencyOrderRelationshipsIgnoreTheSelfReference()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForSource))
+            {
+                // Setup
+                var reader = new SqlServerSchemaReader(connection);
+
+                // Act
+                var actual = reader.GetDependencyOrder(new[] { "Employee" }).Single();
+
+                // Assert
+                Assert.AreEqual(0, actual.Parents.Count);
+                Assert.AreEqual(0, actual.Children.Count);
+                Assert.AreEqual(1, actual.Table.ForeignKeys.Count);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaReaderGetDependencyOrderRelationshipsOfCircularReferences()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForSource))
+            {
+                // Setup
+                var reader = new SqlServerSchemaReader(connection);
+
+                // Act
+                var actual = reader.GetDependencyOrder(new[] { "CycleA", "CycleB" }).ToList();
+
+                // Assert (each one is the parent and the child of the other one)
+                Assert.AreSame(actual[1], actual[0].Parents.Single());
+                Assert.AreSame(actual[1], actual[0].Children.Single());
+                Assert.AreSame(actual[0], actual[1].Parents.Single());
+                Assert.AreSame(actual[0], actual[1].Children.Single());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaReaderGetDependencyOrderBreaksTheCycleAtTheTableThatWasGivenFirst()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForSource))
+            {
+                // Setup
+                var reader = new SqlServerSchemaReader(connection);
+
+                // Act (the tables outside the cycle come first, in the order of their dependencies)
+                var actual = Helper.GetTableNames(reader.GetDependencyOrder(new[] { "Ledger", "CycleA", "CycleB", "Sales.Invoice" }));
+
+                // Assert
+                CollectionAssert.AreEqual(new[] { "Sales.Invoice", "dbo.Ledger", "dbo.CycleA", "dbo.CycleB" }, actual);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaReaderGetDependencyOrderIgnoresTheTableThatIsGivenMoreThanOnce()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForSource))
+            {
+                // Setup
+                var reader = new SqlServerSchemaReader(connection);
+
+                // Act
+                var actual = Helper.GetTableNames(reader.GetDependencyOrder(new[] { "Parent", "dbo.Parent", "[dbo].[Parent]" }));
+
+                // Assert
+                CollectionAssert.AreEqual(new[] { "dbo.Parent" }, actual);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlServerSchemaReaderGetDependencyOrderAsyncRelationshipsOfDependencyChain()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForSource))
+            {
+                // Setup
+                var reader = new SqlServerSchemaReader(connection);
+
+                // Act
                 var actual = (await reader.GetDependencyOrderAsync(new[] { "GrandChild", "Parent", "Child" })).ToList();
 
                 // Assert
-                CollectionAssert.AreEqual(new[] { "Parent", "Child", "GrandChild" }, actual);
+                CollectionAssert.AreEqual(new[] { "Child" }, actual[0].Children.Select(r => r.Table.TableName).ToArray());
+                CollectionAssert.AreEqual(new[] { "Parent" }, actual[1].Parents.Select(r => r.Table.TableName).ToArray());
+                CollectionAssert.AreEqual(new[] { "GrandChild" }, actual[1].Children.Select(r => r.Table.TableName).ToArray());
+                Assert.AreEqual(0, actual[2].Children.Count);
             }
         }
 

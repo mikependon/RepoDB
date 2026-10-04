@@ -250,11 +250,10 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="tableNames">The names of the tables to be ordered.</param>
         /// <returns>The ordered names of the tables.</returns>
-        public IEnumerable<string> GetDependencyOrder(IEnumerable<string> tableNames)
+        public IEnumerable<RelationshipInfo> GetDependencyOrder(IEnumerable<string> tableNames)
         {
             var names = (tableNames ?? throw new ArgumentNullException(nameof(tableNames))).ToList();
-            var foreignKeys = names.ToDictionary(Key, n => (IList<ForeignKeyInfo>)GetForeignKeys(n).ToList());
-            return Order(names, foreignKeys);
+            return Order(names.Select(GetTableSchema).ToList());
         }
 
         #endregion
@@ -390,16 +389,16 @@ namespace RepoDb.Schema
         /// <param name="tableNames">The names of the tables to be ordered.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains: the ordered names of the tables.</returns>
-        public async Task<IEnumerable<string>> GetDependencyOrderAsync(IEnumerable<string> tableNames,
+        public async Task<IEnumerable<RelationshipInfo>> GetDependencyOrderAsync(IEnumerable<string> tableNames,
             CancellationToken cancellationToken = default)
         {
             var names = (tableNames ?? throw new ArgumentNullException(nameof(tableNames))).ToList();
-            var foreignKeys = new Dictionary<string, IList<ForeignKeyInfo>>();
+            var schemas = new List<TableSchema>();
             foreach (var name in names)
             {
-                foreignKeys[Key(name)] = (await GetForeignKeysAsync(name, cancellationToken).ConfigureAwait(false)).ToList();
+                schemas.Add(await GetTableSchemaAsync(name, cancellationToken).ConfigureAwait(false));
             }
-            return Order(names, foreignKeys);
+            return Order(schemas);
         }
 
         #endregion
@@ -811,39 +810,52 @@ namespace RepoDb.Schema
         // Ordering
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        /// <param name="names"></param>
-        /// <param name="foreignKeys"></param>
+        /// <param name="schemas"></param>
         /// <returns></returns>
-        private static IEnumerable<string> Order(IList<string> names,
-            IDictionary<string, IList<ForeignKeyInfo>> foreignKeys)
+        private static IList<RelationshipInfo> Order(IList<TableSchema> schemas)
         {
-            var byKey = new Dictionary<string, string>();
-            foreach (var name in names)
+            // One relationship per table (the first one wins if a table is given more than once)
+            var keys = new List<string>();
+            var relationships = new Dictionary<string, RelationshipInfo>();
+            foreach (var schema in schemas)
             {
-                byKey[Key(name)] = name;
+                var key = Key($"{schema.SchemaName}.{schema.TableName}");
+                if (!relationships.ContainsKey(key))
+                {
+                    keys.Add(key);
+                    relationships[key] = new RelationshipInfo { Table = schema };
+                }
             }
 
-            // Every table depends on the (other) tables its foreign keys reference
-            var pending = byKey.Keys.ToDictionary(
-                k => k,
-                k => new HashSet<string>(foreignKeys[k]
+            // Every table depends on the (other) given tables that its foreign keys reference
+            var pending = new Dictionary<string, HashSet<string>>();
+            foreach (var key in keys)
+            {
+                var parents = new HashSet<string>(relationships[key].Table.ForeignKeys
                     .Select(fk => Key(fk.ReferencedTable))
-                    .Where(d => d != k && byKey.ContainsKey(d))));
+                    .Where(parent => parent != key && relationships.ContainsKey(parent)));
+                pending[key] = parents;
+                foreach (var parent in parents)
+                {
+                    relationships[key].Parents.Add(relationships[parent]);
+                    relationships[parent].Children.Add(relationships[key]);
+                }
+            }
 
-            var ordered = new List<string>();
+            var ordered = new List<RelationshipInfo>();
             while (pending.Count > 0)
             {
-                var ready = pending.Where(p => p.Value.Count == 0).Select(p => p.Key).ToList();
+                var ready = keys.Where(k => pending.ContainsKey(k) && pending[k].Count == 0).ToList();
                 if (ready.Count == 0)
                 {
-                    // A cycle: keep the remaining tables in their given order
-                    ready = pending.Keys.ToList();
+                    // A cycle: break it at the table that was given first
+                    ready = new List<string> { keys.First(k => pending.ContainsKey(k)) };
                 }
                 foreach (var key in ready)
                 {
-                    ordered.Add(byKey[key]);
+                    ordered.Add(relationships[key]);
                     pending.Remove(key);
                 }
                 foreach (var dependencies in pending.Values)

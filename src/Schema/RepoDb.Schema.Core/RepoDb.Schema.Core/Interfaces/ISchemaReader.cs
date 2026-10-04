@@ -92,11 +92,13 @@ namespace RepoDb.Schema
         IEnumerable<string> GetTables(string schemaName = null);
 
         /// <summary>
-        /// Orders the tables so that a table always comes after the tables that its foreign keys reference. Use the order to create the tables, and the reverse of it to drop them.
+        /// Gets the relationships of the tables (as defined by their foreign keys), ordered so that a table always comes after the tables that it references.
+        /// Use the order to create the tables, and the reverse of it to drop them. Only the relationships between the given tables are considered.
+        /// If the tables reference each other in a circular way, no order exists for them, so the cycle is broken at the table that was given first.
         /// </summary>
-        /// <param name="tableNames">The names of the tables to be ordered.</param>
-        /// <returns>The ordered names of the tables.</returns>
-        IEnumerable<string> GetDependencyOrder(IEnumerable<string> tableNames);
+        /// <param name="tableNames">The names of the tables.</param>
+        /// <returns>The ordered <see cref="RelationshipInfo"/> objects, one per table.</returns>
+        IEnumerable<RelationshipInfo> GetDependencyOrder(IEnumerable<string> tableNames);
 
         #endregion
 
@@ -193,12 +195,14 @@ namespace RepoDb.Schema
             CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Orders the tables so that a table always comes after the tables that its foreign keys reference. Use the order to create the tables, and the reverse of it to drop them.
+        /// Gets the relationships of the tables (as defined by their foreign keys), ordered so that a table always comes after the tables that it references.
+        /// Use the order to create the tables, and the reverse of it to drop them. Only the relationships between the given tables are considered.
+        /// If the tables reference each other in a circular way, no order exists for them, so the cycle is broken at the table that was given first.
         /// </summary>
-        /// <param name="tableNames">The names of the tables to be ordered.</param>
+        /// <param name="tableNames">The names of the tables.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains: the ordered names of the tables.</returns>
-        Task<IEnumerable<string>> GetDependencyOrderAsync(IEnumerable<string> tableNames,
+        /// <returns>A task that represents the asynchronous operation. The task result contains: the ordered <see cref="RelationshipInfo"/> objects, one per table.</returns>
+        Task<IEnumerable<RelationshipInfo>> GetDependencyOrderAsync(IEnumerable<string> tableNames,
             CancellationToken cancellationToken = default);
 
         #endregion
