@@ -127,6 +127,17 @@ namespace RepoDb.Schema.Core.UnitTests
             Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
+        [TestMethod]
+        public void TestSchemaTraceKeysCopySchemasTo()
+        {
+            // Act
+            var actual = SchemaTraceKeys.CopySchemasTo;
+            var expected = "CopySchemasTo";
+
+            // Assert
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
+        }
+
         #endregion
     }
 }

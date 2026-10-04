@@ -19,6 +19,11 @@ namespace RepoDb.Schema
         public const string CopySchemaTo = "CopySchemaTo";
 
         /// <summary>
+        /// The trace key for the 'CopySchemasTo' operation.
+        /// </summary>
+        public const string CopySchemasTo = "CopySchemasTo";
+
+        /// <summary>
         /// The trace key used when the schema name of a table is being resolved.
         /// </summary>
         public const string ResolveSchemaName = "ResolveSchemaName";
