@@ -31,6 +31,11 @@ namespace RepoDb.Schema.Enumerations
         /// <summary>
         /// The table already existed, was dropped and then re-created.
         /// </summary>
-        Dropped
+        Dropped,
+
+        /// <summary>
+        /// The schema was not created, as some of its statements have failed (see <see cref="CopySchemaResult.Errors"/>).
+        /// </summary>
+        Failed
     }
 }

@@ -39,54 +39,66 @@ namespace RepoDb.Schema
         /// <param name="tableNames">The names of the tables whose schema is to be copied. The tables can be given in any order, and can reference each other (even in a circular way).</param>
         /// <param name="destinationConnection">The connection of the destination database.</param>
         /// <param name="tableExistenceBehavior">Defines what happens when a table already exists in the destination database. The default is <see cref="CopySchemaExistsBehavior.SkipOnExists"/>. <b>WARNING:</b> <see cref="CopySchemaExistsBehavior.DropOnExists"/> permanently deletes the existing table and its data.</param>
+        /// <param name="createdCallback">The callback that receives the <see cref="CopySchemaResult"/> of a table every time its schema is created in the destination database (the table, its indexes and its foreign keys), in the order that the schemas are completed. The errors that were raised for the table are in the <see cref="CopySchemaResult.Errors"/> of its result. The default is <c>null</c>.</param>
+        /// <param name="errorCallback">The callback that receives a <see cref="CopySchemaError"/> every time a statement fails while the schemas are being created. The error is also added to the <see cref="CopySchemaResult.Errors"/> of the table that it belongs to, and the copy continues with the next statement; throw from the callback to stop the copy. Without a callback, the exception is thrown. The errors of reading the schemas are not reported to it. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopySchemasTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
-        /// <returns>The <see cref="CopySchemasResult"/> that describes the schema copy operation.</returns>
-        public static CopySchemasResult CopySchemasTo(this IDbConnection connection,
+        public static void CopySchemasTo(this IDbConnection connection,
             IEnumerable<string> tableNames,
             IDbConnection destinationConnection,
             CopySchemaExistsBehavior tableExistenceBehavior = CopySchemaExistsBehavior.SkipOnExists,
+            Action<CopySchemaResult> createdCallback = null,
+            Action<CopySchemaError> errorCallback = null,
             int? commandTimeout = null,
             string traceKey = SchemaTraceKeys.CopySchemasTo,
             ITrace trace = null,
             IDbTransaction transaction = null)
         {
+            // Validate
             var names = Validate(connection, tableNames, destinationConnection);
-            var result = Create(connection, destinationConnection, tableExistenceBehavior);
-
-            // If there are no tables to copy, return the result immediately
             if (names.Count == 0)
             {
-                result.EndTime = DateTime.UtcNow;
-                return result;
+                return;
             }
 
-            // Get the schema reader based on the type of the source connection
+            // Variables
+            var startTime = DateTime.UtcNow;
             var schemaReader = SchemaReaderMapper.Get(connection) ??
                 throw new MissingMappingException($"There is no schema reader mapping found for '{connection.GetType().FullName}'. Make sure to register one via the '{nameof(SchemaReaderMapper)}'.");
-
-            // Get the schema composer based on the type of the destination connection
             var schemaComposer = SchemaComposerMapper.Get(destinationConnection) ??
                 throw new MissingMappingException($"There is no schema composer mapping found for '{destinationConnection.GetType().FullName}'. Make sure to register one via the '{nameof(SchemaComposerMapper)}'.");
-
-            // Read the schemas of the tables (the tables that are referenced by the other tables come first) and compose the statements for the destination
             var schemas = schemaReader.GetDependencyOrder(names).Select(r => r.Table).ToList();
             var statements = schemaComposer.ComposeSchemas(schemas).ToList();
+            var completions = GetCompletions(schemas, statements.Count);
+            var owners = GetOwners(schemas, statements.Count);
+            var errors = new List<CopySchemaError>();
 
-            // Execute the composed statements, in order, on the destination connection
-            foreach (var statement in statements)
+            // Iterate
+            for (var i = 0; i < statements.Count; i++)
             {
-                destinationConnection.ExecuteNonQuery(statement,
-                    traceKey: traceKey,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    trace: trace);
+                try
+                {
+                    destinationConnection.ExecuteNonQuery(statements[i],
+                        traceKey: traceKey,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace);
+                }
+                catch (Exception e) when (errorCallback != null && !(e is OperationCanceledException))
+                {
+                    var error = CreateError(e, statements[i], i, owners[i]);
+                    errors.Add(error);
+                    errorCallback(error);
+                }
+
+                // Report
+                Report(createdCallback, completions, errors, i, connection, destinationConnection, tableExistenceBehavior, schemaComposer, startTime);
             }
 
-            Fill(result, schemaComposer, schemas, statements);
-            return result;
+            // Report
+            Report(createdCallback, completions, errors, -1, connection, destinationConnection, tableExistenceBehavior, schemaComposer, startTime);
         }
 
         #endregion
@@ -103,58 +115,72 @@ namespace RepoDb.Schema
         /// <param name="tableNames">The names of the tables whose schema is to be copied. The tables can be given in any order, and can reference each other (even in a circular way).</param>
         /// <param name="destinationConnection">The connection of the destination database.</param>
         /// <param name="tableExistenceBehavior">Defines what happens when a table already exists in the destination database. The default is <see cref="CopySchemaExistsBehavior.SkipOnExists"/>. <b>WARNING:</b> <see cref="CopySchemaExistsBehavior.DropOnExists"/> permanently deletes the existing table and its data.</param>
+        /// <param name="createdCallback">The callback that receives the <see cref="CopySchemaResult"/> of a table every time its schema is created in the destination database (the table, its indexes and its foreign keys), in the order that the schemas are completed. The errors that were raised for the table are in the <see cref="CopySchemaResult.Errors"/> of its result. The default is <c>null</c>.</param>
+        /// <param name="errorCallback">The callback that receives a <see cref="CopySchemaError"/> every time a statement fails while the schemas are being created. The error is also added to the <see cref="CopySchemaResult.Errors"/> of the table that it belongs to, and the copy continues with the next statement; throw from the callback to stop the copy. Without a callback, the exception is thrown. The errors of reading the schemas are not reported to it. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopySchemasTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopySchemasResult"/> that describes the schema copy operation.</returns>
-        public static async Task<CopySchemasResult> CopySchemasToAsync(this IDbConnection connection,
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        public static async Task CopySchemasToAsync(this IDbConnection connection,
             IEnumerable<string> tableNames,
             IDbConnection destinationConnection,
             CopySchemaExistsBehavior tableExistenceBehavior = CopySchemaExistsBehavior.SkipOnExists,
+            Action<CopySchemaResult> createdCallback = null,
+            Action<CopySchemaError> errorCallback = null,
             int? commandTimeout = null,
             string traceKey = SchemaTraceKeys.CopySchemasTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            // Validate
             var names = Validate(connection, tableNames, destinationConnection);
-            var result = Create(connection, destinationConnection, tableExistenceBehavior);
-
-            // If there are no tables to copy, return the result immediately
             if (names.Count == 0)
             {
-                result.EndTime = DateTime.UtcNow;
-                return result;
+                return;
             }
 
-            // Get the schema reader based on the type of the source connection
+            // Variables
+            var startTime = DateTime.UtcNow;
             var schemaReader = SchemaReaderMapper.Get(connection) ??
                 throw new MissingMappingException($"There is no schema reader mapping found for '{connection.GetType().FullName}'. Make sure to register one via the '{nameof(SchemaReaderMapper)}'.");
-
-            // Get the schema composer based on the type of the destination connection
             var schemaComposer = SchemaComposerMapper.Get(destinationConnection) ??
                 throw new MissingMappingException($"There is no schema composer mapping found for '{destinationConnection.GetType().FullName}'. Make sure to register one via the '{nameof(SchemaComposerMapper)}'.");
-
-            // Read the schemas of the tables (the tables that are referenced by the other tables come first) and compose the statements for the destination
             var relationships = await schemaReader.GetDependencyOrderAsync(names, cancellationToken).ConfigureAwait(false);
             var schemas = relationships.Select(r => r.Table).ToList();
             var statements = schemaComposer.ComposeSchemas(schemas).ToList();
+            var completions = GetCompletions(schemas, statements.Count);
+            var owners = GetOwners(schemas, statements.Count);
+            var errors = new List<CopySchemaError>();
 
-            // Execute the composed statements, in order, on the destination connection
-            foreach (var statement in statements)
+            // Iterate
+            for (var i = 0; i < statements.Count; i++)
             {
-                await destinationConnection.ExecuteNonQueryAsync(statement,
-                    traceKey: traceKey,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    trace: trace,
-                    cancellationToken: cancellationToken).ConfigureAwait(false);
+                try
+                {
+                    await destinationConnection.ExecuteNonQueryAsync(statements[i],
+                        traceKey: traceKey,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        cancellationToken: cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception e) when (errorCallback != null && !(e is OperationCanceledException))
+                {
+                    // Raise the error to the caller (the caller can stop the copy by throwing)
+                    var error = CreateError(e, statements[i], i, owners[i]);
+                    errors.Add(error);
+                    errorCallback(error);
+                }
+
+                // Report
+                Report(createdCallback, completions, errors, i, connection, destinationConnection, tableExistenceBehavior, schemaComposer, startTime);
             }
 
-            Fill(result, schemaComposer, schemas, statements);
-            return result;
+            // Report
+            Report(createdCallback, completions, errors, -1, connection, destinationConnection, tableExistenceBehavior, schemaComposer, startTime);
         }
 
         #endregion
@@ -164,56 +190,134 @@ namespace RepoDb.Schema
         #region Helpers
 
         /// <summary>
-        ///
+        /// Gets the schemas that are completed by each statement of the composed script. The composed script has one statement for each table, then one for each index
+        /// and then one for each foreign key (see <see cref="ISchemaComposer.ComposeSchemas"/>), so a schema is completed by its last statement.
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="destinationConnection"></param>
-        /// <param name="tableExistenceBehavior"></param>
-        /// <returns></returns>
-        private static CopySchemasResult Create(IDbConnection connection,
-            IDbConnection destinationConnection,
-            CopySchemaExistsBehavior tableExistenceBehavior) =>
-            new CopySchemasResult
+        /// <param name="schemas">The schemas of the tables, in the order that they were composed.</param>
+        /// <param name="statementCount">The number of the statements that were composed.</param>
+        /// <returns>
+        /// The schemas by the index of the statement that completes them. If the script does not have the expected number of statements,
+        /// the statements that complete the schemas are not known, so it only has the key <c>-1</c> with all the schemas.
+        /// </returns>
+        private static ILookup<int, TableSchema> GetCompletions(IList<TableSchema> schemas,
+            int statementCount)
+        {
+            var last = new int[schemas.Count];
+            var cursor = 0;
+            for (var i = 0; i < schemas.Count; i++)
             {
-                Action = tableExistenceBehavior,
-                StartTime = DateTime.UtcNow,
-                SourceDatabase = connection.Database,
-                SourceServer = (connection as DbConnection)?.DataSource,
-                SourceDatabaseType = connection.GetType().Name,
-                DestinationDatabase = destinationConnection.Database,
-                DestinationServer = (destinationConnection as DbConnection)?.DataSource,
-                DestinationDatabaseType = destinationConnection.GetType().Name
+                last[i] = cursor++;
+            }
+            for (var i = 0; i < schemas.Count; i++)
+            {
+                for (var j = 0; j < schemas[i].Indexes.Count; j++)
+                {
+                    last[i] = cursor++;
+                }
+            }
+            for (var i = 0; i < schemas.Count; i++)
+            {
+                for (var j = 0; j < schemas[i].ForeignKeys.Count; j++)
+                {
+                    last[i] = cursor++;
+                }
+            }
+            var known = cursor == statementCount;
+            return Enumerable.Range(0, schemas.Count).ToLookup(i => known ? last[i] : -1, i => schemas[i]);
+        }
+
+        /// <summary>
+        /// Gets the schema that each statement of the composed script belongs to. The composed script has one statement for each table, then one for each index
+        /// and then one for each foreign key (see <see cref="ISchemaComposer.ComposeSchemas"/>).
+        /// </summary>
+        /// <param name="schemas">The schemas of the tables, in the order that they were composed.</param>
+        /// <param name="statementCount">The number of the statements that were composed.</param>
+        /// <returns>The schema of each statement (<c>null</c> if the script does not have the expected number of statements, so the owners are not known).</returns>
+        private static TableSchema[] GetOwners(IList<TableSchema> schemas,
+            int statementCount)
+        {
+            var owners = new List<TableSchema>(schemas);
+            owners.AddRange(schemas.SelectMany(schema => schema.Indexes.Select(_ => schema)));
+            owners.AddRange(schemas.SelectMany(schema => schema.ForeignKeys.Select(_ => schema)));
+            return owners.Count == statementCount
+                ? owners.ToArray()
+                : new TableSchema[statementCount];
+        }
+
+        /// <summary>
+        /// Creates the error of a statement that has failed.
+        /// </summary>
+        /// <param name="exception"></param>
+        /// <param name="statement"></param>
+        /// <param name="statementIndex"></param>
+        /// <param name="owner"></param>
+        /// <returns></returns>
+        private static CopySchemaError CreateError(Exception exception,
+            string statement,
+            int statementIndex,
+            TableSchema owner) =>
+            new CopySchemaError
+            {
+                Exception = exception,
+                Statement = statement,
+                StatementIndex = statementIndex,
+                TableName = owner?.TableName,
+                SchemaName = owner?.SchemaName
             };
 
         /// <summary>
-        ///
+        /// Calls the callback with the result of each schema that is completed by the statement.
         /// </summary>
-        /// <param name="result"></param>
+        /// <param name="createdCallback"></param>
+        /// <param name="completions"></param>
+        /// <param name="errors"></param>
+        /// <param name="statement"></param>
+        /// <param name="connection"></param>
+        /// <param name="destinationConnection"></param>
+        /// <param name="tableExistenceBehavior"></param>
         /// <param name="schemaComposer"></param>
-        /// <param name="schemas"></param>
-        /// <param name="statements"></param>
-        private static void Fill(CopySchemasResult result,
+        /// <param name="startTime"></param>
+        private static void Report(Action<CopySchemaResult> createdCallback,
+            ILookup<int, TableSchema> completions,
+            IList<CopySchemaError> errors,
+            int statement,
+            IDbConnection connection,
+            IDbConnection destinationConnection,
+            CopySchemaExistsBehavior tableExistenceBehavior,
             ISchemaComposer schemaComposer,
-            IList<TableSchema> schemas,
-            IList<string> statements)
+            DateTime startTime)
         {
-            result.Script = string.Join(Environment.NewLine, statements);
-            foreach (var schema in schemas)
+            if (createdCallback == null)
             {
+                return;
+            }
+
+            foreach (var schema in completions[statement])
+            {
+                // The errors of the statements of the table (an error that does not know its table could belong to any of them)
+                var schemaErrors = errors
+                    .Where(error => error.TableName == null ||
+                        (string.Equals(error.TableName, schema.TableName, StringComparison.Ordinal) &&
+                        string.Equals(error.SchemaName, schema.SchemaName, StringComparison.Ordinal)))
+                    .ToList();
+
+                // The script of a table is the one that would create it on its own, it was executed together with the other tables
                 var script = schemaComposer.ComposeSchema(schema) ?? Enumerable.Empty<string>();
-                result.Tables.Add(new CopySchemaResult
+                createdCallback(new CopySchemaResult
                 {
-                    Action = result.Action,
-                    Outcome = CopySchemaOutcome.Created,
+                    Action = tableExistenceBehavior,
+                    Outcome = schemaErrors.Count > 0 ? CopySchemaOutcome.Failed : CopySchemaOutcome.Created,
+                    Errors = schemaErrors,
                     TableName = schema.TableName,
                     SourceSchema = schema.SchemaName,
-                    SourceDatabase = result.SourceDatabase,
-                    SourceServer = result.SourceServer,
-                    SourceDatabaseType = result.SourceDatabaseType,
-                    DestinationDatabase = result.DestinationDatabase,
-                    DestinationServer = result.DestinationServer,
-                    DestinationDatabaseType = result.DestinationDatabaseType,
-                    StartTime = result.StartTime,
+                    SourceDatabase = connection.Database,
+                    SourceServer = (connection as DbConnection)?.DataSource,
+                    SourceDatabaseType = connection.GetType().Name,
+                    DestinationDatabase = destinationConnection.Database,
+                    DestinationServer = (destinationConnection as DbConnection)?.DataSource,
+                    DestinationDatabaseType = destinationConnection.GetType().Name,
+                    StartTime = startTime,
+                    EndTime = DateTime.UtcNow,
                     Script = string.Join(Environment.NewLine, script),
                     ColumnCount = schema.Columns.Count,
                     IndexCount = schema.Indexes.Count,
@@ -221,12 +325,6 @@ namespace RepoDb.Schema
                     UniqueConstraintCount = schema.UniqueConstraints.Count,
                     CheckConstraintCount = schema.CheckConstraints.Count
                 });
-            }
-
-            result.EndTime = DateTime.UtcNow;
-            foreach (var table in result.Tables)
-            {
-                table.EndTime = result.EndTime;
             }
         }
 
@@ -255,7 +353,6 @@ namespace RepoDb.Schema
             {
                 throw new ArgumentNullException(nameof(destinationConnection));
             }
-
             var names = tableNames.ToList();
             if (names.Any(string.IsNullOrWhiteSpace))
             {

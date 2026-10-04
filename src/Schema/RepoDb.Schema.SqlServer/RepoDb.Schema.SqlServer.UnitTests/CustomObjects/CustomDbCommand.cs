@@ -46,6 +46,10 @@ namespace RepoDb.Schema.SqlServer.UnitTests.CustomObjects
         public override int ExecuteNonQuery()
         {
             (Connection as CustomDbConnection)?.ExecutedCommands.Add(CommandText);
+            if ((Connection as CustomDbConnection)?.FailWhen?.Invoke(CommandText) == true)
+            {
+                throw new System.InvalidOperationException($"The command failed: {CommandText}");
+            }
             return default;
         }
 

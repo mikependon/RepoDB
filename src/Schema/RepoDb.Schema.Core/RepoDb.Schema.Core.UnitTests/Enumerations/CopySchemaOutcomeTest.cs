@@ -33,7 +33,7 @@ namespace RepoDb.Schema.Core.UnitTests.Enumerations
         {
             // Act
             var actual = Enum.GetNames(typeof(CopySchemaOutcome));
-            var expected = new[] { "Created", "Skipped", "Aligned", "Dropped" };
+            var expected = new[] { "Created", "Skipped", "Aligned", "Dropped", "Failed" };
 
             // Assert
             CollectionAssert.AreEqual(expected, actual);

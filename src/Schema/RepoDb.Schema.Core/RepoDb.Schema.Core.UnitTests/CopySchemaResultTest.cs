@@ -414,6 +414,46 @@ namespace RepoDb.Schema.Core.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void TestCopySchemaResultErrorsPropertyDefaultValue()
+        {
+            // Act
+            var result = new CopySchemaResult();
+            var actual = result.Errors;
+
+            // Assert
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(0, actual.Count);
+        }
+
+        [TestMethod]
+        public void TestCopySchemaResultErrorsProperty()
+        {
+            // Setup
+            var error = new CopySchemaError { Statement = "CREATE TABLE [Person] ([Id] int);" };
+
+            // Act
+            var result = new CopySchemaResult();
+            result.Errors.Add(error);
+            var actual = result.Errors;
+
+            // Assert
+            Assert.AreEqual(1, actual.Count);
+            Assert.AreSame(error, actual[0]);
+        }
+
+        [TestMethod]
+        public void TestCopySchemaResultErrorsAreNotShared()
+        {
+            // Act
+            var first = new CopySchemaResult();
+            var second = new CopySchemaResult();
+            first.Errors.Add(new CopySchemaError());
+
+            // Assert
+            Assert.AreEqual(0, second.Errors.Count);
+        }
+
         #endregion
     }
 }

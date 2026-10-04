@@ -71,6 +71,10 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             return composer;
         }
 
+        // Collects the name of the table and the number of the statements that were executed when its schema was reported
+        private static Action<CopySchemaResult> Collect(CustomDbConnection destination, List<(string Table, int Executed)> reported) =>
+            result => reported.Add((result.TableName, destination.ExecutedCommands.Count));
+
         #endregion
 
         #region CopySchemasTo
@@ -145,21 +149,21 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         {
             // Setup (there is no mapping, as nothing is read and nothing is composed)
             var destination = new CustomDbConnection();
+            var reported = new List<(string Table, int Executed)>();
 
             // Act
-            var result = new CustomDbConnection().CopySchemasTo(Enumerable.Empty<string>(), destination);
+            new CustomDbConnection().CopySchemasTo(Enumerable.Empty<string>(), destination, createdCallback: Collect(destination, reported));
 
             // Assert
-            Assert.AreEqual(0, result.TableCount);
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
-            Assert.IsTrue(result.EndTime >= result.StartTime);
+            Assert.AreEqual(0, reported.Count);
         }
 
         [TestMethod]
         public void TestCopySchemasToExecutesTheComposedStatementsInOrder()
         {
             // Setup
-            MapReader(GetRelationships(GetSchema("Country"), GetSchema("Person")));
+            MapReader(GetRelationships(GetSchema("Country"), GetSchema("Person", 1, 1, 1)));
             MapComposer("CREATE TABLE Country;", "CREATE TABLE Person;", "CREATE INDEX IX_Person;", "ALTER TABLE Person ADD FK;");
             var destination = new CustomDbConnection();
 
@@ -177,7 +181,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         {
             // Setup
             var reader = MapReader(GetRelationships(GetSchema("Country"), GetSchema("Person")));
-            MapComposer("CREATE TABLE Country;");
+            MapComposer("CREATE TABLE Country;", "CREATE TABLE Person;");
 
             // Act
             new CustomDbConnection().CopySchemasTo(new[] { "dbo.Person", "Country" }, new CustomDbConnection());
@@ -193,7 +197,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var country = GetSchema("Country");
             var person = GetSchema("Person");
             MapReader(GetRelationships(country, person));
-            var composer = MapComposer("CREATE TABLE Country;");
+            var composer = MapComposer("CREATE TABLE Country;", "CREATE TABLE Person;");
 
             // Act
             new CustomDbConnection().CopySchemasTo(new[] { "Person", "Country" }, new CustomDbConnection());
@@ -203,75 +207,194 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopySchemasToResult()
+        public void TestCopySchemasToWithoutCallback()
         {
             // Setup
-            MapReader(GetRelationships(GetSchema("Country", 2), GetSchema("Person", 4, 1, 1)));
-            MapComposer("CREATE TABLE Country;", "CREATE TABLE Person;");
+            MapReader(GetRelationships(GetSchema("Person")));
+            MapComposer("CREATE TABLE Person;");
+            var destination = new CustomDbConnection();
 
             // Act
-            var result = new CustomDbConnection().CopySchemasTo(new[] { "Person", "Country" }, new CustomDbConnection());
+            new CustomDbConnection().CopySchemasTo(new[] { "Person" }, destination, createdCallback: null);
 
             // Assert
-            Assert.AreEqual(2, result.TableCount);
-            Assert.AreEqual(nameof(CustomDbConnection), result.SourceDatabaseType, StringComparer.Ordinal);
-            Assert.AreEqual(nameof(CustomDbConnection), result.DestinationDatabaseType, StringComparer.Ordinal);
-            Assert.AreEqual(CopySchemaExistsBehavior.SkipOnExists, result.Action);
-            Assert.AreEqual("CREATE TABLE Country;" + Environment.NewLine + "CREATE TABLE Person;", result.Script, StringComparer.Ordinal);
-            Assert.IsTrue(result.EndTime >= result.StartTime);
+            Assert.AreEqual(1, destination.ExecutedCommands.Count);
+        }
+
+        #endregion
+
+        #region Callback
+
+        [TestMethod]
+        public void TestCopySchemasToCallsTheCallbackForEachTable()
+        {
+            // Setup
+            MapReader(GetRelationships(GetSchema("Country"), GetSchema("Person")));
+            MapComposer("CREATE TABLE Country;", "CREATE TABLE Person;");
+            var destination = new CustomDbConnection();
+            var reported = new List<(string Table, int Executed)>();
+
+            // Act
+            new CustomDbConnection().CopySchemasTo(new[] { "Person", "Country" }, destination, createdCallback: Collect(destination, reported));
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { "Country", "Person" }, reported.Select(r => r.Table).ToArray());
         }
 
         [TestMethod]
-        public void TestCopySchemasToResultOfEachTable()
+        public void TestCopySchemasToCallsTheCallbackOnceTheSchemaOfTheTableIsCreated()
+        {
+            // Setup (the Country has no index and no foreign key, so it is created by its first statement,
+            // and the Person is created by its last statement)
+            MapReader(GetRelationships(GetSchema("Country"), GetSchema("Person", 1, 1, 1)));
+            MapComposer("CREATE TABLE Country;", "CREATE TABLE Person;", "CREATE INDEX IX_Person;", "ALTER TABLE Person ADD FK;");
+            var destination = new CustomDbConnection();
+            var reported = new List<(string Table, int Executed)>();
+
+            // Act
+            new CustomDbConnection().CopySchemasTo(new[] { "Person", "Country" }, destination, createdCallback: Collect(destination, reported));
+
+            // Assert
+            Assert.AreEqual(2, reported.Count);
+            Assert.AreEqual(("Country", 1), reported[0]);
+            Assert.AreEqual(("Person", 4), reported[1]);
+        }
+
+        [TestMethod]
+        public void TestCopySchemasToCallsTheCallbackAfterTheIndexesOfTheTable()
+        {
+            // Setup (the Person has an index, but no foreign key)
+            MapReader(GetRelationships(GetSchema("Person", 1, 2, 0), GetSchema("Solo")));
+            MapComposer("CREATE TABLE Person;", "CREATE TABLE Solo;", "CREATE INDEX IX_1;", "CREATE INDEX IX_2;");
+            var destination = new CustomDbConnection();
+            var reported = new List<(string Table, int Executed)>();
+
+            // Act
+            new CustomDbConnection().CopySchemasTo(new[] { "Person", "Solo" }, destination, createdCallback: Collect(destination, reported));
+
+            // Assert
+            Assert.AreEqual(("Solo", 2), reported[0]);
+            Assert.AreEqual(("Person", 4), reported[1]);
+        }
+
+        [TestMethod]
+        public void TestCopySchemasToCallsTheCallbackAfterTheForeignKeysOfTheTablesThatReferenceEachOther()
+        {
+            // Setup (A <-> B: all the tables are created before the foreign keys)
+            MapReader(GetRelationships(GetSchema("A", 1, 0, 1), GetSchema("B", 1, 0, 1)));
+            MapComposer("CREATE TABLE A;", "CREATE TABLE B;", "ALTER TABLE A ADD FK;", "ALTER TABLE B ADD FK;");
+            var destination = new CustomDbConnection();
+            var reported = new List<(string Table, int Executed)>();
+
+            // Act
+            new CustomDbConnection().CopySchemasTo(new[] { "A", "B" }, destination, createdCallback: Collect(destination, reported));
+
+            // Assert
+            Assert.AreEqual(("A", 3), reported[0]);
+            Assert.AreEqual(("B", 4), reported[1]);
+        }
+
+        [TestMethod]
+        public void TestCopySchemasToCallsTheCallbackOfTheTableWithoutObjectsBeforeTheOthersAreCompleted()
+        {
+            // Setup (the Solo table is created before the foreign key of the other table)
+            MapReader(GetRelationships(GetSchema("Solo"), GetSchema("Child", 1, 0, 1)));
+            MapComposer("CREATE TABLE Solo;", "CREATE TABLE Child;", "ALTER TABLE Child ADD FK;");
+            var destination = new CustomDbConnection();
+            var reported = new List<(string Table, int Executed)>();
+
+            // Act
+            new CustomDbConnection().CopySchemasTo(new[] { "Solo", "Child" }, destination, createdCallback: Collect(destination, reported));
+
+            // Assert
+            Assert.AreEqual(("Solo", 1), reported[0]);
+            Assert.AreEqual(("Child", 3), reported[1]);
+        }
+
+        [TestMethod]
+        public void TestCopySchemasToCallsTheCallbackForAllTheTablesAfterTheScriptIfTheStatementsOfTheTablesAreNotKnown()
+        {
+            // Setup (the composer composed less statements than the expected number: 2 tables and a foreign key)
+            MapReader(GetRelationships(GetSchema("Country"), GetSchema("Person", 1, 0, 1)));
+            MapComposer("CREATE TABLE Country;", "CREATE TABLE Person;");
+            var destination = new CustomDbConnection();
+            var reported = new List<(string Table, int Executed)>();
+
+            // Act
+            new CustomDbConnection().CopySchemasTo(new[] { "Person", "Country" }, destination, createdCallback: Collect(destination, reported));
+
+            // Assert
+            Assert.AreEqual(2, reported.Count);
+            Assert.AreEqual(("Country", 2), reported[0]);
+            Assert.AreEqual(("Person", 2), reported[1]);
+        }
+
+        [TestMethod]
+        public void TestCopySchemasToCallbackResult()
         {
             // Setup
             MapReader(GetRelationships(GetSchema("Country", 2), GetSchema("Person", 4, 1, 1)));
-            MapComposer("CREATE TABLE Country;", "CREATE TABLE Person;");
+            MapComposer("CREATE TABLE Country;", "CREATE TABLE Person;", "CREATE INDEX IX_Person;", "ALTER TABLE Person ADD FK;");
+            var results = new List<CopySchemaResult>();
 
             // Act
-            var result = new CustomDbConnection().CopySchemasTo(new[] { "Person", "Country" }, new CustomDbConnection());
+            new CustomDbConnection().CopySchemasTo(new[] { "Person", "Country" }, new CustomDbConnection(), createdCallback: results.Add);
 
-            // Assert (in the order that the tables were created)
-            CollectionAssert.AreEqual(new[] { "Country", "Person" }, result.Tables.Select(t => t.TableName).ToArray());
-            var person = result.Tables[1];
+            // Assert
+            var person = results.Single(r => r.TableName == "Person");
             Assert.AreEqual("dbo", person.SourceSchema, StringComparer.Ordinal);
+            Assert.AreEqual(nameof(CustomDbConnection), person.SourceDatabaseType, StringComparer.Ordinal);
+            Assert.AreEqual(nameof(CustomDbConnection), person.DestinationDatabaseType, StringComparer.Ordinal);
             Assert.AreEqual(CopySchemaOutcome.Created, person.Outcome);
+            Assert.AreEqual(CopySchemaExistsBehavior.SkipOnExists, person.Action);
             Assert.AreEqual(4, person.ColumnCount);
             Assert.AreEqual(1, person.IndexCount);
             Assert.AreEqual(1, person.ForeignKeyCount);
             Assert.AreEqual("CREATE TABLE Person;", person.Script, StringComparer.Ordinal);
-            Assert.AreEqual(result.StartTime, person.StartTime);
-            Assert.AreEqual(result.EndTime, person.EndTime);
-            Assert.AreEqual(2, result.Tables[0].ColumnCount);
+            Assert.IsTrue(person.EndTime >= person.StartTime);
+            Assert.AreEqual(2, results.Single(r => r.TableName == "Country").ColumnCount);
         }
 
         [TestMethod]
-        public void TestCopySchemasToResultActionIsTheRequestedExistsBehavior()
+        public void TestCopySchemasToCallbackResultActionIsTheRequestedExistsBehavior()
+        {
+            // Setup
+            MapReader(GetRelationships(GetSchema("Person")));
+            MapComposer("CREATE TABLE Person;");
+            var results = new List<CopySchemaResult>();
+
+            // Act
+            new CustomDbConnection().CopySchemasTo(new[] { "Person" }, new CustomDbConnection(), CopySchemaExistsBehavior.DropOnExists, results.Add);
+
+            // Assert
+            Assert.AreEqual(CopySchemaExistsBehavior.DropOnExists, results.Single().Action);
+        }
+
+        [TestMethod]
+        public void TestCopySchemasToCallbackIsCalledOnceForTheTableThatIsGivenTwice()
+        {
+            // Setup (the reader returns one relationship for the table that is given twice)
+            MapReader(GetRelationships(GetSchema("Person")));
+            MapComposer("CREATE TABLE Person;");
+            var results = new List<CopySchemaResult>();
+
+            // Act
+            new CustomDbConnection().CopySchemasTo(new[] { "Person", "dbo.Person" }, new CustomDbConnection(), createdCallback: results.Add);
+
+            // Assert
+            Assert.AreEqual(1, results.Count);
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnCopySchemasToIfTheCallbackThrows()
         {
             // Setup
             MapReader(GetRelationships(GetSchema("Person")));
             MapComposer("CREATE TABLE Person;");
 
-            // Act
-            var result = new CustomDbConnection().CopySchemasTo(new[] { "Person" }, new CustomDbConnection(), CopySchemaExistsBehavior.DropOnExists);
-
-            // Assert
-            Assert.AreEqual(CopySchemaExistsBehavior.DropOnExists, result.Action);
-            Assert.AreEqual(CopySchemaExistsBehavior.DropOnExists, result.Tables.Single().Action);
-        }
-
-        [TestMethod]
-        public void TestCopySchemasToResultOfTheSameTableIsNotDuplicated()
-        {
-            // Setup (the reader returns one relationship for the table that is given twice)
-            MapReader(GetRelationships(GetSchema("Person")));
-            MapComposer("CREATE TABLE Person;");
-
-            // Act
-            var result = new CustomDbConnection().CopySchemasTo(new[] { "Person", "dbo.Person" }, new CustomDbConnection());
-
-            // Assert
-            Assert.AreEqual(1, result.TableCount);
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() =>
+                new CustomDbConnection().CopySchemasTo(new[] { "Person" }, new CustomDbConnection(), createdCallback: _ => throw new InvalidOperationException()));
         }
 
         #endregion
@@ -340,20 +463,21 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         {
             // Setup
             var destination = new CustomDbConnection();
+            var reported = new List<(string Table, int Executed)>();
 
             // Act
-            var result = await new CustomDbConnection().CopySchemasToAsync(Enumerable.Empty<string>(), destination);
+            await new CustomDbConnection().CopySchemasToAsync(Enumerable.Empty<string>(), destination, createdCallback: Collect(destination, reported));
 
             // Assert
-            Assert.AreEqual(0, result.TableCount);
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
+            Assert.AreEqual(0, reported.Count);
         }
 
         [TestMethod]
         public async Task TestCopySchemasToAsyncExecutesTheComposedStatementsInOrder()
         {
             // Setup
-            MapReader(GetRelationships(GetSchema("Country"), GetSchema("Person")));
+            MapReader(GetRelationships(GetSchema("Country"), GetSchema("Person", 1, 0, 1)));
             MapComposer("CREATE TABLE Country;", "CREATE TABLE Person;", "ALTER TABLE Person ADD FK;");
             var destination = new CustomDbConnection();
 
@@ -381,22 +505,59 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public async Task TestCopySchemasToAsyncResult()
+        public async Task TestCopySchemasToAsyncCallsTheCallbackOnceTheSchemaOfTheTableIsCreated()
+        {
+            // Setup
+            MapReader(GetRelationships(GetSchema("Country"), GetSchema("Person", 1, 1, 1)));
+            MapComposer("CREATE TABLE Country;", "CREATE TABLE Person;", "CREATE INDEX IX_Person;", "ALTER TABLE Person ADD FK;");
+            var destination = new CustomDbConnection();
+            var reported = new List<(string Table, int Executed)>();
+
+            // Act
+            await new CustomDbConnection().CopySchemasToAsync(new[] { "Person", "Country" }, destination, createdCallback: Collect(destination, reported));
+
+            // Assert
+            Assert.AreEqual(2, reported.Count);
+            Assert.AreEqual(("Country", 1), reported[0]);
+            Assert.AreEqual(("Person", 4), reported[1]);
+        }
+
+        [TestMethod]
+        public async Task TestCopySchemasToAsyncCallsTheCallbackForAllTheTablesAfterTheScriptIfTheStatementsOfTheTablesAreNotKnown()
+        {
+            // Setup
+            MapReader(GetRelationships(GetSchema("Country"), GetSchema("Person", 1, 0, 1)));
+            MapComposer("CREATE TABLE Country;", "CREATE TABLE Person;");
+            var destination = new CustomDbConnection();
+            var reported = new List<(string Table, int Executed)>();
+
+            // Act
+            await new CustomDbConnection().CopySchemasToAsync(new[] { "Person", "Country" }, destination, createdCallback: Collect(destination, reported));
+
+            // Assert
+            Assert.AreEqual(("Country", 2), reported[0]);
+            Assert.AreEqual(("Person", 2), reported[1]);
+        }
+
+        [TestMethod]
+        public async Task TestCopySchemasToAsyncCallbackResult()
         {
             // Setup
             MapReader(GetRelationships(GetSchema("Country", 2), GetSchema("Person", 4, 1, 1)));
-            MapComposer("CREATE TABLE Country;", "CREATE TABLE Person;");
+            MapComposer("CREATE TABLE Country;", "CREATE TABLE Person;", "CREATE INDEX IX_Person;", "ALTER TABLE Person ADD FK;");
+            var results = new List<CopySchemaResult>();
 
             // Act
-            var result = await new CustomDbConnection().CopySchemasToAsync(new[] { "Person", "Country" }, new CustomDbConnection(), CopySchemaExistsBehavior.AlignOnExists);
+            await new CustomDbConnection().CopySchemasToAsync(new[] { "Person", "Country" }, new CustomDbConnection(), CopySchemaExistsBehavior.AlignOnExists, results.Add);
 
             // Assert
-            Assert.AreEqual(2, result.TableCount);
-            Assert.AreEqual(CopySchemaExistsBehavior.AlignOnExists, result.Action);
-            CollectionAssert.AreEqual(new[] { "Country", "Person" }, result.Tables.Select(t => t.TableName).ToArray());
-            Assert.AreEqual(4, result.Tables[1].ColumnCount);
-            Assert.AreEqual("CREATE TABLE Country;" + Environment.NewLine + "CREATE TABLE Person;", result.Script, StringComparer.Ordinal);
-            Assert.IsTrue(result.EndTime >= result.StartTime);
+            Assert.AreEqual(2, results.Count);
+            var person = results.Single(r => r.TableName == "Person");
+            Assert.AreEqual(CopySchemaExistsBehavior.AlignOnExists, person.Action);
+            Assert.AreEqual(4, person.ColumnCount);
+            Assert.AreEqual(1, person.ForeignKeyCount);
+            Assert.AreEqual("CREATE TABLE Person;", person.Script, StringComparer.Ordinal);
+            Assert.IsTrue(person.EndTime >= person.StartTime);
         }
 
         #endregion

@@ -29,6 +29,8 @@ namespace RepoDb.Schema
         /// All the tables are created first, then all the indexes and then all the foreign keys, so the tables can be given in any order
         /// and can reference each other (even in a circular way) as long as the referenced tables are part of the given tables
         /// or already exist in the destination database.
+        /// The statements are ordered like this: one statement for each table (in the given order), then one statement for each index
+        /// (the tables in the given order), then one statement for each foreign key (the tables in the given order).
         /// </summary>
         /// <param name="schemas">The schemas of the tables.</param>
         /// <returns>The ordered SQL statements. Execute them in order.</returns>

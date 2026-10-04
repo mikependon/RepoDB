@@ -75,6 +75,11 @@ namespace RepoDb.Schema
         public DateTime EndTime { get; set; }
 
         /// <summary>
+        /// Gets or sets the errors that were raised while the schema was being created (see <see cref="CopySchemaError"/>).
+        /// </summary>
+        public IList<CopySchemaError> Errors { get; set; } = new List<CopySchemaError>();
+
+        /// <summary>
         /// Gets or sets the number of foreign keys that were created.
         /// </summary>
         public int ForeignKeyCount { get; set; }

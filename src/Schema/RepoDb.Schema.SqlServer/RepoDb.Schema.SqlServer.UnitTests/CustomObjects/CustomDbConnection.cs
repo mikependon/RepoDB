@@ -18,6 +18,11 @@ namespace RepoDb.Schema.SqlServer.UnitTests.CustomObjects
 
         public List<string> ExecutedCommands { get; } = new List<string>();
 
+        /// <summary>
+        /// Gets or sets the condition that makes an executed command fail (with an <see cref="System.InvalidOperationException"/>).
+        /// </summary>
+        public System.Func<string, bool> FailWhen { get; set; }
+
         public override string Database { get; }
 
         public override string DataSource { get; }
