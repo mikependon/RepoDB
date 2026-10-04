@@ -21,6 +21,11 @@
     <None Include="..\..\..\..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="RepoDb.Schema.Core.UnitTests" />
+    <InternalsVisibleTo Include="RepoDb.Schema.SqlServer" />
+    <InternalsVisibleTo Include="RepoDb.Schema.PostgreSql" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\..\Providers\RepoDb.Core\RepoDb\RepoDb.csproj" />
   </ItemGroup>
 </Project>
