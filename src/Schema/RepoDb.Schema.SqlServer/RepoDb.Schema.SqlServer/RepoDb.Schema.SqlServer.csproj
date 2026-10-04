@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Title>RepoDb.Schema.SqlServer</Title>
+    <AssemblyName>RepoDb.Schema.SqlServer</AssemblyName>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>The SQL Server schema reader and composer of RepoDB library.</Description>
+    <LangVersion>preview</LangVersion>
+    <Nullable>annotations</Nullable>
+    <PackageTags>orm hybrid-orm micro-orm schema sqlserver</PackageTags>
+    <PackageIcon>SQLServer.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/mikependon/RepoDB/tree/master/src/Schema/RepoDb.Schema.SqlServer</RepositoryUrl>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />
+    <None Include="..\README.md" Pack="True" PackagePath="\" />
+    <None Include="..\SQLServer.png" Pack="True" PackagePath="\" />
+    <None Include="..\..\..\..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="RepoDb.Schema.SqlServer.UnitTests" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\RepoDb.Schema.Core\RepoDb.Schema.Core\RepoDb.Schema.Core.csproj" />
+    <ProjectReference Include="..\..\..\Providers\RepoDb.SqlServer\RepoDb.SqlServer\RepoDb.SqlServer.csproj" />
+  </ItemGroup>
+</Project>

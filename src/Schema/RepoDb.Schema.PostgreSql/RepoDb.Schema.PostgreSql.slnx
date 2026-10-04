@@ -1,0 +1,13 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="../../Providers/RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="../../Providers/RepoDb.PostgreSql/RepoDb.PostgreSql/RepoDb.PostgreSql.csproj" />
+  <Project Path="../RepoDb.Schema.Core/RepoDb.Schema.Core/RepoDb.Schema.Core.csproj" />
+  <Project Path="RepoDb.Schema.PostgreSql/RepoDb.Schema.PostgreSql.csproj" />
+  <Project Path="RepoDb.Schema.PostgreSql.UnitTests/RepoDb.Schema.PostgreSql.UnitTests.csproj" />
+  <Project Path="RepoDb.Schema.PostgreSql.IntegrationTests/RepoDb.Schema.PostgreSql.IntegrationTests.csproj" />
+</Solution>
