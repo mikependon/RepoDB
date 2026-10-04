@@ -18,12 +18,6 @@ namespace RepoDb.Schema.Models
         /// <summary>
         /// Creates a new instance of <see cref="TableInfo"/> class.
         /// </summary>
-        public TableInfo()
-        { }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="TableInfo"/> class.
-        /// </summary>
         /// <param name="name">The name of the table.</param>
         /// <param name="schema">The name of the schema that owns the table.</param>
         public TableInfo(string name,

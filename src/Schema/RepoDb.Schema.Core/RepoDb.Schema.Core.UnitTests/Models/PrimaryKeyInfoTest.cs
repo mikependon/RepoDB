@@ -22,7 +22,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestPrimaryKeyInfoNamePropertyDefaultValue()
         {
             // Act
-            var primaryKey = new PrimaryKeyInfo();
+            var primaryKey = new PrimaryKeyInfo(null);
             var actual = primaryKey.Name;
 
             // Assert
@@ -33,10 +33,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestPrimaryKeyInfoNameProperty()
         {
             // Act
-            var primaryKey = new PrimaryKeyInfo
-            {
-                Name = "PK_Person"
-            };
+            var primaryKey = new PrimaryKeyInfo("PK_Person");
             var actual = primaryKey.Name;
             var expected = "PK_Person";
 
@@ -48,7 +45,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestPrimaryKeyInfoColumnsPropertyDefaultValue()
         {
             // Act
-            var primaryKey = new PrimaryKeyInfo();
+            var primaryKey = new PrimaryKeyInfo(null);
             var actual = primaryKey.Columns;
 
             // Assert
@@ -60,7 +57,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestPrimaryKeyInfoColumnsProperty()
         {
             // Act
-            var primaryKey = new PrimaryKeyInfo();
+            var primaryKey = new PrimaryKeyInfo(null);
             primaryKey.Columns.Add("Id");
             primaryKey.Columns.Add("Name");
             var actual = primaryKey.Columns;
@@ -74,7 +71,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestPrimaryKeyInfoIsClusteredPropertyDefaultValue()
         {
             // Act
-            var primaryKey = new PrimaryKeyInfo();
+            var primaryKey = new PrimaryKeyInfo(null);
             var actual = primaryKey.IsClustered;
 
             // Assert
@@ -85,7 +82,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestPrimaryKeyInfoIsClusteredProperty()
         {
             // Act
-            var primaryKey = new PrimaryKeyInfo
+            var primaryKey = new PrimaryKeyInfo(null)
             {
                 IsClustered = false
             };

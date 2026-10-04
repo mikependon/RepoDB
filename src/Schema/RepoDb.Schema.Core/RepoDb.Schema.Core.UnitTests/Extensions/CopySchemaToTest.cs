@@ -45,14 +45,13 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         #region Helpers
 
         private static TableSchema GetSchema() =>
-            new TableSchema
+            new TableSchema("Person", "dbo")
             {
-                Table = new TableInfo { Name = "Person", Schema = "dbo" },
                 Columns = { new ColumnInfo(), new ColumnInfo(), new ColumnInfo() },
-                Indexes = { new IndexInfo() },
-                ForeignKeys = { new ForeignKeyInfo(), new ForeignKeyInfo() },
-                UniqueConstraints = { new UniqueConstraintInfo() },
-                CheckConstraints = { new CheckConstraintInfo() }
+                Indexes = { new IndexInfo(null) },
+                ForeignKeys = { new ForeignKeyInfo(null), new ForeignKeyInfo(null) },
+                UniqueConstraints = { new UniqueConstraintInfo(null) },
+                CheckConstraints = { new CheckConstraintInfo(null) }
             };
 
         private static Mock<ISchemaReader> MapReader(TableSchema schema)

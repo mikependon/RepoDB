@@ -14,6 +14,19 @@ namespace RepoDb.Schema.Models
     /// </summary>
     public class CheckConstraintInfo
     {
+        #region Constructors
+
+        /// <summary>
+        /// Creates a new instance of <see cref="CheckConstraintInfo"/> class.
+        /// </summary>
+        /// <param name="name">The name of the constraint or index.</param>
+        public CheckConstraintInfo(string name)
+        {
+            Name = name;
+        }
+
+        #endregion
+
         #region Properties
 
         /// <summary>

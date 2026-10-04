@@ -22,7 +22,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestIndexInfoNamePropertyDefaultValue()
         {
             // Act
-            var index = new IndexInfo();
+            var index = new IndexInfo(null);
             var actual = index.Name;
 
             // Assert
@@ -33,10 +33,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestIndexInfoNameProperty()
         {
             // Act
-            var index = new IndexInfo
-            {
-                Name = "IX_Person_Name"
-            };
+            var index = new IndexInfo("IX_Person_Name");
             var actual = index.Name;
             var expected = "IX_Person_Name";
 
@@ -48,7 +45,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestIndexInfoIsUniquePropertyDefaultValue()
         {
             // Act
-            var index = new IndexInfo();
+            var index = new IndexInfo(null);
             var actual = index.IsUnique;
 
             // Assert
@@ -59,7 +56,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestIndexInfoIsUniqueProperty()
         {
             // Act
-            var index = new IndexInfo
+            var index = new IndexInfo(null)
             {
                 IsUnique = true
             };
@@ -74,7 +71,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestIndexInfoColumnsPropertyDefaultValue()
         {
             // Act
-            var index = new IndexInfo();
+            var index = new IndexInfo(null);
             var actual = index.Columns;
 
             // Assert
@@ -86,7 +83,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestIndexInfoColumnsProperty()
         {
             // Act
-            var index = new IndexInfo();
+            var index = new IndexInfo(null);
             index.Columns.Add("Id");
             index.Columns.Add("Name");
             var actual = index.Columns;
@@ -100,7 +97,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestIndexInfoIncludedColumnsPropertyDefaultValue()
         {
             // Act
-            var index = new IndexInfo();
+            var index = new IndexInfo(null);
             var actual = index.IncludedColumns;
 
             // Assert
@@ -112,7 +109,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestIndexInfoIncludedColumnsProperty()
         {
             // Act
-            var index = new IndexInfo();
+            var index = new IndexInfo(null);
             index.IncludedColumns.Add("Id");
             index.IncludedColumns.Add("Name");
             var actual = index.IncludedColumns;
@@ -126,7 +123,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestIndexInfoIsClusteredPropertyDefaultValue()
         {
             // Act
-            var index = new IndexInfo();
+            var index = new IndexInfo(null);
             var actual = index.IsClustered;
 
             // Assert
@@ -137,7 +134,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestIndexInfoIsClusteredProperty()
         {
             // Act
-            var index = new IndexInfo
+            var index = new IndexInfo(null)
             {
                 IsClustered = true
             };
@@ -151,7 +148,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestIndexInfoFilterPropertyDefaultValue()
         {
             // Act
-            var index = new IndexInfo();
+            var index = new IndexInfo(null);
             var actual = index.Filter;
 
             // Assert
@@ -162,7 +159,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestIndexInfoFilterProperty()
         {
             // Act
-            var index = new IndexInfo
+            var index = new IndexInfo(null)
             {
                 Filter = "([IsActive]=(1))"
             };
@@ -176,7 +173,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestIndexInfoDescendingColumnsPropertyDefaultValue()
         {
             // Act
-            var index = new IndexInfo();
+            var index = new IndexInfo(null);
             var actual = index.DescendingColumns;
 
             // Assert
@@ -188,7 +185,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestIndexInfoDescendingColumnsProperty()
         {
             // Act
-            var index = new IndexInfo();
+            var index = new IndexInfo(null);
             index.DescendingColumns.Add("Price");
             var actual = index.DescendingColumns;
 

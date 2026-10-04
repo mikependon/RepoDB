@@ -26,12 +26,11 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         {
             var schema = name.Contains('.') ? name.Substring(0, name.IndexOf('.')) : "dbo";
             var table = name.Contains('.') ? name.Substring(name.IndexOf('.') + 1) : name;
-            var tableSchema = new TableSchema { Table = new TableInfo { Schema = schema, Name = table } };
+            var tableSchema = new TableSchema(table, schema);
             foreach (var reference in references)
             {
-                tableSchema.ForeignKeys.Add(new ForeignKeyInfo
+                tableSchema.ForeignKeys.Add(new ForeignKeyInfo($"FK_{table}_{reference}")
                 {
-                    Name = $"FK_{table}_{reference}",
                     Columns = { "Id" },
                     ReferencedTable = reference,
                     ReferencedColumns = { "Id" }
@@ -243,7 +242,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         public void TestSqlServerSchemaReaderOrderMatchesTheQuotedNames()
         {
             // Act
-            var odd = new TableSchema { Table = new TableInfo { Schema = "dbo", Name = "Odd.Name" } };
+            var odd = new TableSchema("Odd.Name", "dbo");
             var actual = Relationships(Table("Child", "[dbo].[Odd.Name]"), odd);
 
             // Assert

@@ -23,7 +23,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestForeignKeyInfoNamePropertyDefaultValue()
         {
             // Act
-            var foreignKey = new ForeignKeyInfo();
+            var foreignKey = new ForeignKeyInfo(null);
             var actual = foreignKey.Name;
 
             // Assert
@@ -34,10 +34,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestForeignKeyInfoNameProperty()
         {
             // Act
-            var foreignKey = new ForeignKeyInfo
-            {
-                Name = "FK_Person_Country"
-            };
+            var foreignKey = new ForeignKeyInfo("FK_Person_Country");
             var actual = foreignKey.Name;
             var expected = "FK_Person_Country";
 
@@ -49,7 +46,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestForeignKeyInfoReferencedTablePropertyDefaultValue()
         {
             // Act
-            var foreignKey = new ForeignKeyInfo();
+            var foreignKey = new ForeignKeyInfo(null);
             var actual = foreignKey.ReferencedTable;
 
             // Assert
@@ -60,7 +57,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestForeignKeyInfoReferencedTableProperty()
         {
             // Act
-            var foreignKey = new ForeignKeyInfo
+            var foreignKey = new ForeignKeyInfo(null)
             {
                 ReferencedTable = "dbo.Country"
             };
@@ -75,7 +72,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestForeignKeyInfoColumnsPropertyDefaultValue()
         {
             // Act
-            var foreignKey = new ForeignKeyInfo();
+            var foreignKey = new ForeignKeyInfo(null);
             var actual = foreignKey.Columns;
 
             // Assert
@@ -87,7 +84,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestForeignKeyInfoColumnsProperty()
         {
             // Act
-            var foreignKey = new ForeignKeyInfo();
+            var foreignKey = new ForeignKeyInfo(null);
             foreignKey.Columns.Add("Id");
             foreignKey.Columns.Add("Name");
             var actual = foreignKey.Columns;
@@ -101,7 +98,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestForeignKeyInfoReferencedColumnsPropertyDefaultValue()
         {
             // Act
-            var foreignKey = new ForeignKeyInfo();
+            var foreignKey = new ForeignKeyInfo(null);
             var actual = foreignKey.ReferencedColumns;
 
             // Assert
@@ -113,7 +110,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestForeignKeyInfoReferencedColumnsProperty()
         {
             // Act
-            var foreignKey = new ForeignKeyInfo();
+            var foreignKey = new ForeignKeyInfo(null);
             foreignKey.ReferencedColumns.Add("Id");
             foreignKey.ReferencedColumns.Add("Name");
             var actual = foreignKey.ReferencedColumns;
@@ -127,7 +124,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestForeignKeyInfoUpdateRulePropertyDefaultValue()
         {
             // Act
-            var foreignKey = new ForeignKeyInfo();
+            var foreignKey = new ForeignKeyInfo(null);
             var actual = foreignKey.UpdateRule;
 
             // Assert
@@ -138,7 +135,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestForeignKeyInfoUpdateRuleProperty()
         {
             // Act
-            var foreignKey = new ForeignKeyInfo
+            var foreignKey = new ForeignKeyInfo(null)
             {
                 UpdateRule = ForeignKeyRule.Cascade
             };
@@ -153,7 +150,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestForeignKeyInfoDeleteRulePropertyDefaultValue()
         {
             // Act
-            var foreignKey = new ForeignKeyInfo();
+            var foreignKey = new ForeignKeyInfo(null);
             var actual = foreignKey.DeleteRule;
 
             // Assert
@@ -164,7 +161,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestForeignKeyInfoDeleteRuleProperty()
         {
             // Act
-            var foreignKey = new ForeignKeyInfo
+            var foreignKey = new ForeignKeyInfo(null)
             {
                 DeleteRule = ForeignKeyRule.SetNull
             };

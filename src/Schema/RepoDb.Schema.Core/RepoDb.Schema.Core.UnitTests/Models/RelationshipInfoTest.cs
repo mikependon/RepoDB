@@ -32,7 +32,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestRelationshipInfoTableProperty()
         {
             // Setup
-            var table = new TableSchema { Table = new TableInfo { Name = "Person" } };
+            var table = new TableSchema("Person", null);
 
             // Act
             var relationship = new RelationshipInfo
@@ -61,7 +61,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestRelationshipInfoParentsProperty()
         {
             // Setup
-            var parent = new RelationshipInfo { Schema = new TableSchema { Table = new TableInfo { Name = "Country" } } };
+            var parent = new RelationshipInfo { Schema = new TableSchema("Country", null) };
 
             // Act
             var relationship = new RelationshipInfo();
@@ -89,7 +89,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestRelationshipInfoChildrenProperty()
         {
             // Setup
-            var child = new RelationshipInfo { Schema = new TableSchema { Table = new TableInfo { Name = "Person" } } };
+            var child = new RelationshipInfo { Schema = new TableSchema("Person", null) };
 
             // Act
             var relationship = new RelationshipInfo();
@@ -119,8 +119,8 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestRelationshipInfoCanReferenceItselfCircularly()
         {
             // Setup
-            var a = new RelationshipInfo { Schema = new TableSchema { Table = new TableInfo { Name = "CycleA" } } };
-            var b = new RelationshipInfo { Schema = new TableSchema { Table = new TableInfo { Name = "CycleB" } } };
+            var a = new RelationshipInfo { Schema = new TableSchema("CycleA", null) };
+            var b = new RelationshipInfo { Schema = new TableSchema("CycleB", null) };
 
             // Act
             a.Parents.Add(b);

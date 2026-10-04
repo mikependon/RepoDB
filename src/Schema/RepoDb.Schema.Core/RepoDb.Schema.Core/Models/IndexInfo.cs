@@ -15,6 +15,19 @@ namespace RepoDb.Schema.Models
     /// </summary>
     public class IndexInfo
     {
+        #region Constructors
+
+        /// <summary>
+        /// Creates a new instance of <see cref="IndexInfo"/> class.
+        /// </summary>
+        /// <param name="name">The name of the constraint or index.</param>
+        public IndexInfo(string name)
+        {
+            Name = name;
+        }
+
+        #endregion
+
         #region Properties
 
         /// <summary>

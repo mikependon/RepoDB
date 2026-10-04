@@ -15,6 +15,19 @@ namespace RepoDb.Schema.Models
     /// </summary>
     public class PrimaryKeyInfo
     {
+        #region Constructors
+
+        /// <summary>
+        /// Creates a new instance of <see cref="PrimaryKeyInfo"/> class.
+        /// </summary>
+        /// <param name="name">The name of the constraint or index.</param>
+        public PrimaryKeyInfo(string name)
+        {
+            Name = name;
+        }
+
+        #endregion
+
         #region Properties
 
         /// <summary>

@@ -255,9 +255,8 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             // Setup
             var source = Helper.GetSourceSchema("Product");
             var composer = new SqlServerSchemaComposer();
-            var withoutIndexes = new TableSchema
+            var withoutIndexes = new TableSchema(source.Table.Name, source.Table.Schema)
             {
-                Table = new TableInfo { Name = source.Table.Name, Schema = source.Table.Schema },
                 PrimaryKey = source.PrimaryKey,
                 Columns = source.Columns
             };

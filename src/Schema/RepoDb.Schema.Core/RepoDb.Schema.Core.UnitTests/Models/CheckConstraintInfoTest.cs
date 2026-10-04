@@ -21,7 +21,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestCheckConstraintInfoNamePropertyDefaultValue()
         {
             // Act
-            var constraint = new CheckConstraintInfo();
+            var constraint = new CheckConstraintInfo(null);
             var actual = constraint.Name;
 
             // Assert
@@ -32,10 +32,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestCheckConstraintInfoNameProperty()
         {
             // Act
-            var constraint = new CheckConstraintInfo
-            {
-                Name = "CK_Person_Age"
-            };
+            var constraint = new CheckConstraintInfo("CK_Person_Age");
             var actual = constraint.Name;
             var expected = "CK_Person_Age";
 
@@ -47,7 +44,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestCheckConstraintInfoExpressionPropertyDefaultValue()
         {
             // Act
-            var constraint = new CheckConstraintInfo();
+            var constraint = new CheckConstraintInfo(null);
             var actual = constraint.Expression;
 
             // Assert
@@ -58,7 +55,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestCheckConstraintInfoExpressionProperty()
         {
             // Act
-            var constraint = new CheckConstraintInfo
+            var constraint = new CheckConstraintInfo(null)
             {
                 Expression = "[Age]>=(0)"
             };

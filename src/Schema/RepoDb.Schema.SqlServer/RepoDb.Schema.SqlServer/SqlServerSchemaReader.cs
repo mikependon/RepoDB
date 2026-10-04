@@ -65,9 +65,8 @@ namespace RepoDb.Schema
             var (schema, table) = Resolve(tableName);
             var fullName = FullName(schema, table);
 
-            return new TableSchema
+            return new TableSchema(table, schema)
             {
-                Table = new TableInfo { Name = table, Schema = schema },
                 Columns = Query(SqlServerSchemaText.ColumnsSql, SchemaTraceKeys.GetColumns, MapColumn, FullNameParameter(fullName)),
                 PrimaryKey = MapPrimaryKey(Query(SqlServerSchemaText.KeyConstraintSql, SchemaTraceKeys.GetPrimaryKey, MapKeyColumn, FullNameParameter(fullName), Parameter("Type", "PK"))),
                 Indexes = MapIndexes(Query(SqlServerSchemaText.IndexesSql, SchemaTraceKeys.GetIndexes, MapIndexColumn, FullNameParameter(fullName))),
@@ -183,9 +182,8 @@ namespace RepoDb.Schema
             var (schema, table) = await ResolveAsync(tableName, cancellationToken).ConfigureAwait(false);
             var fullName = FullName(schema, table);
 
-            return new TableSchema
+            return new TableSchema(table, schema)
             {
-                Table = new TableInfo { Name = table, Schema = schema },
                 Columns = await QueryAsync(SqlServerSchemaText.ColumnsSql, SchemaTraceKeys.GetColumns, MapColumn, cancellationToken, FullNameParameter(fullName)).ConfigureAwait(false),
                 PrimaryKey = MapPrimaryKey(await QueryAsync(SqlServerSchemaText.KeyConstraintSql, SchemaTraceKeys.GetPrimaryKey, MapKeyColumn, cancellationToken, FullNameParameter(fullName), Parameter("Type", "PK")).ConfigureAwait(false)),
                 Indexes = MapIndexes(await QueryAsync(SqlServerSchemaText.IndexesSql, SchemaTraceKeys.GetIndexes, MapIndexColumn, cancellationToken, FullNameParameter(fullName)).ConfigureAwait(false)),
@@ -615,7 +613,7 @@ namespace RepoDb.Schema
             var list = rows.ToList();
             return list.Count == 0
                 ? null
-                : new PrimaryKeyInfo { Name = list[0].Name, Columns = list.Select(x => x.Column).ToList(), IsClustered = list[0].IsClustered };
+                : new PrimaryKeyInfo(list[0].Name) { Columns = list.Select(x => x.Column).ToList(), IsClustered = list[0].IsClustered };
         }
 
         /// <summary>
@@ -625,7 +623,7 @@ namespace RepoDb.Schema
         /// <returns></returns>
         private static IList<UniqueConstraintInfo> MapUniqueConstraints(IEnumerable<(string Name, string Column, bool IsClustered)> rows) =>
             rows.GroupBy(x => x.Name)
-                .Select(g => new UniqueConstraintInfo { Name = g.Key, Columns = g.Select(x => x.Column).ToList() })
+                .Select(g => new UniqueConstraintInfo(g.Key) { Columns = g.Select(x => x.Column).ToList() })
                 .ToList();
 
         /// <summary>
@@ -643,9 +641,8 @@ namespace RepoDb.Schema
         /// <returns></returns>
         private static IList<IndexInfo> MapIndexes(IEnumerable<(string Name, bool IsUnique, bool IsClustered, string Filter, string Column, bool IsIncluded, bool IsDescending)> rows) =>
             rows.GroupBy(x => x.Name)
-                .Select(g => new IndexInfo
+                .Select(g => new IndexInfo(g.Key)
                 {
-                    Name = g.Key,
                     IsUnique = g.First().IsUnique,
                     IsClustered = g.First().IsClustered,
                     Filter = g.First().Filter,
@@ -670,9 +667,8 @@ namespace RepoDb.Schema
         /// <returns></returns>
         private static IList<ForeignKeyInfo> MapForeignKeys(IEnumerable<(string Name, string Column, string RefSchema, string RefTable, string RefColumn, int Update, int Delete)> rows) =>
             rows.GroupBy(x => x.Name)
-                .Select(g => new ForeignKeyInfo
+                .Select(g => new ForeignKeyInfo(g.Key)
                 {
-                    Name = g.Key,
                     Columns = g.Select(x => x.Column).ToList(),
                     ReferencedTable = Helper.Format(g.First().RefSchema, g.First().RefTable),
                     ReferencedColumns = g.Select(x => x.RefColumn).ToList(),
@@ -703,7 +699,7 @@ namespace RepoDb.Schema
         /// <param name="r"></param>
         /// <returns></returns>
         private static CheckConstraintInfo MapCheckConstraint(IDataRecord r) =>
-            new CheckConstraintInfo { Name = Text(r, "ConstraintName"), Expression = Text(r, "Definition") };
+            new CheckConstraintInfo(Text(r, "ConstraintName")) { Expression = Text(r, "Definition") };
 
         // Ordering
 

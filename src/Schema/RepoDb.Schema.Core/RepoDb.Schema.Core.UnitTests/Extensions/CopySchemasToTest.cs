@@ -42,10 +42,10 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
         private static TableSchema GetSchema(string tableName, int columns = 1, int indexes = 0, int foreignKeys = 0)
         {
-            var schema = new TableSchema { Table = new TableInfo { Schema = "dbo", Name = tableName } };
+            var schema = new TableSchema(tableName, "dbo");
             for (var i = 0; i < columns; i++) schema.Columns.Add(new ColumnInfo());
-            for (var i = 0; i < indexes; i++) schema.Indexes.Add(new IndexInfo());
-            for (var i = 0; i < foreignKeys; i++) schema.ForeignKeys.Add(new ForeignKeyInfo());
+            for (var i = 0; i < indexes; i++) schema.Indexes.Add(new IndexInfo(null));
+            for (var i = 0; i < foreignKeys; i++) schema.ForeignKeys.Add(new ForeignKeyInfo(null));
             return schema;
         }
 

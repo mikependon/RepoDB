@@ -256,9 +256,8 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionStringForTarget))
             {
                 // Act
-                var withoutIndexesAndForeignKeys = new TableSchema
+                var withoutIndexesAndForeignKeys = new TableSchema(source.Table.Name, source.Table.Schema)
                 {
-                    Table = new TableInfo { Name = source.Table.Name, Schema = source.Table.Schema },
                     PrimaryKey = source.PrimaryKey,
                     Columns = source.Columns,
                     CheckConstraints = source.CheckConstraints

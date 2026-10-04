@@ -43,13 +43,13 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
 
         private static TableSchema SchemaTable(string schemaName, string tableName, params string[] references)
         {
-            var schema = new TableSchema { Table = new TableInfo { Schema = schemaName, Name = tableName } };
+            var schema = new TableSchema(tableName, schemaName);
             schema.Columns.Add(new ColumnInfo
             {
                 Ordinal = 1,
                 Field = new DbField("Id", true, false, false, typeof(int), 4, 10, 0, "int")
             });
-            schema.PrimaryKey = new PrimaryKeyInfo { Name = $"PK_{tableName}", Columns = { "Id" } };
+            schema.PrimaryKey = new PrimaryKeyInfo($"PK_{tableName}") { Columns = { "Id" } };
             foreach (var reference in references)
             {
                 var referenceName = reference.Replace(".", string.Empty);
@@ -58,9 +58,8 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
                     Ordinal = schema.Columns.Count + 1,
                     Field = new DbField($"{referenceName}Id", false, false, true, typeof(int), 4, 10, 0, "int")
                 });
-                schema.ForeignKeys.Add(new ForeignKeyInfo
+                schema.ForeignKeys.Add(new ForeignKeyInfo($"FK_{tableName}_{referenceName}")
                 {
-                    Name = $"FK_{tableName}_{referenceName}",
                     Columns = { $"{referenceName}Id" },
                     ReferencedTable = reference,
                     ReferencedColumns = { "Id" }
@@ -194,8 +193,8 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
         {
             // Setup
             var product = Table("Product");
-            product.Indexes.Add(new IndexInfo { Name = "CIX_Product_Id", IsUnique = true, IsClustered = true, Columns = { "Id" } });
-            product.Indexes.Add(new IndexInfo { Name = "IX_Product_Id", Columns = { "Id" }, DescendingColumns = { "Id" }, Filter = "(\"Id\">(0))" });
+            product.Indexes.Add(new IndexInfo("CIX_Product_Id") { IsUnique = true, IsClustered = true, Columns = { "Id" } });
+            product.Indexes.Add(new IndexInfo("IX_Product_Id") { Columns = { "Id" }, DescendingColumns = { "Id" }, Filter = "(\"Id\">(0))" });
             MapReader(product);
             MapComposer();
             var destination = new CustomDbConnection();
@@ -292,7 +291,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
         {
             // Setup
             var product = Table("Product", "Category");
-            product.Indexes.Add(new IndexInfo { Name = "IX_Product_Id", Columns = { "Id" } });
+            product.Indexes.Add(new IndexInfo("IX_Product_Id") { Columns = { "Id" } });
             MapReader(product, Table("Category"));
             MapComposer();
             var destination = new CustomDbConnection();
@@ -338,7 +337,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
         {
             // Setup
             var product = Table("Product");
-            product.Indexes.Add(new IndexInfo { Name = "IX_Product_Id", Columns = { "Id" } });
+            product.Indexes.Add(new IndexInfo("IX_Product_Id") { Columns = { "Id" } });
             MapReader(product, Table("Category"));
             MapComposer();
             var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("CREATE INDEX", StringComparison.Ordinal) };

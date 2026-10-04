@@ -34,7 +34,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestTableSchemaTableNamePropertyDefaultValue()
         {
             // Act
-            var schema = new TableSchema();
+            var schema = new TableSchema(null, null);
             var actual = schema.Table.Name;
 
             // Assert
@@ -45,10 +45,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestTableSchemaTableNameProperty()
         {
             // Act
-            var schema = new TableSchema
-            {
-                Table = new TableInfo { Name = "Person" }
-            };
+            var schema = new TableSchema("Person", null);
             var actual = schema.Table.Name;
             var expected = "Person";
 
@@ -60,7 +57,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestTableSchemaSchemaNamePropertyDefaultValue()
         {
             // Act
-            var schema = new TableSchema();
+            var schema = new TableSchema(null, null);
             var actual = schema.Table.Schema;
 
             // Assert
@@ -71,10 +68,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestTableSchemaSchemaNameProperty()
         {
             // Act
-            var schema = new TableSchema
-            {
-                Table = new TableInfo { Schema = "dbo" }
-            };
+            var schema = new TableSchema(null, "dbo");
             var actual = schema.Table.Schema;
             var expected = "dbo";
 
@@ -86,7 +80,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestTableSchemaPrimaryKeyPropertyDefaultValue()
         {
             // Act
-            var schema = new TableSchema();
+            var schema = new TableSchema(null, null);
             var actual = schema.PrimaryKey;
 
             // Assert
@@ -97,10 +91,10 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestTableSchemaPrimaryKeyProperty()
         {
             // Setup
-            var primaryKey = new PrimaryKeyInfo { Name = "PK_Person" };
+            var primaryKey = new PrimaryKeyInfo("PK_Person");
 
             // Act
-            var schema = new TableSchema
+            var schema = new TableSchema(null, null)
             {
                 PrimaryKey = primaryKey
             };
@@ -114,7 +108,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestTableSchemaColumnsPropertyDefaultValue()
         {
             // Act
-            var schema = new TableSchema();
+            var schema = new TableSchema(null, null);
             var actual = schema.Columns;
 
             // Assert
@@ -126,7 +120,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestTableSchemaIndexesPropertyDefaultValue()
         {
             // Act
-            var schema = new TableSchema();
+            var schema = new TableSchema(null, null);
             var actual = schema.Indexes;
 
             // Assert
@@ -138,7 +132,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestTableSchemaForeignKeysPropertyDefaultValue()
         {
             // Act
-            var schema = new TableSchema();
+            var schema = new TableSchema(null, null);
             var actual = schema.ForeignKeys;
 
             // Assert
@@ -150,7 +144,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestTableSchemaUniqueConstraintsPropertyDefaultValue()
         {
             // Act
-            var schema = new TableSchema();
+            var schema = new TableSchema(null, null);
             var actual = schema.UniqueConstraints;
 
             // Assert
@@ -162,7 +156,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestTableSchemaCheckConstraintsPropertyDefaultValue()
         {
             // Act
-            var schema = new TableSchema();
+            var schema = new TableSchema(null, null);
             var actual = schema.CheckConstraints;
 
             // Assert
@@ -174,8 +168,8 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestTableSchemaCollectionsAreNotShared()
         {
             // Act
-            var first = new TableSchema();
-            var second = new TableSchema();
+            var first = new TableSchema(null, null);
+            var second = new TableSchema(null, null);
             first.Columns.Add(new ColumnInfo());
 
             // Assert

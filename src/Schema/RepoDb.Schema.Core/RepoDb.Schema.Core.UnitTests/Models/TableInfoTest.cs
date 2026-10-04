@@ -32,7 +32,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestTableInfoNamePropertyDefaultValue()
         {
             // Act
-            var actual = new TableInfo().Name;
+            var actual = new TableInfo(null, null).Name;
 
             // Assert
             Assert.IsNull(actual);
@@ -42,7 +42,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestTableInfoNameProperty()
         {
             // Act
-            var actual = new TableInfo { Name = "Person" }.Name;
+            var actual = new TableInfo("Person", null).Name;
             var expected = "Person";
 
             // Assert
@@ -53,7 +53,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestTableInfoSchemaPropertyDefaultValue()
         {
             // Act
-            var actual = new TableInfo().Schema;
+            var actual = new TableInfo(null, null).Schema;
 
             // Assert
             Assert.IsNull(actual);
@@ -63,7 +63,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestTableInfoSchemaProperty()
         {
             // Act
-            var actual = new TableInfo { Schema = "dbo" }.Schema;
+            var actual = new TableInfo(null, "dbo").Schema;
             var expected = "dbo";
 
             // Assert

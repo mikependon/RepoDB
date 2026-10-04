@@ -20,12 +20,6 @@ namespace RepoDb.Schema.Models
         /// <summary>
         /// Creates a new instance of <see cref="TableSchema"/> class.
         /// </summary>
-        public TableSchema()
-        { }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="TableSchema"/> class.
-        /// </summary>
         /// <param name="name">The name of the table.</param>
         /// <param name="schema">The name of the schema that owns the table.</param>
         public TableSchema(string name,
@@ -66,7 +60,7 @@ namespace RepoDb.Schema.Models
         /// <summary>
         /// Gets or sets the identity (name and schema) of the table.
         /// </summary>
-        public TableInfo Table { get; internal set; } = new TableInfo();
+        public TableInfo Table { get; internal set; }
 
         /// <summary>
         /// Gets or sets the unique constraints of the table.

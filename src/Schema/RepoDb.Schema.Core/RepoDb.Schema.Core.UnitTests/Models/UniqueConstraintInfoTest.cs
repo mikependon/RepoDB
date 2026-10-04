@@ -22,7 +22,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestUniqueConstraintInfoNamePropertyDefaultValue()
         {
             // Act
-            var constraint = new UniqueConstraintInfo();
+            var constraint = new UniqueConstraintInfo(null);
             var actual = constraint.Name;
 
             // Assert
@@ -33,10 +33,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestUniqueConstraintInfoNameProperty()
         {
             // Act
-            var constraint = new UniqueConstraintInfo
-            {
-                Name = "UQ_Person_Name"
-            };
+            var constraint = new UniqueConstraintInfo("UQ_Person_Name");
             var actual = constraint.Name;
             var expected = "UQ_Person_Name";
 
@@ -48,7 +45,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestUniqueConstraintInfoColumnsPropertyDefaultValue()
         {
             // Act
-            var constraint = new UniqueConstraintInfo();
+            var constraint = new UniqueConstraintInfo(null);
             var actual = constraint.Columns;
 
             // Assert
@@ -60,7 +57,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestUniqueConstraintInfoColumnsProperty()
         {
             // Act
-            var constraint = new UniqueConstraintInfo();
+            var constraint = new UniqueConstraintInfo(null);
             constraint.Columns.Add("Id");
             constraint.Columns.Add("Name");
             var actual = constraint.Columns;
