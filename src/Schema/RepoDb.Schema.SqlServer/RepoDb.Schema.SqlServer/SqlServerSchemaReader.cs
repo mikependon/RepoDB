@@ -243,7 +243,7 @@ namespace RepoDb.Schema
         /// <param name="schemaName">The name of the schema to be read. The default is <c>null</c>, which reads all the schemas.</param>
         /// <returns>The names of the tables.</returns>
         public IEnumerable<string> GetTables(string schemaName = null) =>
-            Query(TablesSql, SchemaTraceKeys.GetTables, r => $"{r.GetString(0)}.{r.GetString(1)}", Parameter("SchemaName", schemaName));
+            Query(TablesSql, SchemaTraceKeys.GetTables, r => SqlServerNames.Format(r.GetString(0), r.GetString(1)), Parameter("SchemaName", schemaName));
 
         /// <summary>
         /// Orders the tables so that a table always comes after the tables that its foreign keys reference. Use the order to create the tables, and the reverse of it to drop them.
@@ -381,7 +381,7 @@ namespace RepoDb.Schema
         /// <returns>A task that represents the asynchronous operation. The task result contains: the names of the tables.</returns>
         public async Task<IEnumerable<string>> GetTablesAsync(string schemaName = null,
             CancellationToken cancellationToken = default) =>
-            await QueryAsync(TablesSql, SchemaTraceKeys.GetTables, r => $"{r.GetString(0)}.{r.GetString(1)}", cancellationToken, Parameter("SchemaName", schemaName)).ConfigureAwait(false);
+            await QueryAsync(TablesSql, SchemaTraceKeys.GetTables, r => SqlServerNames.Format(r.GetString(0), r.GetString(1)), cancellationToken, Parameter("SchemaName", schemaName)).ConfigureAwait(false);
 
         /// <summary>
         /// Orders the tables so that a table always comes after the tables that its foreign keys reference. Use the order to create the tables, and the reverse of it to drop them.
@@ -413,20 +413,8 @@ namespace RepoDb.Schema
         /// <param name="tableName"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        private static (string Schema, string Table) ParseTableName(string tableName)
-        {
-            if (string.IsNullOrWhiteSpace(tableName))
-            {
-                throw new ArgumentNullException(nameof(tableName));
-            }
-            var parts = tableName.Split('.')
-                .Select(p => p.Trim().Trim('[', ']', '"'))
-                .Where(p => p.Length > 0)
-                .ToArray();
-            return parts.Length >= 2
-                ? (parts[parts.Length - 2], parts[parts.Length - 1])
-                : (null, parts[0]);
-        }
+        private static (string Schema, string Table) ParseTableName(string tableName) =>
+            SqlServerNames.Parse(tableName);
 
         /// <summary>
         /// 
@@ -435,7 +423,7 @@ namespace RepoDb.Schema
         /// <param name="table"></param>
         /// <returns></returns>
         private static string FullName(string schema, string table) =>
-            $"[{schema.Replace("]", "]]")}].[{table.Replace("]", "]]")}]";
+            $"{SqlServerNames.Quote(schema)}.{SqlServerNames.Quote(table)}";
 
         /// <summary>
         /// 
@@ -445,7 +433,7 @@ namespace RepoDb.Schema
         private static string Key(string tableName)
         {
             var (schema, table) = ParseTableName(tableName);
-            return $"{schema ?? DefaultSchema}.{table}".ToLowerInvariant();
+            return $"{schema ?? DefaultSchema}\u0001{table}".ToLowerInvariant();
         }
 
         /// <summary>
@@ -776,7 +764,7 @@ namespace RepoDb.Schema
                 {
                     Name = g.Key,
                     Columns = g.Select(x => x.Column).ToList(),
-                    ReferencedTable = $"{g.First().RefSchema}.{g.First().RefTable}",
+                    ReferencedTable = SqlServerNames.Format(g.First().RefSchema, g.First().RefTable),
                     ReferencedColumns = g.Select(x => x.RefColumn).ToList(),
                     UpdateRule = ToRule(g.First().Update),
                     DeleteRule = ToRule(g.First().Delete)
@@ -810,60 +798,138 @@ namespace RepoDb.Schema
         // Ordering
 
         /// <summary>
-        ///
+        /// Orders the tables so that a table always comes after the tables that it references, and builds the parents and the children of each one.
+        /// The tables that reference each other (directly or through other tables) have no order between them, so they are kept in the order that they were given.
+        /// The tables that are not related to each other are also kept in the order that they were given.
         /// </summary>
-        /// <param name="schemas"></param>
-        /// <returns></returns>
-        private static IList<RelationshipInfo> Order(IList<TableSchema> schemas)
+        /// <param name="schemas">The schemas of the tables.</param>
+        /// <returns>The ordered relationships, one per table.</returns>
+        internal static IList<RelationshipInfo> Order(IList<TableSchema> schemas)
         {
             // One relationship per table (the first one wins if a table is given more than once)
             var keys = new List<string>();
             var relationships = new Dictionary<string, RelationshipInfo>();
             foreach (var schema in schemas)
             {
-                var key = Key($"{schema.SchemaName}.{schema.TableName}");
+                var key = Key(SqlServerNames.Format(schema.SchemaName, schema.TableName));
                 if (!relationships.ContainsKey(key))
                 {
                     keys.Add(key);
                     relationships[key] = new RelationshipInfo { Table = schema };
                 }
             }
+            var position = keys.Select((key, index) => new { key, index }).ToDictionary(x => x.key, x => x.index);
 
-            // Every table depends on the (other) given tables that its foreign keys reference
-            var pending = new Dictionary<string, HashSet<string>>();
+            // The parents of each table: the (other) given tables that its foreign keys reference
+            var parentKeys = keys.ToDictionary(
+                key => key,
+                key => relationships[key].Table.ForeignKeys
+                    .Select(fk => Key(fk.ReferencedTable))
+                    .Where(parent => parent != key && relationships.ContainsKey(parent))
+                    .Distinct()
+                    .OrderBy(parent => position[parent])
+                    .ToList());
             foreach (var key in keys)
             {
-                var parents = new HashSet<string>(relationships[key].Table.ForeignKeys
-                    .Select(fk => Key(fk.ReferencedTable))
-                    .Where(parent => parent != key && relationships.ContainsKey(parent)));
-                pending[key] = parents;
-                foreach (var parent in parents)
+                foreach (var parent in parentKeys[key])
                 {
                     relationships[key].Parents.Add(relationships[parent]);
+                }
+            }
+            foreach (var key in keys)
+            {
+                foreach (var parent in parentKeys[key])
+                {
                     relationships[parent].Children.Add(relationships[key]);
                 }
             }
 
+            // The tables that reference each other (directly or not) form a group, so find the groups first
+            var groupOf = FindGroups(keys, parentKeys);
+            var groups = keys.GroupBy(key => groupOf[key]).ToDictionary(g => g.Key, g => g.ToList());
+            var pending = groups.ToDictionary(
+                group => group.Key,
+                group => new HashSet<int>(group.Value
+                    .SelectMany(key => parentKeys[key])
+                    .Select(parent => groupOf[parent])
+                    .Where(parent => parent != group.Key)));
+
+            // Take the groups, one by one, whose parent groups are all taken (the one with the table that was given first comes first)
             var ordered = new List<RelationshipInfo>();
             while (pending.Count > 0)
             {
-                var ready = keys.Where(k => pending.ContainsKey(k) && pending[k].Count == 0).ToList();
-                if (ready.Count == 0)
+                var next = pending
+                    .Where(p => p.Value.Count == 0)
+                    .OrderBy(p => groups[p.Key].Min(key => position[key]))
+                    .First()
+                    .Key;
+                ordered.AddRange(groups[next].OrderBy(key => position[key]).Select(key => relationships[key]));
+                pending.Remove(next);
+                foreach (var parents in pending.Values)
                 {
-                    // A cycle: break it at the table that was given first
-                    ready = new List<string> { keys.First(k => pending.ContainsKey(k)) };
-                }
-                foreach (var key in ready)
-                {
-                    ordered.Add(relationships[key]);
-                    pending.Remove(key);
-                }
-                foreach (var dependencies in pending.Values)
-                {
-                    dependencies.ExceptWith(ready);
+                    parents.Remove(next);
                 }
             }
             return ordered;
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="keys"></param>
+        /// <param name="parentKeys"></param>
+        /// <returns></returns>
+        private static Dictionary<string, int> FindGroups(IList<string> keys,
+            IDictionary<string, List<string>> parentKeys)
+        {
+            // Tarjan's algorithm: the tables that can reach each other belong to the same group
+            var groupOf = new Dictionary<string, int>();
+            var indexes = new Dictionary<string, int>();
+            var lowLinks = new Dictionary<string, int>();
+            var stack = new Stack<string>();
+            var onStack = new HashSet<string>();
+            var counter = 0;
+            var groups = 0;
+
+            void Visit(string key)
+            {
+                indexes[key] = lowLinks[key] = counter++;
+                stack.Push(key);
+                onStack.Add(key);
+                foreach (var parent in parentKeys[key])
+                {
+                    if (!indexes.ContainsKey(parent))
+                    {
+                        Visit(parent);
+                        lowLinks[key] = Math.Min(lowLinks[key], lowLinks[parent]);
+                    }
+                    else if (onStack.Contains(parent))
+                    {
+                        lowLinks[key] = Math.Min(lowLinks[key], indexes[parent]);
+                    }
+                }
+                if (lowLinks[key] == indexes[key])
+                {
+                    string member;
+                    do
+                    {
+                        member = stack.Pop();
+                        onStack.Remove(member);
+                        groupOf[member] = groups;
+                    }
+                    while (member != key);
+                    groups++;
+                }
+            }
+
+            foreach (var key in keys)
+            {
+                if (!indexes.ContainsKey(key))
+                {
+                    Visit(key);
+                }
+            }
+            return groupOf;
         }
 
         #endregion

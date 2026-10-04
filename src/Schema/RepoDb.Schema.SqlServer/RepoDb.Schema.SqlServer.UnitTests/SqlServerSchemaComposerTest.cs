@@ -805,6 +805,115 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             Assert.Throws<ArgumentNullException>(() => composer.ComposeSchemas(null));
         }
 
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeCreateTableWithNameThatNeedsQuoting()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var schema = new TableSchema { SchemaName = "dbo", TableName = "Odd.Name" };
+            schema.Columns.Add(GetColumn("Unit Price", "decimal", typeof(decimal), 1, false, null, 10, 2));
+
+            // Act
+            var actual = composer.ComposeCreateTable(schema);
+
+            // Assert
+            StringAssert.StartsWith(actual, "CREATE TABLE [dbo].[Odd.Name] (", StringComparison.Ordinal);
+            StringAssert.Contains(actual, "[Unit Price] decimal(10,2) NOT NULL", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeCreateTableWithClosingBracketInTheNames()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var schema = new TableSchema { SchemaName = "dbo", TableName = "Weird]Name" };
+            schema.Columns.Add(GetColumn("Id", "int", typeof(int), 1, false));
+
+            // Act
+            var actual = composer.ComposeCreateTable(schema);
+
+            // Assert
+            StringAssert.StartsWith(actual, "CREATE TABLE [dbo].[Weird]]Name] (", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeAddForeignKeyWithNamesThatNeedQuoting()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var foreignKey = new ForeignKeyInfo
+            {
+                Name = "FK_OddChild_OddName",
+                Columns = { "ParentId" },
+                ReferencedTable = "[dbo].[Odd.Name]",
+                ReferencedColumns = { "Id" }
+            };
+
+            // Act
+            var actual = composer.ComposeAddForeignKey("[dbo].[Odd.Child]", foreignKey);
+            var expected = "ALTER TABLE [dbo].[Odd.Child] ADD CONSTRAINT [FK_OddChild_OddName] FOREIGN KEY ([ParentId]) REFERENCES [dbo].[Odd.Name] ([Id]);";
+
+            // Assert
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeSchemasWithNamesThatNeedQuoting()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var parent = new TableSchema { SchemaName = "dbo", TableName = "Odd.Name" };
+            parent.Columns.Add(GetColumn("Id", "int", typeof(int), 1, false));
+            parent.Indexes.Add(new IndexInfo { Name = "IX_OddName_Id", Columns = { "Id" } });
+            var child = new TableSchema { SchemaName = "dbo", TableName = "Odd.Child" };
+            child.Columns.Add(GetColumn("ParentId", "int", typeof(int), 1, false));
+            child.ForeignKeys.Add(new ForeignKeyInfo
+            {
+                Name = "FK_OddChild_OddName",
+                Columns = { "ParentId" },
+                ReferencedTable = SqlServerNames.Format("dbo", "Odd.Name"),
+                ReferencedColumns = { "Id" }
+            });
+
+            // Act
+            var actual = composer.ComposeSchemas(new[] { child, parent }).ToList();
+
+            // Assert
+            Assert.AreEqual(4, actual.Count);
+            StringAssert.StartsWith(actual[0], "CREATE TABLE [dbo].[Odd.Child]", StringComparison.Ordinal);
+            StringAssert.StartsWith(actual[1], "CREATE TABLE [dbo].[Odd.Name]", StringComparison.Ordinal);
+            Assert.AreEqual("CREATE INDEX [IX_OddName_Id] ON [dbo].[Odd.Name] ([Id]);", actual[2], StringComparer.Ordinal);
+            StringAssert.Contains(actual[3], "ALTER TABLE [dbo].[Odd.Child] ADD CONSTRAINT [FK_OddChild_OddName]", StringComparison.Ordinal);
+            StringAssert.Contains(actual[3], "REFERENCES [dbo].[Odd.Name] ([Id])", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeDropTableWithClosingBracketInTheName()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+
+            // Act
+            var actual = composer.ComposeDropTable("[dbo].[Weird]]Name]");
+
+            // Assert
+            Assert.AreEqual("DROP TABLE IF EXISTS [dbo].[Weird]]Name];", actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeCreateIndexWithTableNameThatNeedsQuoting()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var index = new IndexInfo { Name = "IX", Columns = { "Id" } };
+
+            // Act
+            var actual = composer.ComposeCreateIndex("dbo.[Odd.Name]", index);
+
+            // Assert
+            Assert.AreEqual("CREATE INDEX [IX] ON [dbo].[Odd.Name] ([Id]);", actual, StringComparer.Ordinal);
+        }
+
         #endregion
 
         #region ComposeTypeName

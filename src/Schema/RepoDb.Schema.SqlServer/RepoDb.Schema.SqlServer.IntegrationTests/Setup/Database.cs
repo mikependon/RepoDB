@@ -125,6 +125,13 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests.Setup
                 CreateEmployeeTable(connection);
                 CreatePreferenceTable(connection);
                 CreateInvoiceReferencingTables(connection);
+                CreateDiamondTables(connection);
+                CreateTransferTables(connection);
+                CreateRingTables(connection);
+                CreateLoopTables(connection);
+                CreateFanTables(connection);
+                CreateItemTables(connection);
+                CreateOddNameTables(connection);
             }
         }
 
@@ -368,6 +375,233 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests.Setup
                         [InvoiceId] INT NOT NULL,
                         CONSTRAINT [PK_Ledger] PRIMARY KEY ([Id]),
                         CONSTRAINT [FK_Ledger_Invoice] FOREIGN KEY ([InvoiceId]) REFERENCES [Sales].[Invoice] ([Id]) ON DELETE CASCADE
+                    );
+                END";
+            connection.ExecuteNonQuery(commandText);
+        }
+
+        private static void CreateDiamondTables(SqlConnection connection)
+        {
+            // A table with 2 parents that share the same parent: A <- B, A <- C, B <- D, C <- D
+            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'DiamondA'))
+                BEGIN
+                    CREATE TABLE [dbo].[DiamondA]
+                    (
+                        [Id] INT NOT NULL,
+                        CONSTRAINT [PK_DiamondA] PRIMARY KEY ([Id])
+                    );
+                    CREATE TABLE [dbo].[DiamondB]
+                    (
+                        [Id] INT NOT NULL,
+                        [AId] INT NOT NULL,
+                        CONSTRAINT [PK_DiamondB] PRIMARY KEY ([Id]),
+                        CONSTRAINT [FK_DiamondB_DiamondA] FOREIGN KEY ([AId]) REFERENCES [dbo].[DiamondA] ([Id])
+                    );
+                    CREATE TABLE [dbo].[DiamondC]
+                    (
+                        [Id] INT NOT NULL,
+                        [AId] INT NOT NULL,
+                        CONSTRAINT [PK_DiamondC] PRIMARY KEY ([Id]),
+                        CONSTRAINT [FK_DiamondC_DiamondA] FOREIGN KEY ([AId]) REFERENCES [dbo].[DiamondA] ([Id])
+                    );
+                    CREATE TABLE [dbo].[DiamondD]
+                    (
+                        [Id] INT NOT NULL,
+                        [BId] INT NOT NULL,
+                        [CId] INT NOT NULL,
+                        CONSTRAINT [PK_DiamondD] PRIMARY KEY ([Id]),
+                        CONSTRAINT [FK_DiamondD_DiamondB] FOREIGN KEY ([BId]) REFERENCES [dbo].[DiamondB] ([Id]),
+                        CONSTRAINT [FK_DiamondD_DiamondC] FOREIGN KEY ([CId]) REFERENCES [dbo].[DiamondC] ([Id])
+                    );
+                END";
+            connection.ExecuteNonQuery(commandText);
+        }
+
+        private static void CreateTransferTables(SqlConnection connection)
+        {
+            // A table with 2 foreign keys to the same parent table
+            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'Account'))
+                BEGIN
+                    CREATE TABLE [dbo].[Account]
+                    (
+                        [Id] INT NOT NULL,
+                        CONSTRAINT [PK_Account] PRIMARY KEY ([Id])
+                    );
+                    CREATE TABLE [dbo].[Transfer]
+                    (
+                        [Id] INT NOT NULL,
+                        [FromAccountId] INT NOT NULL,
+                        [ToAccountId] INT NOT NULL,
+                        CONSTRAINT [PK_Transfer] PRIMARY KEY ([Id]),
+                        CONSTRAINT [FK_Transfer_FromAccount] FOREIGN KEY ([FromAccountId]) REFERENCES [dbo].[Account] ([Id]),
+                        CONSTRAINT [FK_Transfer_ToAccount] FOREIGN KEY ([ToAccountId]) REFERENCES [dbo].[Account] ([Id])
+                    );
+                END";
+            connection.ExecuteNonQuery(commandText);
+        }
+
+        private static void CreateRingTables(SqlConnection connection)
+        {
+            // A cycle of 3 tables: X -> Z -> Y -> X
+            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'RingX'))
+                BEGIN
+                    CREATE TABLE [dbo].[RingX]
+                    (
+                        [Id] INT NOT NULL,
+                        [ZId] INT NULL,
+                        CONSTRAINT [PK_RingX] PRIMARY KEY ([Id])
+                    );
+                    CREATE TABLE [dbo].[RingY]
+                    (
+                        [Id] INT NOT NULL,
+                        [XId] INT NULL,
+                        CONSTRAINT [PK_RingY] PRIMARY KEY ([Id]),
+                        CONSTRAINT [FK_RingY_RingX] FOREIGN KEY ([XId]) REFERENCES [dbo].[RingX] ([Id])
+                    );
+                    CREATE TABLE [dbo].[RingZ]
+                    (
+                        [Id] INT NOT NULL,
+                        [YId] INT NULL,
+                        CONSTRAINT [PK_RingZ] PRIMARY KEY ([Id]),
+                        CONSTRAINT [FK_RingZ_RingY] FOREIGN KEY ([YId]) REFERENCES [dbo].[RingY] ([Id])
+                    );
+                    ALTER TABLE [dbo].[RingX]
+                        ADD CONSTRAINT [FK_RingX_RingZ] FOREIGN KEY ([ZId]) REFERENCES [dbo].[RingZ] ([Id]);
+                END";
+            connection.ExecuteNonQuery(commandText);
+        }
+
+        private static void CreateLoopTables(SqlConnection connection)
+        {
+            // A cycle (A <-> B) with a table that the cycle depends on (Root) and a table that depends on the cycle (Leaf)
+            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'LoopRoot'))
+                BEGIN
+                    CREATE TABLE [dbo].[LoopRoot]
+                    (
+                        [Id] INT NOT NULL,
+                        CONSTRAINT [PK_LoopRoot] PRIMARY KEY ([Id])
+                    );
+                    CREATE TABLE [dbo].[LoopA]
+                    (
+                        [Id] INT NOT NULL,
+                        [RootId] INT NOT NULL,
+                        [BId] INT NULL,
+                        CONSTRAINT [PK_LoopA] PRIMARY KEY ([Id]),
+                        CONSTRAINT [FK_LoopA_LoopRoot] FOREIGN KEY ([RootId]) REFERENCES [dbo].[LoopRoot] ([Id])
+                    );
+                    CREATE TABLE [dbo].[LoopB]
+                    (
+                        [Id] INT NOT NULL,
+                        [AId] INT NULL,
+                        CONSTRAINT [PK_LoopB] PRIMARY KEY ([Id]),
+                        CONSTRAINT [FK_LoopB_LoopA] FOREIGN KEY ([AId]) REFERENCES [dbo].[LoopA] ([Id])
+                    );
+                    ALTER TABLE [dbo].[LoopA]
+                        ADD CONSTRAINT [FK_LoopA_LoopB] FOREIGN KEY ([BId]) REFERENCES [dbo].[LoopB] ([Id]);
+                    CREATE TABLE [dbo].[LoopLeaf]
+                    (
+                        [Id] INT NOT NULL,
+                        [BId] INT NOT NULL,
+                        CONSTRAINT [PK_LoopLeaf] PRIMARY KEY ([Id]),
+                        CONSTRAINT [FK_LoopLeaf_LoopB] FOREIGN KEY ([BId]) REFERENCES [dbo].[LoopB] ([Id])
+                    );
+                END";
+            connection.ExecuteNonQuery(commandText);
+        }
+
+        private static void CreateFanTables(SqlConnection connection)
+        {
+            // A table with many children
+            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'FanRoot'))
+                BEGIN
+                    CREATE TABLE [dbo].[FanRoot]
+                    (
+                        [Id] INT NOT NULL,
+                        CONSTRAINT [PK_FanRoot] PRIMARY KEY ([Id])
+                    );
+                    CREATE TABLE [dbo].[FanChild1] ([Id] INT NOT NULL, [RootId] INT NOT NULL, CONSTRAINT [PK_FanChild1] PRIMARY KEY ([Id]), CONSTRAINT [FK_FanChild1_FanRoot] FOREIGN KEY ([RootId]) REFERENCES [dbo].[FanRoot] ([Id]));
+                    CREATE TABLE [dbo].[FanChild2] ([Id] INT NOT NULL, [RootId] INT NOT NULL, CONSTRAINT [PK_FanChild2] PRIMARY KEY ([Id]), CONSTRAINT [FK_FanChild2_FanRoot] FOREIGN KEY ([RootId]) REFERENCES [dbo].[FanRoot] ([Id]));
+                    CREATE TABLE [dbo].[FanChild3] ([Id] INT NOT NULL, [RootId] INT NOT NULL, CONSTRAINT [PK_FanChild3] PRIMARY KEY ([Id]), CONSTRAINT [FK_FanChild3_FanRoot] FOREIGN KEY ([RootId]) REFERENCES [dbo].[FanRoot] ([Id]));
+                    CREATE TABLE [dbo].[FanChild4] ([Id] INT NOT NULL, [RootId] INT NOT NULL, CONSTRAINT [PK_FanChild4] PRIMARY KEY ([Id]), CONSTRAINT [FK_FanChild4_FanRoot] FOREIGN KEY ([RootId]) REFERENCES [dbo].[FanRoot] ([Id]));
+                END";
+            connection.ExecuteNonQuery(commandText);
+        }
+
+        private static void CreateItemTables(SqlConnection connection)
+        {
+            // 2 tables with the same name in different schemas, and a table that references the one in the non-default schema
+            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'Item' AND SCHEMA_NAME(schema_id) = 'dbo'))
+                BEGIN
+                    CREATE TABLE [dbo].[Item]
+                    (
+                        [Id] INT NOT NULL,
+                        CONSTRAINT [PK_dbo_Item] PRIMARY KEY ([Id])
+                    );
+                END";
+            connection.ExecuteNonQuery(commandText);
+
+            commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'Item' AND SCHEMA_NAME(schema_id) = 'Sales'))
+                BEGIN
+                    CREATE TABLE [Sales].[Item]
+                    (
+                        [Id] INT NOT NULL,
+                        CONSTRAINT [PK_Sales_Item] PRIMARY KEY ([Id])
+                    );
+                END";
+            connection.ExecuteNonQuery(commandText);
+
+            commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'ItemRef'))
+                BEGIN
+                    CREATE TABLE [dbo].[ItemRef]
+                    (
+                        [Id] INT NOT NULL,
+                        [ItemId] INT NOT NULL,
+                        CONSTRAINT [PK_ItemRef] PRIMARY KEY ([Id]),
+                        CONSTRAINT [FK_ItemRef_Item] FOREIGN KEY ([ItemId]) REFERENCES [Sales].[Item] ([Id])
+                    );
+                END";
+            connection.ExecuteNonQuery(commandText);
+        }
+
+        private static void CreateOddNameTables(SqlConnection connection)
+        {
+            // Tables whose names contain a dot, a space and a closing bracket
+            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'Odd.Name'))
+                BEGIN
+                    CREATE TABLE [dbo].[Odd.Name]
+                    (
+                        [Id] INT NOT NULL,
+                        [Value] NVARCHAR(50) NULL,
+                        CONSTRAINT [PK_OddName] PRIMARY KEY ([Id])
+                    );
+                    CREATE INDEX [IX_OddName_Value] ON [dbo].[Odd.Name] ([Value]);
+                    CREATE TABLE [dbo].[Odd.Child]
+                    (
+                        [Id] INT NOT NULL,
+                        [ParentId] INT NOT NULL,
+                        CONSTRAINT [PK_OddChild] PRIMARY KEY ([Id]),
+                        CONSTRAINT [FK_OddChild_OddName] FOREIGN KEY ([ParentId]) REFERENCES [dbo].[Odd.Name] ([Id])
+                    );
+                END";
+            connection.ExecuteNonQuery(commandText);
+
+            commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'Order Details'))
+                BEGIN
+                    CREATE TABLE [dbo].[Order Details]
+                    (
+                        [Id] INT NOT NULL,
+                        [Unit Price] DECIMAL(10, 2) NOT NULL,
+                        CONSTRAINT [PK_OrderDetails] PRIMARY KEY ([Id])
+                    );
+                END";
+            connection.ExecuteNonQuery(commandText);
+
+            commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'Weird]Name'))
+                BEGIN
+                    CREATE TABLE [dbo].[Weird]]Name]
+                    (
+                        [Id] INT NOT NULL,
+                        CONSTRAINT [PK_WeirdName] PRIMARY KEY ([Id])
                     );
                 END";
             connection.ExecuteNonQuery(commandText);

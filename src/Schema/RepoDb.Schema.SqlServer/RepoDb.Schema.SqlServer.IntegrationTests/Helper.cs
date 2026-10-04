@@ -227,7 +227,23 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         /// <param name="relationships">The relationships.</param>
         /// <returns>The names of the tables.</returns>
         public static string[] GetTableNames(IEnumerable<RelationshipInfo> relationships) =>
-            relationships.Select(r => $"{r.Table.SchemaName}.{r.Table.TableName}").ToArray();
+            relationships.Select(r => FormatName(r.Table.SchemaName, r.Table.TableName)).ToArray();
+
+        /// <summary>
+        /// Formats the name of a table like the reader does: the plain identifiers are kept as they are (<c>dbo.Person</c>),
+        /// and the other ones are quoted (<c>[dbo].[Order Details]</c>).
+        /// </summary>
+        /// <param name="schema">The name of the schema.</param>
+        /// <param name="table">The name of the table.</param>
+        /// <returns>The formatted name of the table.</returns>
+        public static string FormatName(string schema, string table)
+        {
+            string Part(string name) =>
+                name.Length > 0 && !char.IsDigit(name[0]) && name.All(c => char.IsLetterOrDigit(c) || c == '_')
+                    ? name
+                    : $"[{name.Replace("]", "]]")}]";
+            return $"{Part(schema)}.{Part(table)}";
+        }
 
         /// <summary>
         /// Gets the names of the columns.

@@ -253,7 +253,7 @@ namespace RepoDb.Schema
         /// <param name="name"></param>
         /// <returns></returns>
         private static string Quote(string name) =>
-            $"[{name.Replace("]", "]]")}]";
+            SqlServerNames.Quote(name);
 
         /// <summary>
         /// 
@@ -261,10 +261,7 @@ namespace RepoDb.Schema
         /// <param name="name"></param>
         /// <returns></returns>
         private static string Name(string name) =>
-            string.Join(".", name.Split('.')
-                .Select(p => p.Trim().Trim('[', ']', '"'))
-                .Where(p => p.Length > 0)
-                .Select(Quote));
+            SqlServerNames.QuoteName(name);
 
         /// <summary>
         /// 
@@ -272,9 +269,7 @@ namespace RepoDb.Schema
         /// <param name="schema"></param>
         /// <returns></returns>
         private static string TableName(TableSchema schema) =>
-            string.IsNullOrWhiteSpace(schema.SchemaName)
-                ? schema.TableName
-                : $"{schema.SchemaName}.{schema.TableName}";
+            SqlServerNames.Format(schema.SchemaName, schema.TableName);
 
         /// <summary>
         /// 

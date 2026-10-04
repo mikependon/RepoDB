@@ -877,7 +877,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 var actual = reader.GetTables("Sales").ToList();
 
                 // Assert
-                CollectionAssert.AreEqual(new[] { "Sales.Invoice", "Sales.InvoiceLine" }, actual);
+                CollectionAssert.AreEqual(new[] { "Sales.Invoice", "Sales.InvoiceLine", "Sales.Item" }, actual);
             }
         }
 
@@ -913,7 +913,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 var actual = (await reader.GetTablesAsync("Sales")).ToList();
 
                 // Assert
-                CollectionAssert.AreEqual(new[] { "Sales.Invoice", "Sales.InvoiceLine" }, actual);
+                CollectionAssert.AreEqual(new[] { "Sales.Invoice", "Sales.InvoiceLine", "Sales.Item" }, actual);
             }
         }
 
@@ -1137,11 +1137,11 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 // Setup
                 var reader = new SqlServerSchemaReader(connection);
 
-                // Act (the tables outside the cycle come first, in the order of their dependencies)
+                // Act (the tables are kept in the order that they were given, as long as the tables that they reference come first)
                 var actual = Helper.GetTableNames(reader.GetDependencyOrder(new[] { "Ledger", "CycleA", "CycleB", "Sales.Invoice" }));
 
                 // Assert
-                CollectionAssert.AreEqual(new[] { "Sales.Invoice", "dbo.Ledger", "dbo.CycleA", "dbo.CycleB" }, actual);
+                CollectionAssert.AreEqual(new[] { "dbo.CycleA", "dbo.CycleB", "Sales.Invoice", "dbo.Ledger" }, actual);
             }
         }
 

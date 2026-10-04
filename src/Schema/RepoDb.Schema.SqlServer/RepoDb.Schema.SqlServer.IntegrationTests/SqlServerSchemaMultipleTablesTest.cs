@@ -19,7 +19,10 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
     public class SqlServerSchemaMultipleTablesTest
     {
         // The tables that reference each other, so no creation order exists for them
-        private static readonly string[] CircularTables = { "dbo.CycleA", "dbo.CycleB" };
+        private static readonly string[] CircularTables =
+        {
+            "dbo.CycleA", "dbo.CycleB", "dbo.RingX", "dbo.RingY", "dbo.RingZ", "dbo.LoopA", "dbo.LoopB", "dbo.LoopLeaf"
+        };
 
         [TestInitialize]
         public void Initialize()
@@ -233,7 +236,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         {
             // Setup
             var tables = GetSourceTables();
-            var schemas = Helper.GetSourceSchemas(tables).ToDictionary(s => $"{s.SchemaName}.{s.TableName}", StringComparer.OrdinalIgnoreCase);
+            var schemas = Helper.GetSourceSchemas(tables).ToDictionary(s => Helper.FormatName(s.SchemaName, s.TableName), StringComparer.OrdinalIgnoreCase);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForSource))
             {
@@ -244,7 +247,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 Assert.AreEqual(tables.Count, order.Count);
                 foreach (var schema in schemas.Values)
                 {
-                    var name = $"{schema.SchemaName}.{schema.TableName}";
+                    var name = Helper.FormatName(schema.SchemaName, schema.TableName);
                     if (CircularTables.Contains(name, StringComparer.OrdinalIgnoreCase))
                     {
                         continue;
