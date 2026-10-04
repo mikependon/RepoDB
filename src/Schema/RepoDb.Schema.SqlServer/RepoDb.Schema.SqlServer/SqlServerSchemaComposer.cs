@@ -255,7 +255,7 @@ namespace RepoDb.Schema
         /// <param name="name"></param>
         /// <returns></returns>
         private static string Quote(string name) =>
-            SqlServerNames.Quote(name);
+            Helper.Quote(name);
 
         /// <summary>
         /// 
@@ -263,7 +263,7 @@ namespace RepoDb.Schema
         /// <param name="name"></param>
         /// <returns></returns>
         private static string Name(string name) =>
-            SqlServerNames.QuoteName(name);
+            Helper.QuoteName(name);
 
         /// <summary>
         /// 
@@ -271,7 +271,7 @@ namespace RepoDb.Schema
         /// <param name="schema"></param>
         /// <returns></returns>
         private static string TableName(TableSchema schema) =>
-            SqlServerNames.Format(schema.SchemaName, schema.TableName);
+            Helper.Format(schema.SchemaName, schema.TableName);
 
         /// <summary>
         /// 

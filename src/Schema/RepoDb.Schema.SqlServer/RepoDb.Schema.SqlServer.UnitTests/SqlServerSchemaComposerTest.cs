@@ -871,7 +871,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             {
                 Name = "FK_OddChild_OddName",
                 Columns = { "ParentId" },
-                ReferencedTable = SqlServerNames.Format("dbo", "Odd.Name"),
+                ReferencedTable = Helper.Format("dbo", "Odd.Name"),
                 ReferencedColumns = { "Id" }
             });
 

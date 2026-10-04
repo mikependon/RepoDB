@@ -231,7 +231,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         public void TestSqlServerCopySchemasToOfTablesWithNamesThatNeedQuoting()
         {
             // Setup
-            MapReader(SchemaTable("dbo", "Odd.Child", SqlServerNames.Format("dbo", "Odd.Name")), SchemaTable("dbo", "Odd.Name"));
+            MapReader(SchemaTable("dbo", "Odd.Child", Helper.Format("dbo", "Odd.Name")), SchemaTable("dbo", "Odd.Name"));
             MapComposer();
             var destination = new CustomDbConnection();
 
