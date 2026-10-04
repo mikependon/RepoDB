@@ -279,6 +279,39 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             Assert.Throws<ArgumentNullException>(() => composer.ComposeCreateTable(null));
         }
 
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeCreateTableWithNonClusteredPrimaryKey()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var schema = new TableSchema { TableName = "Product" };
+            schema.Columns.Add(GetColumn("Id", "int", typeof(int), 1, false));
+            schema.PrimaryKey = new PrimaryKeyInfo { Name = "PK_Product", IsClustered = false, Columns = { "Id" } };
+
+            // Act
+            var actual = composer.ComposeCreateTable(schema);
+
+            // Assert
+            StringAssert.Contains(actual, "CONSTRAINT [PK_Product] PRIMARY KEY NONCLUSTERED ([Id])", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeCreateTableWithClusteredPrimaryKeyByDefault()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var schema = new TableSchema { TableName = "Product" };
+            schema.Columns.Add(GetColumn("Id", "int", typeof(int), 1, false));
+            schema.PrimaryKey = new PrimaryKeyInfo { Name = "PK_Product", Columns = { "Id" } };
+
+            // Act
+            var actual = composer.ComposeCreateTable(schema);
+
+            // Assert
+            StringAssert.Contains(actual, "CONSTRAINT [PK_Product] PRIMARY KEY ([Id])", StringComparison.Ordinal);
+            Assert.IsFalse(actual.Contains("NONCLUSTERED", StringComparison.Ordinal));
+        }
+
         #endregion
 
         #region ComposeCreateIndex
@@ -326,6 +359,125 @@ namespace RepoDb.Schema.SqlServer.UnitTests
 
             // Act/Assert
             Assert.Throws<ArgumentNullException>(() => composer.ComposeCreateIndex("Person", null));
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeCreateIndexWithClusteredIndex()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var index = new IndexInfo { Name = "CIX_Product_Code", IsUnique = true, IsClustered = true, Columns = { "Code" } };
+
+            // Act
+            var actual = composer.ComposeCreateIndex("dbo.Product", index);
+
+            // Assert
+            Assert.AreEqual("CREATE UNIQUE CLUSTERED INDEX [CIX_Product_Code] ON [dbo].[Product] ([Code]);", actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeCreateIndexWithNonUniqueClusteredIndex()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var index = new IndexInfo { Name = "CIX", IsClustered = true, Columns = { "Code" } };
+
+            // Act
+            var actual = composer.ComposeCreateIndex("Product", index);
+
+            // Assert
+            Assert.AreEqual("CREATE CLUSTERED INDEX [CIX] ON [Product] ([Code]);", actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeCreateIndexWithDescendingKey()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var index = new IndexInfo
+            {
+                Name = "IX_Product_Category_Price",
+                Columns = { "Category", "Price" },
+                DescendingColumns = { "Price" },
+                IncludedColumns = { "Name" }
+            };
+
+            // Act
+            var actual = composer.ComposeCreateIndex("dbo.Product", index);
+            var expected = "CREATE INDEX [IX_Product_Category_Price] ON [dbo].[Product] ([Category], [Price] DESC) INCLUDE ([Name]);";
+
+            // Assert
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeCreateIndexWithAllDescendingKeys()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var index = new IndexInfo { Name = "IX", Columns = { "A", "B" }, DescendingColumns = { "A", "B" } };
+
+            // Act
+            var actual = composer.ComposeCreateIndex("T", index);
+
+            // Assert
+            Assert.AreEqual("CREATE INDEX [IX] ON [T] ([A] DESC, [B] DESC);", actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeCreateIndexWithFilter()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var index = new IndexInfo
+            {
+                Name = "IX_Product_Active_Name",
+                Columns = { "Name" },
+                Filter = "([IsActive]=(1))"
+            };
+
+            // Act
+            var actual = composer.ComposeCreateIndex("dbo.Product", index);
+
+            // Assert
+            Assert.AreEqual("CREATE INDEX [IX_Product_Active_Name] ON [dbo].[Product] ([Name]) WHERE ([IsActive]=(1));", actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeCreateIndexWithAllTheOptions()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var index = new IndexInfo
+            {
+                Name = "IX",
+                IsUnique = true,
+                IsClustered = true,
+                Columns = { "A", "B" },
+                DescendingColumns = { "B" },
+                IncludedColumns = { "C" },
+                Filter = "([A]>(0))"
+            };
+
+            // Act
+            var actual = composer.ComposeCreateIndex("T", index);
+
+            // Assert
+            Assert.AreEqual("CREATE UNIQUE CLUSTERED INDEX [IX] ON [T] ([A], [B] DESC) INCLUDE ([C]) WHERE ([A]>(0));", actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeCreateIndexIgnoresTheBlankFilter()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var index = new IndexInfo { Name = "IX", Columns = { "A" }, Filter = "  " };
+
+            // Act
+            var actual = composer.ComposeCreateIndex("T", index);
+
+            // Assert
+            Assert.AreEqual("CREATE INDEX [IX] ON [T] ([A]);", actual, StringComparer.Ordinal);
         }
 
         #endregion
@@ -566,6 +718,91 @@ namespace RepoDb.Schema.SqlServer.UnitTests
 
             // Act/Assert
             Assert.Throws<ArgumentNullException>(() => composer.ComposeSchema(null));
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeSchemas()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var first = GetPersonSchema();
+            var second = new TableSchema { SchemaName = "dbo", TableName = "Country" };
+            second.Columns.Add(GetColumn("Id", "int", typeof(int), 1, false));
+            second.Indexes.Add(new IndexInfo { Name = "IX_Country_Id", Columns = { "Id" } });
+
+            // Act
+            var actual = composer.ComposeSchemas(new[] { first, second }).ToList();
+
+            // Assert (all the tables, then all the indexes, then all the foreign keys)
+            Assert.AreEqual(5, actual.Count);
+            StringAssert.StartsWith(actual[0], "CREATE TABLE [dbo].[Person]", StringComparison.Ordinal);
+            StringAssert.StartsWith(actual[1], "CREATE TABLE [dbo].[Country]", StringComparison.Ordinal);
+            StringAssert.StartsWith(actual[2], "CREATE INDEX [IX_Person_Name] ON [dbo].[Person]", StringComparison.Ordinal);
+            StringAssert.StartsWith(actual[3], "CREATE INDEX [IX_Country_Id] ON [dbo].[Country]", StringComparison.Ordinal);
+            StringAssert.StartsWith(actual[4], "ALTER TABLE [dbo].[Person] ADD CONSTRAINT [FK_Person_Country]", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeSchemasCreatesTheForeignKeysAfterAllTheTables()
+        {
+            // Setup (two tables that reference each other)
+            var composer = new SqlServerSchemaComposer();
+            var a = new TableSchema { SchemaName = "dbo", TableName = "CycleA" };
+            a.Columns.Add(GetColumn("Id", "int", typeof(int), 1, false));
+            a.Columns.Add(GetColumn("BId", "int", typeof(int), 2));
+            a.ForeignKeys.Add(new ForeignKeyInfo { Name = "FK_CycleA_CycleB", Columns = { "BId" }, ReferencedTable = "dbo.CycleB", ReferencedColumns = { "Id" } });
+            var b = new TableSchema { SchemaName = "dbo", TableName = "CycleB" };
+            b.Columns.Add(GetColumn("Id", "int", typeof(int), 1, false));
+            b.Columns.Add(GetColumn("AId", "int", typeof(int), 2));
+            b.ForeignKeys.Add(new ForeignKeyInfo { Name = "FK_CycleB_CycleA", Columns = { "AId" }, ReferencedTable = "dbo.CycleA", ReferencedColumns = { "Id" } });
+
+            // Act
+            var actual = composer.ComposeSchemas(new[] { a, b }).ToList();
+
+            // Assert
+            Assert.AreEqual(4, actual.Count);
+            StringAssert.StartsWith(actual[0], "CREATE TABLE [dbo].[CycleA]", StringComparison.Ordinal);
+            StringAssert.StartsWith(actual[1], "CREATE TABLE [dbo].[CycleB]", StringComparison.Ordinal);
+            StringAssert.StartsWith(actual[2], "ALTER TABLE [dbo].[CycleA] ADD CONSTRAINT [FK_CycleA_CycleB]", StringComparison.Ordinal);
+            StringAssert.StartsWith(actual[3], "ALTER TABLE [dbo].[CycleB] ADD CONSTRAINT [FK_CycleB_CycleA]", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeSchemasWithoutTables()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+
+            // Act
+            var actual = composer.ComposeSchemas(Enumerable.Empty<TableSchema>()).ToList();
+
+            // Assert
+            Assert.AreEqual(0, actual.Count);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeSchemasOfOneTableIsTheSameAsComposeSchema()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+            var schema = GetPersonSchema();
+
+            // Act
+            var actual = composer.ComposeSchemas(new[] { schema }).ToList();
+            var expected = composer.ComposeSchema(schema).ToList();
+
+            // Assert
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnSqlServerSchemaComposerComposeSchemasIfTheSchemasAreNull()
+        {
+            // Setup
+            var composer = new SqlServerSchemaComposer();
+
+            // Act/Assert
+            Assert.Throws<ArgumentNullException>(() => composer.ComposeSchemas(null));
         }
 
         #endregion

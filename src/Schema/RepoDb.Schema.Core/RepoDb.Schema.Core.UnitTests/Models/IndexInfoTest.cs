@@ -122,6 +122,80 @@ namespace RepoDb.Schema.Core.UnitTests.Models
             CollectionAssert.AreEqual(expected, actual.ToArray());
         }
 
+        [TestMethod]
+        public void TestIndexInfoIsClusteredPropertyDefaultValue()
+        {
+            // Act
+            var index = new IndexInfo();
+            var actual = index.IsClustered;
+
+            // Assert
+            Assert.IsFalse(actual);
+        }
+
+        [TestMethod]
+        public void TestIndexInfoIsClusteredProperty()
+        {
+            // Act
+            var index = new IndexInfo
+            {
+                IsClustered = true
+            };
+            var actual = index.IsClustered;
+
+            // Assert
+            Assert.IsTrue(actual);
+        }
+
+        [TestMethod]
+        public void TestIndexInfoFilterPropertyDefaultValue()
+        {
+            // Act
+            var index = new IndexInfo();
+            var actual = index.Filter;
+
+            // Assert
+            Assert.IsNull(actual);
+        }
+
+        [TestMethod]
+        public void TestIndexInfoFilterProperty()
+        {
+            // Act
+            var index = new IndexInfo
+            {
+                Filter = "([IsActive]=(1))"
+            };
+            var actual = index.Filter;
+
+            // Assert
+            Assert.AreEqual("([IsActive]=(1))", actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestIndexInfoDescendingColumnsPropertyDefaultValue()
+        {
+            // Act
+            var index = new IndexInfo();
+            var actual = index.DescendingColumns;
+
+            // Assert
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(0, actual.Count);
+        }
+
+        [TestMethod]
+        public void TestIndexInfoDescendingColumnsProperty()
+        {
+            // Act
+            var index = new IndexInfo();
+            index.DescendingColumns.Add("Price");
+            var actual = index.DescendingColumns;
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { "Price" }, actual.ToArray());
+        }
+
         #endregion
     }
 }

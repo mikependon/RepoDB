@@ -37,6 +37,21 @@ namespace RepoDb.Schema.Models
         /// </summary>
         public IList<string> IncludedColumns { get; set; } = new List<string>();
 
+        /// <summary>
+        /// Gets or sets the names of the key columns that are sorted in descending order. The other key columns are sorted in ascending order.
+        /// </summary>
+        public IList<string> DescendingColumns { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Gets or sets a value that indicates whether the index is clustered.
+        /// </summary>
+        public bool IsClustered { get; set; }
+
+        /// <summary>
+        /// Gets or sets the filter expression of the index, or <c>null</c> if the index is not filtered.
+        /// </summary>
+        public string Filter { get; set; }
+
         #endregion
     }
 }

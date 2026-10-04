@@ -70,6 +70,31 @@ namespace RepoDb.Schema.Core.UnitTests.Models
             CollectionAssert.AreEqual(expected, actual.ToArray());
         }
 
+        [TestMethod]
+        public void TestPrimaryKeyInfoIsClusteredPropertyDefaultValue()
+        {
+            // Act
+            var primaryKey = new PrimaryKeyInfo();
+            var actual = primaryKey.IsClustered;
+
+            // Assert
+            Assert.IsTrue(actual);
+        }
+
+        [TestMethod]
+        public void TestPrimaryKeyInfoIsClusteredProperty()
+        {
+            // Act
+            var primaryKey = new PrimaryKeyInfo
+            {
+                IsClustered = false
+            };
+            var actual = primaryKey.IsClustered;
+
+            // Assert
+            Assert.IsFalse(actual);
+        }
+
         #endregion
     }
 }

@@ -25,6 +25,16 @@ namespace RepoDb.Schema
         IEnumerable<string> ComposeSchema(TableSchema schema);
 
         /// <summary>
+        /// Composes the whole script that creates the tables, their indexes and their foreign keys, as an ordered list of statements.
+        /// All the tables are created first, then all the indexes and then all the foreign keys, so the tables can be given in any order
+        /// and can reference each other (even in a circular way) as long as the referenced tables are part of the given tables
+        /// or already exist in the destination database.
+        /// </summary>
+        /// <param name="schemas">The schemas of the tables.</param>
+        /// <returns>The ordered SQL statements. Execute them in order.</returns>
+        IEnumerable<string> ComposeSchemas(IEnumerable<TableSchema> schemas);
+
+        /// <summary>
         /// Composes the statement that creates the table, including its columns, primary key, unique constraints and check constraints.
         /// </summary>
         /// <param name="schema">The schema of the table.</param>

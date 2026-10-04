@@ -80,6 +80,43 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         }
 
         /// <summary>
+        /// Reads the schemas of the tables from the source database.
+        /// </summary>
+        /// <param name="tableNames">The names of the tables.</param>
+        /// <returns>The <see cref="TableSchema"/> objects of the tables, in the same order.</returns>
+        public static List<TableSchema> GetSourceSchemas(IEnumerable<string> tableNames)
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForSource))
+            {
+                var reader = new SqlServerSchemaReader(connection);
+                return tableNames.Select(reader.GetTableSchema).ToList();
+            }
+        }
+
+        /// <summary>
+        /// Executes the statements, in order, on the target database.
+        /// </summary>
+        /// <param name="statements">The SQL statements.</param>
+        public static void ExecuteOnTarget(IEnumerable<string> statements)
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForTarget))
+            {
+                foreach (var statement in statements)
+                {
+                    connection.ExecuteNonQuery(statement);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Reads the schemas of the tables from the source database, composes all of them together and creates them in the target database.
+        /// The tables can be given in any order.
+        /// </summary>
+        /// <param name="tableNames">The names of the tables.</param>
+        public static void CopyAllToTarget(params string[] tableNames) =>
+            ExecuteOnTarget(new SqlServerSchemaComposer().ComposeSchemas(GetSourceSchemas(tableNames)));
+
+        /// <summary>
         /// Asserts the equality of the 2 schemas of a table. The comments of the columns and the names of the unnamed constraints are not compared.
         /// </summary>
         /// <param name="expected">The expected schema.</param>
@@ -106,6 +143,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             {
                 Assert.IsNotNull(actual.PrimaryKey);
                 Assert.AreEqual(expected.PrimaryKey.Name, actual.PrimaryKey.Name, StringComparer.Ordinal);
+                Assert.AreEqual(expected.PrimaryKey.IsClustered, actual.PrimaryKey.IsClustered);
                 CollectionAssert.AreEqual(expected.PrimaryKey.Columns.ToArray(), actual.PrimaryKey.Columns.ToArray());
             }
 
@@ -115,7 +153,10 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             {
                 var other = actual.Indexes.Single(x => string.Equals(x.Name, index.Name, StringComparison.Ordinal));
                 Assert.AreEqual(index.IsUnique, other.IsUnique);
+                Assert.AreEqual(index.IsClustered, other.IsClustered);
+                Assert.AreEqual(index.Filter, other.Filter, StringComparer.Ordinal);
                 CollectionAssert.AreEqual(index.Columns.ToArray(), other.Columns.ToArray());
+                CollectionAssert.AreEqual(index.DescendingColumns.ToArray(), other.DescendingColumns.ToArray());
                 CollectionAssert.AreEqual(index.IncludedColumns.ToArray(), other.IncludedColumns.ToArray());
             }
 
@@ -172,6 +213,13 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             Assert.AreEqual(expected.ComputedExpression, actual.ComputedExpression, StringComparer.Ordinal, $"Computed expression of '{name}'.");
             Assert.AreEqual(expected.Collation, actual.Collation, StringComparer.Ordinal, $"Collation of '{name}'.");
         }
+
+        /// <summary>
+        /// Asserts that the table of the target database has the same schema as the table of the source database.
+        /// </summary>
+        /// <param name="tableName">The name of the table.</param>
+        public static void AssertTargetMatchesSource(string tableName) =>
+            AssertSchemaEquality(GetSourceSchema(tableName), GetTargetSchema(tableName));
 
         /// <summary>
         /// Gets the names of the columns.

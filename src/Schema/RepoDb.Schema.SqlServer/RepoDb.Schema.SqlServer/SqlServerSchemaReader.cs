@@ -68,24 +68,29 @@ namespace RepoDb.Schema
             ORDER BY c.column_id;";
 
         private const string KeyConstraintSql = @"SELECT kc.name AS ConstraintName,
-                col.name AS ColumnName
+                col.name AS ColumnName,
+                CAST(CASE WHEN i.type = 1 THEN 1 ELSE 0 END AS bit) AS IsClustered
             FROM sys.key_constraints kc
-            INNER JOIN sys.index_columns ic ON ic.object_id = kc.parent_object_id AND ic.index_id = kc.unique_index_id
+            INNER JOIN sys.indexes i ON i.object_id = kc.parent_object_id AND i.index_id = kc.unique_index_id
+            INNER JOIN sys.index_columns ic ON ic.object_id = i.object_id AND ic.index_id = i.index_id
             INNER JOIN sys.columns col ON col.object_id = ic.object_id AND col.column_id = ic.column_id
             WHERE kc.parent_object_id = OBJECT_ID(@FullName) AND kc.type = @Type
             ORDER BY kc.name, ic.key_ordinal;";
 
         private const string IndexesSql = @"SELECT i.name AS IndexName,
                 i.is_unique AS IsUnique,
+                CAST(CASE WHEN i.type = 1 THEN 1 ELSE 0 END AS bit) AS IsClustered,
+                i.filter_definition AS FilterDefinition,
                 col.name AS ColumnName,
-                ic.is_included_column AS IsIncluded
+                ic.is_included_column AS IsIncluded,
+                ic.is_descending_key AS IsDescending
             FROM sys.indexes i
             INNER JOIN sys.index_columns ic ON ic.object_id = i.object_id AND ic.index_id = i.index_id
             INNER JOIN sys.columns col ON col.object_id = ic.object_id AND col.column_id = ic.column_id
             WHERE i.object_id = OBJECT_ID(@FullName)
                 AND i.is_primary_key = 0
                 AND i.is_unique_constraint = 0
-                AND i.type > 0
+                AND i.type IN (1, 2)
                 AND i.name IS NOT NULL
             ORDER BY i.name, ic.is_included_column, ic.key_ordinal, ic.index_column_id;";
 
@@ -700,20 +705,20 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="r"></param>
         /// <returns></returns>
-        private static KeyValuePair<string, string> MapKeyColumn(IDataRecord r) =>
-            new KeyValuePair<string, string>(Text(r, "ConstraintName"), Text(r, "ColumnName"));
+        private static (string Name, string Column, bool IsClustered) MapKeyColumn(IDataRecord r) =>
+            (Text(r, "ConstraintName"), Text(r, "ColumnName"), Flag(r, "IsClustered"));
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="rows"></param>
         /// <returns></returns>
-        private static PrimaryKeyInfo MapPrimaryKey(IEnumerable<KeyValuePair<string, string>> rows)
+        private static PrimaryKeyInfo MapPrimaryKey(IEnumerable<(string Name, string Column, bool IsClustered)> rows)
         {
             var list = rows.ToList();
             return list.Count == 0
                 ? null
-                : new PrimaryKeyInfo { Name = list[0].Key, Columns = list.Select(x => x.Value).ToList() };
+                : new PrimaryKeyInfo { Name = list[0].Name, Columns = list.Select(x => x.Column).ToList(), IsClustered = list[0].IsClustered };
         }
 
         /// <summary>
@@ -721,9 +726,9 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="rows"></param>
         /// <returns></returns>
-        private static IList<UniqueConstraintInfo> MapUniqueConstraints(IEnumerable<KeyValuePair<string, string>> rows) =>
-            rows.GroupBy(x => x.Key)
-                .Select(g => new UniqueConstraintInfo { Name = g.Key, Columns = g.Select(x => x.Value).ToList() })
+        private static IList<UniqueConstraintInfo> MapUniqueConstraints(IEnumerable<(string Name, string Column, bool IsClustered)> rows) =>
+            rows.GroupBy(x => x.Name)
+                .Select(g => new UniqueConstraintInfo { Name = g.Key, Columns = g.Select(x => x.Column).ToList() })
                 .ToList();
 
         /// <summary>
@@ -731,21 +736,24 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="r"></param>
         /// <returns></returns>
-        private static (string Name, bool IsUnique, string Column, bool IsIncluded) MapIndexColumn(IDataRecord r) =>
-            (Text(r, "IndexName"), Flag(r, "IsUnique"), Text(r, "ColumnName"), Flag(r, "IsIncluded"));
+        private static (string Name, bool IsUnique, bool IsClustered, string Filter, string Column, bool IsIncluded, bool IsDescending) MapIndexColumn(IDataRecord r) =>
+            (Text(r, "IndexName"), Flag(r, "IsUnique"), Flag(r, "IsClustered"), Text(r, "FilterDefinition"), Text(r, "ColumnName"), Flag(r, "IsIncluded"), Flag(r, "IsDescending"));
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="rows"></param>
         /// <returns></returns>
-        private static IList<IndexInfo> MapIndexes(IEnumerable<(string Name, bool IsUnique, string Column, bool IsIncluded)> rows) =>
+        private static IList<IndexInfo> MapIndexes(IEnumerable<(string Name, bool IsUnique, bool IsClustered, string Filter, string Column, bool IsIncluded, bool IsDescending)> rows) =>
             rows.GroupBy(x => x.Name)
                 .Select(g => new IndexInfo
                 {
                     Name = g.Key,
                     IsUnique = g.First().IsUnique,
+                    IsClustered = g.First().IsClustered,
+                    Filter = g.First().Filter,
                     Columns = g.Where(x => !x.IsIncluded).Select(x => x.Column).ToList(),
+                    DescendingColumns = g.Where(x => !x.IsIncluded && x.IsDescending).Select(x => x.Column).ToList(),
                     IncludedColumns = g.Where(x => x.IsIncluded).Select(x => x.Column).ToList()
                 })
                 .ToList();

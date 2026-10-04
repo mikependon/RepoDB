@@ -69,14 +69,20 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests.Setup
 
         public static void Cleanup()
         {
-            // Drop the tables that were created in the target by the tests (the referencing tables are dropped first)
+            // The target database is dedicated to the tests, so everything in it is dropped (the foreign keys first,
+            // so the order of the tables and the circular references do not matter)
             using (var connection = new SqlConnection(ConnectionStringForTarget))
             {
-                connection.ExecuteNonQuery(@"DROP TABLE IF EXISTS [dbo].[Person];
-                    DROP TABLE IF EXISTS [dbo].[Country];
-                    DROP TABLE IF EXISTS [dbo].[OrderLine];
-                    DROP TABLE IF EXISTS [dbo].[NoKey];
-                    DROP TABLE IF EXISTS [Sales].[Invoice];");
+                connection.ExecuteNonQuery(@"DECLARE @Sql NVARCHAR(MAX) = N'';
+                    SELECT @Sql += N'ALTER TABLE ' + QUOTENAME(SCHEMA_NAME(t.schema_id)) + N'.' + QUOTENAME(t.name) + N' DROP CONSTRAINT ' + QUOTENAME(fk.name) + N';'
+                    FROM sys.foreign_keys fk
+                    INNER JOIN sys.tables t ON t.object_id = fk.parent_object_id;
+                    EXEC sys.sp_executesql @Sql;
+
+                    SET @Sql = N'';
+                    SELECT @Sql += N'DROP TABLE ' + QUOTENAME(SCHEMA_NAME(t.schema_id)) + N'.' + QUOTENAME(t.name) + N';'
+                    FROM sys.tables t;
+                    EXEC sys.sp_executesql @Sql;");
             }
         }
 
@@ -114,6 +120,11 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests.Setup
                 CreateInvoiceTable(connection);
                 CreateDependencyTables(connection);
                 CreateCycleTables(connection);
+                CreateProductTable(connection);
+                CreateShipmentTable(connection);
+                CreateEmployeeTable(connection);
+                CreatePreferenceTable(connection);
+                CreateInvoiceReferencingTables(connection);
             }
         }
 
@@ -254,6 +265,110 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests.Setup
                     );
                     ALTER TABLE [dbo].[CycleA]
                         ADD CONSTRAINT [FK_CycleA_CycleB] FOREIGN KEY ([BId]) REFERENCES [dbo].[CycleB] ([Id]);
+                END";
+            connection.ExecuteNonQuery(commandText);
+        }
+
+        private static void CreateProductTable(SqlConnection connection)
+        {
+            // A nonclustered primary key, a unique clustered index, a unique nonclustered index,
+            // a multi-column index with a descending key and an included column, and a filtered index
+            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'Product'))
+                BEGIN
+                    CREATE TABLE [dbo].[Product]
+                    (
+                        [Id] INT NOT NULL,
+                        [Code] NVARCHAR(20) NOT NULL,
+                        [Sku] NVARCHAR(30) NOT NULL,
+                        [Name] NVARCHAR(100) NOT NULL,
+                        [Category] INT NOT NULL,
+                        [Price] DECIMAL(18, 2) NOT NULL,
+                        [IsActive] BIT NOT NULL CONSTRAINT [DF_Product_IsActive] DEFAULT ((1)),
+                        CONSTRAINT [PK_Product] PRIMARY KEY NONCLUSTERED ([Id])
+                    );
+                    CREATE UNIQUE CLUSTERED INDEX [CIX_Product_Code] ON [dbo].[Product] ([Code]);
+                    CREATE UNIQUE NONCLUSTERED INDEX [UX_Product_Sku] ON [dbo].[Product] ([Sku]);
+                    CREATE NONCLUSTERED INDEX [IX_Product_Category_Price] ON [dbo].[Product] ([Category] ASC, [Price] DESC) INCLUDE ([Name]);
+                    CREATE NONCLUSTERED INDEX [IX_Product_Active_Name] ON [dbo].[Product] ([Name]) WHERE ([IsActive] = 1);
+                END";
+            connection.ExecuteNonQuery(commandText);
+        }
+
+        private static void CreateShipmentTable(SqlConnection connection)
+        {
+            // A composite foreign key and a second foreign key (with a cascading rule) in the same table
+            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'Shipment'))
+                BEGIN
+                    CREATE TABLE [dbo].[Shipment]
+                    (
+                        [Id] INT NOT NULL,
+                        [OrderId] INT NOT NULL,
+                        [LineNumber] INT NOT NULL,
+                        [CountryId] INT NOT NULL,
+                        CONSTRAINT [PK_Shipment] PRIMARY KEY ([Id]),
+                        CONSTRAINT [FK_Shipment_OrderLine] FOREIGN KEY ([OrderId], [LineNumber]) REFERENCES [dbo].[OrderLine] ([OrderId], [LineNumber]),
+                        CONSTRAINT [FK_Shipment_Country] FOREIGN KEY ([CountryId]) REFERENCES [dbo].[Country] ([Id]) ON DELETE CASCADE
+                    );
+                END";
+            connection.ExecuteNonQuery(commandText);
+        }
+
+        private static void CreateEmployeeTable(SqlConnection connection)
+        {
+            // A self-referencing foreign key
+            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'Employee'))
+                BEGIN
+                    CREATE TABLE [dbo].[Employee]
+                    (
+                        [Id] INT NOT NULL,
+                        [ManagerId] INT NULL,
+                        CONSTRAINT [PK_Employee] PRIMARY KEY ([Id]),
+                        CONSTRAINT [FK_Employee_Manager] FOREIGN KEY ([ManagerId]) REFERENCES [dbo].[Employee] ([Id])
+                    );
+                END";
+            connection.ExecuteNonQuery(commandText);
+        }
+
+        private static void CreatePreferenceTable(SqlConnection connection)
+        {
+            // A foreign key with the SET DEFAULT rules
+            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'Preference'))
+                BEGIN
+                    CREATE TABLE [dbo].[Preference]
+                    (
+                        [Id] INT NOT NULL,
+                        [CountryId] INT NOT NULL CONSTRAINT [DF_Preference_CountryId] DEFAULT ((1)),
+                        CONSTRAINT [PK_Preference] PRIMARY KEY ([Id]),
+                        CONSTRAINT [FK_Preference_Country] FOREIGN KEY ([CountryId]) REFERENCES [dbo].[Country] ([Id]) ON DELETE SET DEFAULT ON UPDATE SET DEFAULT
+                    );
+                END";
+            connection.ExecuteNonQuery(commandText);
+        }
+
+        private static void CreateInvoiceReferencingTables(SqlConnection connection)
+        {
+            // A foreign key within the same (non-default) schema, and a foreign key across the schemas
+            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'InvoiceLine'))
+                BEGIN
+                    CREATE TABLE [Sales].[InvoiceLine]
+                    (
+                        [Id] INT NOT NULL,
+                        [InvoiceId] INT NOT NULL,
+                        CONSTRAINT [PK_InvoiceLine] PRIMARY KEY ([Id]),
+                        CONSTRAINT [FK_InvoiceLine_Invoice] FOREIGN KEY ([InvoiceId]) REFERENCES [Sales].[Invoice] ([Id])
+                    );
+                END";
+            connection.ExecuteNonQuery(commandText);
+
+            commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'Ledger'))
+                BEGIN
+                    CREATE TABLE [dbo].[Ledger]
+                    (
+                        [Id] INT NOT NULL,
+                        [InvoiceId] INT NOT NULL,
+                        CONSTRAINT [PK_Ledger] PRIMARY KEY ([Id]),
+                        CONSTRAINT [FK_Ledger_Invoice] FOREIGN KEY ([InvoiceId]) REFERENCES [Sales].[Invoice] ([Id]) ON DELETE CASCADE
+                    );
                 END";
             connection.ExecuteNonQuery(commandText);
         }

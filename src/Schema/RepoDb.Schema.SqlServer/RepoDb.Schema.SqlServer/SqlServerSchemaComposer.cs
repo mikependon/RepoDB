@@ -51,6 +51,37 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
+        /// Composes the whole script that creates the tables, their indexes and their foreign keys, as an ordered list of statements.
+        /// All the tables are created first, then all the indexes and then all the foreign keys, so the tables can be given in any order
+        /// and can reference each other (even in a circular way) as long as the referenced tables are part of the given tables
+        /// or already exist in the destination database.
+        /// </summary>
+        /// <param name="schemas">The schemas of the tables.</param>
+        /// <returns>The ordered SQL statements. Execute them in order.</returns>
+        public IEnumerable<string> ComposeSchemas(IEnumerable<TableSchema> schemas)
+        {
+            if (schemas == null)
+            {
+                throw new ArgumentNullException(nameof(schemas));
+            }
+
+            var list = schemas.ToList();
+            var statements = new List<string>();
+            statements.AddRange(list.Select(ComposeCreateTable));
+            foreach (var schema in list)
+            {
+                var tableName = TableName(schema);
+                statements.AddRange(schema.Indexes.Select(index => ComposeCreateIndex(tableName, index)));
+            }
+            foreach (var schema in list)
+            {
+                var tableName = TableName(schema);
+                statements.AddRange(schema.ForeignKeys.Select(foreignKey => ComposeAddForeignKey(tableName, foreignKey)));
+            }
+            return statements;
+        }
+
+        /// <summary>
         /// Composes the statement that creates the table, including its columns, primary key, unique constraints and check constraints.
         /// </summary>
         /// <param name="schema">The schema of the table.</param>
@@ -67,7 +98,7 @@ namespace RepoDb.Schema
 
             if (schema.PrimaryKey != null && schema.PrimaryKey.Columns.Count > 0)
             {
-                definitions.Add($"{ConstraintName(schema.PrimaryKey.Name)}PRIMARY KEY ({Columns(schema.PrimaryKey.Columns)})");
+                definitions.Add($"{ConstraintName(schema.PrimaryKey.Name)}PRIMARY KEY {(schema.PrimaryKey.IsClustered ? string.Empty : "NONCLUSTERED ")}({Columns(schema.PrimaryKey.Columns)})");
             }
             definitions.AddRange(schema.UniqueConstraints.Select(u =>
                 $"{ConstraintName(u.Name)}UNIQUE ({Columns(u.Columns)})"));
@@ -96,10 +127,24 @@ namespace RepoDb.Schema
             {
                 statement.Append("UNIQUE ");
             }
-            statement.Append($"INDEX {Quote(index.Name)} ON {Name(tableName)} ({Columns(index.Columns)})");
+            if (index.IsClustered)
+            {
+                statement.Append("CLUSTERED ");
+            }
+
+            // The key columns, each one with its sort order
+            var keys = string.Join(", ", index.Columns.Select(column =>
+                index.DescendingColumns != null && index.DescendingColumns.Contains(column, StringComparer.Ordinal)
+                    ? $"{Quote(column)} DESC"
+                    : Quote(column)));
+            statement.Append($"INDEX {Quote(index.Name)} ON {Name(tableName)} ({keys})");
             if (index.IncludedColumns != null && index.IncludedColumns.Count > 0)
             {
                 statement.Append($" INCLUDE ({Columns(index.IncludedColumns)})");
+            }
+            if (!string.IsNullOrWhiteSpace(index.Filter))
+            {
+                statement.Append($" WHERE {index.Filter}");
             }
             return statement.Append(';').ToString();
         }

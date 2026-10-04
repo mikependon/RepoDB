@@ -877,7 +877,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 var actual = reader.GetTables("Sales").ToList();
 
                 // Assert
-                CollectionAssert.AreEqual(new[] { "Sales.Invoice" }, actual);
+                CollectionAssert.AreEqual(new[] { "Sales.Invoice", "Sales.InvoiceLine" }, actual);
             }
         }
 
@@ -913,7 +913,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 var actual = (await reader.GetTablesAsync("Sales")).ToList();
 
                 // Assert
-                CollectionAssert.AreEqual(new[] { "Sales.Invoice" }, actual);
+                CollectionAssert.AreEqual(new[] { "Sales.Invoice", "Sales.InvoiceLine" }, actual);
             }
         }
 

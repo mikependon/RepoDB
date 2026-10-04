@@ -27,6 +27,11 @@ namespace RepoDb.Schema.Models
         /// </summary>
         public IList<string> Columns { get; set; } = new List<string>();
 
+        /// <summary>
+        /// Gets or sets a value that indicates whether the primary key is clustered. The default is <c>true</c>, which is the default of the databases that cluster their primary keys.
+        /// </summary>
+        public bool IsClustered { get; set; } = true;
+
         #endregion
     }
 }
