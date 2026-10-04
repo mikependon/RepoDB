@@ -18,6 +18,169 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         #region Methods
 
         [TestMethod]
+        public void TestColumnInfoEqualsWithSameValues()
+        {
+            // Act
+            var a = Create();
+            var b = Create();
+
+            // Assert
+            Assert.IsTrue(a.Equals(b));
+            Assert.IsTrue(a.Equals((object)b));
+            Assert.IsTrue(a == b);
+            Assert.IsFalse(a != b);
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [TestMethod]
+        public void TestColumnInfoEqualsWithSameInstance()
+        {
+            // Act
+            var a = Create();
+
+            // Assert
+            Assert.IsTrue(a.Equals(a));
+            Assert.IsTrue(a == a);
+        }
+
+        [TestMethod]
+        public void TestColumnInfoEqualsWithNull()
+        {
+            // Act
+            var a = Create();
+
+            // Assert
+            Assert.IsFalse(a.Equals((object)null));
+            Assert.IsFalse(a.Equals(null));
+            Assert.IsFalse(a == null);
+            Assert.IsFalse(null == a);
+            Assert.IsTrue(a != null);
+            Assert.IsTrue(((ColumnInfo)null) == null);
+        }
+
+        [TestMethod]
+        public void TestColumnInfoEqualsWithOtherType()
+        {
+            // Act
+            var a = Create();
+
+            // Assert
+            Assert.IsFalse(a.Equals(new object()));
+        }
+
+        [TestMethod]
+        public void TestColumnInfoNotEqualsWithDifferentField()
+        {
+            // Act
+            var a = Create();
+            var b = Create();
+            b.Field = new DbField("Other", false, false, true, typeof(string), 10, null, null, "nvarchar");
+
+            // Assert
+            Assert.IsFalse(a.Equals(b));
+            Assert.IsFalse(a == b);
+            Assert.IsTrue(a != b);
+        }
+
+        [TestMethod]
+        public void TestColumnInfoNotEqualsWithDifferentOrdinal()
+        {
+            // Act
+            var a = Create();
+            var b = Create();
+            b.Ordinal = 2;
+
+            // Assert
+            Assert.IsFalse(a.Equals(b));
+            Assert.IsFalse(a == b);
+            Assert.IsTrue(a != b);
+        }
+
+        [TestMethod]
+        public void TestColumnInfoNotEqualsWithDifferentDefaultExpression()
+        {
+            // Act
+            var a = Create();
+            var b = Create();
+            b.DefaultExpression = "1";
+
+            // Assert
+            Assert.IsFalse(a.Equals(b));
+            Assert.IsFalse(a == b);
+            Assert.IsTrue(a != b);
+        }
+
+        [TestMethod]
+        public void TestColumnInfoNotEqualsWithDifferentIdentitySeed()
+        {
+            // Act
+            var a = Create();
+            var b = Create();
+            b.IdentitySeed = 5;
+
+            // Assert
+            Assert.IsFalse(a.Equals(b));
+            Assert.IsFalse(a == b);
+            Assert.IsTrue(a != b);
+        }
+
+        [TestMethod]
+        public void TestColumnInfoNotEqualsWithDifferentIdentityIncrement()
+        {
+            // Act
+            var a = Create();
+            var b = Create();
+            b.IdentityIncrement = 2;
+
+            // Assert
+            Assert.IsFalse(a.Equals(b));
+            Assert.IsFalse(a == b);
+            Assert.IsTrue(a != b);
+        }
+
+        [TestMethod]
+        public void TestColumnInfoNotEqualsWithDifferentComputedExpression()
+        {
+            // Act
+            var a = Create();
+            var b = Create();
+            b.ComputedExpression = null;
+
+            // Assert
+            Assert.IsFalse(a.Equals(b));
+            Assert.IsFalse(a == b);
+            Assert.IsTrue(a != b);
+        }
+
+        [TestMethod]
+        public void TestColumnInfoNotEqualsWithDifferentCollation()
+        {
+            // Act
+            var a = Create();
+            var b = Create();
+            b.Collation = null;
+
+            // Assert
+            Assert.IsFalse(a.Equals(b));
+            Assert.IsFalse(a == b);
+            Assert.IsTrue(a != b);
+        }
+
+        [TestMethod]
+        public void TestColumnInfoNotEqualsWithDifferentComment()
+        {
+            // Act
+            var a = Create();
+            var b = Create();
+            b.Comment = "Other";
+
+            // Assert
+            Assert.IsFalse(a.Equals(b));
+            Assert.IsFalse(a == b);
+            Assert.IsTrue(a != b);
+        }
+
+        [TestMethod]
         public void TestColumnInfoFieldPropertyDefaultValue()
         {
             // Act
@@ -226,6 +389,13 @@ namespace RepoDb.Schema.Core.UnitTests.Models
             // Assert
             Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
+
+        #endregion
+
+        #region Helpers
+
+        private static ColumnInfo Create() =>
+            new ColumnInfo { Field = new DbField("Id", true, true, false, typeof(int), null, null, null, "int"), Ordinal = 1, DefaultExpression = "0", IdentitySeed = 1, IdentityIncrement = 1, ComputedExpression = "[A] + 1", Collation = "Latin1_General_CI_AS", Comment = "The id" };
 
         #endregion
     }

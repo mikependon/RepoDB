@@ -7,6 +7,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Schema.Enumerations;
@@ -18,6 +19,141 @@ namespace RepoDb.Schema.Core.UnitTests.Models
     public class ForeignKeyInfoTest
     {
         #region Methods
+
+        [TestMethod]
+        public void TestForeignKeyInfoEqualsWithSameValues()
+        {
+            // Act
+            var a = Create();
+            var b = Create();
+
+            // Assert
+            Assert.IsTrue(a.Equals(b));
+            Assert.IsTrue(a.Equals((object)b));
+            Assert.IsTrue(a == b);
+            Assert.IsFalse(a != b);
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [TestMethod]
+        public void TestForeignKeyInfoEqualsWithSameInstance()
+        {
+            // Act
+            var a = Create();
+
+            // Assert
+            Assert.IsTrue(a.Equals(a));
+            Assert.IsTrue(a == a);
+        }
+
+        [TestMethod]
+        public void TestForeignKeyInfoEqualsWithNull()
+        {
+            // Act
+            var a = Create();
+
+            // Assert
+            Assert.IsFalse(a.Equals((object)null));
+            Assert.IsFalse(a.Equals(null));
+            Assert.IsFalse(a == null);
+            Assert.IsFalse(null == a);
+            Assert.IsTrue(a != null);
+            Assert.IsTrue(((ForeignKeyInfo)null) == null);
+        }
+
+        [TestMethod]
+        public void TestForeignKeyInfoEqualsWithOtherType()
+        {
+            // Act
+            var a = Create();
+
+            // Assert
+            Assert.IsFalse(a.Equals(new object()));
+        }
+
+        [TestMethod]
+        public void TestForeignKeyInfoNotEqualsWithDifferentName()
+        {
+            // Act
+            var a = Create();
+            var b = Create();
+            b.Name = "FK_Other";
+
+            // Assert
+            Assert.IsFalse(a.Equals(b));
+            Assert.IsFalse(a == b);
+            Assert.IsTrue(a != b);
+        }
+
+        [TestMethod]
+        public void TestForeignKeyInfoNotEqualsWithDifferentColumns()
+        {
+            // Act
+            var a = Create();
+            var b = Create();
+            b.Columns = new List<string> { "OtherId" };
+
+            // Assert
+            Assert.IsFalse(a.Equals(b));
+            Assert.IsFalse(a == b);
+            Assert.IsTrue(a != b);
+        }
+
+        [TestMethod]
+        public void TestForeignKeyInfoNotEqualsWithDifferentReferencedTable()
+        {
+            // Act
+            var a = Create();
+            var b = Create();
+            b.ReferencedTable = "dbo.Other";
+
+            // Assert
+            Assert.IsFalse(a.Equals(b));
+            Assert.IsFalse(a == b);
+            Assert.IsTrue(a != b);
+        }
+
+        [TestMethod]
+        public void TestForeignKeyInfoNotEqualsWithDifferentReferencedColumns()
+        {
+            // Act
+            var a = Create();
+            var b = Create();
+            b.ReferencedColumns = new List<string> { "OtherKey" };
+
+            // Assert
+            Assert.IsFalse(a.Equals(b));
+            Assert.IsFalse(a == b);
+            Assert.IsTrue(a != b);
+        }
+
+        [TestMethod]
+        public void TestForeignKeyInfoNotEqualsWithDifferentUpdateRule()
+        {
+            // Act
+            var a = Create();
+            var b = Create();
+            b.UpdateRule = ForeignKeyRule.NoAction;
+
+            // Assert
+            Assert.IsFalse(a.Equals(b));
+            Assert.IsFalse(a == b);
+            Assert.IsTrue(a != b);
+        }
+
+        [TestMethod]
+        public void TestForeignKeyInfoNotEqualsWithDifferentDeleteRule()
+        {
+            // Act
+            var a = Create();
+            var b = Create();
+            b.DeleteRule = ForeignKeyRule.NoAction;
+
+            // Assert
+            Assert.IsFalse(a.Equals(b));
+            Assert.IsFalse(a == b);
+            Assert.IsTrue(a != b);
+        }
 
         [TestMethod]
         public void TestForeignKeyInfoNamePropertyDefaultValue()
@@ -171,6 +307,13 @@ namespace RepoDb.Schema.Core.UnitTests.Models
             // Assert
             Assert.AreEqual(expected, actual);
         }
+
+        #endregion
+
+        #region Helpers
+
+        private static ForeignKeyInfo Create() =>
+            new ForeignKeyInfo("FK_Person_Country") { Columns = new List<string> { "CountryId" }, ReferencedTable = "dbo.Country", ReferencedColumns = new List<string> { "Id" }, UpdateRule = ForeignKeyRule.Cascade, DeleteRule = ForeignKeyRule.SetNull };
 
         #endregion
     }

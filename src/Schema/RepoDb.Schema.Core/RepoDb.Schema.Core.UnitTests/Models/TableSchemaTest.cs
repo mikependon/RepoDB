@@ -7,6 +7,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Schema.Models;
@@ -17,6 +18,155 @@ namespace RepoDb.Schema.Core.UnitTests.Models
     public class TableSchemaTest
     {
         #region Methods
+
+        [TestMethod]
+        public void TestTableSchemaEqualsWithSameValues()
+        {
+            // Act
+            var a = Create();
+            var b = Create();
+
+            // Assert
+            Assert.IsTrue(a.Equals(b));
+            Assert.IsTrue(a.Equals((object)b));
+            Assert.IsTrue(a == b);
+            Assert.IsFalse(a != b);
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [TestMethod]
+        public void TestTableSchemaEqualsWithSameInstance()
+        {
+            // Act
+            var a = Create();
+
+            // Assert
+            Assert.IsTrue(a.Equals(a));
+            Assert.IsTrue(a == a);
+        }
+
+        [TestMethod]
+        public void TestTableSchemaEqualsWithNull()
+        {
+            // Act
+            var a = Create();
+
+            // Assert
+            Assert.IsFalse(a.Equals((object)null));
+            Assert.IsFalse(a.Equals(null));
+            Assert.IsFalse(a == null);
+            Assert.IsFalse(null == a);
+            Assert.IsTrue(a != null);
+            Assert.IsTrue(((TableSchema)null) == null);
+        }
+
+        [TestMethod]
+        public void TestTableSchemaEqualsWithOtherType()
+        {
+            // Act
+            var a = Create();
+
+            // Assert
+            Assert.IsFalse(a.Equals(new object()));
+        }
+
+        [TestMethod]
+        public void TestTableSchemaNotEqualsWithDifferentTable()
+        {
+            // Act
+            var a = Create();
+            var b = Create();
+            b.Table = new TableInfo("Other", "dbo");
+
+            // Assert
+            Assert.IsFalse(a.Equals(b));
+            Assert.IsFalse(a == b);
+            Assert.IsTrue(a != b);
+        }
+
+        [TestMethod]
+        public void TestTableSchemaNotEqualsWithDifferentPrimaryKey()
+        {
+            // Act
+            var a = Create();
+            var b = Create();
+            b.PrimaryKey = null;
+
+            // Assert
+            Assert.IsFalse(a.Equals(b));
+            Assert.IsFalse(a == b);
+            Assert.IsTrue(a != b);
+        }
+
+        [TestMethod]
+        public void TestTableSchemaNotEqualsWithDifferentColumns()
+        {
+            // Act
+            var a = Create();
+            var b = Create();
+            b.Columns = new List<ColumnInfo>();
+
+            // Assert
+            Assert.IsFalse(a.Equals(b));
+            Assert.IsFalse(a == b);
+            Assert.IsTrue(a != b);
+        }
+
+        [TestMethod]
+        public void TestTableSchemaNotEqualsWithDifferentIndexes()
+        {
+            // Act
+            var a = Create();
+            var b = Create();
+            b.Indexes = new List<IndexInfo>();
+
+            // Assert
+            Assert.IsFalse(a.Equals(b));
+            Assert.IsFalse(a == b);
+            Assert.IsTrue(a != b);
+        }
+
+        [TestMethod]
+        public void TestTableSchemaNotEqualsWithDifferentForeignKeys()
+        {
+            // Act
+            var a = Create();
+            var b = Create();
+            b.ForeignKeys = new List<ForeignKeyInfo>();
+
+            // Assert
+            Assert.IsFalse(a.Equals(b));
+            Assert.IsFalse(a == b);
+            Assert.IsTrue(a != b);
+        }
+
+        [TestMethod]
+        public void TestTableSchemaNotEqualsWithDifferentUniqueConstraints()
+        {
+            // Act
+            var a = Create();
+            var b = Create();
+            b.UniqueConstraints = new List<UniqueConstraintInfo>();
+
+            // Assert
+            Assert.IsFalse(a.Equals(b));
+            Assert.IsFalse(a == b);
+            Assert.IsTrue(a != b);
+        }
+
+        [TestMethod]
+        public void TestTableSchemaNotEqualsWithDifferentCheckConstraints()
+        {
+            // Act
+            var a = Create();
+            var b = Create();
+            b.CheckConstraints = new List<CheckConstraintInfo>();
+
+            // Assert
+            Assert.IsFalse(a.Equals(b));
+            Assert.IsFalse(a == b);
+            Assert.IsTrue(a != b);
+        }
 
         [TestMethod]
         public void TestTableSchemaConstructorWithNameAndSchema()
@@ -176,6 +326,13 @@ namespace RepoDb.Schema.Core.UnitTests.Models
             Assert.AreEqual(1, first.Columns.Count);
             Assert.AreEqual(0, second.Columns.Count);
         }
+
+        #endregion
+
+        #region Helpers
+
+        private static TableSchema Create() =>
+            new TableSchema("Person", "dbo") { PrimaryKey = new PrimaryKeyInfo("PK_Person") { Columns = new List<string> { "Id" } }, Columns = new List<ColumnInfo> { new ColumnInfo { Ordinal = 1 } }, Indexes = new List<IndexInfo> { new IndexInfo("IX") }, ForeignKeys = new List<ForeignKeyInfo> { new ForeignKeyInfo("FK") }, UniqueConstraints = new List<UniqueConstraintInfo> { new UniqueConstraintInfo("UQ") }, CheckConstraints = new List<CheckConstraintInfo> { new CheckConstraintInfo("CK") } };
 
         #endregion
     }

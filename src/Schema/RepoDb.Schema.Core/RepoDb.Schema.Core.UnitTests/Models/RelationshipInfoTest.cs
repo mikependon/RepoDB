@@ -1,4 +1,4 @@
-#region Copyright Attributions
+﻿#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -16,6 +16,71 @@ namespace RepoDb.Schema.Core.UnitTests.Models
     public class RelationshipInfoTest
     {
         #region Methods
+
+        [TestMethod]
+        public void TestRelationshipInfoEqualsWithSameValues()
+        {
+            // Act
+            var a = Create();
+            var b = Create();
+
+            // Assert
+            Assert.IsTrue(a.Equals(b));
+            Assert.IsTrue(a.Equals((object)b));
+            Assert.IsTrue(a == b);
+            Assert.IsFalse(a != b);
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [TestMethod]
+        public void TestRelationshipInfoEqualsWithSameInstance()
+        {
+            // Act
+            var a = Create();
+
+            // Assert
+            Assert.IsTrue(a.Equals(a));
+            Assert.IsTrue(a == a);
+        }
+
+        [TestMethod]
+        public void TestRelationshipInfoEqualsWithNull()
+        {
+            // Act
+            var a = Create();
+
+            // Assert
+            Assert.IsFalse(a.Equals((object)null));
+            Assert.IsFalse(a.Equals(null));
+            Assert.IsFalse(a == null);
+            Assert.IsFalse(null == a);
+            Assert.IsTrue(a != null);
+            Assert.IsTrue(((RelationshipInfo)null) == null);
+        }
+
+        [TestMethod]
+        public void TestRelationshipInfoEqualsWithOtherType()
+        {
+            // Act
+            var a = Create();
+
+            // Assert
+            Assert.IsFalse(a.Equals(new object()));
+        }
+
+        [TestMethod]
+        public void TestRelationshipInfoNotEqualsWithDifferentSchema()
+        {
+            // Act
+            var a = Create();
+            var b = Create();
+            b.Schema = new TableSchema("Other", "dbo");
+
+            // Assert
+            Assert.IsFalse(a.Equals(b));
+            Assert.IsFalse(a == b);
+            Assert.IsTrue(a != b);
+        }
 
         [TestMethod]
         public void TestRelationshipInfoTablePropertyDefaultValue()
@@ -130,6 +195,13 @@ namespace RepoDb.Schema.Core.UnitTests.Models
             Assert.AreSame(b, a.Parents[0]);
             Assert.AreSame(a, a.Parents[0].Parents[0]);
         }
+
+        #endregion
+
+        #region Helpers
+
+        private static RelationshipInfo Create() =>
+            new RelationshipInfo { Schema = new TableSchema("Person", "dbo") };
 
         #endregion
     }
