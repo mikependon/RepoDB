@@ -32,8 +32,8 @@ namespace RepoDb.Schema.Enumerations
         Children,
 
         /// <summary>
-        /// Copies all the tables that are related to the requested tables, in any direction: from the beginning of the tree until the end of it.
+        /// Copies all the tables that are connected to the requested tables, in any direction (their parents, their children, and the tables that those are related to), from the beginning of the tree until the end of it. It does not mean every table of the database.
         /// </summary>
-        EndToEnd
+        All
     }
 }

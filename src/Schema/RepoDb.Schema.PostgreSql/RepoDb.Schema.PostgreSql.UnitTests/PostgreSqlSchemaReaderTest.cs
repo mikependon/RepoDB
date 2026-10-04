@@ -75,7 +75,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
             var reader = new PostgreSqlSchemaReader(new NpgsqlConnection());
 
             // Act/Assert
-            Assert.Throws<ArgumentNullException>(() => reader.GetRelatedTables(null, CopySchemaRelationshipBehavior.EndToEnd));
+            Assert.Throws<ArgumentNullException>(() => reader.GetRelatedTables(null, CopySchemaRelationshipBehavior.All));
         }
 
         [TestMethod]
@@ -85,7 +85,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
             var reader = new PostgreSqlSchemaReader(new NpgsqlConnection());
 
             // Act/Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(() => reader.GetRelatedTablesAsync(null, CopySchemaRelationshipBehavior.EndToEnd));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => reader.GetRelatedTablesAsync(null, CopySchemaRelationshipBehavior.All));
         }
 
         #endregion

@@ -33,7 +33,7 @@ namespace RepoDb.Schema.Core.UnitTests.Enumerations
         {
             // Act
             var actual = Enum.GetNames(typeof(CopySchemaRelationshipBehavior));
-            var expected = new[] { "TableOnly", "Parents", "Children", "EndToEnd" };
+            var expected = new[] { "TableOnly", "Parents", "Children", "All" };
 
             // Assert
             CollectionAssert.AreEqual(expected, actual);
