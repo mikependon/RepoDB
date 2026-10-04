@@ -19,11 +19,23 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         #region Methods
 
         [TestMethod]
+        public void TestTableSchemaConstructorWithNameAndSchema()
+        {
+            // Act
+            var actual = new TableSchema("Person", "dbo");
+
+            // Assert
+            Assert.IsNotNull(actual.Table);
+            Assert.AreEqual("Person", actual.Table.Name, StringComparer.Ordinal);
+            Assert.AreEqual("dbo", actual.Table.Schema, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
         public void TestTableSchemaTableNamePropertyDefaultValue()
         {
             // Act
             var schema = new TableSchema();
-            var actual = schema.TableName;
+            var actual = schema.Table.Name;
 
             // Assert
             Assert.IsNull(actual);
@@ -35,9 +47,9 @@ namespace RepoDb.Schema.Core.UnitTests.Models
             // Act
             var schema = new TableSchema
             {
-                TableName = "Person"
+                Table = new TableInfo { Name = "Person" }
             };
-            var actual = schema.TableName;
+            var actual = schema.Table.Name;
             var expected = "Person";
 
             // Assert
@@ -49,7 +61,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         {
             // Act
             var schema = new TableSchema();
-            var actual = schema.SchemaName;
+            var actual = schema.Table.Schema;
 
             // Assert
             Assert.IsNull(actual);
@@ -61,9 +73,9 @@ namespace RepoDb.Schema.Core.UnitTests.Models
             // Act
             var schema = new TableSchema
             {
-                SchemaName = "dbo"
+                Table = new TableInfo { Schema = "dbo" }
             };
-            var actual = schema.SchemaName;
+            var actual = schema.Table.Schema;
             var expected = "dbo";
 
             // Assert

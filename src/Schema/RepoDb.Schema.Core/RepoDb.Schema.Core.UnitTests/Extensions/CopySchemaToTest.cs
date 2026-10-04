@@ -47,8 +47,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         private static TableSchema GetSchema() =>
             new TableSchema
             {
-                TableName = "Person",
-                SchemaName = "dbo",
+                Table = new TableInfo { Name = "Person", Schema = "dbo" },
                 Columns = { new ColumnInfo(), new ColumnInfo(), new ColumnInfo() },
                 Indexes = { new IndexInfo() },
                 ForeignKeys = { new ForeignKeyInfo(), new ForeignKeyInfo() },
@@ -59,7 +58,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         private static Mock<ISchemaReader> MapReader(TableSchema schema)
         {
             var reader = new Mock<ISchemaReader>();
-            var relationships = new List<RelationshipInfo> { new RelationshipInfo { Table = schema } };
+            var relationships = new List<RelationshipInfo> { new RelationshipInfo { Schema = schema } };
             reader.Setup(r => r.GetDependencyOrder(It.IsAny<IEnumerable<string>>())).Returns(relationships);
             reader.Setup(r => r.GetDependencyOrderAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(relationships);
             SchemaReaderMapper.Add<CustomDbConnection>(reader.Object, true);

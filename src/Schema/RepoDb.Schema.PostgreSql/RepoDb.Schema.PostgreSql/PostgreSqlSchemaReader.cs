@@ -67,8 +67,7 @@ namespace RepoDb.Schema
 
             return new TableSchema
             {
-                TableName = table,
-                SchemaName = schema,
+                Table = new TableInfo { Name = table, Schema = schema },
                 Columns = Query(PostgreSqlSchemaText.ColumnsSql, SchemaTraceKeys.GetColumns, MapColumn, FullNameParameter(fullName)),
                 PrimaryKey = MapPrimaryKey(Query(PostgreSqlSchemaText.KeyConstraintSql, SchemaTraceKeys.GetPrimaryKey, MapKeyColumn, FullNameParameter(fullName), Parameter("Type", "p"))),
                 Indexes = MapIndexes(Query(PostgreSqlSchemaText.IndexesSql, SchemaTraceKeys.GetIndexes, MapIndexColumn, FullNameParameter(fullName))),
@@ -182,8 +181,7 @@ namespace RepoDb.Schema
 
             return new TableSchema
             {
-                TableName = table,
-                SchemaName = schema,
+                Table = new TableInfo { Name = table, Schema = schema },
                 Columns = await QueryAsync(PostgreSqlSchemaText.ColumnsSql, SchemaTraceKeys.GetColumns, MapColumn, cancellationToken, FullNameParameter(fullName)).ConfigureAwait(false),
                 PrimaryKey = MapPrimaryKey(await QueryAsync(PostgreSqlSchemaText.KeyConstraintSql, SchemaTraceKeys.GetPrimaryKey, MapKeyColumn, cancellationToken, FullNameParameter(fullName), Parameter("Type", "p")).ConfigureAwait(false)),
                 Indexes = MapIndexes(await QueryAsync(PostgreSqlSchemaText.IndexesSql, SchemaTraceKeys.GetIndexes, MapIndexColumn, cancellationToken, FullNameParameter(fullName)).ConfigureAwait(false)),
@@ -708,7 +706,7 @@ namespace RepoDb.Schema
         /// <param name="schemas">The schemas of the tables.</param>
         /// <returns>The ordered relationships, one per table.</returns>
         internal static IList<RelationshipInfo> Order(IList<TableSchema> schemas) =>
-            SchemaOrderer.Order(schemas, schema => Key(Helper.Format(schema.SchemaName, schema.TableName)), Key);
+            SchemaOrderer.Order(schemas, schema => Key(Helper.Format(schema.Table.Schema, schema.Table.Name)), Key);
 
         #endregion
     }

@@ -44,8 +44,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         {
             var schema = new TableSchema
             {
-                SchemaName = "dbo",
-                TableName = "Person"
+                Table = new TableInfo { Schema = "dbo", Name = "Person" }
             };
             schema.Columns.Add(new ColumnInfo
             {
@@ -112,7 +111,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         {
             // Setup
             var composer = new SqlServerSchemaComposer();
-            var schema = new TableSchema { TableName = "Person" };
+            var schema = new TableSchema { Table = new TableInfo { Name = "Person" } };
             schema.Columns.Add(GetColumn("Name", "nvarchar", typeof(string), 1, false, 50));
 
             // Act
@@ -131,7 +130,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         {
             // Setup
             var composer = new SqlServerSchemaComposer();
-            var schema = new TableSchema { TableName = "Person" };
+            var schema = new TableSchema { Table = new TableInfo { Name = "Person" } };
             schema.Columns.Add(GetColumn("Second", "int", typeof(int), 2));
             schema.Columns.Add(GetColumn("First", "int", typeof(int), 1));
 
@@ -147,7 +146,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         {
             // Setup
             var composer = new SqlServerSchemaComposer();
-            var schema = new TableSchema { TableName = "Person" };
+            var schema = new TableSchema { Table = new TableInfo { Name = "Person" } };
             schema.Columns.Add(new ColumnInfo
             {
                 Ordinal = 1,
@@ -168,7 +167,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         {
             // Setup
             var composer = new SqlServerSchemaComposer();
-            var schema = new TableSchema { TableName = "Person" };
+            var schema = new TableSchema { Table = new TableInfo { Name = "Person" } };
             schema.Columns.Add(new ColumnInfo
             {
                 Ordinal = 1,
@@ -189,7 +188,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         {
             // Setup
             var composer = new SqlServerSchemaComposer();
-            var schema = new TableSchema { TableName = "Person" };
+            var schema = new TableSchema { Table = new TableInfo { Name = "Person" } };
             schema.Columns.Add(new ColumnInfo
             {
                 Ordinal = 1,
@@ -209,7 +208,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         {
             // Setup
             var composer = new SqlServerSchemaComposer();
-            var schema = new TableSchema { TableName = "Person" };
+            var schema = new TableSchema { Table = new TableInfo { Name = "Person" } };
             schema.Columns.Add(GetColumn("Id", "int", typeof(int), 1, false));
             schema.PrimaryKey = new PrimaryKeyInfo { Columns = { "Id" } };
 
@@ -226,7 +225,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         {
             // Setup
             var composer = new SqlServerSchemaComposer();
-            var schema = new TableSchema { TableName = "OrderLine" };
+            var schema = new TableSchema { Table = new TableInfo { Name = "OrderLine" } };
             schema.Columns.Add(GetColumn("OrderId", "int", typeof(int), 1, false));
             schema.Columns.Add(GetColumn("LineNumber", "int", typeof(int), 2, false));
             schema.PrimaryKey = new PrimaryKeyInfo { Name = "PK_OrderLine", Columns = { "OrderId", "LineNumber" } };
@@ -243,7 +242,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         {
             // Setup
             var composer = new SqlServerSchemaComposer();
-            var schema = new TableSchema { TableName = "NoKey" };
+            var schema = new TableSchema { Table = new TableInfo { Name = "NoKey" } };
             schema.Columns.Add(GetColumn("Value", "nvarchar", typeof(string), 1));
 
             // Act
@@ -258,7 +257,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         {
             // Setup
             var composer = new SqlServerSchemaComposer();
-            var schema = new TableSchema { TableName = "Odd]Table" };
+            var schema = new TableSchema { Table = new TableInfo { Name = "Odd]Table" } };
             schema.Columns.Add(GetColumn("Odd]Column", "int", typeof(int), 1));
 
             // Act
@@ -284,7 +283,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         {
             // Setup
             var composer = new SqlServerSchemaComposer();
-            var schema = new TableSchema { TableName = "Product" };
+            var schema = new TableSchema { Table = new TableInfo { Name = "Product" } };
             schema.Columns.Add(GetColumn("Id", "int", typeof(int), 1, false));
             schema.PrimaryKey = new PrimaryKeyInfo { Name = "PK_Product", IsClustered = false, Columns = { "Id" } };
 
@@ -300,7 +299,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         {
             // Setup
             var composer = new SqlServerSchemaComposer();
-            var schema = new TableSchema { TableName = "Product" };
+            var schema = new TableSchema { Table = new TableInfo { Name = "Product" } };
             schema.Columns.Add(GetColumn("Id", "int", typeof(int), 1, false));
             schema.PrimaryKey = new PrimaryKeyInfo { Name = "PK_Product", Columns = { "Id" } };
 
@@ -700,7 +699,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         {
             // Setup
             var composer = new SqlServerSchemaComposer();
-            var schema = new TableSchema { TableName = "NoKey" };
+            var schema = new TableSchema { Table = new TableInfo { Name = "NoKey" } };
             schema.Columns.Add(GetColumn("Value", "nvarchar", typeof(string), 1));
 
             // Act
@@ -726,7 +725,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             // Setup
             var composer = new SqlServerSchemaComposer();
             var first = GetPersonSchema();
-            var second = new TableSchema { SchemaName = "dbo", TableName = "Country" };
+            var second = new TableSchema { Table = new TableInfo { Schema = "dbo", Name = "Country" } };
             second.Columns.Add(GetColumn("Id", "int", typeof(int), 1, false));
             second.Indexes.Add(new IndexInfo { Name = "IX_Country_Id", Columns = { "Id" } });
 
@@ -747,11 +746,11 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         {
             // Setup (two tables that reference each other)
             var composer = new SqlServerSchemaComposer();
-            var a = new TableSchema { SchemaName = "dbo", TableName = "CycleA" };
+            var a = new TableSchema { Table = new TableInfo { Schema = "dbo", Name = "CycleA" } };
             a.Columns.Add(GetColumn("Id", "int", typeof(int), 1, false));
             a.Columns.Add(GetColumn("BId", "int", typeof(int), 2));
             a.ForeignKeys.Add(new ForeignKeyInfo { Name = "FK_CycleA_CycleB", Columns = { "BId" }, ReferencedTable = "dbo.CycleB", ReferencedColumns = { "Id" } });
-            var b = new TableSchema { SchemaName = "dbo", TableName = "CycleB" };
+            var b = new TableSchema { Table = new TableInfo { Schema = "dbo", Name = "CycleB" } };
             b.Columns.Add(GetColumn("Id", "int", typeof(int), 1, false));
             b.Columns.Add(GetColumn("AId", "int", typeof(int), 2));
             b.ForeignKeys.Add(new ForeignKeyInfo { Name = "FK_CycleB_CycleA", Columns = { "AId" }, ReferencedTable = "dbo.CycleA", ReferencedColumns = { "Id" } });
@@ -810,7 +809,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         {
             // Setup
             var composer = new SqlServerSchemaComposer();
-            var schema = new TableSchema { SchemaName = "dbo", TableName = "Odd.Name" };
+            var schema = new TableSchema { Table = new TableInfo { Schema = "dbo", Name = "Odd.Name" } };
             schema.Columns.Add(GetColumn("Unit Price", "decimal", typeof(decimal), 1, false, null, 10, 2));
 
             // Act
@@ -826,7 +825,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         {
             // Setup
             var composer = new SqlServerSchemaComposer();
-            var schema = new TableSchema { SchemaName = "dbo", TableName = "Weird]Name" };
+            var schema = new TableSchema { Table = new TableInfo { Schema = "dbo", Name = "Weird]Name" } };
             schema.Columns.Add(GetColumn("Id", "int", typeof(int), 1, false));
 
             // Act
@@ -862,10 +861,10 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         {
             // Setup
             var composer = new SqlServerSchemaComposer();
-            var parent = new TableSchema { SchemaName = "dbo", TableName = "Odd.Name" };
+            var parent = new TableSchema { Table = new TableInfo { Schema = "dbo", Name = "Odd.Name" } };
             parent.Columns.Add(GetColumn("Id", "int", typeof(int), 1, false));
             parent.Indexes.Add(new IndexInfo { Name = "IX_OddName_Id", Columns = { "Id" } });
-            var child = new TableSchema { SchemaName = "dbo", TableName = "Odd.Child" };
+            var child = new TableSchema { Table = new TableInfo { Schema = "dbo", Name = "Odd.Child" } };
             child.Columns.Add(GetColumn("ParentId", "int", typeof(int), 1, false));
             child.ForeignKeys.Add(new ForeignKeyInfo
             {

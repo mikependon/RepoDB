@@ -124,8 +124,8 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         public static void AssertSchemaEquality(TableSchema expected,
             TableSchema actual)
         {
-            Assert.AreEqual(expected.TableName, actual.TableName, StringComparer.Ordinal);
-            Assert.AreEqual(expected.SchemaName, actual.SchemaName, StringComparer.Ordinal);
+            Assert.AreEqual(expected.Table.Name, actual.Table.Name, StringComparer.Ordinal);
+            Assert.AreEqual(expected.Table.Schema, actual.Table.Schema, StringComparer.Ordinal);
 
             // Columns
             Assert.AreEqual(expected.Columns.Count, actual.Columns.Count);
@@ -227,7 +227,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         /// <param name="relationships">The relationships.</param>
         /// <returns>The names of the tables.</returns>
         public static string[] GetTableNames(IEnumerable<RelationshipInfo> relationships) =>
-            relationships.Select(r => FormatName(r.Table.SchemaName, r.Table.TableName)).ToArray();
+            relationships.Select(r => FormatName(r.Schema.Table.Schema, r.Schema.Table.Name)).ToArray();
 
         /// <summary>
         /// Formats the name of a table like the reader does: the plain identifiers are kept as they are (<c>dbo.Person</c>),

@@ -40,7 +40,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
         private static TableSchema GetSchema(string tableName, int columns = 1, int indexes = 0, int foreignKeys = 0)
         {
-            var schema = new TableSchema { SchemaName = "dbo", TableName = tableName };
+            var schema = new TableSchema { Table = new TableInfo { Schema = "dbo", Name = tableName } };
             for (var i = 0; i < columns; i++) schema.Columns.Add(new ColumnInfo());
             for (var i = 0; i < indexes; i++) schema.Indexes.Add(new IndexInfo());
             for (var i = 0; i < foreignKeys; i++) schema.ForeignKeys.Add(new ForeignKeyInfo());
@@ -49,7 +49,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
         private static void MapReader(params TableSchema[] schemas)
         {
-            var relationships = schemas.Select(s => new RelationshipInfo { Table = s }).ToList();
+            var relationships = schemas.Select(s => new RelationshipInfo { Schema = s }).ToList();
             var reader = new Mock<ISchemaReader>();
             reader.Setup(r => r.GetDependencyOrder(It.IsAny<IEnumerable<string>>())).Returns(relationships);
             reader.Setup(r => r.GetDependencyOrderAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(relationships);
@@ -60,7 +60,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         {
             var composer = new Mock<ISchemaComposer>();
             composer.Setup(c => c.ComposeSchemas(It.IsAny<IEnumerable<TableSchema>>())).Returns(statements);
-            composer.Setup(c => c.ComposeSchema(It.IsAny<TableSchema>())).Returns<TableSchema>(s => new[] { $"CREATE TABLE {s.TableName};" });
+            composer.Setup(c => c.ComposeSchema(It.IsAny<TableSchema>())).Returns<TableSchema>(s => new[] { $"CREATE TABLE {s.Table.Name};" });
             SchemaComposerMapper.Add<CustomDbConnection>(composer.Object, true);
         }
 

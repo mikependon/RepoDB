@@ -410,7 +410,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             Helper.CopyToTarget("country", "Person", "sales.order_line");
 
             // Assert
-            Assert.AreEqual("sales", Helper.GetTargetSchema("order_line").SchemaName);
+            Assert.AreEqual("sales", Helper.GetTargetSchema("order_line").Table.Schema);
             Helper.AssertTargetMatchesSource("sales.order_line");
         }
 

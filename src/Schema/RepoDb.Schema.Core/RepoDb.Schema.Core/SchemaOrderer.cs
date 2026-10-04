@@ -43,7 +43,7 @@ namespace RepoDb.Schema
                 if (!relationships.ContainsKey(key))
                 {
                     keys.Add(key);
-                    relationships[key] = new RelationshipInfo { Table = schema };
+                    relationships[key] = new RelationshipInfo { Schema = schema };
                 }
             }
             var position = keys.Select((key, index) => new { key, index }).ToDictionary(x => x.key, x => x.index);
@@ -51,7 +51,7 @@ namespace RepoDb.Schema
             // The parents of each table: the (other) given tables that its foreign keys reference
             var parentKeys = keys.ToDictionary(
                 key => key,
-                key => relationships[key].Table.ForeignKeys
+                key => relationships[key].Schema.ForeignKeys
                     .Select(fk => referenceKey(fk.ReferencedTable))
                     .Where(parent => parent != key && relationships.ContainsKey(parent))
                     .Distinct()

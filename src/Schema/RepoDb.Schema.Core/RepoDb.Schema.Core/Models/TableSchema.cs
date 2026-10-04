@@ -15,47 +15,63 @@ namespace RepoDb.Schema.Models
     /// </summary>
     public class TableSchema
     {
+        #region Constructors
+
+        /// <summary>
+        /// Creates a new instance of <see cref="TableSchema"/> class.
+        /// </summary>
+        public TableSchema()
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="TableSchema"/> class.
+        /// </summary>
+        /// <param name="name">The name of the table.</param>
+        /// <param name="schema">The name of the schema that owns the table.</param>
+        public TableSchema(string name,
+            string schema)
+        {
+            Table = new TableInfo(name, schema);
+        }
+
+        #endregion
+
         #region Properties
 
         /// <summary>
         /// Gets or sets the check constraints of the table.
         /// </summary>
-        public IList<CheckConstraintInfo> CheckConstraints { get; set; } = new List<CheckConstraintInfo>();
+        public IList<CheckConstraintInfo> CheckConstraints { get; internal set; } = new List<CheckConstraintInfo>();
 
         /// <summary>
         /// Gets or sets the columns of the table, in their ordinal order.
         /// </summary>
-        public IList<ColumnInfo> Columns { get; set; } = new List<ColumnInfo>();
+        public IList<ColumnInfo> Columns { get; internal set; } = new List<ColumnInfo>();
 
         /// <summary>
         /// Gets or sets the foreign keys of the table.
         /// </summary>
-        public IList<ForeignKeyInfo> ForeignKeys { get; set; } = new List<ForeignKeyInfo>();
+        public IList<ForeignKeyInfo> ForeignKeys { get; internal set; } = new List<ForeignKeyInfo>();
 
         /// <summary>
         /// Gets or sets the indexes of the table.
         /// </summary>
-        public IList<IndexInfo> Indexes { get; set; } = new List<IndexInfo>();
+        public IList<IndexInfo> Indexes { get; internal set; } = new List<IndexInfo>();
 
         /// <summary>
         /// Gets or sets the primary key of the table, or <c>null</c> if the table has no primary key.
         /// </summary>
-        public PrimaryKeyInfo PrimaryKey { get; set; }
+        public PrimaryKeyInfo PrimaryKey { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the name of the schema that owns the table.
+        /// Gets or sets the identity (name and schema) of the table.
         /// </summary>
-        public string SchemaName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the table.
-        /// </summary>
-        public string TableName { get; set; }
+        public TableInfo Table { get; internal set; } = new TableInfo();
 
         /// <summary>
         /// Gets or sets the unique constraints of the table.
         /// </summary>
-        public IList<UniqueConstraintInfo> UniqueConstraints { get; set; } = new List<UniqueConstraintInfo>();
+        public IList<UniqueConstraintInfo> UniqueConstraints { get; internal set; } = new List<UniqueConstraintInfo>();
 
         #endregion
     }

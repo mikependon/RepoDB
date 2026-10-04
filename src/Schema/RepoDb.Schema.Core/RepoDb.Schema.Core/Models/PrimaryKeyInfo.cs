@@ -20,17 +20,17 @@ namespace RepoDb.Schema.Models
         /// <summary>
         /// Gets or sets the name of the primary key constraint.
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; internal set; }
 
         /// <summary>
         /// Gets or sets the ordered names of the columns of the primary key.
         /// </summary>
-        public IList<string> Columns { get; set; } = new List<string>();
+        public IList<string> Columns { get; internal set; } = new List<string>();
 
         /// <summary>
         /// Gets or sets a value that indicates whether the primary key is clustered. The default is <c>true</c>, which is the default of the databases that cluster their primary keys.
         /// </summary>
-        public bool IsClustered { get; set; } = true;
+        public bool IsClustered { get; internal set; } = true;
 
         #endregion
     }

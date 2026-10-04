@@ -24,6 +24,10 @@
     <InternalsVisibleTo Include="RepoDb.Schema.Core.UnitTests" />
     <InternalsVisibleTo Include="RepoDb.Schema.SqlServer" />
     <InternalsVisibleTo Include="RepoDb.Schema.PostgreSql" />
+    <InternalsVisibleTo Include="RepoDb.Schema.SqlServer.UnitTests" />
+    <InternalsVisibleTo Include="RepoDb.Schema.SqlServer.IntegrationTests" />
+    <InternalsVisibleTo Include="RepoDb.Schema.PostgreSql.UnitTests" />
+    <InternalsVisibleTo Include="RepoDb.Schema.PostgreSql.IntegrationTests" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Providers\RepoDb.Core\RepoDb\RepoDb.csproj" />

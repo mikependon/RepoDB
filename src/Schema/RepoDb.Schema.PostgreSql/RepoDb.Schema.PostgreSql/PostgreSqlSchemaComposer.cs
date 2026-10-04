@@ -224,7 +224,7 @@ namespace RepoDb.Schema
         /// <param name="schema"></param>
         /// <returns></returns>
         private static string TableName(TableSchema schema) =>
-            Helper.Format(schema.SchemaName, schema.TableName);
+            Helper.Format(schema.Table.Schema, schema.Table.Name);
 
         /// <summary>
         ///

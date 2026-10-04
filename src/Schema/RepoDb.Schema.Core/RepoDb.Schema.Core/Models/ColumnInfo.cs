@@ -18,42 +18,42 @@ namespace RepoDb.Schema.Models
         /// <summary>
         /// Gets or sets the base field information (name, type, size, precision, scale, nullability, primary and identity flags).
         /// </summary>
-        public DbField Field { get; set; }
+        public DbField Field { get; internal set; }
 
         /// <summary>
         /// Gets or sets the position of the column within the table (starting at 1).
         /// </summary>
-        public int Ordinal { get; set; }
+        public int Ordinal { get; internal set; }
 
         /// <summary>
         /// Gets or sets the default expression of the column, or <c>null</c> if there is none.
         /// </summary>
-        public string DefaultExpression { get; set; }
+        public string DefaultExpression { get; internal set; }
 
         /// <summary>
         /// Gets or sets the seed of the identity column, or <c>null</c> if the column is not an identity.
         /// </summary>
-        public long? IdentitySeed { get; set; }
+        public long? IdentitySeed { get; internal set; }
 
         /// <summary>
         /// Gets or sets the increment of the identity column, or <c>null</c> if the column is not an identity.
         /// </summary>
-        public long? IdentityIncrement { get; set; }
+        public long? IdentityIncrement { get; internal set; }
 
         /// <summary>
         /// Gets or sets the expression of a computed or generated column, or <c>null</c> if the column is not computed.
         /// </summary>
-        public string ComputedExpression { get; set; }
+        public string ComputedExpression { get; internal set; }
 
         /// <summary>
         /// Gets or sets the collation of the column, or <c>null</c> if it is not applicable.
         /// </summary>
-        public string Collation { get; set; }
+        public string Collation { get; internal set; }
 
         /// <summary>
         /// Gets or sets the comment of the column, or <c>null</c> if there is none.
         /// </summary>
-        public string Comment { get; set; }
+        public string Comment { get; internal set; }
 
         #endregion
     }

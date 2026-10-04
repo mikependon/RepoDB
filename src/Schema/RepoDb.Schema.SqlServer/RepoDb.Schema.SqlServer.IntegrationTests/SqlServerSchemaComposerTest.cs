@@ -258,8 +258,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 // Act
                 var withoutIndexesAndForeignKeys = new TableSchema
                 {
-                    TableName = source.TableName,
-                    SchemaName = source.SchemaName,
+                    Table = new TableInfo { Name = source.Table.Name, Schema = source.Table.Schema },
                     PrimaryKey = source.PrimaryKey,
                     Columns = source.Columns,
                     CheckConstraints = source.CheckConstraints

@@ -40,10 +40,10 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             CreateReader().GetDependencyOrder(tableNames).ToList();
 
         private static RelationshipInfo Get(IEnumerable<RelationshipInfo> relationships, string tableName) =>
-            relationships.Single(r => r.Table.TableName == tableName);
+            relationships.Single(r => r.Schema.Table.Name == tableName);
 
         private static int IndexOf(IEnumerable<RelationshipInfo> relationships, string tableName) =>
-            relationships.Select(r => r.Table.TableName).ToList().IndexOf(tableName);
+            relationships.Select(r => r.Schema.Table.Name).ToList().IndexOf(tableName);
 
         #endregion
 
@@ -69,8 +69,8 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             var actual = Order("d_leaf", "d_right", "d_left", "d_root");
 
             // Assert
-            Assert.AreEqual("d_root", actual[0].Table.TableName);
-            Assert.AreEqual("d_leaf", actual[3].Table.TableName);
+            Assert.AreEqual("d_root", actual[0].Schema.Table.Name);
+            Assert.AreEqual("d_leaf", actual[3].Schema.Table.Name);
         }
 
         [TestMethod]
@@ -118,7 +118,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             var actual = Order("fan_3", "fan_1", "fan_parent", "fan_2");
 
             // Assert
-            Assert.AreEqual("fan_parent", actual[0].Table.TableName);
+            Assert.AreEqual("fan_parent", actual[0].Schema.Table.Name);
             Assert.AreEqual(3, Get(actual, "fan_parent").Children.Count);
         }
 
@@ -196,9 +196,9 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
 
             // Assert
             Assert.AreEqual(3, actual.Count);
-            Assert.AreEqual("item_ref", actual[2].Table.TableName);
+            Assert.AreEqual("item_ref", actual[2].Schema.Table.Name);
             Assert.AreEqual(2, actual[2].Parents.Count);
-            CollectionAssert.AreEquivalent(new[] { "public", "sales" }, actual[2].Parents.Select(p => p.Table.SchemaName).ToArray());
+            CollectionAssert.AreEquivalent(new[] { "public", "sales" }, actual[2].Parents.Select(p => p.Schema.Table.Schema).ToArray());
         }
 
         [TestMethod]
@@ -220,8 +220,8 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             var schema = CreateReader().GetTableSchema("\"odd.name\"");
 
             // Assert
-            Assert.AreEqual("odd.name", schema.TableName);
-            Assert.AreEqual("public", schema.SchemaName);
+            Assert.AreEqual("odd.name", schema.Table.Name);
+            Assert.AreEqual("public", schema.Table.Schema);
         }
 
         [TestMethod]
@@ -231,7 +231,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             var schema = CreateReader().GetTableSchema("public.\"odd name\"");
 
             // Assert
-            Assert.AreEqual("odd name", schema.TableName);
+            Assert.AreEqual("odd name", schema.Table.Name);
             Assert.AreEqual("public.\"odd.name\"", schema.ForeignKeys.Single().ReferencedTable);
         }
 
@@ -242,7 +242,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             var schema = CreateReader().GetTableSchema("\"odd\"\"name\"");
 
             // Assert
-            Assert.AreEqual("odd\"name", schema.TableName);
+            Assert.AreEqual("odd\"name", schema.Table.Name);
         }
 
         [TestMethod]
@@ -315,7 +315,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
 
             // Assert
             Assert.AreEqual(1, actual.Count);
-            Assert.AreEqual(1, actual[0].Table.ForeignKeys.Count);
+            Assert.AreEqual(1, actual[0].Schema.ForeignKeys.Count);
             Assert.AreEqual(0, actual[0].Parents.Count);
         }
 
@@ -350,7 +350,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
                     foreach (var parent in relationship.Parents)
                     {
                         var isCycle = parent.Parents.Any(p => ReferenceEquals(p, relationship)) || IsInCycle(parent, relationship);
-                        Assert.IsTrue(isCycle || relationships.IndexOf(parent) < relationships.IndexOf(relationship), $"{parent.Table.TableName} before {relationship.Table.TableName}.");
+                        Assert.IsTrue(isCycle || relationships.IndexOf(parent) < relationships.IndexOf(relationship), $"{parent.Schema.Table.Name} before {relationship.Schema.Table.Name}.");
                     }
                 }
             }
@@ -365,8 +365,8 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             // Assert (each foreign key to another given table is a parent, and the parent knows its child)
             foreach (var relationship in relationships)
             {
-                var referenced = relationship.Table.ForeignKeys.Select(fk => fk.ReferencedTable).Distinct().Count(name => !name.EndsWith("." + relationship.Table.TableName, StringComparison.Ordinal) || name != $"{relationship.Table.SchemaName}.{relationship.Table.TableName}");
-                Assert.AreEqual(referenced, relationship.Parents.Count, relationship.Table.TableName);
+                var referenced = relationship.Schema.ForeignKeys.Select(fk => fk.ReferencedTable).Distinct().Count(name => !name.EndsWith("." + relationship.Schema.Table.Name, StringComparison.Ordinal) || name != $"{relationship.Schema.Table.Schema}.{relationship.Schema.Table.Name}");
+                Assert.AreEqual(referenced, relationship.Parents.Count, relationship.Schema.Table.Name);
                 Assert.IsTrue(relationship.Parents.All(p => p.Children.Contains(relationship)));
             }
         }

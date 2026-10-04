@@ -134,7 +134,7 @@ namespace RepoDb.Schema
                 throw new MissingMappingException($"There is no schema reader mapping found for '{connection.GetType().FullName}'. Make sure to register one via the '{nameof(SchemaReaderMapper)}'.");
             var schemaComposer = SchemaComposerMapper.Get(destinationConnection) ??
                 throw new MissingMappingException($"There is no schema composer mapping found for '{destinationConnection.GetType().FullName}'. Make sure to register one via the '{nameof(SchemaComposerMapper)}'.");
-            var schemas = schemaReader.GetDependencyOrder(names).Select(r => r.Table).ToList();
+            var schemas = schemaReader.GetDependencyOrder(names).Select(r => r.Schema).ToList();
             var statements = schemaComposer.ComposeSchemas(schemas).ToList();
             var completions = GetCompletions(schemas, statements.Count);
             var owners = GetOwners(schemas, statements.Count);
@@ -284,7 +284,7 @@ namespace RepoDb.Schema
             var schemaComposer = SchemaComposerMapper.Get(destinationConnection) ??
                 throw new MissingMappingException($"There is no schema composer mapping found for '{destinationConnection.GetType().FullName}'. Make sure to register one via the '{nameof(SchemaComposerMapper)}'.");
             var relationships = await schemaReader.GetDependencyOrderAsync(names, cancellationToken).ConfigureAwait(false);
-            var schemas = relationships.Select(r => r.Table).ToList();
+            var schemas = relationships.Select(r => r.Schema).ToList();
             var statements = schemaComposer.ComposeSchemas(schemas).ToList();
             var completions = GetCompletions(schemas, statements.Count);
             var owners = GetOwners(schemas, statements.Count);
@@ -395,8 +395,8 @@ namespace RepoDb.Schema
                 Exception = exception,
                 Statement = statement,
                 StatementIndex = statementIndex,
-                TableName = owner?.TableName,
-                SchemaName = owner?.SchemaName
+                TableName = owner?.Table?.Name,
+                SchemaName = owner?.Table?.Schema
             };
 
         /// <summary>
@@ -430,8 +430,8 @@ namespace RepoDb.Schema
             {
                 var schemaErrors = errors
                     .Where(error => error.TableName == null ||
-                        (string.Equals(error.TableName, schema.TableName, StringComparison.Ordinal) &&
-                        string.Equals(error.SchemaName, schema.SchemaName, StringComparison.Ordinal)))
+                        (string.Equals(error.TableName, schema.Table.Name, StringComparison.Ordinal) &&
+                        string.Equals(error.SchemaName, schema.Table.Schema, StringComparison.Ordinal)))
                     .ToList();
                 var script = schemaComposer.ComposeSchema(schema) ?? Enumerable.Empty<string>();
                 
@@ -440,8 +440,8 @@ namespace RepoDb.Schema
                     Action = tableExistenceBehavior,
                     Outcome = schemaErrors.Count > 0 ? CopySchemaOutcome.Failed : CopySchemaOutcome.Created,
                     Errors = schemaErrors,
-                    TableName = schema.TableName,
-                    SourceSchema = schema.SchemaName,
+                    TableName = schema.Table.Name,
+                    SourceSchema = schema.Table.Schema,
                     SourceDatabase = connection.Database,
                     SourceServer = (connection as DbConnection)?.DataSource,
                     SourceDatabaseType = connection.GetType().Name,

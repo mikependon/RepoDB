@@ -1029,10 +1029,10 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(0, parent.Parents.Count);
-                CollectionAssert.AreEqual(new[] { "Child" }, parent.Children.Select(r => r.Table.TableName).ToArray());
-                CollectionAssert.AreEqual(new[] { "Parent" }, child.Parents.Select(r => r.Table.TableName).ToArray());
-                CollectionAssert.AreEqual(new[] { "GrandChild" }, child.Children.Select(r => r.Table.TableName).ToArray());
-                CollectionAssert.AreEqual(new[] { "Child" }, grandChild.Parents.Select(r => r.Table.TableName).ToArray());
+                CollectionAssert.AreEqual(new[] { "Child" }, parent.Children.Select(r => r.Schema.Table.Name).ToArray());
+                CollectionAssert.AreEqual(new[] { "Parent" }, child.Parents.Select(r => r.Schema.Table.Name).ToArray());
+                CollectionAssert.AreEqual(new[] { "GrandChild" }, child.Children.Select(r => r.Schema.Table.Name).ToArray());
+                CollectionAssert.AreEqual(new[] { "Child" }, grandChild.Parents.Select(r => r.Schema.Table.Name).ToArray());
                 Assert.AreEqual(0, grandChild.Children.Count);
             }
         }
@@ -1064,13 +1064,13 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
 
                 // Act
                 var actual = reader.GetDependencyOrder(new[] { "Person", "Country" }).ToList();
-                var person = actual.Single(r => r.Table.TableName == "Person");
+                var person = actual.Single(r => r.Schema.Table.Name == "Person");
 
                 // Assert
-                Assert.AreEqual(7, person.Table.Columns.Count);
-                Assert.AreEqual(1, person.Table.ForeignKeys.Count);
-                Assert.IsNotNull(person.Table.PrimaryKey);
-                CollectionAssert.AreEqual(new[] { "Country" }, person.Parents.Select(r => r.Table.TableName).ToArray());
+                Assert.AreEqual(7, person.Schema.Columns.Count);
+                Assert.AreEqual(1, person.Schema.ForeignKeys.Count);
+                Assert.IsNotNull(person.Schema.PrimaryKey);
+                CollectionAssert.AreEqual(new[] { "Country" }, person.Parents.Select(r => r.Schema.Table.Name).ToArray());
             }
         }
 
@@ -1084,11 +1084,11 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
 
                 // Act
                 var actual = reader.GetDependencyOrder(new[] { "Shipment", "OrderLine", "Country" }).ToList();
-                var shipment = actual.Single(r => r.Table.TableName == "Shipment");
+                var shipment = actual.Single(r => r.Schema.Table.Name == "Shipment");
 
                 // Assert
-                Assert.AreEqual("Shipment", actual[2].Table.TableName, StringComparer.Ordinal);
-                CollectionAssert.AreEquivalent(new[] { "OrderLine", "Country" }, shipment.Parents.Select(r => r.Table.TableName).ToArray());
+                Assert.AreEqual("Shipment", actual[2].Schema.Table.Name, StringComparer.Ordinal);
+                CollectionAssert.AreEquivalent(new[] { "OrderLine", "Country" }, shipment.Parents.Select(r => r.Schema.Table.Name).ToArray());
             }
         }
 
@@ -1106,7 +1106,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 // Assert
                 Assert.AreEqual(0, actual.Parents.Count);
                 Assert.AreEqual(0, actual.Children.Count);
-                Assert.AreEqual(1, actual.Table.ForeignKeys.Count);
+                Assert.AreEqual(1, actual.Schema.ForeignKeys.Count);
             }
         }
 
@@ -1173,9 +1173,9 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 var actual = (await reader.GetDependencyOrderAsync(new[] { "GrandChild", "Parent", "Child" })).ToList();
 
                 // Assert
-                CollectionAssert.AreEqual(new[] { "Child" }, actual[0].Children.Select(r => r.Table.TableName).ToArray());
-                CollectionAssert.AreEqual(new[] { "Parent" }, actual[1].Parents.Select(r => r.Table.TableName).ToArray());
-                CollectionAssert.AreEqual(new[] { "GrandChild" }, actual[1].Children.Select(r => r.Table.TableName).ToArray());
+                CollectionAssert.AreEqual(new[] { "Child" }, actual[0].Children.Select(r => r.Schema.Table.Name).ToArray());
+                CollectionAssert.AreEqual(new[] { "Parent" }, actual[1].Parents.Select(r => r.Schema.Table.Name).ToArray());
+                CollectionAssert.AreEqual(new[] { "GrandChild" }, actual[1].Children.Select(r => r.Schema.Table.Name).ToArray());
                 Assert.AreEqual(0, actual[2].Children.Count);
             }
         }
@@ -1200,8 +1200,8 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 var actual = reader.GetTableSchema("Person");
 
                 // Assert
-                Assert.AreEqual("Person", actual.TableName, StringComparer.Ordinal);
-                Assert.AreEqual("dbo", actual.SchemaName, StringComparer.Ordinal);
+                Assert.AreEqual("Person", actual.Table.Name, StringComparer.Ordinal);
+                Assert.AreEqual("dbo", actual.Table.Schema, StringComparer.Ordinal);
                 Assert.AreEqual(7, actual.Columns.Count);
                 Assert.IsNotNull(actual.PrimaryKey);
                 Assert.AreEqual(1, actual.Indexes.Count);
@@ -1223,8 +1223,8 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 var actual = reader.GetTableSchema("Invoice");
 
                 // Assert
-                Assert.AreEqual("Invoice", actual.TableName, StringComparer.Ordinal);
-                Assert.AreEqual("Sales", actual.SchemaName, StringComparer.Ordinal);
+                Assert.AreEqual("Invoice", actual.Table.Name, StringComparer.Ordinal);
+                Assert.AreEqual("Sales", actual.Table.Schema, StringComparer.Ordinal);
                 Assert.AreEqual(2, actual.Columns.Count);
             }
         }
@@ -1263,8 +1263,8 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 var actual = await reader.GetTableSchemaAsync("Person");
 
                 // Assert
-                Assert.AreEqual("Person", actual.TableName, StringComparer.Ordinal);
-                Assert.AreEqual("dbo", actual.SchemaName, StringComparer.Ordinal);
+                Assert.AreEqual("Person", actual.Table.Name, StringComparer.Ordinal);
+                Assert.AreEqual("dbo", actual.Table.Schema, StringComparer.Ordinal);
                 Assert.AreEqual(7, actual.Columns.Count);
                 Assert.IsNotNull(actual.PrimaryKey);
                 Assert.AreEqual(1, actual.Indexes.Count);

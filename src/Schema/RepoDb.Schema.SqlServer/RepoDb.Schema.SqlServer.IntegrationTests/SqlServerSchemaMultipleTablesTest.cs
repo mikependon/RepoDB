@@ -236,7 +236,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         {
             // Setup
             var tables = GetSourceTables();
-            var schemas = Helper.GetSourceSchemas(tables).ToDictionary(s => Helper.FormatName(s.SchemaName, s.TableName), StringComparer.OrdinalIgnoreCase);
+            var schemas = Helper.GetSourceSchemas(tables).ToDictionary(s => Helper.FormatName(s.Table.Schema, s.Table.Name), StringComparer.OrdinalIgnoreCase);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForSource))
             {
@@ -247,7 +247,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 Assert.AreEqual(tables.Count, order.Count);
                 foreach (var schema in schemas.Values)
                 {
-                    var name = Helper.FormatName(schema.SchemaName, schema.TableName);
+                    var name = Helper.FormatName(schema.Table.Schema, schema.Table.Name);
                     if (CircularTables.Contains(name, StringComparer.OrdinalIgnoreCase))
                     {
                         continue;

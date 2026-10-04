@@ -50,10 +50,10 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         }
 
         private static RelationshipInfo Get(IEnumerable<RelationshipInfo> relationships, string tableName) =>
-            relationships.Single(r => r.Table.TableName == tableName);
+            relationships.Single(r => r.Schema.Table.Name == tableName);
 
         private static string[] Names(IEnumerable<RelationshipInfo> relationships) =>
-            relationships.Select(r => r.Table.TableName).ToArray();
+            relationships.Select(r => r.Schema.Table.Name).ToArray();
 
         private static List<string> GetSourceTables()
         {
@@ -74,8 +74,8 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             var actual = GetRelationships("DiamondD", "DiamondB", "DiamondC", "DiamondA");
 
             // Assert (the root comes first and the table that depends on both branches comes last)
-            Assert.AreEqual("DiamondA", actual[0].Table.TableName, StringComparer.Ordinal);
-            Assert.AreEqual("DiamondD", actual[3].Table.TableName, StringComparer.Ordinal);
+            Assert.AreEqual("DiamondA", actual[0].Schema.Table.Name, StringComparer.Ordinal);
+            Assert.AreEqual("DiamondD", actual[3].Schema.Table.Name, StringComparer.Ordinal);
             CollectionAssert.AreEqual(new[] { "DiamondB", "DiamondC" }, Names(actual.Skip(1).Take(2)));
         }
 
@@ -111,8 +111,8 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 var actual = GetRelationships(given);
 
                 // Assert
-                Assert.AreEqual("DiamondA", actual[0].Table.TableName, StringComparer.Ordinal);
-                Assert.AreEqual("DiamondD", actual[3].Table.TableName, StringComparer.Ordinal);
+                Assert.AreEqual("DiamondA", actual[0].Schema.Table.Name, StringComparer.Ordinal);
+                Assert.AreEqual("DiamondD", actual[3].Schema.Table.Name, StringComparer.Ordinal);
             }
         }
 
@@ -140,7 +140,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             var actual = GetRelationships("Transfer", "Account");
 
             // Assert (the parent is listed once, although the table has 2 foreign keys to it)
-            Assert.AreEqual(2, Get(actual, "Transfer").Table.ForeignKeys.Count);
+            Assert.AreEqual(2, Get(actual, "Transfer").Schema.ForeignKeys.Count);
             Assert.AreEqual(1, Get(actual, "Transfer").Parents.Count);
             Assert.AreEqual(1, Get(actual, "Account").Children.Count);
             CollectionAssert.AreEqual(new[] { "Account", "Transfer" }, Names(actual));
@@ -259,7 +259,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             var actual = GetRelationships("FanChild3", "FanChild1", "FanRoot", "FanChild4", "FanChild2");
 
             // Assert (the children are listed in the order that they were given)
-            Assert.AreEqual("FanRoot", actual[0].Table.TableName, StringComparer.Ordinal);
+            Assert.AreEqual("FanRoot", actual[0].Schema.Table.Name, StringComparer.Ordinal);
             CollectionAssert.AreEqual(new[] { "FanChild3", "FanChild1", "FanChild4", "FanChild2" }, Names(Get(actual, "FanRoot").Children));
             foreach (var child in actual.Skip(1))
             {
@@ -278,9 +278,9 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             var actual = GetRelationships("dbo.ItemRef", "dbo.Item", "Sales.Item");
 
             // Assert (the table references the one of the Sales schema only)
-            var reference = actual.Single(r => r.Table.TableName == "ItemRef");
-            var sales = actual.Single(r => r.Table.TableName == "Item" && r.Table.SchemaName == "Sales");
-            var dbo = actual.Single(r => r.Table.TableName == "Item" && r.Table.SchemaName == "dbo");
+            var reference = actual.Single(r => r.Schema.Table.Name == "ItemRef");
+            var sales = actual.Single(r => r.Schema.Table.Name == "Item" && r.Schema.Table.Schema == "Sales");
+            var dbo = actual.Single(r => r.Schema.Table.Name == "Item" && r.Schema.Table.Schema == "dbo");
             Assert.AreSame(sales, reference.Parents.Single());
             Assert.AreSame(reference, sales.Children.Single());
             Assert.AreEqual(0, dbo.Children.Count);
@@ -316,8 +316,8 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 var actual = reader.GetTableSchema("[dbo].[Odd.Name]");
 
                 // Assert
-                Assert.AreEqual("dbo", actual.SchemaName, StringComparer.Ordinal);
-                Assert.AreEqual("Odd.Name", actual.TableName, StringComparer.Ordinal);
+                Assert.AreEqual("dbo", actual.Table.Schema, StringComparer.Ordinal);
+                Assert.AreEqual("Odd.Name", actual.Table.Name, StringComparer.Ordinal);
                 Assert.AreEqual(2, actual.Columns.Count);
                 Assert.AreEqual(1, actual.Indexes.Count);
                 Assert.IsTrue(reader.TableExists("[dbo].[Odd.Name]"));
@@ -337,7 +337,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 var actual = reader.GetTableSchema("[Order Details]");
 
                 // Assert
-                Assert.AreEqual("Order Details", actual.TableName, StringComparer.Ordinal);
+                Assert.AreEqual("Order Details", actual.Table.Name, StringComparer.Ordinal);
                 Assert.AreEqual("Unit Price", actual.Columns.Single(c => c.Field.Name == "Unit Price").Field.Name, StringComparer.Ordinal);
             }
         }
@@ -354,7 +354,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 var actual = reader.GetTableSchema("[dbo].[Weird]]Name]");
 
                 // Assert
-                Assert.AreEqual("Weird]Name", actual.TableName, StringComparer.Ordinal);
+                Assert.AreEqual("Weird]Name", actual.Table.Name, StringComparer.Ordinal);
             }
         }
 
@@ -386,7 +386,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             // Assert
             CollectionAssert.AreEqual(new[] { "dbo.[Odd.Name]", "dbo.[Odd.Child]" }, Helper.GetTableNames(actual));
             Assert.AreSame(actual[0], actual[1].Parents.Single());
-            Assert.AreEqual("dbo.[Odd.Name]", actual[1].Table.ForeignKeys.Single().ReferencedTable, StringComparer.Ordinal);
+            Assert.AreEqual("dbo.[Odd.Name]", actual[1].Schema.ForeignKeys.Single().ReferencedTable, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -435,7 +435,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             var actual = GetRelationships("Shipment");
 
             // Assert (the foreign keys stay in the schema, but there is no parent to relate to)
-            Assert.AreEqual(2, actual[0].Table.ForeignKeys.Count);
+            Assert.AreEqual(2, actual[0].Schema.ForeignKeys.Count);
             Assert.AreEqual(0, actual[0].Parents.Count);
         }
 
@@ -485,8 +485,8 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             // Assert (every foreign key to another table is a parent, and every parent has a foreign key)
             foreach (var relationship in actual)
             {
-                var self = Helper.FormatName(relationship.Table.SchemaName, relationship.Table.TableName);
-                var referenced = relationship.Table.ForeignKeys
+                var self = Helper.FormatName(relationship.Schema.Table.Schema, relationship.Schema.Table.Name);
+                var referenced = relationship.Schema.ForeignKeys
                     .Select(fk => fk.ReferencedTable)
                     .Where(t => !string.Equals(t, self, StringComparison.OrdinalIgnoreCase))
                     .Distinct(StringComparer.OrdinalIgnoreCase)
@@ -525,10 +525,10 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 Assert.AreEqual(tables.Count, order.Count);
                 foreach (var relationship in actual)
                 {
-                    var name = Helper.FormatName(relationship.Table.SchemaName, relationship.Table.TableName);
+                    var name = Helper.FormatName(relationship.Schema.Table.Schema, relationship.Schema.Table.Name);
                     foreach (var parent in relationship.Parents)
                     {
-                        var parentName = Helper.FormatName(parent.Table.SchemaName, parent.Table.TableName);
+                        var parentName = Helper.FormatName(parent.Schema.Table.Schema, parent.Schema.Table.Name);
                         if (CyclicTables.Contains(name, StringComparer.OrdinalIgnoreCase) &&
                             CyclicTables.Contains(parentName, StringComparer.OrdinalIgnoreCase))
                         {

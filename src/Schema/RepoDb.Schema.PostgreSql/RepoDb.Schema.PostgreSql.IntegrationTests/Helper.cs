@@ -145,7 +145,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
         /// <param name="relationships">The relationships.</param>
         /// <returns>The names of the tables.</returns>
         public static string[] GetTableNames(IEnumerable<RelationshipInfo> relationships) =>
-            relationships.Select(r => r.Table.TableName).ToArray();
+            relationships.Select(r => r.Schema.Table.Name).ToArray();
 
         /// <summary>
         /// Asserts the equality of the 2 schemas of a table. The comments of the columns are not compared.
@@ -155,8 +155,8 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
         public static void AssertSchemaEquality(TableSchema expected,
             TableSchema actual)
         {
-            Assert.AreEqual(expected.TableName, actual.TableName, StringComparer.Ordinal);
-            Assert.AreEqual(expected.SchemaName, actual.SchemaName, StringComparer.Ordinal);
+            Assert.AreEqual(expected.Table.Name, actual.Table.Name, StringComparer.Ordinal);
+            Assert.AreEqual(expected.Table.Schema, actual.Table.Schema, StringComparer.Ordinal);
 
             // Columns
             Assert.AreEqual(expected.Columns.Count, actual.Columns.Count);

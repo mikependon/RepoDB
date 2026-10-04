@@ -23,19 +23,19 @@ namespace RepoDb.Schema.Models
         /// <summary>
         /// Gets or sets the schema of the table.
         /// </summary>
-        public TableSchema Table { get; set; }
+        public TableSchema Schema { get; internal set; }
 
         /// <summary>
         /// Gets or sets the tables that this table references through its foreign keys (the tables that this table depends on,
         /// so they must exist first). A table that references itself is not included.
         /// </summary>
-        public IList<RelationshipInfo> Parents { get; set; } = new List<RelationshipInfo>();
+        public IList<RelationshipInfo> Parents { get; internal set; } = new List<RelationshipInfo>();
 
         /// <summary>
         /// Gets or sets the tables that reference this table through their foreign keys (the tables that depend on this table).
         /// A table that references itself is not included.
         /// </summary>
-        public IList<RelationshipInfo> Children { get; set; } = new List<RelationshipInfo>();
+        public IList<RelationshipInfo> Children { get; internal set; } = new List<RelationshipInfo>();
 
         #endregion
     }

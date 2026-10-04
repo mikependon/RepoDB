@@ -154,9 +154,9 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             var person = reader.GetTableSchema("public.Person");
 
             // Assert
-            Assert.AreEqual("sales", orderLine.SchemaName);
-            Assert.AreEqual("public", person.SchemaName);
-            Assert.AreEqual("Person", person.TableName);
+            Assert.AreEqual("sales", orderLine.Table.Schema);
+            Assert.AreEqual("public", person.Table.Schema);
+            Assert.AreEqual("Person", person.Table.Name);
             Assert.AreEqual("public.\"Person\"", reader.GetForeignKeys("sales.order_line").Single().ReferencedTable);
         }
 
@@ -193,7 +193,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
         public void TestPostgreSqlSchemaReaderGetDependencyOrder()
         {
             // Act
-            var order = CreateReader().GetDependencyOrder(new[] { "sales.order_line", "Person", "country" }).Select(r => r.Table.TableName).ToArray();
+            var order = CreateReader().GetDependencyOrder(new[] { "sales.order_line", "Person", "country" }).Select(r => r.Schema.Table.Name).ToArray();
 
             // Assert
             CollectionAssert.AreEqual(new[] { "country", "Person", "order_line" }, order);
@@ -206,7 +206,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             var relationships = CreateReader().GetDependencyOrder(new[] { "node_b", "country", "node_a" }).ToList();
 
             // Assert
-            CollectionAssert.AreEqual(new[] { "node_b", "node_a", "country" }, relationships.Select(r => r.Table.TableName).ToArray());
+            CollectionAssert.AreEqual(new[] { "node_b", "node_a", "country" }, relationships.Select(r => r.Schema.Table.Name).ToArray());
             Assert.AreEqual(1, relationships[0].Parents.Count);
         }
 

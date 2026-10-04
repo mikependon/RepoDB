@@ -20,12 +20,12 @@ namespace RepoDb.Schema.Models
         /// <summary>
         /// Gets or sets the name of the unique constraint.
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; internal set; }
 
         /// <summary>
         /// Gets or sets the ordered names of the columns of the constraint.
         /// </summary>
-        public IList<string> Columns { get; set; } = new List<string>();
+        public IList<string> Columns { get; internal set; } = new List<string>();
 
         #endregion
     }

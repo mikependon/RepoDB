@@ -26,7 +26,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
         {
             var schema = name.Contains('.') ? name.Substring(0, name.IndexOf('.')) : "public";
             var table = name.Contains('.') ? name.Substring(name.IndexOf('.') + 1) : name;
-            var tableSchema = new TableSchema { SchemaName = schema, TableName = table };
+            var tableSchema = new TableSchema { Table = new TableInfo { Schema = schema, Name = table } };
             foreach (var reference in references)
             {
                 tableSchema.ForeignKeys.Add(new ForeignKeyInfo
@@ -41,16 +41,16 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
         }
 
         private static string[] Order(params TableSchema[] schemas) =>
-            PostgreSqlSchemaReader.Order(schemas).Select(r => r.Table.TableName).ToArray();
+            PostgreSqlSchemaReader.Order(schemas).Select(r => r.Schema.Table.Name).ToArray();
 
         private static IList<RelationshipInfo> Relationships(params TableSchema[] schemas) =>
             PostgreSqlSchemaReader.Order(schemas);
 
         private static RelationshipInfo Get(IEnumerable<RelationshipInfo> relationships, string tableName) =>
-            relationships.Single(r => r.Table.TableName == tableName);
+            relationships.Single(r => r.Schema.Table.Name == tableName);
 
         private static string[] Names(IEnumerable<RelationshipInfo> relationships) =>
-            relationships.Select(r => r.Table.TableName).ToArray();
+            relationships.Select(r => r.Schema.Table.Name).ToArray();
 
         #endregion
 
@@ -164,7 +164,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
             var actual = Order(schemas);
 
             // Assert (they have no order between them, so they are kept as they were given)
-            CollectionAssert.AreEqual(schemas.Select(s => s.TableName).ToArray(), actual);
+            CollectionAssert.AreEqual(schemas.Select(s => s.Table.Name).ToArray(), actual);
         }
 
         #endregion
@@ -180,7 +180,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
             // Assert
             Assert.AreEqual(0, actual[0].Parents.Count);
             Assert.AreEqual(0, actual[0].Children.Count);
-            Assert.AreEqual(1, actual[0].Table.ForeignKeys.Count);
+            Assert.AreEqual(1, actual[0].Schema.ForeignKeys.Count);
         }
 
         [TestMethod]
@@ -202,7 +202,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
             var actual = Relationships(Table("Transfer", "Account", "Account"), Table("Account"));
 
             // Assert
-            Assert.AreEqual(2, Get(actual, "Transfer").Table.ForeignKeys.Count);
+            Assert.AreEqual(2, Get(actual, "Transfer").Schema.ForeignKeys.Count);
             Assert.AreEqual(1, Get(actual, "Transfer").Parents.Count);
             Assert.AreEqual(1, Get(actual, "Account").Children.Count);
         }
@@ -215,7 +215,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
 
             // Assert
             Assert.AreEqual(0, actual[0].Parents.Count);
-            Assert.AreEqual(2, actual[0].Table.ForeignKeys.Count);
+            Assert.AreEqual(2, actual[0].Schema.ForeignKeys.Count);
         }
 
         [TestMethod]
@@ -244,12 +244,12 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
         public void TestPostgreSqlSchemaReaderOrderMatchesTheQuotedNames()
         {
             // Act
-            var odd = new TableSchema { SchemaName = "public", TableName = "Odd.Name" };
+            var odd = new TableSchema { Table = new TableInfo { Schema = "public", Name = "Odd.Name" } };
             var actual = Relationships(Table("Child", "\"public\".\"Odd.Name\""), odd);
 
             // Assert
             Assert.AreEqual(2, actual.Count);
-            Assert.AreEqual("Odd.Name", actual[0].Table.TableName, StringComparer.Ordinal);
+            Assert.AreEqual("Odd.Name", actual[0].Schema.Table.Name, StringComparer.Ordinal);
             Assert.AreSame(actual[0], actual[1].Parents.Single());
         }
 
@@ -259,8 +259,8 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
             // Act
             var actual = Relationships(Table("Ref", "Sales.Item"), Table("Item"), Table("Sales.Item"));
             var reference = Get(actual, "Ref");
-            var sales = actual.Single(r => r.Table.SchemaName == "Sales");
-            var dbo = actual.Single(r => r.Table.TableName == "Item" && r.Table.SchemaName == "public");
+            var sales = actual.Single(r => r.Schema.Table.Schema == "Sales");
+            var dbo = actual.Single(r => r.Schema.Table.Name == "Item" && r.Schema.Table.Schema == "public");
 
             // Assert
             Assert.AreSame(sales, reference.Parents.Single());
@@ -318,7 +318,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
             var actual = Relationships(schema);
 
             // Assert
-            Assert.AreSame(schema, actual[0].Table);
+            Assert.AreSame(schema, actual[0].Schema);
         }
 
         [TestMethod]
@@ -461,13 +461,13 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
                 {
                     foreach (var parent in relationship.Parents)
                     {
-                        if (cyclic.Contains(relationship.Table.TableName) && cyclic.Contains(parent.Table.TableName))
+                        if (cyclic.Contains(relationship.Schema.Table.Name) && cyclic.Contains(parent.Schema.Table.Name))
                         {
                             continue;
                         }
                         Assert.IsTrue(
-                            names.IndexOf(parent.Table.TableName) < names.IndexOf(relationship.Table.TableName),
-                            $"'{parent.Table.TableName}' must come before '{relationship.Table.TableName}'.");
+                            names.IndexOf(parent.Schema.Table.Name) < names.IndexOf(relationship.Schema.Table.Name),
+                            $"'{parent.Schema.Table.Name}' must come before '{relationship.Schema.Table.Name}'.");
                     }
                 }
             }

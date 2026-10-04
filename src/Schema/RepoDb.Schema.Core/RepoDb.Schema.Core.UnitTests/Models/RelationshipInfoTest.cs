@@ -22,7 +22,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         {
             // Act
             var relationship = new RelationshipInfo();
-            var actual = relationship.Table;
+            var actual = relationship.Schema;
 
             // Assert
             Assert.IsNull(actual);
@@ -32,14 +32,14 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestRelationshipInfoTableProperty()
         {
             // Setup
-            var table = new TableSchema { TableName = "Person" };
+            var table = new TableSchema { Table = new TableInfo { Name = "Person" } };
 
             // Act
             var relationship = new RelationshipInfo
             {
-                Table = table
+                Schema = table
             };
-            var actual = relationship.Table;
+            var actual = relationship.Schema;
 
             // Assert
             Assert.AreSame(table, actual);
@@ -61,7 +61,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestRelationshipInfoParentsProperty()
         {
             // Setup
-            var parent = new RelationshipInfo { Table = new TableSchema { TableName = "Country" } };
+            var parent = new RelationshipInfo { Schema = new TableSchema { Table = new TableInfo { Name = "Country" } } };
 
             // Act
             var relationship = new RelationshipInfo();
@@ -89,7 +89,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestRelationshipInfoChildrenProperty()
         {
             // Setup
-            var child = new RelationshipInfo { Table = new TableSchema { TableName = "Person" } };
+            var child = new RelationshipInfo { Schema = new TableSchema { Table = new TableInfo { Name = "Person" } } };
 
             // Act
             var relationship = new RelationshipInfo();
@@ -119,8 +119,8 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestRelationshipInfoCanReferenceItselfCircularly()
         {
             // Setup
-            var a = new RelationshipInfo { Table = new TableSchema { TableName = "CycleA" } };
-            var b = new RelationshipInfo { Table = new TableSchema { TableName = "CycleB" } };
+            var a = new RelationshipInfo { Schema = new TableSchema { Table = new TableInfo { Name = "CycleA" } } };
+            var b = new RelationshipInfo { Schema = new TableSchema { Table = new TableInfo { Name = "CycleB" } } };
 
             // Act
             a.Parents.Add(b);

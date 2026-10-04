@@ -20,37 +20,37 @@ namespace RepoDb.Schema.Models
         /// <summary>
         /// Gets or sets the name of the index.
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; internal set; }
 
         /// <summary>
         /// Gets or sets a value that indicates whether the index is unique.
         /// </summary>
-        public bool IsUnique { get; set; }
+        public bool IsUnique { get; internal set; }
 
         /// <summary>
         /// Gets or sets the ordered names of the key columns of the index.
         /// </summary>
-        public IList<string> Columns { get; set; } = new List<string>();
+        public IList<string> Columns { get; internal set; } = new List<string>();
 
         /// <summary>
         /// Gets or sets the names of the non-key (included) columns of the index.
         /// </summary>
-        public IList<string> IncludedColumns { get; set; } = new List<string>();
+        public IList<string> IncludedColumns { get; internal set; } = new List<string>();
 
         /// <summary>
         /// Gets or sets the names of the key columns that are sorted in descending order. The other key columns are sorted in ascending order.
         /// </summary>
-        public IList<string> DescendingColumns { get; set; } = new List<string>();
+        public IList<string> DescendingColumns { get; internal set; } = new List<string>();
 
         /// <summary>
         /// Gets or sets a value that indicates whether the index is clustered.
         /// </summary>
-        public bool IsClustered { get; set; }
+        public bool IsClustered { get; internal set; }
 
         /// <summary>
         /// Gets or sets the filter expression of the index, or <c>null</c> if the index is not filtered.
         /// </summary>
-        public string Filter { get; set; }
+        public string Filter { get; internal set; }
 
         #endregion
     }

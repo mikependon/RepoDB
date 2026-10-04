@@ -43,7 +43,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
 
         private static TableSchema SchemaTable(string schemaName, string tableName, params string[] references)
         {
-            var schema = new TableSchema { SchemaName = schemaName, TableName = tableName };
+            var schema = new TableSchema { Table = new TableInfo { Schema = schemaName, Name = tableName } };
             schema.Columns.Add(new ColumnInfo
             {
                 Ordinal = 1,
@@ -109,7 +109,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             new CustomDbConnection().CopySchemaTo(new[] { "Person", "Country" }, destination);
 
             // Assert
-            var expected = new SqlServerSchemaComposer().ComposeSchemas(SqlServerSchemaReader.Order(schemas).Select(r => r.Table)).ToList();
+            var expected = new SqlServerSchemaComposer().ComposeSchemas(SqlServerSchemaReader.Order(schemas).Select(r => r.Schema)).ToList();
             CollectionAssert.AreEqual(expected, destination.ExecutedCommands);
         }
 
@@ -435,7 +435,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             await new CustomDbConnection().CopySchemaToAsync(new[] { "Person", "Country" }, destination);
 
             // Assert
-            var expected = new SqlServerSchemaComposer().ComposeSchemas(SqlServerSchemaReader.Order(schemas).Select(r => r.Table)).ToList();
+            var expected = new SqlServerSchemaComposer().ComposeSchemas(SqlServerSchemaReader.Order(schemas).Select(r => r.Schema)).ToList();
             CollectionAssert.AreEqual(expected, destination.ExecutedCommands);
         }
 

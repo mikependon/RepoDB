@@ -168,7 +168,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             var tables = Helper.GetSourceTables();
             using (var connection = new NpgsqlConnection(Database.ConnectionStringForSource))
             {
-                var ordered = new PostgreSqlSchemaReader(connection).GetDependencyOrder(Enumerable.Reverse(tables)).Select(r => r.Table).ToList();
+                var ordered = new PostgreSqlSchemaReader(connection).GetDependencyOrder(Enumerable.Reverse(tables)).Select(r => r.Schema).ToList();
                 Helper.ExecuteOnTarget(Composer.ComposeSchemas(ordered));
             }
 
