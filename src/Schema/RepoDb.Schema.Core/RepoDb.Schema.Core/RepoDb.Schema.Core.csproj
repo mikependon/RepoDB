@@ -28,6 +28,18 @@
     <InternalsVisibleTo Include="RepoDb.Schema.SqlServer.IntegrationTests" />
     <InternalsVisibleTo Include="RepoDb.Schema.PostgreSql.UnitTests" />
     <InternalsVisibleTo Include="RepoDb.Schema.PostgreSql.IntegrationTests" />
+    <InternalsVisibleTo Include="RepoDb.Schema.CockroachDb" />
+    <InternalsVisibleTo Include="RepoDb.Schema.CockroachDb.UnitTests" />
+    <InternalsVisibleTo Include="RepoDb.Schema.CockroachDb.IntegrationTests" />
+    <InternalsVisibleTo Include="RepoDb.Schema.MySqlConnector" />
+    <InternalsVisibleTo Include="RepoDb.Schema.MySqlConnector.UnitTests" />
+    <InternalsVisibleTo Include="RepoDb.Schema.MySqlConnector.IntegrationTests" />
+    <InternalsVisibleTo Include="RepoDb.Schema.MariaDb" />
+    <InternalsVisibleTo Include="RepoDb.Schema.MariaDb.UnitTests" />
+    <InternalsVisibleTo Include="RepoDb.Schema.MariaDb.IntegrationTests" />
+    <InternalsVisibleTo Include="RepoDb.Schema.Sqlite" />
+    <InternalsVisibleTo Include="RepoDb.Schema.Sqlite.UnitTests" />
+    <InternalsVisibleTo Include="RepoDb.Schema.Sqlite.IntegrationTests" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" />

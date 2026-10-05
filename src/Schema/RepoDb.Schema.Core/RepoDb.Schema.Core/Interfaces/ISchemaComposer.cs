@@ -31,6 +31,7 @@ namespace RepoDb.Schema
         /// or already exist in the destination database.
         /// The statements are ordered like this: one statement for each table (in the given order), then one statement for each index
         /// (the tables in the given order), then one statement for each foreign key (the tables in the given order).
+        /// A statement can be empty if the object is created by another statement (i.e.: the engine can only create a foreign key together with its table), and an empty statement is not executed.
         /// </summary>
         /// <param name="schemas">The schemas of the tables.</param>
         /// <returns>The ordered SQL statements. Execute them in order.</returns>

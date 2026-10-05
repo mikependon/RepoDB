@@ -169,11 +169,14 @@ namespace RepoDb.Schema
             {
                 try
                 {
-                    destinationConnection.ExecuteNonQuery(plan.Steps[i].Statement,
-                        traceKey: traceKey,
-                        commandTimeout: commandTimeout,
-                        transaction: transaction,
-                        trace: trace);
+                    if (!string.IsNullOrWhiteSpace(plan.Steps[i].Statement))
+                    {
+                        destinationConnection.ExecuteNonQuery(plan.Steps[i].Statement,
+                            traceKey: traceKey,
+                            commandTimeout: commandTimeout,
+                            transaction: transaction,
+                            trace: trace);
+                    }
                 }
                 catch (Exception e) when (errorCallback != null && !(e is OperationCanceledException))
                 {
@@ -342,12 +345,15 @@ namespace RepoDb.Schema
             {
                 try
                 {
-                    await destinationConnection.ExecuteNonQueryAsync(plan.Steps[i].Statement,
-                        traceKey: traceKey,
-                        commandTimeout: commandTimeout,
-                        transaction: transaction,
-                        trace: trace,
-                        cancellationToken: cancellationToken).ConfigureAwait(false);
+                    if (!string.IsNullOrWhiteSpace(plan.Steps[i].Statement))
+                    {
+                        await destinationConnection.ExecuteNonQueryAsync(plan.Steps[i].Statement,
+                            traceKey: traceKey,
+                            commandTimeout: commandTimeout,
+                            transaction: transaction,
+                            trace: trace,
+                            cancellationToken: cancellationToken).ConfigureAwait(false);
+                    }
                 }
                 catch (Exception e) when (errorCallback != null && !(e is OperationCanceledException))
                 {

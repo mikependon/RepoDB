@@ -1,0 +1,13 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="../../Providers/RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="../../Providers/RepoDb.CockroachDb/RepoDb.CockroachDb/RepoDb.CockroachDb.csproj" />
+  <Project Path="../RepoDb.Schema.Core/RepoDb.Schema.Core/RepoDb.Schema.Core.csproj" />
+  <Project Path="RepoDb.Schema.CockroachDb/RepoDb.Schema.CockroachDb.csproj" />
+  <Project Path="RepoDb.Schema.CockroachDb.UnitTests/RepoDb.Schema.CockroachDb.UnitTests.csproj" />
+  <Project Path="RepoDb.Schema.CockroachDb.IntegrationTests/RepoDb.Schema.CockroachDb.IntegrationTests.csproj" />
+</Solution>
