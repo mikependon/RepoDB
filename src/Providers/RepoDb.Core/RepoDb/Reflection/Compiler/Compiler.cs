@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.Common;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -218,6 +219,27 @@ namespace RepoDb.Reflection
             return StaticType.Convert.GetMethod("ChangeType",
                 new[] { StaticType.Object, TypeCache.Get(conversionType).GetUnderlyingType() });
         }
+
+        /// <summary>
+        /// Gets the <see cref="Convert.ChangeType(object, Type, IFormatProvider)"/> method.
+        /// </summary>
+        /// <returns></returns>
+        internal static MethodInfo GetConvertChangeTypeWithProviderMethod()
+        {
+            return StaticType.Convert.GetMethod("ChangeType",
+                new[] { StaticType.Object, StaticType.Type, typeof(IFormatProvider) });
+        }
+
+        /// <summary>
+        /// Checks whether the type is a numeric primitive or <see cref="decimal"/>.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        internal static bool IsNumericType(Type type) =>
+            type == StaticType.Decimal || type == StaticType.Double || type == StaticType.Single ||
+            type == StaticType.Int64 || type == StaticType.Int32 || type == StaticType.Int16 ||
+            type == StaticType.Byte || type == StaticType.SByte || type == StaticType.UInt16 ||
+            type == StaticType.UInt32 || type == StaticType.UInt64;
 
         /// <summary>
         ///
@@ -1538,6 +1560,16 @@ namespace RepoDb.Reflection
                         throw new InvalidOperationException($"Compiler.DataReader.IsDbNull.FalseExpression: Failed to automatically convert the value expression. " +
                             $"{classPropertyParameterInfo.GetDescriptiveContextString()}", ex);
                     }
+                }
+                // String to numeric (no coercion exists): some providers (e.g. Ahtola) report NUMERIC/DECIMAL columns as String
+                else if (readerField.Type == StaticType.String && IsNumericType(targetTypeUnderlyingType))
+                {
+                    valueExpression = Expression.Convert(
+                        Expression.Call(GetConvertChangeTypeWithProviderMethod(),
+                            Expression.Call(readerParameterExpression, GetDbReaderGetValueMethod(), Expression.Constant(readerField.Ordinal)),
+                            Expression.Constant(targetTypeUnderlyingType, StaticType.Type),
+                            Expression.Constant(CultureInfo.InvariantCulture, typeof(IFormatProvider))),
+                        targetTypeUnderlyingType);
                 }
             }
 

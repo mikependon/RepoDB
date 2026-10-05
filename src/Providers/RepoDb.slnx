@@ -4,6 +4,11 @@
     <Project Path="RepoDb.Core/RepoDb.Tests/RepoDb.UnitTests/RepoDb.UnitTests.csproj" />
     <Project Path="RepoDb.Core/RepoDb.Tests/RepoDb.IntegrationTests/RepoDb.IntegrationTests.csproj" />
   </Folder>
+  <Folder Name="/Ahtola/Core/">
+    <Project Path="RepoDb.Ahtola/RepoDb.Ahtola/RepoDb.Ahtola.csproj" />
+    <Project Path="RepoDb.Ahtola/RepoDb.Ahtola.UnitTests/RepoDb.Ahtola.UnitTests.csproj" />
+    <Project Path="RepoDb.Ahtola/RepoDb.Ahtola.IntegrationTests/RepoDb.Ahtola.IntegrationTests.csproj" />
+  </Folder>
   <Folder Name="/AuroraDb/MySqlConnector/Core/">
     <Project Path="RepoDb.AuroraDb.MySqlConnector/RepoDb.AuroraDb.MySqlConnector/RepoDb.AuroraDb.MySqlConnector.csproj" />
     <Project Path="RepoDb.AuroraDb.MySqlConnector/RepoDb.AuroraDb.MySqlConnector.UnitTests/RepoDb.AuroraDb.MySqlConnector.UnitTests.csproj" />

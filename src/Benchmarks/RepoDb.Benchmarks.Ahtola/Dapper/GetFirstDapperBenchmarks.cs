@@ -11,7 +11,7 @@ using BenchmarkDotNet.Attributes;
 using Dapper;
 using RepoDb.Benchmarks.Core.Models;
 
-namespace RepoDb.Benchmarks.Sqlite.Microsoft.Dapper
+namespace RepoDb.Benchmarks.Ahtola.Dapper
 {
     public class GetFirstDapperBenchmarks : DapperBaseBenchmarks
     {

@@ -1,0 +1,188 @@
+#region Copyright Attributions
+
+// Copyright (c) 2019 Michael Camara Pendon.
+// Portions copyright their respective RepoDB contributors.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+using Ahtola.Data.Sqlite;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Ahtola.IntegrationTests.Models;
+using RepoDb.Ahtola.IntegrationTests.Setup;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace RepoDb.Ahtola.IntegrationTests.Operations.MDS
+{
+    [TestClass]
+    public class AverageAllTest
+    {
+        [TestInitialize]
+        public void Initialize()
+        {
+            Database.Initialize();
+            Cleanup();
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            Database.Cleanup();
+        }
+
+        #region DataEntity
+
+        #region Sync
+
+        [TestMethod]
+        public void TestSqLiteConnectionAverageAll()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection);
+
+                // Act
+                var result = connection.AverageAll<MdsCompleteTable>(e => e.ColumnInt);
+
+                // Assert
+                Assert.AreEqual(tables.Average(e => e.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnSqLiteConnectionAverageAllWithHints()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection);
+
+                // Act
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.AverageAll<MdsCompleteTable>(e => e.ColumnInt,
+                        hints: "WhatEver"));
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestSqLiteConnectionAverageAllAsync()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection);
+
+                // Act
+                var result = await connection.AverageAllAsync<MdsCompleteTable>(e => e.ColumnInt).ConfigureAwait(false);
+
+                // Assert
+                Assert.AreEqual(tables.Average(e => e.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnSqLiteConnectionAverageAllAsyncWithHints()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection);
+
+                // Act
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
+                    await connection.AverageAllAsync<MdsCompleteTable>(e => e.ColumnInt,
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region TableName
+
+        #region Sync
+
+        [TestMethod]
+        public void TestSqLiteConnectionAverageAllViaTableName()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection);
+
+                // Act
+                var result = connection.AverageAll(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                    Field.Parse<MdsCompleteTable>(e => e.ColumnInt).First());
+
+                // Assert
+                Assert.AreEqual(tables.Average(e => e.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnSqLiteConnectionAverageAllViaTableNameWithHints()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection);
+
+                // Act
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.AverageAll(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                        Field.Parse<MdsCompleteTable>(e => e.ColumnInt).First(),
+                        hints: "WhatEver"));
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestSqLiteConnectionAverageAllAsyncViaTableName()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection);
+
+                // Act
+                var result = await connection.AverageAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                    Field.Parse<MdsCompleteTable>(e => e.ColumnInt).First()).ConfigureAwait(false);
+
+                // Assert
+                Assert.AreEqual(tables.Average(e => e.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnSqLiteConnectionAverageAllAsyncViaTableNameWithHints()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection);
+
+                // Act
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
+                    await connection.AverageAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                        Field.Parse<MdsCompleteTable>(e => e.ColumnInt).First(),
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
+            }
+        }
+
+        #endregion
+
+        #endregion
+    }
+}

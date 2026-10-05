@@ -1,0 +1,245 @@
+#region Copyright Attributions
+
+// Copyright (c) 2019 Michael Camara Pendon.
+// Portions copyright their respective RepoDB contributors.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+using Ahtola.Data.Sqlite;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Extensions;
+using RepoDb.Reflection;
+using RepoDb.Ahtola.IntegrationTests.Models;
+using RepoDb.Ahtola.IntegrationTests.Setup;
+using System;
+using System.Data.Common;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace RepoDb.Ahtola.IntegrationTests.Operations.MDS
+{
+    [TestClass]
+    public class ExecuteReaderTest
+    {
+        [TestInitialize]
+        public void Initialize()
+        {
+            Database.Initialize();
+            Cleanup();
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            Database.Cleanup();
+        }
+
+        #region Sync
+
+        [TestMethod]
+        public void TestSqLiteConnectionExecuteReader()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection);
+
+                // Act
+                using (var reader = connection.ExecuteReader("SELECT Id, ColumnInt, ColumnDateTime FROM [MdsCompleteTable];"))
+                {
+                    while (reader.Read())
+                    {
+                        // Act
+                        var id = reader.GetInt64(0);
+                        var columnInt = reader.GetInt32(1);
+                        var columnDateTime = reader.GetDateTime(2).ToString(Helper.DATE_FORMAT, System.Globalization.CultureInfo.InvariantCulture);
+                        var table = tables.FirstOrDefault(e => e.Id == id);
+
+                        // Assert
+                        Assert.IsNotNull(table);
+                        Assert.AreEqual(columnInt, table.ColumnInt);
+                        Assert.AreEqual(columnDateTime, table.ColumnDateTime, StringComparer.Ordinal);
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqLiteConnectionExecuteReaderWithMultipleStatements()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection);
+
+                // Act
+                using (var reader = connection.ExecuteReader("SELECT Id, ColumnInt, ColumnDateTime FROM [MdsCompleteTable]; SELECT Id, ColumnInt, ColumnDateTime FROM [MdsCompleteTable];"))
+                {
+                    do
+                    {
+                        while (reader.Read())
+                        {
+                            // Act
+                            var id = reader.GetInt64(0);
+                            var columnInt = reader.GetInt32(1);
+                            var columnDateTime = reader.GetDateTime(2).ToString(Helper.DATE_FORMAT, System.Globalization.CultureInfo.InvariantCulture);
+                            var table = tables.FirstOrDefault(e => e.Id == id);
+
+                            // Assert
+                            Assert.IsNotNull(table);
+                            Assert.AreEqual(columnInt, table.ColumnInt);
+                            Assert.AreEqual(columnDateTime, table.ColumnDateTime, StringComparer.Ordinal);
+                        }
+                    } while (reader.NextResult());
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqLiteConnectionExecuteReaderAsExtractedEntity()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection);
+
+                // Act
+                using (var reader = connection.ExecuteReader("SELECT * FROM [MdsCompleteTable];"))
+                {
+                    // Act
+                    var result = DataReader.ToEnumerable<MdsCompleteTable>((DbDataReader)reader).AsList();
+
+                    // Assert
+                    tables.AsList().ForEach(table => Helper.AssertPropertiesEquality(table, result.First(e => e.Id == table.Id)));
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqLiteConnectionExecuteReaderAsExtractedDynamic()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection);
+
+                // Act
+                using (var reader = connection.ExecuteReader("SELECT *, 'MDS' AS MDS  FROM [MdsCompleteTable];"))
+                {
+                    // Act
+                    var result = DataReader.ToEnumerable((DbDataReader)reader).AsList();
+
+                    // Assert
+                    tables.AsList().ForEach(table => Helper.AssertMembersEquality(table, result.First(e => e.Id == table.Id)));
+                }
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestSqLiteConnectionExecuteReaderAsync()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection);
+
+                // Act
+                using (var reader = await connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM [MdsCompleteTable];").ConfigureAwait(false))
+                {
+                    while (reader.Read())
+                    {
+                        // Act
+                        var id = reader.GetInt64(0);
+                        var columnInt = reader.GetInt32(1);
+                        var columnDateTime = reader.GetDateTime(2).ToString(Helper.DATE_FORMAT, System.Globalization.CultureInfo.InvariantCulture);
+                        var table = tables.FirstOrDefault(e => e.Id == id);
+
+                        // Assert
+                        Assert.IsNotNull(table);
+                        Assert.AreEqual(columnInt, table.ColumnInt);
+                        Assert.AreEqual(columnDateTime, table.ColumnDateTime, StringComparer.Ordinal);
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqLiteConnectionExecuteReaderAsyncWithMultipleStatements()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection);
+
+                // Act
+                using (var reader = await connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM [MdsCompleteTable]; SELECT Id, ColumnInt, ColumnDateTime FROM [MdsCompleteTable];").ConfigureAwait(false))
+                {
+                    do
+                    {
+                        while (reader.Read())
+                        {
+                            // Act
+                            var id = reader.GetInt64(0);
+                            var columnInt = reader.GetInt32(1);
+                            var columnDateTime = reader.GetDateTime(2).ToString(Helper.DATE_FORMAT, System.Globalization.CultureInfo.InvariantCulture);
+                            var table = tables.FirstOrDefault(e => e.Id == id);
+
+                            // Assert
+                            Assert.IsNotNull(table);
+                            Assert.AreEqual(columnInt, table.ColumnInt);
+                            Assert.AreEqual(columnDateTime, table.ColumnDateTime, StringComparer.Ordinal);
+                        }
+                    } while (reader.NextResult());
+                }
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqLiteConnectionExecuteReaderAsyncAsExtractedEntity()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection);
+
+                // Act
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [MdsCompleteTable];").ConfigureAwait(false))
+                {
+                    // Act
+                    var result = DataReader.ToEnumerable<MdsCompleteTable>((DbDataReader)reader).AsList();
+
+                    // Assert
+                    tables.AsList().ForEach(table => Helper.AssertPropertiesEquality(table, result.First(e => e.Id == table.Id)));
+                }
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqLiteConnectionExecuteReaderAsyncAsExtractedDynamic()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection);
+
+                // Act
+                using (var reader = await connection.ExecuteReaderAsync("SELECT *, 'MDS' AS MDS FROM [MdsCompleteTable];").ConfigureAwait(false))
+                {
+                    // Act
+                    var result = DataReader.ToEnumerable((DbDataReader)reader).AsList();
+
+                    // Assert
+                    tables.AsList().ForEach(table => Helper.AssertMembersEquality(table, result.First(e => e.Id == table.Id)));
+                }
+            }
+        }
+
+        #endregion
+    }
+}
