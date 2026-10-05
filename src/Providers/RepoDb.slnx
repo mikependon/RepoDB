@@ -135,6 +135,11 @@
     <Project Path="RepoDb.Sqlite.Microsoft/RepoDb.Sqlite.Microsoft.UnitTests/RepoDb.Sqlite.Microsoft.UnitTests.csproj" />
     <Project Path="RepoDb.Sqlite.Microsoft/RepoDb.Sqlite.Microsoft.IntegrationTests/RepoDb.Sqlite.Microsoft.IntegrationTests.csproj" />
   </Folder>
+  <Folder Name="/Turso/Core/">
+    <Project Path="RepoDb.Turso/RepoDb.Turso/RepoDb.Turso.csproj" />
+    <Project Path="RepoDb.Turso/RepoDb.Turso.UnitTests/RepoDb.Turso.UnitTests.csproj" />
+    <Project Path="RepoDb.Turso/RepoDb.Turso.IntegrationTests/RepoDb.Turso.IntegrationTests.csproj" />
+  </Folder>
   <Folder Name="/SqlServer/Core/">
     <Project Path="RepoDb.SqlServer/RepoDb.SqlServer/RepoDb.SqlServer.csproj" />
     <Project Path="RepoDb.SqlServer/RepoDb.SqlServer.UnitTests/RepoDb.SqlServer.UnitTests.csproj" />

@@ -1,0 +1,23 @@
+name: Release - RepoDb.Turso (Manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Package version to publish (e.g. 1.14.0)"
+        required: true
+        type: string
+      dependency-overrides:
+        description: "Set RepoDbCoreVersion=<version> if RepoDb.Core is not being released at the same version"
+        required: false
+        type: string
+        default: ''
+
+jobs:
+  publish:
+    uses: ./.github/workflows/release-base.yml
+    with:
+      version: ${{ inputs.version }}
+      dependency-overrides: ${{ inputs.dependency-overrides }}
+      project-name: RepoDb.Turso
+      project-path: src/Providers/RepoDb.Turso/RepoDb.Turso/RepoDb.Turso.csproj

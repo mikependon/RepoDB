@@ -1,0 +1,188 @@
+#region Copyright Attributions
+
+// Copyright (c) 2019 Michael Camara Pendon.
+// Portions copyright their respective RepoDB contributors.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+using Turso.Data.Sqlite;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Turso.IntegrationTests.Models;
+using RepoDb.Turso.IntegrationTests.Setup;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace RepoDb.Turso.IntegrationTests.Operations.MDS
+{
+    [TestClass]
+    public class SumAllTest
+    {
+        [TestInitialize]
+        public void Initialize()
+        {
+            Database.Initialize();
+            Cleanup();
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            Database.Cleanup();
+        }
+
+        #region DataEntity
+
+        #region Sync
+
+        [TestMethod]
+        public void TestSqLiteConnectionSumAll()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection);
+
+                // Act
+                var result = connection.SumAll<MdsCompleteTable>(e => e.ColumnInt);
+
+                // Assert
+                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnSqLiteConnectionSumAllWithHints()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection);
+
+                // Act
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.SumAll<MdsCompleteTable>(e => e.ColumnInt,
+                        hints: "WhatEver"));
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestSqLiteConnectionSumAllAsync()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection);
+
+                // Act
+                var result = await connection.SumAllAsync<MdsCompleteTable>(e => e.ColumnInt).ConfigureAwait(false);
+
+                // Assert
+                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
+            }
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnSqLiteConnectionSumAllAsyncWithHints()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection);
+
+                // Act
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
+                    await connection.SumAllAsync<MdsCompleteTable>(e => e.ColumnInt,
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region TableName
+
+        #region Sync
+
+        [TestMethod]
+        public void TestSqLiteConnectionSumAllViaTableName()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection);
+
+                // Act
+                var result = connection.SumAll(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                    Field.Parse<MdsCompleteTable>(e => e.ColumnInt).First());
+
+                // Assert
+                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnSqLiteConnectionSumAllViaTableNameWithHints()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection);
+
+                // Act
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.SumAll(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                        Field.Parse<MdsCompleteTable>(e => e.ColumnInt).First(),
+                        hints: "WhatEver"));
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestSqLiteConnectionSumAllAsyncViaTableName()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection);
+
+                // Act
+                var result = await connection.SumAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                    Field.Parse<MdsCompleteTable>(e => e.ColumnInt).First()).ConfigureAwait(false);
+
+                // Assert
+                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result, System.Globalization.CultureInfo.InvariantCulture));
+            }
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnSqLiteConnectionSumAllAsyncViaTableNameWithHints()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection);
+
+                // Act
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
+                    await connection.SumAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                        Field.Parse<MdsCompleteTable>(e => e.ColumnInt).First(),
+                        hints: "WhatEver").ConfigureAwait(false)).ConfigureAwait(false);
+            }
+        }
+
+        #endregion
+
+        #endregion
+    }
+}

@@ -1,0 +1,258 @@
+#region Copyright Attributions
+
+// Copyright (c) 2019 Michael Camara Pendon.
+// Portions copyright their respective RepoDB contributors.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Turso.Data.Sqlite;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Turso.IntegrationTests.Models;
+using RepoDb.Turso.IntegrationTests.Setup;
+
+namespace RepoDb.Turso.IntegrationTests
+{
+    [TestClass]
+    public class DbHelperTests
+    {
+        [TestInitialize]
+        public void Initialize()
+        {
+            Database.Initialize();
+            Cleanup();
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            Database.Cleanup();
+        }
+
+        #region GetFields
+
+        #region Sync
+
+        [TestMethod]
+        public void TestDbHelperGetFields()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var helper = connection.GetDbHelper();
+                var tables = Database.CreateMdsCompleteTables(10, connection);
+
+                // Act
+                var fields = helper.GetFields(connection, "MdsCompleteTable", null);
+
+                // Assert
+                using (var reader = connection.ExecuteReader("pragma table_info([MdsCompleteTable]);"))
+                {
+                    var fieldCount = 0;
+
+                    while (reader.Read())
+                    {
+                        var name = reader.GetString(1);
+                        var field = fields.FirstOrDefault(f => string.Equals(f.Name, name, StringComparison.OrdinalIgnoreCase));
+
+                        // Assert
+                        Assert.IsNotNull(field);
+
+                        fieldCount++;
+                    }
+
+                    // Assert
+                    Assert.AreEqual(fieldCount, fields.Count());
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestDbHelperGetFieldsPrimary()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var helper = connection.GetDbHelper();
+                var tables = Database.CreateMdsCompleteTables(10, connection);
+
+                // Act
+                var fields = helper.GetFields(connection, "MdsCompleteTable", null);
+                var primary = fields.FirstOrDefault(f => f.IsPrimary == true);
+
+                // Assert
+                Assert.IsNotNull(primary);
+                Assert.AreEqual("Id", primary.Name, StringComparer.Ordinal);
+            }
+        }
+
+        [TestMethod]
+        public void TestDbHelperGetFieldsIdentity()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var helper = connection.GetDbHelper();
+                var tables = Database.CreateMdsCompleteTables(10, connection);
+
+                // Act
+                var fields = helper.GetFields(connection, "MdsCompleteTable", null);
+                var primary = fields.FirstOrDefault(f => f.IsIdentity == true);
+
+                // Assert
+                Assert.IsNotNull(primary);
+                Assert.AreEqual("Id", primary.Name, StringComparer.Ordinal);
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestDbHelperGetFieldsAsync()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var helper = connection.GetDbHelper();
+                var tables = Database.CreateMdsCompleteTables(10, connection);
+
+                // Act
+                var fields = await helper.GetFieldsAsync(connection, "MdsCompleteTable", null).ConfigureAwait(false);
+
+                // Assert
+                using (var reader = connection.ExecuteReader("pragma table_info([MdsCompleteTable]);"))
+                {
+                    var fieldCount = 0;
+
+                    while (reader.Read())
+                    {
+                        var name = reader.GetString(1);
+                        var field = fields.FirstOrDefault(f => string.Equals(f.Name, name, StringComparison.OrdinalIgnoreCase));
+
+                        // Assert
+                        Assert.IsNotNull(field);
+
+                        fieldCount++;
+                    }
+
+                    // Assert
+                    Assert.AreEqual(fieldCount, fields.Count());
+                }
+            }
+        }
+
+        [TestMethod]
+        public async Task TestDbHelperGetFieldsAsyncPrimary()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var helper = connection.GetDbHelper();
+                var tables = Database.CreateMdsCompleteTables(10, connection);
+
+                // Act
+                var fields = await helper.GetFieldsAsync(connection, "MdsCompleteTable", null).ConfigureAwait(false);
+                var primary = fields.FirstOrDefault(f => f.IsPrimary == true);
+
+                // Assert
+                Assert.IsNotNull(primary);
+                Assert.AreEqual("Id", primary.Name, StringComparer.Ordinal);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestDbHelperGetFieldsAsyncIdentity()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var helper = connection.GetDbHelper();
+                var tables = Database.CreateMdsCompleteTables(10, connection);
+
+                // Act
+                var fields = await helper.GetFieldsAsync(connection, "MdsCompleteTable", null).ConfigureAwait(false);
+                var primary = fields.FirstOrDefault(f => f.IsIdentity == true);
+
+                // Assert
+                Assert.IsNotNull(primary);
+                Assert.AreEqual("Id", primary.Name, StringComparer.Ordinal);
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region GetScopeIdentity
+
+        #region Sync
+
+        [TestMethod]
+        public void TestDbHelperGetScopeIdentity()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Create the tables
+                Database.CreateMdsTables(connection);
+
+                // Setup
+                var helper = connection.GetDbHelper();
+                var table = Helper.CreateMdsCompleteTables(1).First();
+
+                // Act
+                var insertResult = connection.Insert<MdsCompleteTable, long>(table);
+
+                // Assert
+                Assert.IsTrue(insertResult > 0);
+                Assert.IsTrue(table.Id > 0);
+
+                // Act
+                var result = helper.GetScopeIdentity<long>(connection, null);
+
+                // Assert
+                Assert.AreEqual(insertResult, result);
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestDbHelperGetScopeIdentityAsync()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Create the tables
+                Database.CreateMdsTables(connection);
+
+                // Setup
+                var helper = connection.GetDbHelper();
+                var table = Helper.CreateMdsCompleteTables(1).First();
+
+                // Act
+                var insertResult = connection.Insert<MdsCompleteTable, long>(table);
+
+                // Assert
+                Assert.IsTrue(insertResult > 0);
+                Assert.IsTrue(table.Id > 0);
+
+                // Act
+                var result = await helper.GetScopeIdentityAsync<long>(connection, null).ConfigureAwait(false);
+
+                // Assert
+                Assert.AreEqual(insertResult, result);
+            }
+        }
+
+        #endregion
+
+        #endregion
+    }
+}
