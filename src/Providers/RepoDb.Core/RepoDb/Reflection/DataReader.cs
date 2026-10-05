@@ -34,15 +34,17 @@ namespace RepoDb.Reflection
             DbFieldCollection dbFields = null,
             IDbSetting dbSetting = null)
         {
-            if (reader?.IsClosed == false && reader.HasRows)
+            if (reader?.IsClosed == false && reader.HasRows && reader.Read())
             {
+                // Some providers resolve column types only after stepping onto the first row.
                 var func = FunctionCache.GetDataReaderToTypeCompiledFunction<TResult>(reader,
                     dbFields,
                     dbSetting);
-                while (reader.Read())
+                do
                 {
                     yield return func(reader);
                 }
+                while (reader.Read());
             }
         }
 
@@ -64,16 +66,18 @@ namespace RepoDb.Reflection
             IDbSetting dbSetting = null,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            if (reader?.IsClosed != false || !reader.HasRows) yield break;
+            if (reader?.IsClosed != false || !reader.HasRows ||
+                !await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) yield break;
             
             var func = FunctionCache.GetDataReaderToTypeCompiledFunction<TResult>(reader,
                 dbFields,
                 dbSetting);
             
-            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
+            do
             {
                 yield return func(reader);
             }
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false));
         }
 
         #endregion
@@ -91,15 +95,16 @@ namespace RepoDb.Reflection
             DbFieldCollection dbFields = null,
             IDbSetting dbSetting = null)
         {
-            if (reader?.IsClosed == false && reader.HasRows)
+            if (reader?.IsClosed == false && reader.HasRows && reader.Read())
             {
                 var func = FunctionCache.GetDataReaderToExpandoObjectCompileFunction(reader,
                     dbFields,
                     dbSetting);
-                while (reader.Read())
+                do
                 {
                     yield return func(reader);
                 }
+                while (reader.Read());
             }
         }
 
@@ -120,16 +125,18 @@ namespace RepoDb.Reflection
             IDbSetting dbSetting = null,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            if (reader?.IsClosed != false || !reader.HasRows) yield break;
+            if (reader?.IsClosed != false || !reader.HasRows ||
+                !await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) yield break;
             
             var func = FunctionCache.GetDataReaderToExpandoObjectCompileFunction(reader,
                 dbFields,
                 dbSetting);
             
-            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
+            do
             {
                 yield return func(reader);
             }
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false));
         }
 
         #endregion

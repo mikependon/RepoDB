@@ -71,6 +71,7 @@ Fluent operations (Query, Insert, Merge, Delete, Update, and [more](http://repod
 - [SAP HANA](http://repodb.net/tutorial/get-started-saphana)
 - [SQL Server](http://repodb.net/tutorial/get-started-sqlserver)
 - [SQLite](http://repodb.net/tutorial/get-started-sqlite)
+- [Turso](src/Providers/RepoDb.Turso)
 - [Vertica](http://repodb.net/tutorial/get-started-vertica)
 
 While raw SQL execution methods work with **any** ADO.NET-compatible provider:

@@ -14,6 +14,10 @@ We want the .NET community to understand this library's limitations before using
   - [Cache Invalidation](#cache-invalidation)
   - [Advance Query Tree Expression](#advance-query-tree-expression)
   - [Multiple Identity Columns](#multiple-identity-columns)
+- Turso
+  - [Driver and Runtime Requirements](#turso-driver-and-runtime-requirements)
+  - [Truncate Does Not Vacuum](#turso-truncate-does-not-vacuum)
+  - [Remote Sessions and Replica Sync](#turso-remote-sessions-and-replica-sync)
 - SQL Server
   - [Identity Correlation Differs by Input Shape](#identity-correlation-differs-by-input-shape)
   - [ReturnIdentity Silently Ignored for Anonymous Types](#returnidentity-silently-ignored-for-anonymous-types)
@@ -133,6 +137,37 @@ We want the .NET community to understand this library's limitations before using
   - [Bulk COPY Errors Are Not Wrapped in AuroraDbException](#bulk-copy-errors-are-not-wrapped-in-auroradbexception)
   - [Bulk Operations Ignore a Completed Transaction](#bulk-operations-ignore-a-completed-transaction)
   - [Verification Status](#verification-status-10)
+
+## Turso
+
+### Turso Driver and Runtime Requirements
+
+`RepoDb.Turso` requires .NET 8 or later and registers
+`Turso.Data.Sqlite.SqliteConnection` from `Turso.Data.Sqlite.Provider`, not the
+lower-level `Turso.TursoConnection`. The provider is based on the Microsoft
+SQLite provider, but the Turso engine is not a complete SQLite implementation.
+See the [upstream bindings documentation](https://github.com/tursodatabase/turso/tree/main/bindings/dotnet)
+for native platform support and restrictions on SQLite handles, FTS, extensions,
+dirty reads, and async execution.
+
+Use explicit automatic conversion or property handlers when CLR entity types
+differ from SQLite storage types. `UseTurso()` does not change process-wide
+conversion options. The [provider README](src/Providers/RepoDb.Turso/README.md)
+shows the recommended initialization.
+
+### Turso Truncate Does Not Vacuum
+
+`Truncate` issues `DELETE FROM` only. Turso's `VACUUM` requires an experimental
+feature flag, so the provider does not invoke it automatically. Deleted rows do
+not imply reclaimed file space or a reset `AUTOINCREMENT` sequence.
+
+### Turso Remote Sessions and Replica Sync
+
+Keep the driver's default `Read Your Writes=True` for remote connections:
+identity retrieval uses session-local `last_insert_rowid()`. Replica pull/push,
+automatic sync schedules, and conflicts are managed by the driver, not RepoDB.
+The integration suite exercises the local native engine; live remote and
+embedded-replica behavior has not been verified against a hosted endpoint.
 
 ## Core
 
