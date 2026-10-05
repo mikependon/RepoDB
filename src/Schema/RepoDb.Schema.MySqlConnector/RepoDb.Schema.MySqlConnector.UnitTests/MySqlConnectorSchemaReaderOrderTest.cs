@@ -476,7 +476,7 @@ namespace RepoDb.Schema.MySqlConnector.UnitTests
 
         private static TableInfo Reference(string name)
         {
-            var (schema, table) = Helper.Parse(name);
+            var (schema, table) = MySqlConnectorSchemaHelper.Parse(name);
             return new TableInfo(table, schema);
         }
     }

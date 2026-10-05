@@ -230,7 +230,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
         public void TestSqliteCopySchemasToOfTablesWithNamesThatNeedQuoting()
         {
             // Setup
-            MapReader(SchemaTable(null, "Odd.Child", Helper.Format(null, "Odd.Name")), SchemaTable(null, "Odd.Name"));
+            MapReader(SchemaTable(null, "Odd.Child", SqliteSchemaHelper.Format(null, "Odd.Name")), SchemaTable(null, "Odd.Name"));
             MapComposer();
             var destination = new CustomDbConnection();
 
@@ -477,7 +477,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
 
         private static TableInfo Reference(string name)
         {
-            var (schema, table) = Helper.Parse(name);
+            var (schema, table) = SqliteSchemaHelper.Parse(name);
             return new TableInfo(table, schema);
         }
     }

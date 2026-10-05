@@ -16,7 +16,7 @@ namespace RepoDb.Schema
     /// <summary>
     /// A class that parses, quotes and formats the (multi-part) names of the SQLite objects (i.e.: <c>sales.Invoice</c> or <c>"sales"."Order Details"</c>).
     /// </summary>
-    internal static class Helper
+    internal static class SqliteSchemaHelper
     {
         #region Constants
 

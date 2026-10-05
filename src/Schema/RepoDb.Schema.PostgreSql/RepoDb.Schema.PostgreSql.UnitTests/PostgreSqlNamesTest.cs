@@ -20,7 +20,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
         public void TestHelperParseTableOnly()
         {
             // Act
-            var (schema, table) = Helper.Parse("Person");
+            var (schema, table) = PostgreSqlSchemaHelper.Parse("Person");
 
             // Assert
             Assert.IsNull(schema);
@@ -31,7 +31,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
         public void TestHelperParseSchemaAndTable()
         {
             // Act
-            var (schema, table) = Helper.Parse("sales.order_line");
+            var (schema, table) = PostgreSqlSchemaHelper.Parse("sales.order_line");
 
             // Assert
             Assert.AreEqual("sales", schema);
@@ -42,7 +42,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
         public void TestHelperParseQuotedParts()
         {
             // Act
-            var (schema, table) = Helper.Parse("\"my.schema\".\"Order \"\"Details\"\"\"");
+            var (schema, table) = PostgreSqlSchemaHelper.Parse("\"my.schema\".\"Order \"\"Details\"\"\"");
 
             // Assert
             Assert.AreEqual("my.schema", schema);
@@ -53,7 +53,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
         public void TestHelperParseUsesTheLastTwoParts()
         {
             // Act
-            var (schema, table) = Helper.Parse("db.sales.order_line");
+            var (schema, table) = PostgreSqlSchemaHelper.Parse("db.sales.order_line");
 
             // Assert
             Assert.AreEqual("sales", schema);
@@ -64,8 +64,8 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
         public void ThrowExceptionOnHelperSplitIfTheNameIsBlank()
         {
             // Act/Assert
-            Assert.Throws<ArgumentNullException>(() => Helper.Split(null));
-            Assert.Throws<ArgumentNullException>(() => Helper.Split(" "));
+            Assert.Throws<ArgumentNullException>(() => PostgreSqlSchemaHelper.Split(null));
+            Assert.Throws<ArgumentNullException>(() => PostgreSqlSchemaHelper.Split(" "));
         }
 
         #endregion
@@ -76,39 +76,39 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
         public void TestHelperQuote()
         {
             // Assert
-            Assert.AreEqual("\"Person\"", Helper.Quote("Person"));
-            Assert.AreEqual("\"a\"\"b\"", Helper.Quote("a\"b"));
+            Assert.AreEqual("\"Person\"", PostgreSqlSchemaHelper.Quote("Person"));
+            Assert.AreEqual("\"a\"\"b\"", PostgreSqlSchemaHelper.Quote("a\"b"));
         }
 
         [TestMethod]
         public void TestHelperQuoteName()
         {
             // Assert
-            Assert.AreEqual("\"public\".\"Person\"", Helper.QuoteName("public.Person"));
-            Assert.AreEqual("\"Person\"", Helper.QuoteName("Person"));
+            Assert.AreEqual("\"public\".\"Person\"", PostgreSqlSchemaHelper.QuoteName("public.Person"));
+            Assert.AreEqual("\"Person\"", PostgreSqlSchemaHelper.QuoteName("Person"));
         }
 
         [TestMethod]
         public void TestHelperFormatKeepsThePlainLowerCaseNames()
         {
             // Assert
-            Assert.AreEqual("public.person", Helper.Format("public", "person"));
-            Assert.AreEqual("person", Helper.Format(null, "person"));
+            Assert.AreEqual("public.person", PostgreSqlSchemaHelper.Format("public", "person"));
+            Assert.AreEqual("person", PostgreSqlSchemaHelper.Format(null, "person"));
         }
 
         [TestMethod]
         public void TestHelperFormatQuotesTheOtherNames()
         {
             // Assert
-            Assert.AreEqual("public.\"Person\"", Helper.Format("public", "Person"));
-            Assert.AreEqual("\"My Schema\".\"1table\"", Helper.Format("My Schema", "1table"));
+            Assert.AreEqual("public.\"Person\"", PostgreSqlSchemaHelper.Format("public", "Person"));
+            Assert.AreEqual("\"My Schema\".\"1table\"", PostgreSqlSchemaHelper.Format("My Schema", "1table"));
         }
 
         [TestMethod]
         public void TestHelperFormatCanBeParsedBack()
         {
             // Act
-            var (schema, table) = Helper.Parse(Helper.Format("My.Schema", "Order \"Details\""));
+            var (schema, table) = PostgreSqlSchemaHelper.Parse(PostgreSqlSchemaHelper.Format("My.Schema", "Order \"Details\""));
 
             // Assert
             Assert.AreEqual("My.Schema", schema);

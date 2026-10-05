@@ -146,7 +146,7 @@ namespace RepoDb.Schema
             {
                 return new List<string>();
             }
-            return Query(SqliteSchemaText.TablesSql(Schema(schema)), SchemaTraceKeys.GetTables, r => Helper.Format(schema, Text(r, "TableName")));
+            return Query(SqliteSchemaText.TablesSql(Schema(schema)), SchemaTraceKeys.GetTables, r => SqliteSchemaHelper.Format(schema, Text(r, "TableName")));
         }
 
         /// <summary>
@@ -185,11 +185,11 @@ namespace RepoDb.Schema
                     foreignKeys.AddRange(Query(SqliteSchemaText.RelationshipsSql(Schema(schema)),
                         SchemaTraceKeys.GetRelationships,
                         r => (new TableInfo(Text(r, "ChildTable"), schema), new TableInfo(Text(r, "ParentTable"), schema)),
-                        Parameter("Schema", schema ?? Helper.MainSchema)));
+                        Parameter("Schema", schema ?? SqliteSchemaHelper.MainSchema)));
                 }
             }
             return CopySchemaRelationshipExpander.Expand(tables, foreignKeys, relationshipBehavior, Key)
-                .Select(table => Helper.Format(table.Schema, table.Name))
+                .Select(table => SqliteSchemaHelper.Format(table.Schema, table.Name))
                 .ToList();
         }
 
@@ -312,7 +312,7 @@ namespace RepoDb.Schema
                     return new List<string>();
                 }
             }
-            return await QueryAsync(SqliteSchemaText.TablesSql(Schema(schema)), SchemaTraceKeys.GetTables, r => Helper.Format(schema, Text(r, "TableName")), cancellationToken).ConfigureAwait(false);
+            return await QueryAsync(SqliteSchemaText.TablesSql(Schema(schema)), SchemaTraceKeys.GetTables, r => SqliteSchemaHelper.Format(schema, Text(r, "TableName")), cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -362,12 +362,12 @@ namespace RepoDb.Schema
                         SchemaTraceKeys.GetRelationships,
                         r => (new TableInfo(Text(r, "ChildTable"), schema), new TableInfo(Text(r, "ParentTable"), schema)),
                         cancellationToken,
-                        Parameter("Schema", schema ?? Helper.MainSchema)).ConfigureAwait(false);
+                        Parameter("Schema", schema ?? SqliteSchemaHelper.MainSchema)).ConfigureAwait(false);
                     foreignKeys.AddRange(rows);
                 }
             }
             return CopySchemaRelationshipExpander.Expand(tables, foreignKeys, relationshipBehavior, Key)
-                .Select(table => Helper.Format(table.Schema, table.Name))
+                .Select(table => SqliteSchemaHelper.Format(table.Schema, table.Name))
                 .ToList();
         }
 
@@ -393,7 +393,7 @@ namespace RepoDb.Schema
         /// <param name="schema"></param>
         /// <returns></returns>
         private static string NormalizeSchema(string schema) =>
-            string.IsNullOrWhiteSpace(schema) || string.Equals(schema, Helper.MainSchema, StringComparison.OrdinalIgnoreCase) ? null : schema;
+            string.IsNullOrWhiteSpace(schema) || string.Equals(schema, SqliteSchemaHelper.MainSchema, StringComparison.OrdinalIgnoreCase) ? null : schema;
 
         /// <summary>
         /// Gets the quoted name of the schema, to be used in the SQL text.
@@ -401,7 +401,7 @@ namespace RepoDb.Schema
         /// <param name="schema"></param>
         /// <returns></returns>
         private static string Schema(string schema) =>
-            Helper.Quote(schema ?? Helper.MainSchema);
+            SqliteSchemaHelper.Quote(schema ?? SqliteSchemaHelper.MainSchema);
 
         /// <summary>
         ///
@@ -409,7 +409,7 @@ namespace RepoDb.Schema
         /// <param name="tableName"></param>
         /// <returns></returns>
         private static (string Schema, string Table) Resolve(string tableName) =>
-            Helper.Parse(tableName);
+            SqliteSchemaHelper.Parse(tableName);
 
         // Parameters
 
@@ -513,7 +513,7 @@ namespace RepoDb.Schema
             string table)
         {
             var quoted = Schema(schema);
-            var arguments = new[] { Parameter("Table", table), Parameter("Schema", schema ?? Helper.MainSchema) };
+            var arguments = new[] { Parameter("Table", table), Parameter("Schema", schema ?? SqliteSchemaHelper.MainSchema) };
             var raw = new RawTable { Schema = schema, Table = table };
 
             var master = Query(SqliteSchemaText.TableSql(quoted), SchemaTraceKeys.GetColumns, r => (Name: Text(r, "TableName"), Definition: Text(r, "Definition")), arguments[0]).FirstOrDefault();
@@ -552,7 +552,7 @@ namespace RepoDb.Schema
             CancellationToken cancellationToken)
         {
             var quoted = Schema(schema);
-            var arguments = new[] { Parameter("Table", table), Parameter("Schema", schema ?? Helper.MainSchema) };
+            var arguments = new[] { Parameter("Table", table), Parameter("Schema", schema ?? SqliteSchemaHelper.MainSchema) };
             var raw = new RawTable { Schema = schema, Table = table };
 
             var masters = await QueryAsync(SqliteSchemaText.TableSql(quoted), SchemaTraceKeys.GetColumns, r => (Name: Text(r, "TableName"), Definition: Text(r, "Definition")), cancellationToken, arguments[0]).ConfigureAwait(false);

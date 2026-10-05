@@ -20,97 +20,97 @@ namespace RepoDb.Schema.MariaDb.UnitTests
         [TestMethod]
         public void TestMariaDbNamesSplitOfSinglePart()
         {
-            CollectionAssert.AreEqual(new[] { "Person" }, Helper.Split("Person").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "Person" }, MariaDbSchemaHelper.Split("Person").ToArrayOf());
         }
 
         [TestMethod]
         public void TestMariaDbNamesSplitOfTwoParts()
         {
-            CollectionAssert.AreEqual(new[] { "dbo", "Person" }, Helper.Split("dbo.Person").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "dbo", "Person" }, MariaDbSchemaHelper.Split("dbo.Person").ToArrayOf());
         }
 
         [TestMethod]
         public void TestMariaDbNamesSplitOfThreeParts()
         {
-            CollectionAssert.AreEqual(new[] { "db", "dbo", "Person" }, Helper.Split("db.dbo.Person").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "db", "dbo", "Person" }, MariaDbSchemaHelper.Split("db.dbo.Person").ToArrayOf());
         }
 
         [TestMethod]
         public void TestMariaDbNamesSplitOfBacktickedParts()
         {
-            CollectionAssert.AreEqual(new[] { "dbo", "Person" }, Helper.Split("`dbo`.`Person`").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "dbo", "Person" }, MariaDbSchemaHelper.Split("`dbo`.`Person`").ToArrayOf());
         }
 
         [TestMethod]
         public void TestMariaDbNamesSplitOfQuotedParts()
         {
-            CollectionAssert.AreEqual(new[] { "dbo", "Person" }, Helper.Split("\"dbo\".\"Person\"").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "dbo", "Person" }, MariaDbSchemaHelper.Split("\"dbo\".\"Person\"").ToArrayOf());
         }
 
         [TestMethod]
         public void TestMariaDbNamesSplitKeepsTheDotOfABacktickedPart()
         {
-            CollectionAssert.AreEqual(new[] { "dbo", "Odd.Name" }, Helper.Split("`dbo`.`Odd.Name`").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "dbo", "Odd.Name" }, MariaDbSchemaHelper.Split("`dbo`.`Odd.Name`").ToArrayOf());
         }
 
         [TestMethod]
         public void TestMariaDbNamesSplitKeepsTheDotOfAQuotedPart()
         {
-            CollectionAssert.AreEqual(new[] { "dbo", "Odd.Name" }, Helper.Split("dbo.\"Odd.Name\"").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "dbo", "Odd.Name" }, MariaDbSchemaHelper.Split("dbo.\"Odd.Name\"").ToArrayOf());
         }
 
         [TestMethod]
         public void TestMariaDbNamesSplitKeepsTheSpaceOfABacktickedPart()
         {
-            CollectionAssert.AreEqual(new[] { "Order Details" }, Helper.Split("`Order Details`").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "Order Details" }, MariaDbSchemaHelper.Split("`Order Details`").ToArrayOf());
         }
 
         [TestMethod]
         public void TestMariaDbNamesSplitUnescapesTheBacktick()
         {
-            CollectionAssert.AreEqual(new[] { "dbo", "Weird`Name" }, Helper.Split("`dbo`.`Weird``Name`").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "dbo", "Weird`Name" }, MariaDbSchemaHelper.Split("`dbo`.`Weird``Name`").ToArrayOf());
         }
 
         [TestMethod]
         public void TestMariaDbNamesSplitUnescapesTheDoubleQuote()
         {
-            CollectionAssert.AreEqual(new[] { "Say \"Hi\"" }, Helper.Split("\"Say \"\"Hi\"\"\"").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "Say \"Hi\"" }, MariaDbSchemaHelper.Split("\"Say \"\"Hi\"\"\"").ToArrayOf());
         }
 
         [TestMethod]
         public void TestMariaDbNamesSplitTrimsThePartsThatAreNotQuoted()
         {
-            CollectionAssert.AreEqual(new[] { "dbo", "Person" }, Helper.Split("  dbo . Person  ").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "dbo", "Person" }, MariaDbSchemaHelper.Split("  dbo . Person  ").ToArrayOf());
         }
 
         [TestMethod]
         public void TestMariaDbNamesSplitKeepsTheWhiteSpaceOfAQuotedPart()
         {
-            CollectionAssert.AreEqual(new[] { " padded " }, Helper.Split("` padded `").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { " padded " }, MariaDbSchemaHelper.Split("` padded `").ToArrayOf());
         }
 
         [TestMethod]
         public void TestMariaDbNamesSplitOfMixedQuoting()
         {
-            CollectionAssert.AreEqual(new[] { "dbo", "Odd.Name" }, Helper.Split("dbo.`Odd.Name`").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "dbo", "Odd.Name" }, MariaDbSchemaHelper.Split("dbo.`Odd.Name`").ToArrayOf());
         }
 
         [TestMethod]
         public void ThrowExceptionOnMariaDbNamesSplitIfTheNameIsNull()
         {
-            Assert.Throws<ArgumentNullException>(() => Helper.Split(null));
+            Assert.Throws<ArgumentNullException>(() => MariaDbSchemaHelper.Split(null));
         }
 
         [TestMethod]
         public void ThrowExceptionOnMariaDbNamesSplitIfTheNameIsWhiteSpace()
         {
-            Assert.Throws<ArgumentNullException>(() => Helper.Split("   "));
+            Assert.Throws<ArgumentNullException>(() => MariaDbSchemaHelper.Split("   "));
         }
 
         [TestMethod]
         public void ThrowExceptionOnMariaDbNamesSplitIfTheNameHasNoParts()
         {
-            Assert.Throws<ArgumentNullException>(() => Helper.Split("..."));
+            Assert.Throws<ArgumentNullException>(() => MariaDbSchemaHelper.Split("..."));
         }
 
         #endregion
@@ -121,7 +121,7 @@ namespace RepoDb.Schema.MariaDb.UnitTests
         public void TestMariaDbNamesParseOfTableOnly()
         {
             // Act
-            var (schema, table) = Helper.Parse("Person");
+            var (schema, table) = MariaDbSchemaHelper.Parse("Person");
 
             // Assert
             Assert.IsNull(schema);
@@ -132,7 +132,7 @@ namespace RepoDb.Schema.MariaDb.UnitTests
         public void TestMariaDbNamesParseOfSchemaAndTable()
         {
             // Act
-            var (schema, table) = Helper.Parse("Sales.Invoice");
+            var (schema, table) = MariaDbSchemaHelper.Parse("Sales.Invoice");
 
             // Assert
             Assert.AreEqual("Sales", schema, StringComparer.Ordinal);
@@ -143,7 +143,7 @@ namespace RepoDb.Schema.MariaDb.UnitTests
         public void TestMariaDbNamesParseUsesTheLastTwoPartsOfAFullName()
         {
             // Act
-            var (schema, table) = Helper.Parse("db.dbo.Person");
+            var (schema, table) = MariaDbSchemaHelper.Parse("db.dbo.Person");
 
             // Assert
             Assert.AreEqual("dbo", schema, StringComparer.Ordinal);
@@ -154,7 +154,7 @@ namespace RepoDb.Schema.MariaDb.UnitTests
         public void TestMariaDbNamesParseOfNameWithADot()
         {
             // Act
-            var (schema, table) = Helper.Parse("`dbo`.`Odd.Name`");
+            var (schema, table) = MariaDbSchemaHelper.Parse("`dbo`.`Odd.Name`");
 
             // Assert
             Assert.AreEqual("dbo", schema, StringComparer.Ordinal);
@@ -168,37 +168,37 @@ namespace RepoDb.Schema.MariaDb.UnitTests
         [TestMethod]
         public void TestMariaDbNamesQuote()
         {
-            Assert.AreEqual("`Person`", Helper.Quote("Person"), StringComparer.Ordinal);
+            Assert.AreEqual("`Person`", MariaDbSchemaHelper.Quote("Person"), StringComparer.Ordinal);
         }
 
         [TestMethod]
         public void TestMariaDbNamesQuoteEscapesTheBacktick()
         {
-            Assert.AreEqual("`Weird``Name`", Helper.Quote("Weird`Name"), StringComparer.Ordinal);
+            Assert.AreEqual("`Weird``Name`", MariaDbSchemaHelper.Quote("Weird`Name"), StringComparer.Ordinal);
         }
 
         [TestMethod]
         public void TestMariaDbNamesQuoteKeepsTheBacktickAndTheDot()
         {
-            Assert.AreEqual("`a``b.c`", Helper.Quote("a`b.c"), StringComparer.Ordinal);
+            Assert.AreEqual("`a``b.c`", MariaDbSchemaHelper.Quote("a`b.c"), StringComparer.Ordinal);
         }
 
         [TestMethod]
         public void TestMariaDbNamesQuoteName()
         {
-            Assert.AreEqual("`dbo`.`Person`", Helper.QuoteName("dbo.Person"), StringComparer.Ordinal);
+            Assert.AreEqual("`dbo`.`Person`", MariaDbSchemaHelper.QuoteName("dbo.Person"), StringComparer.Ordinal);
         }
 
         [TestMethod]
         public void TestMariaDbNamesQuoteNameOfNameThatIsAlreadyQuoted()
         {
-            Assert.AreEqual("`dbo`.`Odd.Name`", Helper.QuoteName("`dbo`.`Odd.Name`"), StringComparer.Ordinal);
+            Assert.AreEqual("`dbo`.`Odd.Name`", MariaDbSchemaHelper.QuoteName("`dbo`.`Odd.Name`"), StringComparer.Ordinal);
         }
 
         [TestMethod]
         public void TestMariaDbNamesQuoteNameOfSinglePart()
         {
-            Assert.AreEqual("`Person`", Helper.QuoteName("Person"), StringComparer.Ordinal);
+            Assert.AreEqual("`Person`", MariaDbSchemaHelper.QuoteName("Person"), StringComparer.Ordinal);
         }
 
         #endregion
@@ -208,30 +208,30 @@ namespace RepoDb.Schema.MariaDb.UnitTests
         [TestMethod]
         public void TestMariaDbNamesFormatKeepsThePlainNames()
         {
-            Assert.AreEqual("dbo.Person", Helper.Format("dbo", "Person"), StringComparer.Ordinal);
-            Assert.AreEqual("Sales.Invoice_2", Helper.Format("Sales", "Invoice_2"), StringComparer.Ordinal);
+            Assert.AreEqual("dbo.Person", MariaDbSchemaHelper.Format("dbo", "Person"), StringComparer.Ordinal);
+            Assert.AreEqual("Sales.Invoice_2", MariaDbSchemaHelper.Format("Sales", "Invoice_2"), StringComparer.Ordinal);
         }
 
         [TestMethod]
         public void TestMariaDbNamesFormatWithoutSchema()
         {
-            Assert.AreEqual("Person", Helper.Format(null, "Person"), StringComparer.Ordinal);
-            Assert.AreEqual("`Order Details`", Helper.Format(" ", "Order Details"), StringComparer.Ordinal);
+            Assert.AreEqual("Person", MariaDbSchemaHelper.Format(null, "Person"), StringComparer.Ordinal);
+            Assert.AreEqual("`Order Details`", MariaDbSchemaHelper.Format(" ", "Order Details"), StringComparer.Ordinal);
         }
 
         [TestMethod]
         public void TestMariaDbNamesFormatQuotesTheNamesThatAreNotPlain()
         {
-            Assert.AreEqual("dbo.`Odd.Name`", Helper.Format("dbo", "Odd.Name"), StringComparer.Ordinal);
-            Assert.AreEqual("dbo.`Order Details`", Helper.Format("dbo", "Order Details"), StringComparer.Ordinal);
-            Assert.AreEqual("dbo.`Weird``Name`", Helper.Format("dbo", "Weird`Name"), StringComparer.Ordinal);
-            Assert.AreEqual("`My Schema`.Person", Helper.Format("My Schema", "Person"), StringComparer.Ordinal);
+            Assert.AreEqual("dbo.`Odd.Name`", MariaDbSchemaHelper.Format("dbo", "Odd.Name"), StringComparer.Ordinal);
+            Assert.AreEqual("dbo.`Order Details`", MariaDbSchemaHelper.Format("dbo", "Order Details"), StringComparer.Ordinal);
+            Assert.AreEqual("dbo.`Weird``Name`", MariaDbSchemaHelper.Format("dbo", "Weird`Name"), StringComparer.Ordinal);
+            Assert.AreEqual("`My Schema`.Person", MariaDbSchemaHelper.Format("My Schema", "Person"), StringComparer.Ordinal);
         }
 
         [TestMethod]
         public void TestMariaDbNamesFormatQuotesTheNameThatStartsWithADigit()
         {
-            Assert.AreEqual("dbo.`1Table`", Helper.Format("dbo", "1Table"), StringComparer.Ordinal);
+            Assert.AreEqual("dbo.`1Table`", MariaDbSchemaHelper.Format("dbo", "1Table"), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -243,7 +243,7 @@ namespace RepoDb.Schema.MariaDb.UnitTests
             })
             {
                 // Act
-                var (parsedSchema, parsedTable) = Helper.Parse(Helper.Format(schema, table));
+                var (parsedSchema, parsedTable) = MariaDbSchemaHelper.Parse(MariaDbSchemaHelper.Format(schema, table));
 
                 // Assert
                 Assert.AreEqual(schema, parsedSchema, StringComparer.Ordinal);

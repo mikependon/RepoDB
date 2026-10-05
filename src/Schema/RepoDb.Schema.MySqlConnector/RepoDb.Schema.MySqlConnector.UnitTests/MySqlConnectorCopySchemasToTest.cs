@@ -229,7 +229,7 @@ namespace RepoDb.Schema.MySqlConnector.UnitTests
         public void TestMySqlConnectorCopySchemasToOfTablesWithNamesThatNeedQuoting()
         {
             // Setup
-            MapReader(SchemaTable("dbo", "Odd.Child", Helper.Format("dbo", "Odd.Name")), SchemaTable("dbo", "Odd.Name"));
+            MapReader(SchemaTable("dbo", "Odd.Child", MySqlConnectorSchemaHelper.Format("dbo", "Odd.Name")), SchemaTable("dbo", "Odd.Name"));
             MapComposer();
             var destination = new CustomDbConnection();
 
@@ -476,7 +476,7 @@ namespace RepoDb.Schema.MySqlConnector.UnitTests
 
         private static TableInfo Reference(string name)
         {
-            var (schema, table) = Helper.Parse(name);
+            var (schema, table) = MySqlConnectorSchemaHelper.Parse(name);
             return new TableInfo(table, schema);
         }
     }

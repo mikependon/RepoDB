@@ -17,7 +17,7 @@ namespace RepoDb.Schema
     /// A class that parses, quotes and formats the (multi-part) names of the PostgreSQL objects (i.e.: <c>public.person</c> or <c>public."Order Details"</c>).
     /// The names are case-sensitive, as they are always quoted when they are used in a statement.
     /// </summary>
-    internal static class Helper
+    internal static class PostgreSqlSchemaHelper
     {
         #region Public Methods
 

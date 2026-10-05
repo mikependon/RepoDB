@@ -475,7 +475,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
 
         private static TableInfo Reference(string name)
         {
-            var (schema, table) = Helper.Parse(name);
+            var (schema, table) = SqliteSchemaHelper.Parse(name);
             return new TableInfo(table, schema);
         }
     }

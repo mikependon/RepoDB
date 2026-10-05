@@ -153,7 +153,7 @@ namespace RepoDb.Schema
         /// <param name="schemaName">The name of the schema to be read. The default is <c>null</c>, which reads all the schemas.</param>
         /// <returns>The names of the tables.</returns>
         public IEnumerable<string> GetTables(string schemaName = null) =>
-            Query(SqlServerSchemaText.TablesSql, SchemaTraceKeys.GetTables, r => Helper.Format(r.GetString(0), r.GetString(1)), Parameter("SchemaName", schemaName));
+            Query(SqlServerSchemaText.TablesSql, SchemaTraceKeys.GetTables, r => SqlServerSchemaHelper.Format(r.GetString(0), r.GetString(1)), Parameter("SchemaName", schemaName));
 
         /// <summary>
         /// Orders the tables so that a table always comes after the tables that its foreign keys reference. Use the order to create the tables, and the reverse of it to drop them.
@@ -187,7 +187,7 @@ namespace RepoDb.Schema
                 ? new List<(TableInfo Child, TableInfo Parent)>()
                 : Query(SqlServerSchemaText.ForeignKeyRelationshipsSql, SchemaTraceKeys.GetRelationships, MapRelationship);
             return CopySchemaRelationshipExpander.Expand(tables, foreignKeys, relationshipBehavior, Key)
-                .Select(table => Helper.Format(table.Schema, table.Name))
+                .Select(table => SqlServerSchemaHelper.Format(table.Schema, table.Name))
                 .ToList();
         }
 
@@ -314,7 +314,7 @@ namespace RepoDb.Schema
         /// <returns>A task that represents the asynchronous operation. The task result contains: the names of the tables.</returns>
         public async Task<IEnumerable<string>> GetTablesAsync(string schemaName = null,
             CancellationToken cancellationToken = default) =>
-            await QueryAsync(SqlServerSchemaText.TablesSql, SchemaTraceKeys.GetTables, r => Helper.Format(r.GetString(0), r.GetString(1)), cancellationToken, Parameter("SchemaName", schemaName)).ConfigureAwait(false);
+            await QueryAsync(SqlServerSchemaText.TablesSql, SchemaTraceKeys.GetTables, r => SqlServerSchemaHelper.Format(r.GetString(0), r.GetString(1)), cancellationToken, Parameter("SchemaName", schemaName)).ConfigureAwait(false);
 
         /// <summary>
         /// Orders the tables so that a table always comes after the tables that its foreign keys reference. Use the order to create the tables, and the reverse of it to drop them.
@@ -359,7 +359,7 @@ namespace RepoDb.Schema
                 foreignKeys = await QueryAsync(SqlServerSchemaText.ForeignKeyRelationshipsSql, SchemaTraceKeys.GetRelationships, MapRelationship, cancellationToken).ConfigureAwait(false);
             }
             return CopySchemaRelationshipExpander.Expand(tables, foreignKeys, relationshipBehavior, Key)
-                .Select(table => Helper.Format(table.Schema, table.Name))
+                .Select(table => SqlServerSchemaHelper.Format(table.Schema, table.Name))
                 .ToList();
         }
 
@@ -376,7 +376,7 @@ namespace RepoDb.Schema
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         private static (string Schema, string Table) ParseTableName(string tableName) =>
-            Helper.Parse(tableName);
+            SqlServerSchemaHelper.Parse(tableName);
 
         /// <summary>
         /// 
@@ -385,7 +385,7 @@ namespace RepoDb.Schema
         /// <param name="table"></param>
         /// <returns></returns>
         private static string FullName(string schema, string table) =>
-            $"{Helper.Quote(schema)}.{Helper.Quote(table)}";
+            $"{SqlServerSchemaHelper.Quote(schema)}.{SqlServerSchemaHelper.Quote(table)}";
 
         /// <summary>
         /// 

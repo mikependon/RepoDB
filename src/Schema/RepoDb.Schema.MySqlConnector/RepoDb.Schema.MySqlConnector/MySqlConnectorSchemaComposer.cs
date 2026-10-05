@@ -193,7 +193,7 @@ namespace RepoDb.Schema
         /// <param name="table">The identity (name and schema) of the table.</param>
         /// <returns>The name of the table.</returns>
         public string ComposeName(TableInfo table) =>
-            Helper.Format((table ?? throw new ArgumentNullException(nameof(table))).Schema, table.Name);
+            MySqlConnectorSchemaHelper.Format((table ?? throw new ArgumentNullException(nameof(table))).Schema, table.Name);
 
         /// <summary>
         /// Composes the statement that checks whether the table exists in the destination database.
@@ -283,7 +283,7 @@ namespace RepoDb.Schema
         /// <param name="name"></param>
         /// <returns></returns>
         private static string Quote(string name) =>
-            Helper.Quote(name);
+            MySqlConnectorSchemaHelper.Quote(name);
 
         /// <summary>
         /// 
@@ -291,7 +291,7 @@ namespace RepoDb.Schema
         /// <param name="name"></param>
         /// <returns></returns>
         private static string Name(string name) =>
-            Helper.QuoteName(name);
+            MySqlConnectorSchemaHelper.QuoteName(name);
 
         /// <summary>
         ///
@@ -312,7 +312,7 @@ namespace RepoDb.Schema
             string schemaColumn,
             string tableColumn)
         {
-            var (schema, table) = Helper.Parse(tableName);
+            var (schema, table) = MySqlConnectorSchemaHelper.Parse(tableName);
             return $"{schemaColumn} = {(schema == null ? "DATABASE()" : $"'{Literal(schema)}'")} AND {tableColumn} = '{Literal(table)}'";
         }
 
@@ -322,7 +322,7 @@ namespace RepoDb.Schema
         /// <param name="schema"></param>
         /// <returns></returns>
         private static string TableName(TableSchema schema) =>
-            Helper.Format(schema.Table.Schema, schema.Table.Name);
+            MySqlConnectorSchemaHelper.Format(schema.Table.Schema, schema.Table.Name);
 
         /// <summary>
         ///
@@ -330,7 +330,7 @@ namespace RepoDb.Schema
         /// <param name="table"></param>
         /// <returns></returns>
         private static string TableName(TableInfo table) =>
-            Helper.Format(table.Schema, table.Name);
+            MySqlConnectorSchemaHelper.Format(table.Schema, table.Name);
 
         /// <summary>
         /// 

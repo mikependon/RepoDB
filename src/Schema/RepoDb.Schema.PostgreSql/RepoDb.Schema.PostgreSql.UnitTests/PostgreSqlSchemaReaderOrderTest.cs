@@ -476,7 +476,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
 
         private static TableInfo Reference(string name)
         {
-            var (schema, table) = Helper.Parse(name);
+            var (schema, table) = PostgreSqlSchemaHelper.Parse(name);
             return new TableInfo(table, schema);
         }
     }

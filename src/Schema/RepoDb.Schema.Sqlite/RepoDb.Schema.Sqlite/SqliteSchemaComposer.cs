@@ -126,7 +126,7 @@ namespace RepoDb.Schema
                 throw new ArgumentNullException(nameof(index));
             }
 
-            var (schema, table) = Helper.Parse(tableName);
+            var (schema, table) = SqliteSchemaHelper.Parse(tableName);
             var statement = new StringBuilder("CREATE ");
             if (index.IsUnique)
             {
@@ -191,7 +191,7 @@ namespace RepoDb.Schema
         /// <param name="table">The identity (name and schema) of the table.</param>
         /// <returns>The name of the table.</returns>
         public string ComposeName(TableInfo table) =>
-            Helper.Format((table ?? throw new ArgumentNullException(nameof(table))).Schema, table.Name);
+            SqliteSchemaHelper.Format((table ?? throw new ArgumentNullException(nameof(table))).Schema, table.Name);
 
         /// <summary>
         /// Composes the statement that checks whether the table exists in the destination database.
@@ -200,8 +200,8 @@ namespace RepoDb.Schema
         /// <returns>The SQL statement, that returns <c>1</c> if the table exists, and <c>0</c> if not.</returns>
         public string ComposeTableExists(string tableName)
         {
-            var (schema, table) = Helper.Parse(tableName);
-            return $"SELECT CASE WHEN EXISTS (SELECT 1 FROM {Quote(schema ?? Helper.MainSchema)}.sqlite_master WHERE type = 'table' AND name = '{Literal(table)}' COLLATE NOCASE) THEN 1 ELSE 0 END;";
+            var (schema, table) = SqliteSchemaHelper.Parse(tableName);
+            return $"SELECT CASE WHEN EXISTS (SELECT 1 FROM {Quote(schema ?? SqliteSchemaHelper.MainSchema)}.sqlite_master WHERE type = 'table' AND name = '{Literal(table)}' COLLATE NOCASE) THEN 1 ELSE 0 END;";
         }
 
         /// <summary>
@@ -213,8 +213,8 @@ namespace RepoDb.Schema
         public string ComposeColumnExists(string tableName,
             string columnName)
         {
-            var (schema, table) = Helper.Parse(tableName);
-            return $"SELECT CASE WHEN EXISTS (SELECT 1 FROM pragma_table_xinfo('{Literal(table)}', '{Literal(schema ?? Helper.MainSchema)}') WHERE name = '{Literal(columnName)}' COLLATE NOCASE) THEN 1 ELSE 0 END;";
+            var (schema, table) = SqliteSchemaHelper.Parse(tableName);
+            return $"SELECT CASE WHEN EXISTS (SELECT 1 FROM pragma_table_xinfo('{Literal(table)}', '{Literal(schema ?? SqliteSchemaHelper.MainSchema)}') WHERE name = '{Literal(columnName)}' COLLATE NOCASE) THEN 1 ELSE 0 END;";
         }
 
         /// <summary>
@@ -226,8 +226,8 @@ namespace RepoDb.Schema
         public string ComposeIndexExists(string tableName,
             string indexName)
         {
-            var (schema, table) = Helper.Parse(tableName);
-            return $"SELECT CASE WHEN EXISTS (SELECT 1 FROM {Quote(schema ?? Helper.MainSchema)}.sqlite_master WHERE type = 'index' AND tbl_name = '{Literal(table)}' COLLATE NOCASE AND name = '{Literal(indexName)}' COLLATE NOCASE) THEN 1 ELSE 0 END;";
+            var (schema, table) = SqliteSchemaHelper.Parse(tableName);
+            return $"SELECT CASE WHEN EXISTS (SELECT 1 FROM {Quote(schema ?? SqliteSchemaHelper.MainSchema)}.sqlite_master WHERE type = 'index' AND tbl_name = '{Literal(table)}' COLLATE NOCASE AND name = '{Literal(indexName)}' COLLATE NOCASE) THEN 1 ELSE 0 END;";
         }
 
         /// <summary>
@@ -283,7 +283,7 @@ namespace RepoDb.Schema
         /// <param name="name"></param>
         /// <returns></returns>
         private static string Quote(string name) =>
-            Helper.Quote(name);
+            SqliteSchemaHelper.Quote(name);
 
         /// <summary>
         ///
@@ -291,7 +291,7 @@ namespace RepoDb.Schema
         /// <param name="name"></param>
         /// <returns></returns>
         private static string Name(string name) =>
-            Helper.QuoteName(name);
+            SqliteSchemaHelper.QuoteName(name);
 
         /// <summary>
         ///
@@ -307,7 +307,7 @@ namespace RepoDb.Schema
         /// <param name="schema"></param>
         /// <returns></returns>
         private static string TableName(TableSchema schema) =>
-            Helper.Format(schema.Table.Schema, schema.Table.Name);
+            SqliteSchemaHelper.Format(schema.Table.Schema, schema.Table.Name);
 
         /// <summary>
         ///

@@ -150,7 +150,7 @@ namespace RepoDb.Schema
         /// <param name="schemaName">The name of the schema to be read. The default is <c>null</c>, which reads all the schemas.</param>
         /// <returns>The names of the tables.</returns>
         public IEnumerable<string> GetTables(string schemaName = null) =>
-            Query(CockroachDbSchemaText.TablesSql, SchemaTraceKeys.GetTables, r => Helper.Format(r.GetString(0), r.GetString(1)), Parameter("SchemaName", schemaName));
+            Query(CockroachDbSchemaText.TablesSql, SchemaTraceKeys.GetTables, r => CockroachDbSchemaHelper.Format(r.GetString(0), r.GetString(1)), Parameter("SchemaName", schemaName));
 
         /// <summary>
         /// Gets the relationships of the tables (as defined by their foreign keys), ordered so that a table always comes after the tables that it references.
@@ -183,7 +183,7 @@ namespace RepoDb.Schema
                 ? new List<(TableInfo Child, TableInfo Parent)>()
                 : Query(CockroachDbSchemaText.ForeignKeyRelationshipsSql, SchemaTraceKeys.GetRelationships, MapRelationship);
             return CopySchemaRelationshipExpander.Expand(tables, foreignKeys, relationshipBehavior, Key)
-                .Select(table => Helper.Format(table.Schema, table.Name))
+                .Select(table => CockroachDbSchemaHelper.Format(table.Schema, table.Name))
                 .ToList();
         }
 
@@ -307,7 +307,7 @@ namespace RepoDb.Schema
         /// <returns>A task that represents the asynchronous operation. The task result contains: the names of the tables.</returns>
         public async Task<IEnumerable<string>> GetTablesAsync(string schemaName = null,
             CancellationToken cancellationToken = default) =>
-            await QueryAsync(CockroachDbSchemaText.TablesSql, SchemaTraceKeys.GetTables, r => Helper.Format(r.GetString(0), r.GetString(1)), cancellationToken, Parameter("SchemaName", schemaName)).ConfigureAwait(false);
+            await QueryAsync(CockroachDbSchemaText.TablesSql, SchemaTraceKeys.GetTables, r => CockroachDbSchemaHelper.Format(r.GetString(0), r.GetString(1)), cancellationToken, Parameter("SchemaName", schemaName)).ConfigureAwait(false);
 
         /// <summary>
         /// Gets the relationships of the tables (as defined by their foreign keys), ordered so that a table always comes after the tables that it references.
@@ -354,7 +354,7 @@ namespace RepoDb.Schema
                 foreignKeys = await QueryAsync(CockroachDbSchemaText.ForeignKeyRelationshipsSql, SchemaTraceKeys.GetRelationships, MapRelationship, cancellationToken).ConfigureAwait(false);
             }
             return CopySchemaRelationshipExpander.Expand(tables, foreignKeys, relationshipBehavior, Key)
-                .Select(table => Helper.Format(table.Schema, table.Name))
+                .Select(table => CockroachDbSchemaHelper.Format(table.Schema, table.Name))
                 .ToList();
         }
 
@@ -372,7 +372,7 @@ namespace RepoDb.Schema
         /// <param name="tableName"></param>
         /// <returns></returns>
         private static (string Schema, string Table) ParseTableName(string tableName) =>
-            Helper.Parse(tableName);
+            CockroachDbSchemaHelper.Parse(tableName);
 
         /// <summary>
         ///
@@ -381,7 +381,7 @@ namespace RepoDb.Schema
         /// <param name="table"></param>
         /// <returns></returns>
         private static string FullName(string schema, string table) =>
-            $"{Helper.Quote(schema)}.{Helper.Quote(table)}";
+            $"{CockroachDbSchemaHelper.Quote(schema)}.{CockroachDbSchemaHelper.Quote(table)}";
 
         /// <summary>
         ///
