@@ -44,7 +44,14 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForSource))
             {
-                return new SqlServerSchemaReader(connection).GetTables().ToList();
+                var reader = new SqlServerSchemaReader(connection);
+                return reader.GetTables()
+                    .Where(name =>
+                    {
+                        var schema = reader.GetTableSchema(name);
+                        return schema.Table.Schema == "dbo" && schema.ForeignKeys.All(foreignKey => foreignKey.ReferencedTable.Schema == "dbo");
+                    })
+                    .ToList();
             }
         }
 
@@ -329,12 +336,14 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
 
                 // Assert
                 Assert.AreEqual("Invoice", results[0].TableName, StringComparer.Ordinal);
-                AssertTargetMatchesSource("Sales.Invoice", "Sales.InvoiceLine", "dbo.Ledger");
+                CollectionAssert.AreEquivalent(new[] { "Sales", "Sales", "dbo" }, results.Select(r => r.SourceSchema).ToArray());
+                Assert.IsTrue(results.All(r => r.DestinationSchema == "dbo"));
+                CollectionAssert.AreEquivalent(new[] { "dbo.Invoice", "dbo.InvoiceLine", "dbo.Ledger" }, GetTargetTables());
             }
         }
 
         [TestMethod]
-        public void TestCopySchemasToOfTablesWithTheSameNameInDifferentSchemas()
+        public void ThrowExceptionOnCopySchemasToOfTablesWithTheSameNameInDifferentSchemas()
         {
             using (var source = new SqlConnection(Database.ConnectionStringForSource))
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
@@ -342,13 +351,10 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
 
-                // Act
-                var results = new List<CopySchemaResult>();
-                source.CopySchemaTo(new[] { "dbo.ItemRef", "dbo.Item", "Sales.Item" }, target, createdCallback: results.Add);
-
-                // Assert
-                Assert.AreEqual(3, results.Count);
-                AssertTargetMatchesSource("dbo.Item", "Sales.Item", "dbo.ItemRef");
+                // Act/Assert
+                Assert.Throws<InvalidOperationException>(() =>
+                    source.CopySchemaTo(new[] { "dbo.ItemRef", "dbo.Item", "Sales.Item" }, target));
+                Assert.AreEqual(0, GetTargetTables().Count);
             }
         }
 
@@ -469,7 +475,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
 
                 // Act
                 var results = new List<CopySchemaResult>();
-                source.CopySchemaTo(new[] { "NoKey" }, target, CopySchemaExistsBehavior.Drop, createdCallback: results.Add);
+                source.CopySchemaTo(new[] { "NoKey" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Drop, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(CopySchemaExistsBehavior.Drop, results.Single().Action);
@@ -580,7 +586,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 source.CopySchemaTo(new[] { "NoKey" }, target);
 
                 // Act/Assert
-                Assert.Throws<InvalidOperationException>(() => source.CopySchemaTo(new[] { "NoKey" }, target, CopySchemaExistsBehavior.Throw));
+                Assert.Throws<InvalidOperationException>(() => source.CopySchemaTo(new[] { "NoKey" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Throw));
             }
         }
 
@@ -709,7 +715,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
 
                 // Act
                 var results = new List<CopySchemaResult>();
-                await source.CopySchemaToAsync(new[] { "Person", "Country" }, target, CopySchemaExistsBehavior.Align, createdCallback: results.Add);
+                await source.CopySchemaToAsync(new[] { "Person", "Country" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Align, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(2, results.Count);
@@ -750,7 +756,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 await source.CopySchemaToAsync(new[] { "NoKey" }, target);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopySchemaToAsync(new[] { "NoKey" }, target, CopySchemaExistsBehavior.Throw));
+                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopySchemaToAsync(new[] { "NoKey" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Throw));
             }
         }
 

@@ -65,7 +65,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 var results = new List<CopySchemaResult>();
 
                 // Act
-                source.CopySchemaTo(new[] { "Country", "Person" }, target, CopySchemaExistsBehavior.Skip, createdCallback: results.Add);
+                source.CopySchemaTo(new[] { "Country", "Person" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Skip, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(CopySchemaOutcome.Skipped, results.Single(r => r.TableName == "Country").Outcome);
@@ -128,7 +128,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 var results = new List<CopySchemaResult>();
 
                 // Act
-                await source.CopySchemaToAsync(new[] { "Country", "Person" }, target, CopySchemaExistsBehavior.Skip, createdCallback: results.Add);
+                await source.CopySchemaToAsync(new[] { "Country", "Person" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Skip, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(CopySchemaOutcome.Skipped, results.Single(r => r.TableName == "Country").Outcome);
@@ -153,7 +153,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
 
                 // Act/Assert
                 Assert.Throws<InvalidOperationException>(() =>
-                    source.CopySchemaTo(new[] { "Country", "Person" }, target, CopySchemaExistsBehavior.Throw));
+                    source.CopySchemaTo(new[] { "Country", "Person" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Throw));
 
                 // Assert
                 Assert.IsFalse(Helper.TargetTableExists("Person"));
@@ -172,7 +172,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
 
                 // Act/Assert
                 await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                    source.CopySchemaToAsync(new[] { "Country", "Person" }, target, CopySchemaExistsBehavior.Throw));
+                    source.CopySchemaToAsync(new[] { "Country", "Person" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Throw));
                 Assert.IsFalse(Helper.TargetTableExists("Person"));
             }
         }
@@ -187,7 +187,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                source.CopySchemaTo(new[] { "Country", "Person" }, target, CopySchemaExistsBehavior.Throw);
+                source.CopySchemaTo(new[] { "Country", "Person" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Throw);
 
                 // Assert
                 Helper.AssertTargetMatchesSource("Country");
@@ -212,7 +212,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 var results = new List<CopySchemaResult>();
 
                 // Act
-                source.CopySchemaTo(new[] { "Country", "Person" }, target, CopySchemaExistsBehavior.Drop, createdCallback: results.Add);
+                source.CopySchemaTo(new[] { "Country", "Person" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Drop, createdCallback: results.Add);
 
                 // Assert
                 Assert.IsTrue(results.All(r => r.Outcome == CopySchemaOutcome.Dropped));
@@ -236,7 +236,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 var results = new List<CopySchemaResult>();
 
                 // Act
-                source.CopySchemaTo(new[] { "Country", "Person" }, target, CopySchemaExistsBehavior.Drop, createdCallback: results.Add);
+                source.CopySchemaTo(new[] { "Country", "Person" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Drop, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(CopySchemaOutcome.Dropped, results.Single(r => r.TableName == "Country").Outcome);
@@ -257,7 +257,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 InsertCountry(target);
 
                 // Act
-                await source.CopySchemaToAsync(new[] { "Country", "Person" }, target, CopySchemaExistsBehavior.Drop);
+                await source.CopySchemaToAsync(new[] { "Country", "Person" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Drop);
 
                 // Assert
                 Assert.AreEqual(0, CountCountries(target));
@@ -282,7 +282,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 var results = new List<CopySchemaResult>();
 
                 // Act
-                source.CopySchemaTo(new[] { "Person" }, target, CopySchemaExistsBehavior.Align, createdCallback: results.Add);
+                source.CopySchemaTo(new[] { "Person" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Align, createdCallback: results.Add);
 
                 // Assert
                 var result = results.Single();
@@ -305,11 +305,11 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 CreateSmallPerson(target);
-                source.CopySchemaTo(new[] { "Person" }, target, CopySchemaExistsBehavior.Align);
+                source.CopySchemaTo(new[] { "Person" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Align);
                 var results = new List<CopySchemaResult>();
 
                 // Act
-                source.CopySchemaTo(new[] { "Person" }, target, CopySchemaExistsBehavior.Align, createdCallback: results.Add);
+                source.CopySchemaTo(new[] { "Person" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Align, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(CopySchemaOutcome.Aligned, results.Single().Outcome);
@@ -330,7 +330,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 var results = new List<CopySchemaResult>();
 
                 // Act
-                source.CopySchemaTo(new[] { "Country", "Person" }, target, CopySchemaExistsBehavior.Align, createdCallback: results.Add);
+                source.CopySchemaTo(new[] { "Country", "Person" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Align, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(CopySchemaOutcome.Aligned, results.Single(r => r.TableName == "Country").Outcome);
@@ -351,7 +351,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 var results = new List<CopySchemaResult>();
 
                 // Act
-                await source.CopySchemaToAsync(new[] { "Person" }, target, CopySchemaExistsBehavior.Align, createdCallback: results.Add);
+                await source.CopySchemaToAsync(new[] { "Person" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Align, createdCallback: results.Add);
 
                 // Assert
                 CollectionAssert.AreEquivalent(new[] { "NameUpper", "Age", "CountryId", "Salary", "CreatedDateUtc" }, results.Single().AddedColumns.ToArray());
@@ -375,7 +375,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 InsertCountry(target);
 
                 // Act
-                var result = source.CopySchemaTo("Person", target, CopySchemaExistsBehavior.Skip, CopySchemaRelationshipBehavior.Parents);
+                var result = source.CopySchemaTo("Person", target, tableExistenceBehavior: CopySchemaExistsBehavior.Skip, relationshipBehavior: CopySchemaRelationshipBehavior.Parents);
 
                 // Assert
                 Assert.AreEqual(CopySchemaOutcome.Created, result.Outcome);

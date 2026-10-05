@@ -195,7 +195,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestPostgreSqlCopySchemasToOfTablesInDifferentSchemasAndWithTheSameName()
+        public void ThrowExceptionOnPostgreSqlCopySchemasToOfTablesInDifferentSchemasAndWithTheSameName()
         {
             using (var source = new NpgsqlConnection(Database.ConnectionStringForSource))
             using (var target = new NpgsqlConnection(Database.ConnectionStringForTarget))
@@ -203,11 +203,10 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
 
-                // Act
-                source.CopySchemaTo(new[] { "item_ref", "sales.item", "public.item", "country", "Person", "sales.order_line" }, target);
-
-                // Assert
-                AssertTargetMatchesSource("item_ref", "sales.item", "public.item", "sales.order_line");
+                // Act/Assert
+                Assert.Throws<InvalidOperationException>(() =>
+                    source.CopySchemaTo(new[] { "item_ref", "sales.item", "public.item", "country", "Person", "sales.order_line" }, target));
+                Assert.AreEqual(0, Helper.GetTargetTables().Count);
             }
         }
 
@@ -296,7 +295,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
                 var results = new List<CopySchemaResult>();
 
                 // Act
-                source.CopySchemaTo(new[] { "country" }, target, CopySchemaExistsBehavior.Drop, createdCallback: results.Add);
+                source.CopySchemaTo(new[] { "country" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Drop, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(CopySchemaExistsBehavior.Drop, results.Single().Action);
@@ -443,7 +442,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
                 source.CopySchemaTo(new[] { "country" }, target);
 
                 // Act/Assert
-                Assert.Throws<InvalidOperationException>(() => source.CopySchemaTo(new[] { "country", "Person" }, target, CopySchemaExistsBehavior.Throw));
+                Assert.Throws<InvalidOperationException>(() => source.CopySchemaTo(new[] { "country", "Person" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Throw));
             }
         }
 
@@ -777,7 +776,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
                 await source.CopySchemaToAsync(new[] { "country" }, target);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopySchemaToAsync(new[] { "country" }, target, CopySchemaExistsBehavior.Throw));
+                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopySchemaToAsync(new[] { "country" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Throw));
             }
         }
 

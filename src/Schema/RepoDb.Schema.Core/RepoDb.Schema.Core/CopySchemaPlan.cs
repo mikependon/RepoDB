@@ -60,11 +60,20 @@ namespace RepoDb.Schema
         /// Creates the state of each table of the schemas.
         /// </summary>
         /// <param name="schemas">The schemas of the tables, in the order that they must be created.</param>
+        /// <param name="targetSchema">The schema of the destination database that the tables are created in. <c>null</c> keeps the schema of each source table.</param>
         /// <param name="composer">The composer of the destination database.</param>
         /// <returns>The state of each table.</returns>
+        /// <exception cref="InvalidOperationException">Two tables would have the same name in the destination database.</exception>
         public static IList<CopySchemaTable> CreateTables(IEnumerable<TableSchema> schemas,
-            ISchemaComposer composer) =>
-            schemas.Select(schema => new CopySchemaTable(schema, composer.ComposeName(schema.Table))).ToList();
+            string targetSchema,
+            ISchemaComposer composer)
+        {
+            var tables = schemas
+                .Select(source => CreateTable(source, MoveTo(source, targetSchema), composer))
+                .ToList();
+            EnsureUniqueNames(tables);
+            return tables;
+        }
 
         /// <summary>
         /// Creates the plan for the tables, from their state in the destination database.
@@ -95,6 +104,87 @@ namespace RepoDb.Schema
         #endregion
 
         #region Helpers
+
+        /// <summary>
+        /// Creates the state of a table.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="schema"></param>
+        /// <param name="composer"></param>
+        /// <returns></returns>
+        private static CopySchemaTable CreateTable(TableSchema source,
+            TableSchema schema,
+            ISchemaComposer composer) =>
+            new CopySchemaTable(source, schema, composer.ComposeName(schema.Table));
+
+        /// <summary>
+        /// Gets the schema of the table as it is created in the target schema: its name, and the foreign keys that reference the other tables, are in that schema.
+        /// The schema is the one of the source if there is no target schema, or if nothing has to be moved (the table, and the tables that it references, are already in it).
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="targetSchema"></param>
+        /// <returns></returns>
+        private static TableSchema MoveTo(TableSchema source,
+            string targetSchema)
+        {
+            if (string.IsNullOrWhiteSpace(targetSchema) || (IsIn(source.Table, targetSchema) && source.ForeignKeys.All(foreignKey => IsIn(foreignKey.ReferencedTable, targetSchema))))
+            {
+                return source;
+            }
+
+            return new TableSchema(source.Table.Name, targetSchema)
+            {
+                CheckConstraints = source.CheckConstraints,
+                Columns = source.Columns,
+                Indexes = source.Indexes,
+                PrimaryKey = source.PrimaryKey,
+                UniqueConstraints = source.UniqueConstraints,
+                ForeignKeys = source.ForeignKeys.Select(foreignKey => MoveTo(foreignKey, targetSchema)).ToList()
+            };
+        }
+
+        /// <summary>
+        /// Checks whether the table is in the schema.
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="schema"></param>
+        /// <returns></returns>
+        private static bool IsIn(TableInfo table,
+            string schema) =>
+            string.Equals(table.Schema, schema, StringComparison.Ordinal);
+
+        /// <summary>
+        /// Gets the foreign key that references the table in the target schema.
+        /// </summary>
+        /// <param name="foreignKey"></param>
+        /// <param name="targetSchema"></param>
+        /// <returns></returns>
+        private static ForeignKeyInfo MoveTo(ForeignKeyInfo foreignKey,
+            string targetSchema) =>
+            new ForeignKeyInfo(foreignKey.Name)
+            {
+                Columns = foreignKey.Columns,
+                ReferencedTable = new TableInfo(foreignKey.ReferencedTable.Name, targetSchema),
+                ReferencedColumns = foreignKey.ReferencedColumns,
+                UpdateRule = foreignKey.UpdateRule,
+                DeleteRule = foreignKey.DeleteRule
+            };
+
+        /// <summary>
+        /// Throws if two of the tables would have the same name in the destination database (i.e.: the tables of different schemas that are copied into one schema).
+        /// </summary>
+        /// <param name="tables"></param>
+        private static void EnsureUniqueNames(IEnumerable<CopySchemaTable> tables)
+        {
+            var duplicate = tables
+                .Where(table => table.Name != null)
+                .GroupBy(table => table.Name, StringComparer.Ordinal)
+                .FirstOrDefault(group => group.Count() > 1);
+            if (duplicate != null)
+            {
+                throw new InvalidOperationException($"The tables '{string.Join("', '", duplicate.Select(table => $"{table.Source.Table.Schema}.{table.Source.Table.Name}"))}' would have the same name '{duplicate.Key}' in the destination database.");
+            }
+        }
 
         /// <summary>
         /// Sets what is going to happen to each table, and throws if the behavior does not allow that a table already exists.

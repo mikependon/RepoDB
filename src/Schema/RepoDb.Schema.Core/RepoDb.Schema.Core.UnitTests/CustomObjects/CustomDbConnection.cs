@@ -14,6 +14,11 @@ namespace RepoDb.Schema.Core.UnitTests.CustomObjects
 {
     public class CustomDbConnection : DbConnection, IDbConnection
     {
+        static CustomDbConnection()
+        {
+            CustomDbSetting.Map(null);
+        }
+
         public override string ConnectionString { get; set; }
 
         public List<string> ExecutedCommands { get; } = new List<string>();

@@ -361,7 +361,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var results = new List<CopySchemaResult>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Person" }, new CustomDbConnection(), CopySchemaExistsBehavior.Drop, createdCallback: results.Add);
+            new CustomDbConnection().CopySchemaTo(new[] { "Person" }, new CustomDbConnection(), tableExistenceBehavior: CopySchemaExistsBehavior.Drop, createdCallback: results.Add);
 
             // Assert
             Assert.AreEqual(CopySchemaExistsBehavior.Drop, results.Single().Action);
@@ -545,7 +545,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var results = new List<CopySchemaResult>();
 
             // Act
-            await new CustomDbConnection().CopySchemaToAsync(new[] { "Person", "Country" }, new CustomDbConnection(), CopySchemaExistsBehavior.Align, createdCallback: results.Add);
+            await new CustomDbConnection().CopySchemaToAsync(new[] { "Person", "Country" }, new CustomDbConnection(), tableExistenceBehavior: CopySchemaExistsBehavior.Align, createdCallback: results.Add);
 
             // Assert
             Assert.AreEqual(2, results.Count);

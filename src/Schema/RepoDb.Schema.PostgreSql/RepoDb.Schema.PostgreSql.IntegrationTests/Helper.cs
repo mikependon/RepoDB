@@ -130,7 +130,14 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionStringForSource))
             {
-                return new PostgreSqlSchemaReader(connection).GetTables().ToList();
+                var reader = new PostgreSqlSchemaReader(connection);
+                return reader.GetTables()
+                    .Where(name =>
+                    {
+                        var schema = reader.GetTableSchema(name);
+                        return schema.Table.Schema == "public" && schema.ForeignKeys.All(foreignKey => foreignKey.ReferencedTable.Schema == "public");
+                    })
+                    .ToList();
             }
         }
 

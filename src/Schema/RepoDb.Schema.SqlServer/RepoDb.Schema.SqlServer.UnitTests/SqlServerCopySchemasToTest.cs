@@ -61,7 +61,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
                 schema.ForeignKeys.Add(new ForeignKeyInfo($"FK_{tableName}_{referenceName}")
                 {
                     Columns = { $"{referenceName}Id" },
-                    ReferencedTable = Reference(reference),
+                    ReferencedTable = new TableInfo(Reference(reference).Name, Reference(reference).Schema ?? schemaName),
                     ReferencedColumns = { "Id" }
                 });
             }
@@ -220,9 +220,9 @@ namespace RepoDb.Schema.SqlServer.UnitTests
 
             // Assert
             var tables = Tables(destination);
-            StringAssert.StartsWith(tables[0], "CREATE TABLE [Sales].[Invoice]", StringComparison.Ordinal);
+            StringAssert.StartsWith(tables[0], "CREATE TABLE [dbo].[Invoice]", StringComparison.Ordinal);
             StringAssert.StartsWith(tables[1], "CREATE TABLE [dbo].[Ledger]", StringComparison.Ordinal);
-            StringAssert.Contains(ForeignKeys(destination).Single(), "REFERENCES [Sales].[Invoice] ([Id])", StringComparison.Ordinal);
+            StringAssert.Contains(ForeignKeys(destination).Single(), "REFERENCES [dbo].[Invoice] ([Id])", StringComparison.Ordinal);
         }
 
         [TestMethod]
@@ -464,7 +464,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             var results = new List<CopySchemaResult>();
 
             // Act
-            await new CustomDbConnection().CopySchemaToAsync(new[] { "Person", "Country" }, new CustomDbConnection(), CopySchemaExistsBehavior.Throw, createdCallback: results.Add);
+            await new CustomDbConnection().CopySchemaToAsync(new[] { "Person", "Country" }, new CustomDbConnection(), tableExistenceBehavior: CopySchemaExistsBehavior.Throw, createdCallback: results.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.TableName).ToArray());

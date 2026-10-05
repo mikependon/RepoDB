@@ -20,9 +20,17 @@ namespace RepoDb.Schema
     {
         #region Constructors
 
-        public CopySchemaTable(TableSchema schema,
+        /// <summary>
+        /// Creates a new instance of <see cref="CopySchemaTable"/> class.
+        /// </summary>
+        /// <param name="source">The schema of the table, as read from the source database.</param>
+        /// <param name="schema">The schema of the table that is created in the destination database (the same as the source schema if the table is not moved to another schema).</param>
+        /// <param name="name">The name of the table in the dialect of the destination database.</param>
+        public CopySchemaTable(TableSchema source,
+            TableSchema schema,
             string name)
         {
+            Source = source;
             Schema = schema;
             Name = name;
         }
@@ -33,6 +41,11 @@ namespace RepoDb.Schema
 
         /// <summary>
         /// Gets the schema of the table, as read from the source database.
+        /// </summary>
+        public TableSchema Source { get; }
+
+        /// <summary>
+        /// Gets the schema of the table that is created in the destination database.
         /// </summary>
         public TableSchema Schema { get; }
 

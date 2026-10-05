@@ -98,10 +98,12 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
                 source.CopySchemaTo("Person", target);
 
                 // Act
-                source.CopySchemaTo("sales.order_line", target);
+                var result = source.CopySchemaTo("sales.order_line", target);
 
                 // Assert
-                Helper.AssertTargetMatchesSource("sales.order_line");
+                Assert.AreEqual("sales", result.SourceSchema);
+                Assert.AreEqual("public", result.DestinationSchema);
+                Assert.IsTrue(Helper.TargetTableExists("public.order_line"));
             }
         }
 
@@ -116,7 +118,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
                 source.CopySchemaTo("country", target);
 
                 // Act/Assert
-                Assert.Throws<InvalidOperationException>(() => source.CopySchemaTo("country", target, CopySchemaExistsBehavior.Throw));
+                Assert.Throws<InvalidOperationException>(() => source.CopySchemaTo("country", target, tableExistenceBehavior: CopySchemaExistsBehavior.Throw));
             }
         }
 
@@ -140,10 +142,11 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
 
                 // Assert
                 CollectionAssert.AreEquivalent(new[] { "order_line", "node_a", "node_b", "Person", "country" }, created);
-                foreach (var table in tables)
+                foreach (var table in tables.Where(table => table != "sales.order_line"))
                 {
                     Helper.AssertTargetMatchesSource(table);
                 }
+                Assert.IsTrue(Helper.TargetTableExists("public.order_line"));
             }
         }
 

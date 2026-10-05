@@ -11,7 +11,9 @@ using System.Data;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using RepoDb.Data.Core.UnitTests.CustomObjects;
 using RepoDb.Data.Enumerations;
+using RepoDb.Exceptions;
 using RepoDb.Schema.Enumerations;
 
 namespace RepoDb.Data.Core.UnitTests.Extensions
@@ -101,6 +103,44 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
                 Assert.Throws<ArgumentException>(() =>
                     GetConnection().CopyDataTo("Person", "Customer", GetConnection(), tableExistenceBehavior: behavior));
             }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnCopyDataToIfTheTablesHaveDifferentNamesAndTheTargetTableHasASchema()
+        {
+            // Act/Assert
+            Assert.Throws<ArgumentException>(() =>
+                GetConnection().CopyDataTo("Person", "Sales.Customer", new CustomDbConnection()));
+            Assert.Throws<ArgumentException>(() =>
+                GetConnection().CopyDataTo("Person", "[Sales].[Customer]", new CustomDbConnection()));
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnCopyDataToAsyncIfTheTablesHaveDifferentNamesAndTheTargetTableHasASchema()
+        {
+            // Act/Assert
+            await Assert.ThrowsAsync<ArgumentException>(() =>
+                GetConnection().CopyDataToAsync("Person", "Sales.Customer", new CustomDbConnection()));
+        }
+
+        [TestMethod]
+        public void TestCopyDataToWithATargetTableOfAnotherSchemaCopiesTheSchema()
+        {
+            // Act/Assert (the table has the same name, so it is valid and the schema is copied, but there is no schema reader for the connection)
+            Assert.Throws<MissingMappingException>(() =>
+                GetConnection().CopyDataTo("Person", "Sales.Person", new CustomDbConnection()));
+            Assert.Throws<MissingMappingException>(() =>
+                GetConnection().CopyDataTo("Person", "[Sales].[Person]", new CustomDbConnection()));
+            Assert.Throws<MissingMappingException>(() =>
+                new CustomDbConnection().CopyDataTo("[dbo].[Person]", "Sales.Person", new CustomDbConnection()));
+        }
+
+        [TestMethod]
+        public async Task TestCopyDataToAsyncWithATargetTableOfAnotherSchemaCopiesTheSchema()
+        {
+            // Act/Assert
+            await Assert.ThrowsAsync<MissingMappingException>(() =>
+                GetConnection().CopyDataToAsync("Person", "Sales.Person", new CustomDbConnection()));
         }
 
         [TestMethod]

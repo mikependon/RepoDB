@@ -9,11 +9,17 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using RepoDb.DbSettings;
 
 namespace RepoDb.Schema.PostgreSql.UnitTests.CustomObjects
 {
     public class CustomDbConnection : DbConnection, IDbConnection
     {
+        static CustomDbConnection()
+        {
+            DbSettingMapper.Add<CustomDbConnection>(new PostgreSqlDbSetting(), true);
+        }
+
         public override string ConnectionString { get; set; }
 
         public List<string> ExecutedCommands { get; } = new List<string>();

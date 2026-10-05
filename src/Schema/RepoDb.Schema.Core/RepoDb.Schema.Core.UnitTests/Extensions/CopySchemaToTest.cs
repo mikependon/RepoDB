@@ -216,7 +216,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapComposer("CREATE TABLE [Person] ([Id] int);");
 
             // Act
-            var result = new CustomDbConnection().CopySchemaTo("Person", new CustomDbConnection(), CopySchemaExistsBehavior.Drop);
+            var result = new CustomDbConnection().CopySchemaTo("Person", new CustomDbConnection(), tableExistenceBehavior: CopySchemaExistsBehavior.Drop);
 
             // Assert
             Assert.AreEqual(CopySchemaExistsBehavior.Drop, result.Action);
@@ -365,7 +365,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapComposer("CREATE TABLE [Person] ([Id] int);");
 
             // Act
-            var result = await new CustomDbConnection().CopySchemaToAsync("Person", new CustomDbConnection(), CopySchemaExistsBehavior.Align);
+            var result = await new CustomDbConnection().CopySchemaToAsync("Person", new CustomDbConnection(), tableExistenceBehavior: CopySchemaExistsBehavior.Align);
 
             // Assert
             Assert.AreEqual(CopySchemaExistsBehavior.Align, result.Action);
