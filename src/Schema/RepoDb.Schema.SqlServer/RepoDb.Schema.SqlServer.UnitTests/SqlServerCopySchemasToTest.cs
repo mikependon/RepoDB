@@ -71,7 +71,6 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         private static TableSchema Table(string tableName, params string[] references) =>
             SchemaTable("dbo", tableName, references);
 
-        // The reader gives the relationships ordered like the SQL Server reader does, from the schemas that the tables have
         private static void MapReader(params TableSchema[] schemas)
         {
             var reader = new Mock<ISchemaReader>();
@@ -152,7 +151,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         [TestMethod]
         public void TestSqlServerCopySchemasToOfTablesThatReferenceEachOther()
         {
-            // Setup (A -> B -> C -> A)
+            // Setup
             MapReader(Table("A", "B"), Table("B", "C"), Table("C", "A"));
             MapComposer();
             var destination = new CustomDbConnection();
@@ -161,7 +160,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             var results = new List<CopySchemaResult>();
             new CustomDbConnection().CopySchemaTo(new[] { "A", "B", "C" }, destination, createdCallback: results.Add);
 
-            // Assert (all the tables are created before any foreign key, so the cycle can be created)
+            // Assert
             CollectionAssert.AreEqual(new[] { "A", "B", "C" }, results.Select(t => t.TableName).ToArray());
             Assert.AreEqual(3, Tables(destination).Length);
             Assert.AreEqual(3, ForeignKeys(destination).Length);
@@ -255,7 +254,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             // Act
             new CustomDbConnection().CopySchemaTo(new[] { "Person", "Country" }, new CustomDbConnection(), createdCallback: results.Add);
 
-            // Assert (each table is reported once its schema is created, and the Country does not wait for the foreign key of the Person)
+            // Assert
             CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.TableName).ToArray());
             StringAssert.StartsWith(results[0].Script, "CREATE TABLE [dbo].[Country]", StringComparison.Ordinal);
             StringAssert.StartsWith(results[1].Script, "CREATE TABLE [dbo].[Person]", StringComparison.Ordinal);
@@ -279,7 +278,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
                 destination,
                 createdCallback: r => reported.Add((r.TableName, destination.ExecutedCommands.Count)));
 
-            // Assert (3 tables and 1 foreign key: the tables without foreign keys are created with their tables)
+            // Assert
             Assert.AreEqual(3, reported.Count);
             Assert.AreEqual(("Person", 4), reported.Single(r => r.Table == "Person"));
             Assert.AreEqual(("Country", 1), reported.Single(r => r.Table == "Country"));
@@ -303,7 +302,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
                 destination,
                 createdCallback: r => reported.Add((r.TableName, destination.ExecutedCommands.Count)));
 
-            // Assert (2 tables, 1 index and 1 foreign key)
+            // Assert
             Assert.AreEqual(("Category", 1), reported[0]);
             Assert.AreEqual(("Product", 4), reported[1]);
         }
@@ -324,7 +323,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             // Act
             new CustomDbConnection().CopySchemaTo(new[] { "Person", "Country" }, destination, errorCallback: errors.Add);
 
-            // Assert (2 tables and the foreign key of the Person)
+            // Assert
             Assert.AreEqual(1, errors.Count);
             Assert.AreEqual(2, errors[0].StatementIndex);
             Assert.AreEqual("Person", errors[0].TableName, StringComparer.Ordinal);
@@ -368,7 +367,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
                 createdCallback: created.Add,
                 errorCallback: _ => { });
 
-            // Assert (the foreign key of the Person failed, so the error is in the result of the Person only)
+            // Assert
             CollectionAssert.AreEqual(new[] { "Country", "Person" }, created.Select(r => r.TableName).ToArray());
             Assert.AreEqual(0, created[0].Errors.Count);
             Assert.AreEqual(CopySchemaOutcome.Created, created[0].Outcome);
@@ -392,7 +391,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
                     destination,
                     errorCallback: _ => throw new NotSupportedException()));
 
-            // Assert (only the first statement was executed)
+            // Assert
             Assert.AreEqual(1, destination.ExecutedCommands.Count);
         }
 

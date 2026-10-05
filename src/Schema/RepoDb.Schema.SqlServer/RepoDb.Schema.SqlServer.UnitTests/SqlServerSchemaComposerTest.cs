@@ -719,7 +719,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             // Act
             var actual = composer.ComposeSchemas(new[] { first, second }).ToList();
 
-            // Assert (all the tables, then all the indexes, then all the foreign keys)
+            // Assert
             Assert.AreEqual(5, actual.Count);
             StringAssert.StartsWith(actual[0], "CREATE TABLE [dbo].[Person]", StringComparison.Ordinal);
             StringAssert.StartsWith(actual[1], "CREATE TABLE [dbo].[Country]", StringComparison.Ordinal);
@@ -731,7 +731,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         [TestMethod]
         public void TestSqlServerSchemaComposerComposeSchemasCreatesTheForeignKeysAfterAllTheTables()
         {
-            // Setup (two tables that reference each other)
+            // Setup
             var composer = new SqlServerSchemaComposer();
             var a = new TableSchema("CycleA", "dbo");
             a.Columns.Add(GetColumn("Id", "int", typeof(int), 1, false));
@@ -1048,6 +1048,66 @@ namespace RepoDb.Schema.SqlServer.UnitTests
 
             // Assert
             Assert.IsInstanceOfType<ISchemaComposer>(composer);
+        }
+
+        #endregion
+
+        #region ComposeName / Exists
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeName()
+        {
+            // Act/Assert
+            var composer = new SqlServerSchemaComposer();
+            Assert.AreEqual("dbo.Person", composer.ComposeName(new TableInfo("Person", "dbo")));
+            Assert.AreEqual("dbo.[Odd.Name]", composer.ComposeName(new TableInfo("Odd.Name", "dbo")));
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeNameWithoutSchema()
+        {
+            // Act/Assert
+            Assert.AreEqual("Person", new SqlServerSchemaComposer().ComposeName(new TableInfo("Person", null)));
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnSqlServerSchemaComposerComposeNameIfTheTableIsNull()
+        {
+            // Act/Assert
+            Assert.Throws<ArgumentNullException>(() => new SqlServerSchemaComposer().ComposeName(null));
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeTableExists()
+        {
+            // Act/Assert
+            Assert.AreEqual("SELECT CASE WHEN OBJECT_ID(N'[dbo].[Person]', N'U') IS NULL THEN 0 ELSE 1 END;", new SqlServerSchemaComposer().ComposeTableExists("dbo.Person"));
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeColumnExists()
+        {
+            // Act/Assert
+            Assert.AreEqual("SELECT CASE WHEN COL_LENGTH(N'[dbo].[Person]', N'Name') IS NULL THEN 0 ELSE 1 END;", new SqlServerSchemaComposer().ComposeColumnExists("dbo.Person", "Name"));
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeIndexExists()
+        {
+            // Act/Assert
+            Assert.AreEqual("SELECT CASE WHEN EXISTS (SELECT 1 FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Person]') AND name = N'IX_Person_Name') THEN 1 ELSE 0 END;", new SqlServerSchemaComposer().ComposeIndexExists("dbo.Person", "IX_Person_Name"));
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeExistsEscapesTheSingleQuotes()
+        {
+            // Act
+            var composer = new SqlServerSchemaComposer();
+
+            // Assert
+            StringAssert.Contains(composer.ComposeColumnExists("dbo.Person", "O'Brien"), "O''Brien", StringComparison.Ordinal);
+            StringAssert.Contains(composer.ComposeIndexExists("dbo.Person", "IX_O'Brien"), "IX_O''Brien", StringComparison.Ordinal);
+            StringAssert.Contains(composer.ComposeTableExists("dbo.\"O'Brien\""), "O''Brien", StringComparison.Ordinal);
         }
 
         #endregion

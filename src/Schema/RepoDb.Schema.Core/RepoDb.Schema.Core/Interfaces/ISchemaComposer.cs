@@ -75,6 +75,36 @@ namespace RepoDb.Schema
         string ComposeDropTable(string tableName);
 
         /// <summary>
+        /// Composes the name of the table, in the dialect of the destination database, so it can be given to the other methods that take the name of a table.
+        /// </summary>
+        /// <param name="table">The identity (name and schema) of the table.</param>
+        /// <returns>The name of the table, i.e.: <c>dbo.Person</c> or <c>public."Order Details"</c>.</returns>
+        string ComposeName(TableInfo table);
+
+        /// <summary>
+        /// Composes the statement that checks whether the table exists in the destination database.
+        /// </summary>
+        /// <param name="tableName">The name of the table (see <see cref="ComposeName"/>).</param>
+        /// <returns>The SQL statement, that returns <c>1</c> if the table exists, and <c>0</c> if not.</returns>
+        string ComposeTableExists(string tableName);
+
+        /// <summary>
+        /// Composes the statement that checks whether a column exists in a table of the destination database.
+        /// </summary>
+        /// <param name="tableName">The name of the table (see <see cref="ComposeName"/>).</param>
+        /// <param name="columnName">The name of the column.</param>
+        /// <returns>The SQL statement, that returns <c>1</c> if the column exists, and <c>0</c> if not.</returns>
+        string ComposeColumnExists(string tableName, string columnName);
+
+        /// <summary>
+        /// Composes the statement that checks whether an index exists in a table of the destination database.
+        /// </summary>
+        /// <param name="tableName">The name of the table (see <see cref="ComposeName"/>).</param>
+        /// <param name="indexName">The name of the index.</param>
+        /// <returns>The SQL statement, that returns <c>1</c> if the index exists, and <c>0</c> if not.</returns>
+        string ComposeIndexExists(string tableName, string indexName);
+
+        /// <summary>
         /// Composes the data type of a column (including its size, precision and scale) in the dialect of the destination database.
         /// </summary>
         /// <param name="column">The column (as read from the source database) to be mapped.</param>

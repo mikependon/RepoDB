@@ -37,7 +37,6 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
 
         #region Helpers
 
-        // The reader owns the connection it reads from, so it is mapped for the connection that is used as the source of the copy.
         private static void MapSchemaReaderConnection(SqlConnection source) =>
             SchemaReaderMapper.Add<SqlConnection>(new SqlServerSchemaReader(source), true);
 
@@ -97,7 +96,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
 
-                // Act (copying the tables one by one in this order fails, as the table references one that does not exist yet)
+                // Act
                 source.CopySchemaTo(new[] { "Person", "Country" }, target);
 
                 // Assert
@@ -144,13 +143,13 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 MapSchemaReaderConnection(source);
                 var reported = new List<(string Table, List<string> TargetTables)>();
 
-                // Act (the tables that exist in the target when each schema is reported)
+                // Act
                 source.CopySchemaTo(
                     new[] { "Person", "Country", "NoKey" },
                     target,
                     createdCallback: r => reported.Add((r.TableName, GetTargetTables())));
 
-                // Assert (the Country and the NoKey do not wait for the foreign key of the Person)
+                // Assert
                 Assert.AreEqual(3, reported.Count);
                 Assert.AreEqual("Person", reported.Last().Table, StringComparer.Ordinal);
                 Assert.AreEqual(3, reported.Last().TargetTables.Count);
@@ -172,7 +171,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 var results = new List<CopySchemaResult>();
                 source.CopySchemaTo(tables, target, createdCallback: results.Add);
 
-                // Assert (every table is reported once)
+                // Assert
                 Assert.AreEqual(tables.Count, results.Count);
                 Assert.AreEqual(tables.Count, results.Select(r => Helper.FormatName(r.SourceSchema, r.TableName)).Distinct(StringComparer.OrdinalIgnoreCase).Count());
             }
@@ -191,7 +190,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 var results = new List<CopySchemaResult>();
                 source.CopySchemaTo(new[] { "Person", "Country" }, target, createdCallback: results.Add);
 
-                // Assert (in the order that the tables were created)
+                // Assert
                 CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.TableName).ToArray());
                 var person = results[1];
                 Assert.AreEqual("dbo", person.SourceSchema, StringComparer.Ordinal);
@@ -254,7 +253,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
 
-                // Act (copying the tables one by one fails, as each one references the other)
+                // Act
                 source.CopySchemaTo(new[] { "CycleA", "CycleB" }, target);
 
                 // Assert
@@ -505,7 +504,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
 
-                // Act (the copy of all the tables is undone as a whole)
+                // Act
                 using (var transaction = target.BeginTransaction())
                 {
                     source.CopySchemaTo(new[] { "Country", "Person", "CycleA", "CycleB" }, target, transaction: transaction);
@@ -547,7 +546,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
 
-                // Act/Assert (the Shipment table references the Country and the OrderLine tables)
+                // Act/Assert
                 Assert.Throws<SqlException>(() => source.CopySchemaTo(new[] { "Shipment" }, target));
             }
         }
@@ -580,8 +579,8 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 MapSchemaReaderConnection(source);
                 source.CopySchemaTo(new[] { "NoKey" }, target);
 
-                // Act/Assert (the existence behavior is not enforced yet, so the creation of the existing table fails)
-                Assert.Throws<SqlException>(() => source.CopySchemaTo(new[] { "NoKey" }, target));
+                // Act/Assert
+                Assert.Throws<InvalidOperationException>(() => source.CopySchemaTo(new[] { "NoKey" }, target, CopySchemaExistsBehavior.Throw));
             }
         }
 
@@ -594,7 +593,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
 
-                // Act/Assert (a table without columns cannot be created)
+                // Act/Assert
                 Assert.Throws<SqlException>(() => source.CopySchemaTo(new[] { "MissingTable" }, target));
             }
         }
@@ -750,8 +749,8 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 MapSchemaReaderConnection(source);
                 await source.CopySchemaToAsync(new[] { "NoKey" }, target);
 
-                // Act/Assert (the existence behavior is not enforced yet, so the creation of the existing table fails)
-                await Assert.ThrowsAsync<SqlException>(() => source.CopySchemaToAsync(new[] { "NoKey" }, target));
+                // Act/Assert
+                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopySchemaToAsync(new[] { "NoKey" }, target, CopySchemaExistsBehavior.Throw));
             }
         }
 
@@ -797,7 +796,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             using (var source = new SqlConnection(Database.ConnectionStringForSource))
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
             {
-                // Setup (the Person references the Country, which does not exist in the target)
+                // Setup
                 MapSchemaReaderConnection(source);
                 var errors = new List<CopySchemaError>();
 
@@ -824,14 +823,14 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 MapSchemaReaderConnection(source);
                 var created = new List<CopySchemaResult>();
 
-                // Act (the foreign key of the Person fails, but its table and its index are created)
+                // Act
                 source.CopySchemaTo(
                     new[] { "Person" },
                     target,
                     createdCallback: created.Add,
                     errorCallback: _ => { });
 
-                // Assert (the Person is reported with the error of its foreign key)
+                // Assert
                 Assert.AreEqual(1, created.Count);
                 Assert.AreEqual(1, created[0].Errors.Count);
                 Assert.IsInstanceOfType<SqlException>(created[0].Errors[0].Exception);
@@ -846,10 +845,12 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         [TestMethod]
         public void TestCopySchemasToWithErrorCallbackContinuesWithTheOtherTables()
         {
+            Helper.DisableExistenceChecks();
+
             using (var source = new SqlConnection(Database.ConnectionStringForSource))
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
             {
-                // Setup (the NoKey table already exists in the target)
+                // Setup
                 MapSchemaReaderConnection(source);
                 source.CopySchemaTo(new[] { "NoKey" }, target);
                 var created = new List<CopySchemaResult>();
@@ -862,7 +863,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                     createdCallback: created.Add,
                     errorCallback: errors.Add);
 
-                // Assert (the error is in the result of the NoKey only)
+                // Assert
                 Assert.AreEqual(1, errors.Count);
                 Assert.AreEqual("NoKey", errors[0].TableName, StringComparer.Ordinal);
                 StringAssert.StartsWith(errors[0].Statement, "CREATE TABLE [dbo].[NoKey]", StringComparison.Ordinal);
@@ -877,6 +878,8 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         [TestMethod]
         public void TestCopySchemasToWithErrorCallbackCanCopyTheWholeDatabaseTwice()
         {
+            Helper.DisableExistenceChecks();
+
             using (var source = new SqlConnection(Database.ConnectionStringForSource))
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
             {
@@ -887,14 +890,14 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 var errors = new List<CopySchemaError>();
                 var created = new List<CopySchemaResult>();
 
-                // Act (everything already exists, so every statement fails)
+                // Act
                 source.CopySchemaTo(
                     tables,
                     target,
                     createdCallback: created.Add,
                     errorCallback: errors.Add);
 
-                // Assert (every table is reported with its errors, and every error is in the result of a table)
+                // Assert
                 Assert.IsTrue(errors.Count >= tables.Count);
                 Assert.IsTrue(errors.All(e => e.Exception is SqlException));
                 Assert.AreEqual(tables.Count, created.Count);
@@ -911,10 +914,12 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         [TestMethod]
         public void TestCopySchemasToStopsIfTheErrorCallbackThrows()
         {
+            Helper.DisableExistenceChecks();
+
             using (var source = new SqlConnection(Database.ConnectionStringForSource))
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
             {
-                // Setup (the NoKey table already exists in the target, and it is the first one that is created)
+                // Setup
                 MapSchemaReaderConnection(source);
                 source.CopySchemaTo(new[] { "NoKey" }, target);
                 var created = new List<string>();
@@ -927,7 +932,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                         createdCallback: r => created.Add(r.TableName),
                         errorCallback: _ => throw new NotSupportedException()));
 
-                // Assert (nothing else is created)
+                // Assert
                 Assert.AreEqual(0, created.Count);
                 CollectionAssert.AreEqual(new[] { "dbo.NoKey" }, GetTargetTables());
             }
@@ -936,6 +941,8 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         [TestMethod]
         public void ThrowExceptionOnCopySchemasToIfTheErrorCallbackThrowsTheCapturedException()
         {
+            Helper.DisableExistenceChecks();
+
             using (var source = new SqlConnection(Database.ConnectionStringForSource))
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
             {
@@ -952,7 +959,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                         throw e.Exception;
                     }));
 
-                // Assert (the exception that was captured is the one that is thrown)
+                // Assert
                 Assert.AreSame(raised.Exception, exception);
             }
         }
@@ -960,6 +967,8 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         [TestMethod]
         public void ThrowExceptionOnCopySchemasToIfTheErrorCallbackThrows()
         {
+            Helper.DisableExistenceChecks();
+
             using (var source = new SqlConnection(Database.ConnectionStringForSource))
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
             {
@@ -976,6 +985,8 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         [TestMethod]
         public void TestCopySchemasToWithErrorCallbackInTransactionThatTheServerRollsBack()
         {
+            Helper.DisableExistenceChecks();
+
             using (var source = new SqlConnection(Database.ConnectionStringForSource))
             using (var target = new SqlConnection(Database.ConnectionStringForTarget).EnsureOpen())
             {
@@ -983,7 +994,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 MapSchemaReaderConnection(source);
                 source.CopySchemaTo(new[] { "NoKey" }, target);
 
-                // Act (SQL Server rolls back the transaction itself when the creation of the existing table fails, so skipping the error does not save it)
+                // Act
                 using (var transaction = target.BeginTransaction())
                 {
                     source.CopySchemaTo(
@@ -994,7 +1005,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                     Assert.Throws<InvalidOperationException>(() => transaction.Commit());
                 }
 
-                // Assert (nothing of the transaction is kept)
+                // Assert
                 CollectionAssert.AreEqual(new[] { "dbo.NoKey" }, GetTargetTables());
             }
         }
@@ -1005,7 +1016,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             using (var source = new SqlConnection(Database.ConnectionStringForSource))
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
             {
-                // Setup (the errors of reading the schemas are not reported to the error callback)
+                // Setup
                 var errors = 0;
 
                 // Act/Assert
@@ -1043,6 +1054,8 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         [TestMethod]
         public async Task TestCopySchemasToAsyncWithErrorCallbackContinuesWithTheOtherTables()
         {
+            Helper.DisableExistenceChecks();
+
             using (var source = new SqlConnection(Database.ConnectionStringForSource))
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
             {
@@ -1069,6 +1082,8 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         [TestMethod]
         public async Task TestCopySchemasToAsyncStopsIfTheErrorCallbackThrows()
         {
+            Helper.DisableExistenceChecks();
+
             using (var source = new SqlConnection(Database.ConnectionStringForSource))
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
             {
@@ -1091,6 +1106,8 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         [TestMethod]
         public async Task ThrowExceptionOnCopySchemasToAsyncIfTheErrorCallbackThrowsTheCapturedException()
         {
+            Helper.DisableExistenceChecks();
+
             using (var source = new SqlConnection(Database.ConnectionStringForSource))
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
             {

@@ -106,7 +106,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
         [TestMethod]
         public void TestPostgreSqlSchemaReaderOrderMovesOnlyWhatMustMove()
         {
-            // Act (B must come after A, and the other tables stay where they were)
+            // Act
             var actual = Order(Table("B", "A"), Table("X"), Table("A"), Table("Y"));
 
             // Assert
@@ -138,7 +138,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
         [TestMethod]
         public void TestPostgreSqlSchemaReaderOrderOfLongChain()
         {
-            // Setup (a chain of 500 tables, given in the reverse order)
+            // Setup
             var schemas = Enumerable.Range(1, 500)
                 .Select(i => i == 1 ? Table("T1") : Table($"T{i}", $"T{i - 1}"))
                 .Reverse()
@@ -154,7 +154,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
         [TestMethod]
         public void TestPostgreSqlSchemaReaderOrderOfLongCycle()
         {
-            // Setup (a cycle of 500 tables)
+            // Setup
             var schemas = Enumerable.Range(1, 500)
                 .Select(i => Table($"T{i}", $"T{i % 500 + 1}"))
                 .ToArray();
@@ -162,7 +162,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
             // Act
             var actual = Order(schemas);
 
-            // Assert (they have no order between them, so they are kept as they were given)
+            // Assert
             CollectionAssert.AreEqual(schemas.Select(s => s.Table.Name).ToArray(), actual);
         }
 
@@ -220,7 +220,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
         [TestMethod]
         public void TestPostgreSqlSchemaReaderOrderIsNotTransitive()
         {
-            // Act (C references B and B references A, but B is not given)
+            // Act
             var actual = Relationships(Table("C", "B"), Table("A"));
 
             // Assert
@@ -231,7 +231,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
         [TestMethod]
         public void TestPostgreSqlSchemaReaderOrderMatchesTheNamesCaseSensitively()
         {
-            // Act (the names are case-sensitive, so the Child does not reference the Parent)
+            // Act
             var actual = Relationships(Table("Child", "public.PARENT"), Table("Parent"));
 
             // Assert
@@ -371,7 +371,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
         [TestMethod]
         public void TestPostgreSqlSchemaReaderOrderOfCycleWithATableThatDependsOnIt()
         {
-            // Act (the leaf is given first, but it references a table of the cycle)
+            // Act
             var actual = Order(Table("Leaf", "B"), Table("A", "B"), Table("B", "A"));
 
             // Assert
@@ -394,14 +394,14 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
             // Act
             var actual = Order(Table("A1", "A2"), Table("B1", "B2"), Table("A2", "A1"), Table("B2", "B1"));
 
-            // Assert (each cycle keeps the given order, and the cycles are in the order of their first table)
+            // Assert
             CollectionAssert.AreEqual(new[] { "A1", "A2", "B1", "B2" }, actual);
         }
 
         [TestMethod]
         public void TestPostgreSqlSchemaReaderOrderOfCycleThatDependsOnAnotherCycle()
         {
-            // Act (the second cycle references the first cycle, so the first one comes first)
+            // Act
             var actual = Order(Table("B1", "B2", "A1"), Table("B2", "B1"), Table("A1", "A2"), Table("A2", "A1"));
 
             // Assert
@@ -411,7 +411,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
         [TestMethod]
         public void TestPostgreSqlSchemaReaderOrderOfCycleInsideLongerChain()
         {
-            // Act (Top -> Mid1 <-> Mid2 -> Base)
+            // Act
             var actual = Order(Table("Top", "Mid1"), Table("Mid2", "Mid1", "Base"), Table("Mid1", "Mid2"), Table("Base"));
 
             // Assert
@@ -436,7 +436,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
         [TestMethod]
         public void TestPostgreSqlSchemaReaderOrderOfTheSameGraphInAnyGivenOrder()
         {
-            // Setup (a graph with a diamond, a cycle with a root and a leaf, and an independent table)
+            // Setup
             Func<TableSchema[]> graph = () => new[]
             {
                 Table("A"), Table("B", "A"), Table("C", "A"), Table("D", "B", "C"),
@@ -453,7 +453,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
                 var actual = PostgreSqlSchemaReader.Order(given);
                 var names = Names(actual).ToList();
 
-                // Assert (every table is there once, and each table comes after its parents, except for the tables of the cycle)
+                // Assert
                 Assert.AreEqual(9, names.Count);
                 Assert.AreEqual(9, names.Distinct().Count());
                 foreach (var relationship in actual)

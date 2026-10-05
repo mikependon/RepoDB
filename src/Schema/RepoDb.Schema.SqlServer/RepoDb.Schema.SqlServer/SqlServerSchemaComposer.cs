@@ -200,6 +200,42 @@ namespace RepoDb.Schema
             $"DROP TABLE IF EXISTS {Name(tableName)};";
 
         /// <summary>
+        /// Composes the name of the table, in the dialect of the destination database, so it can be given to the other methods that take the name of a table.
+        /// </summary>
+        /// <param name="table">The identity (name and schema) of the table.</param>
+        /// <returns>The name of the table.</returns>
+        public string ComposeName(TableInfo table) =>
+            Helper.Format((table ?? throw new ArgumentNullException(nameof(table))).Schema, table.Name);
+
+        /// <summary>
+        /// Composes the statement that checks whether the table exists in the destination database.
+        /// </summary>
+        /// <param name="tableName">The name of the table.</param>
+        /// <returns>The SQL statement, that returns <c>1</c> if the table exists, and <c>0</c> if not.</returns>
+        public string ComposeTableExists(string tableName) =>
+            $"SELECT CASE WHEN OBJECT_ID(N'{Literal(Name(tableName))}', N'U') IS NULL THEN 0 ELSE 1 END;";
+
+        /// <summary>
+        /// Composes the statement that checks whether a column exists in a table of the destination database.
+        /// </summary>
+        /// <param name="tableName">The name of the table.</param>
+        /// <param name="columnName">The name of the column.</param>
+        /// <returns>The SQL statement, that returns <c>1</c> if the column exists, and <c>0</c> if not.</returns>
+        public string ComposeColumnExists(string tableName,
+            string columnName) =>
+            $"SELECT CASE WHEN COL_LENGTH(N'{Literal(Name(tableName))}', N'{Literal(columnName)}') IS NULL THEN 0 ELSE 1 END;";
+
+        /// <summary>
+        /// Composes the statement that checks whether an index exists in a table of the destination database.
+        /// </summary>
+        /// <param name="tableName">The name of the table.</param>
+        /// <param name="indexName">The name of the index.</param>
+        /// <returns>The SQL statement, that returns <c>1</c> if the index exists, and <c>0</c> if not.</returns>
+        public string ComposeIndexExists(string tableName,
+            string indexName) =>
+            $"SELECT CASE WHEN EXISTS (SELECT 1 FROM sys.indexes WHERE object_id = OBJECT_ID(N'{Literal(Name(tableName))}') AND name = N'{Literal(indexName)}') THEN 1 ELSE 0 END;";
+
+        /// <summary>
         /// Composes the data type of a column (including its size, precision and scale) in the dialect of the destination database.
         /// </summary>
         /// <param name="column">The column (as read from the source database) to be mapped.</param>
@@ -257,6 +293,14 @@ namespace RepoDb.Schema
         /// <returns></returns>
         private static string Name(string name) =>
             Helper.QuoteName(name);
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private static string Literal(string value) =>
+            value.Replace("'", "''");
 
         /// <summary>
         /// 

@@ -52,7 +52,6 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         private static List<RelationshipInfo> GetRelationships(params TableSchema[] schemas) =>
             schemas.Select(s => new RelationshipInfo { Schema = s }).ToList();
 
-        // The reader returns the relationships (the tables in the order that they must be created)
         private static Mock<ISchemaReader> MapReader(List<RelationshipInfo> relationships)
         {
             var reader = new Mock<ISchemaReader>();
@@ -71,7 +70,6 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             return composer;
         }
 
-        // Collects the name of the table and the number of the statements that were executed when its schema was reported
         private static Action<CopySchemaResult> Collect(CustomDbConnection destination, List<(string Table, int Executed)> reported) =>
             result => reported.Add((result.TableName, destination.ExecutedCommands.Count));
 
@@ -147,7 +145,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         [TestMethod]
         public void TestCopySchemasToWithoutTablesDoesNothing()
         {
-            // Setup (there is no mapping, as nothing is read and nothing is composed)
+            // Setup
             var destination = new CustomDbConnection();
             var reported = new List<(string Table, int Executed)>();
 
@@ -244,8 +242,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         [TestMethod]
         public void TestCopySchemasToCallsTheCallbackOnceTheSchemaOfTheTableIsCreated()
         {
-            // Setup (the Country has no index and no foreign key, so it is created by its first statement,
-            // and the Person is created by its last statement)
+            // Setup
             MapReader(GetRelationships(GetSchema("Country"), GetSchema("Person", 1, 1, 1)));
             MapComposer("CREATE TABLE Country;", "CREATE TABLE Person;", "CREATE INDEX IX_Person;", "ALTER TABLE Person ADD FK;");
             var destination = new CustomDbConnection();
@@ -263,7 +260,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         [TestMethod]
         public void TestCopySchemasToCallsTheCallbackAfterTheIndexesOfTheTable()
         {
-            // Setup (the Person has an index, but no foreign key)
+            // Setup
             MapReader(GetRelationships(GetSchema("Person", 1, 2, 0), GetSchema("Solo")));
             MapComposer("CREATE TABLE Person;", "CREATE TABLE Solo;", "CREATE INDEX IX_1;", "CREATE INDEX IX_2;");
             var destination = new CustomDbConnection();
@@ -280,7 +277,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         [TestMethod]
         public void TestCopySchemasToCallsTheCallbackAfterTheForeignKeysOfTheTablesThatReferenceEachOther()
         {
-            // Setup (A <-> B: all the tables are created before the foreign keys)
+            // Setup
             MapReader(GetRelationships(GetSchema("A", 1, 0, 1), GetSchema("B", 1, 0, 1)));
             MapComposer("CREATE TABLE A;", "CREATE TABLE B;", "ALTER TABLE A ADD FK;", "ALTER TABLE B ADD FK;");
             var destination = new CustomDbConnection();
@@ -297,7 +294,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         [TestMethod]
         public void TestCopySchemasToCallsTheCallbackOfTheTableWithoutObjectsBeforeTheOthersAreCompleted()
         {
-            // Setup (the Solo table is created before the foreign key of the other table)
+            // Setup
             MapReader(GetRelationships(GetSchema("Solo"), GetSchema("Child", 1, 0, 1)));
             MapComposer("CREATE TABLE Solo;", "CREATE TABLE Child;", "ALTER TABLE Child ADD FK;");
             var destination = new CustomDbConnection();
@@ -314,7 +311,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         [TestMethod]
         public void TestCopySchemasToCallsTheCallbackForAllTheTablesAfterTheScriptIfTheStatementsOfTheTablesAreNotKnown()
         {
-            // Setup (the composer composed less statements than the expected number: 2 tables and a foreign key)
+            // Setup
             MapReader(GetRelationships(GetSchema("Country"), GetSchema("Person", 1, 0, 1)));
             MapComposer("CREATE TABLE Country;", "CREATE TABLE Person;");
             var destination = new CustomDbConnection();
@@ -373,7 +370,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         [TestMethod]
         public void TestCopySchemasToCallbackIsCalledOnceForTheTableThatIsGivenTwice()
         {
-            // Setup (the reader returns one relationship for the table that is given twice)
+            // Setup
             MapReader(GetRelationships(GetSchema("Person")));
             MapComposer("CREATE TABLE Person;");
             var results = new List<CopySchemaResult>();

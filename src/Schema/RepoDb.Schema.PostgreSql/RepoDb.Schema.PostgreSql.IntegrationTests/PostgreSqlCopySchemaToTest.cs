@@ -36,7 +36,6 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
 
         #region Helpers
 
-        // The reader owns the connection it reads from, so it is mapped for the connection that is used as the source of the copy.
         private static void MapSchemaReaderConnection(NpgsqlConnection source) =>
             SchemaReaderMapper.Add<NpgsqlConnection>(new PostgreSqlSchemaReader(source), true);
 
@@ -117,7 +116,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
                 source.CopySchemaTo("country", target);
 
                 // Act/Assert
-                Assert.Throws<PostgresException>(() => source.CopySchemaTo("country", target));
+                Assert.Throws<InvalidOperationException>(() => source.CopySchemaTo("country", target, CopySchemaExistsBehavior.Throw));
             }
         }
 
@@ -151,10 +150,12 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestPostgreSqlCopySchemaToWithErrorCallbackContinuesWithTheOtherTables()
         {
+            Helper.DisableExistenceChecks();
+
             using (var source = new NpgsqlConnection(Database.ConnectionStringForSource))
             using (var target = new NpgsqlConnection(Database.ConnectionStringForTarget))
             {
-                // Setup (the table already exists in the target)
+                // Setup
                 MapSchemaReaderConnection(source);
                 source.CopySchemaTo("no_key", target);
                 var errors = new List<CopySchemaError>();

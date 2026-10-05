@@ -233,7 +233,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
             // Act
             var actual = new PostgreSqlSchemaComposer().ComposeSchema(GetSchema()).ToList();
 
-            // Assert (the table, its index and its foreign key)
+            // Assert
             Assert.AreEqual(3, actual.Count);
             StringAssert.StartsWith(actual[0], "CREATE TABLE ", StringComparison.Ordinal);
             StringAssert.StartsWith(actual[1], "CREATE UNIQUE INDEX ", StringComparison.Ordinal);
@@ -582,6 +582,67 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
             Assert.AreEqual("timestamptz", TypeName(Column("c", "timestamp with time zone")));
             Assert.AreEqual("time", TypeName(Column("c", "time without time zone")));
             Assert.AreEqual("timetz", TypeName(Column("c", "time with time zone")));
+        }
+
+        #endregion
+
+        #region ComposeName / Exists
+
+        [TestMethod]
+        public void TestPostgreSqlSchemaComposerComposeName()
+        {
+            // Act/Assert
+            var composer = new PostgreSqlSchemaComposer();
+            Assert.AreEqual("public.person", composer.ComposeName(new TableInfo("person", "public")));
+            Assert.AreEqual("public.\"Person\"", composer.ComposeName(new TableInfo("Person", "public")));
+            Assert.AreEqual("public.\"Odd.Name\"", composer.ComposeName(new TableInfo("Odd.Name", "public")));
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlSchemaComposerComposeNameWithoutSchema()
+        {
+            // Act/Assert
+            Assert.AreEqual("person", new PostgreSqlSchemaComposer().ComposeName(new TableInfo("person", null)));
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnPostgreSqlSchemaComposerComposeNameIfTheTableIsNull()
+        {
+            // Act/Assert
+            Assert.Throws<ArgumentNullException>(() => new PostgreSqlSchemaComposer().ComposeName(null));
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlSchemaComposerComposeTableExists()
+        {
+            // Act/Assert
+            Assert.AreEqual("SELECT CASE WHEN EXISTS (SELECT 1 FROM pg_class WHERE oid = to_regclass('\"public\".\"Person\"') AND relkind IN ('r', 'p')) THEN 1 ELSE 0 END;", new PostgreSqlSchemaComposer().ComposeTableExists("public.Person"));
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlSchemaComposerComposeColumnExists()
+        {
+            // Act/Assert
+            Assert.AreEqual("SELECT CASE WHEN EXISTS (SELECT 1 FROM pg_attribute WHERE attrelid = to_regclass('\"public\".\"Person\"') AND attname = 'Name' AND attnum > 0 AND NOT attisdropped) THEN 1 ELSE 0 END;", new PostgreSqlSchemaComposer().ComposeColumnExists("public.Person", "Name"));
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlSchemaComposerComposeIndexExists()
+        {
+            // Act/Assert
+            Assert.AreEqual("SELECT CASE WHEN EXISTS (SELECT 1 FROM pg_index i INNER JOIN pg_class ic ON ic.oid = i.indexrelid WHERE i.indrelid = to_regclass('\"public\".\"Person\"') AND ic.relname = 'IX_Person_Name') THEN 1 ELSE 0 END;", new PostgreSqlSchemaComposer().ComposeIndexExists("public.Person", "IX_Person_Name"));
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlSchemaComposerComposeExistsEscapesTheSingleQuotes()
+        {
+            // Act
+            var composer = new PostgreSqlSchemaComposer();
+
+            // Assert
+            StringAssert.Contains(composer.ComposeColumnExists("public.Person", "O'Brien"), "O''Brien", StringComparison.Ordinal);
+            StringAssert.Contains(composer.ComposeIndexExists("public.Person", "IX_O'Brien"), "IX_O''Brien", StringComparison.Ordinal);
+            StringAssert.Contains(composer.ComposeTableExists("public.\"O'Brien\""), "O''Brien", StringComparison.Ordinal);
         }
 
         #endregion

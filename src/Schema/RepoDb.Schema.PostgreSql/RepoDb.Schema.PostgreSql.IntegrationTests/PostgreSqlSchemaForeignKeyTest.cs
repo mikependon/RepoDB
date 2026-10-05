@@ -234,7 +234,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             Helper.CopyToTarget("color", "preference");
             ExecuteOnTarget("INSERT INTO color VALUES (0), (1); INSERT INTO preference VALUES (1, 1, 1);");
 
-            // Act (the foreign key of the other_id is on delete set null)
+            // Act
             ExecuteOnTarget("DELETE FROM color WHERE id = 1;");
 
             // Assert

@@ -269,7 +269,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             {
                 connection.ExecuteNonQuery("CREATE TABLE in_transaction (id integer);", transaction: transaction);
 
-                // Act/Assert (the table is only visible to the transaction)
+                // Act/Assert
                 Assert.IsTrue(new PostgreSqlSchemaReader(connection, transaction).TableExists("in_transaction"));
                 Assert.IsFalse(CreateReader().TableExists("in_transaction"));
                 transaction.Rollback();

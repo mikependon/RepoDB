@@ -17,7 +17,7 @@ namespace RepoDb.Schema
     /// A class that orders the tables by the foreign keys that they have, and builds the relationships between them.
     /// It is shared by the schema readers, as only the way that a table is identified is different between the databases.
     /// </summary>
-    internal static class SchemaOrderer
+    internal static class CopySchemaOrder
     {
         #region Public Methods
 
@@ -176,87 +176,7 @@ namespace RepoDb.Schema
         /// <returns></returns>
         private static Dictionary<string, int> FindGroups(IEnumerable<string> keys,
             IDictionary<string, List<string>> parentKeys) =>
-            new GroupFinder(parentKeys).Find(keys);
-
-        #endregion
-
-        #region GroupFinder
-
-        /// <summary>
-        /// Finds the groups of the tables that can reach each other (Tarjan's algorithm).
-        /// </summary>
-        private sealed class GroupFinder
-        {
-            private readonly IDictionary<string, List<string>> _parentKeys;
-            private readonly Dictionary<string, int> _groupOf = new Dictionary<string, int>();
-            private readonly Dictionary<string, int> _indexes = new Dictionary<string, int>();
-            private readonly Dictionary<string, int> _lowLinks = new Dictionary<string, int>();
-            private readonly Stack<string> _stack = new Stack<string>();
-            private readonly HashSet<string> _onStack = new HashSet<string>();
-            private int _counter;
-            private int _groups;
-
-            public GroupFinder(IDictionary<string, List<string>> parentKeys)
-            {
-                _parentKeys = parentKeys;
-            }
-
-            /// <summary>
-            /// Gets the group of each table.
-            /// </summary>
-            /// <param name="keys"></param>
-            /// <returns></returns>
-            public Dictionary<string, int> Find(IEnumerable<string> keys)
-            {
-                foreach (var key in keys.Where(key => !_indexes.ContainsKey(key)))
-                {
-                    Visit(key);
-                }
-                return _groupOf;
-            }
-
-            private void Visit(string key)
-            {
-                _indexes[key] = _lowLinks[key] = _counter++;
-                _stack.Push(key);
-                _onStack.Add(key);
-                foreach (var parent in _parentKeys[key])
-                {
-                    VisitParent(key, parent);
-                }
-                if (_lowLinks[key] == _indexes[key])
-                {
-                    TakeGroup(key);
-                }
-            }
-
-            private void VisitParent(string key,
-                string parent)
-            {
-                if (!_indexes.ContainsKey(parent))
-                {
-                    Visit(parent);
-                    _lowLinks[key] = Math.Min(_lowLinks[key], _lowLinks[parent]);
-                }
-                else if (_onStack.Contains(parent))
-                {
-                    _lowLinks[key] = Math.Min(_lowLinks[key], _indexes[parent]);
-                }
-            }
-
-            private void TakeGroup(string root)
-            {
-                string member;
-                do
-                {
-                    member = _stack.Pop();
-                    _onStack.Remove(member);
-                    _groupOf[member] = _groups;
-                }
-                while (member != root);
-                _groups++;
-            }
-        }
+            new CopySchemaGroupFinder(parentKeys).Find(keys);
 
         #endregion
     }

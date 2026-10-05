@@ -106,7 +106,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
         [TestMethod]
         public void ThrowExceptionOnTablesWithCircularReferencesIfTheyAreCreatedOneByOne()
         {
-            // Act/Assert (the first table already references the second one)
+            // Act/Assert
             Assert.Throws<PostgresException>(() => Helper.CopyToTarget("node_a", "node_b"));
         }
 
@@ -116,7 +116,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             // Act
             var statements = Composer.ComposeSchemas(Helper.GetSourceSchemas(new[] { "product", "chain_b", "chain_a" })).ToList();
 
-            // Assert (the tables, then the indexes, then the foreign keys)
+            // Assert
             var kinds = statements.Select(s => s.StartsWith("CREATE TABLE", StringComparison.Ordinal) ? 0 : s.Contains("INDEX") ? 1 : 2).ToList();
             CollectionAssert.AreEqual(kinds.OrderBy(k => k).ToList(), kinds);
             Assert.AreEqual(3, kinds.Count(k => k == 0));
@@ -165,7 +165,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestPostgreSqlSchemaMultipleTablesOfTheWholeDatabaseInTheDependencyOrder()
         {
-            // Act (the reader orders the tables, and the order is used to create them)
+            // Act
             var tables = Helper.GetSourceTables();
             using (var connection = new NpgsqlConnection(Database.ConnectionStringForSource))
             {

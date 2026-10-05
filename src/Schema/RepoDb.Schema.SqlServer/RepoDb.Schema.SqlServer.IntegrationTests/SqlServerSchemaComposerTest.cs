@@ -173,7 +173,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 connection.ExecuteNonQuery("INSERT INTO [dbo].[Country] ([Name]) VALUES (N'Philippines');");
                 connection.ExecuteNonQuery("INSERT INTO [dbo].[Person] ([Name], [CountryId]) VALUES (N'First', 1);");
 
-                // Act (ON DELETE SET NULL)
+                // Act
                 connection.ExecuteNonQuery("DELETE FROM [dbo].[Country];");
                 var countryId = connection.ExecuteScalar<int?>("SELECT [CountryId] FROM [dbo].[Person];");
 

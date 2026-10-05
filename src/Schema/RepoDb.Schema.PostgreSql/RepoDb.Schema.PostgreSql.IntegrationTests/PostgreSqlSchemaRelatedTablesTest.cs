@@ -73,7 +73,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             // Act
             var actual = GetRelatedTables(CopySchemaRelationshipBehavior.TableOnly, "chain_b");
 
-            // Assert (the table is resolved with its schema, and nothing else is returned)
+            // Assert
             CollectionAssert.AreEqual(new[] { "public.chain_b" }, actual);
         }
 
@@ -97,7 +97,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             // Act
             var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Parents, "chain_c");
 
-            // Assert (the parent and the parent of the parent, up to the top of the tree)
+            // Assert
             AssertSame(new[] { "public.chain_c", "public.chain_b", "public.chain_a" }, actual);
             Assert.AreEqual("public.chain_c", actual[0]);
         }
@@ -138,7 +138,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             // Act
             var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Parents, "sales.order_line");
 
-            // Assert (the parent is the table with the case-sensitive name, and its own parent comes too)
+            // Assert
             AssertSame(new[] { "sales.order_line", "public.\"Person\"", "public.country" }, actual);
         }
 
@@ -148,7 +148,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             // Act
             var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Parents, "item_ref");
 
-            // Assert (it references both of them)
+            // Assert
             AssertSame(new[] { "public.item_ref", "public.item", "sales.item" }, actual);
         }
 
@@ -202,7 +202,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             // Act
             var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Children, "chain_a");
 
-            // Assert (the child and the child of the child, down to the end of the tree)
+            // Assert
             AssertSame(new[] { "public.chain_a", "public.chain_b", "public.chain_c" }, actual);
             Assert.AreEqual("public.chain_a", actual[0]);
         }
@@ -243,7 +243,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             // Act
             var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Children, "country");
 
-            // Assert (the child is in another schema, one level down)
+            // Assert
             AssertSame(new[] { "public.country", "public.\"Person\"", "sales.order_line" }, actual);
         }
 
@@ -392,7 +392,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             // Act
             var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Parents, "chain_c", "d_left");
 
-            // Assert (the given tables come first, in the given order)
+            // Assert
             AssertSame(new[] { "public.chain_c", "public.d_left", "public.chain_b", "public.chain_a", "public.d_root" }, actual);
             CollectionAssert.AreEqual(new[] { "public.chain_c", "public.d_left" }, actual.Take(2).ToArray());
         }
@@ -420,7 +420,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestPostgreSqlSchemaRelatedTablesAreComparedWithTheCase()
         {
-            // Act (the names are case-sensitive, so "Person" and "person" are not the same table, and only the existing one has relatives)
+            // Act
             var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Parents, "\"Person\"");
 
             // Assert
@@ -437,7 +437,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
                 var related = reader.GetRelatedTables(new[] { "chain_c" }, CopySchemaRelationshipBehavior.Parents);
                 var actual = reader.GetDependencyOrder(related).Select(r => r.Schema.Table.Name).ToArray();
 
-                // Assert (the tables are ordered so that a table comes after the tables that it references)
+                // Assert
                 CollectionAssert.AreEqual(new[] { "chain_a", "chain_b", "chain_c" }, actual);
             }
         }
@@ -560,7 +560,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
                 // Setup
                 SchemaReaderMapper.Add<NpgsqlConnection>(new PostgreSqlSchemaReader(source), true);
 
-                // Act/Assert (the foreign key can not be created, as the parent is not part of the copy)
+                // Act/Assert
                 Assert.ThrowsExactly<PostgresException>(() =>
                     source.CopySchemaTo(new[] { "chain_b" }, target, relationshipBehavior: CopySchemaRelationshipBehavior.TableOnly));
             }
@@ -613,7 +613,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
                 // Act
                 var result = source.CopySchemaTo("chain_c", target, relationshipBehavior: CopySchemaRelationshipBehavior.Parents);
 
-                // Assert (the result is the one of the given table, and the parents are copied too)
+                // Assert
                 Assert.AreEqual("chain_c", result.TableName);
                 Assert.AreEqual(CopySchemaOutcome.Created, result.Outcome);
                 AssertSame(new[] { "public.chain_a", "public.chain_b", "public.chain_c" }, GetTargetTables().ToArray());
@@ -650,7 +650,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
                 // Act
                 var result = source.CopySchemaTo("public.\"odd.name\"", target, relationshipBehavior: CopySchemaRelationshipBehavior.Children);
 
-                // Assert (the table is identified even if its name needs quoting)
+                // Assert
                 Assert.AreEqual("odd.name", result.TableName);
                 AssertSame(new[] { "public.\"odd.name\"", "public.\"odd name\"" }, GetTargetTables().ToArray());
             }

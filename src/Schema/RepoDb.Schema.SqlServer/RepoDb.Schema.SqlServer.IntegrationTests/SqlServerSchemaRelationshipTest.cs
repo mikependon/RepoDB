@@ -20,7 +20,6 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
     [TestClass]
     public class SqlServerSchemaRelationshipTest
     {
-        // The tables of the source database that are part of a cycle
         private static readonly string[] CyclicTables =
         {
             "dbo.CycleA", "dbo.CycleB", "dbo.RingX", "dbo.RingY", "dbo.RingZ", "dbo.LoopA", "dbo.LoopB"
@@ -73,7 +72,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             // Act
             var actual = GetRelationships("DiamondD", "DiamondB", "DiamondC", "DiamondA");
 
-            // Assert (the root comes first and the table that depends on both branches comes last)
+            // Assert
             Assert.AreEqual("DiamondA", actual[0].Schema.Table.Name, StringComparer.Ordinal);
             Assert.AreEqual("DiamondD", actual[3].Schema.Table.Name, StringComparer.Ordinal);
             CollectionAssert.AreEqual(new[] { "DiamondB", "DiamondC" }, Names(actual.Skip(1).Take(2)));
@@ -139,7 +138,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             // Act
             var actual = GetRelationships("Transfer", "Account");
 
-            // Assert (the parent is listed once, although the table has 2 foreign keys to it)
+            // Assert
             Assert.AreEqual(2, Get(actual, "Transfer").Schema.ForeignKeys.Count);
             Assert.AreEqual(1, Get(actual, "Transfer").Parents.Count);
             Assert.AreEqual(1, Get(actual, "Account").Children.Count);
@@ -167,7 +166,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             // Act
             var actual = GetRelationships("RingX", "RingY", "RingZ");
 
-            // Assert (the tables are kept in the order that they were given, and each one has a parent and a child)
+            // Assert
             CollectionAssert.AreEqual(new[] { "RingX", "RingY", "RingZ" }, Names(actual));
             foreach (var relationship in actual)
             {
@@ -195,7 +194,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             // Act
             var actual = GetRelationships("LoopLeaf", "LoopB", "LoopA", "LoopRoot");
 
-            // Assert (the root comes first, then the cycle in the given order, and the leaf comes last)
+            // Assert
             CollectionAssert.AreEqual(new[] { "LoopRoot", "LoopB", "LoopA", "LoopLeaf" }, Names(actual));
             CollectionAssert.AreEqual(new[] { "LoopA" }, Names(Get(actual, "LoopRoot").Children));
             CollectionAssert.AreEqual(new[] { "LoopB" }, Names(Get(actual, "LoopLeaf").Parents));
@@ -258,7 +257,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             // Act
             var actual = GetRelationships("FanChild3", "FanChild1", "FanRoot", "FanChild4", "FanChild2");
 
-            // Assert (the children are listed in the order that they were given)
+            // Assert
             Assert.AreEqual("FanRoot", actual[0].Schema.Table.Name, StringComparer.Ordinal);
             CollectionAssert.AreEqual(new[] { "FanChild3", "FanChild1", "FanChild4", "FanChild2" }, Names(Get(actual, "FanRoot").Children));
             foreach (var child in actual.Skip(1))
@@ -277,7 +276,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             // Act
             var actual = GetRelationships("dbo.ItemRef", "dbo.Item", "Sales.Item");
 
-            // Assert (the table references the one of the Sales schema only)
+            // Assert
             var reference = actual.Single(r => r.Schema.Table.Name == "ItemRef");
             var sales = actual.Single(r => r.Schema.Table.Name == "Item" && r.Schema.Table.Schema == "Sales");
             var dbo = actual.Single(r => r.Schema.Table.Name == "Item" && r.Schema.Table.Schema == "dbo");
@@ -409,7 +408,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         [TestMethod]
         public void TestSqlServerSchemaRelationshipOnlyConsidersTheDirectReferencesBetweenTheGivenTables()
         {
-            // Act (the table in the middle of the chain is not given, so nothing relates the 2 tables)
+            // Act
             var actual = GetRelationships("GrandChild", "Parent");
 
             // Assert
@@ -434,7 +433,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             // Act
             var actual = GetRelationships("Shipment");
 
-            // Assert (the foreign keys stay in the schema, but there is no parent to relate to)
+            // Assert
             Assert.AreEqual(2, actual[0].Schema.ForeignKeys.Count);
             Assert.AreEqual(0, actual[0].Parents.Count);
         }
@@ -456,7 +455,6 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             Assert.AreEqual(tables.Count, actual.Count);
             foreach (var relationship in actual)
             {
-                // The parents are listed once, and each parent lists this table as a child (and the other way around)
                 Assert.AreEqual(relationship.Parents.Count, relationship.Parents.Distinct().Count());
                 Assert.AreEqual(relationship.Children.Count, relationship.Children.Distinct().Count());
                 Assert.IsFalse(relationship.Parents.Contains(relationship));
@@ -482,7 +480,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             // Act
             var actual = GetRelationships(tables.ToArray());
 
-            // Assert (every foreign key to another table is a parent, and every parent has a foreign key)
+            // Assert
             foreach (var relationship in actual)
             {
                 var self = Helper.FormatName(relationship.Schema.Table.Schema, relationship.Schema.Table.Name);
@@ -521,7 +519,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 var actual = GetRelationships(given.ToArray());
                 var order = Helper.GetTableNames(actual).ToList();
 
-                // Assert (a table comes after the tables that it references, except for the tables that are part of a cycle)
+                // Assert
                 Assert.AreEqual(tables.Count, order.Count);
                 foreach (var relationship in actual)
                 {
@@ -549,7 +547,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             // Act
             var order = Helper.GetTableNames(GetRelationships(tables.AsEnumerable().Reverse().ToArray())).ToList();
 
-            // Assert (the tables of the same cycle are in the order that they were given, which is the reverse one)
+            // Assert
             foreach (var cycle in new[] { new[] { "dbo.RingZ", "dbo.RingY", "dbo.RingX" }, new[] { "dbo.CycleB", "dbo.CycleA" } })
             {
                 var positions = cycle.Select(t => order.IndexOf(t)).ToArray();

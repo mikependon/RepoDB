@@ -174,7 +174,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         [TestMethod]
         public void TestSqlServerSchemaComposerComposedSchemaOfSelfReferencingTable()
         {
-            // Act (the table references itself, so it can be created on its own)
+            // Act
             Helper.CopyToTarget("Employee");
 
             // Assert
@@ -223,11 +223,11 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 connection.ExecuteNonQuery("INSERT INTO [dbo].[Country] ([Name]) VALUES (N'Philippines');");
                 connection.ExecuteNonQuery("INSERT INTO [dbo].[OrderLine] ([OrderId], [LineNumber], [Quantity]) VALUES (1, 1, 5);");
 
-                // Act/Assert (the second column of the key does not match)
+                // Act/Assert
                 Assert.Throws<SqlException>(() =>
                     connection.ExecuteNonQuery("INSERT INTO [dbo].[Shipment] ([Id], [OrderId], [LineNumber], [CountryId]) VALUES (1, 1, 2, 1);"));
 
-                // Act (a matching row)
+                // Act
                 connection.ExecuteNonQuery("INSERT INTO [dbo].[Shipment] ([Id], [OrderId], [LineNumber], [CountryId]) VALUES (1, 1, 1, 1);");
                 var count = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM [dbo].[Shipment];");
 
@@ -289,7 +289,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 connection.ExecuteNonQuery("DELETE FROM [dbo].[Country] WHERE [Id] = 2;");
                 var countryId = connection.ExecuteScalar<int>("SELECT [CountryId] FROM [dbo].[Preference];");
 
-                // Assert (the default of the column is 1)
+                // Assert
                 Assert.AreEqual(1, countryId);
             }
         }
@@ -297,14 +297,14 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         [TestMethod]
         public void ThrowExceptionOnComposedSchemaIfTheReferencedTableDoesNotExist()
         {
-            // Act/Assert (a table is composed on its own, so the table that it references must already exist)
+            // Act/Assert
             Assert.Throws<SqlException>(() => Helper.CopyToTarget("Person"));
         }
 
         [TestMethod]
         public void TestSqlServerSchemaComposerComposedSchemaOfTablesInWrongOrderViaComposeSchemas()
         {
-            // Act (the referencing table is given before the referenced table)
+            // Act
             Helper.CopyAllToTarget("Person", "Country");
 
             // Assert

@@ -55,7 +55,9 @@ namespace RepoDb.Schema.Core.UnitTests.CustomObjects
 
         public override object ExecuteScalar()
         {
-            return default;
+            var connection = Connection as CustomDbConnection;
+            connection?.ExecutedScalars.Add(CommandText);
+            return connection?.ScalarResult?.Invoke(CommandText);
         }
 
         public new DbDataReader ExecuteReader()

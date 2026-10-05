@@ -37,7 +37,7 @@ namespace RepoDb.Schema
         /// <typeparam name="TEntity">The type of the data entity that is mapped to the table.</typeparam>
         /// <param name="connection">The source connection.</param>
         /// <param name="destinationConnection">The connection of the destination database.</param>
-        /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database. The default is <see cref="CopySchemaExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="CopySchemaExistsBehavior.Drop"/> permanently deletes the existing table and its data.</param>
+        /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database: <see cref="CopySchemaExistsBehavior.Skip"/> leaves it as is, <see cref="CopySchemaExistsBehavior.Align"/> adds its missing columns and indexes, <see cref="CopySchemaExistsBehavior.Throw"/> throws before anything is created and <see cref="CopySchemaExistsBehavior.Drop"/> drops it and creates it again. The default is <see cref="CopySchemaExistsBehavior.Skip"/>. Whether the table exists is checked with the statements of the composer, so a composer that does not compose them (empty statement) is treated as if the table does not exist. <b>WARNING:</b> <see cref="CopySchemaExistsBehavior.Drop"/> permanently deletes the existing table and its data.</param>
         /// <param name="relationshipBehavior">Defines which of the tables that are related to the table (through the foreign keys) are copied together with it. The default is <see cref="CopySchemaRelationshipBehavior.TableOnly"/>. The result is still the one of the given table, use the multiple tables overload to receive the result of each related table.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopySchemaTo"/>.</param>
@@ -62,7 +62,7 @@ namespace RepoDb.Schema
         /// <param name="connection">The source connection.</param>
         /// <param name="tableName">The name of the table to be copied.</param>
         /// <param name="destinationConnection">The connection of the destination database.</param>
-        /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database. The default is <see cref="CopySchemaExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="CopySchemaExistsBehavior.Drop"/> permanently deletes the existing table and its data.</param>
+        /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database: <see cref="CopySchemaExistsBehavior.Skip"/> leaves it as is, <see cref="CopySchemaExistsBehavior.Align"/> adds its missing columns and indexes, <see cref="CopySchemaExistsBehavior.Throw"/> throws before anything is created and <see cref="CopySchemaExistsBehavior.Drop"/> drops it and creates it again. The default is <see cref="CopySchemaExistsBehavior.Skip"/>. Whether the table exists is checked with the statements of the composer, so a composer that does not compose them (empty statement) is treated as if the table does not exist. <b>WARNING:</b> <see cref="CopySchemaExistsBehavior.Drop"/> permanently deletes the existing table and its data.</param>
         /// <param name="relationshipBehavior">Defines which of the tables that are related to the table (through the foreign keys) are copied together with it. The default is <see cref="CopySchemaRelationshipBehavior.TableOnly"/>. The result is still the one of the given table, use the multiple tables overload to receive the result of each related table.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopySchemaTo"/>.</param>
@@ -110,7 +110,7 @@ namespace RepoDb.Schema
         /// <param name="connection">The source connection.</param>
         /// <param name="tableNames">The names of the tables whose schema is to be copied. The tables can be given in any order, and can reference each other (even in a circular way).</param>
         /// <param name="destinationConnection">The connection of the destination database.</param>
-        /// <param name="tableExistenceBehavior">Defines what happens when a table already exists in the destination database. The default is <see cref="CopySchemaExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="CopySchemaExistsBehavior.Drop"/> permanently deletes the existing table and its data.</param>
+        /// <param name="tableExistenceBehavior">Defines what happens when a table already exists in the destination database: <see cref="CopySchemaExistsBehavior.Skip"/> leaves it as is, <see cref="CopySchemaExistsBehavior.Align"/> adds its missing columns and indexes, <see cref="CopySchemaExistsBehavior.Throw"/> throws before anything is created and <see cref="CopySchemaExistsBehavior.Drop"/> drops it and creates it again. The default is <see cref="CopySchemaExistsBehavior.Skip"/>. Whether the table exists is checked with the statements of the composer, so a composer that does not compose them (empty statement) is treated as if the table does not exist. <b>WARNING:</b> <see cref="CopySchemaExistsBehavior.Drop"/> permanently deletes the existing table and its data.</param>
         /// <param name="relationshipBehavior">Defines which of the tables that are related to the given tables (through the foreign keys) are copied together with them. The default is <see cref="CopySchemaRelationshipBehavior.TableOnly"/>. Only the foreign keys of the source database are read to find them.</param>
         /// <param name="createdCallback">The callback that receives the <see cref="CopySchemaResult"/> of a table every time its schema is created in the destination database (the table, its indexes and its foreign keys), in the order that the schemas are completed. The errors that were raised for the table are in the <see cref="CopySchemaResult.Errors"/> of its result. The default is <c>null</c>.</param>
         /// <param name="errorCallback">The callback that receives a <see cref="CopySchemaError"/> every time a statement fails while the schemas are being created. The error is also added to the <see cref="CopySchemaResult.Errors"/> of the table that it belongs to, and the copy continues with the next statement; throw from the callback to stop the copy. Without a callback, the exception is thrown. The errors of reading the schemas are not reported to it. The default is <c>null</c>.</param>
@@ -148,17 +148,20 @@ namespace RepoDb.Schema
                 names = schemaReader.GetRelatedTables(names, relationshipBehavior).ToList();
             }
             var schemas = schemaReader.GetDependencyOrder(names).Select(r => r.Schema).ToList();
-            var statements = schemaComposer.ComposeSchemas(schemas).ToList();
-            var completions = GetCompletions(schemas, statements.Count);
-            var owners = GetOwners(schemas, statements.Count);
+            var tables = CopySchemaPlan.CreateTables(schemas, schemaComposer);
+            ProbeTables(tables, tableExistenceBehavior, schemaComposer, destinationConnection, commandTimeout, trace, transaction);
+            var plan = CopySchemaPlan.Create(tables, tableExistenceBehavior, schemaComposer);
             var errors = new List<CopySchemaError>();
 
+            // Report the tables that have nothing to execute
+            Report(createdCallback, plan.Immediate, errors, connection, destinationConnection, tableExistenceBehavior, schemaComposer, startTime);
+
             // Iterate
-            for (var i = 0; i < statements.Count; i++)
+            for (var i = 0; i < plan.Steps.Count; i++)
             {
                 try
                 {
-                    destinationConnection.ExecuteNonQuery(statements[i],
+                    destinationConnection.ExecuteNonQuery(plan.Steps[i].Statement,
                         traceKey: traceKey,
                         commandTimeout: commandTimeout,
                         transaction: transaction,
@@ -166,17 +169,17 @@ namespace RepoDb.Schema
                 }
                 catch (Exception e) when (errorCallback != null && !(e is OperationCanceledException))
                 {
-                    var error = CreateError(e, statements[i], i, owners[i]);
+                    var error = CreateError(e, plan.Steps[i], i);
                     errors.Add(error);
                     errorCallback(error);
                 }
 
                 // Report
-                Report(createdCallback, completions, errors, i, connection, destinationConnection, tableExistenceBehavior, schemaComposer, startTime);
+                Report(createdCallback, plan.Completions[i], errors, connection, destinationConnection, tableExistenceBehavior, schemaComposer, startTime);
             }
 
             // Report
-            Report(createdCallback, completions, errors, -1, connection, destinationConnection, tableExistenceBehavior, schemaComposer, startTime);
+            Report(createdCallback, plan.Completions[-1], errors, connection, destinationConnection, tableExistenceBehavior, schemaComposer, startTime);
         }
 
         #endregion
@@ -191,7 +194,7 @@ namespace RepoDb.Schema
         /// <typeparam name="TEntity">The type of the data entity that is mapped to the table.</typeparam>
         /// <param name="connection">The source connection.</param>
         /// <param name="destinationConnection">The connection of the destination database.</param>
-        /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database. The default is <see cref="CopySchemaExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="CopySchemaExistsBehavior.Drop"/> permanently deletes the existing table and its data.</param>
+        /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database: <see cref="CopySchemaExistsBehavior.Skip"/> leaves it as is, <see cref="CopySchemaExistsBehavior.Align"/> adds its missing columns and indexes, <see cref="CopySchemaExistsBehavior.Throw"/> throws before anything is created and <see cref="CopySchemaExistsBehavior.Drop"/> drops it and creates it again. The default is <see cref="CopySchemaExistsBehavior.Skip"/>. Whether the table exists is checked with the statements of the composer, so a composer that does not compose them (empty statement) is treated as if the table does not exist. <b>WARNING:</b> <see cref="CopySchemaExistsBehavior.Drop"/> permanently deletes the existing table and its data.</param>
         /// <param name="relationshipBehavior">Defines which of the tables that are related to the table (through the foreign keys) are copied together with it. The default is <see cref="CopySchemaRelationshipBehavior.TableOnly"/>. The result is still the one of the given table, use the multiple tables overload to receive the result of each related table.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopySchemaTo"/>.</param>
@@ -218,7 +221,7 @@ namespace RepoDb.Schema
         /// <param name="connection">The source connection.</param>
         /// <param name="tableName">The name of the table to be copied.</param>
         /// <param name="destinationConnection">The connection of the destination database.</param>
-        /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database. The default is <see cref="CopySchemaExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="CopySchemaExistsBehavior.Drop"/> permanently deletes the existing table and its data.</param>
+        /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database: <see cref="CopySchemaExistsBehavior.Skip"/> leaves it as is, <see cref="CopySchemaExistsBehavior.Align"/> adds its missing columns and indexes, <see cref="CopySchemaExistsBehavior.Throw"/> throws before anything is created and <see cref="CopySchemaExistsBehavior.Drop"/> drops it and creates it again. The default is <see cref="CopySchemaExistsBehavior.Skip"/>. Whether the table exists is checked with the statements of the composer, so a composer that does not compose them (empty statement) is treated as if the table does not exist. <b>WARNING:</b> <see cref="CopySchemaExistsBehavior.Drop"/> permanently deletes the existing table and its data.</param>
         /// <param name="relationshipBehavior">Defines which of the tables that are related to the table (through the foreign keys) are copied together with it. The default is <see cref="CopySchemaRelationshipBehavior.TableOnly"/>. The result is still the one of the given table, use the multiple tables overload to receive the result of each related table.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopySchemaTo"/>.</param>
@@ -269,7 +272,7 @@ namespace RepoDb.Schema
         /// <param name="connection">The source connection.</param>
         /// <param name="tableNames">The names of the tables whose schema is to be copied. The tables can be given in any order, and can reference each other (even in a circular way).</param>
         /// <param name="destinationConnection">The connection of the destination database.</param>
-        /// <param name="tableExistenceBehavior">Defines what happens when a table already exists in the destination database. The default is <see cref="CopySchemaExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="CopySchemaExistsBehavior.Drop"/> permanently deletes the existing table and its data.</param>
+        /// <param name="tableExistenceBehavior">Defines what happens when a table already exists in the destination database: <see cref="CopySchemaExistsBehavior.Skip"/> leaves it as is, <see cref="CopySchemaExistsBehavior.Align"/> adds its missing columns and indexes, <see cref="CopySchemaExistsBehavior.Throw"/> throws before anything is created and <see cref="CopySchemaExistsBehavior.Drop"/> drops it and creates it again. The default is <see cref="CopySchemaExistsBehavior.Skip"/>. Whether the table exists is checked with the statements of the composer, so a composer that does not compose them (empty statement) is treated as if the table does not exist. <b>WARNING:</b> <see cref="CopySchemaExistsBehavior.Drop"/> permanently deletes the existing table and its data.</param>
         /// <param name="relationshipBehavior">Defines which of the tables that are related to the given tables (through the foreign keys) are copied together with them. The default is <see cref="CopySchemaRelationshipBehavior.TableOnly"/>. Only the foreign keys of the source database are read to find them.</param>
         /// <param name="createdCallback">The callback that receives the <see cref="CopySchemaResult"/> of a table every time its schema is created in the destination database (the table, its indexes and its foreign keys), in the order that the schemas are completed. The errors that were raised for the table are in the <see cref="CopySchemaResult.Errors"/> of its result. The default is <c>null</c>.</param>
         /// <param name="errorCallback">The callback that receives a <see cref="CopySchemaError"/> every time a statement fails while the schemas are being created. The error is also added to the <see cref="CopySchemaResult.Errors"/> of the table that it belongs to, and the copy continues with the next statement; throw from the callback to stop the copy. Without a callback, the exception is thrown. The errors of reading the schemas are not reported to it. The default is <c>null</c>.</param>
@@ -311,17 +314,20 @@ namespace RepoDb.Schema
             }
             var relationships = await schemaReader.GetDependencyOrderAsync(names, cancellationToken).ConfigureAwait(false);
             var schemas = relationships.Select(r => r.Schema).ToList();
-            var statements = schemaComposer.ComposeSchemas(schemas).ToList();
-            var completions = GetCompletions(schemas, statements.Count);
-            var owners = GetOwners(schemas, statements.Count);
+            var tables = CopySchemaPlan.CreateTables(schemas, schemaComposer);
+            await ProbeTablesAsync(tables, tableExistenceBehavior, schemaComposer, destinationConnection, commandTimeout, trace, transaction, cancellationToken).ConfigureAwait(false);
+            var plan = CopySchemaPlan.Create(tables, tableExistenceBehavior, schemaComposer);
             var errors = new List<CopySchemaError>();
 
+            // Report the tables that have nothing to execute
+            Report(createdCallback, plan.Immediate, errors, connection, destinationConnection, tableExistenceBehavior, schemaComposer, startTime);
+
             // Iterate
-            for (var i = 0; i < statements.Count; i++)
+            for (var i = 0; i < plan.Steps.Count; i++)
             {
                 try
                 {
-                    await destinationConnection.ExecuteNonQueryAsync(statements[i],
+                    await destinationConnection.ExecuteNonQueryAsync(plan.Steps[i].Statement,
                         traceKey: traceKey,
                         commandTimeout: commandTimeout,
                         transaction: transaction,
@@ -330,17 +336,17 @@ namespace RepoDb.Schema
                 }
                 catch (Exception e) when (errorCallback != null && !(e is OperationCanceledException))
                 {
-                    var error = CreateError(e, statements[i], i, owners[i]);
+                    var error = CreateError(e, plan.Steps[i], i);
                     errors.Add(error);
                     errorCallback(error);
                 }
 
                 // Report
-                Report(createdCallback, completions, errors, i, connection, destinationConnection, tableExistenceBehavior, schemaComposer, startTime);
+                Report(createdCallback, plan.Completions[i], errors, connection, destinationConnection, tableExistenceBehavior, schemaComposer, startTime);
             }
 
             // Report
-            Report(createdCallback, completions, errors, -1, connection, destinationConnection, tableExistenceBehavior, schemaComposer, startTime);
+            Report(createdCallback, plan.Completions[-1], errors, connection, destinationConnection, tableExistenceBehavior, schemaComposer, startTime);
         }
 
         #endregion
@@ -361,97 +367,152 @@ namespace RepoDb.Schema
                 string.Equals(r.SourceSchema, table.Schema, StringComparison.Ordinal));
 
         /// <summary>
-        /// Gets the schemas that are completed by each statement of the composed script. The composed script has one statement for each table, then one for each index
-        /// and then one for each foreign key (see <see cref="ISchemaComposer.ComposeSchemas"/>), so a schema is completed by its last statement.
+        /// Reads the state of the tables in the destination database: whether each one exists and, when the existing tables are aligned,
+        /// the columns and the indexes that they are missing. A statement that the composer does not compose leaves the state unknown.
         /// </summary>
-        /// <param name="schemas">The schemas of the tables, in the order that they were composed.</param>
-        /// <param name="statementCount">The number of the statements that were composed.</param>
-        /// <returns>
-        /// The schemas by the index of the statement that completes them. If the script does not have the expected number of statements,
-        /// the statements that complete the schemas are not known, so it only has the key <c>-1</c> with all the schemas.
-        /// </returns>
-        private static ILookup<int, TableSchema> GetCompletions(IList<TableSchema> schemas,
-            int statementCount)
+        /// <param name="tables"></param>
+        /// <param name="behavior"></param>
+        /// <param name="composer"></param>
+        /// <param name="destinationConnection"></param>
+        /// <param name="commandTimeout"></param>
+        /// <param name="trace"></param>
+        /// <param name="transaction"></param>
+        private static void ProbeTables(IEnumerable<CopySchemaTable> tables,
+            CopySchemaExistsBehavior behavior,
+            ISchemaComposer composer,
+            IDbConnection destinationConnection,
+            int? commandTimeout,
+            ITrace trace,
+            IDbTransaction transaction)
         {
-            var last = new int[schemas.Count];
-            var cursor = 0;
-            for (var i = 0; i < schemas.Count; i++)
+            bool? Probe(string statement) =>
+                string.IsNullOrWhiteSpace(statement)
+                    ? (bool?)null
+                    : ToBoolean(destinationConnection.ExecuteScalar(statement, commandTimeout: commandTimeout, transaction: transaction, trace: trace));
+
+            foreach (var table in tables)
             {
-                last[i] = cursor++;
-            }
-            for (var i = 0; i < schemas.Count; i++)
-            {
-                for (var j = 0; j < schemas[i].Indexes.Count; j++)
+                table.Exists = Probe(composer.ComposeTableExists(table.Name));
+                if (table.Exists == true && behavior == CopySchemaExistsBehavior.Align)
                 {
-                    last[i] = cursor++;
+                    table.MissingColumns = table.Schema.Columns.Where(column => Probe(composer.ComposeColumnExists(table.Name, column.Field.Name)) == false).ToList();
+                    table.MissingIndexes = table.Schema.Indexes.Where(index => index.Name != null && Probe(composer.ComposeIndexExists(table.Name, index.Name)) == false).ToList();
                 }
             }
-            for (var i = 0; i < schemas.Count; i++)
-            {
-                for (var j = 0; j < schemas[i].ForeignKeys.Count; j++)
-                {
-                    last[i] = cursor++;
-                }
-            }
-            var known = cursor == statementCount;
-            return Enumerable.Range(0, schemas.Count).ToLookup(i => known ? last[i] : -1, i => schemas[i]);
         }
 
         /// <summary>
-        /// Gets the schema that each statement of the composed script belongs to. The composed script has one statement for each table, then one for each index
-        /// and then one for each foreign key (see <see cref="ISchemaComposer.ComposeSchemas"/>).
+        /// Reads the state of the tables in the destination database (see <see cref="ProbeTables"/>).
         /// </summary>
-        /// <param name="schemas">The schemas of the tables, in the order that they were composed.</param>
-        /// <param name="statementCount">The number of the statements that were composed.</param>
-        /// <returns>The schema of each statement (<c>null</c> if the script does not have the expected number of statements, so the owners are not known).</returns>
-        private static TableSchema[] GetOwners(IList<TableSchema> schemas,
-            int statementCount)
+        /// <param name="tables"></param>
+        /// <param name="behavior"></param>
+        /// <param name="composer"></param>
+        /// <param name="destinationConnection"></param>
+        /// <param name="commandTimeout"></param>
+        /// <param name="trace"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        private static async Task ProbeTablesAsync(IEnumerable<CopySchemaTable> tables,
+            CopySchemaExistsBehavior behavior,
+            ISchemaComposer composer,
+            IDbConnection destinationConnection,
+            int? commandTimeout,
+            ITrace trace,
+            IDbTransaction transaction,
+            CancellationToken cancellationToken)
         {
-            var owners = new List<TableSchema>(schemas);
-            owners.AddRange(schemas.SelectMany(schema => schema.Indexes.Select(_ => schema)));
-            owners.AddRange(schemas.SelectMany(schema => schema.ForeignKeys.Select(_ => schema)));
-            return owners.Count == statementCount
-                ? owners.ToArray()
-                : new TableSchema[statementCount];
+            async Task<bool?> Probe(string statement) =>
+                string.IsNullOrWhiteSpace(statement)
+                    ? (bool?)null
+                    : ToBoolean(await destinationConnection.ExecuteScalarAsync(statement, commandTimeout: commandTimeout, transaction: transaction, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false));
+
+            foreach (var table in tables)
+            {
+                table.Exists = await Probe(composer.ComposeTableExists(table.Name)).ConfigureAwait(false);
+                if (table.Exists == true && behavior == CopySchemaExistsBehavior.Align)
+                {
+                    table.MissingColumns = new List<ColumnInfo>();
+                    foreach (var column in table.Schema.Columns)
+                    {
+                        if (await Probe(composer.ComposeColumnExists(table.Name, column.Field.Name)).ConfigureAwait(false) == false)
+                        {
+                            table.MissingColumns.Add(column);
+                        }
+                    }
+                    table.MissingIndexes = new List<IndexInfo>();
+                    foreach (var index in table.Schema.Indexes.Where(index => index.Name != null))
+                    {
+                        if (await Probe(composer.ComposeIndexExists(table.Name, index.Name)).ConfigureAwait(false) == false)
+                        {
+                            table.MissingIndexes.Add(index);
+                        }
+                    }
+                }
+            }
         }
+
+        /// <summary>
+        /// Converts the result of an existence statement (<c>1</c> if it exists).
+        /// </summary>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        private static bool ToBoolean(object result) =>
+            result != null && result != DBNull.Value && Convert.ToInt32(result) == 1;
 
         /// <summary>
         /// Creates the error of a statement that has failed.
         /// </summary>
         /// <param name="exception"></param>
-        /// <param name="statement"></param>
+        /// <param name="step"></param>
         /// <param name="statementIndex"></param>
-        /// <param name="owner"></param>
         /// <returns></returns>
         private static CopySchemaError CreateError(Exception exception,
-            string statement,
-            int statementIndex,
-            TableSchema owner) =>
+            CopySchemaStep step,
+            int statementIndex) =>
             new CopySchemaError
             {
                 Exception = exception,
-                Statement = statement,
+                Statement = step.Statement,
                 StatementIndex = statementIndex,
-                TableName = owner?.Table?.Name,
-                SchemaName = owner?.Table?.Schema
+                TableName = step.Owner?.Schema.Table?.Name,
+                SchemaName = step.Owner?.Schema.Table?.Schema
             };
 
         /// <summary>
-        /// Calls the callback with the result of each schema that is completed by the statement.
+        /// Gets the script that was (or is going to be) executed for the table.
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="schemaComposer"></param>
+        /// <returns></returns>
+        private static IEnumerable<string> GetScript(CopySchemaTable table,
+            ISchemaComposer schemaComposer)
+        {
+            switch (table.Outcome)
+            {
+                case CopySchemaOutcome.Skipped:
+                    return Enumerable.Empty<string>();
+                case CopySchemaOutcome.Aligned:
+                    return table.AlignStatements;
+                default:
+                    var create = schemaComposer.ComposeSchema(table.Schema) ?? Enumerable.Empty<string>();
+                    return table.DropStatement == null ? create : new[] { table.DropStatement }.Concat(create);
+            }
+        }
+
+        /// <summary>
+        /// Calls the callback with the result of each table that is completed.
         /// </summary>
         /// <param name="createdCallback"></param>
-        /// <param name="completions"></param>
+        /// <param name="tables"></param>
         /// <param name="errors"></param>
-        /// <param name="statement"></param>
         /// <param name="connection"></param>
         /// <param name="destinationConnection"></param>
         /// <param name="tableExistenceBehavior"></param>
         /// <param name="schemaComposer"></param>
         /// <param name="startTime"></param>
         private static void Report(Action<CopySchemaResult> createdCallback,
-            ILookup<int, TableSchema> completions,
+            IEnumerable<CopySchemaTable> tables,
             IList<CopySchemaError> errors,
-            int statement,
             IDbConnection connection,
             IDbConnection destinationConnection,
             CopySchemaExistsBehavior tableExistenceBehavior,
@@ -463,19 +524,23 @@ namespace RepoDb.Schema
                 return;
             }
 
-            foreach (var schema in completions[statement])
+            foreach (var table in tables)
             {
+                var schema = table.Schema;
+                var aligned = table.Outcome == CopySchemaOutcome.Aligned;
                 var schemaErrors = errors
                     .Where(error => error.TableName == null ||
                         (string.Equals(error.TableName, schema.Table.Name, StringComparison.Ordinal) &&
                         string.Equals(error.SchemaName, schema.Table.Schema, StringComparison.Ordinal)))
                     .ToList();
-                var script = schemaComposer.ComposeSchema(schema) ?? Enumerable.Empty<string>();
-                
+
                 createdCallback(new CopySchemaResult
                 {
                     Action = tableExistenceBehavior,
-                    Outcome = schemaErrors.Count > 0 ? CopySchemaOutcome.Failed : CopySchemaOutcome.Created,
+                    Outcome = schemaErrors.Count > 0 ? CopySchemaOutcome.Failed : table.Outcome,
+                    TableExisted = table.Exists,
+                    AddedColumns = aligned ? table.MissingColumns.Select(column => column.Field.Name).ToList() : new List<string>(),
+                    AddedIndexes = aligned ? table.MissingIndexes.Select(index => index.Name).ToList() : new List<string>(),
                     Errors = schemaErrors,
                     TableName = schema.Table.Name,
                     SourceSchema = schema.Table.Schema,
@@ -487,7 +552,7 @@ namespace RepoDb.Schema
                     DestinationDatabaseType = destinationConnection.GetType().Name,
                     StartTime = startTime,
                     EndTime = DateTime.UtcNow,
-                    Script = string.Join(Environment.NewLine, script),
+                    Script = string.Join(Environment.NewLine, GetScript(table, schemaComposer)),
                     ColumnCount = schema.Columns.Count,
                     IndexCount = schema.Indexes.Count,
                     ForeignKeyCount = schema.ForeignKeys.Count,

@@ -19,6 +19,16 @@ namespace RepoDb.Schema.Core.UnitTests.CustomObjects
         public List<string> ExecutedCommands { get; } = new List<string>();
 
         /// <summary>
+        /// Gets the commands that were executed as scalars (the statements that check whether something exists).
+        /// </summary>
+        public List<string> ExecutedScalars { get; } = new List<string>();
+
+        /// <summary>
+        /// Gets or sets the result of an executed scalar command.
+        /// </summary>
+        public System.Func<string, object> ScalarResult { get; set; }
+
+        /// <summary>
         /// Gets or sets the condition that makes an executed command fail (with an <see cref="System.InvalidOperationException"/>).
         /// </summary>
         public System.Func<string, bool> FailWhen { get; set; }

@@ -182,7 +182,7 @@ namespace RepoDb.Schema
             var foreignKeys = relationshipBehavior == CopySchemaRelationshipBehavior.TableOnly
                 ? new List<(TableInfo Child, TableInfo Parent)>()
                 : Query(PostgreSqlSchemaText.ForeignKeyRelationshipsSql, SchemaTraceKeys.GetRelationships, MapRelationship);
-            return RelationshipExpander.Expand(tables, foreignKeys, relationshipBehavior, Key)
+            return CopySchemaRelationshipExpander.Expand(tables, foreignKeys, relationshipBehavior, Key)
                 .Select(table => Helper.Format(table.Schema, table.Name))
                 .ToList();
         }
@@ -353,7 +353,7 @@ namespace RepoDb.Schema
             {
                 foreignKeys = await QueryAsync(PostgreSqlSchemaText.ForeignKeyRelationshipsSql, SchemaTraceKeys.GetRelationships, MapRelationship, cancellationToken).ConfigureAwait(false);
             }
-            return RelationshipExpander.Expand(tables, foreignKeys, relationshipBehavior, Key)
+            return CopySchemaRelationshipExpander.Expand(tables, foreignKeys, relationshipBehavior, Key)
                 .Select(table => Helper.Format(table.Schema, table.Name))
                 .ToList();
         }
@@ -756,12 +756,12 @@ namespace RepoDb.Schema
         // Ordering
 
         /// <summary>
-        /// Orders the tables so that a table always comes after the tables that it references (see <see cref="SchemaOrderer"/>).
+        /// Orders the tables so that a table always comes after the tables that it references (see <see cref="CopySchemaOrder"/>).
         /// </summary>
         /// <param name="schemas">The schemas of the tables.</param>
         /// <returns>The ordered relationships, one per table.</returns>
         internal static IList<RelationshipInfo> Order(IList<TableSchema> schemas) =>
-            SchemaOrderer.Order(schemas, schema => Key(schema.Table), Key);
+            CopySchemaOrder.Order(schemas, schema => Key(schema.Table), Key);
 
         #endregion
     }
