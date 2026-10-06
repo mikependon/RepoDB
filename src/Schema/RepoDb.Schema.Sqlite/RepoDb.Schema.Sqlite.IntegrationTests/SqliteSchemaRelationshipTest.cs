@@ -313,14 +313,14 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
                 var reader = new SqliteSchemaReader(connection);
 
                 // Act
-                var actual = reader.GetTableSchema("\"Odd.Name\"");
+                var actual = reader.GetTableSchema("[Odd.Name]");
 
                 // Assert
                 Assert.IsNull(actual.Table.Schema);
                 Assert.AreEqual("Odd.Name", actual.Table.Name, StringComparer.Ordinal);
                 Assert.AreEqual(2, actual.Columns.Count);
                 Assert.AreEqual(1, actual.Indexes.Count);
-                Assert.IsTrue(reader.TableExists("\"Odd.Name\""));
+                Assert.IsTrue(reader.TableExists("[Odd.Name]"));
                 Assert.IsFalse(reader.TableExists("Odd"));
             }
         }
@@ -334,7 +334,7 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
                 var reader = new SqliteSchemaReader(connection);
 
                 // Act
-                var actual = reader.GetTableSchema("\"Order Details\"");
+                var actual = reader.GetTableSchema("[Order Details]");
 
                 // Assert
                 Assert.AreEqual("Order Details", actual.Table.Name, StringComparer.Ordinal);
@@ -351,7 +351,7 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
                 var reader = new SqliteSchemaReader(connection);
 
                 // Act
-                var actual = reader.GetTableSchema("\"Weird\"\"Name\"");
+                var actual = reader.GetTableSchema("[Weird\"Name]");
 
                 // Assert
                 Assert.AreEqual("Weird\"Name", actual.Table.Name, StringComparer.Ordinal);
@@ -371,9 +371,9 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
 
                 // Assert
                 CollectionAssert.Contains(actual, "Person");
-                CollectionAssert.Contains(actual, "\"Odd.Name\"");
-                CollectionAssert.Contains(actual, "\"Order Details\"");
-                CollectionAssert.Contains(actual, "\"Weird\"\"Name\"");
+                CollectionAssert.Contains(actual, "[Odd.Name]");
+                CollectionAssert.Contains(actual, "[Order Details]");
+                CollectionAssert.Contains(actual, "[Weird\"Name]");
             }
         }
 
@@ -381,10 +381,10 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
         public void TestSqliteSchemaRelationshipOfTablesWithADotInTheirNames()
         {
             // Act
-            var actual = GetRelationships("\"Odd.Child\"", "\"Odd.Name\"");
+            var actual = GetRelationships("[Odd.Child]", "[Odd.Name]");
 
             // Assert
-            CollectionAssert.AreEqual(new[] { "\"Odd.Name\"", "\"Odd.Child\"" }, Helper.GetTableNames(actual));
+            CollectionAssert.AreEqual(new[] { "[Odd.Name]", "[Odd.Child]" }, Helper.GetTableNames(actual));
             Assert.AreSame(actual[0], actual[1].Parents.Single());
             Assert.AreEqual(new TableInfo("Odd.Name", null), actual[1].Schema.ForeignKeys.Single().ReferencedTable);
         }
@@ -393,13 +393,13 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
         public void TestSqliteSchemaComposerComposedSchemaOfTablesWithNamesThatNeedQuoting()
         {
             // Act
-            Helper.CopyAllToTarget("\"Odd.Child\"", "\"Odd.Name\"", "\"Order Details\"", "\"Weird\"\"Name\"");
+            Helper.CopyAllToTarget("[Odd.Child]", "[Odd.Name]", "[Order Details]", "[Weird\"Name]");
 
             // Assert
-            Helper.AssertTargetMatchesSource("\"Odd.Name\"");
-            Helper.AssertTargetMatchesSource("\"Odd.Child\"");
-            Helper.AssertTargetMatchesSource("\"Order Details\"");
-            Helper.AssertTargetMatchesSource("\"Weird\"\"Name\"");
+            Helper.AssertTargetMatchesSource("[Odd.Name]");
+            Helper.AssertTargetMatchesSource("[Odd.Child]");
+            Helper.AssertTargetMatchesSource("[Order Details]");
+            Helper.AssertTargetMatchesSource("[Weird\"Name]");
         }
 
         #endregion

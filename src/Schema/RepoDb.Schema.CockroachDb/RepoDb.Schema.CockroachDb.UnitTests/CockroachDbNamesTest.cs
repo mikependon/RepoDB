@@ -20,7 +20,7 @@ namespace RepoDb.Schema.CockroachDb.UnitTests
         public void TestHelperParseTableOnly()
         {
             // Act
-            var (schema, table) = CockroachDbSchemaHelper.Parse("Person");
+            var (schema, table) = CockroachDbSchemaHelper.ParseSchemaAndTable("Person");
 
             // Assert
             Assert.IsNull(schema);
@@ -31,7 +31,7 @@ namespace RepoDb.Schema.CockroachDb.UnitTests
         public void TestHelperParseSchemaAndTable()
         {
             // Act
-            var (schema, table) = CockroachDbSchemaHelper.Parse("sales.order_line");
+            var (schema, table) = CockroachDbSchemaHelper.ParseSchemaAndTable("sales.order_line");
 
             // Assert
             Assert.AreEqual("sales", schema);
@@ -42,7 +42,7 @@ namespace RepoDb.Schema.CockroachDb.UnitTests
         public void TestHelperParseQuotedParts()
         {
             // Act
-            var (schema, table) = CockroachDbSchemaHelper.Parse("\"my.schema\".\"Order \"\"Details\"\"\"");
+            var (schema, table) = CockroachDbSchemaHelper.ParseSchemaAndTable("\"my.schema\".\"Order \"\"Details\"\"\"");
 
             // Assert
             Assert.AreEqual("my.schema", schema);
@@ -53,7 +53,7 @@ namespace RepoDb.Schema.CockroachDb.UnitTests
         public void TestHelperParseUsesTheLastTwoParts()
         {
             // Act
-            var (schema, table) = CockroachDbSchemaHelper.Parse("db.sales.order_line");
+            var (schema, table) = CockroachDbSchemaHelper.ParseSchemaAndTable("db.sales.order_line");
 
             // Assert
             Assert.AreEqual("sales", schema);
@@ -64,8 +64,8 @@ namespace RepoDb.Schema.CockroachDb.UnitTests
         public void ThrowExceptionOnHelperSplitIfTheNameIsBlank()
         {
             // Act/Assert
-            Assert.Throws<ArgumentNullException>(() => CockroachDbSchemaHelper.Split(null));
-            Assert.Throws<ArgumentNullException>(() => CockroachDbSchemaHelper.Split(" "));
+            Assert.Throws<ArgumentNullException>(() => CockroachDbSchemaHelper.SplitNameIntoParts(null));
+            Assert.Throws<ArgumentNullException>(() => CockroachDbSchemaHelper.SplitNameIntoParts(" "));
         }
 
         #endregion
@@ -92,23 +92,23 @@ namespace RepoDb.Schema.CockroachDb.UnitTests
         public void TestHelperFormatKeepsThePlainLowerCaseNames()
         {
             // Assert
-            Assert.AreEqual("public.person", CockroachDbSchemaHelper.Format("public", "person"));
-            Assert.AreEqual("person", CockroachDbSchemaHelper.Format(null, "person"));
+            Assert.AreEqual("public.person", CockroachDbSchemaHelper.FormatTableName("public", "person"));
+            Assert.AreEqual("person", CockroachDbSchemaHelper.FormatTableName(null, "person"));
         }
 
         [TestMethod]
         public void TestHelperFormatQuotesTheOtherNames()
         {
             // Assert
-            Assert.AreEqual("public.\"Person\"", CockroachDbSchemaHelper.Format("public", "Person"));
-            Assert.AreEqual("\"My Schema\".\"1table\"", CockroachDbSchemaHelper.Format("My Schema", "1table"));
+            Assert.AreEqual("public.\"Person\"", CockroachDbSchemaHelper.FormatTableName("public", "Person"));
+            Assert.AreEqual("\"My Schema\".\"1table\"", CockroachDbSchemaHelper.FormatTableName("My Schema", "1table"));
         }
 
         [TestMethod]
         public void TestHelperFormatCanBeParsedBack()
         {
             // Act
-            var (schema, table) = CockroachDbSchemaHelper.Parse(CockroachDbSchemaHelper.Format("My.Schema", "Order \"Details\""));
+            var (schema, table) = CockroachDbSchemaHelper.ParseSchemaAndTable(CockroachDbSchemaHelper.FormatTableName("My.Schema", "Order \"Details\""));
 
             // Assert
             Assert.AreEqual("My.Schema", schema);

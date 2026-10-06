@@ -65,7 +65,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             });
             schema.PrimaryKey = new PrimaryKeyInfo("PK_Person") { Columns = { "Id" } };
             schema.UniqueConstraints.Add(new UniqueConstraintInfo("UQ_Person_Name") { Columns = { "Name" } });
-            schema.CheckConstraints.Add(new CheckConstraintInfo("CK_Person_Age") { Expression = "(\"Age\" >= 0)" });
+            schema.CheckConstraints.Add(new CheckConstraintInfo("CK_Person_Age") { Expression = "([Age] >= 0)" });
             schema.Indexes.Add(new IndexInfo("IX_Person_Name") { Columns = { "Name" }, IncludedColumns = { "Age" } });
             schema.ForeignKeys.Add(new ForeignKeyInfo("FK_Person_Country")
             {
@@ -90,13 +90,13 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             // Act
             var actual = composer.ComposeCreateTable(schema);
             var expected = string.Join(Environment.NewLine,
-                "CREATE TABLE \"dbo\".\"Person\" (",
-                "    \"Id\" integer NOT NULL CONSTRAINT \"PK_Person\" PRIMARY KEY AUTOINCREMENT,",
-                "    \"Name\" varchar(128) NOT NULL COLLATE NOCASE,",
-                "    \"Age\" integer DEFAULT 0,",
-                "    CONSTRAINT \"UQ_Person_Name\" UNIQUE (\"Name\"),",
-                "    CONSTRAINT \"CK_Person_Age\" CHECK ((\"Age\" >= 0)),",
-                "    CONSTRAINT \"FK_Person_Country\" FOREIGN KEY (\"Age\") REFERENCES \"Country\" (\"Id\")",
+                "CREATE TABLE [dbo].[Person] (",
+                "    [Id] integer NOT NULL CONSTRAINT [PK_Person] PRIMARY KEY AUTOINCREMENT,",
+                "    [Name] varchar(128) NOT NULL COLLATE NOCASE,",
+                "    [Age] integer DEFAULT 0,",
+                "    CONSTRAINT [UQ_Person_Name] UNIQUE ([Name]),",
+                "    CONSTRAINT [CK_Person_Age] CHECK (([Age] >= 0)),",
+                "    CONSTRAINT [FK_Person_Country] FOREIGN KEY ([Age]) REFERENCES [Country] ([Id])",
                 ");");
 
             // Assert
@@ -114,8 +114,8 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             // Act
             var actual = composer.ComposeCreateTable(schema);
             var expected = string.Join(Environment.NewLine,
-                "CREATE TABLE \"Person\" (",
-                "    \"Name\" varchar(50) NOT NULL",
+                "CREATE TABLE [Person] (",
+                "    [Name] varchar(50) NOT NULL",
                 ");");
 
             // Assert
@@ -135,7 +135,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             var actual = composer.ComposeCreateTable(schema);
 
             // Assert
-            Assert.IsTrue(actual.IndexOf("\"First\"", StringComparison.Ordinal) < actual.IndexOf("\"Second\"", StringComparison.Ordinal));
+            Assert.IsTrue(actual.IndexOf("[First]", StringComparison.Ordinal) < actual.IndexOf("[Second]", StringComparison.Ordinal));
         }
 
         [TestMethod]
@@ -147,7 +147,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             schema.Columns.Add(new ColumnInfo
             {
                 Ordinal = 1,
-                ComputedExpression = "upper(\"Name\")",
+                ComputedExpression = "upper([Name])",
                 Field = new DbField("NameUpper", false, false, true, typeof(string), 128, 0, 0, "varchar")
             });
 
@@ -155,7 +155,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             var actual = composer.ComposeCreateTable(schema);
 
             // Assert
-            StringAssert.Contains(actual, "\"NameUpper\" varchar(128) GENERATED ALWAYS AS (upper(\"Name\"))", StringComparison.Ordinal);
+            StringAssert.Contains(actual, "[NameUpper] varchar(128) GENERATED ALWAYS AS (upper([Name]))", StringComparison.Ordinal);
             Assert.IsFalse(actual.Contains("DEFAULT", StringComparison.Ordinal));
         }
 
@@ -177,7 +177,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             var actual = composer.ComposeCreateTable(schema);
 
             // Assert
-            StringAssert.Contains(actual, "\"Id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT", StringComparison.Ordinal);
+            StringAssert.Contains(actual, "[Id] integer NOT NULL PRIMARY KEY AUTOINCREMENT", StringComparison.Ordinal);
             Assert.IsFalse(actual.Contains("DEFAULT", StringComparison.Ordinal));
         }
 
@@ -198,7 +198,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             var actual = composer.ComposeCreateTable(schema);
 
             // Assert
-            StringAssert.Contains(actual, "\"Age\" integer COLLATE NOCASE", StringComparison.Ordinal);
+            StringAssert.Contains(actual, "[Age] integer COLLATE NOCASE", StringComparison.Ordinal);
         }
 
         [TestMethod]
@@ -214,7 +214,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             var actual = composer.ComposeCreateTable(schema);
 
             // Assert
-            StringAssert.Contains(actual, "    PRIMARY KEY (\"Id\")", StringComparison.Ordinal);
+            StringAssert.Contains(actual, "    PRIMARY KEY ([Id])", StringComparison.Ordinal);
             Assert.IsFalse(actual.Contains("CONSTRAINT", StringComparison.Ordinal));
         }
 
@@ -232,7 +232,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             var actual = composer.ComposeCreateTable(schema);
 
             // Assert
-            StringAssert.Contains(actual, "PRIMARY KEY (\"OrderId\", \"LineNumber\")", StringComparison.Ordinal);
+            StringAssert.Contains(actual, "PRIMARY KEY ([OrderId], [LineNumber])", StringComparison.Ordinal);
         }
 
         [TestMethod]
@@ -262,8 +262,8 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             var actual = composer.ComposeCreateTable(schema);
 
             // Assert
-            StringAssert.Contains(actual, "\"Odd\"\"Table\"", StringComparison.Ordinal);
-            StringAssert.Contains(actual, "\"Odd\"\"Column\"", StringComparison.Ordinal);
+            StringAssert.Contains(actual, "[Odd\"Table]", StringComparison.Ordinal);
+            StringAssert.Contains(actual, "[Odd\"Column]", StringComparison.Ordinal);
         }
 
         [TestMethod]
@@ -289,7 +289,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             var actual = composer.ComposeCreateTable(schema);
 
             // Assert
-            StringAssert.Contains(actual, "CONSTRAINT \"PK_Product\" PRIMARY KEY (\"Id\")", StringComparison.Ordinal);
+            StringAssert.Contains(actual, "CONSTRAINT [PK_Product] PRIMARY KEY ([Id])", StringComparison.Ordinal);
         }
 
         [TestMethod]
@@ -305,7 +305,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             var actual = composer.ComposeCreateTable(schema);
 
             // Assert
-            StringAssert.Contains(actual, "\"Id\" integer NOT NULL CONSTRAINT \"PK_Product\" PRIMARY KEY AUTOINCREMENT", StringComparison.Ordinal);
+            StringAssert.Contains(actual, "[Id] integer NOT NULL CONSTRAINT [PK_Product] PRIMARY KEY AUTOINCREMENT", StringComparison.Ordinal);
             Assert.IsFalse(actual.Contains("PRIMARY KEY (", StringComparison.Ordinal));
         }
 
@@ -324,7 +324,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             var actual = composer.ComposeCreateIndex("dbo.Person", index);
 
             // Assert
-            Assert.AreEqual("CREATE INDEX \"dbo\".\"IX_Person_Name\" ON \"Person\" (\"Name\");", actual, StringComparer.Ordinal);
+            Assert.AreEqual("CREATE INDEX [dbo].[IX_Person_Name] ON [Person] ([Name]);", actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -340,8 +340,8 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             };
 
             // Act
-            var actual = composer.ComposeCreateIndex("\"dbo\".\"Person\"", index);
-            var expected = "CREATE UNIQUE INDEX \"dbo\".\"IX_Person_Name\" ON \"Person\" (\"Name\", \"Age\");";
+            var actual = composer.ComposeCreateIndex("[dbo].[Person]", index);
+            var expected = "CREATE UNIQUE INDEX [dbo].[IX_Person_Name] ON [Person] ([Name], [Age]);";
 
             // Assert
             Assert.AreEqual(expected, actual, StringComparer.Ordinal);
@@ -368,7 +368,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             var actual = composer.ComposeCreateIndex("dbo.Product", index);
 
             // Assert
-            Assert.AreEqual("CREATE UNIQUE INDEX \"dbo\".\"CIX_Product_Code\" ON \"Product\" (\"Code\");", actual, StringComparer.Ordinal);
+            Assert.AreEqual("CREATE UNIQUE INDEX [dbo].[CIX_Product_Code] ON [Product] ([Code]);", actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -382,7 +382,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             var actual = composer.ComposeCreateIndex("Product", index);
 
             // Assert
-            Assert.AreEqual("CREATE INDEX \"CIX\" ON \"Product\" (\"Code\");", actual, StringComparer.Ordinal);
+            Assert.AreEqual("CREATE INDEX [CIX] ON [Product] ([Code]);", actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -399,7 +399,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
 
             // Act
             var actual = composer.ComposeCreateIndex("dbo.Product", index);
-            var expected = "CREATE INDEX \"dbo\".\"IX_Product_Category_Price\" ON \"Product\" (\"Category\", \"Price\" DESC);";
+            var expected = "CREATE INDEX [dbo].[IX_Product_Category_Price] ON [Product] ([Category], [Price] DESC);";
 
             // Assert
             Assert.AreEqual(expected, actual, StringComparer.Ordinal);
@@ -416,7 +416,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             var actual = composer.ComposeCreateIndex("T", index);
 
             // Assert
-            Assert.AreEqual("CREATE INDEX \"IX\" ON \"T\" (\"A\" DESC, \"B\" DESC);", actual, StringComparer.Ordinal);
+            Assert.AreEqual("CREATE INDEX [IX] ON [T] ([A] DESC, [B] DESC);", actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -427,14 +427,14 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             var index = new IndexInfo("IX_Product_Active_Name")
             {
                 Columns = { "Name" },
-                Filter = "(\"IsActive\"=(1))"
+                Filter = "([IsActive]=(1))"
             };
 
             // Act
             var actual = composer.ComposeCreateIndex("dbo.Product", index);
 
             // Assert
-            Assert.AreEqual("CREATE INDEX \"dbo\".\"IX_Product_Active_Name\" ON \"Product\" (\"Name\") WHERE (\"IsActive\"=(1));", actual, StringComparer.Ordinal);
+            Assert.AreEqual("CREATE INDEX [dbo].[IX_Product_Active_Name] ON [Product] ([Name]) WHERE ([IsActive]=(1));", actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -449,14 +449,14 @@ namespace RepoDb.Schema.Sqlite.UnitTests
                 Columns = { "A", "B" },
                 DescendingColumns = { "B" },
                 IncludedColumns = { "C" },
-                Filter = "(\"A\">(0))"
+                Filter = "([A]>(0))"
             };
 
             // Act
             var actual = composer.ComposeCreateIndex("T", index);
 
             // Assert
-            Assert.AreEqual("CREATE UNIQUE INDEX \"IX\" ON \"T\" (\"A\", \"B\" DESC) WHERE (\"A\">(0));", actual, StringComparer.Ordinal);
+            Assert.AreEqual("CREATE UNIQUE INDEX [IX] ON [T] ([A], [B] DESC) WHERE ([A]>(0));", actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -470,7 +470,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             var actual = composer.ComposeCreateIndex("T", index);
 
             // Assert
-            Assert.AreEqual("CREATE INDEX \"IX\" ON \"T\" (\"A\");", actual, StringComparer.Ordinal);
+            Assert.AreEqual("CREATE INDEX [IX] ON [T] ([A]);", actual, StringComparer.Ordinal);
         }
 
         #endregion
@@ -516,7 +516,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             var actual = composer.ComposeCreateTable(schema);
 
             // Assert
-            StringAssert.Contains(actual, "CONSTRAINT \"FK_Person_Country\" FOREIGN KEY (\"CountryId\") REFERENCES \"Country\" (\"Id\") ON DELETE SET NULL ON UPDATE CASCADE", StringComparison.Ordinal);
+            StringAssert.Contains(actual, "CONSTRAINT [FK_Person_Country] FOREIGN KEY ([CountryId]) REFERENCES [Country] ([Id]) ON DELETE SET NULL ON UPDATE CASCADE", StringComparison.Ordinal);
         }
 
         [TestMethod]
@@ -584,7 +584,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             var actual = composer.ComposeCreateTable(schema);
 
             // Assert
-            StringAssert.Contains(actual, "FOREIGN KEY (\"OrderId\", \"LineNumber\") REFERENCES \"OrderLine\" (\"OrderId\", \"LineNumber\")", StringComparison.Ordinal);
+            StringAssert.Contains(actual, "FOREIGN KEY ([OrderId], [LineNumber]) REFERENCES [OrderLine] ([OrderId], [LineNumber])", StringComparison.Ordinal);
         }
 
         [TestMethod]
@@ -612,7 +612,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             var actual = composer.ComposeAddColumn("dbo.Person", column);
 
             // Assert
-            Assert.AreEqual("ALTER TABLE \"dbo\".\"Person\" ADD COLUMN \"Nickname\" varchar(50);", actual, StringComparer.Ordinal);
+            Assert.AreEqual("ALTER TABLE [dbo].[Person] ADD COLUMN [Nickname] varchar(50);", actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -627,7 +627,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             var actual = composer.ComposeAddColumn("Person", column);
 
             // Assert
-            Assert.AreEqual("ALTER TABLE \"Person\" ADD COLUMN \"Age\" integer NOT NULL DEFAULT 0;", actual, StringComparer.Ordinal);
+            Assert.AreEqual("ALTER TABLE [Person] ADD COLUMN [Age] integer NOT NULL DEFAULT 0;", actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -654,7 +654,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             var actual = composer.ComposeDropTable("dbo.Person");
 
             // Assert
-            Assert.AreEqual("DROP TABLE IF EXISTS \"dbo\".\"Person\";", actual, StringComparer.Ordinal);
+            Assert.AreEqual("DROP TABLE IF EXISTS [dbo].[Person];", actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -664,10 +664,10 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             var composer = new SqliteSchemaComposer();
 
             // Act
-            var actual = composer.ComposeDropTable("\"Sales\".\"Invoice\"");
+            var actual = composer.ComposeDropTable("[Sales].[Invoice]");
 
             // Assert
-            Assert.AreEqual("DROP TABLE IF EXISTS \"Sales\".\"Invoice\";", actual, StringComparer.Ordinal);
+            Assert.AreEqual("DROP TABLE IF EXISTS [Sales].[Invoice];", actual, StringComparer.Ordinal);
         }
 
         #endregion
@@ -686,8 +686,8 @@ namespace RepoDb.Schema.Sqlite.UnitTests
 
             // Assert
             Assert.AreEqual(2, actual.Count);
-            StringAssert.StartsWith(actual[0], "CREATE TABLE \"dbo\".\"Person\"", StringComparison.Ordinal);
-            StringAssert.StartsWith(actual[1], "CREATE INDEX \"dbo\".\"IX_Person_Name\" ON \"Person\"", StringComparison.Ordinal);
+            StringAssert.StartsWith(actual[0], "CREATE TABLE [dbo].[Person]", StringComparison.Ordinal);
+            StringAssert.StartsWith(actual[1], "CREATE INDEX [dbo].[IX_Person_Name] ON [Person]", StringComparison.Ordinal);
         }
 
         [TestMethod]
@@ -730,10 +730,10 @@ namespace RepoDb.Schema.Sqlite.UnitTests
 
             // Assert
             Assert.AreEqual(5, actual.Count);
-            StringAssert.StartsWith(actual[0], "CREATE TABLE \"dbo\".\"Person\"", StringComparison.Ordinal);
-            StringAssert.StartsWith(actual[1], "CREATE TABLE \"dbo\".\"Country\"", StringComparison.Ordinal);
-            StringAssert.StartsWith(actual[2], "CREATE INDEX \"dbo\".\"IX_Person_Name\" ON \"Person\"", StringComparison.Ordinal);
-            StringAssert.StartsWith(actual[3], "CREATE INDEX \"dbo\".\"IX_Country_Id\" ON \"Country\"", StringComparison.Ordinal);
+            StringAssert.StartsWith(actual[0], "CREATE TABLE [dbo].[Person]", StringComparison.Ordinal);
+            StringAssert.StartsWith(actual[1], "CREATE TABLE [dbo].[Country]", StringComparison.Ordinal);
+            StringAssert.StartsWith(actual[2], "CREATE INDEX [dbo].[IX_Person_Name] ON [Person]", StringComparison.Ordinal);
+            StringAssert.StartsWith(actual[3], "CREATE INDEX [dbo].[IX_Country_Id] ON [Country]", StringComparison.Ordinal);
             Assert.AreEqual(string.Empty, actual[4]);
         }
 
@@ -756,10 +756,10 @@ namespace RepoDb.Schema.Sqlite.UnitTests
 
             // Assert
             Assert.AreEqual(4, actual.Count);
-            StringAssert.StartsWith(actual[0], "CREATE TABLE \"dbo\".\"CycleA\"", StringComparison.Ordinal);
-            StringAssert.StartsWith(actual[1], "CREATE TABLE \"dbo\".\"CycleB\"", StringComparison.Ordinal);
-            StringAssert.Contains(actual[0], "CONSTRAINT \"FK_CycleA_CycleB\" FOREIGN KEY (\"BId\") REFERENCES \"CycleB\" (\"Id\")", StringComparison.Ordinal);
-            StringAssert.Contains(actual[1], "CONSTRAINT \"FK_CycleB_CycleA\" FOREIGN KEY (\"AId\") REFERENCES \"CycleA\" (\"Id\")", StringComparison.Ordinal);
+            StringAssert.StartsWith(actual[0], "CREATE TABLE [dbo].[CycleA]", StringComparison.Ordinal);
+            StringAssert.StartsWith(actual[1], "CREATE TABLE [dbo].[CycleB]", StringComparison.Ordinal);
+            StringAssert.Contains(actual[0], "CONSTRAINT [FK_CycleA_CycleB] FOREIGN KEY ([BId]) REFERENCES [CycleB] ([Id])", StringComparison.Ordinal);
+            StringAssert.Contains(actual[1], "CONSTRAINT [FK_CycleB_CycleA] FOREIGN KEY ([AId]) REFERENCES [CycleA] ([Id])", StringComparison.Ordinal);
             Assert.AreEqual(string.Empty, actual[2]);
             Assert.AreEqual(string.Empty, actual[3]);
         }
@@ -815,8 +815,8 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             var actual = composer.ComposeCreateTable(schema);
 
             // Assert
-            StringAssert.StartsWith(actual, "CREATE TABLE \"dbo\".\"Odd.Name\" (", StringComparison.Ordinal);
-            StringAssert.Contains(actual, "\"Unit Price\" decimal(10,2) NOT NULL", StringComparison.Ordinal);
+            StringAssert.StartsWith(actual, "CREATE TABLE [dbo].[Odd.Name] (", StringComparison.Ordinal);
+            StringAssert.Contains(actual, "[Unit Price] decimal(10,2) NOT NULL", StringComparison.Ordinal);
         }
 
         [TestMethod]
@@ -831,7 +831,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             var actual = composer.ComposeCreateTable(schema);
 
             // Assert
-            StringAssert.StartsWith(actual, "CREATE TABLE \"dbo\".\"Weird\"\"Name\" (", StringComparison.Ordinal);
+            StringAssert.StartsWith(actual, "CREATE TABLE [dbo].[Weird\"Name] (", StringComparison.Ordinal);
         }
 
         [TestMethod]
@@ -852,8 +852,8 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             var actual = composer.ComposeCreateTable(schema);
 
             // Assert
-            StringAssert.StartsWith(actual, "CREATE TABLE \"dbo\".\"Odd.Child\" (", StringComparison.Ordinal);
-            StringAssert.Contains(actual, "CONSTRAINT \"FK_OddChild_OddName\" FOREIGN KEY (\"ParentId\") REFERENCES \"Odd.Name\" (\"Id\")", StringComparison.Ordinal);
+            StringAssert.StartsWith(actual, "CREATE TABLE [dbo].[Odd.Child] (", StringComparison.Ordinal);
+            StringAssert.Contains(actual, "CONSTRAINT [FK_OddChild_OddName] FOREIGN KEY ([ParentId]) REFERENCES [Odd.Name] ([Id])", StringComparison.Ordinal);
         }
 
         [TestMethod]
@@ -878,11 +878,11 @@ namespace RepoDb.Schema.Sqlite.UnitTests
 
             // Assert
             Assert.AreEqual(4, actual.Count);
-            StringAssert.StartsWith(actual[0], "CREATE TABLE \"dbo\".\"Odd.Child\"", StringComparison.Ordinal);
-            StringAssert.StartsWith(actual[1], "CREATE TABLE \"dbo\".\"Odd.Name\"", StringComparison.Ordinal);
-            Assert.AreEqual("CREATE INDEX \"dbo\".\"IX_OddName_Id\" ON \"Odd.Name\" (\"Id\");", actual[2], StringComparer.Ordinal);
-            StringAssert.Contains(actual[0], "CONSTRAINT \"FK_OddChild_OddName\" FOREIGN KEY (\"ParentId\")", StringComparison.Ordinal);
-            StringAssert.Contains(actual[0], "REFERENCES \"Odd.Name\" (\"Id\")", StringComparison.Ordinal);
+            StringAssert.StartsWith(actual[0], "CREATE TABLE [dbo].[Odd.Child]", StringComparison.Ordinal);
+            StringAssert.StartsWith(actual[1], "CREATE TABLE [dbo].[Odd.Name]", StringComparison.Ordinal);
+            Assert.AreEqual("CREATE INDEX [dbo].[IX_OddName_Id] ON [Odd.Name] ([Id]);", actual[2], StringComparer.Ordinal);
+            StringAssert.Contains(actual[0], "CONSTRAINT [FK_OddChild_OddName] FOREIGN KEY ([ParentId])", StringComparison.Ordinal);
+            StringAssert.Contains(actual[0], "REFERENCES [Odd.Name] ([Id])", StringComparison.Ordinal);
             Assert.AreEqual(string.Empty, actual[3]);
         }
 
@@ -893,10 +893,10 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             var composer = new SqliteSchemaComposer();
 
             // Act
-            var actual = composer.ComposeDropTable("\"dbo\".\"Weird\"\"Name\"");
+            var actual = composer.ComposeDropTable("[dbo].[Weird\"Name]");
 
             // Assert
-            Assert.AreEqual("DROP TABLE IF EXISTS \"dbo\".\"Weird\"\"Name\";", actual, StringComparer.Ordinal);
+            Assert.AreEqual("DROP TABLE IF EXISTS [dbo].[Weird\"Name];", actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -907,10 +907,10 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             var index = new IndexInfo("IX") { Columns = { "Id" } };
 
             // Act
-            var actual = composer.ComposeCreateIndex("dbo.\"Odd.Name\"", index);
+            var actual = composer.ComposeCreateIndex("dbo.[Odd.Name]", index);
 
             // Assert
-            Assert.AreEqual("CREATE INDEX \"dbo\".\"IX\" ON \"Odd.Name\" (\"Id\");", actual, StringComparer.Ordinal);
+            Assert.AreEqual("CREATE INDEX [dbo].[IX] ON [Odd.Name] ([Id]);", actual, StringComparer.Ordinal);
         }
 
         #endregion
@@ -1072,7 +1072,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             // Act/Assert
             var composer = new SqliteSchemaComposer();
             Assert.AreEqual("dbo.Person", composer.ComposeName(new TableInfo("Person", "dbo")));
-            Assert.AreEqual("dbo.\"Odd.Name\"", composer.ComposeName(new TableInfo("Odd.Name", "dbo")));
+            Assert.AreEqual("dbo.[Odd.Name]", composer.ComposeName(new TableInfo("Odd.Name", "dbo")));
         }
 
         [TestMethod]
@@ -1093,7 +1093,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
         public void TestSqliteSchemaComposerComposeTableExists()
         {
             // Act/Assert
-            Assert.AreEqual("SELECT CASE WHEN EXISTS (SELECT 1 FROM \"sales\".sqlite_master WHERE type = 'table' AND name = 'Person' COLLATE NOCASE) THEN 1 ELSE 0 END;", new SqliteSchemaComposer().ComposeTableExists("sales.Person"));
+            Assert.AreEqual("SELECT CASE WHEN EXISTS (SELECT 1 FROM [sales].sqlite_master WHERE type = 'table' AND name = 'Person' COLLATE NOCASE) THEN 1 ELSE 0 END;", new SqliteSchemaComposer().ComposeTableExists("sales.Person"));
         }
 
         [TestMethod]
@@ -1107,7 +1107,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
         public void TestSqliteSchemaComposerComposeIndexExists()
         {
             // Act/Assert
-            Assert.AreEqual("SELECT CASE WHEN EXISTS (SELECT 1 FROM \"main\".sqlite_master WHERE type = 'index' AND tbl_name = 'Person' COLLATE NOCASE AND name = 'IX_Person_Name' COLLATE NOCASE) THEN 1 ELSE 0 END;", new SqliteSchemaComposer().ComposeIndexExists("Person", "IX_Person_Name"));
+            Assert.AreEqual("SELECT CASE WHEN EXISTS (SELECT 1 FROM [main].sqlite_master WHERE type = 'index' AND tbl_name = 'Person' COLLATE NOCASE AND name = 'IX_Person_Name' COLLATE NOCASE) THEN 1 ELSE 0 END;", new SqliteSchemaComposer().ComposeIndexExists("Person", "IX_Person_Name"));
         }
 
         [TestMethod]
@@ -1119,7 +1119,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             // Assert
             StringAssert.Contains(composer.ComposeColumnExists("dbo.Person", "O'Brien"), "O''Brien", StringComparison.Ordinal);
             StringAssert.Contains(composer.ComposeIndexExists("dbo.Person", "IX_O'Brien"), "IX_O''Brien", StringComparison.Ordinal);
-            StringAssert.Contains(composer.ComposeTableExists("dbo.\"O'Brien\""), "O''Brien", StringComparison.Ordinal);
+            StringAssert.Contains(composer.ComposeTableExists("dbo.[O'Brien]"), "O''Brien", StringComparison.Ordinal);
         }
 
         #endregion

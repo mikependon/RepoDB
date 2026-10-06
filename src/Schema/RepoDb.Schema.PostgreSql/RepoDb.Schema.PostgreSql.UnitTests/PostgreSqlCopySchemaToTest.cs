@@ -229,7 +229,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
         public void TestPostgreSqlCopySchemasToOfTablesWithNamesThatNeedQuoting()
         {
             // Setup
-            MapReader(SchemaTable("public", "Odd.Child", PostgreSqlSchemaHelper.Format("public", "Odd.Name")), SchemaTable("public", "Odd.Name"));
+            MapReader(SchemaTable("public", "Odd.Child", PostgreSqlSchemaHelper.FormatTableName("public", "Odd.Name")), SchemaTable("public", "Odd.Name"));
             MapComposer();
             var destination = new CustomDbConnection();
 
@@ -476,7 +476,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
 
         private static TableInfo Reference(string name)
         {
-            var (schema, table) = PostgreSqlSchemaHelper.Parse(name);
+            var (schema, table) = PostgreSqlSchemaHelper.ParseSchemaAndTable(name);
             return new TableInfo(table, schema);
         }
     }

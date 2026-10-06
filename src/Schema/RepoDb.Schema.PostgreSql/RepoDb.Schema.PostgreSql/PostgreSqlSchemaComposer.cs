@@ -167,7 +167,7 @@ namespace RepoDb.Schema
         /// <param name="table">The identity (name and schema) of the table.</param>
         /// <returns>The name of the table.</returns>
         public string ComposeName(TableInfo table) =>
-            PostgreSqlSchemaHelper.Format((table ?? throw new ArgumentNullException(nameof(table))).Schema, table.Name);
+            PostgreSqlSchemaHelper.FormatTableName((table ?? throw new ArgumentNullException(nameof(table))).Schema, table.Name);
 
         /// <summary>
         /// Composes the statement that checks whether the table exists in the destination database.
@@ -266,7 +266,7 @@ namespace RepoDb.Schema
         /// <param name="schema"></param>
         /// <returns></returns>
         private static string TableName(TableSchema schema) =>
-            PostgreSqlSchemaHelper.Format(schema.Table.Schema, schema.Table.Name);
+            PostgreSqlSchemaHelper.FormatTableName(schema.Table.Schema, schema.Table.Name);
 
         /// <summary>
         ///
@@ -274,7 +274,7 @@ namespace RepoDb.Schema
         /// <param name="table"></param>
         /// <returns></returns>
         private static string TableName(TableInfo table) =>
-            PostgreSqlSchemaHelper.Format(table.Schema, table.Name);
+            PostgreSqlSchemaHelper.FormatTableName(table.Schema, table.Name);
 
         /// <summary>
         ///

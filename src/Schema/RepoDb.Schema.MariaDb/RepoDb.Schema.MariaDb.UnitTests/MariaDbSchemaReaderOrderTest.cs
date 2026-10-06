@@ -476,7 +476,7 @@ namespace RepoDb.Schema.MariaDb.UnitTests
 
         private static TableInfo Reference(string name)
         {
-            var (schema, table) = MariaDbSchemaHelper.Parse(name);
+            var (schema, table) = MariaDbSchemaHelper.ParseSchemaAndTable(name);
             return new TableInfo(table, schema);
         }
     }

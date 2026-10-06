@@ -20,97 +20,97 @@ namespace RepoDb.Schema.MySql.UnitTests
         [TestMethod]
         public void TestMySqlNamesSplitOfSinglePart()
         {
-            CollectionAssert.AreEqual(new[] { "Person" }, MySqlSchemaHelper.Split("Person").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "Person" }, MySqlSchemaHelper.SplitNameIntoParts("Person").ToArrayOf());
         }
 
         [TestMethod]
         public void TestMySqlNamesSplitOfTwoParts()
         {
-            CollectionAssert.AreEqual(new[] { "dbo", "Person" }, MySqlSchemaHelper.Split("dbo.Person").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "dbo", "Person" }, MySqlSchemaHelper.SplitNameIntoParts("dbo.Person").ToArrayOf());
         }
 
         [TestMethod]
         public void TestMySqlNamesSplitOfThreeParts()
         {
-            CollectionAssert.AreEqual(new[] { "db", "dbo", "Person" }, MySqlSchemaHelper.Split("db.dbo.Person").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "db", "dbo", "Person" }, MySqlSchemaHelper.SplitNameIntoParts("db.dbo.Person").ToArrayOf());
         }
 
         [TestMethod]
         public void TestMySqlNamesSplitOfBacktickedParts()
         {
-            CollectionAssert.AreEqual(new[] { "dbo", "Person" }, MySqlSchemaHelper.Split("`dbo`.`Person`").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "dbo", "Person" }, MySqlSchemaHelper.SplitNameIntoParts("`dbo`.`Person`").ToArrayOf());
         }
 
         [TestMethod]
         public void TestMySqlNamesSplitOfQuotedParts()
         {
-            CollectionAssert.AreEqual(new[] { "dbo", "Person" }, MySqlSchemaHelper.Split("\"dbo\".\"Person\"").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "dbo", "Person" }, MySqlSchemaHelper.SplitNameIntoParts("\"dbo\".\"Person\"").ToArrayOf());
         }
 
         [TestMethod]
         public void TestMySqlNamesSplitKeepsTheDotOfABacktickedPart()
         {
-            CollectionAssert.AreEqual(new[] { "dbo", "Odd.Name" }, MySqlSchemaHelper.Split("`dbo`.`Odd.Name`").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "dbo", "Odd.Name" }, MySqlSchemaHelper.SplitNameIntoParts("`dbo`.`Odd.Name`").ToArrayOf());
         }
 
         [TestMethod]
         public void TestMySqlNamesSplitKeepsTheDotOfAQuotedPart()
         {
-            CollectionAssert.AreEqual(new[] { "dbo", "Odd.Name" }, MySqlSchemaHelper.Split("dbo.\"Odd.Name\"").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "dbo", "Odd.Name" }, MySqlSchemaHelper.SplitNameIntoParts("dbo.\"Odd.Name\"").ToArrayOf());
         }
 
         [TestMethod]
         public void TestMySqlNamesSplitKeepsTheSpaceOfABacktickedPart()
         {
-            CollectionAssert.AreEqual(new[] { "Order Details" }, MySqlSchemaHelper.Split("`Order Details`").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "Order Details" }, MySqlSchemaHelper.SplitNameIntoParts("`Order Details`").ToArrayOf());
         }
 
         [TestMethod]
         public void TestMySqlNamesSplitUnescapesTheBacktick()
         {
-            CollectionAssert.AreEqual(new[] { "dbo", "Weird`Name" }, MySqlSchemaHelper.Split("`dbo`.`Weird``Name`").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "dbo", "Weird`Name" }, MySqlSchemaHelper.SplitNameIntoParts("`dbo`.`Weird``Name`").ToArrayOf());
         }
 
         [TestMethod]
         public void TestMySqlNamesSplitUnescapesTheDoubleQuote()
         {
-            CollectionAssert.AreEqual(new[] { "Say \"Hi\"" }, MySqlSchemaHelper.Split("\"Say \"\"Hi\"\"\"").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "Say \"Hi\"" }, MySqlSchemaHelper.SplitNameIntoParts("\"Say \"\"Hi\"\"\"").ToArrayOf());
         }
 
         [TestMethod]
         public void TestMySqlNamesSplitTrimsThePartsThatAreNotQuoted()
         {
-            CollectionAssert.AreEqual(new[] { "dbo", "Person" }, MySqlSchemaHelper.Split("  dbo . Person  ").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "dbo", "Person" }, MySqlSchemaHelper.SplitNameIntoParts("  dbo . Person  ").ToArrayOf());
         }
 
         [TestMethod]
         public void TestMySqlNamesSplitKeepsTheWhiteSpaceOfAQuotedPart()
         {
-            CollectionAssert.AreEqual(new[] { " padded " }, MySqlSchemaHelper.Split("` padded `").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { " padded " }, MySqlSchemaHelper.SplitNameIntoParts("` padded `").ToArrayOf());
         }
 
         [TestMethod]
         public void TestMySqlNamesSplitOfMixedQuoting()
         {
-            CollectionAssert.AreEqual(new[] { "dbo", "Odd.Name" }, MySqlSchemaHelper.Split("dbo.`Odd.Name`").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "dbo", "Odd.Name" }, MySqlSchemaHelper.SplitNameIntoParts("dbo.`Odd.Name`").ToArrayOf());
         }
 
         [TestMethod]
         public void ThrowExceptionOnMySqlNamesSplitIfTheNameIsNull()
         {
-            Assert.Throws<ArgumentNullException>(() => MySqlSchemaHelper.Split(null));
+            Assert.Throws<ArgumentNullException>(() => MySqlSchemaHelper.SplitNameIntoParts(null));
         }
 
         [TestMethod]
         public void ThrowExceptionOnMySqlNamesSplitIfTheNameIsWhiteSpace()
         {
-            Assert.Throws<ArgumentNullException>(() => MySqlSchemaHelper.Split("   "));
+            Assert.Throws<ArgumentNullException>(() => MySqlSchemaHelper.SplitNameIntoParts("   "));
         }
 
         [TestMethod]
         public void ThrowExceptionOnMySqlNamesSplitIfTheNameHasNoParts()
         {
-            Assert.Throws<ArgumentNullException>(() => MySqlSchemaHelper.Split("..."));
+            Assert.Throws<ArgumentNullException>(() => MySqlSchemaHelper.SplitNameIntoParts("..."));
         }
 
         #endregion
@@ -121,7 +121,7 @@ namespace RepoDb.Schema.MySql.UnitTests
         public void TestMySqlNamesParseOfTableOnly()
         {
             // Act
-            var (schema, table) = MySqlSchemaHelper.Parse("Person");
+            var (schema, table) = MySqlSchemaHelper.ParseSchemaAndTable("Person");
 
             // Assert
             Assert.IsNull(schema);
@@ -132,7 +132,7 @@ namespace RepoDb.Schema.MySql.UnitTests
         public void TestMySqlNamesParseOfSchemaAndTable()
         {
             // Act
-            var (schema, table) = MySqlSchemaHelper.Parse("Sales.Invoice");
+            var (schema, table) = MySqlSchemaHelper.ParseSchemaAndTable("Sales.Invoice");
 
             // Assert
             Assert.AreEqual("Sales", schema, StringComparer.Ordinal);
@@ -143,7 +143,7 @@ namespace RepoDb.Schema.MySql.UnitTests
         public void TestMySqlNamesParseUsesTheLastTwoPartsOfAFullName()
         {
             // Act
-            var (schema, table) = MySqlSchemaHelper.Parse("db.dbo.Person");
+            var (schema, table) = MySqlSchemaHelper.ParseSchemaAndTable("db.dbo.Person");
 
             // Assert
             Assert.AreEqual("dbo", schema, StringComparer.Ordinal);
@@ -154,7 +154,7 @@ namespace RepoDb.Schema.MySql.UnitTests
         public void TestMySqlNamesParseOfNameWithADot()
         {
             // Act
-            var (schema, table) = MySqlSchemaHelper.Parse("`dbo`.`Odd.Name`");
+            var (schema, table) = MySqlSchemaHelper.ParseSchemaAndTable("`dbo`.`Odd.Name`");
 
             // Assert
             Assert.AreEqual("dbo", schema, StringComparer.Ordinal);
@@ -208,30 +208,30 @@ namespace RepoDb.Schema.MySql.UnitTests
         [TestMethod]
         public void TestMySqlNamesFormatKeepsThePlainNames()
         {
-            Assert.AreEqual("dbo.Person", MySqlSchemaHelper.Format("dbo", "Person"), StringComparer.Ordinal);
-            Assert.AreEqual("Sales.Invoice_2", MySqlSchemaHelper.Format("Sales", "Invoice_2"), StringComparer.Ordinal);
+            Assert.AreEqual("dbo.Person", MySqlSchemaHelper.FormatTableName("dbo", "Person"), StringComparer.Ordinal);
+            Assert.AreEqual("Sales.Invoice_2", MySqlSchemaHelper.FormatTableName("Sales", "Invoice_2"), StringComparer.Ordinal);
         }
 
         [TestMethod]
         public void TestMySqlNamesFormatWithoutSchema()
         {
-            Assert.AreEqual("Person", MySqlSchemaHelper.Format(null, "Person"), StringComparer.Ordinal);
-            Assert.AreEqual("`Order Details`", MySqlSchemaHelper.Format(" ", "Order Details"), StringComparer.Ordinal);
+            Assert.AreEqual("Person", MySqlSchemaHelper.FormatTableName(null, "Person"), StringComparer.Ordinal);
+            Assert.AreEqual("`Order Details`", MySqlSchemaHelper.FormatTableName(" ", "Order Details"), StringComparer.Ordinal);
         }
 
         [TestMethod]
         public void TestMySqlNamesFormatQuotesTheNamesThatAreNotPlain()
         {
-            Assert.AreEqual("dbo.`Odd.Name`", MySqlSchemaHelper.Format("dbo", "Odd.Name"), StringComparer.Ordinal);
-            Assert.AreEqual("dbo.`Order Details`", MySqlSchemaHelper.Format("dbo", "Order Details"), StringComparer.Ordinal);
-            Assert.AreEqual("dbo.`Weird``Name`", MySqlSchemaHelper.Format("dbo", "Weird`Name"), StringComparer.Ordinal);
-            Assert.AreEqual("`My Schema`.Person", MySqlSchemaHelper.Format("My Schema", "Person"), StringComparer.Ordinal);
+            Assert.AreEqual("dbo.`Odd.Name`", MySqlSchemaHelper.FormatTableName("dbo", "Odd.Name"), StringComparer.Ordinal);
+            Assert.AreEqual("dbo.`Order Details`", MySqlSchemaHelper.FormatTableName("dbo", "Order Details"), StringComparer.Ordinal);
+            Assert.AreEqual("dbo.`Weird``Name`", MySqlSchemaHelper.FormatTableName("dbo", "Weird`Name"), StringComparer.Ordinal);
+            Assert.AreEqual("`My Schema`.Person", MySqlSchemaHelper.FormatTableName("My Schema", "Person"), StringComparer.Ordinal);
         }
 
         [TestMethod]
         public void TestMySqlNamesFormatQuotesTheNameThatStartsWithADigit()
         {
-            Assert.AreEqual("dbo.`1Table`", MySqlSchemaHelper.Format("dbo", "1Table"), StringComparer.Ordinal);
+            Assert.AreEqual("dbo.`1Table`", MySqlSchemaHelper.FormatTableName("dbo", "1Table"), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -243,7 +243,7 @@ namespace RepoDb.Schema.MySql.UnitTests
             })
             {
                 // Act
-                var (parsedSchema, parsedTable) = MySqlSchemaHelper.Parse(MySqlSchemaHelper.Format(schema, table));
+                var (parsedSchema, parsedTable) = MySqlSchemaHelper.ParseSchemaAndTable(MySqlSchemaHelper.FormatTableName(schema, table));
 
                 // Assert
                 Assert.AreEqual(schema, parsedSchema, StringComparer.Ordinal);

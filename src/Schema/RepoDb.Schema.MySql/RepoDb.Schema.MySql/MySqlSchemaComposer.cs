@@ -193,7 +193,7 @@ namespace RepoDb.Schema
         /// <param name="table">The identity (name and schema) of the table.</param>
         /// <returns>The name of the table.</returns>
         public string ComposeName(TableInfo table) =>
-            MySqlSchemaHelper.Format((table ?? throw new ArgumentNullException(nameof(table))).Schema, table.Name);
+            MySqlSchemaHelper.FormatTableName((table ?? throw new ArgumentNullException(nameof(table))).Schema, table.Name);
 
         /// <summary>
         /// Composes the statement that checks whether the table exists in the destination database.
@@ -312,7 +312,7 @@ namespace RepoDb.Schema
             string schemaColumn,
             string tableColumn)
         {
-            var (schema, table) = MySqlSchemaHelper.Parse(tableName);
+            var (schema, table) = MySqlSchemaHelper.ParseSchemaAndTable(tableName);
             return $"{schemaColumn} = {(schema == null ? "DATABASE()" : $"'{Literal(schema)}'")} AND {tableColumn} = '{Literal(table)}'";
         }
 
@@ -322,7 +322,7 @@ namespace RepoDb.Schema
         /// <param name="schema"></param>
         /// <returns></returns>
         private static string TableName(TableSchema schema) =>
-            MySqlSchemaHelper.Format(schema.Table.Schema, schema.Table.Name);
+            MySqlSchemaHelper.FormatTableName(schema.Table.Schema, schema.Table.Name);
 
         /// <summary>
         ///
@@ -330,7 +330,7 @@ namespace RepoDb.Schema
         /// <param name="table"></param>
         /// <returns></returns>
         private static string TableName(TableInfo table) =>
-            MySqlSchemaHelper.Format(table.Schema, table.Name);
+            MySqlSchemaHelper.FormatTableName(table.Schema, table.Name);
 
         /// <summary>
         /// 

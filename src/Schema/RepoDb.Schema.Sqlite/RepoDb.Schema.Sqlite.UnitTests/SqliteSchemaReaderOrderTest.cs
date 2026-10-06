@@ -243,7 +243,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
         {
             // Act
             var odd = new TableSchema("Odd.Name", "sales");
-            var actual = Relationships(Table("Child", "\"sales\".\"Odd.Name\""), odd);
+            var actual = Relationships(Table("Child", "[sales].[Odd.Name]"), odd);
 
             // Assert
             Assert.AreEqual(2, actual.Count);
@@ -475,7 +475,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
 
         private static TableInfo Reference(string name)
         {
-            var (schema, table) = SqliteSchemaHelper.Parse(name);
+            var (schema, table) = SqliteSchemaHelper.ParseSchemaAndTable(name);
             return new TableInfo(table, schema);
         }
     }

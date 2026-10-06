@@ -229,7 +229,7 @@ namespace RepoDb.Schema.MariaDb.UnitTests
         public void TestMariaDbCopySchemasToOfTablesWithNamesThatNeedQuoting()
         {
             // Setup
-            MapReader(SchemaTable("dbo", "Odd.Child", MariaDbSchemaHelper.Format("dbo", "Odd.Name")), SchemaTable("dbo", "Odd.Name"));
+            MapReader(SchemaTable("dbo", "Odd.Child", MariaDbSchemaHelper.FormatTableName("dbo", "Odd.Name")), SchemaTable("dbo", "Odd.Name"));
             MapComposer();
             var destination = new CustomDbConnection();
 
@@ -476,7 +476,7 @@ namespace RepoDb.Schema.MariaDb.UnitTests
 
         private static TableInfo Reference(string name)
         {
-            var (schema, table) = MariaDbSchemaHelper.Parse(name);
+            var (schema, table) = MariaDbSchemaHelper.ParseSchemaAndTable(name);
             return new TableInfo(table, schema);
         }
     }

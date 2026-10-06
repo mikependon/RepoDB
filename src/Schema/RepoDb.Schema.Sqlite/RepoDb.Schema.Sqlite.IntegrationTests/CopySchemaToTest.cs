@@ -89,8 +89,8 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
                 Assert.AreEqual(1, result.ForeignKeyCount);
                 Assert.AreEqual(0, result.UniqueConstraintCount);
                 Assert.AreEqual(1, result.CheckConstraintCount);
-                StringAssert.Contains(result.Script, "CREATE TABLE \"Person\"", StringComparison.Ordinal);
-                StringAssert.Contains(result.Script, "CREATE INDEX \"IX_Person_Name\"", StringComparison.Ordinal);
+                StringAssert.Contains(result.Script, "CREATE TABLE [Person]", StringComparison.Ordinal);
+                StringAssert.Contains(result.Script, "CREATE INDEX [IX_Person_Name]", StringComparison.Ordinal);
                 StringAssert.Contains(result.Script, "FK_Person_Country", StringComparison.Ordinal);
                 Assert.IsTrue(result.EndTime >= result.StartTime);
             }

@@ -167,7 +167,7 @@ namespace RepoDb.Schema
         /// <param name="table">The identity (name and schema) of the table.</param>
         /// <returns>The name of the table.</returns>
         public string ComposeName(TableInfo table) =>
-            CockroachDbSchemaHelper.Format((table ?? throw new ArgumentNullException(nameof(table))).Schema, table.Name);
+            CockroachDbSchemaHelper.FormatTableName((table ?? throw new ArgumentNullException(nameof(table))).Schema, table.Name);
 
         /// <summary>
         /// Composes the statement that checks whether the table exists in the destination database.
@@ -272,7 +272,7 @@ namespace RepoDb.Schema
         /// <param name="schema"></param>
         /// <returns></returns>
         private static string TableName(TableSchema schema) =>
-            CockroachDbSchemaHelper.Format(schema.Table.Schema, schema.Table.Name);
+            CockroachDbSchemaHelper.FormatTableName(schema.Table.Schema, schema.Table.Name);
 
         /// <summary>
         ///
@@ -280,7 +280,7 @@ namespace RepoDb.Schema
         /// <param name="table"></param>
         /// <returns></returns>
         private static string TableName(TableInfo table) =>
-            CockroachDbSchemaHelper.Format(table.Schema, table.Name);
+            CockroachDbSchemaHelper.FormatTableName(table.Schema, table.Name);
 
         /// <summary>
         ///

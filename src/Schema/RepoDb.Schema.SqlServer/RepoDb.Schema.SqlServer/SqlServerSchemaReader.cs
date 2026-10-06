@@ -27,8 +27,6 @@ namespace RepoDb.Schema
     {
         #region Private Variables
 
-        private const string DefaultSchema = "dbo";
-
         private readonly IDbConnection _connection;
         private readonly IDbTransaction _transaction;
         private readonly SqlServerDbTypeNameToClientTypeResolver _typeResolver = new SqlServerDbTypeNameToClientTypeResolver();
@@ -86,7 +84,7 @@ namespace RepoDb.Schema
             var (schema, table) = ParseTableName(tableName);
             if (schema == null)
             {
-                schema = ResolveSchemaName(table) ?? DefaultSchema;
+                schema = ResolveSchemaName(table) ?? SqlServerSchemaHelper.DefaultSchema;
             }
             return Query(SqlServerSchemaText.TableExistsSql, SchemaTraceKeys.TableExists, r => Convert.ToInt32(r[0]), FullNameParameter(FullName(schema, table))).FirstOrDefault() == 1;
         }
@@ -153,7 +151,7 @@ namespace RepoDb.Schema
         /// <param name="schemaName">The name of the schema to be read. The default is <c>null</c>, which reads all the schemas.</param>
         /// <returns>The names of the tables.</returns>
         public IEnumerable<string> GetTables(string schemaName = null) =>
-            Query(SqlServerSchemaText.TablesSql, SchemaTraceKeys.GetTables, r => SqlServerSchemaHelper.Format(r.GetString(0), r.GetString(1)), Parameter("SchemaName", schemaName));
+            Query(SqlServerSchemaText.TablesSql, SchemaTraceKeys.GetTables, r => SqlServerSchemaHelper.FormatTableName(r.GetString(0), r.GetString(1)), Parameter("SchemaName", schemaName));
 
         /// <summary>
         /// Orders the tables so that a table always comes after the tables that its foreign keys reference. Use the order to create the tables, and the reverse of it to drop them.
@@ -187,7 +185,7 @@ namespace RepoDb.Schema
                 ? new List<(TableInfo Child, TableInfo Parent)>()
                 : Query(SqlServerSchemaText.ForeignKeyRelationshipsSql, SchemaTraceKeys.GetRelationships, MapRelationship);
             return CopySchemaRelationshipExpander.Expand(tables, foreignKeys, relationshipBehavior, Key)
-                .Select(table => SqlServerSchemaHelper.Format(table.Schema, table.Name))
+                .Select(table => SqlServerSchemaHelper.FormatTableName(table.Schema, table.Name))
                 .ToList();
         }
 
@@ -230,7 +228,7 @@ namespace RepoDb.Schema
             var (schema, table) = ParseTableName(tableName);
             if (schema == null)
             {
-                schema = await ResolveSchemaNameAsync(table, cancellationToken).ConfigureAwait(false) ?? DefaultSchema;
+                schema = await ResolveSchemaNameAsync(table, cancellationToken).ConfigureAwait(false) ?? SqlServerSchemaHelper.DefaultSchema;
             }
             var result = await QueryAsync(SqlServerSchemaText.TableExistsSql, SchemaTraceKeys.TableExists, r => Convert.ToInt32(r[0]), cancellationToken, FullNameParameter(FullName(schema, table))).ConfigureAwait(false);
             return result.FirstOrDefault() == 1;
@@ -314,7 +312,7 @@ namespace RepoDb.Schema
         /// <returns>A task that represents the asynchronous operation. The task result contains: the names of the tables.</returns>
         public async Task<IEnumerable<string>> GetTablesAsync(string schemaName = null,
             CancellationToken cancellationToken = default) =>
-            await QueryAsync(SqlServerSchemaText.TablesSql, SchemaTraceKeys.GetTables, r => SqlServerSchemaHelper.Format(r.GetString(0), r.GetString(1)), cancellationToken, Parameter("SchemaName", schemaName)).ConfigureAwait(false);
+            await QueryAsync(SqlServerSchemaText.TablesSql, SchemaTraceKeys.GetTables, r => SqlServerSchemaHelper.FormatTableName(r.GetString(0), r.GetString(1)), cancellationToken, Parameter("SchemaName", schemaName)).ConfigureAwait(false);
 
         /// <summary>
         /// Orders the tables so that a table always comes after the tables that its foreign keys reference. Use the order to create the tables, and the reverse of it to drop them.
@@ -359,7 +357,7 @@ namespace RepoDb.Schema
                 foreignKeys = await QueryAsync(SqlServerSchemaText.ForeignKeyRelationshipsSql, SchemaTraceKeys.GetRelationships, MapRelationship, cancellationToken).ConfigureAwait(false);
             }
             return CopySchemaRelationshipExpander.Expand(tables, foreignKeys, relationshipBehavior, Key)
-                .Select(table => SqlServerSchemaHelper.Format(table.Schema, table.Name))
+                .Select(table => SqlServerSchemaHelper.FormatTableName(table.Schema, table.Name))
                 .ToList();
         }
 
@@ -376,7 +374,7 @@ namespace RepoDb.Schema
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         private static (string Schema, string Table) ParseTableName(string tableName) =>
-            SqlServerSchemaHelper.Parse(tableName);
+            SqlServerSchemaHelper.ParseSchemaAndTable(tableName);
 
         /// <summary>
         /// 
@@ -385,7 +383,7 @@ namespace RepoDb.Schema
         /// <param name="table"></param>
         /// <returns></returns>
         private static string FullName(string schema, string table) =>
-            $"{SqlServerSchemaHelper.Quote(schema)}.{SqlServerSchemaHelper.Quote(table)}";
+            SqlServerSchemaHelper.QuoteSchemaAndTable(schema, table);
 
         /// <summary>
         /// 
@@ -393,7 +391,7 @@ namespace RepoDb.Schema
         /// <param name="tableName"></param>
         /// <returns></returns>
         private static string Key(TableInfo table) =>
-            $"{table.Schema ?? DefaultSchema}\u0001{table.Name}".ToLowerInvariant();
+            $"{table.Schema ?? SqlServerSchemaHelper.DefaultSchema}\u0001{table.Name}".ToLowerInvariant();
 
         /// <summary>
         /// 
@@ -403,7 +401,7 @@ namespace RepoDb.Schema
         private (string Schema, string Table) Resolve(string tableName)
         {
             var (schema, table) = ParseTableName(tableName);
-            return (schema ?? ResolveSchemaName(table) ?? DefaultSchema, table);
+            return (schema ?? ResolveSchemaName(table) ?? SqlServerSchemaHelper.DefaultSchema, table);
         }
 
         /// <summary>
@@ -416,7 +414,7 @@ namespace RepoDb.Schema
             CancellationToken cancellationToken)
         {
             var (schema, table) = ParseTableName(tableName);
-            return (schema ?? await ResolveSchemaNameAsync(table, cancellationToken).ConfigureAwait(false) ?? DefaultSchema, table);
+            return (schema ?? await ResolveSchemaNameAsync(table, cancellationToken).ConfigureAwait(false) ?? SqlServerSchemaHelper.DefaultSchema, table);
         }
 
         /// <summary>

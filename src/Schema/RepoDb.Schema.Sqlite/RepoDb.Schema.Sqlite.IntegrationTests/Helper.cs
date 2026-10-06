@@ -33,8 +33,8 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
         {
             using (var connection = Database.CreateTarget())
             {
-                connection.ExecuteNonQuery("CREATE TABLE \"Blocker\" (\"Id\" INT);");
-                connection.ExecuteNonQuery($"CREATE INDEX \"{indexName}\" ON \"Blocker\" (\"Id\");");
+                connection.ExecuteNonQuery("CREATE TABLE [Blocker] ([Id] INT);");
+                connection.ExecuteNonQuery($"CREATE INDEX [{indexName}] ON [Blocker] ([Id]);");
             }
         }
 
@@ -262,7 +262,7 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
             string Part(string name) =>
                 name.Length > 0 && !char.IsDigit(name[0]) && name.All(c => char.IsLetterOrDigit(c) || c == '_')
                     ? name
-                    : $"\"{name.Replace("\"", "\"\"")}\"";
+                    : $"[{name}]";
             return schema == null ? Part(table) : $"{Part(schema)}.{Part(table)}";
         }
 

@@ -40,13 +40,13 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
             SchemaReaderMapper.Add<SqliteConnection>(new SqliteSchemaReader(source), true);
 
         private static int CountCountries(SqliteConnection target) =>
-            target.ExecuteScalar<int>("SELECT COUNT(*) FROM \"Country\";");
+            target.ExecuteScalar<int>("SELECT COUNT(*) FROM [Country];");
 
         private static void InsertCountry(SqliteConnection target) =>
-            target.ExecuteNonQuery("INSERT INTO \"Country\" (\"Name\") VALUES ('Philippines');");
+            target.ExecuteNonQuery("INSERT INTO [Country] ([Name]) VALUES ('Philippines');");
 
         private static void CreateSmallPerson(SqliteConnection target) =>
-            target.ExecuteNonQuery("CREATE TABLE \"Person\" (\"Id\" BIGINT NOT NULL, \"Name\" VARCHAR(128) NOT NULL);");
+            target.ExecuteNonQuery("CREATE TABLE [Person] ([Id] BIGINT NOT NULL, [Name] VARCHAR(128) NOT NULL);");
 
         #endregion
 
@@ -217,7 +217,7 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
                 // Assert
                 Assert.IsTrue(results.All(r => r.Outcome == CopySchemaOutcome.Dropped));
                 Assert.IsTrue(results.All(r => r.TableExisted == true));
-                StringAssert.StartsWith(results.Single(r => r.TableName == "Person").Script, "DROP TABLE IF EXISTS \"Person\";", StringComparison.Ordinal);
+                StringAssert.StartsWith(results.Single(r => r.TableName == "Person").Script, "DROP TABLE IF EXISTS [Person];", StringComparison.Ordinal);
                 Assert.AreEqual(0, CountCountries(target));
                 Helper.AssertTargetMatchesSource("Country");
                 Helper.AssertTargetMatchesSource("Person");

@@ -166,10 +166,10 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
         public void TestSqliteSchemaRelatedTablesWithParentsOfTablesWithSpecialNames()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Parents, "\"Odd.Child\"");
+            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Parents, "[Odd.Child]");
 
             // Assert
-            AssertSame(new[] { "\"Odd.Child\"", "\"Odd.Name\"" }, actual);
+            AssertSame(new[] { "[Odd.Child]", "[Odd.Name]" }, actual);
         }
 
         #endregion
@@ -401,7 +401,7 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
         public void TestSqliteSchemaRelatedTablesAreComparedWithTheCase()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Children, "Parent", "\"Parent\"");
+            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Children, "Parent", "[Parent]");
 
             // Assert
             Assert.AreEqual(3, actual.Length);
@@ -631,11 +631,11 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
                 SchemaReaderMapper.Add<SqliteConnection>(new SqliteSchemaReader(source), true);
 
                 // Act
-                var result = source.CopySchemaTo("\"Odd.Name\"", target, relationshipBehavior: CopySchemaRelationshipBehavior.Children);
+                var result = source.CopySchemaTo("[Odd.Name]", target, relationshipBehavior: CopySchemaRelationshipBehavior.Children);
 
                 // Assert
                 Assert.AreEqual("Odd.Name", result.TableName);
-                AssertSame(new[] { "\"Odd.Name\"", "\"Odd.Child\"" }, GetTargetTables().ToArray());
+                AssertSame(new[] { "[Odd.Name]", "[Odd.Child]" }, GetTargetTables().ToArray());
             }
         }
 

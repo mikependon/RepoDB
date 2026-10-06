@@ -476,7 +476,7 @@ namespace RepoDb.Schema.CockroachDb.UnitTests
 
         private static TableInfo Reference(string name)
         {
-            var (schema, table) = CockroachDbSchemaHelper.Parse(name);
+            var (schema, table) = CockroachDbSchemaHelper.ParseSchemaAndTable(name);
             return new TableInfo(table, schema);
         }
     }

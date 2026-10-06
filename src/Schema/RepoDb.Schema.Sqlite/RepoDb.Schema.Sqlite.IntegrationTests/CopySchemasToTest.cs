@@ -133,10 +133,10 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
                 Assert.AreEqual(nameof(SqliteConnection), person.DestinationDatabaseType, StringComparer.Ordinal);
                 Assert.AreEqual(CopySchemaExistsBehavior.Skip, person.Action);
                 Assert.AreEqual(CopySchemaOutcome.Created, person.Outcome);
-                StringAssert.Contains(person.Script, "CREATE TABLE \"Person\"", StringComparison.Ordinal);
+                StringAssert.Contains(person.Script, "CREATE TABLE [Person]", StringComparison.Ordinal);
                 StringAssert.Contains(person.Script, "FK_Person_Country", StringComparison.Ordinal);
                 Assert.IsTrue(person.EndTime >= person.StartTime);
-                StringAssert.Contains(results.Single(r => r.TableName == "Country").Script, "CREATE TABLE \"Country\"", StringComparison.Ordinal);
+                StringAssert.Contains(results.Single(r => r.TableName == "Country").Script, "CREATE TABLE [Country]", StringComparison.Ordinal);
             }
         }
 
@@ -207,7 +207,7 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
                 Assert.AreEqual(1, person.ForeignKeyCount);
                 Assert.AreEqual(1, person.CheckConstraintCount);
                 Assert.AreEqual(0, person.UniqueConstraintCount);
-                StringAssert.StartsWith(person.Script, "CREATE TABLE \"Person\"", StringComparison.Ordinal);
+                StringAssert.StartsWith(person.Script, "CREATE TABLE [Person]", StringComparison.Ordinal);
                 Assert.AreEqual(1, results[0].UniqueConstraintCount);
             }
         }
@@ -369,10 +369,10 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                source.CopySchemaTo(new[] { "\"Odd.Child\"", "\"Odd.Name\"", "\"Order Details\"", "\"Weird\"\"Name\"" }, target);
+                source.CopySchemaTo(new[] { "[Odd.Child]", "[Odd.Name]", "[Order Details]", "[Weird\"Name]" }, target);
 
                 // Assert
-                AssertTargetMatchesSource("\"Odd.Name\"", "\"Odd.Child\"", "\"Order Details\"", "\"Weird\"\"Name\"");
+                AssertTargetMatchesSource("[Odd.Name]", "[Odd.Child]", "[Order Details]", "[Weird\"Name]");
             }
         }
 
@@ -457,7 +457,7 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
 
                 // Act
                 var results = new List<CopySchemaResult>();
-                source.CopySchemaTo(new[] { "Country", "Country", "\"Country\"" }, target, createdCallback: results.Add);
+                source.CopySchemaTo(new[] { "Country", "Country", "[Country]" }, target, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(1, results.Count);
@@ -727,7 +727,7 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
                 Assert.AreEqual("main", results[1].SourceDatabase, StringComparer.Ordinal);
                 Assert.AreEqual("main", results[1].DestinationDatabase, StringComparer.Ordinal);
                 Assert.AreEqual(7, results[1].ColumnCount);
-                StringAssert.Contains(results[1].Script, "CREATE TABLE \"Person\"", StringComparison.Ordinal);
+                StringAssert.Contains(results[1].Script, "CREATE TABLE [Person]", StringComparison.Ordinal);
             }
         }
 
@@ -819,7 +819,7 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
                 Assert.IsInstanceOfType<SqliteException>(errors[0].Exception);
                 Assert.AreEqual("Person", errors[0].TableName, StringComparer.Ordinal);
                 Assert.IsNull(errors[0].SchemaName);
-                StringAssert.StartsWith(errors[0].Statement, "CREATE INDEX \"IX_Person_Name\" ON \"Person\"", StringComparison.Ordinal);
+                StringAssert.StartsWith(errors[0].Statement, "CREATE INDEX [IX_Person_Name] ON [Person]", StringComparison.Ordinal);
                 Assert.AreEqual(1, errors[0].StatementIndex);
             }
         }
@@ -878,7 +878,7 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
                 // Assert
                 Assert.AreEqual(1, errors.Count);
                 Assert.AreEqual("NoKey", errors[0].TableName, StringComparer.Ordinal);
-                StringAssert.StartsWith(errors[0].Statement, "CREATE TABLE \"NoKey\"", StringComparison.Ordinal);
+                StringAssert.StartsWith(errors[0].Statement, "CREATE TABLE [NoKey]", StringComparison.Ordinal);
                 CollectionAssert.AreEquivalent(new[] { "NoKey", "Parent", "Child" }, created.Select(r => r.TableName).ToArray());
                 Assert.AreSame(errors[0], created.Single(r => r.TableName == "NoKey").Errors.Single());
                 Assert.AreEqual(CopySchemaOutcome.Failed, created.Single(r => r.TableName == "NoKey").Outcome);
@@ -1060,7 +1060,7 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
                 Assert.AreEqual(1, errors.Count);
                 Assert.IsInstanceOfType<SqliteException>(errors[0].Exception);
                 Assert.AreEqual("Person", errors[0].TableName, StringComparer.Ordinal);
-                StringAssert.StartsWith(errors[0].Statement, "CREATE INDEX \"IX_Person_Name\"", StringComparison.Ordinal);
+                StringAssert.StartsWith(errors[0].Statement, "CREATE INDEX [IX_Person_Name]", StringComparison.Ordinal);
             }
         }
 
