@@ -23,7 +23,7 @@ namespace RepoDb.Schema
     /// <summary>
     /// Contains the helper methods of the <see cref="CopySchemaToExtension"/> class: the checks of the destination tables, the reports of the results and the validation of the arguments.
     /// </summary>
-    internal static class CopySchemaHelper
+    internal static class DbConnection
     {
         #region Methods
 
@@ -233,10 +233,10 @@ namespace RepoDb.Schema
                     SourceSchema = table.Source.Table.Schema,
                     DestinationSchema = schema.Table.Schema,
                     SourceDatabase = connection.Database,
-                    SourceServer = (connection as DbConnection)?.DataSource,
+                    SourceServer = (connection as System.Data.Common.DbConnection)?.DataSource,
                     SourceDatabaseType = connection.GetType().Name,
                     DestinationDatabase = destinationConnection.Database,
-                    DestinationServer = (destinationConnection as DbConnection)?.DataSource,
+                    DestinationServer = (destinationConnection as System.Data.Common.DbConnection)?.DataSource,
                     DestinationDatabaseType = destinationConnection.GetType().Name,
                     StartTime = startTime,
                     EndTime = DateTime.UtcNow,

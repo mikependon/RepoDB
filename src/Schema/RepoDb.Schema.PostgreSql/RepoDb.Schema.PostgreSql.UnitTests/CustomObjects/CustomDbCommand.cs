@@ -28,7 +28,7 @@ namespace RepoDb.Schema.PostgreSql.UnitTests.CustomObjects
 
         public override UpdateRowSource UpdatedRowSource { get; set; }
 
-        protected override DbConnection DbConnection { get; set; }
+        protected override System.Data.Common.DbConnection DbConnection { get; set; }
 
         protected override DbParameterCollection DbParameterCollection { get; }
 
