@@ -6,7 +6,7 @@
 
 #endregion
 
-using RepoDb.Connector.MariaDbConnector;
+using RepoDb.Connector.MariaDb;
 
 namespace RepoDb.Schema.MariaDb
 {
@@ -16,7 +16,7 @@ namespace RepoDb.Schema.MariaDb
     public static class MariaDbSchemaGlobalConfiguration
     {
         /// <summary>
-        /// Initializes the MariaDB settings first (see <c>UseMariaDbConnector</c>), then registers the <see cref="MariaDbSchemaComposer"/> to the <see cref="SchemaComposerMapper"/> for the <see cref="MariaDbConnection"/> type.
+        /// Initializes the MariaDB settings first (see <c>UseMariaDb</c>), then registers the <see cref="MariaDbSchemaComposer"/> to the <see cref="SchemaComposerMapper"/> for the <see cref="MariaDbConnection"/> type.
         /// A <see cref="MariaDbSchemaReader"/> owns the connection that it reads, so it is created with its connection instead of being registered here.
         /// It is safe to call this method more than once.
         /// </summary>
@@ -24,7 +24,7 @@ namespace RepoDb.Schema.MariaDb
         /// <returns>The used global configuration instance itself.</returns>
         public static GlobalConfiguration UseMariaDbSchema(this GlobalConfiguration globalConfiguration)
         {
-            globalConfiguration.UseMariaDbConnector();
+            globalConfiguration.UseMariaDb();
             SchemaComposerMapper.Add<MariaDbConnection>(new MariaDbSchemaComposer(), force: true);
             return globalConfiguration;
         }

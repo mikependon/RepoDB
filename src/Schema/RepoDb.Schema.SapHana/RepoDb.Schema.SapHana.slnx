@@ -1,0 +1,13 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="../../Providers/RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="../../Providers/RepoDb.SapHana/RepoDb.SapHana/RepoDb.SapHana.csproj" />
+  <Project Path="../RepoDb.Schema.Core/RepoDb.Schema.Core/RepoDb.Schema.Core.csproj" />
+  <Project Path="RepoDb.Schema.SapHana/RepoDb.Schema.SapHana.csproj" />
+  <Project Path="RepoDb.Schema.SapHana.UnitTests/RepoDb.Schema.SapHana.UnitTests.csproj" />
+  <Project Path="RepoDb.Schema.SapHana.IntegrationTests/RepoDb.Schema.SapHana.IntegrationTests.csproj" />
+</Solution>

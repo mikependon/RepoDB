@@ -16,7 +16,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Providers\RepoDb.Core\RepoDb\RepoDb.csproj" />
-    <ProjectReference Include="..\..\..\Providers\RepoDb.MariaDbConnector\RepoDb.MariaDbConnector\RepoDb.MariaDbConnector.csproj" />
+    <ProjectReference Include="..\..\..\Providers\RepoDb.MariaDb\RepoDb.MariaDb\RepoDb.MariaDb.csproj" />
     <ProjectReference Include="..\..\RepoDb.Schema.Core\RepoDb.Schema.Core\RepoDb.Schema.Core.csproj" />
     <ProjectReference Include="..\RepoDb.Schema.MariaDb\RepoDb.Schema.MariaDb.csproj" />
   </ItemGroup>

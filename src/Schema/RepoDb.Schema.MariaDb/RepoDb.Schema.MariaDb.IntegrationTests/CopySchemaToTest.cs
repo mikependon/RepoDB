@@ -8,7 +8,7 @@
 
 using System;
 using System.Threading.Tasks;
-using RepoDb.Connector.MariaDbConnector;
+using RepoDb.Connector.MariaDb;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Schema.Enumerations;
 using RepoDb.Schema.MariaDb.IntegrationTests.Setup;

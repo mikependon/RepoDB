@@ -1,0 +1,13 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="../../Providers/RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="../../Providers/RepoDb.Oracle/RepoDb.Oracle/RepoDb.Oracle.csproj" />
+  <Project Path="../RepoDb.Schema.Core/RepoDb.Schema.Core/RepoDb.Schema.Core.csproj" />
+  <Project Path="RepoDb.Schema.Oracle/RepoDb.Schema.Oracle.csproj" />
+  <Project Path="RepoDb.Schema.Oracle.UnitTests/RepoDb.Schema.Oracle.UnitTests.csproj" />
+  <Project Path="RepoDb.Schema.Oracle.IntegrationTests/RepoDb.Schema.Oracle.IntegrationTests.csproj" />
+</Solution>
