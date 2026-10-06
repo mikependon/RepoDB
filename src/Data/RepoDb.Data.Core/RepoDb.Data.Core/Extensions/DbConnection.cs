@@ -302,7 +302,6 @@ namespace RepoDb.Data
                     Report(options, inserted, progressCallback);
                     return;
                 }
-
                 var batch = new List<object>(batchSize);
                 while (reader.Read())
                 {
@@ -359,7 +358,6 @@ namespace RepoDb.Data
                     Report(options, inserted, progressCallback);
                     return;
                 }
-
                 var batch = new List<object>(batchSize);
                 while (await ReadAsync(reader, cancellationToken).ConfigureAwait(false))
                 {
