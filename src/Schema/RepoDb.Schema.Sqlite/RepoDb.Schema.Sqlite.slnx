@@ -1,0 +1,13 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="../../Providers/RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="../../Providers/RepoDb.Sqlite.Microsoft/RepoDb.Sqlite.Microsoft/RepoDb.Sqlite.Microsoft.csproj" />
+  <Project Path="../RepoDb.Schema.Core/RepoDb.Schema.Core/RepoDb.Schema.Core.csproj" />
+  <Project Path="RepoDb.Schema.Sqlite/RepoDb.Schema.Sqlite.csproj" />
+  <Project Path="RepoDb.Schema.Sqlite.UnitTests/RepoDb.Schema.Sqlite.UnitTests.csproj" />
+  <Project Path="RepoDb.Schema.Sqlite.IntegrationTests/RepoDb.Schema.Sqlite.IntegrationTests.csproj" />
+</Solution>

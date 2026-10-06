@@ -162,6 +162,42 @@ namespace RepoDb.Schema
             $"DROP TABLE IF EXISTS {Name(tableName)};";
 
         /// <summary>
+        /// Composes the name of the table, in the dialect of the destination database, so it can be given to the other methods that take the name of a table.
+        /// </summary>
+        /// <param name="table">The identity (name and schema) of the table.</param>
+        /// <returns>The name of the table.</returns>
+        public string ComposeName(TableInfo table) =>
+            PostgreSqlSchemaHelper.Format((table ?? throw new ArgumentNullException(nameof(table))).Schema, table.Name);
+
+        /// <summary>
+        /// Composes the statement that checks whether the table exists in the destination database.
+        /// </summary>
+        /// <param name="tableName">The name of the table.</param>
+        /// <returns>The SQL statement, that returns <c>1</c> if the table exists, and <c>0</c> if not.</returns>
+        public string ComposeTableExists(string tableName) =>
+            $"SELECT CASE WHEN EXISTS (SELECT 1 FROM pg_class WHERE oid = to_regclass('{Literal(Name(tableName))}') AND relkind IN ('r', 'p')) THEN 1 ELSE 0 END;";
+
+        /// <summary>
+        /// Composes the statement that checks whether a column exists in a table of the destination database.
+        /// </summary>
+        /// <param name="tableName">The name of the table.</param>
+        /// <param name="columnName">The name of the column.</param>
+        /// <returns>The SQL statement, that returns <c>1</c> if the column exists, and <c>0</c> if not.</returns>
+        public string ComposeColumnExists(string tableName,
+            string columnName) =>
+            $"SELECT CASE WHEN EXISTS (SELECT 1 FROM pg_attribute WHERE attrelid = to_regclass('{Literal(Name(tableName))}') AND attname = '{Literal(columnName)}' AND attnum > 0 AND NOT attisdropped) THEN 1 ELSE 0 END;";
+
+        /// <summary>
+        /// Composes the statement that checks whether an index exists in a table of the destination database.
+        /// </summary>
+        /// <param name="tableName">The name of the table.</param>
+        /// <param name="indexName">The name of the index.</param>
+        /// <returns>The SQL statement, that returns <c>1</c> if the index exists, and <c>0</c> if not.</returns>
+        public string ComposeIndexExists(string tableName,
+            string indexName) =>
+            $"SELECT CASE WHEN EXISTS (SELECT 1 FROM pg_index i INNER JOIN pg_class ic ON ic.oid = i.indexrelid WHERE i.indrelid = to_regclass('{Literal(Name(tableName))}') AND ic.relname = '{Literal(indexName)}') THEN 1 ELSE 0 END;";
+
+        /// <summary>
         /// Composes the data type of a column (including its size, precision and scale) in the dialect of the destination database.
         /// </summary>
         /// <param name="column">The column (as read from the source database) to be mapped.</param>
@@ -206,7 +242,7 @@ namespace RepoDb.Schema
         /// <param name="name"></param>
         /// <returns></returns>
         private static string Quote(string name) =>
-            Helper.Quote(name);
+            PostgreSqlSchemaHelper.Quote(name);
 
         /// <summary>
         ///
@@ -214,7 +250,15 @@ namespace RepoDb.Schema
         /// <param name="name"></param>
         /// <returns></returns>
         private static string Name(string name) =>
-            Helper.QuoteName(name);
+            PostgreSqlSchemaHelper.QuoteName(name);
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private static string Literal(string value) =>
+            value.Replace("'", "''");
 
         /// <summary>
         ///
@@ -222,7 +266,7 @@ namespace RepoDb.Schema
         /// <param name="schema"></param>
         /// <returns></returns>
         private static string TableName(TableSchema schema) =>
-            Helper.Format(schema.Table.Schema, schema.Table.Name);
+            PostgreSqlSchemaHelper.Format(schema.Table.Schema, schema.Table.Name);
 
         /// <summary>
         ///
@@ -230,7 +274,7 @@ namespace RepoDb.Schema
         /// <param name="table"></param>
         /// <returns></returns>
         private static string TableName(TableInfo table) =>
-            Helper.Format(table.Schema, table.Name);
+            PostgreSqlSchemaHelper.Format(table.Schema, table.Name);
 
         /// <summary>
         ///

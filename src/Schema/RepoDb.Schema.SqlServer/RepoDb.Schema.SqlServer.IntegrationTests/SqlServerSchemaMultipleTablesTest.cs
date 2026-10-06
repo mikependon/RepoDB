@@ -19,7 +19,6 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
     [TestClass]
     public class SqlServerSchemaMultipleTablesTest
     {
-        // The tables that reference each other, so no creation order exists for them
         private static readonly string[] CircularTables =
         {
             "dbo.CycleA", "dbo.CycleB", "dbo.RingX", "dbo.RingY", "dbo.RingZ", "dbo.LoopA", "dbo.LoopB", "dbo.LoopLeaf"
@@ -80,7 +79,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             {
                 var order = Helper.GetTableNames(new SqlServerSchemaReader(connection).GetDependencyOrder(new[] { "GrandChild", "Parent", "Child" }));
 
-                // Act (each table is created on its own, in the order that the reader gave)
+                // Act
                 Helper.CopyToTarget(order);
             }
 
@@ -137,7 +136,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         [TestMethod]
         public void ThrowExceptionOnTablesWithCircularReferencesIfTheyAreCreatedOneByOne()
         {
-            // Act/Assert (a table is created together with its foreign keys, so the first one references a table that does not exist yet)
+            // Act/Assert
             Assert.Throws<SqlException>(() => Helper.CopyToTarget("CycleA", "CycleB"));
         }
 
@@ -154,7 +153,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             // Act
             var statements = new SqlServerSchemaComposer().ComposeSchemas(schemas).ToList();
 
-            // Assert (all the tables, then all the indexes, then all the foreign keys)
+            // Assert
             var lastTable = statements.FindLastIndex(s => s.StartsWith("CREATE TABLE", StringComparison.Ordinal));
             var firstIndex = statements.FindIndex(s => s.Contains("INDEX", StringComparison.Ordinal) && s.StartsWith("CREATE", StringComparison.Ordinal));
             var lastIndex = statements.FindLastIndex(s => s.Contains("INDEX", StringComparison.Ordinal) && s.StartsWith("CREATE", StringComparison.Ordinal));
@@ -221,7 +220,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                     .Where(t => !CircularTables.Contains(t, StringComparer.OrdinalIgnoreCase))
                     .ToArray();
 
-                // Act (the tables with circular references cannot be created on their own, so they are left out)
+                // Act
                 Helper.CopyToTarget(order);
 
                 // Assert
@@ -244,7 +243,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 // Act
                 var order = Helper.GetTableNames(new SqlServerSchemaReader(connection).GetDependencyOrder(tables)).ToList();
 
-                // Assert (except the tables that reference each other and themselves)
+                // Assert
                 Assert.AreEqual(tables.Count, order.Count);
                 foreach (var schema in schemas.Values)
                 {

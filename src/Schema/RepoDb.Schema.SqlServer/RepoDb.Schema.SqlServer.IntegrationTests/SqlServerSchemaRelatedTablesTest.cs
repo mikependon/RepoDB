@@ -73,7 +73,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             // Act
             var actual = GetRelatedTables(CopySchemaRelationshipBehavior.TableOnly, "Child");
 
-            // Assert (the table is resolved with its schema, and nothing else is returned)
+            // Assert
             CollectionAssert.AreEqual(new[] { "dbo.Child" }, actual);
         }
 
@@ -97,7 +97,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             // Act
             var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Parents, "GrandChild");
 
-            // Assert (the parent and the parent of the parent, up to the top of the tree)
+            // Assert
             AssertSame(new[] { "dbo.GrandChild", "dbo.Child", "dbo.Parent" }, actual);
             Assert.AreEqual("dbo.GrandChild", actual[0]);
         }
@@ -148,7 +148,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             // Act
             var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Parents, "ItemRef");
 
-            // Assert (it references Sales.Item, not dbo.Item)
+            // Assert
             AssertSame(new[] { "dbo.ItemRef", "Sales.Item" }, actual);
         }
 
@@ -182,7 +182,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             // Act
             var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Children, "Parent");
 
-            // Assert (the child and the child of the child, down to the end of the tree)
+            // Assert
             AssertSame(new[] { "dbo.Parent", "dbo.Child", "dbo.GrandChild" }, actual);
             Assert.AreEqual("dbo.Parent", actual[0]);
         }
@@ -233,7 +233,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             // Act
             var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Children, "Country");
 
-            // Assert (the tables that reference the country, and the table that they reference is not part of it)
+            // Assert
             AssertSame(new[] { "dbo.Country", "dbo.Person", "dbo.Shipment", "dbo.Preference" }, actual);
         }
 
@@ -279,7 +279,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             // Act
             var actual = GetRelatedTables(CopySchemaRelationshipBehavior.ParentsAndChildren, "Country");
 
-            // Assert (Shipment is a child of the country, and it references OrderLine, which is a parent that is not related to the country otherwise)
+            // Assert
             AssertSame(new[] { "dbo.Country", "dbo.Person", "dbo.Shipment", "dbo.Preference", "dbo.OrderLine" }, actual);
         }
 
@@ -372,7 +372,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             // Act
             var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Parents, "GrandChild", "DiamondB");
 
-            // Assert (the given tables come first, in the given order)
+            // Assert
             AssertSame(new[] { "dbo.GrandChild", "dbo.DiamondB", "dbo.Child", "dbo.Parent", "dbo.DiamondA" }, actual);
             CollectionAssert.AreEqual(new[] { "dbo.GrandChild", "dbo.DiamondB" }, actual.Take(2).ToArray());
         }
@@ -400,7 +400,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         [TestMethod]
         public void TestSqlServerSchemaRelatedTablesAreComparedWithoutTheCase()
         {
-            // Act (SQL Server is case-insensitive, so Parent and PARENT are the same table)
+            // Act
             var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Children, "PARENT", "dbo.child");
 
             // Assert
@@ -418,7 +418,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 var related = reader.GetRelatedTables(new[] { "GrandChild" }, CopySchemaRelationshipBehavior.Parents);
                 var actual = reader.GetDependencyOrder(related).Select(r => r.Schema.Table.Name).ToArray();
 
-                // Assert (the tables are ordered so that a table comes after the tables that it references)
+                // Assert
                 CollectionAssert.AreEqual(new[] { "Parent", "Child", "GrandChild" }, actual);
             }
         }
@@ -541,7 +541,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 // Setup
                 SchemaReaderMapper.Add<SqlConnection>(new SqlServerSchemaReader(source), true);
 
-                // Act (the foreign key can not be created, as the parent is not part of the copy)
+                // Act
                 Assert.ThrowsExactly<SqlException>(() =>
                     source.CopySchemaTo(new[] { "Child" }, target, relationshipBehavior: CopySchemaRelationshipBehavior.TableOnly));
             }
@@ -594,7 +594,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 // Act
                 var result = source.CopySchemaTo("GrandChild", target, relationshipBehavior: CopySchemaRelationshipBehavior.Parents);
 
-                // Assert (the result is the one of the given table, and the parents are copied too)
+                // Assert
                 Assert.AreEqual("GrandChild", result.TableName);
                 Assert.AreEqual(CopySchemaOutcome.Created, result.Outcome);
                 AssertSame(new[] { "dbo.Parent", "dbo.Child", "dbo.GrandChild" }, GetTargetTables().ToArray());
@@ -631,7 +631,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 // Act
                 var result = source.CopySchemaTo("dbo.[Odd.Name]", target, relationshipBehavior: CopySchemaRelationshipBehavior.Children);
 
-                // Assert (the table is identified even if its name needs quoting)
+                // Assert
                 Assert.AreEqual("Odd.Name", result.TableName);
                 AssertSame(new[] { "dbo.[Odd.Name]", "dbo.[Odd.Child]" }, GetTargetTables().ToArray());
             }

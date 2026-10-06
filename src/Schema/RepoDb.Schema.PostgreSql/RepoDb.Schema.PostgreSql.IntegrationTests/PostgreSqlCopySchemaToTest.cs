@@ -36,7 +36,6 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
 
         #region Helpers
 
-        // The reader owns the connection it reads from, so it is mapped for the connection that is used as the source of the copy.
         private static void MapSchemaReaderConnection(NpgsqlConnection source) =>
             SchemaReaderMapper.Add<NpgsqlConnection>(new PostgreSqlSchemaReader(source), true);
 
@@ -99,10 +98,12 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
                 source.CopySchemaTo("Person", target);
 
                 // Act
-                source.CopySchemaTo("sales.order_line", target);
+                var result = source.CopySchemaTo("sales.order_line", target);
 
                 // Assert
-                Helper.AssertTargetMatchesSource("sales.order_line");
+                Assert.AreEqual("sales", result.SourceSchema);
+                Assert.AreEqual("public", result.DestinationSchema);
+                Assert.IsTrue(Helper.TargetTableExists("public.order_line"));
             }
         }
 
@@ -117,7 +118,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
                 source.CopySchemaTo("country", target);
 
                 // Act/Assert
-                Assert.Throws<PostgresException>(() => source.CopySchemaTo("country", target));
+                Assert.Throws<InvalidOperationException>(() => source.CopySchemaTo("country", target, tableExistenceBehavior: CopySchemaExistsBehavior.Throw));
             }
         }
 
@@ -141,20 +142,23 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
 
                 // Assert
                 CollectionAssert.AreEquivalent(new[] { "order_line", "node_a", "node_b", "Person", "country" }, created);
-                foreach (var table in tables)
+                foreach (var table in tables.Where(table => table != "sales.order_line"))
                 {
                     Helper.AssertTargetMatchesSource(table);
                 }
+                Assert.IsTrue(Helper.TargetTableExists("public.order_line"));
             }
         }
 
         [TestMethod]
         public void TestPostgreSqlCopySchemaToWithErrorCallbackContinuesWithTheOtherTables()
         {
+            Helper.DisableExistenceChecks();
+
             using (var source = new NpgsqlConnection(Database.ConnectionStringForSource))
             using (var target = new NpgsqlConnection(Database.ConnectionStringForTarget))
             {
-                // Setup (the table already exists in the target)
+                // Setup
                 MapSchemaReaderConnection(source);
                 source.CopySchemaTo("no_key", target);
                 var errors = new List<CopySchemaError>();

@@ -34,7 +34,6 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
 
         #region Helpers
 
-        // The reader owns the connection it reads from, so it is mapped for the connection that is used as the source of the copy.
         private static void MapSchemaReaderConnection(SqlConnection source) =>
             SchemaReaderMapper.Add<SqlConnection>(new SqlServerSchemaReader(source), true);
 
@@ -125,10 +124,11 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var result = source.CopySchemaTo("Sales.Invoice", target);
+                var result = source.CopySchemaTo("Sales.Invoice", target, "Sales");
 
                 // Assert
                 Assert.AreEqual("Sales", result.SourceSchema, StringComparer.Ordinal);
+                Assert.AreEqual("Sales", result.DestinationSchema, StringComparer.Ordinal);
                 Helper.AssertSchemaEquality(Helper.GetSourceSchema("Sales.Invoice"), Helper.GetTargetSchema("Sales.Invoice"));
             }
         }
@@ -143,7 +143,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var result = source.CopySchemaTo("NoKey", target, CopySchemaExistsBehavior.Drop);
+                var result = source.CopySchemaTo("NoKey", target, tableExistenceBehavior: CopySchemaExistsBehavior.Drop);
 
                 // Assert
                 Assert.AreEqual(CopySchemaExistsBehavior.Drop, result.Action);
@@ -200,8 +200,8 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 MapSchemaReaderConnection(source);
                 source.CopySchemaTo("NoKey", target);
 
-                // Act/Assert (the existence behavior is not enforced yet, so the creation of the existing table fails)
-                Assert.Throws<SqlException>(() => source.CopySchemaTo("NoKey", target));
+                // Act/Assert
+                Assert.Throws<InvalidOperationException>(() => source.CopySchemaTo("NoKey", target, tableExistenceBehavior: CopySchemaExistsBehavior.Throw));
             }
         }
 
@@ -258,7 +258,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                await source.CopySchemaToAsync("Sales.Invoice", target);
+                await source.CopySchemaToAsync("Sales.Invoice", target, "Sales");
 
                 // Assert
                 Helper.AssertSchemaEquality(Helper.GetSourceSchema("Sales.Invoice"), Helper.GetTargetSchema("Sales.Invoice"));
@@ -275,8 +275,8 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 MapSchemaReaderConnection(source);
                 await source.CopySchemaToAsync("NoKey", target);
 
-                // Act/Assert (the existence behavior is not enforced yet, so the creation of the existing table fails)
-                await Assert.ThrowsAsync<SqlException>(() => source.CopySchemaToAsync("NoKey", target));
+                // Act/Assert
+                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopySchemaToAsync("NoKey", target, tableExistenceBehavior: CopySchemaExistsBehavior.Throw));
             }
         }
 

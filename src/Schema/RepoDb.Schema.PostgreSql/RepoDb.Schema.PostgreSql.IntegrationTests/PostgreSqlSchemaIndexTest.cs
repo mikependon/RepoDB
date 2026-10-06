@@ -48,7 +48,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             // Act
             var indexes = CreateReader().GetIndexes("product").ToList();
 
-            // Assert (the primary key is not an index)
+            // Assert
             CollectionAssert.AreEquivalent(new[] { "ix_product_name", "ux_product_code", "ix_product_multi", "ix_product_active", "ix_product_all_desc" }, indexes.Select(x => x.Name).ToArray());
         }
 
@@ -113,7 +113,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestPostgreSqlSchemaReaderGetIndexesDoesNotIncludeTheUniqueConstraints()
         {
-            // Assert (the unique constraint of the country is backed by an index, but it is not an index)
+            // Assert
             Assert.AreEqual(0, CreateReader().GetIndexes("country").Count());
         }
 

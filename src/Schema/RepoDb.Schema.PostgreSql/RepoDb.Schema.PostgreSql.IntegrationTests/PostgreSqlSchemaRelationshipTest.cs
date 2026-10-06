@@ -156,7 +156,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             // Act
             var actual = Order("loop_tail", "loop_b", "loop_a", "loop_base");
 
-            // Assert (the base first, then the cycle in the given order, then the tail)
+            // Assert
             CollectionAssert.AreEqual(new[] { "loop_base", "loop_b", "loop_a", "loop_tail" }, Helper.GetTableNames(actual));
         }
 
@@ -289,7 +289,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestPostgreSqlSchemaRelationshipOnlyConsidersTheDirectReferencesBetweenTheGivenTables()
         {
-            // Act (the chain_b that links them is not given)
+            // Act
             var actual = Order("chain_c", "chain_a");
 
             // Assert
@@ -341,7 +341,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             var forward = CreateReader().GetDependencyOrder(tables).ToList();
             var backward = CreateReader().GetDependencyOrder(Enumerable.Reverse(tables)).ToList();
 
-            // Assert (the referenced tables always come first, except inside a cycle)
+            // Assert
             foreach (var relationships in new[] { forward, backward })
             {
                 Assert.AreEqual(tables.Count, relationships.Count);
@@ -362,7 +362,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             // Act
             var relationships = CreateReader().GetDependencyOrder(Helper.GetSourceTables()).ToList();
 
-            // Assert (each foreign key to another given table is a parent, and the parent knows its child)
+            // Assert
             foreach (var relationship in relationships)
             {
                 var referenced = relationship.Schema.ForeignKeys.Select(fk => fk.ReferencedTable).Distinct().Count(table => table != relationship.Schema.Table);
@@ -399,7 +399,6 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             CollectionAssert.AreEqual(sync.Select(r => r.Parents.Count).ToArray(), async.Select(r => r.Parents.Count).ToArray());
         }
 
-        // Whether the parent can reach the relationship again through its own parents (the 2 are in the same cycle)
         private static bool IsInCycle(RelationshipInfo parent, RelationshipInfo relationship)
         {
             var visited = new HashSet<RelationshipInfo>();

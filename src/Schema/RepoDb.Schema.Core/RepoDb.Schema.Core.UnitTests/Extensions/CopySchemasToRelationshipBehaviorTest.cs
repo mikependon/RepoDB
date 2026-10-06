@@ -46,7 +46,6 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         private static TableSchema GetSchema(string tableName) =>
             new TableSchema(tableName, "dbo") { Columns = { new ColumnInfo() } };
 
-        // The reader expands the given tables with the related ones, and then returns the relationships of the expanded tables
         private static Mock<ISchemaReader> MapReader(string[] related, params string[] ordered)
         {
             var relationships = ordered.Select(name => new RelationshipInfo { Schema = GetSchema(name) }).ToList();
@@ -127,7 +126,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         [TestMethod]
         public void TestCopySchemasToWithRelationshipBehaviorCopiesTheRelatedTables()
         {
-            // Setup (the reader expands Person with its parent Country)
+            // Setup
             var reader = MapReader(new[] { "Person", "Country" }, "Country", "Person");
             MapComposer("CREATE TABLE Country;", "CREATE TABLE Person;");
             var destination = new CustomDbConnection();
@@ -139,7 +138,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
                 relationshipBehavior: CopySchemaRelationshipBehavior.Parents,
                 createdCallback: r => results.Add(r.TableName));
 
-            // Assert (the tables that were expanded are the ones that are ordered, composed and executed)
+            // Assert
             reader.Verify(r => r.GetDependencyOrder(It.Is<IEnumerable<string>>(n => n.SequenceEqual(new[] { "Person", "Country" }))), Times.Once);
             CollectionAssert.AreEqual(new[] { "CREATE TABLE Country;", "CREATE TABLE Person;" }, destination.ExecutedCommands);
             CollectionAssert.AreEqual(new[] { "Country", "Person" }, results);
@@ -148,7 +147,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         [TestMethod]
         public void TestCopySchemasToWithRelationshipBehaviorAndNoTablesDoesNothing()
         {
-            // Setup (nothing is read, as there is nothing to expand)
+            // Setup
             var reader = MapReader(new string[0]);
             var destination = new CustomDbConnection();
 
@@ -217,7 +216,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         [TestMethod]
         public async Task TestCopySchemasToAsyncWithRelationshipBehaviorCopiesTheRelatedTables()
         {
-            // Setup (the reader expands Person with its parent Country)
+            // Setup
             var reader = MapReader(new[] { "Person", "Country" }, "Country", "Person");
             MapComposer("CREATE TABLE Country;", "CREATE TABLE Person;");
             var destination = new CustomDbConnection();
@@ -256,7 +255,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         [TestMethod]
         public void TestCopySchemaToOfASingleTableWithRelationshipBehaviorReturnsTheResultOfTheGivenTable()
         {
-            // Setup (the given table is created last, so it is not simply the last result)
+            // Setup
             var reader = MapReader(new[] { "Person", "Country" }, "Country", "Person");
             MapComposer("CREATE TABLE Country;", "CREATE TABLE Person;");
             var destination = new CustomDbConnection();
@@ -264,7 +263,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Act
             var result = new CustomDbConnection().CopySchemaTo("Country", destination, relationshipBehavior: CopySchemaRelationshipBehavior.Children);
 
-            // Assert (the related table is copied too)
+            // Assert
             reader.Verify(r => r.GetRelatedTables(It.Is<IEnumerable<string>>(n => n.SequenceEqual(new[] { "Country" })), CopySchemaRelationshipBehavior.Children), Times.Once);
             CollectionAssert.AreEqual(new[] { "CREATE TABLE Country;", "CREATE TABLE Person;" }, destination.ExecutedCommands);
             Assert.AreEqual("Country", result.TableName);
@@ -287,7 +286,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         [TestMethod]
         public void TestCopySchemaToOfASingleTableWithRelationshipBehaviorAndNoRelatedTables()
         {
-            // Setup (there is nothing related, so there is nothing to find)
+            // Setup
             var reader = MapReader(new[] { "Person" }, "Person");
             MapComposer("CREATE TABLE Person;");
 

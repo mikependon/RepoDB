@@ -985,7 +985,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 // Act
                 var actual = Helper.GetTableNames(reader.GetDependencyOrder(new[] { "CycleA", "CycleB" }));
 
-                // Assert (the cycle is broken at the table that was given first)
+                // Assert
                 CollectionAssert.AreEqual(new[] { "dbo.CycleA", "dbo.CycleB" }, actual);
             }
         }
@@ -1122,7 +1122,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 // Act
                 var actual = reader.GetDependencyOrder(new[] { "CycleA", "CycleB" }).ToList();
 
-                // Assert (each one is the parent and the child of the other one)
+                // Assert
                 Assert.AreSame(actual[1], actual[0].Parents.Single());
                 Assert.AreSame(actual[1], actual[0].Children.Single());
                 Assert.AreSame(actual[0], actual[1].Parents.Single());
@@ -1138,7 +1138,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 // Setup
                 var reader = new SqlServerSchemaReader(connection);
 
-                // Act (the tables are kept in the order that they were given, as long as the tables that they reference come first)
+                // Act
                 var actual = Helper.GetTableNames(reader.GetDependencyOrder(new[] { "Ledger", "CycleA", "CycleB", "Sales.Invoice" }));
 
                 // Assert

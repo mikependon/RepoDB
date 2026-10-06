@@ -64,7 +64,6 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             SchemaComposerMapper.Add<CustomDbConnection>(composer.Object, true);
         }
 
-        // Country (no index, no foreign key), Person (an index and a foreign key) and Solo (nothing)
         private static void MapThreeTables()
         {
             MapReader(GetSchema("Country"), GetSchema("Person", 1, 1, 1), GetSchema("Solo"));
@@ -129,7 +128,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         [TestMethod]
         public void TestCopySchemasToErrorCallbackKnowsTheTableOfEachKindOfStatement()
         {
-            // Setup (a table, an index and a foreign key of the Person fail)
+            // Setup
             MapThreeTables();
             var destination = new CustomDbConnection
             {
@@ -161,7 +160,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
                 createdCallback: created.Add,
                 errorCallback: _ => { });
 
-            // Assert (all the statements were executed, and the Person has the error of its index)
+            // Assert
             Assert.AreEqual(5, destination.ExecutedCommands.Count);
             CollectionAssert.AreEqual(new[] { "Country", "Solo", "Person" }, created.Select(r => r.TableName).ToArray());
             Assert.AreEqual(0, created[0].Errors.Count);
@@ -173,7 +172,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         [TestMethod]
         public void TestCopySchemasToReportsTheTableThatFailedWithItsErrors()
         {
-            // Setup (the table of the Country fails)
+            // Setup
             MapThreeTables();
             var destination = new CustomDbConnection { FailWhen = c => c == "CREATE TABLE Country;" };
             var created = new List<CopySchemaResult>();
@@ -225,7 +224,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
                     throw e.Exception;
                 }));
 
-            // Assert (the exception that was captured is the one that is thrown)
+            // Assert
             Assert.AreSame(raised.Exception, exception);
         }
 
@@ -245,7 +244,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
                     createdCallback: r => created.Add(r.TableName),
                     errorCallback: _ => throw new NotSupportedException()));
 
-            // Assert (the statements after the failed one were not executed)
+            // Assert
             CollectionAssert.AreEqual(new[] { "CREATE TABLE Country;", "CREATE TABLE Person;" }, destination.ExecutedCommands);
             CollectionAssert.AreEqual(new[] { "Country" }, created);
         }
@@ -266,7 +265,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
                     createdCallback: r => created.Add(r.TableName),
                     errorCallback: _ => throw new NotSupportedException()));
 
-            // Assert (the Person is not created, as its foreign key failed)
+            // Assert
             Assert.AreEqual(5, destination.ExecutedCommands.Count);
             CollectionAssert.AreEquivalent(new[] { "Country", "Solo" }, created);
         }
@@ -274,7 +273,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         [TestMethod]
         public void TestCopySchemasToErrorCallbackWhenTheStatementsOfTheTablesAreNotKnown()
         {
-            // Setup (less statements than the expected number, so the tables of the statements are not known)
+            // Setup
             MapReader(GetSchema("Country"), GetSchema("Person", 1, 0, 1));
             MapComposer("CREATE TABLE Country;", "CREATE TABLE Person;");
             var destination = new CustomDbConnection { FailWhen = c => c == "CREATE TABLE Person;" };
@@ -288,7 +287,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
                 createdCallback: created.Add,
                 errorCallback: errors.Add);
 
-            // Assert (the error does not know its table, so it is in the result of every table)
+            // Assert
             Assert.AreEqual(1, errors.Count);
             Assert.IsNull(errors[0].TableName);
             Assert.IsNull(errors[0].SchemaName);
@@ -299,7 +298,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         [TestMethod]
         public void TestCopySchemasToErrorsOfTheResultAreTheOnesThatWereRaised()
         {
-            // Setup (a table, an index and a foreign key of the Person fail)
+            // Setup
             MapThreeTables();
             var destination = new CustomDbConnection { FailWhen = c => c.Contains("Person", StringComparison.Ordinal) };
             var errors = new List<CopySchemaError>();
@@ -312,7 +311,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
                 createdCallback: created.Add,
                 errorCallback: errors.Add);
 
-            // Assert (the same errors are passed to the callback and added to the result of the table)
+            // Assert
             var person = created.Single(r => r.TableName == "Person");
             Assert.AreEqual(3, person.Errors.Count);
             Assert.IsTrue(person.Errors.SequenceEqual(errors));
@@ -341,7 +340,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         [TestMethod]
         public void ThrowExceptionOnCopySchemasToWithErrorCallbackIfThereIsNoMappedSchemaReader()
         {
-            // Setup (the errors of reading the schemas are not reported to the error callback)
+            // Setup
             MapComposer("CREATE TABLE Person;");
             var errors = 0;
 
@@ -485,7 +484,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             {
                 source.Cancel();
 
-                // Act/Assert (a cancellation is not an error of the statements)
+                // Act/Assert
                 await Assert.ThrowsAsync<OperationCanceledException>(() =>
                     new CustomDbConnection().CopySchemaToAsync(
                         new[] { "Country", "Person", "Solo" },

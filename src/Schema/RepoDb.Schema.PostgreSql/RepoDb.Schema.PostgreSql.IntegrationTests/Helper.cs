@@ -19,6 +19,13 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
     public static class Helper
     {
         /// <summary>
+        /// Makes the schema copies stop checking what exists in the destination database, so they always try to create the tables.
+        /// The next call of <see cref="Database.Initialize"/> registers the composer again.
+        /// </summary>
+        public static void DisableExistenceChecks() =>
+            SchemaComposerMapper.Add<NpgsqlConnection>(new NoExistenceCheckSchemaComposer(new PostgreSqlSchemaComposer()), force: true);
+
+        /// <summary>
         /// Reads the schema of the table from the source database.
         /// </summary>
         /// <param name="tableName">The name of the table.</param>
@@ -123,7 +130,14 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionStringForSource))
             {
-                return new PostgreSqlSchemaReader(connection).GetTables().ToList();
+                var reader = new PostgreSqlSchemaReader(connection);
+                return reader.GetTables()
+                    .Where(name =>
+                    {
+                        var schema = reader.GetTableSchema(name);
+                        return schema.Table.Schema == "public" && schema.ForeignKeys.All(foreignKey => foreignKey.ReferencedTable.Schema == "public");
+                    })
+                    .ToList();
             }
         }
 

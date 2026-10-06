@@ -1,0 +1,80 @@
+﻿#region Copyright Attributions
+
+// Copyright (c) 2018 Michael Camara Pendon.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+using System.Data;
+using System.Data.Common;
+
+namespace RepoDb.Schema.MySqlConnector.UnitTests.CustomObjects
+{
+    public class CustomDbCommand : DbCommand, IDbCommand
+    {
+        public CustomDbCommand()
+        {
+            DbParameterCollection = new CustomDbParameterCollection();
+        }
+
+        public override string CommandText { get; set; }
+
+        public override int CommandTimeout { get; set; }
+
+        public override CommandType CommandType { get; set; }
+
+        public override bool DesignTimeVisible { get; set; }
+
+        public override UpdateRowSource UpdatedRowSource { get; set; }
+
+        protected override DbConnection DbConnection { get; set; }
+
+        protected override DbParameterCollection DbParameterCollection { get; }
+
+        protected override DbTransaction DbTransaction { get; set; }
+
+        public override void Cancel()
+        {
+        }
+
+        public new CustomDbParameterCollection Parameters
+        {
+            get { return (CustomDbParameterCollection)DbParameterCollection; }
+        }
+
+        public override int ExecuteNonQuery()
+        {
+            (Connection as CustomDbConnection)?.ExecutedCommands.Add(CommandText);
+            if ((Connection as CustomDbConnection)?.FailWhen?.Invoke(CommandText) == true)
+            {
+                throw new System.InvalidOperationException($"The command failed: {CommandText}");
+            }
+            return default;
+        }
+
+        public override object ExecuteScalar()
+        {
+            return default;
+        }
+
+        public new DbDataReader ExecuteReader()
+        {
+            return new CustomDbDataReader();
+        }
+
+        public override void Prepare()
+        {
+        }
+
+        protected override DbParameter CreateDbParameter()
+        {
+            return new CustomDbParameter();
+        }
+
+        protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior)
+        {
+            return new CustomDbDataReader();
+        }
+    }
+}

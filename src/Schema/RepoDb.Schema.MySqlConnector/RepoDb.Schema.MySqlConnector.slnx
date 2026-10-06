@@ -1,0 +1,13 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="../../Providers/RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="../../Providers/RepoDb.MySqlConnector/RepoDb.MySqlConnector/RepoDb.MySqlConnector.csproj" />
+  <Project Path="../RepoDb.Schema.Core/RepoDb.Schema.Core/RepoDb.Schema.Core.csproj" />
+  <Project Path="RepoDb.Schema.MySqlConnector/RepoDb.Schema.MySqlConnector.csproj" />
+  <Project Path="RepoDb.Schema.MySqlConnector.UnitTests/RepoDb.Schema.MySqlConnector.UnitTests.csproj" />
+  <Project Path="RepoDb.Schema.MySqlConnector.IntegrationTests/RepoDb.Schema.MySqlConnector.IntegrationTests.csproj" />
+</Solution>

@@ -16,7 +16,7 @@ namespace RepoDb.Schema
     /// <summary>
     /// A class that parses, quotes and formats the (multi-part) names of the SQL Server objects (i.e.: <c>dbo.Person</c> or <c>[dbo].[Order Details]</c>).
     /// </summary>
-    internal static class Helper
+    internal static class SqlServerSchemaHelper
     {
         #region Public Methods
 

@@ -79,7 +79,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             // Act
             var id = CreateReader().GetColumns("ticket").First();
 
-            // Assert (the sequence is not copied, so the column is an identity column without a default)
+            // Assert
             Assert.IsTrue(id.Field.IsIdentity);
             Assert.IsNull(id.DefaultExpression);
             Assert.AreEqual(1, id.IdentitySeed);
@@ -104,7 +104,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             // Act
             var indexes = CreateReader().GetIndexes("Person").ToList();
 
-            // Assert (the primary key is not an index)
+            // Assert
             Assert.AreEqual(2, indexes.Count);
             var name = indexes.Single(i => i.Name == "ix_person_name");
             Assert.IsFalse(name.IsUnique);

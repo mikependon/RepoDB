@@ -239,11 +239,11 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             {
                 connection.ExecuteNonQuery("INSERT INTO [dbo].[Product] ([Id], [Code], [Sku], [Name], [Category], [Price]) VALUES (1, N'C1', N'S1', N'First', 1, 1.00);");
 
-                // Act/Assert (the unique nonclustered index)
+                // Act/Assert
                 Assert.Throws<SqlException>(() =>
                     connection.ExecuteNonQuery("INSERT INTO [dbo].[Product] ([Id], [Code], [Sku], [Name], [Category], [Price]) VALUES (2, N'C2', N'S1', N'Second', 1, 1.00);"));
 
-                // Act/Assert (the unique clustered index)
+                // Act/Assert
                 Assert.Throws<SqlException>(() =>
                     connection.ExecuteNonQuery("INSERT INTO [dbo].[Product] ([Id], [Code], [Sku], [Name], [Category], [Price]) VALUES (3, N'C1', N'S3', N'Third', 1, 1.00);"));
             }
