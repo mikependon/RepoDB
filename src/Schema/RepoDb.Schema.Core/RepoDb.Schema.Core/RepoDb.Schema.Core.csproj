@@ -31,6 +31,9 @@
     <InternalsVisibleTo Include="RepoDb.Schema.CockroachDb" />
     <InternalsVisibleTo Include="RepoDb.Schema.CockroachDb.UnitTests" />
     <InternalsVisibleTo Include="RepoDb.Schema.CockroachDb.IntegrationTests" />
+    <InternalsVisibleTo Include="RepoDb.Schema.MySql" />
+    <InternalsVisibleTo Include="RepoDb.Schema.MySql.UnitTests" />
+    <InternalsVisibleTo Include="RepoDb.Schema.MySql.IntegrationTests" />
     <InternalsVisibleTo Include="RepoDb.Schema.MySqlConnector" />
     <InternalsVisibleTo Include="RepoDb.Schema.MySqlConnector.UnitTests" />
     <InternalsVisibleTo Include="RepoDb.Schema.MySqlConnector.IntegrationTests" />
