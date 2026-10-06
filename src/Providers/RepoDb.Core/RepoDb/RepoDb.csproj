@@ -98,6 +98,14 @@
     <InternalsVisibleTo Include="RepoDb.Schema.PostgreSql" />
     <InternalsVisibleTo Include="RepoDb.Schema.SqlServer" />
     <InternalsVisibleTo Include="RepoDb.Schema.Sqlite" />
+    <InternalsVisibleTo Include="RepoDb.Schema.Db2" />
+    <InternalsVisibleTo Include="RepoDb.Schema.DuckDb" />
+    <InternalsVisibleTo Include="RepoDb.Schema.Firebird" />
+    <InternalsVisibleTo Include="RepoDb.Schema.MariaDbConnector" />
+    <InternalsVisibleTo Include="RepoDb.Schema.MySql" />
+    <InternalsVisibleTo Include="RepoDb.Schema.Oracle" />
+    <InternalsVisibleTo Include="RepoDb.Schema.SapHana" />
+    <InternalsVisibleTo Include="RepoDb.Schema.Vertica" />
     <InternalsVisibleTo Include="RepoDb.SqlServer" />
     <InternalsVisibleTo Include="RepoDb.Sqlite.Microsoft" />
     <InternalsVisibleTo Include="RepoDb.Telemetry.Core" />
