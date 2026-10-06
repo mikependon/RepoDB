@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Enumerations;
 using RepoDb.Extensions;
 using System;
@@ -28,7 +29,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
         /// <returns></returns>
-        public static Field GetTargetReturnColumnAsField(Type entityType,
+        public static Field GetTargetReturnColumnAsField([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             DbFieldCollection dbFields)
         {
             var primaryField = GetPrimaryAsReturnKeyField(entityType, dbFields);
@@ -56,7 +57,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="dbFields"></param>
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
-        private static Field GetPrimaryAsReturnKeyField(Type entityType,
+        private static Field GetPrimaryAsReturnKeyField([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             DbFieldCollection dbFields)
         {
             return PrimaryCache.Get(entityType)?.AsField() ??
@@ -70,7 +71,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="dbFields"></param>
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
-        private static Field GetIdentityAsReturnKeyField(Type entityType,
+        private static Field GetIdentityAsReturnKeyField([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             DbFieldCollection dbFields)
         {
             return IdentityCache.Get(entityType)?.AsField() ??

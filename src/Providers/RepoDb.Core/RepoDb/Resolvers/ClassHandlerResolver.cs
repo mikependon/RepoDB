@@ -39,13 +39,9 @@ namespace RepoDb.Resolvers
             
 #if NET7_0_OR_GREATER
             var genericAttribute = type.GetCustomAttribute(typeof(ClassHandlerAttribute<>));
-            if (genericAttribute is not null)
+            if (genericAttribute is IGenericClassHandlerAttribute genericClassHandlerAttribute)
             {
-                var handlerType = genericAttribute.GetType()
-                    .GetGenericArguments()
-                    .First();
-
-                classHandler = Activator.CreateInstance(handlerType);
+                classHandler = Activator.CreateInstance(genericClassHandlerAttribute.HandlerType);
             }
 #endif
 

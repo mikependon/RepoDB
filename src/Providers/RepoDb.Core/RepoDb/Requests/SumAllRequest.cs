@@ -9,6 +9,7 @@
 
 using RepoDb.Interfaces;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Data;
 
 namespace RepoDb.Requests
@@ -46,7 +47,7 @@ namespace RepoDb.Requests
         /// <param name="field">The field object.</param>
         /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public SumAllRequest(Type type,
+        public SumAllRequest([DynamicallyAccessedMembers(Trimming.Entity)] Type type,
             IDbConnection connection,
             IDbTransaction transaction,
             Field field = null,

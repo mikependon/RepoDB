@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -43,10 +44,10 @@ namespace RepoDb
         /// <typeparam name="TType">The target .NET CLR type.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add<TType, TPropertyHandler>(bool force = false)
+        public static void Add<TType, [DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(bool force = false)
             where TPropertyHandler : new()
         {
-            Add(typeof(TType), new TPropertyHandler(), force);
+            AddInternal(typeof(TType), new TPropertyHandler(), typeof(TPropertyHandler), force);
         }
 
         /// <summary>
@@ -56,10 +57,10 @@ namespace RepoDb
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
         /// <param name="propertyHandler">The instance of the property handler. The type must implement the <see cref="IPropertyHandler{TInput, TResult}"/> interface.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add<TType, TPropertyHandler>(TPropertyHandler propertyHandler,
+        public static void Add<TType, [DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(TPropertyHandler propertyHandler,
             bool force = false)
         {
-            Add(typeof(TType), propertyHandler, force);
+            AddInternal(typeof(TType), propertyHandler, TypeExtension.GetHandlerType<TPropertyHandler>(propertyHandler), force);
         }
 
         /// <summary>
@@ -68,13 +69,29 @@ namespace RepoDb
         /// <param name="type">The target .NET CLR type.</param>
         /// <param name="propertyHandler">The instance of the property handler. The type must implement the <see cref="IPropertyHandler{TInput, TResult}"/> interface.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
+        [RequiresUnreferencedCode("The implemented interfaces of the runtime type of the property handler might be trimmed. Use the generic 'Add' methods instead.")]
         public static void Add(Type type,
             object propertyHandler,
             bool force = false)
         {
+            AddInternal(type, propertyHandler, propertyHandler?.GetType(), force);
+        }
+
+        /// <summary>
+        /// Type Level: Adds a mapping between a .NET CLR type and a <see cref="IPropertyHandler{TInput, TResult}"/> object.
+        /// </summary>
+        /// <param name="type">The target .NET CLR type.</param>
+        /// <param name="propertyHandler">The instance of the property handler.</param>
+        /// <param name="propertyHandlerType">The type of the property handler.</param>
+        /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
+        internal static void AddInternal(Type type,
+            object propertyHandler,
+            [DynamicallyAccessedMembers(Trimming.Handler)] Type propertyHandlerType,
+            bool force)
+        {
             // Guard the type
             GuardPresence(type);
-            Guard(propertyHandler?.GetType());
+            Guard(propertyHandlerType);
 
             // Variables for cache
             var key = GenerateHashCode(type);
@@ -110,7 +127,7 @@ namespace RepoDb
         /// <typeparam name="TType">The target .NET CLR type.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
         /// <returns>An instance of mapped property handler for .NET CLR type.</returns>
-        public static TPropertyHandler Get<TType, TPropertyHandler>()
+        public static TPropertyHandler Get<TType, [DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>()
         {
             return Get<TPropertyHandler>(typeof(TType));
         }
@@ -121,7 +138,7 @@ namespace RepoDb
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
         /// <param name="type">The target .NET CLR type.</param>
         /// <returns>An instance of mapped property handler for .NET CLR type.</returns>
-        public static TPropertyHandler Get<TPropertyHandler>(Type type)
+        public static TPropertyHandler Get<[DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(Type type)
         {
             // Check the presence
             GuardPresence(type);
@@ -183,7 +200,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
-        public static void Add<TEntity, TPropertyHandler>(Expression<Func<TEntity, object>> expression)
+        public static void Add<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(Expression<Func<TEntity, object>> expression)
             where TEntity : class
             where TPropertyHandler : new()
         {
@@ -197,7 +214,7 @@ namespace RepoDb
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <param name="propertyHandler">The instance of the property handler.</param>
-        public static void Add<TEntity, TPropertyHandler>(Expression<Func<TEntity, object>> expression,
+        public static void Add<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(Expression<Func<TEntity, object>> expression,
             TPropertyHandler propertyHandler)
             where TEntity : class
         {
@@ -212,7 +229,7 @@ namespace RepoDb
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add<TEntity, TPropertyHandler>(Expression<Func<TEntity, object>> expression,
+        public static void Add<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(Expression<Func<TEntity, object>> expression,
             bool force)
             where TEntity : class
             where TPropertyHandler : new()
@@ -228,7 +245,7 @@ namespace RepoDb
         /// <param name="expression">The expression to be parsed.</param>
         /// <param name="propertyHandler">The instance of the property handler.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add<TEntity, TPropertyHandler>(Expression<Func<TEntity, object>> expression,
+        public static void Add<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(Expression<Func<TEntity, object>> expression,
             TPropertyHandler propertyHandler,
             bool force)
             where TEntity : class
@@ -243,7 +260,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
         /// <param name="propertyName">The instance of property handler.</param>
-        public static void Add<TEntity, TPropertyHandler>(string propertyName)
+        public static void Add<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(string propertyName)
             where TEntity : class
             where TPropertyHandler : new()
         {
@@ -257,7 +274,7 @@ namespace RepoDb
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
         /// <param name="propertyName">The instance of property handler.</param>
         /// <param name="propertyHandler">The instance of the property handler.</param>
-        public static void Add<TEntity, TPropertyHandler>(string propertyName,
+        public static void Add<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(string propertyName,
             TPropertyHandler propertyHandler)
             where TEntity : class
         {
@@ -272,7 +289,7 @@ namespace RepoDb
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
         /// <param name="propertyName">The instance of property handler.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add<TEntity, TPropertyHandler>(string propertyName,
+        public static void Add<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(string propertyName,
             bool force)
             where TEntity : class
             where TPropertyHandler : new()
@@ -288,7 +305,7 @@ namespace RepoDb
         /// <param name="propertyName">The instance of property handler.</param>
         /// <param name="propertyHandler">The instance of property handler.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add<TEntity, TPropertyHandler>(string propertyName,
+        public static void Add<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(string propertyName,
             TPropertyHandler propertyHandler,
             bool force)
             where TEntity : class
@@ -314,7 +331,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
-        public static void Add<TEntity, TPropertyHandler>(Field field)
+        public static void Add<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(Field field)
             where TEntity : class
             where TPropertyHandler : new()
         {
@@ -328,7 +345,7 @@ namespace RepoDb
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         /// <param name="propertyHandler">The instance of the property handler.</param>
-        public static void Add<TEntity, TPropertyHandler>(Field field,
+        public static void Add<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(Field field,
             TPropertyHandler propertyHandler)
             where TEntity : class
         {
@@ -343,7 +360,7 @@ namespace RepoDb
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add<TEntity, TPropertyHandler>(Field field,
+        public static void Add<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(Field field,
             bool force)
             where TEntity : class
             where TPropertyHandler : new()
@@ -359,7 +376,7 @@ namespace RepoDb
         /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         /// <param name="propertyHandler">The instance of the property handler.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add<TEntity, TPropertyHandler>(Field field,
+        public static void Add<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(Field field,
             TPropertyHandler propertyHandler,
             bool force)
             where TEntity : class
@@ -385,7 +402,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/> to be mapped.</param>
-        internal static void Add<TEntity, TPropertyHandler>(PropertyInfo propertyInfo)
+        internal static void Add<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(PropertyInfo propertyInfo)
             where TEntity : class
             where TPropertyHandler : new()
         {
@@ -399,7 +416,7 @@ namespace RepoDb
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/> to be mapped.</param>
         /// <param name="propertyHandler">The instance of the property handler.</param>
-        internal static void Add<TEntity, TPropertyHandler>(PropertyInfo propertyInfo,
+        internal static void Add<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(PropertyInfo propertyInfo,
             TPropertyHandler propertyHandler)
             where TEntity : class
         {
@@ -414,7 +431,7 @@ namespace RepoDb
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/> to be mapped.</param>
         /// <param name="propertyHandler">The instance of the property handler.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        internal static void Add<TEntity, TPropertyHandler>(PropertyInfo propertyInfo,
+        internal static void Add<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(PropertyInfo propertyInfo,
             TPropertyHandler propertyHandler,
             bool force)
             where TEntity : class
@@ -431,7 +448,7 @@ namespace RepoDb
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/> to be mapped.</param>
         /// <param name="propertyHandler">The instance of the property handler.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        internal static void Add<TPropertyHandler>(Type entityType,
+        internal static void Add<[DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             PropertyInfo propertyInfo,
             TPropertyHandler propertyHandler,
             bool force)
@@ -439,7 +456,7 @@ namespace RepoDb
             // Validate
             ThrowNullReferenceException(propertyInfo, "PropertyInfo");
             ThrowNullReferenceException(propertyHandler, "PropertyHandler");
-            Guard(propertyHandler?.GetType() ?? typeof(TPropertyHandler));
+            Guard(TypeExtension.GetHandlerType<TPropertyHandler>(propertyHandler));
 
             /*
              * Note: The reflected type of the property info if explored via expression is different, therefore, we
@@ -487,7 +504,7 @@ namespace RepoDb
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>The mapped property handler object of the property.</returns>
-        public static TPropertyHandler Get<TEntity, TPropertyHandler>(Expression<Func<TEntity, object>> expression)
+        public static TPropertyHandler Get<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(Expression<Func<TEntity, object>> expression)
             where TEntity : class
         {
             return Get<TEntity, TPropertyHandler>(ExpressionExtension.GetProperty<TEntity>(expression));
@@ -500,7 +517,7 @@ namespace RepoDb
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
         /// <param name="propertyName">The name of the property.</param>
         /// <returns>The mapped property handler object of the property.</returns>
-        public static TPropertyHandler Get<TEntity, TPropertyHandler>(string propertyName)
+        public static TPropertyHandler Get<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(string propertyName)
             where TEntity : class
         {
             return Get<TEntity, TPropertyHandler>(TypeExtension.GetProperty<TEntity>(propertyName));
@@ -513,7 +530,7 @@ namespace RepoDb
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
         /// <returns>The mapped property handler object of the property.</returns>
-        public static TPropertyHandler Get<TEntity, TPropertyHandler>(Field field)
+        public static TPropertyHandler Get<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(Field field)
             where TEntity : class
         {
             return Get<TEntity, TPropertyHandler>(TypeExtension.GetProperty<TEntity>(field.Name));
@@ -526,7 +543,7 @@ namespace RepoDb
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
         /// <returns>The mapped property handler object of the property.</returns>
-        internal static TPropertyHandler Get<TEntity, TPropertyHandler>(PropertyInfo propertyInfo)
+        internal static TPropertyHandler Get<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(PropertyInfo propertyInfo)
             where TEntity : class
         {
             return Get<TPropertyHandler>(typeof(TEntity), propertyInfo);
@@ -539,7 +556,7 @@ namespace RepoDb
         /// <param name="entityType">The type of the data entity.</param>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
         /// <returns>The mapped property handler object of the property.</returns>
-        internal static TPropertyHandler Get<TPropertyHandler>(Type entityType,
+        internal static TPropertyHandler Get<[DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(Type entityType,
             PropertyInfo propertyInfo)
         {
             // Validate
@@ -568,7 +585,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
-        public static void Remove<TEntity>(Expression<Func<TEntity, object>> expression)
+        public static void Remove<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> expression)
             where TEntity : class
         {
             Remove<TEntity>(ExpressionExtension.GetProperty<TEntity>(expression));
@@ -579,7 +596,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <param name="propertyName">The instance of property handler.</param>
-        public static void Remove<TEntity>(string propertyName)
+        public static void Remove<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string propertyName)
             where TEntity : class
         {
             // Validates
@@ -601,7 +618,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
-        public static void Remove<TEntity>(Field field)
+        public static void Remove<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field)
             where TEntity : class
         {
             // Validates
@@ -623,7 +640,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/> to be mapped.</param>
-        internal static void Remove<TEntity>(PropertyInfo propertyInfo)
+        internal static void Remove<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(PropertyInfo propertyInfo)
         {
             Remove(typeof(TEntity), propertyInfo);
         }
@@ -698,7 +715,7 @@ namespace RepoDb
         /// <summary>
         /// Throws an exception if the type does not implemented the <see cref="IPropertyHandler{TInput, TResult}"/> interface.
         /// </summary>
-        private static void Guard(Type type)
+        private static void Guard([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)] Type type)
         {
             GuardPresence(type);
             if (!type.IsInterfacedTo(StaticType.IPropertyHandler))

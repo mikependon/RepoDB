@@ -135,7 +135,7 @@ namespace RepoDb
         /// <returns></returns>
         public Type TypeNullable()
         {
-            return IsNullable && Type.IsValueType ? typeof(System.Nullable<>).MakeGenericType(Type) : Type;
+            return IsNullable && Type.IsValueType ? RepoDb.Extensions.TypeExtension.MakeNullableType(Type) : Type;
         }
 
         #endregion

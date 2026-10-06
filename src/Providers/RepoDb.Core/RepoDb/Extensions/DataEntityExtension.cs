@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -28,9 +29,9 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="type">The type of the data entity.</param>
         /// <returns>The list of <see cref="ClassProperty"/> objects.</returns>
-        public static IEnumerable<ClassProperty> GetProperties(Type type)
+        public static IEnumerable<ClassProperty> GetProperties([DynamicallyAccessedMembers(Trimming.Entity)] Type type)
         {
-            foreach (var property in TypeCache.Get(type).GetProperties())
+            foreach (var property in TypeCache.GetProperties(type))
             {
                 yield return new ClassProperty(type, property);
             }
@@ -41,7 +42,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <returns>The list of <see cref="ClassProperty"/> objects.</returns>
-        public static IEnumerable<ClassProperty> GetProperties<TEntity>()
+        public static IEnumerable<ClassProperty> GetProperties<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>()
             where TEntity : class
         {
             return GetProperties(typeof(TEntity));
@@ -83,7 +84,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity where to get the mapped name.</typeparam>
         /// <returns>The mapped name for the data entity.</returns>
-        public static string GetMappedName<TEntity>()
+        public static string GetMappedName<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>()
         {
             return GetMappedName(typeof(TEntity));
         }
@@ -176,7 +177,7 @@ namespace RepoDb.Extensions
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="propertyName"></param>
         /// <returns></returns>
-        internal static PropertyInfo GetPropertyOrThrow<TEntity>(string propertyName)
+        internal static PropertyInfo GetPropertyOrThrow<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string propertyName)
             where TEntity : class
         {
             return GetPropertyOrThrow(typeof(TEntity), propertyName);
@@ -188,7 +189,7 @@ namespace RepoDb.Extensions
         /// <param name="type"></param>
         /// <param name="propertyName"></param>
         /// <returns></returns>
-        internal static PropertyInfo GetPropertyOrThrow(Type type,
+        internal static PropertyInfo GetPropertyOrThrow([DynamicallyAccessedMembers(Trimming.Entity)] Type type,
             string propertyName)
         {
             var property = TypeExtension.GetProperty(type, propertyName);
@@ -205,7 +206,7 @@ namespace RepoDb.Extensions
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="propertyName"></param>
         /// <returns></returns>
-        internal static ClassProperty GetClassPropertyOrThrow<TEntity>(string propertyName)
+        internal static ClassProperty GetClassPropertyOrThrow<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string propertyName)
             where TEntity : class
         {
             return GetClassPropertyOrThrow(typeof(TEntity), propertyName);
@@ -217,7 +218,7 @@ namespace RepoDb.Extensions
         /// <param name="type"></param>
         /// <param name="propertyName"></param>
         /// <returns></returns>
-        internal static ClassProperty GetClassPropertyOrThrow(Type type,
+        internal static ClassProperty GetClassPropertyOrThrow([DynamicallyAccessedMembers(Trimming.Entity)] Type type,
             string propertyName)
         {
             var property = PropertyCache

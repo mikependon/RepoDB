@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Requests;
@@ -50,7 +51,8 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public static TEntity QuerySingle<TEntity>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static TEntity QuerySingle<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             object what,
             IEnumerable<Field> fields = null,
@@ -109,7 +111,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public static TEntity QuerySingle<TEntity, TWhat>(this IDbConnection connection,
+        public static TEntity QuerySingle<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(this IDbConnection connection,
             string tableName,
             TWhat what,
             IEnumerable<Field> fields = null,
@@ -167,7 +169,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public static TEntity QuerySingle<TEntity>(this IDbConnection connection,
+        public static TEntity QuerySingle<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
@@ -225,7 +227,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public static TEntity QuerySingle<TEntity>(this IDbConnection connection,
+        public static TEntity QuerySingle<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             QueryField where,
             IEnumerable<Field> fields = null,
@@ -283,7 +285,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public static TEntity QuerySingle<TEntity>(this IDbConnection connection,
+        public static TEntity QuerySingle<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
@@ -341,7 +343,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public static TEntity QuerySingle<TEntity>(this IDbConnection connection,
+        public static TEntity QuerySingle<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             QueryGroup where,
             IEnumerable<Field> fields = null,
@@ -398,7 +400,8 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public static TEntity QuerySingle<TEntity>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static TEntity QuerySingle<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             object what,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -455,7 +458,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public static TEntity QuerySingle<TEntity, TWhat>(this IDbConnection connection,
+        public static TEntity QuerySingle<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(this IDbConnection connection,
             TWhat what,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -511,7 +514,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public static TEntity QuerySingle<TEntity>(this IDbConnection connection,
+        public static TEntity QuerySingle<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             QueryField where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -567,7 +570,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public static TEntity QuerySingle<TEntity>(this IDbConnection connection,
+        public static TEntity QuerySingle<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -622,7 +625,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public static TEntity QuerySingle<TEntity>(this IDbConnection connection,
+        public static TEntity QuerySingle<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -678,7 +681,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public static TEntity QuerySingle<TEntity>(this IDbConnection connection,
+        public static TEntity QuerySingle<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             QueryGroup where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -735,7 +738,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        internal static TEntity QuerySingleInternal<TEntity>(this IDbConnection connection,
+        internal static TEntity QuerySingleInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             QueryGroup where,
             IEnumerable<Field> fields = null,
@@ -803,7 +806,8 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public static async Task<TEntity> QuerySingleAsync<TEntity>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static async Task<TEntity> QuerySingleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             object what,
             IEnumerable<Field> fields = null,
@@ -865,7 +869,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public static async Task<TEntity> QuerySingleAsync<TEntity, TWhat>(this IDbConnection connection,
+        public static async Task<TEntity> QuerySingleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(this IDbConnection connection,
             string tableName,
             TWhat what,
             IEnumerable<Field> fields = null,
@@ -926,7 +930,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public static Task<TEntity> QuerySingleAsync<TEntity>(this IDbConnection connection,
+        public static Task<TEntity> QuerySingleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
@@ -987,7 +991,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public static Task<TEntity> QuerySingleAsync<TEntity>(this IDbConnection connection,
+        public static Task<TEntity> QuerySingleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             QueryField where,
             IEnumerable<Field> fields = null,
@@ -1048,7 +1052,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public static Task<TEntity> QuerySingleAsync<TEntity>(this IDbConnection connection,
+        public static Task<TEntity> QuerySingleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
@@ -1109,7 +1113,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public static Task<TEntity> QuerySingleAsync<TEntity>(this IDbConnection connection,
+        public static Task<TEntity> QuerySingleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             QueryGroup where,
             IEnumerable<Field> fields = null,
@@ -1169,7 +1173,8 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public static async Task<TEntity> QuerySingleAsync<TEntity>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static async Task<TEntity> QuerySingleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             object what,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -1229,7 +1234,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public static async Task<TEntity> QuerySingleAsync<TEntity, TWhat>(this IDbConnection connection,
+        public static async Task<TEntity> QuerySingleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(this IDbConnection connection,
             TWhat what,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -1288,7 +1293,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public static Task<TEntity> QuerySingleAsync<TEntity>(this IDbConnection connection,
+        public static Task<TEntity> QuerySingleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             QueryField where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -1347,7 +1352,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public static Task<TEntity> QuerySingleAsync<TEntity>(this IDbConnection connection,
+        public static Task<TEntity> QuerySingleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -1406,7 +1411,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public static Task<TEntity> QuerySingleAsync<TEntity>(this IDbConnection connection,
+        public static Task<TEntity> QuerySingleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -1465,7 +1470,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public static Task<TEntity> QuerySingleAsync<TEntity>(this IDbConnection connection,
+        public static Task<TEntity> QuerySingleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             QueryGroup where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -1525,7 +1530,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        internal static async Task<TEntity> QuerySingleAsyncInternal<TEntity>(this IDbConnection connection,
+        internal static async Task<TEntity> QuerySingleAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             QueryGroup where,
             IEnumerable<Field> fields = null,
@@ -1594,7 +1599,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public static dynamic QuerySingle<TWhat>(this IDbConnection connection,
+        public static dynamic QuerySingle<[DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(this IDbConnection connection,
             string tableName,
             TWhat what,
             IEnumerable<Field> fields = null,
@@ -1650,6 +1655,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static dynamic QuerySingle(this IDbConnection connection,
             string tableName,
             object what,
@@ -1936,7 +1942,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public static async Task<dynamic> QuerySingleAsync<TWhat>(this IDbConnection connection,
+        public static async Task<dynamic> QuerySingleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(this IDbConnection connection,
             string tableName,
             TWhat what,
             IEnumerable<Field> fields = null,
@@ -1995,6 +2001,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static async Task<dynamic> QuerySingleAsync(this IDbConnection connection,
             string tableName,
             object what,
@@ -2294,7 +2301,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        internal static TEntity QuerySingleInternalBase<TEntity>(this IDbConnection connection,
+        internal static TEntity QuerySingleInternalBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             QueryGroup where,
             IEnumerable<Field> fields = null,
@@ -2395,7 +2402,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        internal static async Task<TEntity> QuerySingleAsyncInternalBase<TEntity>(this IDbConnection connection,
+        internal static async Task<TEntity> QuerySingleAsyncInternalBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             QueryGroup where,
             IEnumerable<Field> fields = null,

@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Extensions;
 using System;
 using System.Collections.Concurrent;
@@ -28,7 +29,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <returns>The cached list <see cref="Field"/> objects.</returns>
-        public static IEnumerable<Field> Get<TEntity>()
+        public static IEnumerable<Field> Get<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>()
             where TEntity : class
         {
             return Get(typeof(TEntity));
@@ -39,7 +40,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entityType">The type of the data entity.</param>
         /// <returns>The cached list <see cref="Field"/> objects.</returns>
-        public static IEnumerable<Field> Get(Type entityType)
+        public static IEnumerable<Field> Get([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType)
         {
             if (!TypeCache.Get(entityType).IsClassType())
             {

@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Contexts.Cachers;
 using RepoDb.Contexts.Execution;
 using RepoDb.Extensions;
@@ -64,7 +65,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="transaction"></param>
         /// <param name="statementBuilder"></param>
         /// <returns></returns>
-        public static MergeExecutionContext Create(Type entityType,
+        public static MergeExecutionContext Create([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             IDbConnection connection,
             string tableName,
             IEnumerable<Field> qualifiers,
@@ -121,7 +122,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="statementBuilder"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<MergeExecutionContext> CreateAsync(Type entityType,
+        public static async Task<MergeExecutionContext> CreateAsync([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             IDbConnection connection,
             string tableName,
             IEnumerable<Field> qualifiers,
@@ -176,7 +177,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="fields"></param>
         /// <param name="commandText"></param>
         /// <returns></returns>
-        private static MergeExecutionContext CreateInternal(Type entityType,
+        private static MergeExecutionContext CreateInternal([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             IDbConnection connection,
             DbFieldCollection dbFields,
             string tableName,

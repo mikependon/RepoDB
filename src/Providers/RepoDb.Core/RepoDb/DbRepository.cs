@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -374,6 +375,7 @@ namespace RepoDb
         /// <returns>
         /// An enumerable list of dynamic objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public IEnumerable<dynamic> ExecuteQuery(string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -426,6 +428,7 @@ namespace RepoDb
         /// <returns>
         /// An enumerable list of dynamic objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<IEnumerable<dynamic>> ExecuteQueryAsync(string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -480,7 +483,8 @@ namespace RepoDb
         /// <returns>
         /// An enumerable list of data entity objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
-        public IEnumerable<TEntity> ExecuteQuery<TEntity>(string commandText,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public IEnumerable<TEntity> ExecuteQuery<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string commandText,
             object param = null,
             CommandType? commandType = null,
             string cacheKey = null,
@@ -534,7 +538,8 @@ namespace RepoDb
         /// <returns>
         /// An enumerable list of data entity objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
-        public async Task<IEnumerable<TEntity>> ExecuteQueryAsync<TEntity>(string commandText,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public async Task<IEnumerable<TEntity>> ExecuteQueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string commandText,
             object param = null,
             CommandType? commandType = null,
             string cacheKey = null,
@@ -589,6 +594,7 @@ namespace RepoDb
         /// A dynamic object containing the converted result of the first row returned by the underlying <see cref="IDataReader"/> object.
         /// </returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public dynamic ExecuteQueryFirst(string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -642,6 +648,7 @@ namespace RepoDb
         /// A dynamic object containing the converted result of the first row returned by the underlying <see cref="IDataReader"/> object.
         /// </returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<dynamic> ExecuteQueryFirstAsync(string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -697,7 +704,8 @@ namespace RepoDb
         /// An instance of the target data entity object containing the converted result of the first row returned by the underlying <see cref="IDataReader"/> object.
         /// </returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public TEntity ExecuteQueryFirst<TEntity>(string commandText,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public TEntity ExecuteQueryFirst<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string commandText,
             object param = null,
             CommandType? commandType = null,
             string cacheKey = null,
@@ -752,7 +760,8 @@ namespace RepoDb
         /// An instance of the target data entity object containing the converted result of the first row returned by the underlying <see cref="IDataReader"/> object.
         /// </returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public async Task<TEntity> ExecuteQueryFirstAsync<TEntity>(string commandText,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public async Task<TEntity> ExecuteQueryFirstAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string commandText,
             object param = null,
             CommandType? commandType = null,
             string cacheKey = null,
@@ -810,6 +819,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public dynamic ExecuteQuerySingle(string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -866,6 +876,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<dynamic> ExecuteQuerySingleAsync(string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -924,7 +935,8 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public TEntity ExecuteQuerySingle<TEntity>(string commandText,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public TEntity ExecuteQuerySingle<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string commandText,
             object param = null,
             CommandType? commandType = null,
             string cacheKey = null,
@@ -982,7 +994,8 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public async Task<TEntity> ExecuteQuerySingleAsync<TEntity>(string commandText,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public async Task<TEntity> ExecuteQuerySingleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string commandText,
             object param = null,
             CommandType? commandType = null,
             string cacheKey = null,
@@ -1030,6 +1043,7 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public int ExecuteNonQuery(string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -1071,6 +1085,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<int> ExecuteNonQueryAsync(string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -1117,6 +1132,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An object that holds the first occurrence value (first column of first row) of the execution.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public object ExecuteScalar(string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -1166,6 +1182,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An object that holds the first occurrence value (first column of first row) of the execution.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<object> ExecuteScalarAsync(string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -1217,6 +1234,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A first occurrence occurrence (first column of first row) of the execution.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public TResult ExecuteScalar<TResult>(string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -1267,6 +1285,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A first occurrence value (first column of first row) of the execution.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<TResult> ExecuteScalarAsync<TResult>(string commandText,
             object param = null,
             CommandType? commandType = null,

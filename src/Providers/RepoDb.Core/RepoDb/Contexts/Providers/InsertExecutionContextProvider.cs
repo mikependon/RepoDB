@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Contexts.Cachers;
 using RepoDb.Contexts.Execution;
 using RepoDb.Extensions;
@@ -59,7 +60,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="transaction"></param>
         /// <param name="statementBuilder"></param>
         /// <returns></returns>
-        public static InsertExecutionContext Create(Type entityType,
+        public static InsertExecutionContext Create([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             IDbConnection connection,
             string tableName,
             IEnumerable<Field> fields,
@@ -113,7 +114,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="statementBuilder"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<InsertExecutionContext> CreateAsync(Type entityType,
+        public static async Task<InsertExecutionContext> CreateAsync([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             IDbConnection connection,
             string tableName,
             IEnumerable<Field> fields,
@@ -166,7 +167,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="fields"></param>
         /// <param name="commandText"></param>
         /// <returns></returns>
-        private static InsertExecutionContext CreateInternal(Type entityType,
+        private static InsertExecutionContext CreateInternal([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             IDbConnection connection,
             DbFieldCollection dbFields,
             string tableName,

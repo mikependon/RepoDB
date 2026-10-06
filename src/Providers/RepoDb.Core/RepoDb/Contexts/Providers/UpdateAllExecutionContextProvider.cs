@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Contexts.Cachers;
 using RepoDb.Contexts.Execution;
 using RepoDb.Extensions;
@@ -71,7 +72,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="transaction"></param>
         /// <param name="statementBuilder"></param>
         /// <returns></returns>
-        public static UpdateAllExecutionContext Create(Type entityType,
+        public static UpdateAllExecutionContext Create([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
@@ -135,7 +136,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="statementBuilder"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<UpdateAllExecutionContext> CreateAsync(Type entityType,
+        public static async Task<UpdateAllExecutionContext> CreateAsync([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
@@ -197,7 +198,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="fields"></param>
         /// <param name="commandText"></param>
         /// <returns></returns>
-        private static UpdateAllExecutionContext CreateInternal(Type entityType,
+        private static UpdateAllExecutionContext CreateInternal([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
@@ -220,7 +221,7 @@ namespace RepoDb.Contexts.Providers
             // Exclude the fields not on the actual entity
             if (!TypeCache.Get(entityType).IsClassType())
             {
-                var entityFields = Field.Parse(entities?.FirstOrDefault());
+                var entityFields = Field.ParseObject(entities?.FirstOrDefault());
                 inputFields = inputFields?
                     .Where(field =>
                         entityFields.FirstOrDefault(f => string.Equals(f.Name.AsUnquoted(trim: true, dbSetting), field.Name.AsUnquoted(trim: true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)

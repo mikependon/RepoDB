@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Extensions;
 using System;
 using System.Collections.Concurrent;
@@ -31,7 +32,7 @@ namespace RepoDb
         /// <param name="entities">The list of the data entities.</param>
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>The values of the property of the data entities.</returns>
-        public static IEnumerable<TResult> GetEntitiesPropertyValues<TEntity, TResult>(IEnumerable<TEntity> entities,
+        public static IEnumerable<TResult> GetEntitiesPropertyValues<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> expression)
             where TEntity : class
         {
@@ -50,7 +51,7 @@ namespace RepoDb
         /// <param name="entities">The list of the data entities.</param>
         /// <param name="field">The name of the target property defined as <see cref="Field"/>.</param>
         /// <returns>The values of the property of the data entities.</returns>
-        public static IEnumerable<TResult> GetEntitiesPropertyValues<TEntity, TResult>(IEnumerable<TEntity> entities,
+        public static IEnumerable<TResult> GetEntitiesPropertyValues<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(IEnumerable<TEntity> entities,
             Field field)
             where TEntity : class
         {
@@ -68,7 +69,7 @@ namespace RepoDb
         /// <param name="entities">The list of the data entities.</param>
         /// <param name="propertyName">The name of the target property.</param>
         /// <returns>The values of the property of the data entities.</returns>
-        public static IEnumerable<TResult> GetEntitiesPropertyValues<TEntity, TResult>(IEnumerable<TEntity> entities,
+        public static IEnumerable<TResult> GetEntitiesPropertyValues<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(IEnumerable<TEntity> entities,
             string propertyName)
             where TEntity : class
         {
@@ -86,7 +87,7 @@ namespace RepoDb
         /// <param name="entities">The list of the data entities.</param>
         /// <param name="property">The target property.</param>
         /// <returns>The values of the property of the data entities.</returns>
-        internal static IEnumerable<TResult> GetEntitiesPropertyValues<TEntity, TResult>(IEnumerable<TEntity> entities,
+        internal static IEnumerable<TResult> GetEntitiesPropertyValues<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(IEnumerable<TEntity> entities,
             ClassProperty property)
             where TEntity : class
         {
@@ -98,7 +99,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TResult"></typeparam>
-        private static class GetPropertyValuesCache<TEntity, TResult>
+        private static class GetPropertyValuesCache<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>
             where TEntity : class
         {
             private static ConcurrentDictionary<int, Func<TEntity, TResult>> cache = new();
@@ -188,7 +189,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <returns>The properties of the class.</returns>
-        public static IEnumerable<ClassProperty> GetProperties<TEntity>()
+        public static IEnumerable<ClassProperty> GetProperties<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>()
             where TEntity : class
         {
             return GetPropertiesCache<TEntity>.Do();
@@ -198,7 +199,7 @@ namespace RepoDb
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        private static class GetPropertiesCache<TEntity>
+        private static class GetPropertiesCache<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>
             where TEntity : class
         {
             private static Func<IEnumerable<ClassProperty>> func;
@@ -236,7 +237,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The target type of the class.</typeparam>
         /// <param name="obj">The object to be extracted.</param>
         /// <returns>A list of <see cref="PropertyValue"/> object with extracted values.</returns>
-        public static IEnumerable<PropertyValue> GetPropertiesAndValues<TEntity>(TEntity obj)
+        public static IEnumerable<PropertyValue> GetPropertiesAndValues<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(TEntity obj)
             where TEntity : class
         {
             return GetPropertiesValuesCache<TEntity>.Do(obj);
@@ -246,7 +247,7 @@ namespace RepoDb
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        private static class GetPropertiesValuesCache<TEntity>
+        private static class GetPropertiesValuesCache<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>
             where TEntity : class
         {
             private static Func<TEntity, IEnumerable<PropertyValue>> func;
@@ -258,9 +259,9 @@ namespace RepoDb
             private static Func<TEntity, IEnumerable<PropertyValue>> GetFunc()
             {
                 // Expressions
-                var addMethod = StaticType.PropertyValueList.GetMethod("Add", new[] { StaticType.PropertyValue });
+                var addMethod = typeof(List<RepoDb.PropertyValue>).GetMethod("Add", new[] { StaticType.PropertyValue });
                 var obj = Expression.Parameter(typeof(TEntity), "obj");
-                var constructor = StaticType.PropertyValue.GetConstructor(new[]
+                var constructor = typeof(RepoDb.PropertyValue).GetConstructor(new[]
                 {
                     StaticType.String,
                     StaticType.Object,
@@ -270,7 +271,7 @@ namespace RepoDb
                 // Set the body
                 var properties = PropertyCache.Get<TEntity>();
                 var body = Expression.ListInit(
-                    Expression.New(StaticType.PropertyValueList),
+                    Expression.New(typeof(List<PropertyValue>)),
                     properties.Select(property =>
                     {
                         var name = Expression.Constant(property.GetMappedName());

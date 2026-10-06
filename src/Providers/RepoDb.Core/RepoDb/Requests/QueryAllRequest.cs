@@ -10,6 +10,7 @@
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Collections.Generic;
 using System.Data;
 
@@ -51,7 +52,7 @@ namespace RepoDb.Requests
         /// <param name="orderBy">The list of order fields.</param>
         /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public QueryAllRequest(Type type,
+        public QueryAllRequest([DynamicallyAccessedMembers(Trimming.Entity)] Type type,
             IDbConnection connection,
             IDbTransaction transaction,
             IEnumerable<Field> fields = null,

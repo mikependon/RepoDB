@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -337,8 +338,19 @@ namespace RepoDb.Extensions
         public static object GetHandledValue(this PropertyInfo property,
             object entity)
         {
-            return GetHandledValue(property, entity, property.DeclaringType);
+            return GetHandledValue(property, entity, GetDeclaringType(property));
         }
+
+        /// <summary>
+        /// Returns the declaring type of the property.
+        /// </summary>
+        /// <param name="property">The target <see cref="PropertyInfo"/> object.</param>
+        /// <returns>The declaring type of the property.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2073:Target return value does not satisfy 'DynamicallyAccessedMembersAttribute' requirements.",
+            Justification = "The declaring type is only used to look-up the mapping of the given property, whose metadata is available.")]
+        [return: DynamicallyAccessedMembers(Trimming.Entity)]
+        internal static Type GetDeclaringType(PropertyInfo property) =>
+            property?.DeclaringType;
 
         /// <summary>
         /// Returns the value of the data entity property. If the property handler is defined in the property, then the
@@ -350,14 +362,14 @@ namespace RepoDb.Extensions
         /// <returns>The handled value of the data entity property.</returns>
         public static object GetHandledValue(this PropertyInfo property,
             object entity,
-            Type declaringType)
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type declaringType)
         {
-            var classProperty = PropertyCache.Get((declaringType ?? property?.DeclaringType), property, includeMappings: true);
+            var classProperty = PropertyCache.Get((declaringType ?? GetDeclaringType(property)), property, includeMappings: true);
             var propertyHandler = classProperty?.GetPropertyHandler();
             var value = property?.GetValue(entity);
             if (propertyHandler != null)
             {
-                var setMethod = propertyHandler.GetType().GetMethod("Set");
+                var setMethod = Reflection.Compiler.GetPropertyHandlerSetMethod(propertyHandler);
                 return setMethod.Invoke(propertyHandler, new[] { value, classProperty });
             }
             return value;

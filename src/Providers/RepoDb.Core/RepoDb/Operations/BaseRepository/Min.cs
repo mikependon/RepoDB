@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -29,6 +30,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The min value of the target field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public object Min(Field field,
             object where,
             string hints = null,
@@ -139,6 +141,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The min value of the target field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public object Min(Expression<Func<TEntity, object>> field,
             object where,
             string hints = null,
@@ -250,6 +253,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Task<object> MinAsync(Field field,
             object where,
             string hints = null,
@@ -375,6 +379,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Task<object> MinAsync(Expression<Func<TEntity, object>> field,
             object where,
             string hints = null,
@@ -503,6 +508,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The min value of the target field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public TResult Min<TResult>(Field field,
             object where,
             string hints = null,
@@ -613,6 +619,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The min value of the target field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public TResult Min<TResult>(Expression<Func<TEntity, TResult>> field,
             object where,
             string hints = null,
@@ -724,6 +731,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Task<TResult> MinAsync<TResult>(Field field,
             object where,
             string hints = null,
@@ -849,6 +857,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Task<TResult> MinAsync<TResult>(Expression<Func<TEntity, TResult>> field,
             object where,
             string hints = null,

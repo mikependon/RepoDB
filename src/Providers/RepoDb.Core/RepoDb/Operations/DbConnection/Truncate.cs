@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Interfaces;
 using RepoDb.Requests;
 using System.Data;
@@ -33,7 +34,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of rows affected.</returns>
-        public static int Truncate<TEntity>(this IDbConnection connection,
+        public static int Truncate<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Truncate,
             IDbTransaction transaction = null,
@@ -60,7 +61,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of rows affected.</returns>
-        internal static int TruncateInternal<TEntity>(this IDbConnection connection,
+        internal static int TruncateInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Truncate,
             IDbTransaction transaction = null,
@@ -99,7 +100,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected.</returns>
-        public static Task<int> TruncateAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> TruncateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Truncate,
             IDbTransaction transaction = null,
@@ -129,7 +130,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected.</returns>
-        internal static Task<int> TruncateAsyncInternal<TEntity>(this IDbConnection connection,
+        internal static Task<int> TruncateAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Truncate,
             IDbTransaction transaction = null,

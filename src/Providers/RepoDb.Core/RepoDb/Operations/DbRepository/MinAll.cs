@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Data;
 using System.Data.Common;
@@ -31,7 +32,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        public object MinAll<TEntity>(Field field,
+        public object MinAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field,
             string hints = null,
             string traceKey = TraceKeys.MinAll,
             IDbTransaction transaction = null)
@@ -67,7 +68,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        public object MinAll<TEntity>(Expression<Func<TEntity, object>> field,
+        public object MinAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> field,
             string hints = null,
             string traceKey = TraceKeys.MinAll,
             IDbTransaction transaction = null)
@@ -104,7 +105,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        public async Task<object> MinAllAsync<TEntity>(Field field,
+        public async Task<object> MinAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field,
             string hints = null,
             string traceKey = TraceKeys.MinAll,
             IDbTransaction transaction = null,
@@ -143,7 +144,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        public async Task<object> MinAllAsync<TEntity>(Expression<Func<TEntity, object>> field,
+        public async Task<object> MinAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> field,
             string hints = null,
             string traceKey = TraceKeys.MinAll,
             IDbTransaction transaction = null,
@@ -186,7 +187,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        public TResult MinAll<TEntity, TResult>(Field field,
+        public TResult MinAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Field field,
             string hints = null,
             string traceKey = TraceKeys.MinAll,
             IDbTransaction transaction = null)
@@ -223,7 +224,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        public TResult MinAll<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
+        public TResult MinAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
             string hints = null,
             string traceKey = TraceKeys.MinAll,
             IDbTransaction transaction = null)
@@ -261,7 +262,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        public async Task<TResult> MinAllAsync<TEntity, TResult>(Field field,
+        public async Task<TResult> MinAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Field field,
             string hints = null,
             string traceKey = TraceKeys.MinAll,
             IDbTransaction transaction = null,
@@ -301,7 +302,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        public async Task<TResult> MinAllAsync<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
+        public async Task<TResult> MinAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
             string hints = null,
             string traceKey = TraceKeys.MinAll,
             IDbTransaction transaction = null,

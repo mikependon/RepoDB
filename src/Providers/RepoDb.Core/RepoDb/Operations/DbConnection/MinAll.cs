@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Interfaces;
 using RepoDb.Requests;
 using System;
@@ -39,7 +40,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        public static object MinAll<TEntity>(this IDbConnection connection,
+        public static object MinAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Field field,
             string hints = null,
             int? commandTimeout = null,
@@ -72,7 +73,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        public static object MinAll<TEntity>(this IDbConnection connection,
+        public static object MinAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             string hints = null,
             int? commandTimeout = null,
@@ -106,7 +107,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        public static Task<object> MinAllAsync<TEntity>(this IDbConnection connection,
+        public static Task<object> MinAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Field field,
             string hints = null,
             int? commandTimeout = null,
@@ -142,7 +143,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        public static Task<object> MinAllAsync<TEntity>(this IDbConnection connection,
+        public static Task<object> MinAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             string hints = null,
             int? commandTimeout = null,
@@ -182,7 +183,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        public static TResult MinAll<TEntity, TResult>(this IDbConnection connection,
+        public static TResult MinAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Field field,
             string hints = null,
             int? commandTimeout = null,
@@ -216,7 +217,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        public static TResult MinAll<TEntity, TResult>(this IDbConnection connection,
+        public static TResult MinAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Expression<Func<TEntity, TResult>> field,
             string hints = null,
             int? commandTimeout = null,
@@ -250,7 +251,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        internal static TResult MinAllInternal<TEntity, TResult>(this IDbConnection connection,
+        internal static TResult MinAllInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Field field,
             string hints = null,
             int? commandTimeout = null,
@@ -294,7 +295,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        public static Task<TResult> MinAllAsync<TEntity, TResult>(this IDbConnection connection,
+        public static Task<TResult> MinAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Field field,
             string hints = null,
             int? commandTimeout = null,
@@ -331,7 +332,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        public static Task<TResult> MinAllAsync<TEntity, TResult>(this IDbConnection connection,
+        public static Task<TResult> MinAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Expression<Func<TEntity, TResult>> field,
             string hints = null,
             int? commandTimeout = null,
@@ -368,7 +369,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        internal static Task<TResult> MinAllAsyncInternal<TEntity, TResult>(this IDbConnection connection,
+        internal static Task<TResult> MinAllAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Field field,
             string hints = null,
             int? commandTimeout = null,

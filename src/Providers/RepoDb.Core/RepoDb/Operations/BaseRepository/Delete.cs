@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -47,7 +48,7 @@ namespace RepoDb
 		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public int Delete<TWhat>(TWhat what,
+        public int Delete<[DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(TWhat what,
             string hints = null,
             string traceKey = TraceKeys.Delete,
 			IDbTransaction transaction = null)
@@ -66,6 +67,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public int Delete(object what,
             string hints = null,
             string traceKey = TraceKeys.Delete,
@@ -189,7 +191,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public Task<int> DeleteAsync<TWhat>(TWhat what,
+        public Task<int> DeleteAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(TWhat what,
             string hints = null,
             string traceKey = TraceKeys.Delete,
 			IDbTransaction transaction = null,
@@ -211,6 +213,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Task<int> DeleteAsync(object what,
             string hints = null,
             string traceKey = TraceKeys.Delete,

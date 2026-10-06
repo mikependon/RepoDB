@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Data;
 using System.Data.Common;
@@ -31,7 +32,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value of the target field.</returns>
-        public double AverageAll<TEntity>(Field field,
+        public double AverageAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field,
             string hints = null,
             string traceKey = TraceKeys.AverageAll,
             IDbTransaction transaction = null)
@@ -67,7 +68,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value of the target field.</returns>
-        public double AverageAll<TEntity>(Expression<Func<TEntity, object>> field,
+        public double AverageAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> field,
             string hints = null,
             string traceKey = TraceKeys.AverageAll,
             IDbTransaction transaction = null)
@@ -104,7 +105,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
-        public async Task<double> AverageAllAsync<TEntity>(Field field,
+        public async Task<double> AverageAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field,
             string hints = null,
             string traceKey = TraceKeys.AverageAll,
             IDbTransaction transaction = null,
@@ -143,7 +144,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
-        public async Task<double> AverageAllAsync<TEntity>(Expression<Func<TEntity, object>> field,
+        public async Task<double> AverageAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> field,
             string hints = null,
             string traceKey = TraceKeys.AverageAll,
             IDbTransaction transaction = null,
@@ -186,7 +187,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value of the target field.</returns>
-        public TResult AverageAll<TEntity, TResult>(Field field,
+        public TResult AverageAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Field field,
             string hints = null,
             string traceKey = TraceKeys.AverageAll,
             IDbTransaction transaction = null)
@@ -223,7 +224,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value of the target field.</returns>
-        public TResult AverageAll<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
+        public TResult AverageAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
             string hints = null,
             string traceKey = TraceKeys.AverageAll,
             IDbTransaction transaction = null)
@@ -261,7 +262,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
-        public async Task<TResult> AverageAllAsync<TEntity, TResult>(Field field,
+        public async Task<TResult> AverageAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Field field,
             string hints = null,
             string traceKey = TraceKeys.AverageAll,
             IDbTransaction transaction = null,
@@ -301,7 +302,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
-        public async Task<TResult> AverageAllAsync<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
+        public async Task<TResult> AverageAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
             string hints = null,
             string traceKey = TraceKeys.AverageAll,
             IDbTransaction transaction = null,

@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Interfaces;
 using RepoDb.Requests;
 using System.Data;
@@ -35,7 +36,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        public static long CountAll<TEntity>(this IDbConnection connection,
+        public static long CountAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.CountAll,
@@ -65,7 +66,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        internal static long CountAllInternal<TEntity>(this IDbConnection connection,
+        internal static long CountAllInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.CountAll,
@@ -105,7 +106,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        public static Task<long> CountAllAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> CountAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.CountAll,
@@ -138,7 +139,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        internal static Task<long> CountAllAsyncInternal<TEntity>(this IDbConnection connection,
+        internal static Task<long> CountAllAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.CountAll,

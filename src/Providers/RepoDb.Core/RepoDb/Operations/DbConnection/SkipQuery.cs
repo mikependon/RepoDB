@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Requests;
@@ -43,7 +44,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static IEnumerable<TEntity> SkipQuery<TEntity>(this IDbConnection connection,
+        public static IEnumerable<TEntity> SkipQuery<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             int skip,
             int rowsPerBatch,
@@ -90,7 +91,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static IEnumerable<TEntity> SkipQuery<TEntity>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static IEnumerable<TEntity> SkipQuery<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             int skip,
             int rowsPerBatch,
@@ -138,7 +140,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static IEnumerable<TEntity> SkipQuery<TEntity>(this IDbConnection connection,
+        public static IEnumerable<TEntity> SkipQuery<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             int skip,
             int rowsPerBatch,
@@ -186,7 +188,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static IEnumerable<TEntity> SkipQuery<TEntity>(this IDbConnection connection,
+        public static IEnumerable<TEntity> SkipQuery<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             int skip,
             int rowsPerBatch,
@@ -234,7 +236,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static IEnumerable<TEntity> SkipQuery<TEntity>(this IDbConnection connection,
+        public static IEnumerable<TEntity> SkipQuery<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             int skip,
             int rowsPerBatch,
@@ -282,7 +284,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static IEnumerable<TEntity> SkipQuery<TEntity>(this IDbConnection connection,
+        public static IEnumerable<TEntity> SkipQuery<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             int skip,
             int rowsPerBatch,
@@ -328,7 +330,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static IEnumerable<TEntity> SkipQuery<TEntity>(this IDbConnection connection,
+        public static IEnumerable<TEntity> SkipQuery<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -373,7 +375,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static IEnumerable<TEntity> SkipQuery<TEntity>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static IEnumerable<TEntity> SkipQuery<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -419,7 +422,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static IEnumerable<TEntity> SkipQuery<TEntity>(this IDbConnection connection,
+        public static IEnumerable<TEntity> SkipQuery<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -465,7 +468,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static IEnumerable<TEntity> SkipQuery<TEntity>(this IDbConnection connection,
+        public static IEnumerable<TEntity> SkipQuery<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -511,7 +514,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static IEnumerable<TEntity> SkipQuery<TEntity>(this IDbConnection connection,
+        public static IEnumerable<TEntity> SkipQuery<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -557,7 +560,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static IEnumerable<TEntity> SkipQuery<TEntity>(this IDbConnection connection,
+        public static IEnumerable<TEntity> SkipQuery<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -604,7 +607,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        internal static IEnumerable<TEntity> SkipQueryInternal<TEntity>(this IDbConnection connection,
+        internal static IEnumerable<TEntity> SkipQueryInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             int skip,
             int rowsPerBatch,
@@ -661,7 +664,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static Task<IEnumerable<TEntity>> SkipQueryAsync<TEntity>(this IDbConnection connection,
+        public static Task<IEnumerable<TEntity>> SkipQueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             int skip,
             int rowsPerBatch,
@@ -711,7 +714,8 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static Task<IEnumerable<TEntity>> SkipQueryAsync<TEntity>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static Task<IEnumerable<TEntity>> SkipQueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             int skip,
             int rowsPerBatch,
@@ -762,7 +766,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static Task<IEnumerable<TEntity>> SkipQueryAsync<TEntity>(this IDbConnection connection,
+        public static Task<IEnumerable<TEntity>> SkipQueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             int skip,
             int rowsPerBatch,
@@ -813,7 +817,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static Task<IEnumerable<TEntity>> SkipQueryAsync<TEntity>(this IDbConnection connection,
+        public static Task<IEnumerable<TEntity>> SkipQueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             int skip,
             int rowsPerBatch,
@@ -864,7 +868,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static Task<IEnumerable<TEntity>> SkipQueryAsync<TEntity>(this IDbConnection connection,
+        public static Task<IEnumerable<TEntity>> SkipQueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             int skip,
             int rowsPerBatch,
@@ -915,7 +919,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static Task<IEnumerable<TEntity>> SkipQueryAsync<TEntity>(this IDbConnection connection,
+        public static Task<IEnumerable<TEntity>> SkipQueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             int skip,
             int rowsPerBatch,
@@ -964,7 +968,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static Task<IEnumerable<TEntity>> SkipQueryAsync<TEntity>(this IDbConnection connection,
+        public static Task<IEnumerable<TEntity>> SkipQueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -1012,7 +1016,8 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static Task<IEnumerable<TEntity>> SkipQueryAsync<TEntity>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static Task<IEnumerable<TEntity>> SkipQueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -1061,7 +1066,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static Task<IEnumerable<TEntity>> SkipQueryAsync<TEntity>(this IDbConnection connection,
+        public static Task<IEnumerable<TEntity>> SkipQueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -1110,7 +1115,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static Task<IEnumerable<TEntity>> SkipQueryAsync<TEntity>(this IDbConnection connection,
+        public static Task<IEnumerable<TEntity>> SkipQueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -1159,7 +1164,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static Task<IEnumerable<TEntity>> SkipQueryAsync<TEntity>(this IDbConnection connection,
+        public static Task<IEnumerable<TEntity>> SkipQueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -1208,7 +1213,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static Task<IEnumerable<TEntity>> SkipQueryAsync<TEntity>(this IDbConnection connection,
+        public static Task<IEnumerable<TEntity>> SkipQueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -1258,7 +1263,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        internal static async Task<IEnumerable<TEntity>> SkipQueryAsyncInternal<TEntity>(this IDbConnection connection,
+        internal static async Task<IEnumerable<TEntity>> SkipQueryAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             int skip,
             int rowsPerBatch,
@@ -1360,6 +1365,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static IEnumerable<dynamic> SkipQuery(this IDbConnection connection,
             string tableName,
             int skip,
@@ -1596,6 +1602,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Task<IEnumerable<dynamic>> SkipQueryAsync(this IDbConnection connection,
             string tableName,
             int skip,
@@ -1796,7 +1803,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        internal static IEnumerable<TEntity> SkipQueryInternalBase<TEntity>(this IDbConnection connection,
+        internal static IEnumerable<TEntity> SkipQueryInternalBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             int skip,
             int rowsPerBatch,
@@ -1874,7 +1881,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        internal static async Task<IEnumerable<TEntity>> SkipQueryAsyncInternalBase<TEntity>(this IDbConnection connection,
+        internal static async Task<IEnumerable<TEntity>> SkipQueryAsyncInternalBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             int skip,
             int rowsPerBatch,

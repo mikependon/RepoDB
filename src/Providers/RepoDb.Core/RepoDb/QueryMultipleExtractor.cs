@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Reflection;
@@ -160,7 +161,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of data entity to be extracted.</typeparam>
         /// <param name="isMoveToNextResult">A flag to use whether the operation would call the <see cref="System.Data.IDataReader.NextResult()"/> method.</param>
         /// <returns>An enumerable of extracted data entity.</returns>
-        public IEnumerable<TEntity> Extract<TEntity>(bool isMoveToNextResult = true)
+        public IEnumerable<TEntity> Extract<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(bool isMoveToNextResult = true)
         {
             if (!GetCacheItem<IEnumerable<TEntity>>(out var result))
             {
@@ -182,7 +183,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of data entity to be extracted.</typeparam>
         /// <param name="isMoveToNextResult">A flag to use whether the operation would call the <see cref="System.Data.IDataReader.NextResult()"/> method.</param>
         /// <returns>An enumerable of extracted data entity.</returns>
-        public async Task<IEnumerable<TEntity>> ExtractAsync<TEntity>(bool isMoveToNextResult = true)
+        public async Task<IEnumerable<TEntity>> ExtractAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(bool isMoveToNextResult = true)
         {
             if (!GetCacheItem<IEnumerable<TEntity>>(out var result))
             {

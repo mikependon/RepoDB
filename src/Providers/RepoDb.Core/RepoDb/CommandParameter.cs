@@ -7,6 +7,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Data.Common;
 
 namespace RepoDb
@@ -22,7 +23,7 @@ namespace RepoDb
     /// <param name="mappedToType">The parent type where this parameter is mapped.</param>
     internal class CommandParameter(Field field,
         object value,
-        Type mappedToType)
+        [DynamicallyAccessedMembers(Trimming.Entity)] Type mappedToType)
     {
 
         /// <summary>
@@ -38,6 +39,7 @@ namespace RepoDb
         /// <summary>
         /// The parent type where this parameter is mapped.
         /// </summary>
+        [DynamicallyAccessedMembers(Trimming.Entity)]
         public Type MappedToType { get; set; } = mappedToType;
     }
 }

@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Requests;
@@ -47,7 +48,8 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public static TEntity QueryFirst<TEntity>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static TEntity QueryFirst<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             object what,
             IEnumerable<Field> fields = null,
@@ -103,7 +105,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public static TEntity QueryFirst<TEntity, TWhat>(this IDbConnection connection,
+        public static TEntity QueryFirst<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(this IDbConnection connection,
             string tableName,
             TWhat what,
             IEnumerable<Field> fields = null,
@@ -158,7 +160,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public static TEntity QueryFirst<TEntity>(this IDbConnection connection,
+        public static TEntity QueryFirst<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
@@ -213,7 +215,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public static TEntity QueryFirst<TEntity>(this IDbConnection connection,
+        public static TEntity QueryFirst<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             QueryField where,
             IEnumerable<Field> fields = null,
@@ -268,7 +270,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public static TEntity QueryFirst<TEntity>(this IDbConnection connection,
+        public static TEntity QueryFirst<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
@@ -323,7 +325,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public static TEntity QueryFirst<TEntity>(this IDbConnection connection,
+        public static TEntity QueryFirst<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             QueryGroup where,
             IEnumerable<Field> fields = null,
@@ -377,7 +379,8 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public static TEntity QueryFirst<TEntity>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static TEntity QueryFirst<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             object what,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -431,7 +434,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public static TEntity QueryFirst<TEntity, TWhat>(this IDbConnection connection,
+        public static TEntity QueryFirst<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(this IDbConnection connection,
             TWhat what,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -484,7 +487,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public static TEntity QueryFirst<TEntity>(this IDbConnection connection,
+        public static TEntity QueryFirst<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             QueryField where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -537,7 +540,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public static TEntity QueryFirst<TEntity>(this IDbConnection connection,
+        public static TEntity QueryFirst<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -589,7 +592,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public static TEntity QueryFirst<TEntity>(this IDbConnection connection,
+        public static TEntity QueryFirst<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -642,7 +645,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public static TEntity QueryFirst<TEntity>(this IDbConnection connection,
+        public static TEntity QueryFirst<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             QueryGroup where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -696,7 +699,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        internal static TEntity QueryFirstInternal<TEntity>(this IDbConnection connection,
+        internal static TEntity QueryFirstInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             QueryGroup where,
             IEnumerable<Field> fields = null,
@@ -761,7 +764,8 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public static async Task<TEntity> QueryFirstAsync<TEntity>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static async Task<TEntity> QueryFirstAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             object what,
             IEnumerable<Field> fields = null,
@@ -820,7 +824,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public static async Task<TEntity> QueryFirstAsync<TEntity, TWhat>(this IDbConnection connection,
+        public static async Task<TEntity> QueryFirstAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(this IDbConnection connection,
             string tableName,
             TWhat what,
             IEnumerable<Field> fields = null,
@@ -878,7 +882,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public static Task<TEntity> QueryFirstAsync<TEntity>(this IDbConnection connection,
+        public static Task<TEntity> QueryFirstAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
@@ -936,7 +940,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public static Task<TEntity> QueryFirstAsync<TEntity>(this IDbConnection connection,
+        public static Task<TEntity> QueryFirstAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             QueryField where,
             IEnumerable<Field> fields = null,
@@ -994,7 +998,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public static Task<TEntity> QueryFirstAsync<TEntity>(this IDbConnection connection,
+        public static Task<TEntity> QueryFirstAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
@@ -1052,7 +1056,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public static Task<TEntity> QueryFirstAsync<TEntity>(this IDbConnection connection,
+        public static Task<TEntity> QueryFirstAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             QueryGroup where,
             IEnumerable<Field> fields = null,
@@ -1109,7 +1113,8 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public static async Task<TEntity> QueryFirstAsync<TEntity>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static async Task<TEntity> QueryFirstAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             object what,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -1166,7 +1171,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public static async Task<TEntity> QueryFirstAsync<TEntity, TWhat>(this IDbConnection connection,
+        public static async Task<TEntity> QueryFirstAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(this IDbConnection connection,
             TWhat what,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -1222,7 +1227,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public static Task<TEntity> QueryFirstAsync<TEntity>(this IDbConnection connection,
+        public static Task<TEntity> QueryFirstAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             QueryField where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -1278,7 +1283,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public static Task<TEntity> QueryFirstAsync<TEntity>(this IDbConnection connection,
+        public static Task<TEntity> QueryFirstAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -1334,7 +1339,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public static Task<TEntity> QueryFirstAsync<TEntity>(this IDbConnection connection,
+        public static Task<TEntity> QueryFirstAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -1390,7 +1395,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public static Task<TEntity> QueryFirstAsync<TEntity>(this IDbConnection connection,
+        public static Task<TEntity> QueryFirstAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             QueryGroup where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -1447,7 +1452,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        internal static async Task<TEntity> QueryFirstAsyncInternal<TEntity>(this IDbConnection connection,
+        internal static async Task<TEntity> QueryFirstAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             QueryGroup where,
             IEnumerable<Field> fields = null,
@@ -1513,7 +1518,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A dynamic object containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public static dynamic QueryFirst<TWhat>(this IDbConnection connection,
+        public static dynamic QueryFirst<[DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(this IDbConnection connection,
             string tableName,
             TWhat what,
             IEnumerable<Field> fields = null,
@@ -1566,6 +1571,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A dynamic object containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static dynamic QueryFirst(this IDbConnection connection,
             string tableName,
             object what,
@@ -1837,7 +1843,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A dynamic object containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public static async Task<dynamic> QueryFirstAsync<TWhat>(this IDbConnection connection,
+        public static async Task<dynamic> QueryFirstAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(this IDbConnection connection,
             string tableName,
             TWhat what,
             IEnumerable<Field> fields = null,
@@ -1893,6 +1899,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A dynamic object containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static async Task<dynamic> QueryFirstAsync(this IDbConnection connection,
             string tableName,
             object what,
@@ -2177,7 +2184,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        internal static TEntity QueryFirstInternalBase<TEntity>(this IDbConnection connection,
+        internal static TEntity QueryFirstInternalBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             QueryGroup where,
             IEnumerable<Field> fields = null,
@@ -2275,7 +2282,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        internal static async Task<TEntity> QueryFirstAsyncInternalBase<TEntity>(this IDbConnection connection,
+        internal static async Task<TEntity> QueryFirstAsyncInternalBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             QueryGroup where,
             IEnumerable<Field> fields = null,

@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -1391,7 +1392,7 @@ hasDefaultValue: false);
         /// <param name="type"></param>
         /// <param name="dbFields"></param>
         /// <returns></returns>
-        private static Field GetPrimaryField(Type type,
+        private static Field GetPrimaryField([DynamicallyAccessedMembers(Trimming.Entity)] Type type,
             DbFieldCollection dbFields)
         {
             return (type != null && !type.IsObjectType() ? PrimaryCache.Get(type) : null)?.AsField() ??
@@ -1404,7 +1405,7 @@ hasDefaultValue: false);
         /// <param name="type"></param>
         /// <param name="dbFields"></param>
         /// <returns></returns>
-        private static Field GetIdentityField(Type type,
+        private static Field GetIdentityField([DynamicallyAccessedMembers(Trimming.Entity)] Type type,
             DbFieldCollection dbFields)
         {
             return (type != null && !type.IsObjectType() ? IdentityCache.Get(type) : null)?.AsField() ??

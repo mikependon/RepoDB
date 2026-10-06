@@ -7,6 +7,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using RepoDb.Extensions;
 
@@ -17,7 +18,8 @@ namespace RepoDb
     /// </summary>
     public class CachedType
     {
-        private readonly Lazy<PropertyInfo[]> lazyGetProperties;
+        private readonly Type type;
+        private PropertyInfo[] properties;
         private readonly Lazy<Type> lazyGetUnderlyingType;
         private readonly Lazy<bool> lazyIsAnonymousType;
         private readonly Lazy<bool> lazyIsClassType;
@@ -30,11 +32,11 @@ namespace RepoDb
         /// <param name="type">The target type.</param>
         public CachedType(Type type)
         {
+            this.type = type;
             lazyGetUnderlyingType = new Lazy<Type>(() => type?.GetUnderlyingType());
 
             if (type is null) return;
 
-            lazyGetProperties = new Lazy<PropertyInfo[]>(type.GetProperties);
             lazyIsAnonymousType = new Lazy<bool>(type.IsAnonymousType);
             lazyIsClassType = new Lazy<bool>(type.IsClassType);
             lazyIsDictionaryStringObject = new Lazy<bool>(type.IsDictionaryStringObject);
@@ -48,9 +50,14 @@ namespace RepoDb
         /// An array of PropertyInfo objects representing all public properties of the current Type.
         /// -or- An empty array of type PropertyInfo, if the current Type does not have public properties.
         /// </returns>
+        [RequiresUnreferencedCode("The public properties of the type might be trimmed. Use TypeCache.GetProperties(Type) with a statically known type instead.")]
         public PropertyInfo[] GetProperties()
         {
-            return lazyGetProperties.Value;
+            if (type is null)
+            {
+                throw new NullReferenceException("The type is not defined.");
+            }
+            return properties ??= TypeCache.GetProperties(type);
         }
 
         /// <summary>

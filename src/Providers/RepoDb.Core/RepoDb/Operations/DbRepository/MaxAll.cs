@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Data;
 using System.Data.Common;
@@ -31,7 +32,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The max value of the target field.</returns>
-        public object MaxAll<TEntity>(Field field,
+        public object MaxAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field,
             string hints = null,
             string traceKey = TraceKeys.MaxAll,
             IDbTransaction transaction = null)
@@ -67,7 +68,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The max value of the target field.</returns>
-        public object MaxAll<TEntity>(Expression<Func<TEntity, object>> field,
+        public object MaxAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> field,
             string hints = null,
             string traceKey = TraceKeys.MaxAll,
             IDbTransaction transaction = null)
@@ -104,7 +105,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
-        public async Task<object> MaxAllAsync<TEntity>(Field field,
+        public async Task<object> MaxAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field,
             string hints = null,
             string traceKey = TraceKeys.MaxAll,
             IDbTransaction transaction = null,
@@ -143,7 +144,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
-        public async Task<object> MaxAllAsync<TEntity>(Expression<Func<TEntity, object>> field,
+        public async Task<object> MaxAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> field,
             string hints = null,
             string traceKey = TraceKeys.MaxAll,
             IDbTransaction transaction = null,
@@ -186,7 +187,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The max value of the target field.</returns>
-        public TResult MaxAll<TEntity, TResult>(Field field,
+        public TResult MaxAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Field field,
             string hints = null,
             string traceKey = TraceKeys.MaxAll,
             IDbTransaction transaction = null)
@@ -223,7 +224,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The max value of the target field.</returns>
-        public TResult MaxAll<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
+        public TResult MaxAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
             string hints = null,
             string traceKey = TraceKeys.MaxAll,
             IDbTransaction transaction = null)
@@ -261,7 +262,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
-        public async Task<TResult> MaxAllAsync<TEntity, TResult>(Field field,
+        public async Task<TResult> MaxAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Field field,
             string hints = null,
             string traceKey = TraceKeys.MaxAll,
             IDbTransaction transaction = null,
@@ -301,7 +302,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
-        public async Task<TResult> MaxAllAsync<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
+        public async Task<TResult> MaxAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
             string hints = null,
             string traceKey = TraceKeys.MaxAll,
             IDbTransaction transaction = null,

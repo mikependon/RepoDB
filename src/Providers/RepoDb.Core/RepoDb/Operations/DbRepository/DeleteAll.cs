@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -31,7 +32,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public int DeleteAll<TEntity>(string tableName,
+        public int DeleteAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             IEnumerable<TEntity> entities,
             string hints = null,
             string traceKey = TraceKeys.DeleteAll,
@@ -71,7 +72,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public int DeleteAll<TEntity, TKey>(string tableName,
+        public int DeleteAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TKey>(string tableName,
             IEnumerable<TKey> keys,
             string hints = null,
             string traceKey = TraceKeys.DeleteAll,
@@ -110,7 +111,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public int DeleteAll<TEntity>(string tableName,
+        public int DeleteAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             IEnumerable<object> keys,
             string hints = null,
             string traceKey = TraceKeys.DeleteAll,
@@ -148,7 +149,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public int DeleteAll<TEntity>(IEnumerable<TEntity> entities,
+        public int DeleteAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IEnumerable<TEntity> entities,
             string hints = null,
             string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null)
@@ -185,7 +186,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public int DeleteAll<TEntity, TKey>(IEnumerable<TKey> keys,
+        public int DeleteAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TKey>(IEnumerable<TKey> keys,
             string hints = null,
             string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null)
@@ -221,7 +222,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public int DeleteAll<TEntity>(IEnumerable<object> keys,
+        public int DeleteAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IEnumerable<object> keys,
             string hints = null,
             string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null)
@@ -256,7 +257,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public int DeleteAll<TEntity>(string hints = null,
+        public int DeleteAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string hints = null,
             string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -296,7 +297,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public async Task<int> DeleteAllAsync<TEntity>(string tableName,
+        public async Task<int> DeleteAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             IEnumerable<TEntity> entities,
             string hints = null,
             string traceKey = TraceKeys.DeleteAll,
@@ -339,7 +340,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public async Task<int> DeleteAllAsync<TEntity, TKey>(string tableName,
+        public async Task<int> DeleteAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TKey>(string tableName,
             IEnumerable<TKey> keys,
             string hints = null,
             string traceKey = TraceKeys.DeleteAll,
@@ -381,7 +382,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public async Task<int> DeleteAllAsync<TEntity>(string tableName,
+        public async Task<int> DeleteAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             IEnumerable<object> keys,
             string hints = null,
             string traceKey = TraceKeys.DeleteAll,
@@ -422,7 +423,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public async Task<int> DeleteAllAsync<TEntity>(IEnumerable<TEntity> entities,
+        public async Task<int> DeleteAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IEnumerable<TEntity> entities,
             string hints = null,
             string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null,
@@ -462,7 +463,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public async Task<int> DeleteAllAsync<TEntity, TKey>(IEnumerable<TKey> keys,
+        public async Task<int> DeleteAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TKey>(IEnumerable<TKey> keys,
             string hints = null,
             string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null,
@@ -501,7 +502,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public async Task<int> DeleteAllAsync<TEntity>(IEnumerable<object> keys,
+        public async Task<int> DeleteAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IEnumerable<object> keys,
             string hints = null,
             string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null,
@@ -539,7 +540,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public async Task<int> DeleteAllAsync<TEntity>(string hints = null,
+        public async Task<int> DeleteAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string hints = null,
             string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)

@@ -9,6 +9,7 @@
 
 using RepoDb.Interfaces;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Data;
 
 namespace RepoDb.Requests
@@ -43,7 +44,7 @@ namespace RepoDb.Requests
         /// <param name="transaction">The transaction object.</param>
         /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public DeleteAllRequest(Type type,
+        public DeleteAllRequest([DynamicallyAccessedMembers(Trimming.Entity)] Type type,
             IDbConnection connection,
             IDbTransaction transaction,
             string hints = null,

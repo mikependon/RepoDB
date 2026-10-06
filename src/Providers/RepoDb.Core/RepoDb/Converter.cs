@@ -120,6 +120,51 @@ namespace RepoDb
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
+        /// <summary>
+        /// The non-generic equivalent of the <see cref="ToType{T}(object, bool)"/> method, which does not require the generic
+        /// method to be instantiated at runtime (not possible when publishing with NativeAOT). The default value of the target
+        /// type is returned as null.
+        /// </summary>
+        /// <param name="value">The value to be converted.</param>
+        /// <param name="type">The target type.</param>
+        /// <returns>The converted value, or null for the default value of the target type.</returns>
+        internal static object ToType(object value,
+            Type type)
+        {
+            if (value != null && value != DBNull.Value && type.IsInstanceOfType(value))
+            {
+                return value;
+            }
+            if (value == null || value == DBNull.Value)
+            {
+                if (GlobalConfiguration.Options.ConversionType == ConversionType.Automatic ||
+                    Nullable.GetUnderlyingType(type) != null)
+                {
+                    return null;
+                }
+                else if (type.IsValueType)
+                {
+                    throw new InvalidCastException($"Failed to convert '{(value == DBNull.Value ? "DBNull" : "Null")}' to '{type.GetUnderlyingType().FullName}'. " +
+                        $"Consider enabling 'GlobalConfiguration.Options.ConversionType' to '{ConversionType.Automatic.ToString()}' or make the type '{type.FullName}' nullable.");
+                }
+            }
+            try
+            {
+                value = (type.Equals(StaticType.Guid) && value is string) ?
+                    StringToGuidAsObject(value) : Convert.ChangeType(value, type, System.Globalization.CultureInfo.InvariantCulture);
+                if (value == DBNull.Value || (value == null && type.IsValueType))
+                {
+                    throw new Exception("Failed to convert the 'DBNull' value.");
+                }
+                return value;
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidCastException($"{ex.Message} " +
+                    $"Consider enabling 'GlobalConfiguration.Options.ConversionType' to '{ConversionType.Automatic.ToString()}'.");
+            }
+        }
+
         private static object StringToGuidAsObject(object value)
         {
             if (Guid.TryParse(value.ToString(), out var result))

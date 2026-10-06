@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -35,7 +36,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> SkipQuery<TEntity>(string tableName,
+        public IEnumerable<TEntity> SkipQuery<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -84,7 +85,8 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> SkipQuery<TEntity>(string tableName,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public IEnumerable<TEntity> SkipQuery<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -135,7 +137,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> SkipQuery<TEntity>(string tableName,
+        public IEnumerable<TEntity> SkipQuery<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -187,7 +189,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> SkipQuery<TEntity>(string tableName,
+        public IEnumerable<TEntity> SkipQuery<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -238,7 +240,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> SkipQuery<TEntity>(string tableName,
+        public IEnumerable<TEntity> SkipQuery<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -289,7 +291,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> SkipQuery<TEntity>(string tableName,
+        public IEnumerable<TEntity> SkipQuery<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -338,7 +340,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> SkipQuery<TEntity>(int skip,
+        public IEnumerable<TEntity> SkipQuery<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
@@ -384,7 +386,8 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> SkipQuery<TEntity>(int skip,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public IEnumerable<TEntity> SkipQuery<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields,
@@ -432,7 +435,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> SkipQuery<TEntity>(int skip,
+        public IEnumerable<TEntity> SkipQuery<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             Expression<Func<TEntity, bool>> where,
@@ -480,7 +483,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> SkipQuery<TEntity>(int skip,
+        public IEnumerable<TEntity> SkipQuery<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             QueryField where,
@@ -528,7 +531,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> SkipQuery<TEntity>(int skip,
+        public IEnumerable<TEntity> SkipQuery<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             IEnumerable<QueryField> where,
@@ -576,7 +579,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> SkipQuery<TEntity>(int skip,
+        public IEnumerable<TEntity> SkipQuery<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             QueryGroup where,
@@ -628,7 +631,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public async Task<IEnumerable<TEntity>> SkipQueryAsync<TEntity>(string tableName,
+        public async Task<IEnumerable<TEntity>> SkipQueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -680,7 +683,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public async Task<IEnumerable<TEntity>> SkipQueryAsync<TEntity>(string tableName,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public async Task<IEnumerable<TEntity>> SkipQueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -734,7 +738,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public async Task<IEnumerable<TEntity>> SkipQueryAsync<TEntity>(string tableName,
+        public async Task<IEnumerable<TEntity>> SkipQueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -789,7 +793,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public async Task<IEnumerable<TEntity>> SkipQueryAsync<TEntity>(string tableName,
+        public async Task<IEnumerable<TEntity>> SkipQueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -843,7 +847,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public async Task<IEnumerable<TEntity>> SkipQueryAsync<TEntity>(string tableName,
+        public async Task<IEnumerable<TEntity>> SkipQueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -897,7 +901,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public async Task<IEnumerable<TEntity>> SkipQueryAsync<TEntity>(string tableName,
+        public async Task<IEnumerable<TEntity>> SkipQueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -949,7 +953,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public async Task<IEnumerable<TEntity>> SkipQueryAsync<TEntity>(int skip,
+        public async Task<IEnumerable<TEntity>> SkipQueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
@@ -998,7 +1002,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public async Task<IEnumerable<TEntity>> SkipQueryAsync<TEntity>(int skip,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public async Task<IEnumerable<TEntity>> SkipQueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             object where,
@@ -1050,7 +1055,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public async Task<IEnumerable<TEntity>> SkipQueryAsync<TEntity>(int skip,
+        public async Task<IEnumerable<TEntity>> SkipQueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             Expression<Func<TEntity, bool>> where,
@@ -1102,7 +1107,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public async Task<IEnumerable<TEntity>> SkipQueryAsync<TEntity>(int skip,
+        public async Task<IEnumerable<TEntity>> SkipQueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             QueryField where,
@@ -1154,7 +1159,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public async Task<IEnumerable<TEntity>> SkipQueryAsync<TEntity>(int skip,
+        public async Task<IEnumerable<TEntity>> SkipQueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             IEnumerable<QueryField> where,
@@ -1206,7 +1211,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public async Task<IEnumerable<TEntity>> SkipQueryAsync<TEntity>(int skip,
+        public async Task<IEnumerable<TEntity>> SkipQueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             QueryGroup where,
@@ -1307,6 +1312,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public IEnumerable<dynamic> SkipQuery(string tableName,
             int skip,
             int rowsPerBatch,
@@ -1557,6 +1563,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<IEnumerable<dynamic>> SkipQueryAsync(string tableName,
             int skip,
             int rowsPerBatch,

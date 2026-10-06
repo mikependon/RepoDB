@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -24,7 +25,7 @@ namespace RepoDb
     /// </summary>
     /// <typeparam name="TEntity">The type of data entity object to be mapped on this repository.</typeparam>
     /// <typeparam name="TDbConnection">The type of the <see cref="DbConnection"/> object.</typeparam>
-    public abstract partial class BaseRepository<TEntity, TDbConnection> : IDisposable
+    public abstract partial class BaseRepository<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TDbConnection> : IDisposable
         where TDbConnection : DbConnection, new()
         where TEntity : class
     {
@@ -321,6 +322,7 @@ namespace RepoDb
         /// <returns>
         /// An enumerable list of data entity objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public IEnumerable<TEntity> ExecuteQuery(string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -359,6 +361,7 @@ namespace RepoDb
         /// <returns>
         /// An enumerable list of data entity objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Task<IEnumerable<TEntity>> ExecuteQueryAsync(string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -399,6 +402,7 @@ namespace RepoDb
         /// An instance of the target data entity object containing the converted result of the first row returned by the underlying <see cref="IDataReader"/> object.
         /// </returns>
         /// <remarks>An <see cref="Exceptions.EmptyException"/> is thrown if the query did not return any row.</remarks>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public TEntity ExecuteQueryFirst(string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -438,6 +442,7 @@ namespace RepoDb
         /// An instance of the target data entity object containing the converted result of the first row returned by the underlying <see cref="IDataReader"/> object.
         /// </returns>
         /// <remarks>An <see cref="Exceptions.EmptyException"/> is thrown if the query did not return any row.</remarks>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Task<TEntity> ExecuteQueryFirstAsync(string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -481,6 +486,7 @@ namespace RepoDb
         /// An <see cref="Exceptions.EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="Exceptions.MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public TEntity ExecuteQuerySingle(string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -523,6 +529,7 @@ namespace RepoDb
         /// An <see cref="Exceptions.EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="Exceptions.MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Task<TEntity> ExecuteQuerySingleAsync(string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -556,6 +563,7 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public int ExecuteNonQuery(string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -584,6 +592,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Task<int> ExecuteNonQueryAsync(string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -617,6 +626,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An object that holds the first occurrence value (first column of first row) of the execution.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public object ExecuteScalar(string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -651,6 +661,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An object that holds the first occurrence value (first column of first row) of the execution.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Task<object> ExecuteScalarAsync(string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -687,6 +698,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A first occurrence value (first column of first row) of the execution.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public TResult ExecuteScalar<TResult>(string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -722,6 +734,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A first occurrence value (first column of first row) of the execution.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Task<TResult> ExecuteScalarAsync<TResult>(string commandText,
             object param = null,
             CommandType? commandType = null,

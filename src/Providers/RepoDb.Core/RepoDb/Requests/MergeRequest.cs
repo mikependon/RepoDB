@@ -10,6 +10,7 @@
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Collections.Generic;
 using System.Data;
 
@@ -32,7 +33,7 @@ namespace RepoDb.Requests
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects.</param>
         /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public MergeRequest(Type type,
+        public MergeRequest([DynamicallyAccessedMembers(Trimming.Entity)] Type type,
             IDbConnection connection,
             IDbTransaction transaction,
             IEnumerable<Field> fields = null,
@@ -87,7 +88,7 @@ namespace RepoDb.Requests
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects.</param>
         /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public MergeRequest(Type type,
+        public MergeRequest([DynamicallyAccessedMembers(Trimming.Entity)] Type type,
             string name,
             IDbConnection connection,
             IDbTransaction transaction,

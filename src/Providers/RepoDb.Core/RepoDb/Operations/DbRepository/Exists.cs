@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -31,7 +32,8 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        public bool Exists<TEntity>(object what,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public bool Exists<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(object what,
             string hints = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction transaction = null)
@@ -68,7 +70,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        public bool Exists<TEntity, TWhat>(TWhat what,
+        public bool Exists<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(TWhat what,
             string hints = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction transaction = null)
@@ -104,7 +106,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        public bool Exists<TEntity>(Expression<Func<TEntity, bool>> where,
+        public bool Exists<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, bool>> where,
             string hints = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction transaction = null)
@@ -140,7 +142,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        public bool Exists<TEntity>(QueryField where,
+        public bool Exists<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(QueryField where,
             string hints = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction transaction = null)
@@ -176,7 +178,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        public bool Exists<TEntity>(IEnumerable<QueryField> where,
+        public bool Exists<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IEnumerable<QueryField> where,
             string hints = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction transaction = null)
@@ -212,7 +214,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        public bool Exists<TEntity>(QueryGroup where,
+        public bool Exists<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(QueryGroup where,
             string hints = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction transaction = null)
@@ -253,7 +255,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        public async Task<bool> ExistsAsync<TEntity>(object what,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public async Task<bool> ExistsAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(object what,
             string hints = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction transaction = null,
@@ -293,7 +296,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        public async Task<bool> ExistsAsync<TEntity, TWhat>(TWhat what,
+        public async Task<bool> ExistsAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(TWhat what,
             string hints = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction transaction = null,
@@ -332,7 +335,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        public async Task<bool> ExistsAsync<TEntity>(Expression<Func<TEntity, bool>> where,
+        public async Task<bool> ExistsAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, bool>> where,
             string hints = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction transaction = null,
@@ -371,7 +374,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        public async Task<bool> ExistsAsync<TEntity>(QueryField where,
+        public async Task<bool> ExistsAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(QueryField where,
             string hints = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction transaction = null,
@@ -410,7 +413,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        public async Task<bool> ExistsAsync<TEntity>(IEnumerable<QueryField> where,
+        public async Task<bool> ExistsAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IEnumerable<QueryField> where,
             string hints = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction transaction = null,
@@ -449,7 +452,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        public async Task<bool> ExistsAsync<TEntity>(QueryGroup where,
+        public async Task<bool> ExistsAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(QueryGroup where,
             string hints = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction transaction = null,
@@ -492,7 +495,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        public bool Exists<TWhat>(string tableName,
+        public bool Exists<[DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(string tableName,
             TWhat what,
             string hints = null,
             string traceKey = TraceKeys.Exists,
@@ -529,6 +532,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public bool Exists(string tableName,
             object what,
             string hints = null,
@@ -683,7 +687,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        public async Task<bool> ExistsAsync<TWhat>(string tableName,
+        public async Task<bool> ExistsAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(string tableName,
             TWhat what,
             string hints = null,
             string traceKey = TraceKeys.Exists,
@@ -723,6 +727,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<bool> ExistsAsync(string tableName,
             object what,
             string hints = null,

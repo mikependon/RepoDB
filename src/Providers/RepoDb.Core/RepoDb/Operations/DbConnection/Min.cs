@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Requests;
@@ -41,7 +42,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        public static object Min<TEntity>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static object Min<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Field field,
             object where,
             string hints = null,
@@ -77,7 +79,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        public static object Min<TEntity>(this IDbConnection connection,
+        public static object Min<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Field field,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
@@ -113,7 +115,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        public static object Min<TEntity>(this IDbConnection connection,
+        public static object Min<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Field field,
             QueryField where,
             string hints = null,
@@ -149,7 +151,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        public static object Min<TEntity>(this IDbConnection connection,
+        public static object Min<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Field field,
             IEnumerable<QueryField> where,
             string hints = null,
@@ -185,7 +187,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        public static object Min<TEntity>(this IDbConnection connection,
+        public static object Min<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Field field,
             QueryGroup where,
             string hints = null,
@@ -221,7 +223,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        public static object Min<TEntity>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static object Min<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             object where,
             string hints = null,
@@ -257,7 +260,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        public static object Min<TEntity>(this IDbConnection connection,
+        public static object Min<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
@@ -293,7 +296,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        public static object Min<TEntity>(this IDbConnection connection,
+        public static object Min<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             QueryField where,
             string hints = null,
@@ -329,7 +332,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        public static object Min<TEntity>(this IDbConnection connection,
+        public static object Min<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             IEnumerable<QueryField> where,
             string hints = null,
@@ -365,7 +368,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        public static object Min<TEntity>(this IDbConnection connection,
+        public static object Min<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             QueryGroup where,
             string hints = null,
@@ -401,7 +404,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        internal static object MinInternal<TEntity>(this IDbConnection connection,
+        internal static object MinInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Field field,
             QueryGroup where,
             string hints = null,
@@ -453,7 +456,8 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        public static Task<object> MinAsync<TEntity>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static Task<object> MinAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Field field,
             object where,
             string hints = null,
@@ -492,7 +496,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        public static Task<object> MinAsync<TEntity>(this IDbConnection connection,
+        public static Task<object> MinAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Field field,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
@@ -531,7 +535,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        public static Task<object> MinAsync<TEntity>(this IDbConnection connection,
+        public static Task<object> MinAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Field field,
             QueryField where,
             string hints = null,
@@ -570,7 +574,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        public static Task<object> MinAsync<TEntity>(this IDbConnection connection,
+        public static Task<object> MinAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Field field,
             IEnumerable<QueryField> where,
             string hints = null,
@@ -609,7 +613,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        public static Task<object> MinAsync<TEntity>(this IDbConnection connection,
+        public static Task<object> MinAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Field field,
             QueryGroup where,
             string hints = null,
@@ -648,7 +652,8 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        public static Task<object> MinAsync<TEntity>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static Task<object> MinAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             object where,
             string hints = null,
@@ -687,7 +692,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        public static Task<object> MinAsync<TEntity>(this IDbConnection connection,
+        public static Task<object> MinAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
@@ -726,7 +731,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        public static Task<object> MinAsync<TEntity>(this IDbConnection connection,
+        public static Task<object> MinAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             QueryField where,
             string hints = null,
@@ -765,7 +770,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        public static Task<object> MinAsync<TEntity>(this IDbConnection connection,
+        public static Task<object> MinAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             IEnumerable<QueryField> where,
             string hints = null,
@@ -804,7 +809,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        public static Task<object> MinAsync<TEntity>(this IDbConnection connection,
+        public static Task<object> MinAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             QueryGroup where,
             string hints = null,
@@ -843,7 +848,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        internal static Task<object> MinAsyncInternal<TEntity>(this IDbConnection connection,
+        internal static Task<object> MinAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Field field,
             QueryGroup where,
             int? commandTimeout = null,
@@ -901,7 +906,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        public static TResult Min<TEntity, TResult>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static TResult Min<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Field field,
             object where,
             string hints = null,
@@ -938,7 +944,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        public static TResult Min<TEntity, TResult>(this IDbConnection connection,
+        public static TResult Min<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Field field,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
@@ -975,7 +981,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        public static TResult Min<TEntity, TResult>(this IDbConnection connection,
+        public static TResult Min<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Field field,
             QueryField where,
             string hints = null,
@@ -1012,7 +1018,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        public static TResult Min<TEntity, TResult>(this IDbConnection connection,
+        public static TResult Min<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Field field,
             IEnumerable<QueryField> where,
             string hints = null,
@@ -1049,7 +1055,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        public static TResult Min<TEntity, TResult>(this IDbConnection connection,
+        public static TResult Min<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Field field,
             QueryGroup where,
             string hints = null,
@@ -1086,7 +1092,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        public static TResult Min<TEntity, TResult>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static TResult Min<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Expression<Func<TEntity, TResult>> field,
             object where,
             string hints = null,
@@ -1123,7 +1130,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        public static TResult Min<TEntity, TResult>(this IDbConnection connection,
+        public static TResult Min<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Expression<Func<TEntity, TResult>> field,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
@@ -1160,7 +1167,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        public static TResult Min<TEntity, TResult>(this IDbConnection connection,
+        public static TResult Min<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Expression<Func<TEntity, TResult>> field,
             QueryField where,
             string hints = null,
@@ -1197,7 +1204,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        public static TResult Min<TEntity, TResult>(this IDbConnection connection,
+        public static TResult Min<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Expression<Func<TEntity, TResult>> field,
             IEnumerable<QueryField> where,
             string hints = null,
@@ -1234,7 +1241,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        public static TResult Min<TEntity, TResult>(this IDbConnection connection,
+        public static TResult Min<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Expression<Func<TEntity, TResult>> field,
             QueryGroup where,
             string hints = null,
@@ -1271,7 +1278,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        internal static TResult MinInternal<TEntity, TResult>(this IDbConnection connection,
+        internal static TResult MinInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Field field,
             QueryGroup where,
             string hints = null,
@@ -1324,7 +1331,8 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        public static Task<TResult> MinAsync<TEntity, TResult>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static Task<TResult> MinAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Field field,
             object where,
             string hints = null,
@@ -1364,7 +1372,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        public static Task<TResult> MinAsync<TEntity, TResult>(this IDbConnection connection,
+        public static Task<TResult> MinAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Field field,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
@@ -1404,7 +1412,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        public static Task<TResult> MinAsync<TEntity, TResult>(this IDbConnection connection,
+        public static Task<TResult> MinAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Field field,
             QueryField where,
             string hints = null,
@@ -1444,7 +1452,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        public static Task<TResult> MinAsync<TEntity, TResult>(this IDbConnection connection,
+        public static Task<TResult> MinAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Field field,
             IEnumerable<QueryField> where,
             string hints = null,
@@ -1484,7 +1492,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        public static Task<TResult> MinAsync<TEntity, TResult>(this IDbConnection connection,
+        public static Task<TResult> MinAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Field field,
             QueryGroup where,
             string hints = null,
@@ -1524,7 +1532,8 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        public static Task<TResult> MinAsync<TEntity, TResult>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static Task<TResult> MinAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Expression<Func<TEntity, TResult>> field,
             object where,
             string hints = null,
@@ -1564,7 +1573,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        public static Task<TResult> MinAsync<TEntity, TResult>(this IDbConnection connection,
+        public static Task<TResult> MinAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Expression<Func<TEntity, TResult>> field,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
@@ -1604,7 +1613,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        public static Task<TResult> MinAsync<TEntity, TResult>(this IDbConnection connection,
+        public static Task<TResult> MinAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Expression<Func<TEntity, TResult>> field,
             QueryField where,
             string hints = null,
@@ -1644,7 +1653,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        public static Task<TResult> MinAsync<TEntity, TResult>(this IDbConnection connection,
+        public static Task<TResult> MinAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Expression<Func<TEntity, TResult>> field,
             IEnumerable<QueryField> where,
             string hints = null,
@@ -1684,7 +1693,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        public static Task<TResult> MinAsync<TEntity, TResult>(this IDbConnection connection,
+        public static Task<TResult> MinAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Expression<Func<TEntity, TResult>> field,
             QueryGroup where,
             string hints = null,
@@ -1724,7 +1733,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
-        internal static Task<TResult> MinAsyncInternal<TEntity, TResult>(this IDbConnection connection,
+        internal static Task<TResult> MinAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Field field,
             QueryGroup where,
             int? commandTimeout = null,
@@ -1781,6 +1790,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static object Min(this IDbConnection connection,
             string tableName,
             Field field,
@@ -1981,6 +1991,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Task<object> MinAsync(this IDbConnection connection,
             string tableName,
             Field field,
@@ -2199,6 +2210,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static TResult Min<TResult>(this IDbConnection connection,
             string tableName,
             Field field,
@@ -2404,6 +2416,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The min value of the target field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Task<TResult> MinAsync<TResult>(this IDbConnection connection,
             string tableName,
             Field field,

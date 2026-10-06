@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Contexts.Cachers;
 using RepoDb.Contexts.Execution;
 using RepoDb.Extensions;
@@ -71,7 +72,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="transaction"></param>
         /// <param name="statementBuilder"></param>
         /// <returns></returns>
-        public static MergeAllExecutionContext Create(Type entityType,
+        public static MergeAllExecutionContext Create([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             IDbConnection connection,
             IEnumerable<object> entities,
             string tableName,
@@ -154,7 +155,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="statementBuilder"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<MergeAllExecutionContext> CreateAsync(Type entityType,
+        public static async Task<MergeAllExecutionContext> CreateAsync([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             IDbConnection connection,
             IEnumerable<object> entities,
             string tableName,
@@ -235,7 +236,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="fields"></param>
         /// <param name="commandText"></param>
         /// <returns></returns>
-        private static MergeAllExecutionContext CreateInternal(Type entityType,
+        private static MergeAllExecutionContext CreateInternal([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             IDbConnection connection,
             IEnumerable<object> entities,
             DbFieldCollection dbFields,
@@ -265,7 +266,7 @@ namespace RepoDb.Contexts.Providers
             // Exclude the fields not on the actual entity
             if (!TypeCache.Get(entityType).IsClassType())
             {
-                var entityFields = Field.Parse(entities?.FirstOrDefault());
+                var entityFields = Field.ParseObject(entities?.FirstOrDefault());
                 inputFields = inputFields?
                     .Where(field =>
                         entityFields.FirstOrDefault(f =>

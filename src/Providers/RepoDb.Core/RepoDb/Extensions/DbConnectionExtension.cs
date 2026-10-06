@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
@@ -134,6 +135,7 @@ namespace RepoDb
         /// <returns>
         /// An enumerable list of dynamic objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static IEnumerable<dynamic> ExecuteQuery(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -282,6 +284,7 @@ namespace RepoDb
         /// <returns>
         /// An enumerable list of dynamic objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Task<IEnumerable<dynamic>> ExecuteQueryAsync(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -436,7 +439,8 @@ namespace RepoDb
         /// <returns>
         /// An enumerable list of the target result type instances containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
-        public static IEnumerable<TResult> ExecuteQuery<TResult>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static IEnumerable<TResult> ExecuteQuery<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -481,7 +485,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
-        internal static IEnumerable<TResult> ExecuteQueryInternal<TResult>(this IDbConnection connection,
+        internal static IEnumerable<TResult> ExecuteQueryInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -561,7 +565,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
-        private static IEnumerable<TResult> ExecuteQueryInternalForDictionaryStringObject<TResult>(this IDbConnection connection,
+        private static IEnumerable<TResult> ExecuteQueryInternalForDictionaryStringObject<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -631,7 +635,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
-        private static IEnumerable<TResult> ExecuteQueryInternalForType<TResult>(this IDbConnection connection,
+        private static IEnumerable<TResult> ExecuteQueryInternalForType<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -736,7 +740,8 @@ namespace RepoDb
         /// <returns>
         /// An enumerable list of the target result type instances containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
-        public static Task<IEnumerable<TResult>> ExecuteQueryAsync<TResult>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static Task<IEnumerable<TResult>> ExecuteQueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -784,7 +789,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
-        internal static async Task<IEnumerable<TResult>> ExecuteQueryAsyncInternal<TResult>(this IDbConnection connection,
+        internal static async Task<IEnumerable<TResult>> ExecuteQueryAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -868,7 +873,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
-        private static async Task<IEnumerable<TResult>> ExecuteQueryAsyncInternalForDictionaryStringObject<TResult>(this IDbConnection connection,
+        private static async Task<IEnumerable<TResult>> ExecuteQueryAsyncInternalForDictionaryStringObject<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -941,7 +946,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
-        private static async Task<IEnumerable<TResult>> ExecuteQueryAsyncInternalForType<TResult>(this IDbConnection connection,
+        private static async Task<IEnumerable<TResult>> ExecuteQueryAsyncInternalForType<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -1047,6 +1052,7 @@ namespace RepoDb
         /// A dynamic object containing the converted result of the first row returned by the underlying <see cref="IDataReader"/> object.
         /// </returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static dynamic ExecuteQueryFirst(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -1208,6 +1214,7 @@ namespace RepoDb
         /// A dynamic object containing the converted result of the first row returned by the underlying <see cref="IDataReader"/> object.
         /// </returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Task<dynamic> ExecuteQueryFirstAsync(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -1374,7 +1381,8 @@ namespace RepoDb
         /// An instance of the target result type containing the converted result of the first row returned by the underlying <see cref="IDataReader"/> object.
         /// </returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public static TResult ExecuteQueryFirst<TResult>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static TResult ExecuteQueryFirst<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -1419,7 +1427,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
-        internal static TResult ExecuteQueryFirstInternal<TResult>(this IDbConnection connection,
+        internal static TResult ExecuteQueryFirstInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -1499,7 +1507,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
-        private static TResult ExecuteQueryFirstInternalForDictionaryStringObject<TResult>(this IDbConnection connection,
+        private static TResult ExecuteQueryFirstInternalForDictionaryStringObject<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -1571,7 +1579,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
-        private static TResult ExecuteQueryFirstInternalForType<TResult>(this IDbConnection connection,
+        private static TResult ExecuteQueryFirstInternalForType<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -1689,7 +1697,8 @@ namespace RepoDb
         /// An instance of the target result type containing the converted result of the first row returned by the underlying <see cref="IDataReader"/> object.
         /// </returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public static Task<TResult> ExecuteQueryFirstAsync<TResult>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static Task<TResult> ExecuteQueryFirstAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -1737,7 +1746,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
-        internal static async Task<TResult> ExecuteQueryFirstAsyncInternal<TResult>(this IDbConnection connection,
+        internal static async Task<TResult> ExecuteQueryFirstAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -1821,7 +1830,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
-        private static async Task<TResult> ExecuteQueryFirstAsyncInternalForDictionaryStringObject<TResult>(this IDbConnection connection,
+        private static async Task<TResult> ExecuteQueryFirstAsyncInternalForDictionaryStringObject<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -1896,7 +1905,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
-        private static async Task<TResult> ExecuteQueryFirstAsyncInternalForType<TResult>(this IDbConnection connection,
+        private static async Task<TResult> ExecuteQueryFirstAsyncInternalForType<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -2016,6 +2025,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static dynamic ExecuteQuerySingle(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -2187,6 +2197,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Task<dynamic> ExecuteQuerySingleAsync(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -2363,7 +2374,8 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public static TResult ExecuteQuerySingle<TResult>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static TResult ExecuteQuerySingle<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -2408,7 +2420,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
-        internal static TResult ExecuteQuerySingleInternal<TResult>(this IDbConnection connection,
+        internal static TResult ExecuteQuerySingleInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -2488,7 +2500,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
-        private static TResult ExecuteQuerySingleInternalForDictionaryStringObject<TResult>(this IDbConnection connection,
+        private static TResult ExecuteQuerySingleInternalForDictionaryStringObject<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -2560,7 +2572,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
-        private static TResult ExecuteQuerySingleInternalForType<TResult>(this IDbConnection connection,
+        private static TResult ExecuteQuerySingleInternalForType<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -2688,7 +2700,8 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public static Task<TResult> ExecuteQuerySingleAsync<TResult>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static Task<TResult> ExecuteQuerySingleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -2736,7 +2749,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
-        internal static async Task<TResult> ExecuteQuerySingleAsyncInternal<TResult>(this IDbConnection connection,
+        internal static async Task<TResult> ExecuteQuerySingleAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -2820,7 +2833,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
-        private static async Task<TResult> ExecuteQuerySingleAsyncInternalForDictionaryStringObject<TResult>(this IDbConnection connection,
+        private static async Task<TResult> ExecuteQuerySingleAsyncInternalForDictionaryStringObject<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -2895,7 +2908,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
-        private static async Task<TResult> ExecuteQuerySingleAsyncInternalForType<TResult>(this IDbConnection connection,
+        private static async Task<TResult> ExecuteQuerySingleAsyncInternalForType<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -3015,6 +3028,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>An instance of <see cref="QueryMultipleExtractor"/> used to extract the results.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static QueryMultipleExtractor ExecuteQueryMultiple(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -3125,6 +3139,7 @@ isDisposeConnection: false);
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An instance of <see cref="QueryMultipleExtractor"/> used to extract the results.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Task<QueryMultipleExtractor> ExecuteQueryMultipleAsync(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -3235,6 +3250,7 @@ isDisposeConnection: false,
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <return>The instance of the <see cref="IDataReader"/> object.</return>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static IDataReader ExecuteReader(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -3281,7 +3297,7 @@ isDisposeConnection: false,
             string traceKey,
             IDbTransaction transaction,
             ITrace trace,
-            Type entityType,
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             DbFieldCollection dbFields,
             bool skipCommandArrayParametersCheck,
             Func<DbCommand, TraceResult> beforeExecutionCallback = null)
@@ -3363,6 +3379,7 @@ isDisposeConnection: false,
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <return>The instance of the <see cref="IDataReader"/> object.</return>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Task<IDataReader> ExecuteReaderAsync(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -3413,7 +3430,7 @@ isDisposeConnection: false,
             IDbTransaction transaction,
             ITrace trace,
             CancellationToken cancellationToken,
-            Type entityType,
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             DbFieldCollection dbFields,
             bool skipCommandArrayParametersCheck,
             Func<DbCommand, CancellationToken, Task<TraceResult>> beforeExecutionCallbackAsync = null)
@@ -3500,6 +3517,7 @@ isDisposeConnection: false,
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static int ExecuteNonQuery(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -3545,7 +3563,7 @@ isDisposeConnection: false,
             string traceKey,
             IDbTransaction transaction,
             ITrace trace,
-            Type entityType,
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             DbFieldCollection dbFields,
             bool skipCommandArrayParametersCheck)
         {
@@ -3604,6 +3622,7 @@ isDisposeConnection: false,
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Task<int> ExecuteNonQueryAsync(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -3653,7 +3672,7 @@ isDisposeConnection: false,
             IDbTransaction transaction,
             ITrace trace,
             CancellationToken cancellationToken,
-            Type entityType,
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             DbFieldCollection dbFields,
             bool skipCommandArrayParametersCheck)
         {
@@ -3718,6 +3737,7 @@ isDisposeConnection: false,
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>An object that holds the first occurrence value (first column of first row) of the execution.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static object ExecuteScalar(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -3774,6 +3794,7 @@ isDisposeConnection: false,
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An object that holds the first occurrence value (first column of first row) of the execution.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Task<object> ExecuteScalarAsync(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -3832,6 +3853,7 @@ isDisposeConnection: false,
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>A first occurrence value (first column of first row) of the execution.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static TResult ExecuteScalar<TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -3892,7 +3914,7 @@ isDisposeConnection: false,
             IDbTransaction transaction,
             ICache cache,
             ITrace trace,
-            Type entityType,
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             DbFieldCollection dbFields,
             bool skipCommandArrayParametersCheck,
             bool forceAutomaticConversion)
@@ -3975,6 +3997,7 @@ isDisposeConnection: false,
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A first occurrence value (first column of first row) of the execution.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Task<TResult> ExecuteScalarAsync<TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -4038,7 +4061,7 @@ isDisposeConnection: false,
             ICache cache,
             ITrace trace,
             CancellationToken cancellationToken,
-            Type entityType,
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             DbFieldCollection dbFields,
             bool skipCommandArrayParametersCheck,
             bool forceAutomaticConversion)
@@ -4261,7 +4284,7 @@ isDisposeConnection: false,
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="command"></param>
         /// <param name="entities"></param>
-        private static void AddOrderColumnParameters<TEntity>(DbCommand command,
+        private static void AddOrderColumnParameters<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(DbCommand command,
             IEnumerable<TEntity> entities)
             where TEntity : class
         {
@@ -4289,7 +4312,7 @@ isDisposeConnection: false,
         /// <param name="connection"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        internal static Field GetAndGuardPrimaryKeyOrIdentityKey(Type entityType,
+        internal static Field GetAndGuardPrimaryKeyOrIdentityKey([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             IDbConnection connection,
             IDbTransaction transaction)
         {
@@ -4308,7 +4331,7 @@ isDisposeConnection: false,
         internal static Field GetAndGuardPrimaryKeyOrIdentityKey(IDbConnection connection,
             string tableName,
             IDbTransaction transaction,
-            Type entityType)
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType)
         {
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var key = GetAndGuardPrimaryKeyOrIdentityKey(entityType, dbFields) ?? GetPrimaryOrIdentityKey(entityType);
@@ -4339,7 +4362,7 @@ isDisposeConnection: false,
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        internal static Task<Field> GetAndGuardPrimaryKeyOrIdentityKeyAsync(Type entityType,
+        internal static Task<Field> GetAndGuardPrimaryKeyOrIdentityKeyAsync([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             IDbConnection connection,
             IDbTransaction transaction,
             CancellationToken cancellationToken = default)
@@ -4360,7 +4383,7 @@ isDisposeConnection: false,
         internal static async Task<Field> GetAndGuardPrimaryKeyOrIdentityKeyAsync(IDbConnection connection,
             string tableName,
             IDbTransaction transaction,
-            Type entityType,
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             CancellationToken cancellationToken = default)
         {
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
@@ -4416,7 +4439,7 @@ isDisposeConnection: false,
         /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
         /// <returns></returns>
-        internal static Field GetAndGuardPrimaryKeyOrIdentityKey(Type entityType,
+        internal static Field GetAndGuardPrimaryKeyOrIdentityKey([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             DbFieldCollection dbFields)
         {
             return entityType == null ? null :
@@ -4455,7 +4478,7 @@ isDisposeConnection: false,
         /// <param name="type"></param>
         /// <param name="dbFields"></param>
         /// <returns></returns>
-        internal static Field GetAndGuardPrimaryKeyOrIdentityKeyForEntity(Type type,
+        internal static Field GetAndGuardPrimaryKeyOrIdentityKeyForEntity([DynamicallyAccessedMembers(Trimming.Entity)] Type type,
             DbFieldCollection dbFields)
         {
             // Properties
@@ -4523,7 +4546,7 @@ isDisposeConnection: false,
         /// <param name="what"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        internal static QueryGroup WhatToQueryGroup<T>(this IDbConnection connection,
+        internal static QueryGroup WhatToQueryGroup<[DynamicallyAccessedMembers(Trimming.Entity)] T>(this IDbConnection connection,
             string tableName,
             T what,
             IDbTransaction transaction)
@@ -4535,7 +4558,7 @@ isDisposeConnection: false,
             var queryGroup = WhatToQueryGroup<T>(what);
             if (queryGroup == null)
             {
-                var whatType = what.GetType();
+                var whatType = TypeExtension.GetRuntimeType<T>(what);
                 var cachedType = TypeCache.Get(whatType);
                 if (cachedType.IsClassType() || cachedType.IsAnonymousType())
                 {
@@ -4561,7 +4584,7 @@ isDisposeConnection: false,
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        internal static async Task<QueryGroup> WhatToQueryGroupAsync<T>(this IDbConnection connection,
+        internal static async Task<QueryGroup> WhatToQueryGroupAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T>(this IDbConnection connection,
             string tableName,
             T what,
             IDbTransaction transaction,
@@ -4574,7 +4597,7 @@ isDisposeConnection: false,
             var queryGroup = WhatToQueryGroup<T>(what);
             if (queryGroup == null)
             {
-                var whatType = what.GetType();
+                var whatType = TypeExtension.GetRuntimeType<T>(what);
                 var cachedType = TypeCache.Get(whatType);
                 if (cachedType.IsClassType() || cachedType.IsAnonymousType())
                 {
@@ -4598,7 +4621,7 @@ isDisposeConnection: false,
         /// <param name="what"></param>
         /// <param name="dbFields"></param>
         /// <returns></returns>
-        internal static QueryGroup WhatToQueryGroup<T>(string tableName,
+        internal static QueryGroup WhatToQueryGroup<[DynamicallyAccessedMembers(Trimming.Entity)] T>(string tableName,
             T what,
             IEnumerable<DbField> dbFields)
         {
@@ -4621,7 +4644,7 @@ isDisposeConnection: false,
         /// <param name="what"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        internal static QueryGroup WhatToQueryGroup(Type entityType,
+        internal static QueryGroup WhatToQueryGroup([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             IDbConnection connection,
             object what,
             IDbTransaction transaction)
@@ -4648,7 +4671,7 @@ isDisposeConnection: false,
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        internal static async Task<QueryGroup> WhatToQueryGroupAsync(Type entityType,
+        internal static async Task<QueryGroup> WhatToQueryGroupAsync([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             IDbConnection connection,
             object what,
             IDbTransaction transaction,
@@ -4674,7 +4697,7 @@ isDisposeConnection: false,
         /// <param name="dbField"></param>
         /// <param name="what"></param>
         /// <returns></returns>
-        internal static QueryGroup WhatToQueryGroup<T>(DbField dbField,
+        internal static QueryGroup WhatToQueryGroup<[DynamicallyAccessedMembers(Trimming.Entity)] T>(DbField dbField,
             T what)
         {
             if (what == null)
@@ -4702,7 +4725,7 @@ isDisposeConnection: false,
         /// <param name="field"></param>
         /// <param name="what"></param>
         /// <returns></returns>
-        internal static QueryGroup WhatToQueryGroup<T>(Field field,
+        internal static QueryGroup WhatToQueryGroup<[DynamicallyAccessedMembers(Trimming.Entity)] T>(Field field,
             T what)
         {
             var type = typeof(T);
@@ -4727,7 +4750,7 @@ isDisposeConnection: false,
         /// <typeparam name="T"></typeparam>
         /// <param name="what"></param>
         /// <returns></returns>
-        internal static QueryGroup WhatToQueryGroup<T>(T what)
+        internal static QueryGroup WhatToQueryGroup<[DynamicallyAccessedMembers(Trimming.Entity)] T>(T what)
         {
             if (what == null)
             {
@@ -4824,7 +4847,7 @@ isDisposeConnection: false,
             }
             if (dbField != null)
             {
-                var type = entity.GetType();
+                var type = entity.GetRuntimeType();
                 if (TypeCache.Get(type).IsClassType())
                 {
                     var properties = PropertyCache.Get(type) ?? type.GetClassProperties();
@@ -4849,7 +4872,7 @@ isDisposeConnection: false,
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="where"></param>
         /// <returns></returns>
-        internal static QueryGroup ToQueryGroup<TEntity>(Expression<Func<TEntity, bool>> where)
+        internal static QueryGroup ToQueryGroup<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, bool>> where)
             where TEntity : class
         {
             if (where == null)
@@ -4882,11 +4905,11 @@ isDisposeConnection: false,
         /// <param name="field"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        internal static QueryGroup ToQueryGroup<TEntity>(Field field,
+        internal static QueryGroup ToQueryGroup<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field,
             TEntity entity)
             where TEntity : class
         {
-            var type = entity?.GetType() ?? typeof(TEntity);
+            var type = GetEntityType<TEntity>(entity);
             return TypeCache.Get(type).IsDictionaryStringObject() ? ToQueryGroup(field, (IDictionary<string, object>)entity) :
                 ToQueryGroup(PropertyCache.Get<TEntity>(field, includeMappings: true) ?? PropertyCache.Get(type, field, includeMappings: true), entity);
         }
@@ -4898,7 +4921,7 @@ isDisposeConnection: false,
         /// <param name="property"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        internal static QueryGroup ToQueryGroup<TEntity>(ClassProperty property,
+        internal static QueryGroup ToQueryGroup<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(ClassProperty property,
             TEntity entity)
             where TEntity : class
         {
@@ -4940,7 +4963,7 @@ isDisposeConnection: false,
         /// </summary>
         /// <param name="entityType"></param>
         /// <returns></returns>
-        internal static Field GetPrimaryOrIdentityKey(Type entityType)
+        internal static Field GetPrimaryOrIdentityKey([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType)
         {
             return entityType != null ? (PrimaryCache.Get(entityType) ?? IdentityCache.Get(entityType))?.AsField() : null;
         }
@@ -4950,7 +4973,7 @@ isDisposeConnection: false,
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entities"></param>
-        internal static void ThrowIfNullOrEmpty<TEntity>(IEnumerable<TEntity> entities)
+        internal static void ThrowIfNullOrEmpty<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IEnumerable<TEntity> entities)
             where TEntity : class
         {
             if (entities == null)
@@ -4986,7 +5009,7 @@ isDisposeConnection: false,
         /// <param name="dbFields"></param>
         internal static void WhereToCommandParameters(DbCommand command,
             QueryGroup where,
-            Type entityType,
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             DbFieldCollection dbFields)
         {
             DbCommandExtension.CreateParameters(command, where, propertiesToSkip: null, entityType, dbFields);
@@ -5057,7 +5080,7 @@ isDisposeConnection: false,
         /// <param name="entities"></param>
         /// <param name="property"></param>
         /// <returns></returns>
-        internal static IEnumerable<TResult> ExtractPropertyValues<TEntity, TResult>(IEnumerable<TEntity> entities,
+        internal static IEnumerable<TResult> ExtractPropertyValues<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(IEnumerable<TEntity> entities,
             ClassProperty property)
             where TEntity : class
         {
@@ -5070,11 +5093,11 @@ isDisposeConnection: false,
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entity"></param>
         /// <returns></returns>
-        internal static IEnumerable<Field> GetQualifiedFields<TEntity>(TEntity entity)
+        internal static IEnumerable<Field> GetQualifiedFields<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(TEntity entity)
             where TEntity : class
         {
-            var typeOfEntity = entity?.GetType() ?? typeof(TEntity);
-            return !TypeCache.Get(typeOfEntity).IsClassType() ? Field.Parse(entity) : FieldCache.Get(typeOfEntity);
+            var typeOfEntity = GetEntityType<TEntity>(entity);
+            return !TypeCache.Get(typeOfEntity).IsClassType() ? Field.ParseObject(entity) : FieldCache.Get(typeOfEntity);
         }
 
         /// <summary>
@@ -5083,7 +5106,7 @@ isDisposeConnection: false,
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="fields"></param>
         /// <returns></returns>
-        internal static IEnumerable<Field> GetQualifiedFields<TEntity>(IEnumerable<Field> fields)
+        internal static IEnumerable<Field> GetQualifiedFields<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IEnumerable<Field> fields)
             where TEntity : class
         {
             return (fields ?? (!TypeCache.Get(typeof(TEntity)).IsDictionaryStringObject() ? FieldCache.Get<TEntity>() : null)).AsList();
@@ -5096,7 +5119,7 @@ isDisposeConnection: false,
         /// <param name="fields"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        internal static IEnumerable<Field> GetQualifiedFields<TEntity>(IEnumerable<Field> fields,
+        internal static IEnumerable<Field> GetQualifiedFields<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IEnumerable<Field> fields,
             TEntity entity)
             where TEntity : class
         {
@@ -5157,7 +5180,7 @@ isDisposeConnection: false,
             CommandType? commandType = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
-            Type entityType = null,
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType = null,
             DbFieldCollection dbFields = null,
             bool skipCommandArrayParametersCheck = true)
         {
@@ -5200,7 +5223,7 @@ isDisposeConnection: false,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default,
-            Type entityType = null,
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType = null,
             DbFieldCollection dbFields = null,
             bool skipCommandArrayParametersCheck = true)
         {
@@ -5241,7 +5264,7 @@ isDisposeConnection: false,
             CommandType? commandType = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
-            Type entityType = null,
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType = null,
             DbFieldCollection dbFields = null,
             bool skipCommandArrayParametersCheck = true)
         {
@@ -5252,7 +5275,7 @@ isDisposeConnection: false,
             // Func
             if (param != null)
             {
-                var func = FunctionCache.GetPlainTypeToDbParametersCompiledFunction(param.GetType(), entityType, dbFields);
+                var func = FunctionCache.GetPlainTypeToDbParametersCompiledFunction(param.GetRuntimeType(), entityType, dbFields);
                 if (func != null)
                 {
                     var cmd = (DbCommand)command;
@@ -5365,7 +5388,7 @@ isDisposeConnection: false,
             var commandArrayParametersText = (CommandArrayParametersText)null;
 
             // CommandArrayParameters
-            foreach (var property in TypeCache.Get(param.GetType()).GetProperties())
+            foreach (var property in TypeCache.GetProperties(param.GetRuntimeType()))
             {
                 var propertyHandler = PropertyHandlerCache.Get<object>(property.DeclaringType, property);
                 if (propertyHandler != null ||
@@ -5700,7 +5723,7 @@ isDisposeConnection: false,
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entities"></param>
         /// <returns></returns>
-        internal static string GetMappedName<TEntity>(IEnumerable<TEntity> entities)
+        internal static string GetMappedName<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IEnumerable<TEntity> entities)
             where TEntity : class
         {
             return GetMappedName<TEntity>(entities?.FirstOrDefault());
@@ -5712,10 +5735,10 @@ isDisposeConnection: false,
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entity"></param>
         /// <returns></returns>
-        internal static string GetMappedName<TEntity>(TEntity entity)
+        internal static string GetMappedName<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(TEntity entity)
             where TEntity : class
         {
-            return entity != null ? ClassMappedNameCache.Get(entity.GetType()) : ClassMappedNameCache.Get<TEntity>();
+            return ClassMappedNameCache.Get(GetEntityType<TEntity>(entity));
         }
 
         /// <summary>
@@ -5724,7 +5747,8 @@ isDisposeConnection: false,
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entities"></param>
         /// <returns></returns>
-        internal static Type GetEntityType<TEntity>(IEnumerable<TEntity> entities)
+        [return: DynamicallyAccessedMembers(Trimming.Entity)]
+        internal static Type GetEntityType<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IEnumerable<TEntity> entities)
             where TEntity : class
         {
             return GetEntityType<TEntity>(entities?.FirstOrDefault());
@@ -5736,10 +5760,11 @@ isDisposeConnection: false,
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entity"></param>
         /// <returns></returns>
-        internal static Type GetEntityType<TEntity>(TEntity entity)
+        [return: DynamicallyAccessedMembers(Trimming.Entity)]
+        internal static Type GetEntityType<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(TEntity entity)
             where TEntity : class
         {
-            return entity?.GetType() ?? typeof(TEntity);
+            return TypeExtension.GetRuntimeType<TEntity>(entity);
         }
 
 
@@ -5760,8 +5785,8 @@ isDisposeConnection: false,
             {
                 return dictionary.TryGetValue(fieldName, out var value) ? value : null;
             }
-            return entity.GetType()
-                .GetProperty(fieldName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase)
+            return TypeCache.GetProperties(entity.GetRuntimeType())
+                .FirstOrDefault(property => string.Equals(property.Name, fieldName, StringComparison.OrdinalIgnoreCase))
                 ?.GetValue(entity);
         }
 

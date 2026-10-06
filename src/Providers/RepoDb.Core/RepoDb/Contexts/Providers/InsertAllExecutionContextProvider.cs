@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Contexts.Cachers;
 using RepoDb.Contexts.Execution;
 using RepoDb.Extensions;
@@ -65,7 +66,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="transaction"></param>
         /// <param name="statementBuilder"></param>
         /// <returns></returns>
-        public static InsertAllExecutionContext Create(Type entityType,
+        public static InsertAllExecutionContext Create([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             IDbConnection connection,
             string tableName,
             int batchSize,
@@ -141,7 +142,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="statementBuilder"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<InsertAllExecutionContext> CreateAsync(Type entityType,
+        public static async Task<InsertAllExecutionContext> CreateAsync([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             IDbConnection connection,
             string tableName,
             int batchSize,
@@ -214,7 +215,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="fields"></param>
         /// <param name="commandText"></param>
         /// <returns></returns>
-        private static InsertAllExecutionContext CreateInternal(Type entityType,
+        private static InsertAllExecutionContext CreateInternal([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             IDbConnection connection,
             string tableName,
             DbFieldCollection dbFields,

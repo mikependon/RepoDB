@@ -31,12 +31,12 @@ namespace RepoDb.Reflection
             IDbSetting dbSetting,
             IDbHelper dbHelper)
         {
-            var typeOfListEntity = typeof(IList<>).MakeGenericType(StaticType.Object);
-            var getItemMethod = typeOfListEntity.GetMethod("get_Item", new[] { StaticType.Int32 });
+            var typeOfListEntity = typeof(IList<object>);
+            var getItemMethod = typeof(IList<object>).GetMethod("get_Item", new[] { StaticType.Int32 });
             var dbCommandExpression = Expression.Parameter(StaticType.DbCommand, "command");
             var entitiesParameterExpression = Expression.Parameter(typeOfListEntity, "entities");
             var dbParameterCollectionExpression = Expression.Property(dbCommandExpression,
-                StaticType.DbCommand.GetProperty("Parameters"));
+                typeof(System.Data.Common.DbCommand).GetProperty("Parameters"));
             var bodyExpressions = new List<Expression>();
 
             // Clear the parameter collection first

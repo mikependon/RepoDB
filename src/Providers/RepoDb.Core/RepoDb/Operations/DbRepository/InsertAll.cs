@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -33,7 +34,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of inserted rows in the table.</returns>
-        public int InsertAll<TEntity>(string tableName,
+        public int InsertAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
@@ -77,7 +78,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of inserted rows in the table.</returns>
-        public int InsertAll<TEntity>(IEnumerable<TEntity> entities,
+        public int InsertAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -125,7 +126,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of inserted rows in the table.</returns>
-        public async Task<int> InsertAllAsync<TEntity>(string tableName,
+        public async Task<int> InsertAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
@@ -172,7 +173,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of inserted rows in the table.</returns>
-        public async Task<int> InsertAllAsync<TEntity>(IEnumerable<TEntity> entities,
+        public async Task<int> InsertAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -220,6 +221,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of inserted rows in the table.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public int InsertAll(string tableName,
             IEnumerable<object> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -268,6 +270,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of inserted rows in the table.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<int> InsertAllAsync(string tableName,
             IEnumerable<object> entities,
             int batchSize = Constant.DefaultBatchOperationSize,

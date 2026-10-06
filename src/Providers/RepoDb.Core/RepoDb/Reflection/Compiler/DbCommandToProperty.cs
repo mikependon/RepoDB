@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Data.Common;
 using System.Linq.Expressions;
@@ -26,7 +27,7 @@ namespace RepoDb.Reflection
         /// <param name="index"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        internal static Action<TEntity, DbCommand> CompileDbCommandToProperty<TEntity>(Field field,
+        internal static Action<TEntity, DbCommand> CompileDbCommandToProperty<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field,
             string parameterName,
             int index,
             IDbSetting dbSetting)
@@ -38,13 +39,13 @@ namespace RepoDb.Reflection
             var dbCommandParameterExpression = Expression.Parameter(StaticType.DbCommand, "command");
 
             // Variables for DbCommand
-            var dbCommandParametersProperty = StaticType.DbCommand.GetProperty("Parameters");
+            var dbCommandParametersProperty = typeof(System.Data.Common.DbCommand).GetProperty("Parameters");
 
             // Variables for DbParameterCollection
-            var dbParameterCollectionIndexerMethod = StaticType.DbParameterCollection.GetMethod("get_Item", new[] { StaticType.String });
+            var dbParameterCollectionIndexerMethod = typeof(System.Data.Common.DbParameterCollection).GetMethod("get_Item", new[] { StaticType.String });
 
             // Variables for DbParameter
-            var dbParameterValueProperty = StaticType.DbParameter.GetProperty("Value");
+            var dbParameterValueProperty = typeof(System.Data.Common.DbParameter).GetProperty("Value");
 
             // Get the entity property
             var propertyName = field.Name.AsUnquoted(trim: true, dbSetting).AsAlphaNumeric();

@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Requests;
@@ -39,7 +40,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        public static bool Exists<TEntity>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static bool Exists<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             object what,
             string hints = null,
             int? commandTimeout = null,
@@ -73,7 +75,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        public static bool Exists<TEntity, TWhat>(this IDbConnection connection,
+        public static bool Exists<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(this IDbConnection connection,
             TWhat what,
             string hints = null,
             int? commandTimeout = null,
@@ -106,7 +108,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        public static bool Exists<TEntity>(this IDbConnection connection,
+        public static bool Exists<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
             int? commandTimeout = null,
@@ -139,7 +141,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        public static bool Exists<TEntity>(this IDbConnection connection,
+        public static bool Exists<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             QueryField where,
             string hints = null,
             int? commandTimeout = null,
@@ -172,7 +174,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        public static bool Exists<TEntity>(this IDbConnection connection,
+        public static bool Exists<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IEnumerable<QueryField> where,
             string hints = null,
             int? commandTimeout = null,
@@ -205,7 +207,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        public static bool Exists<TEntity>(this IDbConnection connection,
+        public static bool Exists<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             QueryGroup where,
             string hints = null,
             int? commandTimeout = null,
@@ -238,7 +240,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        internal static bool ExistsInternal<TEntity>(this IDbConnection connection,
+        internal static bool ExistsInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             QueryGroup where,
             string hints = null,
             int? commandTimeout = null,
@@ -291,7 +293,8 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        public static async Task<bool> ExistsAsync<TEntity>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static async Task<bool> ExistsAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             object what,
             string hints = null,
             int? commandTimeout = null,
@@ -328,7 +331,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        public static async Task<bool> ExistsAsync<TEntity, TWhat>(this IDbConnection connection,
+        public static async Task<bool> ExistsAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(this IDbConnection connection,
             TWhat what,
             string hints = null,
             int? commandTimeout = null,
@@ -364,7 +367,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        public static Task<bool> ExistsAsync<TEntity>(this IDbConnection connection,
+        public static Task<bool> ExistsAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
             int? commandTimeout = null,
@@ -400,7 +403,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        public static Task<bool> ExistsAsync<TEntity>(this IDbConnection connection,
+        public static Task<bool> ExistsAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             QueryField where,
             string hints = null,
             int? commandTimeout = null,
@@ -436,7 +439,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        public static Task<bool> ExistsAsync<TEntity>(this IDbConnection connection,
+        public static Task<bool> ExistsAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IEnumerable<QueryField> where,
             string hints = null,
             int? commandTimeout = null,
@@ -472,7 +475,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        public static Task<bool> ExistsAsync<TEntity>(this IDbConnection connection,
+        public static Task<bool> ExistsAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             QueryGroup where,
             string hints = null,
             int? commandTimeout = null,
@@ -508,7 +511,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        internal static Task<bool> ExistsAsyncInternal<TEntity>(this IDbConnection connection,
+        internal static Task<bool> ExistsAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             QueryGroup where,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
@@ -563,7 +566,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        public static bool Exists<TWhat>(this IDbConnection connection,
+        public static bool Exists<[DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(this IDbConnection connection,
             string tableName,
             TWhat what,
             string hints = null,
@@ -597,6 +600,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static bool Exists(this IDbConnection connection,
             string tableName,
             object what,
@@ -787,7 +791,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        public static async Task<bool> ExistsAsync<TWhat>(this IDbConnection connection,
+        public static async Task<bool> ExistsAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(this IDbConnection connection,
             string tableName,
             TWhat what,
             string hints = null,
@@ -824,6 +828,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static async Task<bool> ExistsAsync(this IDbConnection connection,
             string tableName,
             object what,

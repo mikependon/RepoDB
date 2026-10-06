@@ -7,6 +7,8 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace RepoDb
 {
     /// <summary>
@@ -19,7 +21,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <returns>An instance of <see cref="EntityMapFluentDefinition{TEntity}"/> object.</returns>
-        public static EntityMapFluentDefinition<TEntity> Entity<TEntity>()
+        public static EntityMapFluentDefinition<TEntity> Entity<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>()
             where TEntity : class
         {
             return new();

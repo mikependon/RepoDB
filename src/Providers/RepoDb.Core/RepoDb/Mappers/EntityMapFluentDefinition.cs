@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Attributes.Parameter;
 using RepoDb.Interfaces;
 using System;
@@ -21,7 +22,7 @@ namespace RepoDb
     /// Use this class if you wish to avoid decorating an attribute into the models.
     /// </summary>
     /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-    public class EntityMapFluentDefinition<TEntity>
+    public class EntityMapFluentDefinition<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>
         where TEntity : class
     {
         #region Properties
@@ -433,7 +434,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TClassHandler">The type of the <see cref="IClassHandler{TEntity}"/>.</typeparam>
         /// <returns>The current instance.</returns>
-        public EntityMapFluentDefinition<TEntity> ClassHandler<TClassHandler>()
+        public EntityMapFluentDefinition<TEntity> ClassHandler<[DynamicallyAccessedMembers(Trimming.Handler)] TClassHandler>()
             where TClassHandler : new()
         {
             return ClassHandler(new TClassHandler());
@@ -446,7 +447,7 @@ namespace RepoDb
         /// <typeparam name="TClassHandler">The type of the <see cref="IClassHandler{TEntity}"/>.</typeparam>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         /// <returns>The current instance.</returns>
-        public EntityMapFluentDefinition<TEntity> ClassHandler<TClassHandler>(bool force)
+        public EntityMapFluentDefinition<TEntity> ClassHandler<[DynamicallyAccessedMembers(Trimming.Handler)] TClassHandler>(bool force)
             where TClassHandler : new()
         {
             return ClassHandler(new TClassHandler(), force);
@@ -458,7 +459,7 @@ namespace RepoDb
         /// <typeparam name="TClassHandler">The type of the <see cref="IClassHandler{TEntity}"/>.</typeparam>
         /// <param name="classHandler">The instance of the <see cref="IClassHandler{TEntity}"/>.</param>
         /// <returns>The current instance.</returns>
-        public EntityMapFluentDefinition<TEntity> ClassHandler<TClassHandler>(TClassHandler classHandler)
+        public EntityMapFluentDefinition<TEntity> ClassHandler<[DynamicallyAccessedMembers(Trimming.Handler)] TClassHandler>(TClassHandler classHandler)
         {
             return ClassHandler<TClassHandler>(classHandler, force: false);
         }
@@ -470,7 +471,7 @@ namespace RepoDb
         /// <param name="classHandler">The instance of the <see cref="IClassHandler{TEntity}"/>.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         /// <returns>The current instance.</returns>
-        public EntityMapFluentDefinition<TEntity> ClassHandler<TClassHandler>(TClassHandler classHandler,
+        public EntityMapFluentDefinition<TEntity> ClassHandler<[DynamicallyAccessedMembers(Trimming.Handler)] TClassHandler>(TClassHandler classHandler,
             bool force)
         {
             ClassHandlerMapper.Add<TEntity, TClassHandler>(classHandler, force);
@@ -492,7 +493,7 @@ namespace RepoDb
         /// <typeparam name="TPropertyHandler">The type of the <see cref="IPropertyHandler{TInput, TResult}"/>.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>The current instance.</returns>
-        public EntityMapFluentDefinition<TEntity> PropertyHandler<TPropertyHandler>(Expression<Func<TEntity, object>> expression)
+        public EntityMapFluentDefinition<TEntity> PropertyHandler<[DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(Expression<Func<TEntity, object>> expression)
             where TPropertyHandler : new()
         {
             return PropertyHandler(expression, new TPropertyHandler());
@@ -506,7 +507,7 @@ namespace RepoDb
         /// <param name="expression">The expression to be parsed.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         /// <returns>The current instance.</returns>
-        public EntityMapFluentDefinition<TEntity> PropertyHandler<TPropertyHandler>(Expression<Func<TEntity, object>> expression,
+        public EntityMapFluentDefinition<TEntity> PropertyHandler<[DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(Expression<Func<TEntity, object>> expression,
             bool force)
             where TPropertyHandler : new()
         {
@@ -520,7 +521,7 @@ namespace RepoDb
         /// <param name="expression">The expression to be parsed.</param>
         /// <param name="propertyHandler">The instance of the <see cref="IPropertyHandler{TInput, TResult}"/>.</param>
         /// <returns>The current instance.</returns>
-        public EntityMapFluentDefinition<TEntity> PropertyHandler<TPropertyHandler>(Expression<Func<TEntity, object>> expression,
+        public EntityMapFluentDefinition<TEntity> PropertyHandler<[DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(Expression<Func<TEntity, object>> expression,
             TPropertyHandler propertyHandler)
         {
             return PropertyHandler<TPropertyHandler>(expression, propertyHandler, force: false);
@@ -534,7 +535,7 @@ namespace RepoDb
         /// <param name="propertyHandler">The instance of the <see cref="IPropertyHandler{TInput, TResult}"/>.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         /// <returns>The current instance.</returns>
-        public EntityMapFluentDefinition<TEntity> PropertyHandler<TPropertyHandler>(Expression<Func<TEntity, object>> expression,
+        public EntityMapFluentDefinition<TEntity> PropertyHandler<[DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(Expression<Func<TEntity, object>> expression,
             TPropertyHandler propertyHandler,
             bool force)
         {
@@ -553,7 +554,7 @@ namespace RepoDb
         /// <typeparam name="TPropertyHandler">The type of the <see cref="IPropertyHandler{TInput, TResult}"/>.</typeparam>
         /// <param name="propertyName">The name of the class property to be mapped.</param>
         /// <returns>The current instance.</returns>
-        public EntityMapFluentDefinition<TEntity> PropertyHandler<TPropertyHandler>(string propertyName)
+        public EntityMapFluentDefinition<TEntity> PropertyHandler<[DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(string propertyName)
             where TPropertyHandler : new()
         {
             return PropertyHandler(propertyName, new TPropertyHandler(), force: false);
@@ -566,7 +567,7 @@ namespace RepoDb
         /// <param name="propertyName">The name of the class property to be mapped.</param>
         /// <param name="propertyHandler">The instance of the <see cref="IPropertyHandler{TInput, TResult}"/>.</param>
         /// <returns>The current instance.</returns>
-        public EntityMapFluentDefinition<TEntity> PropertyHandler<TPropertyHandler>(string propertyName,
+        public EntityMapFluentDefinition<TEntity> PropertyHandler<[DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(string propertyName,
             TPropertyHandler propertyHandler)
         {
             return PropertyHandler<TPropertyHandler>(propertyName, propertyHandler, force: false);
@@ -580,7 +581,7 @@ namespace RepoDb
         /// <param name="propertyHandler">The instance of the <see cref="IPropertyHandler{TInput, TResult}"/>.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         /// <returns>The current instance.</returns>
-        public EntityMapFluentDefinition<TEntity> PropertyHandler<TPropertyHandler>(string propertyName,
+        public EntityMapFluentDefinition<TEntity> PropertyHandler<[DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(string propertyName,
             TPropertyHandler propertyHandler,
             bool force)
         {
@@ -599,7 +600,7 @@ namespace RepoDb
         /// <typeparam name="TPropertyHandler">The type of the <see cref="IPropertyHandler{TInput, TResult}"/>.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         /// <returns>The current instance.</returns>
-        public EntityMapFluentDefinition<TEntity> PropertyHandler<TPropertyHandler>(Field field)
+        public EntityMapFluentDefinition<TEntity> PropertyHandler<[DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(Field field)
             where TPropertyHandler : new()
         {
             return PropertyHandler(field, new TPropertyHandler(), force: false);
@@ -612,7 +613,7 @@ namespace RepoDb
         /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         /// <param name="propertyHandler">The instance of the <see cref="IPropertyHandler{TInput, TResult}"/>.</param>
         /// <returns>The current instance.</returns>
-        public EntityMapFluentDefinition<TEntity> PropertyHandler<TPropertyHandler>(Field field,
+        public EntityMapFluentDefinition<TEntity> PropertyHandler<[DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(Field field,
             TPropertyHandler propertyHandler)
         {
             return PropertyHandler<TPropertyHandler>(field, propertyHandler, force: false);
@@ -626,7 +627,7 @@ namespace RepoDb
         /// <param name="propertyHandler">The instance of the <see cref="IPropertyHandler{TInput, TResult}"/>.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         /// <returns>The current instance.</returns>
-        public EntityMapFluentDefinition<TEntity> PropertyHandler<TPropertyHandler>(Field field,
+        public EntityMapFluentDefinition<TEntity> PropertyHandler<[DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(Field field,
             TPropertyHandler propertyHandler,
             bool force)
         {

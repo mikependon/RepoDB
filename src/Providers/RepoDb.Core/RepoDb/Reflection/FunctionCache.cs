@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Reflection;
@@ -58,7 +59,7 @@ namespace RepoDb
         /// <param name="dbFields">The list of the <see cref="DbField"/> objects to be used.</param>
         /// <param name="dbSetting">The instance of <see cref="IDbSetting"/> object to be used.</param>
         /// <returns></returns>
-        internal static Func<DbDataReader, TResult> GetDataReaderToTypeCompiledFunction<TResult>(DbDataReader reader,
+        internal static Func<DbDataReader, TResult> GetDataReaderToTypeCompiledFunction<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(DbDataReader reader,
             DbFieldCollection dbFields = null,
             IDbSetting dbSetting = null)
         {
@@ -71,7 +72,7 @@ namespace RepoDb
         /// 
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
-        private static class DataReaderToTypeCache<TResult>
+        private static class DataReaderToTypeCache<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>
         {
             private static ConcurrentDictionary<long, Func<DbDataReader, TResult>> cache = new();
 
@@ -177,7 +178,7 @@ namespace RepoDb
         /// <param name="dbSetting"></param>
         /// <param name="dbHelper"></param>
         /// <returns></returns>
-        internal static Action<DbCommand, object> GetDataEntityDbParameterSetterCompiledFunction(Type entityType,
+        internal static Action<DbCommand, object> GetDataEntityDbParameterSetterCompiledFunction([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             string cacheKey,
             IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
@@ -211,7 +212,7 @@ namespace RepoDb
             /// <param name="dbSetting"></param>
             /// <param name="dbHelper"></param>
             /// <returns></returns>
-            internal static Action<DbCommand, object> Get(Type entityType,
+            internal static Action<DbCommand, object> Get([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
                 string cacheKey,
                 IEnumerable<DbField> inputFields,
                 IEnumerable<DbField> outputFields,
@@ -282,7 +283,7 @@ namespace RepoDb
         /// <param name="dbSetting"></param>
         /// <param name="dbHelper"></param>
         /// <returns></returns>
-        internal static Action<DbCommand, IList<object>> GetDataEntityListDbParameterSetterCompiledFunction(Type entityType,
+        internal static Action<DbCommand, IList<object>> GetDataEntityListDbParameterSetterCompiledFunction([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             string cacheKey,
             IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
@@ -313,7 +314,7 @@ namespace RepoDb
             /// <param name="dbSetting"></param>
             /// <param name="dbHelper"></param>
             /// <returns></returns>
-            internal static Action<DbCommand, IList<object>> Get(Type entityType,
+            internal static Action<DbCommand, IList<object>> Get([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
                 string cacheKey,
                 IEnumerable<DbField> inputFields,
                 IEnumerable<DbField> outputFields,
@@ -396,7 +397,7 @@ namespace RepoDb
         /// <param name="index"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        internal static Action<TEntity, DbCommand> GetDbCommandToPropertyCompiledFunction<TEntity>(Field field,
+        internal static Action<TEntity, DbCommand> GetDbCommandToPropertyCompiledFunction<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field,
             string parameterName,
             int index,
             IDbSetting dbSetting = null)
@@ -411,7 +412,7 @@ namespace RepoDb
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        private static class DbCommandToPropertyCache<TEntity>
+        private static class DbCommandToPropertyCache<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>
             where TEntity : class
         {
             private static ConcurrentDictionary<long, Action<TEntity, DbCommand>> cache = new();
@@ -451,7 +452,7 @@ namespace RepoDb
         /// <param name="entityType"></param>
         /// <param name="field"></param>
         /// <returns></returns>
-        internal static Action<object, object> GetDataEntityPropertySetterCompiledFunction(Type entityType,
+        internal static Action<object, object> GetDataEntityPropertySetterCompiledFunction([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             Field field)
         {
             return DataEntityPropertySetterCache.Get(entityType, field);
@@ -472,7 +473,7 @@ namespace RepoDb
             /// <param name="type"></param>
             /// <param name="field"></param>
             /// <returns></returns>
-            internal static Action<object, object> Get(Type type,
+            internal static Action<object, object> Get([DynamicallyAccessedMembers(Trimming.Entity)] Type type,
                 Field field)
             {
                 var key = HashCode.Combine(type.GetHashCode(), field.GetHashCode(), GlobalConfiguration.Options.ConversionType);
@@ -505,8 +506,8 @@ namespace RepoDb
         /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
         /// <returns></returns>
-        internal static Action<DbCommand, object> GetPlainTypeToDbParametersCompiledFunction(Type paramType,
-            Type entityType,
+        internal static Action<DbCommand, object> GetPlainTypeToDbParametersCompiledFunction([DynamicallyAccessedMembers(Trimming.Entity)] Type paramType,
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             DbFieldCollection dbFields = null)
         {
             return PlainTypeToDbParametersCompiledFunctionCache.Get(paramType, entityType, dbFields);
@@ -528,8 +529,8 @@ namespace RepoDb
             /// <param name="entityType"></param>
             /// <param name="dbFields"></param>
             /// <returns></returns>
-            internal static Action<DbCommand, object> Get(Type paramType,
-                Type entityType,
+            internal static Action<DbCommand, object> Get([DynamicallyAccessedMembers(Trimming.Entity)] Type paramType,
+                [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
                 DbFieldCollection dbFields = null)
             {
                 if (paramType == null)

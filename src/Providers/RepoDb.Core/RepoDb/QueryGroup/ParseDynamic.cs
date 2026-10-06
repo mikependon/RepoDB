@@ -9,6 +9,7 @@
 
 using RepoDb.Extensions;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -21,7 +22,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="obj">The instance of the object to be parsed.</param>
         /// <returns>An instance of the <see cref="QueryGroup"/> with parsed properties and values.</returns>
-        public static QueryGroup Parse<T>(T obj)
+        public static QueryGroup Parse<[DynamicallyAccessedMembers(Trimming.Entity)] T>(T obj)
         {
             return Parse<T>(obj, throwException: true);
         }
@@ -32,7 +33,7 @@ namespace RepoDb
         /// <param name="obj">The instance of the object to be parsed.</param>
         /// <param name="throwException">If true, an exception will be thrown if the type of 'obj' argument cannot be parsed.</param>
         /// <returns>An instance of the <see cref="QueryGroup"/> with parsed properties and values.</returns>
-        public static QueryGroup Parse<T>(T obj,
+        public static QueryGroup Parse<[DynamicallyAccessedMembers(Trimming.Entity)] T>(T obj,
             bool throwException = true)
         {
             // Check for value
@@ -42,7 +43,7 @@ namespace RepoDb
             }
 
             // Type of the object
-            var type = TypeCache.Get(obj.GetType()).GetUnderlyingType();
+            var type = RepoDb.Extensions.TypeExtension.GetRuntimeType<T>(obj);
 
             // Filter the type
             if (!TypeCache.Get(type).IsClassType())
@@ -58,7 +59,7 @@ namespace RepoDb
             }
 
             // Declare variables
-            var properties = TypeCache.Get(type).GetProperties();
+            var properties = TypeCache.GetProperties(type);
             var queryFields = new List<QueryField>(properties.Length);
 
             // Iterate every property

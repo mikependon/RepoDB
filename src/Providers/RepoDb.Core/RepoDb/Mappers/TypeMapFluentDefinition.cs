@@ -10,6 +10,7 @@
 using RepoDb.Attributes.Parameter;
 using RepoDb.Interfaces;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Collections.Generic;
 using System.Data;
 
@@ -65,7 +66,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
         /// <returns>The current instance.</returns>
-        public TypeMapFluentDefinition<TType> PropertyHandler<TPropertyHandler>()
+        public TypeMapFluentDefinition<TType> PropertyHandler<[DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>()
             where TPropertyHandler : new()
         {
             return PropertyHandler(new TPropertyHandler(), force: false);
@@ -78,7 +79,7 @@ namespace RepoDb
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         /// <returns>The current instance.</returns>
-        public TypeMapFluentDefinition<TType> PropertyHandler<TPropertyHandler>(bool force)
+        public TypeMapFluentDefinition<TType> PropertyHandler<[DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(bool force)
             where TPropertyHandler : new()
         {
             return PropertyHandler(new TPropertyHandler(), force);
@@ -90,7 +91,7 @@ namespace RepoDb
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
         /// <param name="propertyHandler">The instance of the property handler. The type must implement the <see cref="IPropertyHandler{TInput, TResult}"/> interface.</param>
         /// <returns>The current instance.</returns>
-        public TypeMapFluentDefinition<TType> PropertyHandler<TPropertyHandler>(TPropertyHandler propertyHandler)
+        public TypeMapFluentDefinition<TType> PropertyHandler<[DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(TPropertyHandler propertyHandler)
         {
             return PropertyHandler<TPropertyHandler>(propertyHandler, force: false);
         }
@@ -102,7 +103,7 @@ namespace RepoDb
         /// <param name="propertyHandler">The instance of the property handler. The type must implement the <see cref="IPropertyHandler{TInput, TResult}"/> interface.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         /// <returns>The current instance.</returns>
-        public TypeMapFluentDefinition<TType> PropertyHandler<TPropertyHandler>(TPropertyHandler propertyHandler,
+        public TypeMapFluentDefinition<TType> PropertyHandler<[DynamicallyAccessedMembers(Trimming.Handler)] TPropertyHandler>(TPropertyHandler propertyHandler,
             bool force)
         {
             PropertyHandlerMapper.Add<TType, TPropertyHandler>(propertyHandler, force);

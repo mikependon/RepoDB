@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Data.Common;
 using System.Dynamic;
@@ -17,7 +18,7 @@ namespace RepoDb.Reflection.Delegates
     /// </summary>
     /// <typeparam name="TEntity">The data entity object to map.</typeparam>
     /// <returns>An instance of data entity object containing the values from the <see cref="DbDataReader"/> object.</returns>
-    internal delegate Func<DbDataReader, TEntity> DataReaderToDataEntityFunction<TEntity>()
+    internal delegate Func<DbDataReader, TEntity> DataReaderToDataEntityFunction<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>()
         where TEntity : class;
 
     /// <summary>

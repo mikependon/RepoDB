@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Requests;
@@ -40,7 +41,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        public static long Count<TEntity>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static long Count<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             object where,
             string hints = null,
             int? commandTimeout = null,
@@ -73,7 +75,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        public static long Count<TEntity>(this IDbConnection connection,
+        public static long Count<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
             int? commandTimeout = null,
@@ -106,7 +108,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        public static long Count<TEntity>(this IDbConnection connection,
+        public static long Count<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             QueryField where,
             string hints = null,
             int? commandTimeout = null,
@@ -139,7 +141,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        public static long Count<TEntity>(this IDbConnection connection,
+        public static long Count<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IEnumerable<QueryField> where,
             string hints = null,
             int? commandTimeout = null,
@@ -172,7 +174,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        public static long Count<TEntity>(this IDbConnection connection,
+        public static long Count<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             QueryGroup where,
             string hints = null,
             int? commandTimeout = null,
@@ -205,7 +207,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        internal static long CountInternal<TEntity>(this IDbConnection connection,
+        internal static long CountInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             QueryGroup where,
             string hints = null,
             int? commandTimeout = null,
@@ -254,7 +256,8 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static Task<long> CountAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             object where,
             string hints = null,
             int? commandTimeout = null,
@@ -290,7 +293,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> CountAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
             int? commandTimeout = null,
@@ -326,7 +329,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> CountAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             QueryField where,
             string hints = null,
             int? commandTimeout = null,
@@ -362,7 +365,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> CountAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IEnumerable<QueryField> where,
             string hints = null,
             int? commandTimeout = null,
@@ -398,7 +401,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> CountAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             QueryGroup where,
             string hints = null,
             int? commandTimeout = null,
@@ -434,7 +437,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        internal static Task<long> CountAsyncInternal<TEntity>(this IDbConnection connection,
+        internal static Task<long> CountAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             QueryGroup where,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Count,
@@ -488,6 +491,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static long Count(this IDbConnection connection,
             string tableName,
             object where,
@@ -673,6 +677,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Task<long> CountAsync(this IDbConnection connection,
             string tableName,
             object where,

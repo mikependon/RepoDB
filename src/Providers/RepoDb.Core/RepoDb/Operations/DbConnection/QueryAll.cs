@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Requests;
@@ -42,7 +43,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static IEnumerable<TEntity> QueryAll<TEntity>(this IDbConnection connection,
+        public static IEnumerable<TEntity> QueryAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -89,7 +90,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static IEnumerable<TEntity> QueryAll<TEntity>(this IDbConnection connection,
+        public static IEnumerable<TEntity> QueryAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
@@ -136,7 +137,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        internal static IEnumerable<TEntity> QueryAllInternal<TEntity>(this IDbConnection connection,
+        internal static IEnumerable<TEntity> QueryAllInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -194,7 +195,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static Task<IEnumerable<TEntity>> QueryAllAsync<TEntity>(this IDbConnection connection,
+        public static Task<IEnumerable<TEntity>> QueryAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -244,7 +245,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static Task<IEnumerable<TEntity>> QueryAllAsync<TEntity>(this IDbConnection connection,
+        public static Task<IEnumerable<TEntity>> QueryAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
@@ -294,7 +295,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        internal static async Task<IEnumerable<TEntity>> QueryAllAsyncInternal<TEntity>(this IDbConnection connection,
+        internal static async Task<IEnumerable<TEntity>> QueryAllAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -551,7 +552,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        internal static IEnumerable<TEntity> QueryAllInternalBase<TEntity>(this IDbConnection connection,
+        internal static IEnumerable<TEntity> QueryAllInternalBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -636,7 +637,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        internal static async Task<IEnumerable<TEntity>> QueryAllAsyncInternalBase<TEntity>(this IDbConnection connection,
+        internal static async Task<IEnumerable<TEntity>> QueryAllAsyncInternalBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,

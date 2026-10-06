@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Contexts.Providers;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -42,7 +43,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public static int Update<TEntity>(this IDbConnection connection,
+        public static int Update<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
@@ -86,7 +87,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public static int Update<TEntity, TWhat>(this IDbConnection connection,
+        public static int Update<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             TWhat what,
@@ -128,7 +129,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public static int Update<TEntity>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static int Update<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             object what,
@@ -170,7 +172,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public static int Update<TEntity>(this IDbConnection connection,
+        public static int Update<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             Expression<Func<TEntity, bool>> where,
@@ -212,7 +214,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public static int Update<TEntity>(this IDbConnection connection,
+        public static int Update<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             QueryField where,
@@ -254,7 +256,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public static int Update<TEntity>(this IDbConnection connection,
+        public static int Update<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             IEnumerable<QueryField> where,
@@ -296,7 +298,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public static int Update<TEntity>(this IDbConnection connection,
+        public static int Update<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             QueryGroup where,
@@ -336,7 +338,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public static int Update<TEntity>(this IDbConnection connection,
+        public static int Update<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -377,7 +379,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public static int Update<TEntity, TWhat>(this IDbConnection connection,
+        public static int Update<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(this IDbConnection connection,
             TEntity entity,
             TWhat what,
             IEnumerable<Field> fields = null,
@@ -417,7 +419,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public static int Update<TEntity>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static int Update<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             TEntity entity,
             object what,
             IEnumerable<Field> fields = null,
@@ -457,7 +460,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public static int Update<TEntity>(this IDbConnection connection,
+        public static int Update<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             TEntity entity,
             Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
@@ -497,7 +500,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public static int Update<TEntity>(this IDbConnection connection,
+        public static int Update<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             TEntity entity,
             QueryField where,
             IEnumerable<Field> fields = null,
@@ -537,7 +540,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public static int Update<TEntity>(this IDbConnection connection,
+        public static int Update<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
@@ -577,7 +580,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public static int Update<TEntity>(this IDbConnection connection,
+        public static int Update<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             TEntity entity,
             QueryGroup where,
             IEnumerable<Field> fields = null,
@@ -618,7 +621,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        internal static int UpdateInternal<TEntity>(this IDbConnection connection,
+        internal static int UpdateInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             QueryGroup where,
@@ -681,7 +684,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public static async Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
+        public static async Task<int> UpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
@@ -728,7 +731,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public static async Task<int> UpdateAsync<TEntity, TWhat>(this IDbConnection connection,
+        public static async Task<int> UpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             TWhat what,
@@ -773,7 +776,8 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public static async Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static async Task<int> UpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             object what,
@@ -818,7 +822,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> UpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             Expression<Func<TEntity, bool>> where,
@@ -863,7 +867,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> UpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             QueryField where,
@@ -908,7 +912,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> UpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             IEnumerable<QueryField> where,
@@ -953,7 +957,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> UpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             QueryGroup where,
@@ -996,7 +1000,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public static async Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
+        public static async Task<int> UpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -1040,7 +1044,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public static async Task<int> UpdateAsync<TEntity, TWhat>(this IDbConnection connection,
+        public static async Task<int> UpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(this IDbConnection connection,
             TEntity entity,
             TWhat what,
             IEnumerable<Field> fields = null,
@@ -1083,7 +1087,8 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public static async Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static async Task<int> UpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             TEntity entity,
             object what,
             IEnumerable<Field> fields = null,
@@ -1126,7 +1131,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> UpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             TEntity entity,
             Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
@@ -1169,7 +1174,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> UpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             TEntity entity,
             QueryField where,
             IEnumerable<Field> fields = null,
@@ -1212,7 +1217,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> UpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
@@ -1255,7 +1260,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> UpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             TEntity entity,
             QueryGroup where,
             IEnumerable<Field> fields = null,
@@ -1299,7 +1304,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        internal static Task<int> UpdateAsyncInternal<TEntity>(this IDbConnection connection,
+        internal static Task<int> UpdateAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             QueryGroup where,
@@ -1363,6 +1368,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static int Update(this IDbConnection connection,
             string tableName,
             object entity,
@@ -1403,6 +1409,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static int Update(this IDbConnection connection,
             string tableName,
             object entity,
@@ -1443,6 +1450,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static int Update(this IDbConnection connection,
             string tableName,
             object entity,
@@ -1483,6 +1491,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static int Update(this IDbConnection connection,
             string tableName,
             object entity,
@@ -1523,6 +1532,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static int Update(this IDbConnection connection,
             string tableName,
             object entity,
@@ -1567,6 +1577,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static async Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
@@ -1611,6 +1622,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
@@ -1654,6 +1666,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
@@ -1697,6 +1710,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
@@ -1740,6 +1754,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
@@ -1787,7 +1802,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        internal static int UpdateInternalBase<TEntity>(this IDbConnection connection,
+        internal static int UpdateInternalBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             QueryGroup where,
@@ -1823,7 +1838,7 @@ namespace RepoDb
                 context.ParametersSetterFunc(command, entity);
 
                 // Add the fields from the query group
-                WhereToCommandParameters(command, where, entity?.GetType(),
+                WhereToCommandParameters(command, where, entity == null ? null : entityType,
                     DbFieldCache.Get(connection, tableName, transaction));
 
                 // Before Execution
@@ -1869,7 +1884,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        internal static async Task<int> UpdateAsyncInternalBase<TEntity>(this IDbConnection connection,
+        internal static async Task<int> UpdateAsyncInternalBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             QueryGroup where,
@@ -1907,7 +1922,7 @@ namespace RepoDb
                 context.ParametersSetterFunc(command, entity);
 
                 // Add the fields from the query group
-                WhereToCommandParameters(command, where, entity?.GetType(),
+                WhereToCommandParameters(command, where, entity == null ? null : entityType,
                     await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false));
 
                 // Before Execution

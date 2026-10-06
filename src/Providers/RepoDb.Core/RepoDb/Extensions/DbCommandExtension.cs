@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Attributes.Parameter;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
@@ -111,6 +112,9 @@ namespace RepoDb.Extensions
         ///
         /// </summary>
         /// <param name="parameter"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2075:'this' argument does not satisfy 'DynamicallyAccessedMembersAttribute' in call to target method.",
+            Justification = "Only the SQL Server parameters support the table-valued parameters ('TypeName' property). The SQL Server provider also sets " +
+                "the 'TypeName' property statically (see SqlServerDbHelper.DynamicHandler), so that it is not dependent on the reflection when trimmed.")]
         private static void EnsureTableValueParameter(IDbDataParameter parameter)
         {
             if (parameter == null || !(parameter.Value is DataTable table))
@@ -186,6 +190,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command">The command object to be used.</param>
         /// <param name="param">The object to be used when creating the parameters.</param>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static void CreateParameters(this IDbCommand command,
             object param)
         {
@@ -200,7 +205,7 @@ namespace RepoDb.Extensions
         /// <param name="entityType">The type of the data entity.</param>
         public static void CreateParameters(this IDbCommand command,
             object param,
-            Type entityType)
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType)
         {
             CreateParameters(command, param, propertiesToSkip: null, entityType, dbFields: null);
         }
@@ -216,7 +221,7 @@ namespace RepoDb.Extensions
         internal static void CreateParameters(this IDbCommand command,
             object param,
             HashSet<string> propertiesToSkip,
-            Type entityType,
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             DbFieldCollection dbFields = null)
         {
             // Check
@@ -443,10 +448,10 @@ namespace RepoDb.Extensions
         private static void CreateParametersInternal(IDbCommand command,
             object param,
             HashSet<string> propertiesToSkip,
-            Type entityType,
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             DbFieldCollection dbFields = null)
         {
-            var type = param.GetType();
+            var type = param.GetRuntimeType();
 
             // Check
             if (type.IsGenericType && type.GetGenericTypeDefinition() == StaticType.Dictionary)
@@ -590,7 +595,7 @@ namespace RepoDb.Extensions
         internal static void CreateParameters(IDbCommand command,
             QueryGroup queryGroup,
             HashSet<string> propertiesToSkip,
-            Type entityType,
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             DbFieldCollection dbFields = null)
         {
             if (queryGroup == null)
@@ -611,7 +616,7 @@ namespace RepoDb.Extensions
         internal static void CreateParameters(this IDbCommand command,
             IEnumerable<QueryField> queryFields,
             HashSet<string> propertiesToSkip,
-            Type entityType,
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             DbFieldCollection dbFields = null)
         {
             if (queryFields == null)
@@ -654,7 +659,7 @@ namespace RepoDb.Extensions
         private static void CreateParameters(this IDbCommand command,
             QueryField queryField,
             HashSet<string> propertiesToSkip,
-            Type entityType,
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             DbFieldCollection dbFields = null)
         {
             if (queryField == null)
@@ -793,7 +798,7 @@ namespace RepoDb.Extensions
 
             if (propertyHandler != null)
             {
-                var propertyHandlerSetMethod = Reflection.Compiler.GetPropertyHandlerInterfaceOrHandlerType(propertyHandler)?.GetMethod("Set");
+                var propertyHandlerSetMethod = Reflection.Compiler.GetPropertyHandlerSetMethod(propertyHandler);
                 value = propertyHandlerSetMethod
                     .Invoke(propertyHandler, new[] { value,
                         PropertyHandlerSetOptions.Create(parameter,classProperty) });
@@ -978,7 +983,7 @@ namespace RepoDb.Extensions
 #endif
             else
             {
-                return (value != DBNull.Value) ? Convert.ChangeType(value, targetType, System.Globalization.CultureInfo.InvariantCulture) : Activator.CreateInstance(targetType);
+                return (value != DBNull.Value) ? Convert.ChangeType(value, targetType, System.Globalization.CultureInfo.InvariantCulture) : targetType.GetDefaultValue();
             }
         }
 
@@ -991,7 +996,7 @@ namespace RepoDb.Extensions
         {
             if (value != null)
             {
-                value = StaticType.Guid
+                value = typeof(System.Guid)
                     .GetMethod("Parse", new[] { StaticType.String })
                     .Invoke(null, new[] { value });
             }
