@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -39,7 +40,7 @@ namespace RepoDb
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkDelete<TEntity>(this SqlConnection connection,
+        public static int BulkDelete<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this SqlConnection connection,
             IEnumerable<object> primaryKeys,
             string hints = null,
             int? bulkCopyTimeout = null,
@@ -73,7 +74,7 @@ namespace RepoDb
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkDelete<TEntity>(this SqlConnection connection,
+        public static int BulkDelete<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this SqlConnection connection,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
@@ -116,7 +117,7 @@ namespace RepoDb
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkDelete<TEntity>(this SqlConnection connection,
+        public static int BulkDelete<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
@@ -159,7 +160,7 @@ namespace RepoDb
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkDelete<TEntity>(this SqlConnection connection,
+        public static int BulkDelete<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this SqlConnection connection,
             DbDataReader reader,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
@@ -200,7 +201,7 @@ namespace RepoDb
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkDelete<TEntity>(this SqlConnection connection,
+        public static int BulkDelete<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this SqlConnection connection,
             DataTable dataTable,
             Expression<Func<TEntity, object>> qualifiers = null,
             DataRowState? rowState = null,
@@ -362,7 +363,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static Task<int> BulkDeleteAsync<TEntity>(this SqlConnection connection,
+        public static Task<int> BulkDeleteAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this SqlConnection connection,
             IEnumerable<object> primaryKeys,
             string hints = null,
             int? bulkCopyTimeout = null,
@@ -399,7 +400,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkDeleteAsync<TEntity>(this SqlConnection connection,
+        public static async Task<int> BulkDeleteAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this SqlConnection connection,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
@@ -445,7 +446,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkDeleteAsync<TEntity>(this SqlConnection connection,
+        public static async Task<int> BulkDeleteAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
@@ -491,7 +492,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static Task<int> BulkDeleteAsync<TEntity>(this SqlConnection connection,
+        public static Task<int> BulkDeleteAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this SqlConnection connection,
             DbDataReader reader,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
@@ -535,7 +536,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static Task<int> BulkDeleteAsync<TEntity>(this SqlConnection connection,
+        public static Task<int> BulkDeleteAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this SqlConnection connection,
             DataTable dataTable,
             Expression<Func<TEntity, object>> qualifiers = null,
             DataRowState? rowState = null,

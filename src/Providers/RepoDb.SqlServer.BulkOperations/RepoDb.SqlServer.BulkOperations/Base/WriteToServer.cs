@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -40,7 +41,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="trace"></param>
         /// <returns></returns>
-        private static int WriteToServerInternal<TEntity>(SqlConnection connection,
+        private static int WriteToServerInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
@@ -280,7 +281,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> WriteToServerAsyncInternal<TEntity>(SqlConnection connection,
+        private static async Task<int> WriteToServerAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,

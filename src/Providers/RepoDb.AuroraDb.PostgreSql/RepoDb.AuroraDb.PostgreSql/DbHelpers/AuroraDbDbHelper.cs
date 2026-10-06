@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Connector.AuroraDb.Npgsql;
 using RepoDb.DbSettings;
 using RepoDb.Extensions;
@@ -143,6 +144,40 @@ namespace RepoDb.DbHelpers
         private static bool IsOperationInProgressException(Exception ex) => string.Equals(ex.GetType().Name, "NpgsqlOperationInProgressException", StringComparison.Ordinal);
 
         /// <summary>
+
+        /// Creates a new (closed) connection with the same connection string as the given connection.
+
+        /// </summary>
+
+        /// <param name="connection">The existing connection.</param>
+
+        /// <returns>The new connection.</returns>
+
+        private static DbConnection CreateNewConnection(IDbConnection connection) =>
+
+            connection.GetType() == typeof(AuroraDbConnection) ? new AuroraDbConnection(connection.ConnectionString) : CreateNewConnectionViaReflection(connection);
+
+
+        /// <summary>
+
+        /// Creates a new (closed) connection of the runtime type of the given connection (i.e.: a type derived from <see cref="AuroraDbConnection"/>).
+
+        /// </summary>
+
+        /// <param name="connection">The existing connection.</param>
+
+        /// <returns>The new connection.</returns>
+
+        [UnconditionalSuppressMessage("Trimming", "IL2072:Target parameter argument does not satisfy 'DynamicallyAccessedMembersAttribute' in call to target method.",
+
+            Justification = "Only used for the types derived from AuroraDbConnection (which is constructed directly), whose constructors are expected to be preserved by the application.")]
+
+        private static DbConnection CreateNewConnectionViaReflection(IDbConnection connection) =>
+
+            (DbConnection)Activator.CreateInstance(connection.GetType(), connection.ConnectionString);
+
+
+        /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
@@ -159,7 +194,7 @@ namespace RepoDb.DbHelpers
             catch (Exception ex) when (IsOperationInProgressException(ex))
             {
                 Debug.WriteLine($"{ex.GetType().Name} occurred. Retrying the operation on a new connection.");
-                using var newConnection = (IDbConnection)Activator.CreateInstance(connection.GetType(), connection.ConnectionString);
+                using var newConnection = CreateNewConnection(connection);
                 newConnection.Open();
                 return func(newConnection);
             }
@@ -183,7 +218,7 @@ namespace RepoDb.DbHelpers
             catch (Exception ex) when (IsOperationInProgressException(ex))
             {
                 Debug.WriteLine($"{ex.GetType().Name} occurred. Retrying the operation on a new connection.");
-                var newConnection = (DbConnection)Activator.CreateInstance(connection.GetType(), connection.ConnectionString);
+                var newConnection = CreateNewConnection(connection);
                 await using (newConnection.ConfigureAwait(true))
                 {
                     await newConnection.OpenAsync().ConfigureAwait(false);
@@ -207,16 +242,17 @@ namespace RepoDb.DbHelpers
 
          => TryExecuteOnExistingConnection(connection, c => GetFieldsInternal(c, tableName, transaction));
 
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "The parameter object passed to the RepoDB execute methods is either null or a Dictionary<string, object>, which is not reflected.")]
         private IEnumerable<DbField> GetFieldsInternal(IDbConnection connection,
             string tableName,
             IDbTransaction transaction = null)
         {
             // Variables
             var commandText = GetCommandText();
-            var param = new
+            var param = new Dictionary<string, object>
             {
-                Schema = DataEntityExtension.GetSchema(tableName, m_dbSetting).AsUnquoted(m_dbSetting),
-                TableName = DataEntityExtension.GetTableName(tableName, m_dbSetting).AsUnquoted(m_dbSetting)
+                ["Schema"] = DataEntityExtension.GetSchema(tableName, m_dbSetting).AsUnquoted(m_dbSetting),
+                ["TableName"] = DataEntityExtension.GetTableName(tableName, m_dbSetting).AsUnquoted(m_dbSetting)
             };
 
             // Iterate and extract
@@ -249,6 +285,7 @@ namespace RepoDb.DbHelpers
 
          => TryExecuteOnExistingConnectionAsync(connection, c => GetFieldsAsyncInternal(c, tableName, transaction, cancellationToken));
 
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "The parameter object passed to the RepoDB execute methods is either null or a Dictionary<string, object>, which is not reflected.")]
         private async Task<IEnumerable<DbField>> GetFieldsAsyncInternal(IDbConnection connection,
             string tableName,
             IDbTransaction transaction = null,
@@ -256,10 +293,10 @@ namespace RepoDb.DbHelpers
         {
             // Variables
             var commandText = GetCommandText();
-            var param = new
+            var param = new Dictionary<string, object>
             {
-                Schema = DataEntityExtension.GetSchema(tableName, m_dbSetting).AsUnquoted(m_dbSetting),
-                TableName = DataEntityExtension.GetTableName(tableName, m_dbSetting).AsUnquoted(m_dbSetting)
+                ["Schema"] = DataEntityExtension.GetSchema(tableName, m_dbSetting).AsUnquoted(m_dbSetting),
+                ["TableName"] = DataEntityExtension.GetTableName(tableName, m_dbSetting).AsUnquoted(m_dbSetting)
             };
 
             // Iterate and extract
@@ -294,6 +331,7 @@ namespace RepoDb.DbHelpers
 
          => TryExecuteOnExistingConnection(connection, c => GetScopeIdentityInternal<T>(c, transaction));
 
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private T GetScopeIdentityInternal<T>(IDbConnection connection,
             IDbTransaction transaction = null)
         {
@@ -315,6 +353,7 @@ namespace RepoDb.DbHelpers
 
          => TryExecuteOnExistingConnectionAsync(connection, c => GetScopeIdentityAsyncInternal<T>(c, transaction, cancellationToken));
 
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private Task<T> GetScopeIdentityAsyncInternal<T>(IDbConnection connection,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)

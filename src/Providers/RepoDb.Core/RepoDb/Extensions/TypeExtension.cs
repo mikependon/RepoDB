@@ -307,7 +307,8 @@ namespace RepoDb.Extensions
             Justification = "The default value of a value type is its zero-initialized instance, no constructor is being invoked.")]
         internal static object GetDefaultValue(this Type type)
         {
-            if (type?.IsValueType != true)
+            // The default value of a reference type or a Nullable<T> is null
+            if (type?.IsValueType != true || Nullable.GetUnderlyingType(type) != null)
             {
                 return null;
             }

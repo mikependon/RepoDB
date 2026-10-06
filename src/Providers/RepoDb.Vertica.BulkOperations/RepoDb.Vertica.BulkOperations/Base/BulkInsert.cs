@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using Vertica.Data.VerticaClient;
 using RepoDb.Enumerations.Vertica;
 using RepoDb.Extensions;
@@ -47,7 +48,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BulkInsertBase<TEntity>(this VerticaConnection connection,
+        private static int BulkInsertBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this VerticaConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<VerticaBulkInsertMapItem> mappings = null,
@@ -89,7 +90,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BulkInsertBaseForReturnIdentity<TEntity>(this VerticaConnection connection,
+        private static int BulkInsertBaseForReturnIdentity<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this VerticaConnection connection,
             string tableName,
             IList<TEntity> entities,
             IEnumerable<VerticaBulkInsertMapItem> mappings,
@@ -144,7 +145,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BulkInsertBaseNoReturnIdentity<TEntity>(this VerticaConnection connection,
+        private static int BulkInsertBaseNoReturnIdentity<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this VerticaConnection connection,
             string tableName,
             IList<TEntity> entities,
             IEnumerable<VerticaBulkInsertMapItem> mappings,
@@ -379,7 +380,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkInsertBaseAsync<TEntity>(this VerticaConnection connection,
+        private static async Task<int> BulkInsertBaseAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this VerticaConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<VerticaBulkInsertMapItem> mappings = null,
@@ -423,7 +424,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkInsertBaseForReturnIdentityAsync<TEntity>(this VerticaConnection connection,
+        private static async Task<int> BulkInsertBaseForReturnIdentityAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this VerticaConnection connection,
             string tableName,
             IList<TEntity> entities,
             IEnumerable<VerticaBulkInsertMapItem> mappings,
@@ -480,7 +481,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkInsertBaseNoReturnIdentityAsync<TEntity>(this VerticaConnection connection,
+        private static async Task<int> BulkInsertBaseNoReturnIdentityAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this VerticaConnection connection,
             string tableName,
             IList<TEntity> entities,
             IEnumerable<VerticaBulkInsertMapItem> mappings,

@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using Oracle.ManagedDataAccess.Client;
 using RepoDb.Enumerations;
 using RepoDb.Enumerations.Oracle;
@@ -48,7 +49,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of updated rows.</returns>
-        public static int BulkUpdate<TEntity>(this DbRepository<OracleConnection> repository,
+        public static int BulkUpdate<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DbRepository<OracleConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
@@ -80,7 +81,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of updated rows.</returns>
-        public static int BulkUpdate<TEntity>(this DbRepository<OracleConnection> repository,
+        public static int BulkUpdate<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DbRepository<OracleConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
@@ -128,7 +129,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of updated rows.</returns>
-        public static async Task<int> BulkUpdateAsync<TEntity>(this DbRepository<OracleConnection> repository,
+        public static async Task<int> BulkUpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DbRepository<OracleConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
@@ -162,7 +163,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of updated rows.</returns>
-        public static async Task<int> BulkUpdateAsync<TEntity>(this DbRepository<OracleConnection> repository,
+        public static async Task<int> BulkUpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DbRepository<OracleConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,

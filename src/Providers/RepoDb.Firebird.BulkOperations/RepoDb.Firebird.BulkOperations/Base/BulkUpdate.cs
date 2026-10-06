@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using FirebirdSql.Data.FirebirdClient;
 using RepoDb.Enumerations.Firebird;
 using RepoDb.Extensions;
@@ -28,7 +29,7 @@ namespace RepoDb
 
         #region BulkUpdateBase<TEntity>
 
-        private static int BulkUpdateBase<TEntity>(this FbConnection connection,
+        private static int BulkUpdateBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this FbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -199,7 +200,7 @@ namespace RepoDb
 
         #region BulkUpdateBaseAsync<TEntity>
 
-        private static async Task<int> BulkUpdateBaseAsync<TEntity>(this FbConnection connection,
+        private static async Task<int> BulkUpdateBaseAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this FbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,

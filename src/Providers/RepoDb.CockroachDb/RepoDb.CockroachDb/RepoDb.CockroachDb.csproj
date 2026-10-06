@@ -19,6 +19,9 @@
     -->
     <PackageVersion Condition="'$(RepoDbCockroachDbVersion)' != ''">$(RepoDbCockroachDbVersion)</PackageVersion>
   </PropertyGroup>
+  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="RepoDb.Connector.CockroachDb" Version="0.0.1-alpha1" />
     <PackageReference Include="System.Text.Json" Version="10.0.9" />

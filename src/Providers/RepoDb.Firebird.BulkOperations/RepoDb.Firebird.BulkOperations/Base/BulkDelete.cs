@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using FirebirdSql.Data.FirebirdClient;
 using RepoDb.Enumerations.Firebird;
 using RepoDb.Extensions;
@@ -28,7 +29,7 @@ namespace RepoDb
 
         #region BulkDeleteBase<TEntity>
 
-        private static int BulkDeleteBase<TEntity>(this FbConnection connection,
+        private static int BulkDeleteBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this FbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -178,7 +179,7 @@ namespace RepoDb
 
         #region BulkDeleteBaseAsync<TEntity>
 
-        private static async Task<int> BulkDeleteBaseAsync<TEntity>(this FbConnection connection,
+        private static async Task<int> BulkDeleteBaseAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this FbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,

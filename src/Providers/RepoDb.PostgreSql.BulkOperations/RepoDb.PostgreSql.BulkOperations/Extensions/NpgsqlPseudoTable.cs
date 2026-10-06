@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using Npgsql;
 using RepoDb.Enumerations.PostgreSql;
 using RepoDb.Extensions;
@@ -36,6 +37,7 @@ namespace RepoDb
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static void CreatePseudoTable(NpgsqlConnection connection,
             string tableName,
             string pseudoTableName,
@@ -56,7 +58,7 @@ namespace RepoDb
                 GetCreatePseudoTemporaryTableCommandText(tableName, pseudoTableName, mappings, identityBehavior, dbSetting);
 
             connection.ExecuteNonQuery(commandText,
-                bulkCopyTimeout,
+                commandTimeout: bulkCopyTimeout,
                 trace: trace,
                 traceKey: traceKey,
                 transaction: transaction);
@@ -79,6 +81,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static async Task CreatePseudoTableAsync(NpgsqlConnection connection,
             string tableName,
             string pseudoTableName,
@@ -100,7 +103,7 @@ namespace RepoDb
                 GetCreatePseudoTemporaryTableCommandText(tableName, pseudoTableName, mappings, identityBehavior, dbSetting);
 
             await connection.ExecuteNonQueryAsync(commandText,
-                bulkCopyTimeout,
+                commandTimeout: bulkCopyTimeout,
                 trace: trace,
                 traceKey: traceKey,
                 transaction: transaction,
@@ -117,6 +120,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static int MergeToPseudoTable(NpgsqlConnection connection,
             Func<string> getMergeToPseudoCommandText,
             int? bulkCopyTimeout = null,
@@ -127,7 +131,7 @@ namespace RepoDb
             var commandText = getMergeToPseudoCommandText();
 
             return connection.ExecuteNonQuery(commandText,
-                bulkCopyTimeout,
+                commandTimeout: bulkCopyTimeout,
                 trace: trace,
                 traceKey: traceKey,
                 transaction: transaction);
@@ -141,6 +145,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static IEnumerable<IdentityResult> MergeToPseudoTableWithIdentityResults(NpgsqlConnection connection,
             Func<string> getMergeToPseudoCommandText,
             int? bulkCopyTimeout = null,
@@ -149,7 +154,7 @@ namespace RepoDb
             var commandText = getMergeToPseudoCommandText();
 
             return connection.ExecuteQuery<IdentityResult>(commandText,
-                bulkCopyTimeout,
+                commandTimeout: bulkCopyTimeout,
                 transaction: transaction);
         }
 
@@ -164,6 +169,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static async Task<int> MergeToPseudoTableAsync(NpgsqlConnection connection,
             Func<string> getMergeToPseudoCommandText,
             int? bulkCopyTimeout = null,
@@ -175,7 +181,7 @@ namespace RepoDb
             var commandText = getMergeToPseudoCommandText();
 
             return await connection.ExecuteNonQueryAsync(commandText,
-                bulkCopyTimeout,
+                commandTimeout: bulkCopyTimeout,
                 trace: trace,
                 traceKey: traceKey,
                 transaction: transaction,
@@ -190,6 +196,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static async Task<IEnumerable<IdentityResult>> MergeToPseudoTableWithIdentityResultsAsync(NpgsqlConnection connection,
             Func<string> getMergeToPseudoCommandText,
             int? bulkCopyTimeout = null,
@@ -199,7 +206,7 @@ namespace RepoDb
             var commandText = getMergeToPseudoCommandText();
 
             return await connection.ExecuteQueryAsync<IdentityResult>(commandText,
-                bulkCopyTimeout,
+                commandTimeout: bulkCopyTimeout,
                 transaction: transaction,
                 cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -213,6 +220,7 @@ namespace RepoDb
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static void DropPseudoTable(NpgsqlConnection connection,
             string tableName,
             int? bulkCopyTimeout = null,
@@ -229,7 +237,7 @@ namespace RepoDb
             var commandText = GetDropPseudoTemporaryTableCommandText(tableName, dbSetting);
 
             connection.ExecuteNonQuery(commandText,
-                bulkCopyTimeout,
+                commandTimeout: bulkCopyTimeout,
                 trace: trace,
                 traceKey: traceKey,
                 transaction: transaction);
@@ -246,6 +254,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static async Task DropPseudoTableAsync(NpgsqlConnection connection,
             string tableName,
             int? bulkCopyTimeout = null,
@@ -263,7 +272,7 @@ namespace RepoDb
             var commandText = GetDropPseudoTemporaryTableCommandText(tableName, dbSetting);
 
             await connection.ExecuteNonQueryAsync(commandText,
-                bulkCopyTimeout,
+                commandTimeout: bulkCopyTimeout,
                 trace: trace,
                 traceKey: traceKey,
                 transaction: transaction,
@@ -281,6 +290,7 @@ namespace RepoDb
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static void CreatePseudoTableIndex(NpgsqlConnection connection,
             string tableName,
             IEnumerable<Field> fields,
@@ -298,7 +308,7 @@ namespace RepoDb
             var commandText = GetCreatePseudoTableIndexCommandText(tableName, fields, dbSetting);
 
             connection.ExecuteNonQuery(commandText,
-                bulkCopyTimeout,
+                commandTimeout: bulkCopyTimeout,
                 trace: trace,
                 traceKey: traceKey,
                 transaction: transaction);
@@ -319,6 +329,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static async Task CreatePseudoTableIndexAsync(NpgsqlConnection connection,
             string tableName,
             IEnumerable<Field> fields,
@@ -337,7 +348,7 @@ namespace RepoDb
             var commandText = GetCreatePseudoTableIndexCommandText(tableName, fields, dbSetting);
 
             await connection.ExecuteNonQueryAsync(commandText,
-                bulkCopyTimeout,
+                commandTimeout: bulkCopyTimeout,
                 trace: trace,
                 traceKey: traceKey,
                 transaction: transaction,

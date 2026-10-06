@@ -20,6 +20,9 @@
     -->
     <PackageVersion Condition="'$(RepoDbPostgreSqlVersion)' != ''">$(RepoDbPostgreSqlVersion)</PackageVersion>
   </PropertyGroup>
+  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Attributes\NpgsqlTypeMapAttribute.cs" />
   </ItemGroup>

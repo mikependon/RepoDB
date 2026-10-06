@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using Npgsql;
 using RepoDb.Enumerations.PostgreSql;
 using RepoDb.Interfaces;
@@ -49,7 +50,7 @@ namespace RepoDb
         /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been merged into the target table.</returns>
-        public static int BulkMerge<TEntity>(this NpgsqlConnection connection,
+        public static int BulkMerge<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this NpgsqlConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<PostgreSqlBulkInsertMapItem> mappings = null,
@@ -97,7 +98,7 @@ namespace RepoDb
         /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been merged into the target table.</returns>
-        public static int BulkMerge<TEntity>(this NpgsqlConnection connection,
+        public static int BulkMerge<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -298,7 +299,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been merged into the target table.</returns>
-        public static Task<int> BulkMergeAsync<TEntity>(this NpgsqlConnection connection,
+        public static Task<int> BulkMergeAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this NpgsqlConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<PostgreSqlBulkInsertMapItem> mappings = null,
@@ -349,7 +350,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been merged into the target table.</returns>
-        public static async Task<int> BulkMergeAsync<TEntity>(this NpgsqlConnection connection,
+        public static async Task<int> BulkMergeAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,

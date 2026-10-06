@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using Vertica.Data.VerticaClient;
 using RepoDb.Enumerations.Vertica;
 using RepoDb.Interfaces;
@@ -42,7 +43,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of deleted rows.</returns>
-        public static int BulkDelete<TEntity>(this BaseRepository<TEntity, VerticaConnection> repository,
+        public static int BulkDelete<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this BaseRepository<TEntity, VerticaConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             int? bulkCopyTimeout = null,
@@ -70,7 +71,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of deleted rows.</returns>
-        public static int BulkDelete<TEntity>(this BaseRepository<TEntity, VerticaConnection> repository,
+        public static int BulkDelete<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this BaseRepository<TEntity, VerticaConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
@@ -103,7 +104,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of deleted rows.</returns>
-        public static Task<int> BulkDeleteAsync<TEntity>(this BaseRepository<TEntity, VerticaConnection> repository,
+        public static Task<int> BulkDeleteAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this BaseRepository<TEntity, VerticaConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             int? bulkCopyTimeout = null,
@@ -133,7 +134,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of deleted rows.</returns>
-        public static Task<int> BulkDeleteAsync<TEntity>(this BaseRepository<TEntity, VerticaConnection> repository,
+        public static Task<int> BulkDeleteAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this BaseRepository<TEntity, VerticaConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,

@@ -14,6 +14,7 @@ We want the .NET community to understand this library's limitations before using
   - [Cache Invalidation](#cache-invalidation)
   - [Advance Query Tree Expression](#advance-query-tree-expression)
   - [Multiple Identity Columns](#multiple-identity-columns)
+  - [NativeAOT and Trimming](#nativeaot-and-trimming)
 - Turso
   - [Driver and Runtime Requirements](#turso-driver-and-runtime-requirements)
   - [Truncate Does Not Vacuum](#turso-truncate-does-not-vacuum)
@@ -528,6 +529,35 @@ CREATE TABLE IF NOT EXISTS public."Person"
 RepoDB's core statement builder only supports a single identity column per table, across all supported RDBMS. Any additional identity column beyond the primary one is excluded from parameter passing in push operations. This causes the operation to fail.
 
 There is currently no workaround other than keeping a single identity column per table.
+
+### NativeAOT and Trimming
+
+RepoDB (the core library and the providers) is annotated for trimming and NativeAOT (`IsAotCompatible` for the `net8.0` and later targets), and is verified by publishing a NativeAOT application ([RepoDb.NativeAotTests](src/Providers/RepoDb.Core/RepoDb.NativeAotTests)). Under NativeAOT, the compiled functions are executed via the expression interpreter (there is no JIT), so the first execution of an operation per type is slower than with the JIT.
+
+The following APIs are fully supported (no trimming/AOT warnings):
+
+- The generic operations on the data entity classes (i.e.: `Query<T>`, `QueryAll<T>`, `Insert<T>`, `InsertAll<T>`, `Merge<T>`, `Update<T>`, `Delete<T>`, `BatchQuery<T>`, `QueryMultiple<T1, T2>`, `Count<T>`, `Exists<T>`, `Sum<T>`, etc.), with lambda expressions, `QueryField` or `QueryGroup` as the `where` argument. The members of the generic type arguments are preserved by the `DynamicallyAccessedMembers` annotations of the library.
+- The table-name based generic operations with a `Dictionary<string, object>` (i.e.: `connection.Insert<Dictionary<string, object>, long>("Person", dictionary)`).
+- The attributes (i.e.: `Map`, `Primary`, `Identity`, `PropertyHandler`, `ClassHandler`, `TypeMap`), the `FluentMapper`, and the generic `PropertyHandlerMapper`/`ClassHandlerMapper` methods.
+
+The APIs that discover the properties of the runtime type of an untyped `object` are annotated with `RequiresUnreferencedCode` (warning `IL2026`). This includes the `param`, `what`, `where` and `entity` arguments of type `object` (i.e.: `ExecuteQuery`, `ExecuteNonQuery`, `ExecuteScalar`, `Query<T>(object what)`, `Insert(string tableName, object entity)`), `Field.Parse(object)` and `OrderField.Parse(object)`. The properties of an anonymous type (or of a class) that is passed as such an argument are trimmed, therefore:
+
+- Prefer the generic and lambda expression based overloads.
+- Pass a `Dictionary<string, object>`, an `ExpandoObject`, a `QueryField` or a `QueryGroup` instead of an anonymous type, and suppress the warning (it is safe to suppress when the argument is null, a primitive (key) value, a dictionary, an `ExpandoObject`, a `QueryField` or a `QueryGroup`).
+
+```csharp
+[UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "The parameters are passed as a dictionary.")]
+public IEnumerable<Person> GetPeople(DbConnection connection, string name) =>
+    connection.ExecuteQuery<Person>("SELECT * FROM [Person] WHERE Name = @Name;",
+        new Dictionary<string, object> { ["Name"] = name });
+```
+
+Other limitations:
+
+- The parameterless constructors of the `JsonToEntityPropertyHandler<T>` and `JsonToObjectPropertyHandler<T>` are using the reflection-based `JsonSerializer`. Use the constructors that accept a (source generated) `JsonTypeInfo<T>` instead.
+- Only the members of the generic type argument are preserved. If you pass an instance of a derived class to a generic operation (i.e.: `Insert<Base>(derived)`), the properties declared only on the derived class are not preserved. Pass the derived type as the generic type argument instead.
+- `Field.Parse<T>(e => new { e.Id, e.Name })` produces a trimming warning in your own code, as the C# compiler builds an anonymous type expression. Use `Field.From("Id", "Name")` or `Field.Parse<T>(e => e.Id)` instead.
+- The trimming and NativeAOT compatibility of the underlying ADO.NET driver (i.e.: `Microsoft.Data.SqlClient`, `Npgsql`, `Oracle.ManagedDataAccess`) is not under the control of RepoDB. Check the documentation of your driver.
 
 -----
 

@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using DuckDB.NET.Data;
 using RepoDb.Enumerations.DuckDb;
 using RepoDb.Exceptions;
@@ -45,7 +46,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BulkInsertBase<TEntity>(this DuckDBConnection connection,
+        private static int BulkInsertBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DuckDBConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<DuckDbBulkInsertMapItem> mappings = null,
@@ -109,7 +110,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BulkInsertBaseForReturnIdentity<TEntity>(this DuckDBConnection connection,
+        private static int BulkInsertBaseForReturnIdentity<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DuckDBConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<DuckDbBulkInsertMapItem> mappings = null,
@@ -175,7 +176,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BulkInsertBaseNoReturnIdentity<TEntity>(this DuckDBConnection connection,
+        private static int BulkInsertBaseNoReturnIdentity<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DuckDBConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<DuckDbBulkInsertMapItem> mappings = null,
@@ -489,7 +490,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkInsertBaseAsync<TEntity>(this DuckDBConnection connection,
+        private static async Task<int> BulkInsertBaseAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DuckDBConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<DuckDbBulkInsertMapItem> mappings = null,
@@ -557,7 +558,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkInsertBaseForReturnIdentityAsync<TEntity>(this DuckDBConnection connection,
+        private static async Task<int> BulkInsertBaseForReturnIdentityAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DuckDBConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<DuckDbBulkInsertMapItem> mappings = null,
@@ -626,7 +627,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkInsertBaseNoReturnIdentityAsync<TEntity>(this DuckDBConnection connection,
+        private static async Task<int> BulkInsertBaseNoReturnIdentityAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DuckDBConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<DuckDbBulkInsertMapItem> mappings = null,

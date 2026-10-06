@@ -21,6 +21,9 @@
     -->
     <PackageVersion Condition="'$(RepoDbMariaDbConnectorBulkOperationsVersion)' != ''">$(RepoDbMariaDbConnectorBulkOperationsVersion)</PackageVersion>
   </PropertyGroup>
+  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
   <ItemGroup>
     <None Include="..\..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />
     <None Include="..\README.md" Pack="True" PackagePath="\" />

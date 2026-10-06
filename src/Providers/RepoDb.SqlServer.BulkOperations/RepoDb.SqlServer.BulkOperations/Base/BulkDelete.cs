@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -45,7 +46,7 @@ namespace RepoDb
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <returns></returns>
-        internal static int BulkDeleteInternalBase<TEntity>(SqlConnection connection,
+        internal static int BulkDeleteInternalBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field>? qualifiers = null,
@@ -93,6 +94,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="trace"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         internal static int BulkDeleteInternalBase(SqlConnection connection,
             string tableName,
             DbDataReader reader,
@@ -251,6 +253,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="trace"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         internal static int BulkDeleteInternalBase(SqlConnection connection,
             string tableName,
             DataTable table,
@@ -418,7 +421,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        internal static async Task<int> BulkDeleteAsyncInternalBase<TEntity>(SqlConnection connection,
+        internal static async Task<int> BulkDeleteAsyncInternalBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field>? qualifiers = null,
@@ -469,6 +472,7 @@ namespace RepoDb
         /// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         internal static async Task<int> BulkDeleteAsyncInternalBase(SqlConnection connection,
             string tableName,
             DbDataReader reader,
@@ -630,6 +634,7 @@ namespace RepoDb
         /// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         internal static async Task<int> BulkDeleteAsyncInternalBase(SqlConnection connection,
             string tableName,
             DataTable table,

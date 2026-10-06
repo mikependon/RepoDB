@@ -21,6 +21,9 @@
     -->
     <PackageVersion Condition="'$(RepoDbFirebirdBulkOperationsVersion)' != ''">$(RepoDbFirebirdBulkOperationsVersion)</PackageVersion>
   </PropertyGroup>
+  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="10.3.4" />

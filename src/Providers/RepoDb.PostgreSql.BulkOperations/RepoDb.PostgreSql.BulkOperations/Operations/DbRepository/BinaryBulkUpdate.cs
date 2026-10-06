@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using Npgsql;
 using RepoDb.Enumerations;
@@ -48,7 +49,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been updated into the target table.</returns>
         [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkUpdate' instead.")]
-        public static int BinaryBulkUpdate<TEntity>(this DbRepository<NpgsqlConnection> repository,
+        public static int BinaryBulkUpdate<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DbRepository<NpgsqlConnection> repository,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
@@ -106,7 +107,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been updated into the target table.</returns>
         [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkUpdate' instead.")]
-        public static int BinaryBulkUpdate<TEntity>(this DbRepository<NpgsqlConnection> repository,
+        public static int BinaryBulkUpdate<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DbRepository<NpgsqlConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -347,7 +348,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been updated into the target table.</returns>
         [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkUpdate' instead.")]
-        public static async Task<int> BinaryBulkUpdateAsync<TEntity>(this DbRepository<NpgsqlConnection> repository,
+        public static async Task<int> BinaryBulkUpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DbRepository<NpgsqlConnection> repository,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
@@ -408,7 +409,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been updated into the target table.</returns>
         [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkUpdate' instead.")]
-        public static async Task<int> BinaryBulkUpdateAsync<TEntity>(this DbRepository<NpgsqlConnection> repository,
+        public static async Task<int> BinaryBulkUpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DbRepository<NpgsqlConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,

@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using FirebirdSql.Data.FirebirdClient;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -210,6 +211,7 @@ namespace RepoDb.DbHelpers
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "The parameter object passed to the RepoDB execute methods is either null or a Dictionary<string, object>, which is not reflected.")]
         public IEnumerable<DbField> GetFields(IDbConnection connection,
             string tableName,
             IDbTransaction transaction = null)
@@ -217,9 +219,9 @@ namespace RepoDb.DbHelpers
             // Variables
             var commandText = GetCommandText();
             var setting = connection.GetDbSetting();
-            var param = new
+            var param = new Dictionary<string, object>
             {
-                TableName = DataEntityExtension.GetTableName(tableName, setting).AsUnquoted(setting)
+                ["TableName"] = DataEntityExtension.GetTableName(tableName, setting).AsUnquoted(setting)
             };
 
             // Iterate and extract
@@ -245,6 +247,7 @@ namespace RepoDb.DbHelpers
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "The parameter object passed to the RepoDB execute methods is either null or a Dictionary<string, object>, which is not reflected.")]
         public async Task<IEnumerable<DbField>> GetFieldsAsync(IDbConnection connection,
             string tableName,
             IDbTransaction transaction = null,
@@ -255,9 +258,9 @@ namespace RepoDb.DbHelpers
             // Variables
             var commandText = GetCommandText();
             var setting = connection.GetDbSetting();
-            var param = new
+            var param = new Dictionary<string, object>
             {
-                TableName = DataEntityExtension.GetTableName(tableName, setting).AsUnquoted(setting)
+                ["TableName"] = DataEntityExtension.GetTableName(tableName, setting).AsUnquoted(setting)
             };
 
             // Iterate and extract

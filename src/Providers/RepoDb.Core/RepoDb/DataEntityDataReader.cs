@@ -109,7 +109,7 @@ namespace RepoDb
 
             // Type
             var entityType = typeof(TEntity);
-            EntityType = entityType == StaticType.Object ?
+            this.entityType = entityType == StaticType.Object ?
                 DbConnectionExtension.GetEntityType<TEntity>(entities.FirstOrDefault()) :
                 entityType;
             isDictionaryStringObject = TypeCache.Get(EntityType).IsDictionaryStringObject();
@@ -169,7 +169,10 @@ namespace RepoDb
         /// Gets the type of the entities.
         /// </summary>
         [DynamicallyAccessedMembers(Trimming.Entity)]
-        private Type EntityType { get; set; }
+        private Type EntityType => entityType;
+
+        [DynamicallyAccessedMembers(Trimming.Entity)]
+        private readonly Type entityType;
 
         /// <summary>
         /// Gets the properties of data entity object.

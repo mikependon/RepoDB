@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -50,7 +51,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BulkMergeBase<TEntity>(this OracleConnection connection,
+        private static int BulkMergeBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this OracleConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -131,7 +132,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns>The number of rows affected by the <c>MERGE</c>.</returns>
-        private static int BulkMergeBaseForReturnIdentity<TEntity>(this OracleConnection connection,
+        private static int BulkMergeBaseForReturnIdentity<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this OracleConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -220,7 +221,7 @@ namespace RepoDb
         /// immediately regardless of this parameter.
         /// </param>
         /// <returns>The number of rows affected by the <c>MERGE</c>.</returns>
-        private static int BulkMergeBaseNoReturnIdentity<TEntity>(this OracleConnection connection,
+        private static int BulkMergeBaseNoReturnIdentity<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this OracleConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -632,7 +633,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkMergeBaseAsync<TEntity>(this OracleConnection connection,
+        private static async Task<int> BulkMergeBaseAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this OracleConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -708,7 +709,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkMergeBaseForReturnIdentityAsync<TEntity>(this OracleConnection connection,
+        private static async Task<int> BulkMergeBaseForReturnIdentityAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this OracleConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -785,7 +786,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkMergeBaseNoReturnIdentityAsync<TEntity>(this OracleConnection connection,
+        private static async Task<int> BulkMergeBaseNoReturnIdentityAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this OracleConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,

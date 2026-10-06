@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Data.SqlClient;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -199,6 +200,7 @@ namespace RepoDb.DbHelpers
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "The parameter object passed to the RepoDB execute methods is either null or a Dictionary<string, object>, which is not reflected.")]
         public IEnumerable<DbField> GetFields(IDbConnection connection,
             string tableName,
             IDbTransaction transaction = null)
@@ -208,12 +210,12 @@ namespace RepoDb.DbHelpers
             var unquotedTableName = DataEntityExtension.GetTableName(tableName, setting).AsUnquoted(setting);
             var isTempTable = IsTempTable(unquotedTableName);
             var commandText = isTempTable ? GetTempTableCommandText() : GetCommandText();
-            object param = isTempTable
-                ? new { TableName = unquotedTableName }
-                : new
+            var param = isTempTable
+                ? new Dictionary<string, object> { ["TableName"] = unquotedTableName }
+                : new Dictionary<string, object>
                 {
-                    Schema = DataEntityExtension.GetSchema(tableName, setting).AsUnquoted(setting),
-                    TableName = unquotedTableName
+                    ["Schema"] = DataEntityExtension.GetSchema(tableName, setting).AsUnquoted(setting),
+                    ["TableName"] = unquotedTableName
                 };
 
             // Iterate and extract
@@ -239,6 +241,7 @@ namespace RepoDb.DbHelpers
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "The parameter object passed to the RepoDB execute methods is either null or a Dictionary<string, object>, which is not reflected.")]
         public async Task<IEnumerable<DbField>> GetFieldsAsync(IDbConnection connection,
             string tableName,
             IDbTransaction transaction = null,
@@ -249,12 +252,12 @@ namespace RepoDb.DbHelpers
             var unquotedTableName = DataEntityExtension.GetTableName(tableName, setting).AsUnquoted(setting);
             var isTempTable = IsTempTable(unquotedTableName);
             var commandText = isTempTable ? GetTempTableCommandText() : GetCommandText();
-            object param = isTempTable
-                ? new { TableName = unquotedTableName }
-                : new
+            var param = isTempTable
+                ? new Dictionary<string, object> { ["TableName"] = unquotedTableName }
+                : new Dictionary<string, object>
                 {
-                    Schema = DataEntityExtension.GetSchema(tableName, setting).AsUnquoted(setting),
-                    TableName = unquotedTableName
+                    ["Schema"] = DataEntityExtension.GetSchema(tableName, setting).AsUnquoted(setting),
+                    ["TableName"] = unquotedTableName
                 };
 
             // Iterate and extract
@@ -284,6 +287,7 @@ namespace RepoDb.DbHelpers
         /// <param name="connection">The instance of the connection object.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>The newly generated identity from the database.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public T GetScopeIdentity<T>(IDbConnection connection,
             IDbTransaction transaction = null)
         {
@@ -299,6 +303,7 @@ namespace RepoDb.DbHelpers
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The newly generated identity from the database.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public async Task<T> GetScopeIdentityAsync<T>(IDbConnection connection,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
@@ -335,7 +340,12 @@ namespace RepoDb.DbHelpers
         /// <param name="parameter"></param>
         private void HandleDbParameterPostCreation(SqlParameter parameter)
         {
-            // Do nothing for now
+            // Table-Valued Parameter: the type name is set statically (and not only via reflection by the core library), so that
+            // it is not affected by the trimming (i.e.: when publishing with NativeAOT).
+            if (parameter?.Value is DataTable table && string.IsNullOrEmpty(parameter.TypeName))
+            {
+                parameter.TypeName = table.TableName;
+            }
         }
 
         #endregion

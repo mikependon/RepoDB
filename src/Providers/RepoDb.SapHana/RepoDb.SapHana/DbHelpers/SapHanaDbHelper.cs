@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using Sap.Data.Hana;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -164,15 +165,16 @@ namespace RepoDb.DbHelpers
         /// <summary>
         /// Gets the list of <see cref="DbField"/> of the table.
         /// </summary>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "The parameter object passed to the RepoDB execute methods is either null or a Dictionary<string, object>, which is not reflected.")]
         public IEnumerable<DbField> GetFields(IDbConnection connection,
             string tableName,
             IDbTransaction transaction = null)
         {
             var commandText = GetCommandText();
-            var param = new
+            var param = new Dictionary<string, object>
             {
-                TableSchema = connection.ExecuteScalar<string>("SELECT CURRENT_SCHEMA FROM DUMMY;", transaction: transaction),
-                TableName = DataEntityExtension.GetTableName(tableName, m_dbSetting).AsUnquoted(m_dbSetting)
+                ["TableSchema"] = connection.ExecuteScalar<string>("SELECT CURRENT_SCHEMA FROM DUMMY;", transaction: transaction),
+                ["TableName"] = DataEntityExtension.GetTableName(tableName, m_dbSetting).AsUnquoted(m_dbSetting)
             };
 
             using var reader = (DbDataReader)connection.ExecuteReader(commandText, param, transaction: transaction);
@@ -190,6 +192,7 @@ namespace RepoDb.DbHelpers
         /// <summary>
         /// Gets the list of <see cref="DbField"/> of the table in an asynchronous way.
         /// </summary>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "The parameter object passed to the RepoDB execute methods is either null or a Dictionary<string, object>, which is not reflected.")]
         public async Task<IEnumerable<DbField>> GetFieldsAsync(IDbConnection connection,
             string tableName,
             IDbTransaction transaction = null,
@@ -198,11 +201,11 @@ namespace RepoDb.DbHelpers
             cancellationToken.ThrowIfCancellationRequested();
 
             var commandText = GetCommandText();
-            var param = new
+            var param = new Dictionary<string, object>
             {
-                TableSchema = await connection.ExecuteScalarAsync<string>("SELECT CURRENT_SCHEMA FROM DUMMY;", transaction: transaction,
+                ["TableSchema"] = await connection.ExecuteScalarAsync<string>("SELECT CURRENT_SCHEMA FROM DUMMY;", transaction: transaction,
                     cancellationToken: cancellationToken).ConfigureAwait(false),
-                TableName = DataEntityExtension.GetTableName(tableName, m_dbSetting).AsUnquoted(m_dbSetting)
+                ["TableName"] = DataEntityExtension.GetTableName(tableName, m_dbSetting).AsUnquoted(m_dbSetting)
             };
 
             using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, param, transaction: transaction,
@@ -225,6 +228,7 @@ namespace RepoDb.DbHelpers
         /// <summary>
         /// Gets the newly generated identity from the database.
         /// </summary>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public T GetScopeIdentity<T>(IDbConnection connection,
             IDbTransaction transaction = null)
         {
@@ -234,6 +238,7 @@ namespace RepoDb.DbHelpers
         /// <summary>
         /// Gets the newly generated identity from the database in an asynchronous way.
         /// </summary>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public Task<T> GetScopeIdentityAsync<T>(IDbConnection connection,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)

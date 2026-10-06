@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -53,7 +54,7 @@ namespace RepoDb.Data
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <returns>The number of rows inserted into the destination table.</returns>
-        public static int CopyDataTo<TEntity>(this IDbConnection connection,
+        public static int CopyDataTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
             int batchSize = 1000,
@@ -89,7 +90,7 @@ namespace RepoDb.Data
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <returns>The number of rows inserted into the target table.</returns>
-        public static int CopyDataTo<TEntity>(this IDbConnection connection,
+        public static int CopyDataTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string targetTable,
             string destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
@@ -199,7 +200,7 @@ namespace RepoDb.Data
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <returns>The number of rows inserted into the destination table.</returns>
-        public static int CopyDataTo<TEntity>(this IDbConnection connection,
+        public static int CopyDataTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IDbConnection destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
             int batchSize = 1000,
@@ -235,7 +236,7 @@ namespace RepoDb.Data
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <returns>The number of rows inserted into the target table.</returns>
-        public static int CopyDataTo<TEntity>(this IDbConnection connection,
+        public static int CopyDataTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string targetTable,
             IDbConnection destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
@@ -353,7 +354,7 @@ namespace RepoDb.Data
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the number of rows inserted into the destination table.</returns>
-        public static Task<int> CopyDataToAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> CopyDataToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
             int batchSize = 1000,
@@ -391,7 +392,7 @@ namespace RepoDb.Data
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the number of rows inserted into the target table.</returns>
-        public static Task<int> CopyDataToAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> CopyDataToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string targetTable,
             string destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
@@ -507,7 +508,7 @@ namespace RepoDb.Data
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the number of rows inserted into the destination table.</returns>
-        public static Task<int> CopyDataToAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> CopyDataToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IDbConnection destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
             int batchSize = 1000,
@@ -545,7 +546,7 @@ namespace RepoDb.Data
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the number of rows inserted into the target table.</returns>
-        public static Task<int> CopyDataToAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> CopyDataToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string targetTable,
             IDbConnection destinationConnection,
             Expression<Func<TEntity, bool>> where = null,

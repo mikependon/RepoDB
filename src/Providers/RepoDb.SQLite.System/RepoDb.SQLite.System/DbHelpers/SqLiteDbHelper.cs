@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using System;
@@ -117,6 +118,7 @@ namespace RepoDb.DbHelpers
         /// <param name="tableName"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "The parameter object passed to the RepoDB execute methods is either null or a Dictionary<string, object>, which is not reflected.")]
         private string GetIdentityFieldName<TDbConnection>(TDbConnection connection,
             string tableName,
             IDbTransaction transaction = null)
@@ -125,7 +127,7 @@ namespace RepoDb.DbHelpers
             // Sql text
             var commandText = "SELECT sql FROM [sqlite_master] WHERE name = @TableName AND type = 'table';";
             var sql = connection.ExecuteScalar<string>(commandText: commandText,
-                param: new { TableName = DataEntityExtension.GetTableName(tableName, DbSetting).AsUnquoted(DbSetting) },
+                param: new Dictionary<string, object> { ["TableName"] = DataEntityExtension.GetTableName(tableName, DbSetting).AsUnquoted(DbSetting) },
                 transaction: transaction);
 
             // Return
@@ -143,6 +145,7 @@ namespace RepoDb.DbHelpers
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "The parameter object passed to the RepoDB execute methods is either null or a Dictionary<string, object>, which is not reflected.")]
         private async Task<string> GetIdentityFieldNameAsync<TDbConnection>(TDbConnection connection,
             string tableName,
             IDbTransaction transaction = null,
@@ -152,7 +155,7 @@ namespace RepoDb.DbHelpers
             // Sql text
             var commandText = "SELECT sql FROM [sqlite_master] WHERE name = @TableName AND type = 'table';";
             var sql = await connection.ExecuteScalarAsync<string>(commandText: commandText,
-                param: new { TableName = DataEntityExtension.GetTableName(tableName, DbSetting).AsUnquoted(DbSetting) },
+                param: new Dictionary<string, object> { ["TableName"] = DataEntityExtension.GetTableName(tableName, DbSetting).AsUnquoted(DbSetting) },
                 transaction: transaction,
                 cancellationToken: cancellationToken).ConfigureAwait(false);
 
@@ -250,6 +253,7 @@ namespace RepoDb.DbHelpers
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public IEnumerable<DbField> GetFields(IDbConnection connection,
             string tableName,
             IDbTransaction transaction = null)
@@ -281,6 +285,7 @@ namespace RepoDb.DbHelpers
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public async Task<IEnumerable<DbField>> GetFieldsAsync(IDbConnection connection,
             string tableName,
             IDbTransaction transaction = null,
@@ -316,6 +321,7 @@ namespace RepoDb.DbHelpers
         /// <param name="connection">The instance of the connection object.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>The newly generated identity from the database.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public T GetScopeIdentity<T>(IDbConnection connection,
             IDbTransaction transaction = null)
         {
@@ -330,6 +336,7 @@ namespace RepoDb.DbHelpers
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The newly generated identity from the database.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public Task<T> GetScopeIdentityAsync<T>(IDbConnection connection,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)

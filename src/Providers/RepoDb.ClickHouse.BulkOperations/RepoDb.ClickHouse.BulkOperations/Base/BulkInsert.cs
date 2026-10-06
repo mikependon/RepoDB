@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Enumerations.ClickHouse;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -54,7 +55,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <returns></returns>
         /// <exception cref="NotSupportedException"><paramref name="identityBehavior"/> is <see cref="ClickHouseBulkImportIdentityBehavior.ReturnIdentity"/>.</exception>
-        private static int BulkInsertBase<TEntity>(this ClickHouseConnection connection,
+        private static int BulkInsertBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this ClickHouseConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<ClickHouseBulkInsertMapItem> mappings = null,
@@ -241,7 +242,7 @@ namespace RepoDb
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         /// <exception cref="NotSupportedException"><paramref name="identityBehavior"/> is <see cref="ClickHouseBulkImportIdentityBehavior.ReturnIdentity"/>.</exception>
-        private static async Task<int> BulkInsertBaseAsync<TEntity>(this ClickHouseConnection connection,
+        private static async Task<int> BulkInsertBaseAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this ClickHouseConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<ClickHouseBulkInsertMapItem> mappings = null,

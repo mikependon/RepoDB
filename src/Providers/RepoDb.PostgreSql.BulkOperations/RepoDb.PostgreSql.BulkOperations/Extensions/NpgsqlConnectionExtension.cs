@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using Npgsql;
 using NpgsqlTypes;
 using RepoDb.Enumerations.PostgreSql;
@@ -72,11 +73,11 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="entityType"></param>
         /// <param name="identityBehavior"></param>
-        private static int BinaryImport<TEntity>(NpgsqlBinaryImporter importer,
+        private static int BinaryImport<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(NpgsqlBinaryImporter importer,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
-            Type entityType,
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             PostgreSqlBulkImportIdentityBehavior identityBehavior,
             int startIndex = 0)
             where TEntity : class
@@ -192,7 +193,7 @@ namespace RepoDb
         /// <param name="startIndex">The running __RepoDb_OrderColumn index to continue from (carries over across batches so batched
         /// imports keep a single, globally-ordered sequence instead of each batch restarting at 0).</param>
         /// <returns></returns>
-        private static int BinaryImportWrite<TEntity>(NpgsqlBinaryImporter importer,
+        private static int BinaryImportWrite<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(NpgsqlBinaryImporter importer,
             Func<bool> moveNext,
             Func<TEntity> getCurrent,
             Action<TEntity> write,
@@ -323,11 +324,11 @@ namespace RepoDb
         /// <param name="entityType"></param>
         /// <param name="identityBehavior"></param>
         /// <param name="cancellationToken"></param>
-        private static async Task<int> BinaryImportAsync<TEntity>(NpgsqlBinaryImporter importer,
+        private static async Task<int> BinaryImportAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(NpgsqlBinaryImporter importer,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
-            Type entityType,
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             PostgreSqlBulkImportIdentityBehavior identityBehavior,
             CancellationToken cancellationToken = default,
             int startIndex = 0)
@@ -458,7 +459,7 @@ namespace RepoDb
         /// <param name="startIndex">The running __RepoDb_OrderColumn index to continue from (carries over across batches so batched
         /// imports keep a single, globally-ordered sequence instead of each batch restarting at 0).</param>
         /// <returns></returns>
-        private static async Task<int> BinaryImportWriteAsync<TEntity>(NpgsqlBinaryImporter importer,
+        private static async Task<int> BinaryImportWriteAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(NpgsqlBinaryImporter importer,
             Func<Task<bool>> moveNextAsync,
             Func<Task<TEntity>> getCurrentAsync,
             Func<TEntity, Task> writeAsync,

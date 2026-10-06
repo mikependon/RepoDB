@@ -6,6 +6,8 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
 using System;
 using System.Data.Common;
 using System.Threading;
@@ -29,6 +31,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the table for which to wait for mutations.</param>
         /// <param name="transaction">The database transaction.</param>
         /// <exception cref="TimeoutException"></exception>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "The parameter object passed to the RepoDB execute methods is either null or a Dictionary<string, object>, which is not reflected.")]
         public static void WaitForMutations(this ClickHouseConnection connection,
             string tableName,
             DbTransaction transaction)
@@ -38,7 +41,7 @@ namespace RepoDb
             {
                 var pending = connection.ExecuteScalar<long>(
                     "SELECT COUNT(1) FROM system.mutations WHERE database = @Database AND table = @Table AND is_done = 0;",
-                    new { connection.Database, Table = tableName },
+                    new Dictionary<string, object> { ["Database"] = connection.Database, ["Table"] = tableName },
                     transaction: transaction);
                 if (pending == 0)
                 {
@@ -60,6 +63,7 @@ namespace RepoDb
         /// <param name="transaction">The database transaction.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <exception cref="TimeoutException"></exception>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "The parameter object passed to the RepoDB execute methods is either null or a Dictionary<string, object>, which is not reflected.")]
         public static async Task WaitForMutationsAsync(this ClickHouseConnection connection,
             string tableName,
             DbTransaction transaction,
@@ -70,7 +74,7 @@ namespace RepoDb
             {
                 var pending = await connection.ExecuteScalarAsync<long>(
                     "SELECT COUNT(1) FROM system.mutations WHERE database = @Database AND table = @Table AND is_done = 0;",
-                    new { connection.Database, Table = tableName },
+                    new Dictionary<string, object> { ["Database"] = connection.Database, ["Table"] = tableName },
                     transaction: transaction,
                     cancellationToken: cancellationToken).ConfigureAwait(false);
                 if (pending == 0)

@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Connector.EnterpriseDb;
 using RepoDb.Enumerations.EnterpriseDb;
 using RepoDb.Interfaces;
@@ -42,7 +43,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows.</returns>
-        public static int BulkMerge<TEntity>(this EDBConnection connection,
+        public static int BulkMerge<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this EDBConnection connection,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<EDBBulkInsertMapItem> mappings = null,
@@ -75,7 +76,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows.</returns>
-        public static int BulkMerge<TEntity>(this EDBConnection connection,
+        public static int BulkMerge<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this EDBConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -214,7 +215,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of affected rows.</returns>
-        public static Task<int> BulkMergeAsync<TEntity>(this EDBConnection connection,
+        public static Task<int> BulkMergeAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this EDBConnection connection,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<EDBBulkInsertMapItem> mappings = null,
@@ -249,7 +250,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of affected rows.</returns>
-        public static Task<int> BulkMergeAsync<TEntity>(this EDBConnection connection,
+        public static Task<int> BulkMergeAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this EDBConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -373,7 +374,7 @@ namespace RepoDb
 
         #region Helpers
 
-        private static IEnumerable<Field> ParseQualifiers<TEntity>(Expression<Func<TEntity, object>> qualifiers)
+        private static IEnumerable<Field> ParseQualifiers<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> qualifiers)
             where TEntity : class =>
             qualifiers != null ? Field.Parse(qualifiers) : null;
 

@@ -570,7 +570,7 @@ namespace RepoDb.Reflection
         internal static MethodInfo GetDbReaderGetValueMethod(Type targetType)
         {
             // The typed getters of the DbDataReader (i.e.: 'Get' + the name of the type), statically defined for trimming.
-            return targetType == null ? null : Type.GetTypeCode(targetType) switch
+            return targetType == null || targetType.IsEnum ? null : Type.GetTypeCode(targetType) switch
             {
                 TypeCode.Boolean => typeof(DbDataReader).GetMethod(nameof(DbDataReader.GetBoolean)),
                 TypeCode.Byte => typeof(DbDataReader).GetMethod(nameof(DbDataReader.GetByte)),

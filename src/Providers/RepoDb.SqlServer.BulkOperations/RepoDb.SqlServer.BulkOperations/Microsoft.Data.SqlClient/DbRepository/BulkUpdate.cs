@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -45,7 +46,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkUpdate<TEntity>(this DbRepository<SqlConnection> repository,
+        public static int BulkUpdate<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DbRepository<SqlConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>>? qualifiers = null,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
@@ -90,7 +91,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkUpdate<TEntity>(this DbRepository<SqlConnection> repository,
+        public static int BulkUpdate<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DbRepository<SqlConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>>? qualifiers = null,
@@ -141,7 +142,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkUpdateAsync<TEntity>(this DbRepository<SqlConnection> repository,
+        public static async Task<int> BulkUpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DbRepository<SqlConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>>? qualifiers = null,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
@@ -189,7 +190,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkUpdateAsync<TEntity>(this DbRepository<SqlConnection> repository,
+        public static async Task<int> BulkUpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DbRepository<SqlConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>>? qualifiers = null,

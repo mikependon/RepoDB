@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -66,7 +67,7 @@ namespace RepoDb
         /// <returns>The number of rows updated.</returns>
         /// <exception cref="PrimaryFieldNotFoundException">No <paramref name="qualifiers"/> were given, and the table has neither a primary nor an identity key.</exception>
         /// <exception cref="MissingFieldsException">The resulting staged-field list is empty.</exception>
-        private static int BulkUpdateBase<TEntity>(this OracleConnection connection,
+        private static int BulkUpdateBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this OracleConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -347,7 +348,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns>The number of rows updated.</returns>
-        private static async Task<int> BulkUpdateBaseAsync<TEntity>(this OracleConnection connection,
+        private static async Task<int> BulkUpdateBaseAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this OracleConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,

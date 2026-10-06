@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Connector.MariaDb;
 using RepoDb.Enumerations.MariaDb;
 using RepoDb.Exceptions;
@@ -47,7 +48,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BulkInsertBase<TEntity>(this MariaDbConnection connection,
+        private static int BulkInsertBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this MariaDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<MariaDbBulkInsertMapItem> mappings = null,
@@ -111,7 +112,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BulkInsertBaseForReturnIdentity<TEntity>(this MariaDbConnection connection,
+        private static int BulkInsertBaseForReturnIdentity<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this MariaDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<MariaDbBulkInsertMapItem> mappings = null,
@@ -177,7 +178,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BulkInsertBaseNoReturnIdentity<TEntity>(this MariaDbConnection connection,
+        private static int BulkInsertBaseNoReturnIdentity<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this MariaDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<MariaDbBulkInsertMapItem> mappings = null,
@@ -489,7 +490,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkInsertBaseAsync<TEntity>(this MariaDbConnection connection,
+        private static async Task<int> BulkInsertBaseAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this MariaDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<MariaDbBulkInsertMapItem> mappings = null,
@@ -557,7 +558,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkInsertBaseForReturnIdentityAsync<TEntity>(this MariaDbConnection connection,
+        private static async Task<int> BulkInsertBaseForReturnIdentityAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this MariaDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<MariaDbBulkInsertMapItem> mappings = null,
@@ -625,7 +626,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkInsertBaseNoReturnIdentityAsync<TEntity>(this MariaDbConnection connection,
+        private static async Task<int> BulkInsertBaseNoReturnIdentityAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this MariaDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<MariaDbBulkInsertMapItem> mappings = null,

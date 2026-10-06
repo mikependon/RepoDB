@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -39,7 +40,7 @@ namespace RepoDb
         /// <param name="entities">The data entities (the source).</param>
         /// <param name="hasMappings">The value that indicates whether explicit mappings were passed to the operation.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
-        private static void ValidateColumnMappings<TEntity>(IDbConnection connection,
+        private static void ValidateColumnMappings<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             bool hasMappings,

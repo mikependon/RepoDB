@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using Npgsql;
 using NpgsqlTypes;
 using RepoDb.Enumerations.PostgreSql;
@@ -38,9 +39,9 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <param name="mappings"></param>
         /// <param name="entityType"></param>
         /// <returns></returns>
-        internal static Action<NpgsqlBinaryImporter, TEntity> GetNpgsqlBinaryImporterWriteFunc<TEntity>(string tableName,
+        internal static Action<NpgsqlBinaryImporter, TEntity> GetNpgsqlBinaryImporterWriteFunc<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
-            Type entityType)
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType)
             where TEntity : class =>
             GetNpgsqlBinaryImporterWriteFuncCache<TEntity>.Get(tableName, mappings, entityType);
 
@@ -55,10 +56,10 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <param name="identityBehavior"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        internal static Action<NpgsqlBinaryImporter, TEntity> GetNpgsqlBinaryImporterWriteFunc<TEntity>(string tableName,
+        internal static Action<NpgsqlBinaryImporter, TEntity> GetNpgsqlBinaryImporterWriteFunc<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             DbFieldCollection dbFields,
             IEnumerable<ClassProperty> properties,
-            Type entityType,
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             PostgreSqlBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting = null)
             where TEntity : class =>
@@ -68,7 +69,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        private static class GetNpgsqlBinaryImporterWriteFuncCache<TEntity>
+        private static class GetNpgsqlBinaryImporterWriteFuncCache<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>
             where TEntity : class
         {
             private static ConcurrentDictionary<int, Action<NpgsqlBinaryImporter, TEntity>> cache = new();
@@ -82,7 +83,7 @@ namespace RepoDb.PostgreSql.BulkOperations
             /// <returns></returns>
             public static Action<NpgsqlBinaryImporter, TEntity> Get(string tableName,
                 IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
-                Type entityType) =>
+                [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType) =>
                 GetFunc(tableName, mappings, entityType);
 
             /// <summary>
@@ -98,7 +99,7 @@ namespace RepoDb.PostgreSql.BulkOperations
             public static Action<NpgsqlBinaryImporter, TEntity> Get(string tableName,
                 DbFieldCollection dbFields,
                 IEnumerable<ClassProperty> properties,
-                Type entityType,
+                [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
                 PostgreSqlBulkImportIdentityBehavior identityBehavior,
                 IDbSetting dbSetting = null)
             {
@@ -127,7 +128,7 @@ namespace RepoDb.PostgreSql.BulkOperations
             /// <returns></returns>
             private static Action<NpgsqlBinaryImporter, TEntity> GetFunc(string tableName,
                 IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
-                Type entityType)
+                [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType)
             {
                 var targetTableName = tableName ?? ClassMappedNameCache.Get<TEntity>();
                 var hashCode = GetHashCode<TEntity>(targetTableName, mappings);
@@ -187,7 +188,7 @@ namespace RepoDb.PostgreSql.BulkOperations
                         writeMethod = GetNpgsqlBinaryImporterWriteMethod();
                     }
 
-                    expressions.Add(Expression.Call(importerParameterExpression, writeMethod.MakeGenericMethod(new[] { typeof(object) }), parameters));
+                    expressions.Add(Expression.Call(importerParameterExpression, writeMethod, parameters));
                 }
 
                 // Check
@@ -227,9 +228,9 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <param name="mappings"></param>
         /// <param name="entityType"></param>
         /// <returns></returns>
-        internal static Func<NpgsqlBinaryImporter, TEntity, CancellationToken, Task> GetNpgsqlBinaryImporterWriteAsyncFunc<TEntity>(string tableName,
+        internal static Func<NpgsqlBinaryImporter, TEntity, CancellationToken, Task> GetNpgsqlBinaryImporterWriteAsyncFunc<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
-            Type entityType)
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType)
             where TEntity : class =>
             GetNpgsqlBinaryImporterWriteAsyncFuncCache<TEntity>.Get(tableName, mappings, entityType);
 
@@ -244,10 +245,10 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <param name="identityBehavior"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        internal static Func<NpgsqlBinaryImporter, TEntity, CancellationToken, Task> GetNpgsqlBinaryImporterWriteAsyncFunc<TEntity>(string tableName,
+        internal static Func<NpgsqlBinaryImporter, TEntity, CancellationToken, Task> GetNpgsqlBinaryImporterWriteAsyncFunc<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             DbFieldCollection dbFields,
             IEnumerable<ClassProperty> properties,
-            Type entityType,
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             PostgreSqlBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting = null)
             where TEntity : class =>
@@ -257,7 +258,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        private static class GetNpgsqlBinaryImporterWriteAsyncFuncCache<TEntity>
+        private static class GetNpgsqlBinaryImporterWriteAsyncFuncCache<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>
             where TEntity : class
         {
             private static ConcurrentDictionary<int,
@@ -272,7 +273,7 @@ namespace RepoDb.PostgreSql.BulkOperations
             /// <returns></returns>
             public static Func<NpgsqlBinaryImporter, TEntity, CancellationToken, Task> Get(string tableName,
                 IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
-                Type entityType) =>
+                [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType) =>
                 GetFunc(tableName, mappings, entityType);
 
             /// <summary>
@@ -288,7 +289,7 @@ namespace RepoDb.PostgreSql.BulkOperations
             public static Func<NpgsqlBinaryImporter, TEntity, CancellationToken, Task> Get(string tableName,
                 DbFieldCollection dbFields,
                 IEnumerable<ClassProperty> properties,
-                Type entityType,
+                [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
                 PostgreSqlBulkImportIdentityBehavior identityBehavior,
                 IDbSetting dbSetting = null)
             {
@@ -317,7 +318,7 @@ namespace RepoDb.PostgreSql.BulkOperations
             /// <returns></returns>
             private static Func<NpgsqlBinaryImporter, TEntity, CancellationToken, Task> GetFunc(string tableName,
                 IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
-                Type entityType)
+                [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType)
             {
                 var targetTableName = tableName ?? ClassMappedNameCache.Get<TEntity>();
                 var hashCode = GetHashCode<TEntity>(targetTableName, mappings);
@@ -380,7 +381,7 @@ namespace RepoDb.PostgreSql.BulkOperations
                         writeMethod = GetNpgsqlBinaryImporterWriteAsyncMethod();
                     }
 
-                    expressions.Add(Expression.Call(importerParameterExpression, writeMethod.MakeGenericMethod(new[] { typeof(object) }), parameters));
+                    expressions.Add(Expression.Call(importerParameterExpression, writeMethod, parameters));
                 }
 
                 // Check
@@ -419,101 +420,51 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// </summary>
         /// <returns></returns>
         private static MethodInfo GetNpgsqlBinaryImporterWriteMethod() =>
-            typeof(NpgsqlBinaryImporter)
-                .GetMethods()
-                .Where(method =>
-                    string.Equals("Write", method.Name, StringComparison.OrdinalIgnoreCase))
-                .First(method => method.GetParameters().Length == 1);
+            GetMethod(importer => importer.Write<object>(null));
+
+        /// <summary>
+        /// Returns the (closed generic) method that is being called by the expression. The method is statically referenced
+        /// (and not constructed at runtime via 'MakeGenericMethod'), so that it is available when publishing with NativeAOT.
+        /// </summary>
+        /// <param name="expression">The method call expression.</param>
+        /// <returns>The called method.</returns>
+        private static MethodInfo GetMethod(Expression<Action<NpgsqlBinaryImporter>> expression) =>
+            ((MethodCallExpression)expression.Body).Method;
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
         private static MethodInfo GetNpgsqlBinaryImporterWriteAsyncMethod() =>
-            typeof(NpgsqlBinaryImporter)
-                .GetMethods()
-                .Where(method =>
-                    string.Equals("WriteAsync", method.Name, StringComparison.OrdinalIgnoreCase))
-                .First(method =>
-                {
-                    var parameters = method.GetParameters();
-                    return parameters.Length == 2 &&
-                        parameters[1].ParameterType == typeof(CancellationToken);
-                });
+            GetMethod(importer => importer.WriteAsync<object>(null, CancellationToken.None));
 
         /// <summary>
         ///
         /// </summary>
         /// <returns></returns>
-        private static MethodInfo GetNpgsqlBinaryImporterWriteWithDataTypeNameMethod()
-        {
-            var methods = typeof(NpgsqlBinaryImporter)
-                .GetMethods()
-                .Where(method => string.Equals("Write", method.Name, StringComparison.OrdinalIgnoreCase));
-
-            return methods.First(method =>
-            {
-                var parameters = method.GetParameters();
-                return parameters.Length == 2 &&
-                    parameters[1].ParameterType == typeof(string);
-            });
-        }
+        private static MethodInfo GetNpgsqlBinaryImporterWriteWithDataTypeNameMethod() =>
+            GetMethod(importer => importer.Write<object>(null, (string)null));
 
         /// <summary>
         ///
         /// </summary>
         /// <returns></returns>
-        private static MethodInfo GetNpgsqlBinaryImporterWriteWithNpgsqlDbTypeMethod()
-        {
-            var methods = typeof(NpgsqlBinaryImporter)
-                .GetMethods()
-                .Where(method => string.Equals("Write", method.Name, StringComparison.OrdinalIgnoreCase));
-
-            return methods.First(method =>
-            {
-                var parameters = method.GetParameters();
-                return parameters.Length == 2 &&
-                    parameters[1].ParameterType == typeof(NpgsqlDbType);
-            });
-        }
+        private static MethodInfo GetNpgsqlBinaryImporterWriteWithNpgsqlDbTypeMethod() =>
+            GetMethod(importer => importer.Write<object>(null, default(NpgsqlDbType)));
 
         /// <summary>
         ///
         /// </summary>
         /// <returns></returns>
-        private static MethodInfo GetNpgsqlBinaryImporterWriteAsyncWithDataTypeNameMethod()
-        {
-            var methods = typeof(NpgsqlBinaryImporter)
-                .GetMethods()
-                .Where(method => string.Equals("WriteAsync", method.Name, StringComparison.OrdinalIgnoreCase));
-
-            return methods.First(method =>
-            {
-                var parameters = method.GetParameters();
-                return parameters.Length == 3 &&
-                    parameters[1].ParameterType == typeof(string) &&
-                    parameters[2].ParameterType == typeof(CancellationToken);
-            });
-        }
+        private static MethodInfo GetNpgsqlBinaryImporterWriteAsyncWithDataTypeNameMethod() =>
+            GetMethod(importer => importer.WriteAsync<object>(null, (string)null, CancellationToken.None));
 
         /// <summary>
         ///
         /// </summary>
         /// <returns></returns>
-        private static MethodInfo GetNpgsqlBinaryImporterWriteAsyncWithNpgsqlDbTypeMethod()
-        {
-            var methods = typeof(NpgsqlBinaryImporter)
-                .GetMethods()
-                .Where(method => string.Equals("WriteAsync", method.Name, StringComparison.OrdinalIgnoreCase));
-
-            return methods.First(method =>
-            {
-                var parameters = method.GetParameters();
-                return parameters.Length == 3 &&
-                    parameters[1].ParameterType == typeof(NpgsqlDbType) &&
-                    parameters[2].ParameterType == typeof(CancellationToken);
-            });
-        }
+        private static MethodInfo GetNpgsqlBinaryImporterWriteAsyncWithNpgsqlDbTypeMethod() =>
+            GetMethod(importer => importer.WriteAsync<object>(null, default(NpgsqlDbType), CancellationToken.None));
 
         /// <summary>
         /// 
@@ -523,7 +474,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <param name="mapping"></param>
         /// <returns></returns>
         private static Expression GetEntityPropertyExpression(Expression entityExpression,
-            Type entityType,
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             PostgreSqlBulkInsertMapItem mapping)
         {
             // Property
@@ -533,7 +484,7 @@ namespace RepoDb.PostgreSql.BulkOperations
                 throw new PropertyNotFoundException($"Property '{mapping.SourceColumn}' is not found from type '{entityType.FullName}'.");
             }
 
-            var propertyExpression = (Expression)Expression.Property(entityExpression, mapping.SourceColumn);
+            var propertyExpression = (Expression)Expression.Property(entityExpression, classProperty.PropertyInfo);
 
             // Enum — skip conversion when DataTypeName is set; Npgsql resolves native PG enum types by name directly
             if (mapping.DataTypeName == null && TypeCache.Get(classProperty.PropertyInfo.PropertyType).GetUnderlyingType().IsEnum)
@@ -567,11 +518,12 @@ namespace RepoDb.PostgreSql.BulkOperations
             {
                 var underlyingType = TypeCache.Get(expression.Type).GetUnderlyingType();
                 var nullableType = underlyingType.IsValueType ?
-                    typeof(Nullable<>).MakeGenericType(underlyingType) : underlyingType;
+                    underlyingType.MakeNullableType() : underlyingType;
                 var testExpression = Expression.Equal(Expression.Constant(null), propertyExpression);
                 var trueExpression = Expression.Default(nullableType);
+                // Equivalent to 'new Nullable<T>(value)'
                 var falseExpression = underlyingType.IsValueType && npgsqlDbType != NpgsqlDbType.Unknown ?
-                    Expression.New(nullableType.GetConstructor(new[] { underlyingType }), expression) : expression;
+                    Expression.Convert(expression, nullableType) : expression;
                 expression = Expression.Condition(testExpression, trueExpression, falseExpression);
             }
 
@@ -645,7 +597,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <param name="tableName"></param>
         /// <param name="mappings"></param>
         /// <returns></returns>
-        private static int GetHashCode<TEntity>(string tableName,
+        private static int GetHashCode<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             IEnumerable<PostgreSqlBulkInsertMapItem> mappings) =>
             GetHashCode(typeof(TEntity), tableName, mappings);
 
@@ -685,7 +637,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <typeparam name="TResult"></typeparam>
         /// <param name="methodName"></param>
         /// <returns></returns>
-        public static Func<TEntity, TResult> GetMethodFunc<TEntity, TResult>(string methodName)
+        public static Func<TEntity, TResult> GetMethodFunc<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] TEntity, TResult>(string methodName)
             where TEntity : class =>
             MethodFuncCache<TEntity, TResult>.GetFunc(methodName);
 
@@ -694,7 +646,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TResult"></typeparam>
-        private static class MethodFuncCache<TEntity, TResult>
+        private static class MethodFuncCache<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] TEntity, TResult>
             where TEntity : class
         {
             private static ConcurrentDictionary<int, Func<TEntity, TResult>> cache = new();
@@ -737,7 +689,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="methodName"></param>
         /// <returns></returns>
-        public static Action<TEntity> GetMethodFunc<TEntity>(string methodName)
+        public static Action<TEntity> GetMethodFunc<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] TEntity>(string methodName)
             where TEntity : class =>
             VoidMethodFuncCache<TEntity>.GetFunc(methodName);
 
@@ -745,7 +697,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        private static class VoidMethodFuncCache<TEntity>
+        private static class VoidMethodFuncCache<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] TEntity>
             where TEntity : class
         {
             private static ConcurrentDictionary<int, Action<TEntity>> cache = new();
@@ -790,7 +742,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <param name="methodName"></param>
         /// <param name="types"></param>
         /// <returns></returns>
-        public static Func<TEntity, object[], TResult> GetParameterizedMethodFunc<TEntity, TResult>(string methodName,
+        public static Func<TEntity, object[], TResult> GetParameterizedMethodFunc<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] TEntity, TResult>(string methodName,
             Type[] types)
             where TEntity : class =>
             ParameterizedMethodFuncCache<TEntity, TResult>.GetFunc(methodName, types);
@@ -800,7 +752,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TResult"></typeparam>
-        private static class ParameterizedMethodFuncCache<TEntity, TResult>
+        private static class ParameterizedMethodFuncCache<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] TEntity, TResult>
             where TEntity : class
         {
             private static ConcurrentDictionary<int, Func<TEntity, object[], TResult>> cache = new();
@@ -859,7 +811,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <param name="methodName"></param>
         /// <param name="types"></param>
         /// <returns></returns>
-        public static Action<TEntity, object[]> GetParameterizedVoidMethodFunc<TEntity>(string methodName,
+        public static Action<TEntity, object[]> GetParameterizedVoidMethodFunc<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] TEntity>(string methodName,
             Type[] types)
             where TEntity : class =>
             ParameterizedVoidMethodFuncCache<TEntity>.GetFunc(methodName, types);
@@ -868,7 +820,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        private static class ParameterizedVoidMethodFuncCache<TEntity>
+        private static class ParameterizedVoidMethodFuncCache<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] TEntity>
             where TEntity : class
         {
             private static ConcurrentDictionary<int, Action<TEntity, object[]>> cache = new();
@@ -927,7 +879,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <typeparam name="TResult"></typeparam>
         /// <param name="propertyName"></param>
         /// <returns></returns>
-        public static Func<TEntity, TResult> GetPropertyGetterFunc<TEntity, TResult>(string propertyName)
+        public static Func<TEntity, TResult> GetPropertyGetterFunc<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(string propertyName)
             where TEntity : class =>
             PropertyGetterFuncCache<TEntity, TResult>.GetFunc(PropertyCache.Get<TEntity>(propertyName));
 
@@ -936,7 +888,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TResult"></typeparam>
-        private static class PropertyGetterFuncCache<TEntity, TResult>
+        private static class PropertyGetterFuncCache<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>
             where TEntity : class
         {
             private static ConcurrentDictionary<int, Func<TEntity, TResult>> cache = new();
@@ -974,7 +926,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="propertyName"></param>
         /// <returns></returns>
-        public static Action<TEntity, object> GetPropertySetterFunc<TEntity>(string propertyName)
+        public static Action<TEntity, object> GetPropertySetterFunc<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string propertyName)
             where TEntity : class =>
             PropertySetterFuncCache<TEntity>.GetFunc(PropertyCache.Get<TEntity>(propertyName, true));
 
@@ -982,7 +934,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        private static class PropertySetterFuncCache<TEntity>
+        private static class PropertySetterFuncCache<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>
             where TEntity : class
         {
             private static ConcurrentDictionary<int, Action<TEntity, object>> cache = new();
@@ -1030,7 +982,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <typeparam name="TResult"></typeparam>
         /// <param name="fieldName"></param>
         /// <returns></returns>
-        public static Func<TEntity, TResult> GetFieldGetterFunc<TEntity, TResult>(string fieldName)
+        public static Func<TEntity, TResult> GetFieldGetterFunc<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicFields | DynamicallyAccessedMemberTypes.PublicProperties)] TEntity, TResult>(string fieldName)
             where TEntity : class =>
             FieldGetterFuncCache<TEntity, TResult>.GetFunc(fieldName);
 
@@ -1039,7 +991,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TResult"></typeparam>
-        private static class FieldGetterFuncCache<TEntity, TResult>
+        private static class FieldGetterFuncCache<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicFields | DynamicallyAccessedMemberTypes.PublicProperties)] TEntity, TResult>
             where TEntity : class
         {
             private static ConcurrentDictionary<int, Func<TEntity, TResult>> cache = new();
@@ -1084,7 +1036,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <typeparam name="TEnum"></typeparam>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static Func<TEnum> GetEnumFunc<TEnum>(string value)
+        public static Func<TEnum> GetEnumFunc<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] TEnum>(string value)
             where TEnum : Enum =>
             EnumFuncCache<TEnum>.GetFunc(value);
 
@@ -1092,7 +1044,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// 
         /// </summary>
         /// <typeparam name="TEnum"></typeparam>
-        private static class EnumFuncCache<TEnum>
+        private static class EnumFuncCache<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] TEnum>
             where TEnum : Enum
         {
             private static ConcurrentDictionary<int, Func<TEnum>> cache = new();
@@ -1135,7 +1087,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <param name="instance"></param>
         /// <param name="propertyName"></param>
         /// <param name="value"></param>
-        public static void SetProperty<TEntity>(TEntity instance,
+        public static void SetProperty<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(TEntity instance,
             string propertyName,
             object value)
             where TEntity : class

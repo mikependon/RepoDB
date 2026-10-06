@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using MySql.Data.MySqlClient;
 using RepoDb.Enumerations.MySql;
 using RepoDb.Interfaces;
@@ -39,7 +40,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of deleted rows.</returns>
-        public static int BulkDelete<TEntity>(this MySqlConnection connection,
+        public static int BulkDelete<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this MySqlConnection connection,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             int? bulkCopyTimeout = null,
@@ -67,7 +68,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of deleted rows.</returns>
-        public static int BulkDelete<TEntity>(this MySqlConnection connection,
+        public static int BulkDelete<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this MySqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -186,7 +187,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of deleted rows.</returns>
-        public static Task<int> BulkDeleteAsync<TEntity>(this MySqlConnection connection,
+        public static Task<int> BulkDeleteAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this MySqlConnection connection,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             int? bulkCopyTimeout = null,
@@ -216,7 +217,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of deleted rows.</returns>
-        public static Task<int> BulkDeleteAsync<TEntity>(this MySqlConnection connection,
+        public static Task<int> BulkDeleteAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this MySqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,

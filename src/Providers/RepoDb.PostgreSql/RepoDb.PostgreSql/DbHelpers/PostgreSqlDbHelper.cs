@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using Npgsql;
 using NpgsqlTypes;
 using RepoDb.Extensions;
@@ -178,16 +179,17 @@ namespace RepoDb.DbHelpers
 
          => TryExecuteOnExistingConnection(connection, c => GetFieldsInternal(c, tableName, transaction));
 
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "The parameter object passed to the RepoDB execute methods is either null or a Dictionary<string, object>, which is not reflected.")]
         private IEnumerable<DbField> GetFieldsInternal(IDbConnection connection,
             string tableName,
             IDbTransaction transaction = null)
         {
             // Variables
             var commandText = GetCommandText();
-            var param = new
+            var param = new Dictionary<string, object>
             {
-                Schema = DataEntityExtension.GetSchema(tableName, m_dbSetting).AsUnquoted(m_dbSetting),
-                TableName = DataEntityExtension.GetTableName(tableName, m_dbSetting).AsUnquoted(m_dbSetting)
+                ["Schema"] = DataEntityExtension.GetSchema(tableName, m_dbSetting).AsUnquoted(m_dbSetting),
+                ["TableName"] = DataEntityExtension.GetTableName(tableName, m_dbSetting).AsUnquoted(m_dbSetting)
             };
 
             // Iterate and extract
@@ -220,6 +222,7 @@ namespace RepoDb.DbHelpers
 
          => TryExecuteOnExistingConnectionAsync(connection, c => GetFieldsAsyncInternal(c, tableName, transaction, cancellationToken));
 
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "The parameter object passed to the RepoDB execute methods is either null or a Dictionary<string, object>, which is not reflected.")]
         private async Task<IEnumerable<DbField>> GetFieldsAsyncInternal(IDbConnection connection,
             string tableName,
             IDbTransaction transaction = null,
@@ -227,10 +230,10 @@ namespace RepoDb.DbHelpers
         {
             // Variables
             var commandText = GetCommandText();
-            var param = new
+            var param = new Dictionary<string, object>
             {
-                Schema = DataEntityExtension.GetSchema(tableName, m_dbSetting).AsUnquoted(m_dbSetting),
-                TableName = DataEntityExtension.GetTableName(tableName, m_dbSetting).AsUnquoted(m_dbSetting)
+                ["Schema"] = DataEntityExtension.GetSchema(tableName, m_dbSetting).AsUnquoted(m_dbSetting),
+                ["TableName"] = DataEntityExtension.GetTableName(tableName, m_dbSetting).AsUnquoted(m_dbSetting)
             };
 
             // Iterate and extract
@@ -265,6 +268,7 @@ namespace RepoDb.DbHelpers
 
          => TryExecuteOnExistingConnection(connection, c => GetScopeIdentityInternal<T>(c, transaction));
 
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private T GetScopeIdentityInternal<T>(IDbConnection connection,
             IDbTransaction transaction = null)
         {
@@ -286,6 +290,7 @@ namespace RepoDb.DbHelpers
 
          => TryExecuteOnExistingConnectionAsync(connection, c => GetScopeIdentityAsyncInternal<T>(c, transaction, cancellationToken));
 
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private Task<T> GetScopeIdentityAsyncInternal<T>(IDbConnection connection,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)

@@ -85,7 +85,17 @@ namespace System.Diagnostics.CodeAnalysis
             AssemblyName = assemblyName;
         }
 
+        public DynamicDependencyAttribute(DynamicallyAccessedMemberTypes memberTypes, Type type)
+        {
+            MemberTypes = memberTypes;
+            Type = type;
+        }
+
         public string MemberSignature { get; }
+
+        public DynamicallyAccessedMemberTypes MemberTypes { get; }
+
+        public Type Type { get; }
 
         public string TypeName { get; }
 
