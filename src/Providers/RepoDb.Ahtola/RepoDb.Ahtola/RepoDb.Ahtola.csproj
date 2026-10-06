@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Title>RepoDb.Ahtola</Title>
+    <AssemblyName>RepoDb.Ahtola</AssemblyName>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <LangVersion>preview</LangVersion>
+    <Nullable>annotations</Nullable>
+    <Description>A hybrid .NET ORM library for Ahtola, a pure managed SQLite-compatible engine (using Devolutions.Ahtola.Data.Sqlite).</Description>
+    <PackageTags>orm hybrid-orm micro-orm sqlite ahtola</PackageTags>
+    <RepositoryUrl>https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.Ahtola</RepositoryUrl>
+    <PackageReleaseNotes>http://repodb.net/release/sqlite</PackageReleaseNotes>
+    <PackageProjectUrl>https://repodb.net/tutorial/get-started-sqlite</PackageProjectUrl>
+    <PackageIcon>SQLite.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Properties\**" />
+    <EmbeddedResource Remove="Properties\**" />
+    <None Remove="Properties\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Devolutions.Ahtola.Data.Sqlite" Version="0.9.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />
+    <None Include="..\README.md" Pack="True" PackagePath="\" />
+    <None Include="..\SQLite.png" Pack="True" PackagePath="\" />
+  </ItemGroup>
+</Project>
