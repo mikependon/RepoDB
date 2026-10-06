@@ -10,6 +10,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RepoDb.Connector.MariaDb;
+using RepoDb.DbSettings;
+using RepoDb.Extensions;
+using RepoDb.Interfaces;
 
 namespace RepoDb.Schema
 {
@@ -18,15 +22,49 @@ namespace RepoDb.Schema
     /// </summary>
     internal static class MariaDbSchemaHelper
     {
+        #region Properties
+
+        /// <summary>
+        /// Gets the setting of the connection: its quotes and its separator are used to parse, quote and format the names.
+        /// The default setting of the provider is used if the provider is not initialized.
+        /// </summary>
+        private static IDbSetting Setting =>
+            DbSettingMapper.Get<MariaDbConnection>() ?? new MariaDbDbSetting();
+
+        /// <summary>
+        /// Gets the default schema of the setting, which owns the tables whose names have no schema.
+        /// </summary>
+        public static string DefaultSchema =>
+            Setting.DefaultSchema;
+
+        /// <summary>
+        /// Gets the character that opens a quoted part of a name.
+        /// </summary>
+        private static char OpeningQuote =>
+            Setting.OpeningQuote[0];
+
+        /// <summary>
+        /// Gets the character that closes a quoted part of a name.
+        /// </summary>
+        private static char ClosingQuote =>
+            Setting.ClosingQuote[0];
+
+        /// <summary>
+        /// Gets the character that separates the parts of a name.
+        /// </summary>
+        private static char Separator =>
+            string.IsNullOrEmpty(Setting.SchemaSeparator) ? '.' : Setting.SchemaSeparator[0];
+
+        #endregion
+
         #region Public Methods
 
         /// <summary>
-        /// Splits a name into its parts. The parts can be quoted with backticks (a <c>`</c> is escaped as <c>``</c>) or with double quotes
-        /// (a <c>"</c> is escaped as <c>""</c>), so a quoted part can contain dots and spaces.
+        /// Splits a name into its parts. The parts can be quoted with the quotes of the setting or with alternative quotes (a closing quote is escaped by doubling it), so a quoted part can contain dots and spaces.
         /// </summary>
         /// <param name="name">The name to be split.</param>
         /// <returns>The unquoted parts of the name.</returns>
-        public static IList<string> Split(string name)
+        public static IList<string> SplitNameIntoParts(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -39,42 +77,24 @@ namespace RepoDb.Schema
             var i = 0;
             while (i < name.Length)
             {
-                var c = name[i];
-                if (c == '`' || c == '"')
+                if (IsOpeningQuote(name[i]))
                 {
-                    var close = c;
+                    i = ReadQuoted(name, i, current);
                     quoted = true;
-                    i++;
-                    while (i < name.Length)
-                    {
-                        if (name[i] == close)
-                        {
-                            if (i + 1 < name.Length && name[i + 1] == close)
-                            {
-                                current.Append(close);
-                                i += 2;
-                                continue;
-                            }
-                            break;
-                        }
-                        current.Append(name[i]);
-                        i++;
-                    }
-                    i++;
                 }
-                else if (c == '.')
+                else if (name[i] == Separator)
                 {
-                    Add(parts, current, quoted);
+                    AddCurrentPart(parts, current, quoted);
                     quoted = false;
                     i++;
                 }
                 else
                 {
-                    current.Append(c);
+                    current.Append(name[i]);
                     i++;
                 }
             }
-            Add(parts, current, quoted);
+            AddCurrentPart(parts, current, quoted);
 
             if (parts.Count == 0)
             {
@@ -88,29 +108,43 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="name">The name of the table.</param>
         /// <returns>The schema and the table.</returns>
-        public static (string Schema, string Table) Parse(string name)
+        public static (string Schema, string Table) ParseSchemaAndTable(string name)
         {
-            var parts = Split(name);
+            var parts = SplitNameIntoParts(name);
             return parts.Count >= 2
                 ? (parts[parts.Count - 2], parts[parts.Count - 1])
                 : (null, parts[0]);
         }
 
         /// <summary>
-        /// Quotes a single part of a name with backticks.
+        /// Quotes a single part of a name with the quotes of the setting (a part can contain dots and spaces). A closing quote inside the part is escaped by doubling it.
         /// </summary>
         /// <param name="part">The part of the name.</param>
         /// <returns>The quoted part.</returns>
-        public static string Quote(string part) =>
-            $"`{part.Replace("`", "``")}`";
+        public static string Quote(string part)
+        {
+            var setting = Setting;
+            return part.Length == 0 || part.IndexOf(OpeningQuote) >= 0 || part.IndexOf(ClosingQuote) >= 0
+                ? string.Concat(setting.OpeningQuote, part.Replace(setting.ClosingQuote, setting.ClosingQuote + setting.ClosingQuote), setting.ClosingQuote)
+                : part.AsQuoted(false, true, setting);
+        }
 
         /// <summary>
-        /// Quotes all the parts of a name with backticks.
+        /// Quotes all the parts of a name with the quotes of the setting.
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns>The quoted name.</returns>
         public static string QuoteName(string name) =>
-            string.Join(".", Split(name).Select(Quote));
+            string.Join(Separator.ToString(), SplitNameIntoParts(name).Select(Quote));
+
+        /// <summary>
+        /// Quotes the schema and the table, and joins them with the separator of the setting.
+        /// </summary>
+        /// <param name="schema">The schema of the table.</param>
+        /// <param name="table">The name of the table.</param>
+        /// <returns>The quoted name of the table.</returns>
+        public static string QuoteSchemaAndTable(string schema, string table) =>
+            string.Concat(Quote(schema), Separator, Quote(table));
 
         /// <summary>
         /// Formats the name of a table. The parts are kept as they are if they are plain identifiers (i.e.: <c>dbo.Person</c>),
@@ -119,14 +153,14 @@ namespace RepoDb.Schema
         /// <param name="schema">The schema of the table (can be <c>null</c>).</param>
         /// <param name="table">The name of the table.</param>
         /// <returns>The formatted name of the table.</returns>
-        public static string Format(string schema, string table)
+        public static string FormatTableName(string schema, string table)
         {
             var formattedTable = IsPlain(table) ? table : Quote(table);
             if (string.IsNullOrWhiteSpace(schema))
             {
                 return formattedTable;
             }
-            return $"{(IsPlain(schema) ? schema : Quote(schema))}.{formattedTable}";
+            return $"{(IsPlain(schema) ? schema : Quote(schema))}{Separator}{formattedTable}";
         }
 
         #endregion
@@ -134,12 +168,69 @@ namespace RepoDb.Schema
         #region Helpers
 
         /// <summary>
+        /// Checks whether the character opens a quoted part of a name: the opening quote of the setting, or an alternative quote.
+        /// </summary>
+        /// <param name="c"></param>
+        /// <returns></returns>
+        private static bool IsOpeningQuote(char c) =>
+            c == OpeningQuote || c == '"';
+
+        /// <summary>
+        /// Gets the character that closes the quoted part that is opened by the character.
+        /// </summary>
+        /// <param name="opening"></param>
+        /// <returns></returns>
+        private static char GetClosingQuote(char opening) =>
+            opening == OpeningQuote ? ClosingQuote : opening;
+
+        /// <summary>
+        /// Reads a quoted part of a name (a closing quote that is doubled is a closing quote of the part) and appends the unquoted part to the buffer.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="start">The position of the opening quote.</param>
+        /// <param name="current"></param>
+        /// <returns>The position after the closing quote.</returns>
+        private static int ReadQuoted(string name,
+            int start,
+            StringBuilder current)
+        {
+            var close = GetClosingQuote(name[start]);
+            var i = start + 1;
+            while (i < name.Length)
+            {
+                if (name[i] == close && !IsEscapedQuote(name, i, close))
+                {
+                    break;
+                }
+                if (name[i] == close)
+                {
+                    i++;
+                }
+                current.Append(name[i]);
+                i++;
+            }
+            return i + 1;
+        }
+
+        /// <summary>
+        /// Checks whether the closing quote at the position is doubled, which escapes it.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="position"></param>
+        /// <param name="close"></param>
+        /// <returns></returns>
+        private static bool IsEscapedQuote(string name,
+            int position,
+            char close) =>
+            position + 1 < name.Length && name[position + 1] == close;
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="parts"></param>
         /// <param name="current"></param>
         /// <param name="quoted"></param>
-        private static void Add(List<string> parts, StringBuilder current, bool quoted)
+        private static void AddCurrentPart(List<string> parts, StringBuilder current, bool quoted)
         {
             var part = quoted ? current.ToString() : current.ToString().Trim();
             current.Clear();

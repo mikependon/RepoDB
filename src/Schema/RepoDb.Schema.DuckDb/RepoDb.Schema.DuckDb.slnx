@@ -1,0 +1,13 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="../../Providers/RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="../../Providers/RepoDb.DuckDb/RepoDb.DuckDb/RepoDb.DuckDb.csproj" />
+  <Project Path="../RepoDb.Schema.Core/RepoDb.Schema.Core/RepoDb.Schema.Core.csproj" />
+  <Project Path="RepoDb.Schema.DuckDb/RepoDb.Schema.DuckDb.csproj" />
+  <Project Path="RepoDb.Schema.DuckDb.UnitTests/RepoDb.Schema.DuckDb.UnitTests.csproj" />
+  <Project Path="RepoDb.Schema.DuckDb.IntegrationTests/RepoDb.Schema.DuckDb.IntegrationTests.csproj" />
+</Solution>

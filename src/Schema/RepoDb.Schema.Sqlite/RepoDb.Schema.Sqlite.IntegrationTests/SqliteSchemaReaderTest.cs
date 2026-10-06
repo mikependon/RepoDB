@@ -78,7 +78,7 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
                 var reader = new SqliteSchemaReader(connection);
 
                 // Act
-                var actual = reader.TableExists("\"Person\"");
+                var actual = reader.TableExists("[Person]");
 
                 // Assert
                 Assert.IsTrue(actual);
@@ -1156,7 +1156,7 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
                 var reader = new SqliteSchemaReader(connection);
 
                 // Act
-                var actual = Helper.GetTableNames(reader.GetDependencyOrder(new[] { "Parent", "Parent", "\"Parent\"" }));
+                var actual = Helper.GetTableNames(reader.GetDependencyOrder(new[] { "Parent", "Parent", "[Parent]" }));
 
                 // Assert
                 CollectionAssert.AreEqual(new[] { "Parent" }, actual);

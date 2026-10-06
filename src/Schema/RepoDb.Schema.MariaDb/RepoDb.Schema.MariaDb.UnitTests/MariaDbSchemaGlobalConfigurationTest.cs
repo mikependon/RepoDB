@@ -6,7 +6,7 @@
 
 #endregion
 
-using RepoDb.Connector.MariaDbConnector;
+using RepoDb.Connector.MariaDb;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace RepoDb.Schema.MariaDb.UnitTests

@@ -13,7 +13,7 @@ using RepoDb.DbSettings;
 
 namespace RepoDb.Schema.MySqlConnector.UnitTests.CustomObjects
 {
-    public class CustomDbConnection : DbConnection, IDbConnection
+    public class CustomDbConnection : System.Data.Common.DbConnection, IDbConnection
     {
         static CustomDbConnection()
         {

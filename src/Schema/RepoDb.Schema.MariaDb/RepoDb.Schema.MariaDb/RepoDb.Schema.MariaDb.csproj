@@ -25,6 +25,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Schema.Core\RepoDb.Schema.Core\RepoDb.Schema.Core.csproj" />
-    <ProjectReference Include="..\..\..\Providers\RepoDb.MariaDbConnector\RepoDb.MariaDbConnector\RepoDb.MariaDbConnector.csproj" />
+    <ProjectReference Include="..\..\..\Providers\RepoDb.MariaDb\RepoDb.MariaDb\RepoDb.MariaDb.csproj" />
   </ItemGroup>
 </Project>

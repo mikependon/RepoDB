@@ -17,7 +17,7 @@ using RepoDb.Exceptions;
 using RepoDb.Interfaces;
 using RepoDb.Schema.Enumerations;
 using RepoDb.Schema.Models;
-using static RepoDb.Schema.CopySchemaHelper;
+using static RepoDb.Schema.DbConnection;
 
 namespace RepoDb.Schema
 {
@@ -256,8 +256,6 @@ namespace RepoDb.Schema
             CancellationToken cancellationToken = default)
         {
             Validate(connection, tableName, destinationConnection);
-
-            // Copy the table as a set of one table, the callback receives the result of each table that is copied
             var results = new List<CopySchemaResult>();
             await connection.CopySchemaToAsync(new[] { tableName },
                 destinationConnection,

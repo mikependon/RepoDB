@@ -15,7 +15,7 @@ namespace RepoDb.Schema.MySqlConnector.UnitTests.CustomObjects
     {
         public override IsolationLevel IsolationLevel { get; }
 
-        protected override DbConnection DbConnection { get; }
+        protected override System.Data.Common.DbConnection DbConnection { get; }
 
         public override void Commit()
         {

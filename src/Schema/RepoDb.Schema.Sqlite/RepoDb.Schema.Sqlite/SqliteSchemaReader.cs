@@ -146,7 +146,7 @@ namespace RepoDb.Schema
             {
                 return new List<string>();
             }
-            return Query(SqliteSchemaText.TablesSql(Schema(schema)), SchemaTraceKeys.GetTables, r => SqliteSchemaHelper.Format(schema, Text(r, "TableName")));
+            return Query(SqliteSchemaText.TablesSql(Schema(schema)), SchemaTraceKeys.GetTables, r => SqliteSchemaHelper.FormatTableName(schema, Text(r, "TableName")));
         }
 
         /// <summary>
@@ -189,7 +189,7 @@ namespace RepoDb.Schema
                 }
             }
             return CopySchemaRelationshipExpander.Expand(tables, foreignKeys, relationshipBehavior, Key)
-                .Select(table => SqliteSchemaHelper.Format(table.Schema, table.Name))
+                .Select(table => SqliteSchemaHelper.FormatTableName(table.Schema, table.Name))
                 .ToList();
         }
 
@@ -312,7 +312,7 @@ namespace RepoDb.Schema
                     return new List<string>();
                 }
             }
-            return await QueryAsync(SqliteSchemaText.TablesSql(Schema(schema)), SchemaTraceKeys.GetTables, r => SqliteSchemaHelper.Format(schema, Text(r, "TableName")), cancellationToken).ConfigureAwait(false);
+            return await QueryAsync(SqliteSchemaText.TablesSql(Schema(schema)), SchemaTraceKeys.GetTables, r => SqliteSchemaHelper.FormatTableName(schema, Text(r, "TableName")), cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -367,7 +367,7 @@ namespace RepoDb.Schema
                 }
             }
             return CopySchemaRelationshipExpander.Expand(tables, foreignKeys, relationshipBehavior, Key)
-                .Select(table => SqliteSchemaHelper.Format(table.Schema, table.Name))
+                .Select(table => SqliteSchemaHelper.FormatTableName(table.Schema, table.Name))
                 .ToList();
         }
 
@@ -409,7 +409,7 @@ namespace RepoDb.Schema
         /// <param name="tableName"></param>
         /// <returns></returns>
         private static (string Schema, string Table) Resolve(string tableName) =>
-            SqliteSchemaHelper.Parse(tableName);
+            SqliteSchemaHelper.ParseSchemaAndTable(tableName);
 
         // Parameters
 

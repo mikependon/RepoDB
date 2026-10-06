@@ -5,7 +5,7 @@
     <Platform Name="x86" />
   </Configurations>
   <Project Path="../../Providers/RepoDb.Core/RepoDb/RepoDb.csproj" />
-  <Project Path="../../Providers/RepoDb.MariaDbConnector/RepoDb.MariaDbConnector/RepoDb.MariaDbConnector.csproj" />
+  <Project Path="../../Providers/RepoDb.MariaDb/RepoDb.MariaDb/RepoDb.MariaDb.csproj" />
   <Project Path="../RepoDb.Schema.Core/RepoDb.Schema.Core/RepoDb.Schema.Core.csproj" />
   <Project Path="RepoDb.Schema.MariaDb/RepoDb.Schema.MariaDb.csproj" />
   <Project Path="RepoDb.Schema.MariaDb.UnitTests/RepoDb.Schema.MariaDb.UnitTests.csproj" />

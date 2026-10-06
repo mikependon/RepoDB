@@ -13,7 +13,7 @@ using RepoDb.Interfaces;
 
 namespace RepoDb.Data.Core.UnitTests.CustomObjects
 {
-    public class CustomDbConnection : DbConnection
+    public class CustomDbConnection : System.Data.Common.DbConnection
     {
         static CustomDbConnection()
         {

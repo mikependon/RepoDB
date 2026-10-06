@@ -229,7 +229,7 @@ namespace RepoDb.Schema.CockroachDb.UnitTests
         public void TestCockroachDbCopySchemasToOfTablesWithNamesThatNeedQuoting()
         {
             // Setup
-            MapReader(SchemaTable("public", "Odd.Child", CockroachDbSchemaHelper.Format("public", "Odd.Name")), SchemaTable("public", "Odd.Name"));
+            MapReader(SchemaTable("public", "Odd.Child", CockroachDbSchemaHelper.FormatTableName("public", "Odd.Name")), SchemaTable("public", "Odd.Name"));
             MapComposer();
             var destination = new CustomDbConnection();
 
@@ -476,7 +476,7 @@ namespace RepoDb.Schema.CockroachDb.UnitTests
 
         private static TableInfo Reference(string name)
         {
-            var (schema, table) = CockroachDbSchemaHelper.Parse(name);
+            var (schema, table) = CockroachDbSchemaHelper.ParseSchemaAndTable(name);
             return new TableInfo(table, schema);
         }
     }

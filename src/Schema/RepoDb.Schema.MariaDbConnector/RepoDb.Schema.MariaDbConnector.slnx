@@ -1,0 +1,13 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="../../Providers/RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="../../Providers/RepoDb.MariaDbConnector/RepoDb.MariaDbConnector/RepoDb.MariaDbConnector.csproj" />
+  <Project Path="../RepoDb.Schema.Core/RepoDb.Schema.Core/RepoDb.Schema.Core.csproj" />
+  <Project Path="RepoDb.Schema.MariaDbConnector/RepoDb.Schema.MariaDbConnector.csproj" />
+  <Project Path="RepoDb.Schema.MariaDbConnector.UnitTests/RepoDb.Schema.MariaDbConnector.UnitTests.csproj" />
+  <Project Path="RepoDb.Schema.MariaDbConnector.IntegrationTests/RepoDb.Schema.MariaDbConnector.IntegrationTests.csproj" />
+</Solution>

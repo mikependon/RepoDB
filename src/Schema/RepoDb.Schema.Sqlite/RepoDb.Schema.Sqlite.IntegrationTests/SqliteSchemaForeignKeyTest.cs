@@ -220,16 +220,16 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
 
             using (var connection = Database.CreateTarget())
             {
-                connection.ExecuteNonQuery("INSERT INTO \"Country\" (\"Name\") VALUES ('Philippines');");
-                connection.ExecuteNonQuery("INSERT INTO \"OrderLine\" (\"OrderId\", \"LineNumber\", \"Quantity\") VALUES (1, 1, 5);");
+                connection.ExecuteNonQuery("INSERT INTO [Country] ([Name]) VALUES ('Philippines');");
+                connection.ExecuteNonQuery("INSERT INTO [OrderLine] ([OrderId], [LineNumber], [Quantity]) VALUES (1, 1, 5);");
 
                 // Act/Assert
                 Assert.Throws<SqliteException>(() =>
-                    connection.ExecuteNonQuery("INSERT INTO \"Shipment\" (\"Id\", \"OrderId\", \"LineNumber\", \"CountryId\") VALUES (1, 1, 2, 1);"));
+                    connection.ExecuteNonQuery("INSERT INTO [Shipment] ([Id], [OrderId], [LineNumber], [CountryId]) VALUES (1, 1, 2, 1);"));
 
                 // Act
-                connection.ExecuteNonQuery("INSERT INTO \"Shipment\" (\"Id\", \"OrderId\", \"LineNumber\", \"CountryId\") VALUES (1, 1, 1, 1);");
-                var count = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM \"Shipment\";");
+                connection.ExecuteNonQuery("INSERT INTO [Shipment] ([Id], [OrderId], [LineNumber], [CountryId]) VALUES (1, 1, 1, 1);");
+                var count = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM [Shipment];");
 
                 // Assert
                 Assert.AreEqual(1, count);
@@ -244,13 +244,13 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
 
             using (var connection = Database.CreateTarget())
             {
-                connection.ExecuteNonQuery("INSERT INTO \"Country\" (\"Name\") VALUES ('Philippines');");
-                connection.ExecuteNonQuery("INSERT INTO \"OrderLine\" (\"OrderId\", \"LineNumber\", \"Quantity\") VALUES (1, 1, 5);");
-                connection.ExecuteNonQuery("INSERT INTO \"Shipment\" (\"Id\", \"OrderId\", \"LineNumber\", \"CountryId\") VALUES (1, 1, 1, 1);");
+                connection.ExecuteNonQuery("INSERT INTO [Country] ([Name]) VALUES ('Philippines');");
+                connection.ExecuteNonQuery("INSERT INTO [OrderLine] ([OrderId], [LineNumber], [Quantity]) VALUES (1, 1, 5);");
+                connection.ExecuteNonQuery("INSERT INTO [Shipment] ([Id], [OrderId], [LineNumber], [CountryId]) VALUES (1, 1, 1, 1);");
 
                 // Act
-                connection.ExecuteNonQuery("DELETE FROM \"Country\";");
-                var count = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM \"Shipment\";");
+                connection.ExecuteNonQuery("DELETE FROM [Country];");
+                var count = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM [Shipment];");
 
                 // Assert
                 Assert.AreEqual(0, count);
@@ -267,10 +267,10 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
             {
                 // Act/Assert
                 Assert.Throws<SqliteException>(() =>
-                    connection.ExecuteNonQuery("INSERT INTO \"Employee\" (\"Id\", \"ManagerId\") VALUES (1, 99);"));
+                    connection.ExecuteNonQuery("INSERT INTO [Employee] ([Id], [ManagerId]) VALUES (1, 99);"));
 
-                connection.ExecuteNonQuery("INSERT INTO \"Employee\" (\"Id\", \"ManagerId\") VALUES (1, NULL);");
-                connection.ExecuteNonQuery("INSERT INTO \"Employee\" (\"Id\", \"ManagerId\") VALUES (2, 1);");
+                connection.ExecuteNonQuery("INSERT INTO [Employee] ([Id], [ManagerId]) VALUES (1, NULL);");
+                connection.ExecuteNonQuery("INSERT INTO [Employee] ([Id], [ManagerId]) VALUES (2, 1);");
             }
         }
 
@@ -282,12 +282,12 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
 
             using (var connection = Database.CreateTarget())
             {
-                connection.ExecuteNonQuery("INSERT INTO \"Country\" (\"Name\") VALUES ('First'), ('Second');");
-                connection.ExecuteNonQuery("INSERT INTO \"Preference\" (\"Id\", \"CountryId\") VALUES (1, 2);");
+                connection.ExecuteNonQuery("INSERT INTO [Country] ([Name]) VALUES ('First'), ('Second');");
+                connection.ExecuteNonQuery("INSERT INTO [Preference] ([Id], [CountryId]) VALUES (1, 2);");
 
                 // Act
-                connection.ExecuteNonQuery("DELETE FROM \"Country\" WHERE \"Id\" = 2;");
-                var countryId = connection.ExecuteScalar<int>("SELECT \"CountryId\" FROM \"Preference\";");
+                connection.ExecuteNonQuery("DELETE FROM [Country] WHERE [Id] = 2;");
+                var countryId = connection.ExecuteScalar<int>("SELECT [CountryId] FROM [Preference];");
 
                 // Assert
                 Assert.AreEqual(1, countryId);

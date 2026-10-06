@@ -106,8 +106,8 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
             using (var connection = Database.CreateTarget())
             {
                 // Act
-                connection.ExecuteNonQuery("INSERT INTO \"Person\" (\"Name\") VALUES ('First'), ('Second');");
-                var ids = connection.ExecuteQuery<long>("SELECT \"Id\" FROM \"Person\" ORDER BY \"Id\";").ToArray();
+                connection.ExecuteNonQuery("INSERT INTO [Person] ([Name]) VALUES ('First'), ('Second');");
+                var ids = connection.ExecuteQuery<long>("SELECT [Id] FROM [Person] ORDER BY [Id];").ToArray();
 
                 // Assert
                 CollectionAssert.AreEqual(new[] { 1L, 2L }, ids);
@@ -123,8 +123,8 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
             using (var connection = Database.CreateTarget())
             {
                 // Act
-                connection.ExecuteNonQuery("INSERT INTO \"Person\" (\"Name\") VALUES ('First');");
-                var age = connection.ExecuteScalar<int>("SELECT \"Age\" FROM \"Person\";");
+                connection.ExecuteNonQuery("INSERT INTO [Person] ([Name]) VALUES ('First');");
+                var age = connection.ExecuteScalar<int>("SELECT [Age] FROM [Person];");
 
                 // Assert
                 Assert.AreEqual(0, age);
@@ -140,8 +140,8 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
             using (var connection = Database.CreateTarget())
             {
                 // Act
-                connection.ExecuteNonQuery("INSERT INTO \"Person\" (\"Name\") VALUES ('first');");
-                var nameUpper = connection.ExecuteScalar<string>("SELECT \"NameUpper\" FROM \"Person\";");
+                connection.ExecuteNonQuery("INSERT INTO [Person] ([Name]) VALUES ('first');");
+                var nameUpper = connection.ExecuteScalar<string>("SELECT [NameUpper] FROM [Person];");
 
                 // Assert
                 Assert.AreEqual("FIRST", nameUpper, StringComparer.Ordinal);
@@ -158,7 +158,7 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
             {
                 // Act/Assert
                 Assert.Throws<SqliteException>(() =>
-                    connection.ExecuteNonQuery("INSERT INTO \"Person\" (\"Name\", \"Age\") VALUES ('First', -1);"));
+                    connection.ExecuteNonQuery("INSERT INTO [Person] ([Name], [Age]) VALUES ('First', -1);"));
             }
         }
 
@@ -170,12 +170,12 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
 
             using (var connection = Database.CreateTarget())
             {
-                connection.ExecuteNonQuery("INSERT INTO \"Country\" (\"Name\") VALUES ('Philippines');");
-                connection.ExecuteNonQuery("INSERT INTO \"Person\" (\"Name\", \"CountryId\") VALUES ('First', 1);");
+                connection.ExecuteNonQuery("INSERT INTO [Country] ([Name]) VALUES ('Philippines');");
+                connection.ExecuteNonQuery("INSERT INTO [Person] ([Name], [CountryId]) VALUES ('First', 1);");
 
                 // Act
-                connection.ExecuteNonQuery("DELETE FROM \"Country\";");
-                var countryId = connection.ExecuteScalar<int?>("SELECT \"CountryId\" FROM \"Person\";");
+                connection.ExecuteNonQuery("DELETE FROM [Country];");
+                var countryId = connection.ExecuteScalar<int?>("SELECT [CountryId] FROM [Person];");
 
                 // Assert
                 Assert.IsNull(countryId);

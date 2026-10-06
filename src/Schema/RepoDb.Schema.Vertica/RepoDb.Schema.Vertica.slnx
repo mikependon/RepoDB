@@ -1,0 +1,13 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="../../Providers/RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="../../Providers/RepoDb.Vertica/RepoDb.Vertica/RepoDb.Vertica.csproj" />
+  <Project Path="../RepoDb.Schema.Core/RepoDb.Schema.Core/RepoDb.Schema.Core.csproj" />
+  <Project Path="RepoDb.Schema.Vertica/RepoDb.Schema.Vertica.csproj" />
+  <Project Path="RepoDb.Schema.Vertica.UnitTests/RepoDb.Schema.Vertica.UnitTests.csproj" />
+  <Project Path="RepoDb.Schema.Vertica.IntegrationTests/RepoDb.Schema.Vertica.IntegrationTests.csproj" />
+</Solution>

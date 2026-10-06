@@ -42,7 +42,6 @@ namespace RepoDb.Schema
             {
                 throw new ArgumentNullException(nameof(schema));
             }
-
             var tableName = TableName(schema);
             var statements = new List<string> { ComposeCreateTable(schema) };
             statements.AddRange(schema.Indexes.Select(index => ComposeCreateIndex(tableName, index)));
@@ -66,7 +65,6 @@ namespace RepoDb.Schema
             {
                 throw new ArgumentNullException(nameof(schemas));
             }
-
             var list = schemas.ToList();
             var statements = new List<string>();
             statements.AddRange(list.Select(ComposeCreateTable));
@@ -205,7 +203,7 @@ namespace RepoDb.Schema
         /// <param name="table">The identity (name and schema) of the table.</param>
         /// <returns>The name of the table.</returns>
         public string ComposeName(TableInfo table) =>
-            SqlServerSchemaHelper.Format((table ?? throw new ArgumentNullException(nameof(table))).Schema, table.Name);
+            SqlServerSchemaHelper.FormatTableName((table ?? throw new ArgumentNullException(nameof(table))).Schema, table.Name);
 
         /// <summary>
         /// Composes the statement that checks whether the table exists in the destination database.
@@ -308,7 +306,7 @@ namespace RepoDb.Schema
         /// <param name="schema"></param>
         /// <returns></returns>
         private static string TableName(TableSchema schema) =>
-            SqlServerSchemaHelper.Format(schema.Table.Schema, schema.Table.Name);
+            SqlServerSchemaHelper.FormatTableName(schema.Table.Schema, schema.Table.Name);
 
         /// <summary>
         ///
@@ -316,7 +314,7 @@ namespace RepoDb.Schema
         /// <param name="table"></param>
         /// <returns></returns>
         private static string TableName(TableInfo table) =>
-            SqlServerSchemaHelper.Format(table.Schema, table.Name);
+            SqlServerSchemaHelper.FormatTableName(table.Schema, table.Name);
 
         /// <summary>
         /// 

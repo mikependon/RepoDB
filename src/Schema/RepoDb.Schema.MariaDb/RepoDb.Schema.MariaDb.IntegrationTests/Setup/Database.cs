@@ -8,7 +8,7 @@
 
 using System;
 using System.Data;
-using RepoDb.Connector.MariaDbConnector;
+using RepoDb.Connector.MariaDb;
 
 namespace RepoDb.Schema.MariaDb.IntegrationTests.Setup
 {

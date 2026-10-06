@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Title>RepoDb.Schema.Firebird</Title>
+    <AssemblyName>RepoDb.Schema.Firebird</AssemblyName>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>The Firebird schema reader and composer of RepoDB library.</Description>
+    <LangVersion>preview</LangVersion>
+    <Nullable>annotations</Nullable>
+    <PackageTags>orm hybrid-orm micro-orm schema firebird</PackageTags>
+    <PackageIcon>Firebird.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/mikependon/RepoDB/tree/master/src/Schema/RepoDb.Schema.Firebird</RepositoryUrl>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />
+    <None Include="..\README.md" Pack="True" PackagePath="\" />
+    <None Include="..\Firebird.png" Pack="True" PackagePath="\" />
+    <None Include="..\..\..\..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="RepoDb.Schema.Firebird.UnitTests" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\RepoDb.Schema.Core\RepoDb.Schema.Core\RepoDb.Schema.Core.csproj" />
+    <ProjectReference Include="..\..\..\Providers\RepoDb.Firebird\RepoDb.Firebird\RepoDb.Firebird.csproj" />
+  </ItemGroup>
+</Project>

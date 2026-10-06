@@ -14,8 +14,10 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using RepoDb.Data.Enumerations;
+using RepoDb.Data.Helpers;
 using RepoDb.Data.Interfaces;
 using RepoDb.Data.Models;
+using RepoDb.Enumerations;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Schema;
@@ -27,7 +29,7 @@ namespace RepoDb.Data
     /// <summary>
     /// Contains the helper methods of the <see cref="CopyDataToExtension"/> class: the tables whose rows are copied, the names of the tables and the copy of the rows.
     /// </summary>
-    internal static class Helper
+    internal static class DbConnection
     {
         #region Methods
 
@@ -263,11 +265,11 @@ namespace RepoDb.Data
         }
 
         /// <summary>
-        /// Copies the rows of the source table into the target table, in batches.
+        /// Copies the rows of the source table into the target table. The rows are read with a data reader that is fed to the bulk insert of the destination connection
+        /// (the <c>BulkOperations</c> package of its provider). If the provider has no bulk insert, the rows of the reader are inserted in batches.
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="destinationConnection"></param>
-        /// <param name="targetSchema"></param>
         /// <param name="sourceTable"></param>
         /// <param name="targetTable"></param>
         /// <param name="where"></param>
@@ -291,37 +293,37 @@ namespace RepoDb.Data
             ITrace trace,
             IDbTransaction transaction)
         {
-            var batch = new List<object>(batchSize);
-            void Flush()
+            var (commandText, param) = CreateSelect(connection, sourceTable, where);
+            using (var reader = connection.ExecuteReader(commandText, param, commandTimeout: commandTimeout, traceKey: traceKey ?? TraceKeys.ExecuteReader, trace: trace))
             {
-                var inserted = destinationConnection.InsertAll(targetTable, batch, batchSize, commandTimeout: commandTimeout, traceKey: traceKey, transaction: transaction, trace: trace);
-                options.BatchNumber++;
-                options.RowCount = inserted;
-                options.TotalCopiedRowCount += inserted;
-                options.EndTime = DateTime.UtcNow;
-                batch.Clear();
-                progressCallback?.Invoke(options);
-            }
-            foreach (object row in where == null ? connection.QueryAll(sourceTable, commandTimeout: commandTimeout, traceKey: traceKey, trace: trace) : connection.Query(sourceTable, where, commandTimeout: commandTimeout, traceKey: traceKey, trace: trace))
-            {
-                batch.Add(row);
-                if (batch.Count == batchSize)
+                if (BulkInsertInvoker.IsAvailable(destinationConnection, reader, false))
                 {
-                    Flush();
+                    var inserted = BulkInsertInvoker.BulkInsert(destinationConnection, targetTable, reader, batchSize, commandTimeout, null, trace, transaction);
+                    Report(options, inserted, progressCallback);
+                    return;
                 }
-            }
-            if (batch.Count > 0)
-            {
-                Flush();
+                var batch = new List<object>(batchSize);
+                while (reader.Read())
+                {
+                    batch.Add(ToRow(reader));
+                    if (batch.Count == batchSize)
+                    {
+                        Report(options, destinationConnection.InsertAll(targetTable, batch, batchSize, commandTimeout: commandTimeout, traceKey: traceKey, transaction: transaction, trace: trace), progressCallback);
+                        batch.Clear();
+                    }
+                }
+                if (batch.Count > 0)
+                {
+                    Report(options, destinationConnection.InsertAll(targetTable, batch, batchSize, commandTimeout: commandTimeout, traceKey: traceKey, transaction: transaction, trace: trace), progressCallback);
+                }
             }
         }
 
         /// <summary>
-        /// Copies the rows of the source table into the target table, in batches.
+        /// Copies the rows of the source table into the target table in an asynchronous way (see <see cref="CopyRows"/>).
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="destinationConnection"></param>
-        /// <param name="targetSchema"></param>
         /// <param name="sourceTable"></param>
         /// <param name="targetTable"></param>
         /// <param name="where"></param>
@@ -347,33 +349,138 @@ namespace RepoDb.Data
             IDbTransaction transaction,
             CancellationToken cancellationToken)
         {
-            var batch = new List<object>(batchSize);
-            async Task Flush()
+            var (commandText, param) = CreateSelect(connection, sourceTable, where);
+            using (var reader = await connection.ExecuteReaderAsync(commandText, param, commandTimeout: commandTimeout, traceKey: traceKey ?? TraceKeys.ExecuteReader, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false))
             {
-                var inserted = await destinationConnection.InsertAllAsync(targetTable, batch, batchSize, commandTimeout: commandTimeout, traceKey: traceKey, transaction: transaction, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false);
-                options.BatchNumber++;
-                options.RowCount = inserted;
-                options.TotalCopiedRowCount += inserted;
-                options.EndTime = DateTime.UtcNow;
-                batch.Clear();
-                progressCallback?.Invoke(options);
-            }
-            var rows = where == null
-                ? await connection.QueryAllAsync(sourceTable, commandTimeout: commandTimeout, traceKey: traceKey, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false)
-                : await connection.QueryAsync(sourceTable, where, commandTimeout: commandTimeout, traceKey: traceKey, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false);
-            foreach (object row in rows)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                batch.Add(row);
-                if (batch.Count == batchSize)
+                if (BulkInsertInvoker.IsAvailable(destinationConnection, reader, true))
                 {
-                    await Flush().ConfigureAwait(false);
+                    var inserted = await BulkInsertInvoker.BulkInsertAsync(destinationConnection, targetTable, reader, batchSize, commandTimeout, null, trace, transaction, cancellationToken).ConfigureAwait(false);
+                    Report(options, inserted, progressCallback);
+                    return;
+                }
+                var batch = new List<object>(batchSize);
+                while (await ReadAsync(reader, cancellationToken).ConfigureAwait(false))
+                {
+                    batch.Add(ToRow(reader));
+                    if (batch.Count == batchSize)
+                    {
+                        Report(options, await destinationConnection.InsertAllAsync(targetTable, batch, batchSize, commandTimeout: commandTimeout, traceKey: traceKey, transaction: transaction, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false), progressCallback);
+                        batch.Clear();
+                    }
+                }
+                if (batch.Count > 0)
+                {
+                    Report(options, await destinationConnection.InsertAllAsync(targetTable, batch, batchSize, commandTimeout: commandTimeout, traceKey: traceKey, transaction: transaction, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false), progressCallback);
                 }
             }
-            if (batch.Count > 0)
+        }
+
+        /// <summary>
+        /// Composes the <c>SELECT</c> statement of the source table with the statement builder of the connection, and the parameters of its filter.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="sourceTable"></param>
+        /// <param name="where"></param>
+        /// <returns>The statement and its parameters (<c>null</c> if there is no filter).</returns>
+        private static (string CommandText, object Param) CreateSelect(IDbConnection connection,
+            string sourceTable,
+            QueryGroup where)
+        {
+            var statementBuilder = StatementBuilderMapper.Get(connection) ?? throw new InvalidOperationException($"No statement builder is mapped to the connection '{connection.GetType().FullName}'.");
+            var fields = DbFieldCache.Get(connection, sourceTable, null)?.GetAsFields();
+            where?.Fix();
+            var commandText = statementBuilder.CreateQuery(sourceTable, fields, where);
+            return (commandText, where == null ? null : ToParameters(where));
+        }
+
+        /// <summary>
+        /// Gets the parameters of the filter, by the names that the statement builder gives to them.
+        /// </summary>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        private static IDictionary<string, object> ToParameters(QueryGroup where)
+        {
+            var parameters = new Dictionary<string, object>(StringComparer.Ordinal);
+            foreach (var field in where.GetFields(true))
             {
-                await Flush().ConfigureAwait(false);
+                var name = field.Parameter.Name;
+                if (field.Operation == Operation.Between || field.Operation == Operation.NotBetween)
+                {
+                    var values = ToList(field.Parameter.Value);
+                    parameters[$"{name}_Left"] = values.Count > 0 ? values[0] : null;
+                    parameters[$"{name}_Right"] = values.Count > 1 ? values[1] : null;
+                }
+                else if (field.Operation == Operation.In || field.Operation == Operation.NotIn)
+                {
+                    var values = ToList(field.Parameter.Value);
+                    for (var i = 0; i < values.Count; i++)
+                    {
+                        parameters[$"{name}_In_{i.ToString(System.Globalization.CultureInfo.InvariantCulture)}"] = values[i];
+                    }
+                }
+                else
+                {
+                    parameters[name] = field.Parameter.Value;
+                }
             }
+            return parameters;
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private static IList<object> ToList(object value) =>
+            value is System.Collections.IEnumerable enumerable && !(value is string)
+                ? enumerable.Cast<object>().ToList()
+                : new List<object> { value };
+
+        /// <summary>
+        /// Converts the current row of the reader into an object, to be inserted.
+        /// </summary>
+        /// <param name="record"></param>
+        /// <returns></returns>
+        private static object ToRow(IDataRecord record)
+        {
+            var row = new System.Dynamic.ExpandoObject() as IDictionary<string, object>;
+            for (var i = 0; i < record.FieldCount; i++)
+            {
+                row[record.GetName(i)] = record.IsDBNull(i) ? null : record.GetValue(i);
+            }
+            return row;
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private static Task<bool> ReadAsync(IDataReader reader,
+            CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return reader is System.Data.Common.DbDataReader dbReader
+                ? dbReader.ReadAsync(cancellationToken)
+                : Task.FromResult(reader.Read());
+        }
+
+        /// <summary>
+        /// Reports the progress of the copy: a batch of rows was copied.
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="inserted"></param>
+        /// <param name="progressCallback"></param>
+        private static void Report(CopyDataProgress options,
+            int inserted,
+            Action<CopyDataProgress> progressCallback)
+        {
+            options.BatchNumber++;
+            options.RowCount = inserted;
+            options.TotalCopiedRowCount += inserted;
+            options.EndTime = DateTime.UtcNow;
+            progressCallback?.Invoke(options);
         }
 
         /// <summary>

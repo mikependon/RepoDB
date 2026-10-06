@@ -21,7 +21,7 @@ using RepoDb.Interfaces;
 using RepoDb.Schema;
 using RepoDb.Schema.Enumerations;
 using RepoDb.Schema.Models;
-using static RepoDb.Data.Helper;
+using static RepoDb.Data.DbConnection;
 
 namespace RepoDb.Data
 {

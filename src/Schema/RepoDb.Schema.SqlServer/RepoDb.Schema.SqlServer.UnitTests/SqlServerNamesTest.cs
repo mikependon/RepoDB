@@ -20,97 +20,97 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         [TestMethod]
         public void TestSqlServerNamesSplitOfSinglePart()
         {
-            CollectionAssert.AreEqual(new[] { "Person" }, SqlServerSchemaHelper.Split("Person").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "Person" }, SqlServerSchemaHelper.SplitNameIntoParts("Person").ToArrayOf());
         }
 
         [TestMethod]
         public void TestSqlServerNamesSplitOfTwoParts()
         {
-            CollectionAssert.AreEqual(new[] { "dbo", "Person" }, SqlServerSchemaHelper.Split("dbo.Person").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "dbo", "Person" }, SqlServerSchemaHelper.SplitNameIntoParts("dbo.Person").ToArrayOf());
         }
 
         [TestMethod]
         public void TestSqlServerNamesSplitOfThreeParts()
         {
-            CollectionAssert.AreEqual(new[] { "db", "dbo", "Person" }, SqlServerSchemaHelper.Split("db.dbo.Person").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "db", "dbo", "Person" }, SqlServerSchemaHelper.SplitNameIntoParts("db.dbo.Person").ToArrayOf());
         }
 
         [TestMethod]
         public void TestSqlServerNamesSplitOfBracketedParts()
         {
-            CollectionAssert.AreEqual(new[] { "dbo", "Person" }, SqlServerSchemaHelper.Split("[dbo].[Person]").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "dbo", "Person" }, SqlServerSchemaHelper.SplitNameIntoParts("[dbo].[Person]").ToArrayOf());
         }
 
         [TestMethod]
         public void TestSqlServerNamesSplitOfQuotedParts()
         {
-            CollectionAssert.AreEqual(new[] { "dbo", "Person" }, SqlServerSchemaHelper.Split("\"dbo\".\"Person\"").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "dbo", "Person" }, SqlServerSchemaHelper.SplitNameIntoParts("\"dbo\".\"Person\"").ToArrayOf());
         }
 
         [TestMethod]
         public void TestSqlServerNamesSplitKeepsTheDotOfABracketedPart()
         {
-            CollectionAssert.AreEqual(new[] { "dbo", "Odd.Name" }, SqlServerSchemaHelper.Split("[dbo].[Odd.Name]").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "dbo", "Odd.Name" }, SqlServerSchemaHelper.SplitNameIntoParts("[dbo].[Odd.Name]").ToArrayOf());
         }
 
         [TestMethod]
         public void TestSqlServerNamesSplitKeepsTheDotOfAQuotedPart()
         {
-            CollectionAssert.AreEqual(new[] { "dbo", "Odd.Name" }, SqlServerSchemaHelper.Split("dbo.\"Odd.Name\"").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "dbo", "Odd.Name" }, SqlServerSchemaHelper.SplitNameIntoParts("dbo.\"Odd.Name\"").ToArrayOf());
         }
 
         [TestMethod]
         public void TestSqlServerNamesSplitKeepsTheSpaceOfABracketedPart()
         {
-            CollectionAssert.AreEqual(new[] { "Order Details" }, SqlServerSchemaHelper.Split("[Order Details]").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "Order Details" }, SqlServerSchemaHelper.SplitNameIntoParts("[Order Details]").ToArrayOf());
         }
 
         [TestMethod]
         public void TestSqlServerNamesSplitUnescapesTheClosingBracket()
         {
-            CollectionAssert.AreEqual(new[] { "dbo", "Weird]Name" }, SqlServerSchemaHelper.Split("[dbo].[Weird]]Name]").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "dbo", "Weird]Name" }, SqlServerSchemaHelper.SplitNameIntoParts("[dbo].[Weird]]Name]").ToArrayOf());
         }
 
         [TestMethod]
         public void TestSqlServerNamesSplitUnescapesTheDoubleQuote()
         {
-            CollectionAssert.AreEqual(new[] { "Say \"Hi\"" }, SqlServerSchemaHelper.Split("\"Say \"\"Hi\"\"\"").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "Say \"Hi\"" }, SqlServerSchemaHelper.SplitNameIntoParts("\"Say \"\"Hi\"\"\"").ToArrayOf());
         }
 
         [TestMethod]
         public void TestSqlServerNamesSplitTrimsThePartsThatAreNotQuoted()
         {
-            CollectionAssert.AreEqual(new[] { "dbo", "Person" }, SqlServerSchemaHelper.Split("  dbo . Person  ").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "dbo", "Person" }, SqlServerSchemaHelper.SplitNameIntoParts("  dbo . Person  ").ToArrayOf());
         }
 
         [TestMethod]
         public void TestSqlServerNamesSplitKeepsTheWhiteSpaceOfAQuotedPart()
         {
-            CollectionAssert.AreEqual(new[] { " padded " }, SqlServerSchemaHelper.Split("[ padded ]").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { " padded " }, SqlServerSchemaHelper.SplitNameIntoParts("[ padded ]").ToArrayOf());
         }
 
         [TestMethod]
         public void TestSqlServerNamesSplitOfMixedQuoting()
         {
-            CollectionAssert.AreEqual(new[] { "dbo", "Odd.Name" }, SqlServerSchemaHelper.Split("dbo.[Odd.Name]").ToArrayOf());
+            CollectionAssert.AreEqual(new[] { "dbo", "Odd.Name" }, SqlServerSchemaHelper.SplitNameIntoParts("dbo.[Odd.Name]").ToArrayOf());
         }
 
         [TestMethod]
         public void ThrowExceptionOnSqlServerNamesSplitIfTheNameIsNull()
         {
-            Assert.Throws<ArgumentNullException>(() => SqlServerSchemaHelper.Split(null));
+            Assert.Throws<ArgumentNullException>(() => SqlServerSchemaHelper.SplitNameIntoParts(null));
         }
 
         [TestMethod]
         public void ThrowExceptionOnSqlServerNamesSplitIfTheNameIsWhiteSpace()
         {
-            Assert.Throws<ArgumentNullException>(() => SqlServerSchemaHelper.Split("   "));
+            Assert.Throws<ArgumentNullException>(() => SqlServerSchemaHelper.SplitNameIntoParts("   "));
         }
 
         [TestMethod]
         public void ThrowExceptionOnSqlServerNamesSplitIfTheNameHasNoParts()
         {
-            Assert.Throws<ArgumentNullException>(() => SqlServerSchemaHelper.Split("..."));
+            Assert.Throws<ArgumentNullException>(() => SqlServerSchemaHelper.SplitNameIntoParts("..."));
         }
 
         #endregion
@@ -121,7 +121,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         public void TestSqlServerNamesParseOfTableOnly()
         {
             // Act
-            var (schema, table) = SqlServerSchemaHelper.Parse("Person");
+            var (schema, table) = SqlServerSchemaHelper.ParseSchemaAndTable("Person");
 
             // Assert
             Assert.IsNull(schema);
@@ -132,7 +132,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         public void TestSqlServerNamesParseOfSchemaAndTable()
         {
             // Act
-            var (schema, table) = SqlServerSchemaHelper.Parse("Sales.Invoice");
+            var (schema, table) = SqlServerSchemaHelper.ParseSchemaAndTable("Sales.Invoice");
 
             // Assert
             Assert.AreEqual("Sales", schema, StringComparer.Ordinal);
@@ -143,7 +143,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         public void TestSqlServerNamesParseUsesTheLastTwoPartsOfAFullName()
         {
             // Act
-            var (schema, table) = SqlServerSchemaHelper.Parse("db.dbo.Person");
+            var (schema, table) = SqlServerSchemaHelper.ParseSchemaAndTable("db.dbo.Person");
 
             // Assert
             Assert.AreEqual("dbo", schema, StringComparer.Ordinal);
@@ -154,7 +154,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         public void TestSqlServerNamesParseOfNameWithADot()
         {
             // Act
-            var (schema, table) = SqlServerSchemaHelper.Parse("[dbo].[Odd.Name]");
+            var (schema, table) = SqlServerSchemaHelper.ParseSchemaAndTable("[dbo].[Odd.Name]");
 
             // Assert
             Assert.AreEqual("dbo", schema, StringComparer.Ordinal);
@@ -208,30 +208,30 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         [TestMethod]
         public void TestSqlServerNamesFormatKeepsThePlainNames()
         {
-            Assert.AreEqual("dbo.Person", SqlServerSchemaHelper.Format("dbo", "Person"), StringComparer.Ordinal);
-            Assert.AreEqual("Sales.Invoice_2", SqlServerSchemaHelper.Format("Sales", "Invoice_2"), StringComparer.Ordinal);
+            Assert.AreEqual("dbo.Person", SqlServerSchemaHelper.FormatTableName("dbo", "Person"), StringComparer.Ordinal);
+            Assert.AreEqual("Sales.Invoice_2", SqlServerSchemaHelper.FormatTableName("Sales", "Invoice_2"), StringComparer.Ordinal);
         }
 
         [TestMethod]
         public void TestSqlServerNamesFormatWithoutSchema()
         {
-            Assert.AreEqual("Person", SqlServerSchemaHelper.Format(null, "Person"), StringComparer.Ordinal);
-            Assert.AreEqual("[Order Details]", SqlServerSchemaHelper.Format(" ", "Order Details"), StringComparer.Ordinal);
+            Assert.AreEqual("Person", SqlServerSchemaHelper.FormatTableName(null, "Person"), StringComparer.Ordinal);
+            Assert.AreEqual("[Order Details]", SqlServerSchemaHelper.FormatTableName(" ", "Order Details"), StringComparer.Ordinal);
         }
 
         [TestMethod]
         public void TestSqlServerNamesFormatQuotesTheNamesThatAreNotPlain()
         {
-            Assert.AreEqual("dbo.[Odd.Name]", SqlServerSchemaHelper.Format("dbo", "Odd.Name"), StringComparer.Ordinal);
-            Assert.AreEqual("dbo.[Order Details]", SqlServerSchemaHelper.Format("dbo", "Order Details"), StringComparer.Ordinal);
-            Assert.AreEqual("dbo.[Weird]]Name]", SqlServerSchemaHelper.Format("dbo", "Weird]Name"), StringComparer.Ordinal);
-            Assert.AreEqual("[My Schema].Person", SqlServerSchemaHelper.Format("My Schema", "Person"), StringComparer.Ordinal);
+            Assert.AreEqual("dbo.[Odd.Name]", SqlServerSchemaHelper.FormatTableName("dbo", "Odd.Name"), StringComparer.Ordinal);
+            Assert.AreEqual("dbo.[Order Details]", SqlServerSchemaHelper.FormatTableName("dbo", "Order Details"), StringComparer.Ordinal);
+            Assert.AreEqual("dbo.[Weird]]Name]", SqlServerSchemaHelper.FormatTableName("dbo", "Weird]Name"), StringComparer.Ordinal);
+            Assert.AreEqual("[My Schema].Person", SqlServerSchemaHelper.FormatTableName("My Schema", "Person"), StringComparer.Ordinal);
         }
 
         [TestMethod]
         public void TestSqlServerNamesFormatQuotesTheNameThatStartsWithADigit()
         {
-            Assert.AreEqual("dbo.[1Table]", SqlServerSchemaHelper.Format("dbo", "1Table"), StringComparer.Ordinal);
+            Assert.AreEqual("dbo.[1Table]", SqlServerSchemaHelper.FormatTableName("dbo", "1Table"), StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -243,7 +243,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             })
             {
                 // Act
-                var (parsedSchema, parsedTable) = SqlServerSchemaHelper.Parse(SqlServerSchemaHelper.Format(schema, table));
+                var (parsedSchema, parsedTable) = SqlServerSchemaHelper.ParseSchemaAndTable(SqlServerSchemaHelper.FormatTableName(schema, table));
 
                 // Assert
                 Assert.AreEqual(schema, parsedSchema, StringComparer.Ordinal);

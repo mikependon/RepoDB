@@ -12,7 +12,7 @@ using System.Data.Common;
 
 namespace RepoDb.Schema.Core.UnitTests.CustomObjects
 {
-    public class CustomDbConnection : DbConnection, IDbConnection
+    public class CustomDbConnection : System.Data.Common.DbConnection, IDbConnection
     {
         static CustomDbConnection()
         {

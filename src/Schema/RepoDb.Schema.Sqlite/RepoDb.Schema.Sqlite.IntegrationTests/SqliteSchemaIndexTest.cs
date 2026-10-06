@@ -248,15 +248,15 @@ namespace RepoDb.Schema.Sqlite.IntegrationTests
 
             using (var connection = Database.CreateTarget())
             {
-                connection.ExecuteNonQuery("INSERT INTO \"Product\" (\"Id\", \"Code\", \"Sku\", \"Name\", \"Category\", \"Price\") VALUES (1, 'C1', 'S1', 'First', 1, 1.00);");
+                connection.ExecuteNonQuery("INSERT INTO [Product] ([Id], [Code], [Sku], [Name], [Category], [Price]) VALUES (1, 'C1', 'S1', 'First', 1, 1.00);");
 
                 // Act/Assert
                 Assert.Throws<SqliteException>(() =>
-                    connection.ExecuteNonQuery("INSERT INTO \"Product\" (\"Id\", \"Code\", \"Sku\", \"Name\", \"Category\", \"Price\") VALUES (2, 'C2', 'S1', 'Second', 1, 1.00);"));
+                    connection.ExecuteNonQuery("INSERT INTO [Product] ([Id], [Code], [Sku], [Name], [Category], [Price]) VALUES (2, 'C2', 'S1', 'Second', 1, 1.00);"));
 
                 // Act/Assert
                 Assert.Throws<SqliteException>(() =>
-                    connection.ExecuteNonQuery("INSERT INTO \"Product\" (\"Id\", \"Code\", \"Sku\", \"Name\", \"Category\", \"Price\") VALUES (3, 'C1', 'S3', 'Third', 1, 1.00);"));
+                    connection.ExecuteNonQuery("INSERT INTO [Product] ([Id], [Code], [Sku], [Name], [Category], [Price]) VALUES (3, 'C1', 'S3', 'Third', 1, 1.00);"));
             }
         }
 

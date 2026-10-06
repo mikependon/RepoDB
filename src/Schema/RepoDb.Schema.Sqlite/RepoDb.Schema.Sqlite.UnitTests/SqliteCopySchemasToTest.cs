@@ -129,8 +129,8 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             // Assert
             var tables = Tables(destination);
             Assert.AreEqual(2, tables.Length);
-            StringAssert.StartsWith(tables[0], "CREATE TABLE \"Country\"", StringComparison.Ordinal);
-            StringAssert.StartsWith(tables[1], "CREATE TABLE \"Person\"", StringComparison.Ordinal);
+            StringAssert.StartsWith(tables[0], "CREATE TABLE [Country]", StringComparison.Ordinal);
+            StringAssert.StartsWith(tables[1], "CREATE TABLE [Person]", StringComparison.Ordinal);
         }
 
         [TestMethod]
@@ -194,7 +194,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             // Setup
             var product = Table("Product");
             product.Indexes.Add(new IndexInfo("CIX_Product_Id") { IsUnique = true, IsClustered = true, Columns = { "Id" } });
-            product.Indexes.Add(new IndexInfo("IX_Product_Id") { Columns = { "Id" }, DescendingColumns = { "Id" }, Filter = "(\"Id\">(0))" });
+            product.Indexes.Add(new IndexInfo("IX_Product_Id") { Columns = { "Id" }, DescendingColumns = { "Id" }, Filter = "([Id]>(0))" });
             MapReader(product);
             MapComposer();
             var destination = new CustomDbConnection();
@@ -204,8 +204,8 @@ namespace RepoDb.Schema.Sqlite.UnitTests
 
             // Assert
             Assert.AreEqual(3, destination.ExecutedCommands.Count);
-            Assert.AreEqual("CREATE UNIQUE INDEX \"CIX_Product_Id\" ON \"Product\" (\"Id\");", destination.ExecutedCommands[1], StringComparer.Ordinal);
-            Assert.AreEqual("CREATE INDEX \"IX_Product_Id\" ON \"Product\" (\"Id\" DESC) WHERE (\"Id\">(0));", destination.ExecutedCommands[2], StringComparer.Ordinal);
+            Assert.AreEqual("CREATE UNIQUE INDEX [CIX_Product_Id] ON [Product] ([Id]);", destination.ExecutedCommands[1], StringComparer.Ordinal);
+            Assert.AreEqual("CREATE INDEX [IX_Product_Id] ON [Product] ([Id] DESC) WHERE ([Id]>(0));", destination.ExecutedCommands[2], StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -221,27 +221,27 @@ namespace RepoDb.Schema.Sqlite.UnitTests
 
             // Assert
             var tables = Tables(destination);
-            StringAssert.StartsWith(tables[0], "CREATE TABLE \"sales\".\"Invoice\"", StringComparison.Ordinal);
-            StringAssert.StartsWith(tables[1], "CREATE TABLE \"Ledger\"", StringComparison.Ordinal);
-            StringAssert.Contains(ForeignKeys(destination).Single(), "REFERENCES \"Invoice\" (\"Id\")", StringComparison.Ordinal);
+            StringAssert.StartsWith(tables[0], "CREATE TABLE [sales].[Invoice]", StringComparison.Ordinal);
+            StringAssert.StartsWith(tables[1], "CREATE TABLE [Ledger]", StringComparison.Ordinal);
+            StringAssert.Contains(ForeignKeys(destination).Single(), "REFERENCES [Invoice] ([Id])", StringComparison.Ordinal);
         }
 
         [TestMethod]
         public void TestSqliteCopySchemasToOfTablesWithNamesThatNeedQuoting()
         {
             // Setup
-            MapReader(SchemaTable(null, "Odd.Child", SqliteSchemaHelper.Format(null, "Odd.Name")), SchemaTable(null, "Odd.Name"));
+            MapReader(SchemaTable(null, "Odd.Child", SqliteSchemaHelper.FormatTableName(null, "Odd.Name")), SchemaTable(null, "Odd.Name"));
             MapComposer();
             var destination = new CustomDbConnection();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "\"Odd.Child\"", "\"Odd.Name\"" }, destination);
+            new CustomDbConnection().CopySchemaTo(new[] { "[Odd.Child]", "[Odd.Name]" }, destination);
 
             // Assert
             var tables = Tables(destination);
-            StringAssert.StartsWith(tables[0], "CREATE TABLE \"Odd.Name\"", StringComparison.Ordinal);
-            StringAssert.StartsWith(tables[1], "CREATE TABLE \"Odd.Child\"", StringComparison.Ordinal);
-            StringAssert.Contains(ForeignKeys(destination).Single(), "REFERENCES \"Odd.Name\" (\"Id\")", StringComparison.Ordinal);
+            StringAssert.StartsWith(tables[0], "CREATE TABLE [Odd.Name]", StringComparison.Ordinal);
+            StringAssert.StartsWith(tables[1], "CREATE TABLE [Odd.Child]", StringComparison.Ordinal);
+            StringAssert.Contains(ForeignKeys(destination).Single(), "REFERENCES [Odd.Name] ([Id])", StringComparison.Ordinal);
         }
 
         [TestMethod]
@@ -257,9 +257,9 @@ namespace RepoDb.Schema.Sqlite.UnitTests
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.TableName).ToArray());
-            StringAssert.StartsWith(results[0].Script, "CREATE TABLE \"Country\"", StringComparison.Ordinal);
-            StringAssert.StartsWith(results[1].Script, "CREATE TABLE \"Person\"", StringComparison.Ordinal);
-            StringAssert.Contains(results[1].Script, "CONSTRAINT \"FK_Person_Country\" FOREIGN KEY (\"CountryId\") REFERENCES \"Country\" (\"Id\")", StringComparison.Ordinal);
+            StringAssert.StartsWith(results[0].Script, "CREATE TABLE [Country]", StringComparison.Ordinal);
+            StringAssert.StartsWith(results[1].Script, "CREATE TABLE [Person]", StringComparison.Ordinal);
+            StringAssert.Contains(results[1].Script, "CONSTRAINT [FK_Person_Country] FOREIGN KEY ([CountryId]) REFERENCES [Country] ([Id])", StringComparison.Ordinal);
             Assert.AreEqual(1, results[1].ForeignKeyCount);
             Assert.AreEqual(CopySchemaOutcome.Created, results[0].Outcome);
         }
@@ -318,7 +318,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
             MapComposer();
-            var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("CREATE TABLE \"Person\"", StringComparison.Ordinal) };
+            var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("CREATE TABLE [Person]", StringComparison.Ordinal) };
             var errors = new List<CopySchemaError>();
 
             // Act
@@ -329,7 +329,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             Assert.AreEqual(1, errors[0].StatementIndex);
             Assert.AreEqual("Person", errors[0].TableName, StringComparer.Ordinal);
             Assert.IsNull(errors[0].SchemaName);
-            StringAssert.StartsWith(errors[0].Statement, "CREATE TABLE \"Person\"", StringComparison.Ordinal);
+            StringAssert.StartsWith(errors[0].Statement, "CREATE TABLE [Person]", StringComparison.Ordinal);
         }
 
         [TestMethod]
@@ -349,7 +349,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             // Assert
             Assert.AreEqual(1, errors.Count);
             Assert.AreEqual("Product", errors[0].TableName, StringComparer.Ordinal);
-            Assert.AreEqual("CREATE INDEX \"IX_Product_Id\" ON \"Product\" (\"Id\");", errors[0].Statement, StringComparer.Ordinal);
+            Assert.AreEqual("CREATE INDEX [IX_Product_Id] ON [Product] ([Id]);", errors[0].Statement, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -358,7 +358,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
             MapComposer();
-            var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("CREATE TABLE \"Person\"", StringComparison.Ordinal) };
+            var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("CREATE TABLE [Person]", StringComparison.Ordinal) };
             var created = new List<CopySchemaResult>();
 
             // Act
@@ -374,7 +374,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             Assert.AreEqual(CopySchemaOutcome.Created, created[0].Outcome);
             Assert.AreEqual(1, created[1].Errors.Count);
             Assert.AreEqual(CopySchemaOutcome.Failed, created[1].Outcome);
-            StringAssert.StartsWith(created[1].Errors[0].Statement, "CREATE TABLE \"Person\"", StringComparison.Ordinal);
+            StringAssert.StartsWith(created[1].Errors[0].Statement, "CREATE TABLE [Person]", StringComparison.Ordinal);
         }
 
         [TestMethod]
@@ -383,7 +383,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
             MapComposer();
-            var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("CREATE TABLE \"Country\"", StringComparison.Ordinal) };
+            var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("CREATE TABLE [Country]", StringComparison.Ordinal) };
 
             // Act/Assert
             Assert.Throws<NotSupportedException>(() =>
@@ -402,7 +402,7 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
             MapComposer();
-            var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("CREATE TABLE \"Person\"", StringComparison.Ordinal) };
+            var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("CREATE TABLE [Person]", StringComparison.Ordinal) };
             CopySchemaError raised = null;
 
             // Act
@@ -470,14 +470,14 @@ namespace RepoDb.Schema.Sqlite.UnitTests
             // Assert
             CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.TableName).ToArray());
             Assert.AreEqual(CopySchemaExistsBehavior.Throw, results[1].Action);
-            StringAssert.Contains(results[1].Script, "CREATE TABLE \"Person\"", StringComparison.Ordinal);
+            StringAssert.Contains(results[1].Script, "CREATE TABLE [Person]", StringComparison.Ordinal);
         }
 
         #endregion
 
         private static TableInfo Reference(string name)
         {
-            var (schema, table) = SqliteSchemaHelper.Parse(name);
+            var (schema, table) = SqliteSchemaHelper.ParseSchemaAndTable(name);
             return new TableInfo(table, schema);
         }
     }

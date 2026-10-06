@@ -9,7 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using RepoDb.Connector.MariaDbConnector;
+using RepoDb.Connector.MariaDb;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Schema.MariaDb.IntegrationTests.Setup;
 using RepoDb.Schema.Models;

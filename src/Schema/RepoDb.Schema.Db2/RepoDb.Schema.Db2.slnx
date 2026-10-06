@@ -1,0 +1,13 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="../../Providers/RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="../../Providers/RepoDb.Db2/RepoDb.Db2/RepoDb.Db2.csproj" />
+  <Project Path="../RepoDb.Schema.Core/RepoDb.Schema.Core/RepoDb.Schema.Core.csproj" />
+  <Project Path="RepoDb.Schema.Db2/RepoDb.Schema.Db2.csproj" />
+  <Project Path="RepoDb.Schema.Db2.UnitTests/RepoDb.Schema.Db2.UnitTests.csproj" />
+  <Project Path="RepoDb.Schema.Db2.IntegrationTests/RepoDb.Schema.Db2.IntegrationTests.csproj" />
+</Solution>

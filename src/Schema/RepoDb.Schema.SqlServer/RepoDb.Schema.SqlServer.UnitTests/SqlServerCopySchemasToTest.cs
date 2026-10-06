@@ -229,7 +229,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         public void TestSqlServerCopySchemasToOfTablesWithNamesThatNeedQuoting()
         {
             // Setup
-            MapReader(SchemaTable("dbo", "Odd.Child", SqlServerSchemaHelper.Format("dbo", "Odd.Name")), SchemaTable("dbo", "Odd.Name"));
+            MapReader(SchemaTable("dbo", "Odd.Child", SqlServerSchemaHelper.FormatTableName("dbo", "Odd.Name")), SchemaTable("dbo", "Odd.Name"));
             MapComposer();
             var destination = new CustomDbConnection();
 
@@ -476,7 +476,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
 
         private static TableInfo Reference(string name)
         {
-            var (schema, table) = SqlServerSchemaHelper.Parse(name);
+            var (schema, table) = SqlServerSchemaHelper.ParseSchemaAndTable(name);
             return new TableInfo(table, schema);
         }
     }

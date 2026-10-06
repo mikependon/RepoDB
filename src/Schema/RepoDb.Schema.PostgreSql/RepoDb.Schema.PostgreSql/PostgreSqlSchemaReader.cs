@@ -28,7 +28,6 @@ namespace RepoDb.Schema
     {
         #region Private Variables
 
-        private const string DefaultSchema = "public";
         private readonly IDbConnection _connection;
         private readonly IDbTransaction _transaction;
         private readonly PostgreSqlDbTypeNameToClientTypeResolver _typeResolver = new PostgreSqlDbTypeNameToClientTypeResolver();
@@ -84,7 +83,7 @@ namespace RepoDb.Schema
         public bool TableExists(string tableName)
         {
             var (schema, table) = ParseTableName(tableName);
-            schema = schema ?? ResolveSchemaName(table) ?? DefaultSchema;
+            schema = schema ?? ResolveSchemaName(table) ?? PostgreSqlSchemaHelper.DefaultSchema;
             return Query(PostgreSqlSchemaText.TableExistsSql, SchemaTraceKeys.TableExists, r => Convert.ToInt32(r[0]), FullNameParameter(FullName(schema, table))).FirstOrDefault() == 1;
         }
 
@@ -150,7 +149,7 @@ namespace RepoDb.Schema
         /// <param name="schemaName">The name of the schema to be read. The default is <c>null</c>, which reads all the schemas.</param>
         /// <returns>The names of the tables.</returns>
         public IEnumerable<string> GetTables(string schemaName = null) =>
-            Query(PostgreSqlSchemaText.TablesSql, SchemaTraceKeys.GetTables, r => PostgreSqlSchemaHelper.Format(r.GetString(0), r.GetString(1)), Parameter("SchemaName", schemaName));
+            Query(PostgreSqlSchemaText.TablesSql, SchemaTraceKeys.GetTables, r => PostgreSqlSchemaHelper.FormatTableName(r.GetString(0), r.GetString(1)), Parameter("SchemaName", schemaName));
 
         /// <summary>
         /// Gets the relationships of the tables (as defined by their foreign keys), ordered so that a table always comes after the tables that it references.
@@ -183,7 +182,7 @@ namespace RepoDb.Schema
                 ? new List<(TableInfo Child, TableInfo Parent)>()
                 : Query(PostgreSqlSchemaText.ForeignKeyRelationshipsSql, SchemaTraceKeys.GetRelationships, MapRelationship);
             return CopySchemaRelationshipExpander.Expand(tables, foreignKeys, relationshipBehavior, Key)
-                .Select(table => PostgreSqlSchemaHelper.Format(table.Schema, table.Name))
+                .Select(table => PostgreSqlSchemaHelper.FormatTableName(table.Schema, table.Name))
                 .ToList();
         }
 
@@ -224,7 +223,7 @@ namespace RepoDb.Schema
             CancellationToken cancellationToken = default)
         {
             var (schema, table) = ParseTableName(tableName);
-            schema = schema ?? await ResolveSchemaNameAsync(table, cancellationToken).ConfigureAwait(false) ?? DefaultSchema;
+            schema = schema ?? await ResolveSchemaNameAsync(table, cancellationToken).ConfigureAwait(false) ?? PostgreSqlSchemaHelper.DefaultSchema;
             var result = await QueryAsync(PostgreSqlSchemaText.TableExistsSql, SchemaTraceKeys.TableExists, r => Convert.ToInt32(r[0]), cancellationToken, FullNameParameter(FullName(schema, table))).ConfigureAwait(false);
             return result.FirstOrDefault() == 1;
         }
@@ -307,7 +306,7 @@ namespace RepoDb.Schema
         /// <returns>A task that represents the asynchronous operation. The task result contains: the names of the tables.</returns>
         public async Task<IEnumerable<string>> GetTablesAsync(string schemaName = null,
             CancellationToken cancellationToken = default) =>
-            await QueryAsync(PostgreSqlSchemaText.TablesSql, SchemaTraceKeys.GetTables, r => PostgreSqlSchemaHelper.Format(r.GetString(0), r.GetString(1)), cancellationToken, Parameter("SchemaName", schemaName)).ConfigureAwait(false);
+            await QueryAsync(PostgreSqlSchemaText.TablesSql, SchemaTraceKeys.GetTables, r => PostgreSqlSchemaHelper.FormatTableName(r.GetString(0), r.GetString(1)), cancellationToken, Parameter("SchemaName", schemaName)).ConfigureAwait(false);
 
         /// <summary>
         /// Gets the relationships of the tables (as defined by their foreign keys), ordered so that a table always comes after the tables that it references.
@@ -354,7 +353,7 @@ namespace RepoDb.Schema
                 foreignKeys = await QueryAsync(PostgreSqlSchemaText.ForeignKeyRelationshipsSql, SchemaTraceKeys.GetRelationships, MapRelationship, cancellationToken).ConfigureAwait(false);
             }
             return CopySchemaRelationshipExpander.Expand(tables, foreignKeys, relationshipBehavior, Key)
-                .Select(table => PostgreSqlSchemaHelper.Format(table.Schema, table.Name))
+                .Select(table => PostgreSqlSchemaHelper.FormatTableName(table.Schema, table.Name))
                 .ToList();
         }
 
@@ -372,7 +371,7 @@ namespace RepoDb.Schema
         /// <param name="tableName"></param>
         /// <returns></returns>
         private static (string Schema, string Table) ParseTableName(string tableName) =>
-            PostgreSqlSchemaHelper.Parse(tableName);
+            PostgreSqlSchemaHelper.ParseSchemaAndTable(tableName);
 
         /// <summary>
         ///
@@ -381,7 +380,7 @@ namespace RepoDb.Schema
         /// <param name="table"></param>
         /// <returns></returns>
         private static string FullName(string schema, string table) =>
-            $"{PostgreSqlSchemaHelper.Quote(schema)}.{PostgreSqlSchemaHelper.Quote(table)}";
+            PostgreSqlSchemaHelper.QuoteSchemaAndTable(schema, table);
 
         /// <summary>
         ///
@@ -389,7 +388,7 @@ namespace RepoDb.Schema
         /// <param name="tableName"></param>
         /// <returns></returns>
         private static string Key(TableInfo table) =>
-            $"{table.Schema ?? DefaultSchema}\u0001{table.Name}";
+            $"{table.Schema ?? PostgreSqlSchemaHelper.DefaultSchema}\u0001{table.Name}";
 
         /// <summary>
         ///
@@ -399,7 +398,7 @@ namespace RepoDb.Schema
         private (string Schema, string Table) Resolve(string tableName)
         {
             var (schema, table) = ParseTableName(tableName);
-            return (schema ?? ResolveSchemaName(table) ?? DefaultSchema, table);
+            return (schema ?? ResolveSchemaName(table) ?? PostgreSqlSchemaHelper.DefaultSchema, table);
         }
 
         /// <summary>
@@ -412,7 +411,7 @@ namespace RepoDb.Schema
             CancellationToken cancellationToken)
         {
             var (schema, table) = ParseTableName(tableName);
-            return (schema ?? await ResolveSchemaNameAsync(table, cancellationToken).ConfigureAwait(false) ?? DefaultSchema, table);
+            return (schema ?? await ResolveSchemaNameAsync(table, cancellationToken).ConfigureAwait(false) ?? PostgreSqlSchemaHelper.DefaultSchema, table);
         }
 
         /// <summary>
