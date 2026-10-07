@@ -1,4 +1,4 @@
-# RepoDb.Turso
+# RepoDb.Sqlite.Turso
 
 RepoDB provider for [Turso's .NET bindings](https://github.com/tursodatabase/turso/tree/main/bindings/dotnet),
 copied from `RepoDb.Sqlite.Microsoft` and adapted to the SQLite-compatible
@@ -7,7 +7,7 @@ supported by the underlying driver.
 
 ## Getting started
 
-Reference `RepoDb.Turso`, then initialize it once before using RepoDB operations:
+Reference `RepoDb.Sqlite.Turso`, then initialize it once before using RepoDB operations:
 
 ```csharp
 using RepoDb;

@@ -1,0 +1,45 @@
+name: Build & Run Tests - RepoDb.Sqlite.Turso (Push)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'src/Providers/RepoDb.Core/**'
+      - 'src/Providers/RepoDb.Sqlite.Turso/**'
+      - 'src/Providers/RepoDb.Sqlite.Microsoft/**'
+      - 'src/Directory.Build.props'
+      - 'global.json'
+      - '.github/workflows/build-sqlite-turso.yml'
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: src/Providers/RepoDb.Sqlite.Turso
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+            10.0.x
+      - name: Build
+        run: dotnet build RepoDb.Sqlite.Turso.sln -c Release
+      - name: Test .NET 8
+        run: dotnet test --solution RepoDb.Sqlite.Turso.sln -c Release -f net8.0 --no-build
+      - name: Test .NET 9
+        run: dotnet test --solution RepoDb.Sqlite.Turso.sln -c Release -f net9.0 --no-build
+      - name: Test .NET 10
+        run: dotnet test --solution RepoDb.Sqlite.Turso.sln -c Release -f net10.0 --no-build
+      - name: Pack
+        run: dotnet pack RepoDb.Sqlite.Turso/RepoDb.Sqlite.Turso.csproj -c Release --no-build -p:Version=1.14.0-dev-${{ github.run_number }} -o release
+      - uses: actions/upload-artifact@v5
+        with:
+          name: release-sqlite-turso-${{ matrix.os }}
+          path: src/Providers/RepoDb.Sqlite.Turso/release/*.nupkg

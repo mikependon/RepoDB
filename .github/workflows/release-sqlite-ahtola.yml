@@ -1,4 +1,4 @@
-name: Release - RepoDb.Turso (Manual)
+name: Release - RepoDb.Sqlite.Ahtola (Manual)
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
         required: true
         type: string
       dependency-overrides:
-        description: "Set RepoDbCoreVersion=<version> if RepoDb.Core is not being released at the same version"
+        description: "Set RepoDbCoreVersion=<version> if RepoDb.Core is not being released at the same version this run (e.g. RepoDbCoreVersion=1.14.0)"
         required: false
         type: string
         default: ''
@@ -19,5 +19,5 @@ jobs:
     with:
       version: ${{ inputs.version }}
       dependency-overrides: ${{ inputs.dependency-overrides }}
-      project-name: RepoDb.Turso
-      project-path: src/Providers/RepoDb.Turso/RepoDb.Turso/RepoDb.Turso.csproj
+      project-name: RepoDb.Sqlite.Ahtola
+      project-path: src/Providers/RepoDb.Sqlite.Ahtola/RepoDb.Sqlite.Ahtola/RepoDb.Sqlite.Ahtola.csproj

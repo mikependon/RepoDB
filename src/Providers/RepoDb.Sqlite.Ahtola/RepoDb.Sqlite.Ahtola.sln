@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Ahtola", "RepoDb.Ahtola\RepoDb.Ahtola.csproj", "{F2D7D216-5198-4508-A806-741172D4BB75}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Sqlite.Ahtola", "RepoDb.Sqlite.Ahtola\RepoDb.Sqlite.Ahtola.csproj", "{F2D7D216-5198-4508-A806-741172D4BB75}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb", "..\RepoDb.Core\RepoDb\RepoDb.csproj", "{184B72D5-19F5-4018-81B6-52CD5ECF1C76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Ahtola.UnitTests", "RepoDb.Ahtola.UnitTests\RepoDb.Ahtola.UnitTests.csproj", "{F2BCA42B-983D-4434-B07F-000F1C829426}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Sqlite.Ahtola.UnitTests", "RepoDb.Sqlite.Ahtola.UnitTests\RepoDb.Sqlite.Ahtola.UnitTests.csproj", "{F2BCA42B-983D-4434-B07F-000F1C829426}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Ahtola.IntegrationTests", "RepoDb.Ahtola.IntegrationTests\RepoDb.Ahtola.IntegrationTests.csproj", "{41FA0B58-0752-4B81-989A-B1279871860D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Sqlite.Ahtola.IntegrationTests", "RepoDb.Sqlite.Ahtola.IntegrationTests\RepoDb.Sqlite.Ahtola.IntegrationTests.csproj", "{41FA0B58-0752-4B81-989A-B1279871860D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

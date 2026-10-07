@@ -14,7 +14,7 @@
     <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Providers\RepoDb.Ahtola\RepoDb.Ahtola\RepoDb.Ahtola.csproj" />
+    <ProjectReference Include="..\..\Providers\RepoDb.Sqlite.Ahtola\RepoDb.Sqlite.Ahtola\RepoDb.Sqlite.Ahtola.csproj" />
     <ProjectReference Include="..\RepoDb.Benchmarks.Core\RepoDb.Benchmarks.Core.csproj" />
   </ItemGroup>
 </Project>

@@ -121,7 +121,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.DuckDb.BulkOperation
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Benchmarks.Ahtola", "RepoDb.Benchmarks.Ahtola\RepoDb.Benchmarks.Ahtola.csproj", "{28208CD3-0D66-445B-A00F-1AE9DF2183C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Ahtola", "..\Providers\RepoDb.Ahtola\RepoDb.Ahtola\RepoDb.Ahtola.csproj", "{09EFD3B9-1A03-4E83-BF10-CEDA46F0DA2F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Sqlite.Ahtola", "..\Providers\RepoDb.Sqlite.Ahtola\RepoDb.Sqlite.Ahtola\RepoDb.Sqlite.Ahtola.csproj", "{09EFD3B9-1A03-4E83-BF10-CEDA46F0DA2F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

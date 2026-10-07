@@ -1,0 +1,19 @@
+name: Build & Run Tests - RepoDb.Sqlite.Ahtola (Push)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'src/Providers/RepoDb.Core/**'
+      - 'src/Providers/RepoDb.Sqlite.Ahtola/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-sqlite-ahtola.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: src/Providers/RepoDb.Sqlite.Ahtola
+      solution-file: RepoDb.Sqlite.Ahtola.sln
+      artifact-name: release-sqlite-ahtola
+      db-engine: none

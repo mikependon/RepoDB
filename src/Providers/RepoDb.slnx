@@ -4,10 +4,10 @@
     <Project Path="RepoDb.Core/RepoDb.Tests/RepoDb.UnitTests/RepoDb.UnitTests.csproj" />
     <Project Path="RepoDb.Core/RepoDb.Tests/RepoDb.IntegrationTests/RepoDb.IntegrationTests.csproj" />
   </Folder>
-  <Folder Name="/Ahtola/Core/">
-    <Project Path="RepoDb.Ahtola/RepoDb.Ahtola/RepoDb.Ahtola.csproj" />
-    <Project Path="RepoDb.Ahtola/RepoDb.Ahtola.UnitTests/RepoDb.Ahtola.UnitTests.csproj" />
-    <Project Path="RepoDb.Ahtola/RepoDb.Ahtola.IntegrationTests/RepoDb.Ahtola.IntegrationTests.csproj" />
+  <Folder Name="/Sqlite.Ahtola/Core/">
+    <Project Path="RepoDb.Sqlite.Ahtola/RepoDb.Sqlite.Ahtola/RepoDb.Sqlite.Ahtola.csproj" />
+    <Project Path="RepoDb.Sqlite.Ahtola/RepoDb.Sqlite.Ahtola.UnitTests/RepoDb.Sqlite.Ahtola.UnitTests.csproj" />
+    <Project Path="RepoDb.Sqlite.Ahtola/RepoDb.Sqlite.Ahtola.IntegrationTests/RepoDb.Sqlite.Ahtola.IntegrationTests.csproj" />
   </Folder>
   <Folder Name="/AuroraDb/MySqlConnector/Core/">
     <Project Path="RepoDb.AuroraDb.MySqlConnector/RepoDb.AuroraDb.MySqlConnector/RepoDb.AuroraDb.MySqlConnector.csproj" />
@@ -140,10 +140,10 @@
     <Project Path="RepoDb.Sqlite.Microsoft/RepoDb.Sqlite.Microsoft.UnitTests/RepoDb.Sqlite.Microsoft.UnitTests.csproj" />
     <Project Path="RepoDb.Sqlite.Microsoft/RepoDb.Sqlite.Microsoft.IntegrationTests/RepoDb.Sqlite.Microsoft.IntegrationTests.csproj" />
   </Folder>
-  <Folder Name="/Turso/Core/">
-    <Project Path="RepoDb.Turso/RepoDb.Turso/RepoDb.Turso.csproj" />
-    <Project Path="RepoDb.Turso/RepoDb.Turso.UnitTests/RepoDb.Turso.UnitTests.csproj" />
-    <Project Path="RepoDb.Turso/RepoDb.Turso.IntegrationTests/RepoDb.Turso.IntegrationTests.csproj" />
+  <Folder Name="/Sqlite.Turso/Core/">
+    <Project Path="RepoDb.Sqlite.Turso/RepoDb.Sqlite.Turso/RepoDb.Sqlite.Turso.csproj" />
+    <Project Path="RepoDb.Sqlite.Turso/RepoDb.Sqlite.Turso.UnitTests/RepoDb.Sqlite.Turso.UnitTests.csproj" />
+    <Project Path="RepoDb.Sqlite.Turso/RepoDb.Sqlite.Turso.IntegrationTests/RepoDb.Sqlite.Turso.IntegrationTests.csproj" />
   </Folder>
   <Folder Name="/SqlServer/Core/">
     <Project Path="RepoDb.SqlServer/RepoDb.SqlServer/RepoDb.SqlServer.csproj" />

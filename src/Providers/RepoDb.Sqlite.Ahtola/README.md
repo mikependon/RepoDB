@@ -1,14 +1,14 @@
 <div align="center">
     <a href="https://github.com/Devolutions/ahtola"><image src="SQLite.png" style="width:256px;" /></a>
     <br/>
-    <span style="font-size:28px;font-weight:bold;"><strong>RepoDb.Ahtola</strong></span>
+    <span style="font-size:28px;font-weight:bold;"><strong>RepoDb.Sqlite.Ahtola</strong></span>
     <br/>
     <span style="font-size:16px;">RepoDB for Ahtola, a pure managed (C#) SQLite-compatible engine.</span>
 </div>
 
 -----
 
-# RepoDb.Ahtola — RepoDB for Ahtola (Devolutions.Ahtola.Data.Sqlite)
+# RepoDb.Sqlite.Ahtola — RepoDB for Ahtola (Devolutions.Ahtola.Data.Sqlite)
 
 The [Ahtola](https://github.com/Devolutions/ahtola) provider for RepoDB — a fast, lightweight .NET ORM that lets you use raw SQL and fluent operations side by side on the same connection. Built on top of [RepoDb](https://repodb.net) and [Devolutions.Ahtola.Data.Sqlite](https://www.nuget.org/packages/Devolutions.Ahtola.Data.Sqlite), a pure managed port of Turso's SQLite-compatible engine (no native SQLite library required).
 
@@ -48,7 +48,7 @@ This provider is a copy of `RepoDb.Sqlite.Microsoft` re-targeted at Ahtola's `Mi
 ## Installation
 
 ```
-Install-Package RepoDb.Ahtola
+Install-Package RepoDb.Sqlite.Ahtola
 ```
 
 Or visit the [installation](http://repodb.net/tutorial/installation) page for more options.

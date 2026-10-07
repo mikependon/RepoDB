@@ -1,14 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Title>RepoDb.Turso</Title>
-    <AssemblyName>RepoDb.Turso</AssemblyName>
+    <Title>RepoDb.Sqlite.Ahtola</Title>
+    <AssemblyName>RepoDb.Sqlite.Ahtola</AssemblyName>
     <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
     <LangVersion>preview</LangVersion>
     <Nullable>annotations</Nullable>
-    <Description>A hybrid .NET ORM library for Turso (using Turso.Data.Sqlite.Provider).</Description>
-    <PackageTags>orm hybrid-orm micro-orm sqlite turso libsql</PackageTags>
-    <RepositoryUrl>https://github.com/mamoreau-devolutions/RepoDB/tree/master/src/Providers/RepoDb.Turso</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/mamoreau-devolutions/RepoDB/tree/master/src/Providers/RepoDb.Turso</PackageProjectUrl>
+    <Description>A hybrid .NET ORM library for Ahtola, a pure managed SQLite-compatible engine (using Devolutions.Ahtola.Data.Sqlite).</Description>
+    <PackageTags>orm hybrid-orm micro-orm sqlite ahtola</PackageTags>
+    <RepositoryUrl>https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.Sqlite.Ahtola</RepositoryUrl>
+    <PackageReleaseNotes>http://repodb.net/release/sqlite</PackageReleaseNotes>
+    <PackageProjectUrl>https://repodb.net/tutorial/get-started-sqlite</PackageProjectUrl>
     <PackageIcon>SQLite.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
@@ -19,7 +20,7 @@
     <None Remove="Properties\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Turso.Data.Sqlite.Provider" Version="0.8.1" />
+    <PackageReference Include="Devolutions.Ahtola.Data.Sqlite" Version="0.9.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
