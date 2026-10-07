@@ -75,7 +75,7 @@
     <InternalsVisibleTo Include="RepoDb.CockroachDb.BulkOperations" />
     <InternalsVisibleTo Include="RepoDb.AuroraDb.PostgreSql.BulkOperations" />
     <InternalsVisibleTo Include="RepoDb.AuroraDb.MySqlConnector.BulkOperations" />
-    <InternalsVisibleTo Include="RepoDb.Ahtola" />
+    <InternalsVisibleTo Include="RepoDb.Sqlite.Ahtola" />
     <InternalsVisibleTo Include="RepoDb.AuroraDb.MySqlConnector" />
     <InternalsVisibleTo Include="RepoDb.AuroraDb.PostgreSql" />
     <InternalsVisibleTo Include="RepoDb.ClickHouse" />
@@ -106,11 +106,14 @@
     <InternalsVisibleTo Include="RepoDb.Schema.Oracle" />
     <InternalsVisibleTo Include="RepoDb.Schema.SapHana" />
     <InternalsVisibleTo Include="RepoDb.Schema.Vertica" />
+    <InternalsVisibleTo Include="RepoDb.Schema.AuroraDbMySqlConnector" />
+    <InternalsVisibleTo Include="RepoDb.Schema.AuroraDbPostgreSql" />
+    <InternalsVisibleTo Include="RepoDb.Schema.ClickHouse" />
     <InternalsVisibleTo Include="RepoDb.SqlServer" />
     <InternalsVisibleTo Include="RepoDb.Sqlite.Microsoft" />
     <InternalsVisibleTo Include="RepoDb.Telemetry.Core" />
     <InternalsVisibleTo Include="RepoDb.Telemetry.Default" />
-    <InternalsVisibleTo Include="RepoDb.Turso" />
+    <InternalsVisibleTo Include="RepoDb.Sqlite.Turso" />
     <InternalsVisibleTo Include="RepoDb.Vertica" />
   </ItemGroup>
 </Project>
