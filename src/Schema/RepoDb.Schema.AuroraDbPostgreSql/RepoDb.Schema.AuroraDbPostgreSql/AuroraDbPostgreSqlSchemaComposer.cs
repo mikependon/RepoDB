@@ -1,0 +1,342 @@
+#region Copyright Attributions
+
+// Copyright (c) 2026 Michael Camara Pendon.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using RepoDb.Resolvers;
+using RepoDb.Schema.Enumerations;
+using RepoDb.Schema.Models;
+
+namespace RepoDb.Schema
+{
+    /// <summary>
+    /// An <see cref="ISchemaComposer"/> that composes the SQL statements, in the dialect of PostgreSQL, that create the objects of a table.
+    /// The column types are mapped on a best-effort basis, so the schema can come from a PostgreSQL database or from another database engine.
+    /// The collations are not composed, as they are specific to the database that they came from.
+    /// </summary>
+    public class AuroraDbPostgreSqlSchemaComposer : ISchemaComposer
+    {
+        #region Private Variables
+
+        private readonly DbTypeNameToAuroraDbPostgreSqlTypeNameResolver _typeNameResolver = new DbTypeNameToAuroraDbPostgreSqlTypeNameResolver();
+        private readonly ClientTypeToAuroraDbPostgreSqlTypeNameResolver _clientTypeResolver = new ClientTypeToAuroraDbPostgreSqlTypeNameResolver();
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Composes the whole script that creates the table, its indexes and its foreign keys, as an ordered list of statements.
+        /// </summary>
+        /// <param name="schema">The schema of the table.</param>
+        /// <returns>The ordered SQL statements. Execute them in order.</returns>
+        public IEnumerable<string> ComposeSchema(TableSchema schema) =>
+            ComposeSchemas(new[] { schema ?? throw new ArgumentNullException(nameof(schema)) });
+
+        /// <summary>
+        /// Composes the whole script that creates the tables, their indexes and their foreign keys, as an ordered list of statements.
+        /// All the tables are created first, then all the indexes and then all the foreign keys, so the tables can be given in any order
+        /// and can reference each other (even in a circular way) as long as the referenced tables are part of the given tables
+        /// or already exist in the destination database.
+        /// The statements are ordered like this: one statement for each table (in the given order), then one statement for each index
+        /// (the tables in the given order), then one statement for each foreign key (the tables in the given order).
+        /// </summary>
+        /// <param name="schemas">The schemas of the tables.</param>
+        /// <returns>The ordered SQL statements. Execute them in order.</returns>
+        public IEnumerable<string> ComposeSchemas(IEnumerable<TableSchema> schemas)
+        {
+            if (schemas == null)
+            {
+                throw new ArgumentNullException(nameof(schemas));
+            }
+
+            var list = schemas.ToList();
+            var statements = new List<string>();
+            statements.AddRange(list.Select(ComposeCreateTable));
+            statements.AddRange(list.SelectMany(schema => schema.Indexes.Select(index => ComposeCreateIndex(TableName(schema), index))));
+            statements.AddRange(list.SelectMany(schema => schema.ForeignKeys.Select(foreignKey => ComposeAddForeignKey(TableName(schema), foreignKey))));
+            return statements;
+        }
+
+        /// <summary>
+        /// Composes the statement that creates the table, including its columns, primary key, unique constraints and check constraints.
+        /// </summary>
+        /// <param name="schema">The schema of the table.</param>
+        /// <returns>The SQL statement.</returns>
+        public string ComposeCreateTable(TableSchema schema)
+        {
+            if (schema == null)
+            {
+                throw new ArgumentNullException(nameof(schema));
+            }
+            if (schema.Columns.Count == 0)
+            {
+                // PostgreSQL accepts a table without columns, so a table that does not exist in the source would be silently created as an empty one
+                throw new ArgumentException("The table has no columns, so it does not exist or it cannot be created.", nameof(schema));
+            }
+
+            var definitions = new List<string>();
+            definitions.AddRange(schema.Columns.OrderBy(c => c.Ordinal).Select(Column));
+
+            if (schema.PrimaryKey != null && schema.PrimaryKey.Columns.Count > 0)
+            {
+                definitions.Add($"{ConstraintName(schema.PrimaryKey.Name)}PRIMARY KEY ({Columns(schema.PrimaryKey.Columns)})");
+            }
+            definitions.AddRange(schema.UniqueConstraints.Select(u => $"{ConstraintName(u.Name)}UNIQUE ({Columns(u.Columns)})"));
+            definitions.AddRange(schema.CheckConstraints.Select(c => $"{ConstraintName(c.Name)}CHECK ({c.Expression})"));
+
+            return $"CREATE TABLE {Name(TableName(schema))} ({Environment.NewLine}    {string.Join("," + Environment.NewLine + "    ", definitions)}{Environment.NewLine});";
+        }
+
+        /// <summary>
+        /// Composes the statement that creates an index.
+        /// </summary>
+        /// <param name="tableName">The name of the table.</param>
+        /// <param name="index">The index to be created.</param>
+        /// <returns>The SQL statement.</returns>
+        public string ComposeCreateIndex(string tableName,
+            IndexInfo index)
+        {
+            if (index == null)
+            {
+                throw new ArgumentNullException(nameof(index));
+            }
+            var keys = string.Join(", ", index.Columns.Select(column =>
+                index.DescendingColumns != null && index.DescendingColumns.Contains(column, StringComparer.Ordinal)
+                    ? $"{Quote(column)} DESC"
+                    : Quote(column)));
+            var statement = new StringBuilder($"CREATE {(index.IsUnique ? "UNIQUE " : string.Empty)}INDEX {Quote(index.Name)} ON {Name(tableName)} ({keys})");
+            if (index.IncludedColumns != null && index.IncludedColumns.Count > 0)
+            {
+                statement.Append($" INCLUDE ({Columns(index.IncludedColumns)})");
+            }
+            if (!string.IsNullOrWhiteSpace(index.Filter))
+            {
+                statement.Append($" WHERE {index.Filter}");
+            }
+            return statement.Append(';').ToString();
+        }
+
+        /// <summary>
+        /// Composes the statement that adds a foreign key.
+        /// </summary>
+        /// <param name="tableName">The name of the table.</param>
+        /// <param name="foreignKey">The foreign key to be added.</param>
+        /// <returns>The SQL statement.</returns>
+        public string ComposeAddForeignKey(string tableName,
+            ForeignKeyInfo foreignKey)
+        {
+            if (foreignKey == null)
+            {
+                throw new ArgumentNullException(nameof(foreignKey));
+            }
+
+            return $"ALTER TABLE {Name(tableName)} ADD {ConstraintName(foreignKey.Name)}FOREIGN KEY ({Columns(foreignKey.Columns)}) " +
+                $"REFERENCES {Name(TableName(foreignKey.ReferencedTable))} ({Columns(foreignKey.ReferencedColumns)})" +
+                $"{Rule("DELETE", foreignKey.DeleteRule)}{Rule("UPDATE", foreignKey.UpdateRule)};";
+        }
+
+        /// <summary>
+        /// Composes the statement that adds a column to an existing table.
+        /// </summary>
+        /// <param name="tableName">The name of the table.</param>
+        /// <param name="column">The column to be added.</param>
+        /// <returns>The SQL statement.</returns>
+        public string ComposeAddColumn(string tableName,
+            ColumnInfo column) =>
+            $"ALTER TABLE {Name(tableName)} ADD COLUMN {Column(column ?? throw new ArgumentNullException(nameof(column)))};";
+
+        /// <summary>
+        /// Composes the statement that drops the table.
+        /// </summary>
+        /// <param name="tableName">The name of the table.</param>
+        /// <returns>The SQL statement.</returns>
+        public string ComposeDropTable(string tableName) =>
+            $"DROP TABLE IF EXISTS {Name(tableName)};";
+
+        /// <summary>
+        /// Composes the name of the table, in the dialect of the destination database, so it can be given to the other methods that take the name of a table.
+        /// </summary>
+        /// <param name="table">The identity (name and schema) of the table.</param>
+        /// <returns>The name of the table.</returns>
+        public string ComposeName(TableInfo table) =>
+            AuroraDbPostgreSqlSchemaHelper.FormatTableName((table ?? throw new ArgumentNullException(nameof(table))).Schema, table.Name);
+
+        /// <summary>
+        /// Composes the statement that checks whether the table exists in the destination database.
+        /// </summary>
+        /// <param name="tableName">The name of the table.</param>
+        /// <returns>The SQL statement, that returns <c>1</c> if the table exists, and <c>0</c> if not.</returns>
+        public string ComposeTableExists(string tableName) =>
+            $"SELECT CASE WHEN EXISTS (SELECT 1 FROM pg_class WHERE oid = to_regclass('{Literal(Name(tableName))}') AND relkind IN ('r', 'p')) THEN 1 ELSE 0 END;";
+
+        /// <summary>
+        /// Composes the statement that checks whether a column exists in a table of the destination database.
+        /// </summary>
+        /// <param name="tableName">The name of the table.</param>
+        /// <param name="columnName">The name of the column.</param>
+        /// <returns>The SQL statement, that returns <c>1</c> if the column exists, and <c>0</c> if not.</returns>
+        public string ComposeColumnExists(string tableName,
+            string columnName) =>
+            $"SELECT CASE WHEN EXISTS (SELECT 1 FROM pg_attribute WHERE attrelid = to_regclass('{Literal(Name(tableName))}') AND attname = '{Literal(columnName)}' AND attnum > 0 AND NOT attisdropped) THEN 1 ELSE 0 END;";
+
+        /// <summary>
+        /// Composes the statement that checks whether an index exists in a table of the destination database.
+        /// </summary>
+        /// <param name="tableName">The name of the table.</param>
+        /// <param name="indexName">The name of the index.</param>
+        /// <returns>The SQL statement, that returns <c>1</c> if the index exists, and <c>0</c> if not.</returns>
+        public string ComposeIndexExists(string tableName,
+            string indexName) =>
+            $"SELECT CASE WHEN EXISTS (SELECT 1 FROM pg_index i INNER JOIN pg_class ic ON ic.oid = i.indexrelid WHERE i.indrelid = to_regclass('{Literal(Name(tableName))}') AND ic.relname = '{Literal(indexName)}') THEN 1 ELSE 0 END;";
+
+        /// <summary>
+        /// Composes the data type of a column (including its size, precision and scale) in the dialect of the destination database.
+        /// </summary>
+        /// <param name="column">The column (as read from the source database) to be mapped.</param>
+        /// <returns>The destination data type, i.e.: <c>VARCHAR(128)</c>.</returns>
+        public string ComposeTypeName(ColumnInfo column)
+        {
+            if (column == null)
+            {
+                throw new ArgumentNullException(nameof(column));
+            }
+
+            var field = column.Field ?? throw new ArgumentException("The column has no field.", nameof(column));
+            var type = _typeNameResolver.Resolve(field.DatabaseType) ?? _clientTypeResolver.Resolve(field.Type);
+
+            switch (type)
+            {
+                case "char":
+                    return $"char({(field.Size > 0 ? field.Size.ToString() : "1")})";
+                case "varchar":
+                    return field.Size > 0 ? $"varchar({field.Size})" : type;
+                case "numeric":
+                    return field.Precision > 0 ? $"numeric({field.Precision},{field.Scale ?? 0})" : type;
+                case "timestamp":
+                case "timestamptz":
+                case "time":
+                case "timetz":
+                    return field.Scale.HasValue ? $"{type}({Math.Min(field.Scale.Value, (byte)6)})" : type;
+                default:
+                    return type;
+            }
+        }
+
+        #endregion
+
+        #region Helpers
+
+        // Names
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private static string Quote(string name) =>
+            AuroraDbPostgreSqlSchemaHelper.Quote(name);
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private static string Name(string name) =>
+            AuroraDbPostgreSqlSchemaHelper.QuoteName(name);
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private static string Literal(string value) =>
+            value.Replace("'", "''");
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="schema"></param>
+        /// <returns></returns>
+        private static string TableName(TableSchema schema) =>
+            AuroraDbPostgreSqlSchemaHelper.FormatTableName(schema.Table.Schema, schema.Table.Name);
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="table"></param>
+        /// <returns></returns>
+        private static string TableName(TableInfo table) =>
+            AuroraDbPostgreSqlSchemaHelper.FormatTableName(table.Schema, table.Name);
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="columns"></param>
+        /// <returns></returns>
+        private static string Columns(IEnumerable<string> columns) =>
+            string.Join(", ", columns.Select(Quote));
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private static string ConstraintName(string name) =>
+            string.IsNullOrWhiteSpace(name) ? string.Empty : $"CONSTRAINT {Quote(name)} ";
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="action"></param>
+        /// <param name="rule"></param>
+        /// <returns></returns>
+        private static string Rule(string action, CopySchemaForeignKeyRule rule)
+        {
+            switch (rule)
+            {
+                case CopySchemaForeignKeyRule.Cascade: return $" ON {action} CASCADE";
+                case CopySchemaForeignKeyRule.SetNull: return $" ON {action} SET NULL";
+                case CopySchemaForeignKeyRule.SetDefault: return $" ON {action} SET DEFAULT";
+                case CopySchemaForeignKeyRule.Restrict: return $" ON {action} RESTRICT";
+                default: return string.Empty;
+            }
+        }
+
+        // Columns
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="column"></param>
+        /// <returns></returns>
+        private string Column(ColumnInfo column)
+        {
+            var field = column.Field;
+            var definition = new StringBuilder(Quote(field.Name)).Append(' ').Append(ComposeTypeName(column));
+            if (!string.IsNullOrWhiteSpace(column.ComputedExpression))
+            {
+                return definition.Append($" GENERATED ALWAYS AS ({column.ComputedExpression}) STORED").ToString();
+            }
+            if (field.IsIdentity)
+            {
+                definition.Append($" GENERATED BY DEFAULT AS IDENTITY (START WITH {column.IdentitySeed ?? 1} INCREMENT BY {column.IdentityIncrement ?? 1})");
+            }
+            definition.Append(field.IsNullable ? " NULL" : " NOT NULL");
+            if (!field.IsIdentity && !string.IsNullOrWhiteSpace(column.DefaultExpression))
+            {
+                definition.Append(" DEFAULT ").Append(column.DefaultExpression);
+            }
+            return definition.ToString();
+        }
+
+        #endregion
+    }
+}

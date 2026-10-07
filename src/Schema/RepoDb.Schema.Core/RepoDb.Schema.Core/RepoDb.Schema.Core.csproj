@@ -55,6 +55,15 @@
     <InternalsVisibleTo Include="RepoDb.Schema.DuckDb" />
     <InternalsVisibleTo Include="RepoDb.Schema.DuckDb.UnitTests" />
     <InternalsVisibleTo Include="RepoDb.Schema.DuckDb.IntegrationTests" />
+    <InternalsVisibleTo Include="RepoDb.Schema.AuroraDbMySqlConnector" />
+    <InternalsVisibleTo Include="RepoDb.Schema.AuroraDbMySqlConnector.UnitTests" />
+    <InternalsVisibleTo Include="RepoDb.Schema.AuroraDbMySqlConnector.IntegrationTests" />
+    <InternalsVisibleTo Include="RepoDb.Schema.AuroraDbPostgreSql" />
+    <InternalsVisibleTo Include="RepoDb.Schema.AuroraDbPostgreSql.UnitTests" />
+    <InternalsVisibleTo Include="RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests" />
+    <InternalsVisibleTo Include="RepoDb.Schema.ClickHouse" />
+    <InternalsVisibleTo Include="RepoDb.Schema.ClickHouse.UnitTests" />
+    <InternalsVisibleTo Include="RepoDb.Schema.ClickHouse.IntegrationTests" />
     <InternalsVisibleTo Include="RepoDb.Schema.MySqlConnector" />
     <InternalsVisibleTo Include="RepoDb.Schema.MySqlConnector.UnitTests" />
     <InternalsVisibleTo Include="RepoDb.Schema.MySqlConnector.IntegrationTests" />

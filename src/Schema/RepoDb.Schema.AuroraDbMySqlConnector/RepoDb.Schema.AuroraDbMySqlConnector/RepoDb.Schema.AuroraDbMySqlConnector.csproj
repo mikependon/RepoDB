@@ -1,30 +1,30 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Title>RepoDb.Schema.DuckDb</Title>
-    <AssemblyName>RepoDb.Schema.DuckDb</AssemblyName>
+    <Title>RepoDb.Schema.AuroraDbMySqlConnector</Title>
+    <AssemblyName>RepoDb.Schema.AuroraDbMySqlConnector</AssemblyName>
     <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
-    <Description>The DuckDb schema reader and composer of RepoDB library.</Description>
+    <Description>The Amazon Aurora MySQL schema reader and composer of RepoDB library.</Description>
     <LangVersion>preview</LangVersion>
     <Nullable>annotations</Nullable>
-    <PackageTags>orm hybrid-orm micro-orm schema duckdb</PackageTags>
-    <PackageIcon>DuckDB.png</PackageIcon>
+    <PackageTags>orm hybrid-orm micro-orm schema aurora mysql</PackageTags>
+    <PackageIcon>AuroraDB.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/mikependon/RepoDB/tree/master/src/Schema/RepoDb.Schema.DuckDb</RepositoryUrl>
+    <RepositoryUrl>https://github.com/mikependon/RepoDB/tree/master/src/Schema/RepoDb.Schema.AuroraDbMySqlConnector</RepositoryUrl>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />
     <None Include="..\README.md" Pack="True" PackagePath="\" />
-    <None Include="..\DuckDB.png" Pack="True" PackagePath="\" />
+    <None Include="..\AuroraDB.png" Pack="True" PackagePath="\" />
     <None Include="..\..\..\..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
   <ItemGroup>
-    <InternalsVisibleTo Include="RepoDb.Schema.DuckDb.UnitTests" />
+    <InternalsVisibleTo Include="RepoDb.Schema.AuroraDbMySqlConnector.UnitTests" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Schema.Core\RepoDb.Schema.Core\RepoDb.Schema.Core.csproj" />
-    <ProjectReference Include="..\..\..\Providers\RepoDb.DuckDb\RepoDb.DuckDb\RepoDb.DuckDb.csproj" />
+    <ProjectReference Include="..\..\..\Providers\RepoDb.AuroraDb.MySqlConnector\RepoDb.AuroraDb.MySqlConnector\RepoDb.AuroraDb.MySqlConnector.csproj" />
   </ItemGroup>
 </Project>

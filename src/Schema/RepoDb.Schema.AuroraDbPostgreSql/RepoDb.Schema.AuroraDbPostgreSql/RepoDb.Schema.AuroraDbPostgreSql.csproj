@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Title>RepoDb.Schema.AuroraDbPostgreSql</Title>
+    <AssemblyName>RepoDb.Schema.AuroraDbPostgreSql</AssemblyName>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <Description>The Amazon Aurora PostgreSQL schema reader and composer of RepoDB library.</Description>
+    <LangVersion>preview</LangVersion>
+    <Nullable>annotations</Nullable>
+    <PackageTags>orm hybrid-orm micro-orm schema aurora postgresql</PackageTags>
+    <PackageIcon>AuroraDB.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/mikependon/RepoDB/tree/master/src/Schema/RepoDb.Schema.AuroraDbPostgreSql</RepositoryUrl>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />
+    <None Include="..\README.md" Pack="True" PackagePath="\" />
+    <None Include="..\AuroraDB.png" Pack="True" PackagePath="\" />
+    <None Include="..\..\..\..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="RepoDb.Schema.AuroraDbPostgreSql.UnitTests" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\RepoDb.Schema.Core\RepoDb.Schema.Core\RepoDb.Schema.Core.csproj" />
+    <ProjectReference Include="..\..\..\Providers\RepoDb.AuroraDb.PostgreSql\RepoDb.AuroraDb.PostgreSql\RepoDb.AuroraDb.PostgreSql.csproj" />
+  </ItemGroup>
+</Project>

@@ -3,11 +3,11 @@
     <br/>
     <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/"><strong>RepoDb.Schema.DuckDb</strong></a></span>
     <br/>
-    <span style="font-size:16px;">The DuckDb schema reader and composer of RepoDB library.</span>
+    <span style="font-size:16px;">The DuckDB schema reader and composer of RepoDB library.</span>
 </div>
 
 -----
 
-- `DuckDbSchemaReader` (`ISchemaReader`) reads the schema of a table (columns, identity, generated columns, primary key, indexes, foreign keys, unique and check constraints) from the `SYSCAT` catalog views of the connection it is created with. A schema is a DuckDb schema; a table without a schema belongs to the current schema of the connection. A unique index is read as an index, while a unique constraint is read as a constraint.
-- `DuckDbSchemaComposer` (`ISchemaComposer`) composes the SQL statements that create the equivalent objects. DuckDb supports the `CASCADE`, `SET NULL`, `NO ACTION` and `RESTRICT` rules on `DELETE` of a foreign key, and only the `NO ACTION` and `RESTRICT` rules on `UPDATE`. The included columns of an index are supported only by the unique indexes, and DuckDb has no partial indexes and no column-level collation. A DDL statement is part of the transaction, so it can be rolled back.
+- `DuckDbSchemaReader` (`ISchemaReader`) reads the schema of a table (columns, primary key, indexes, foreign keys, unique and check constraints) from the `duckdb_*()` catalog functions of the connection it is created with. A schema is a schema of the database of the connection (`main` by default). DuckDB does not keep the names of the constraints, so it generates them. It has no identity column (a column whose default is `nextval()` of a sequence is read as an identity) and no flag for a generated column (a default that refers to another column is read as the expression of a generated column). The direction of an index key is not kept, and DuckDB has no foreign key rules.
+- `DuckDbSchemaComposer` (`ISchemaComposer`) composes the SQL statements that create the equivalent objects. DuckDB can not add a foreign key to an existing table, so the foreign keys are part of `CREATE TABLE` (`ComposeAddForeignKey` is empty), the tables are created after the tables that they reference (circular references and references across schemas can not be created), and an identity column creates its sequence first (the statement is a script separated by a semicolon). A not nullable column is added in 2 statements, and a generated column can not be added to an existing table. DDL is part of the transaction.
 - `GlobalConfiguration.Setup().UseDuckDbSchema()` (`DuckDbSchemaGlobalConfiguration`) registers the composer for `DuckDBConnection`.

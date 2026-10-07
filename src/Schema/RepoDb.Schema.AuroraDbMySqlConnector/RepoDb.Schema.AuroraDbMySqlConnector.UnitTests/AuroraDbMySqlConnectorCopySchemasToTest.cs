@@ -15,16 +15,16 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using RepoDb.Schema.Enumerations;
 using RepoDb.Schema.Models;
-using RepoDb.Schema.DuckDb.UnitTests.CustomObjects;
+using RepoDb.Schema.AuroraDbMySqlConnector.UnitTests.CustomObjects;
 
-namespace RepoDb.Schema.DuckDb.UnitTests
+namespace RepoDb.Schema.AuroraDbMySqlConnector.UnitTests
 {
     /// <summary>
-    /// Tests the copy of the schema of multiple tables with the DuckDB composer: the reader is faked (it returns the ordered relationships
-    /// like the DuckDB reader does) and the destination connection records the statements that are executed on it.
+    /// Tests the copy of the schema of multiple tables with the MySQL composer: the reader is faked (it returns the ordered relationships
+    /// like the MySQL reader does) and the destination connection records the statements that are executed on it.
     /// </summary>
     [TestClass]
-    public class DuckDbCopySchemasToTest
+    public class AuroraDbMySqlConnectorCopySchemasToTest
     {
         [TestInitialize]
         public void Initialize()
@@ -69,37 +69,33 @@ namespace RepoDb.Schema.DuckDb.UnitTests
         }
 
         private static TableSchema Table(string tableName, params string[] references) =>
-            SchemaTable("main", tableName, references);
+            SchemaTable("dbo", tableName, references);
 
         private static void MapReader(params TableSchema[] schemas)
         {
             var reader = new Mock<ISchemaReader>();
             reader.Setup(r => r.GetDependencyOrder(It.IsAny<IEnumerable<string>>()))
-                .Returns(() => DuckDbSchemaReader.Order(schemas));
+                .Returns(() => AuroraDbMySqlConnectorSchemaReader.Order(schemas));
             reader.Setup(r => r.GetDependencyOrderAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(() => DuckDbSchemaReader.Order(schemas));
+                .ReturnsAsync(() => AuroraDbMySqlConnectorSchemaReader.Order(schemas));
             SchemaReaderMapper.Add<CustomDbConnection>(reader.Object, true);
         }
 
         private static void MapComposer() =>
-            SchemaComposerMapper.Add<CustomDbConnection>(new DuckDbSchemaComposer(), true);
+            SchemaComposerMapper.Add<CustomDbConnection>(new AuroraDbMySqlConnectorSchemaComposer(), true);
 
         private static string[] Tables(CustomDbConnection connection) =>
             connection.ExecutedCommands.Where(c => c.StartsWith("CREATE TABLE", StringComparison.Ordinal)).ToArray();
 
         private static string[] ForeignKeys(CustomDbConnection connection) =>
-            Tables(connection)
-                .SelectMany(table => table.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
-                .Where(line => line.Contains("FOREIGN KEY", StringComparison.Ordinal))
-                .Select(line => line.Trim())
-                .ToArray();
+            connection.ExecutedCommands.Where(c => c.StartsWith("ALTER TABLE", StringComparison.Ordinal)).ToArray();
 
         #endregion
 
         #region CopySchemasTo
 
         [TestMethod]
-        public void TestDuckDbCopySchemasToExecutesTheStatementsThatTheComposerComposed()
+        public void TestAuroraDbMySqlConnectorCopySchemasToExecutesTheStatementsThatTheComposerComposed()
         {
             // Setup
             var schemas = new[] { Table("Person", "Country"), Table("Country") };
@@ -111,12 +107,12 @@ namespace RepoDb.Schema.DuckDb.UnitTests
             new CustomDbConnection().CopySchemaTo(new[] { "Person", "Country" }, destination);
 
             // Assert
-            var expected = new DuckDbSchemaComposer().ComposeSchemas(DuckDbSchemaReader.Order(schemas).Select(r => r.Schema)).Where(statement => statement.Length > 0).ToList();
+            var expected = new AuroraDbMySqlConnectorSchemaComposer().ComposeSchemas(AuroraDbMySqlConnectorSchemaReader.Order(schemas).Select(r => r.Schema)).ToList();
             CollectionAssert.AreEqual(expected, destination.ExecutedCommands);
         }
 
         [TestMethod]
-        public void TestDuckDbCopySchemasToCreatesTheReferencedTableFirst()
+        public void TestAuroraDbMySqlConnectorCopySchemasToCreatesTheReferencedTableFirst()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
@@ -129,12 +125,12 @@ namespace RepoDb.Schema.DuckDb.UnitTests
             // Assert
             var tables = Tables(destination);
             Assert.AreEqual(2, tables.Length);
-            StringAssert.StartsWith(tables[0], "CREATE TABLE \"main\".\"Country\"", StringComparison.Ordinal);
-            StringAssert.StartsWith(tables[1], "CREATE TABLE \"main\".\"Person\"", StringComparison.Ordinal);
+            StringAssert.StartsWith(tables[0], "CREATE TABLE `dbo`.`Country`", StringComparison.Ordinal);
+            StringAssert.StartsWith(tables[1], "CREATE TABLE `dbo`.`Person`", StringComparison.Ordinal);
         }
 
         [TestMethod]
-        public void TestDuckDbCopySchemasToCreatesTheForeignKeysWithTheTables()
+        public void TestAuroraDbMySqlConnectorCopySchemasToCreatesTheForeignKeysAfterAllTheTables()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"), Table("Shipment", "Country", "Person"));
@@ -145,13 +141,15 @@ namespace RepoDb.Schema.DuckDb.UnitTests
             new CustomDbConnection().CopySchemaTo(new[] { "Person", "Country", "Shipment" }, destination);
 
             // Assert
+            var lastTable = destination.ExecutedCommands.FindLastIndex(c => c.StartsWith("CREATE TABLE", StringComparison.Ordinal));
+            var firstForeignKey = destination.ExecutedCommands.FindIndex(c => c.StartsWith("ALTER TABLE", StringComparison.Ordinal));
             Assert.AreEqual(3, Tables(destination).Length);
             Assert.AreEqual(3, ForeignKeys(destination).Length);
-            Assert.AreEqual(3, destination.ExecutedCommands.Count);
+            Assert.IsTrue(lastTable < firstForeignKey);
         }
 
         [TestMethod]
-        public void TestDuckDbCopySchemasToOfTablesThatReferenceEachOther()
+        public void TestAuroraDbMySqlConnectorCopySchemasToOfTablesThatReferenceEachOther()
         {
             // Setup
             MapReader(Table("A", "B"), Table("B", "C"), Table("C", "A"));
@@ -166,11 +164,12 @@ namespace RepoDb.Schema.DuckDb.UnitTests
             CollectionAssert.AreEqual(new[] { "A", "B", "C" }, results.Select(t => t.TableName).ToArray());
             Assert.AreEqual(3, Tables(destination).Length);
             Assert.AreEqual(3, ForeignKeys(destination).Length);
-            Assert.AreEqual(3, destination.ExecutedCommands.Count);
+            Assert.IsTrue(destination.ExecutedCommands.FindLastIndex(c => c.StartsWith("CREATE TABLE", StringComparison.Ordinal)) <
+                destination.ExecutedCommands.FindIndex(c => c.StartsWith("ALTER TABLE", StringComparison.Ordinal)));
         }
 
         [TestMethod]
-        public void TestDuckDbCopySchemasToOfDiamond()
+        public void TestAuroraDbMySqlConnectorCopySchemasToOfDiamond()
         {
             // Setup
             MapReader(Table("D", "B", "C"), Table("C", "A"), Table("B", "A"), Table("A"));
@@ -189,12 +188,12 @@ namespace RepoDb.Schema.DuckDb.UnitTests
         }
 
         [TestMethod]
-        public void TestDuckDbCopySchemasToWithTheIndexesOfTheTables()
+        public void TestAuroraDbMySqlConnectorCopySchemasToWithTheIndexesOfTheTables()
         {
             // Setup
             var product = Table("Product");
             product.Indexes.Add(new IndexInfo("CIX_Product_Id") { IsUnique = true, IsClustered = true, Columns = { "Id" } });
-            product.Indexes.Add(new IndexInfo("IX_Product_Id") { Columns = { "Id" }, DescendingColumns = { "Id" }, Filter = "([Id]>(0))" });
+            product.Indexes.Add(new IndexInfo("IX_Product_Id") { Columns = { "Id" }, DescendingColumns = { "Id" }, Filter = "(`Id`>(0))" });
             MapReader(product);
             MapComposer();
             var destination = new CustomDbConnection();
@@ -204,48 +203,48 @@ namespace RepoDb.Schema.DuckDb.UnitTests
 
             // Assert
             Assert.AreEqual(3, destination.ExecutedCommands.Count);
-            Assert.AreEqual("CREATE UNIQUE INDEX \"CIX_Product_Id\" ON \"main\".\"Product\" (\"Id\")", destination.ExecutedCommands[1], StringComparer.Ordinal);
-            Assert.AreEqual("CREATE INDEX \"IX_Product_Id\" ON \"main\".\"Product\" (\"Id\")", destination.ExecutedCommands[2], StringComparer.Ordinal);
+            Assert.AreEqual("CREATE UNIQUE INDEX `CIX_Product_Id` ON `dbo`.`Product` (`Id`);", destination.ExecutedCommands[1], StringComparer.Ordinal);
+            Assert.AreEqual("CREATE INDEX `IX_Product_Id` ON `dbo`.`Product` (`Id` DESC);", destination.ExecutedCommands[2], StringComparer.Ordinal);
         }
 
         [TestMethod]
-        public void TestDuckDbCopySchemasToOfTablesInDifferentSchemas()
+        public void TestAuroraDbMySqlConnectorCopySchemasToOfTablesInDifferentSchemas()
         {
             // Setup
-            MapReader(SchemaTable(null, "Ledger", "sales.Invoice"), SchemaTable("sales", "Invoice"));
+            MapReader(SchemaTable("dbo", "Ledger", "Sales.Invoice"), SchemaTable("Sales", "Invoice"));
             MapComposer();
             var destination = new CustomDbConnection();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Ledger", "sales.Invoice" }, destination);
+            new CustomDbConnection().CopySchemaTo(new[] { "dbo.Ledger", "Sales.Invoice" }, destination);
 
             // Assert
             var tables = Tables(destination);
-            StringAssert.StartsWith(tables[0], "CREATE TABLE \"main\".\"Invoice\"", StringComparison.Ordinal);
-            StringAssert.StartsWith(tables[1], "CREATE TABLE \"main\".\"Ledger\"", StringComparison.Ordinal);
-            StringAssert.Contains(ForeignKeys(destination).Single(), "REFERENCES \"main\".\"Invoice\" (\"Id\")", StringComparison.Ordinal);
+            StringAssert.StartsWith(tables[0], "CREATE TABLE `Sales`.`Invoice`", StringComparison.Ordinal);
+            StringAssert.StartsWith(tables[1], "CREATE TABLE `dbo`.`Ledger`", StringComparison.Ordinal);
+            StringAssert.Contains(ForeignKeys(destination).Single(), "REFERENCES `Sales`.`Invoice` (`Id`)", StringComparison.Ordinal);
         }
 
         [TestMethod]
-        public void TestDuckDbCopySchemasToOfTablesWithNamesThatNeedQuoting()
+        public void TestAuroraDbMySqlConnectorCopySchemasToOfTablesWithNamesThatNeedQuoting()
         {
             // Setup
-            MapReader(SchemaTable(null, "Odd.Child", DuckDbSchemaHelper.FormatTableName(null, "Odd.Name")), SchemaTable(null, "Odd.Name"));
+            MapReader(SchemaTable("dbo", "Odd.Child", AuroraDbMySqlConnectorSchemaHelper.FormatTableName("dbo", "Odd.Name")), SchemaTable("dbo", "Odd.Name"));
             MapComposer();
             var destination = new CustomDbConnection();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "\"Odd.Child\"", "\"Odd.Name\"" }, destination);
+            new CustomDbConnection().CopySchemaTo(new[] { "`dbo`.`Odd.Child`", "`dbo`.`Odd.Name`" }, destination);
 
             // Assert
             var tables = Tables(destination);
-            StringAssert.StartsWith(tables[0], "CREATE TABLE \"main\".\"Odd.Name\"", StringComparison.Ordinal);
-            StringAssert.StartsWith(tables[1], "CREATE TABLE \"main\".\"Odd.Child\"", StringComparison.Ordinal);
-            StringAssert.Contains(ForeignKeys(destination).Single(), "REFERENCES \"main\".\"Odd.Name\" (\"Id\")", StringComparison.Ordinal);
+            StringAssert.StartsWith(tables[0], "CREATE TABLE `dbo`.`Odd.Name`", StringComparison.Ordinal);
+            StringAssert.StartsWith(tables[1], "CREATE TABLE `dbo`.`Odd.Child`", StringComparison.Ordinal);
+            StringAssert.Contains(ForeignKeys(destination).Single(), "REFERENCES `dbo`.`Odd.Name` (`Id`)", StringComparison.Ordinal);
         }
 
         [TestMethod]
-        public void TestDuckDbCopySchemasToCallbackResult()
+        public void TestAuroraDbMySqlConnectorCopySchemasToCallbackResult()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
@@ -257,15 +256,15 @@ namespace RepoDb.Schema.DuckDb.UnitTests
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.TableName).ToArray());
-            StringAssert.StartsWith(results[0].Script, "CREATE TABLE \"main\".\"Country\"", StringComparison.Ordinal);
-            StringAssert.StartsWith(results[1].Script, "CREATE TABLE \"main\".\"Person\"", StringComparison.Ordinal);
-            StringAssert.Contains(results[1].Script, "FOREIGN KEY (\"CountryId\") REFERENCES \"main\".\"Country\" (\"Id\")", StringComparison.Ordinal);
+            StringAssert.StartsWith(results[0].Script, "CREATE TABLE `dbo`.`Country`", StringComparison.Ordinal);
+            StringAssert.StartsWith(results[1].Script, "CREATE TABLE `dbo`.`Person`", StringComparison.Ordinal);
+            StringAssert.Contains(results[1].Script, "ALTER TABLE `dbo`.`Person` ADD CONSTRAINT `FK_Person_Country`", StringComparison.Ordinal);
             Assert.AreEqual(1, results[1].ForeignKeyCount);
             Assert.AreEqual(CopySchemaOutcome.Created, results[0].Outcome);
         }
 
         [TestMethod]
-        public void TestDuckDbCopySchemasToCallsTheCallbackOnceTheSchemaOfTheTableIsCreated()
+        public void TestAuroraDbMySqlConnectorCopySchemasToCallsTheCallbackOnceTheSchemaOfTheTableIsCreated()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"), Table("Solo"));
@@ -281,13 +280,13 @@ namespace RepoDb.Schema.DuckDb.UnitTests
 
             // Assert
             Assert.AreEqual(3, reported.Count);
-            Assert.AreEqual(("Person", 3), reported.Single(r => r.Table == "Person"));
+            Assert.AreEqual(("Person", 4), reported.Single(r => r.Table == "Person"));
             Assert.AreEqual(("Country", 1), reported.Single(r => r.Table == "Country"));
             Assert.AreEqual(("Solo", 3), reported.Single(r => r.Table == "Solo"));
         }
 
         [TestMethod]
-        public void TestDuckDbCopySchemasToCallsTheCallbackAfterTheIndexesAndTheForeignKeys()
+        public void TestAuroraDbMySqlConnectorCopySchemasToCallsTheCallbackAfterTheIndexesAndTheForeignKeys()
         {
             // Setup
             var product = Table("Product", "Category");
@@ -305,7 +304,7 @@ namespace RepoDb.Schema.DuckDb.UnitTests
 
             // Assert
             Assert.AreEqual(("Category", 1), reported[0]);
-            Assert.AreEqual(("Product", 3), reported[1]);
+            Assert.AreEqual(("Product", 4), reported[1]);
         }
 
         #endregion
@@ -313,12 +312,12 @@ namespace RepoDb.Schema.DuckDb.UnitTests
         #region ErrorCallback
 
         [TestMethod]
-        public void TestDuckDbCopySchemasToErrorCallbackOfTheTableThatFails()
+        public void TestAuroraDbMySqlConnectorCopySchemasToErrorCallbackOfTheForeignKeyThatFails()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
             MapComposer();
-            var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("CREATE TABLE \"main\".\"Person\"", StringComparison.Ordinal) };
+            var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("ALTER TABLE", StringComparison.Ordinal) };
             var errors = new List<CopySchemaError>();
 
             // Act
@@ -326,14 +325,14 @@ namespace RepoDb.Schema.DuckDb.UnitTests
 
             // Assert
             Assert.AreEqual(1, errors.Count);
-            Assert.AreEqual(1, errors[0].StatementIndex);
+            Assert.AreEqual(2, errors[0].StatementIndex);
             Assert.AreEqual("Person", errors[0].TableName, StringComparer.Ordinal);
-            Assert.AreEqual("main", errors[0].SchemaName, StringComparer.Ordinal);
-            StringAssert.StartsWith(errors[0].Statement, "CREATE TABLE \"main\".\"Person\"", StringComparison.Ordinal);
+            Assert.AreEqual("dbo", errors[0].SchemaName, StringComparer.Ordinal);
+            StringAssert.StartsWith(errors[0].Statement, "ALTER TABLE `dbo`.`Person` ADD CONSTRAINT `FK_Person_Country`", StringComparison.Ordinal);
         }
 
         [TestMethod]
-        public void TestDuckDbCopySchemasToErrorCallbackOfTheIndexThatFails()
+        public void TestAuroraDbMySqlConnectorCopySchemasToErrorCallbackOfTheIndexThatFails()
         {
             // Setup
             var product = Table("Product");
@@ -349,16 +348,16 @@ namespace RepoDb.Schema.DuckDb.UnitTests
             // Assert
             Assert.AreEqual(1, errors.Count);
             Assert.AreEqual("Product", errors[0].TableName, StringComparer.Ordinal);
-            Assert.AreEqual("CREATE INDEX \"IX_Product_Id\" ON \"main\".\"Product\" (\"Id\")", errors[0].Statement, StringComparer.Ordinal);
+            Assert.AreEqual("CREATE INDEX `IX_Product_Id` ON `dbo`.`Product` (`Id`);", errors[0].Statement, StringComparer.Ordinal);
         }
 
         [TestMethod]
-        public void TestDuckDbCopySchemasToErrorCallbackAddsTheErrorToTheResultOfTheTable()
+        public void TestAuroraDbMySqlConnectorCopySchemasToErrorCallbackAddsTheErrorToTheResultOfTheTable()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
             MapComposer();
-            var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("CREATE TABLE \"main\".\"Person\"", StringComparison.Ordinal) };
+            var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("ALTER TABLE", StringComparison.Ordinal) };
             var created = new List<CopySchemaResult>();
 
             // Act
@@ -374,16 +373,16 @@ namespace RepoDb.Schema.DuckDb.UnitTests
             Assert.AreEqual(CopySchemaOutcome.Created, created[0].Outcome);
             Assert.AreEqual(1, created[1].Errors.Count);
             Assert.AreEqual(CopySchemaOutcome.Failed, created[1].Outcome);
-            StringAssert.StartsWith(created[1].Errors[0].Statement, "CREATE TABLE \"main\".\"Person\"", StringComparison.Ordinal);
+            StringAssert.StartsWith(created[1].Errors[0].Statement, "ALTER TABLE `dbo`.`Person`", StringComparison.Ordinal);
         }
 
         [TestMethod]
-        public void TestDuckDbCopySchemasToStopsIfTheErrorCallbackThrows()
+        public void TestAuroraDbMySqlConnectorCopySchemasToStopsIfTheErrorCallbackThrows()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
             MapComposer();
-            var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("CREATE TABLE \"main\".\"Country\"", StringComparison.Ordinal) };
+            var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("CREATE TABLE `dbo`.`Country`", StringComparison.Ordinal) };
 
             // Act/Assert
             Assert.Throws<NotSupportedException>(() =>
@@ -397,12 +396,12 @@ namespace RepoDb.Schema.DuckDb.UnitTests
         }
 
         [TestMethod]
-        public void ThrowExceptionOnDuckDbCopySchemasToIfTheErrorCallbackThrowsTheCapturedException()
+        public void ThrowExceptionOnAuroraDbMySqlConnectorCopySchemasToIfTheErrorCallbackThrowsTheCapturedException()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
             MapComposer();
-            var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("CREATE TABLE \"main\".\"Person\"", StringComparison.Ordinal) };
+            var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("ALTER TABLE", StringComparison.Ordinal) };
             CopySchemaError raised = null;
 
             // Act
@@ -422,7 +421,7 @@ namespace RepoDb.Schema.DuckDb.UnitTests
         #region CopySchemasToAsync
 
         [TestMethod]
-        public async Task TestDuckDbCopySchemasToAsyncExecutesTheStatementsThatTheComposerComposed()
+        public async Task TestAuroraDbMySqlConnectorCopySchemasToAsyncExecutesTheStatementsThatTheComposerComposed()
         {
             // Setup
             var schemas = new[] { Table("Person", "Country"), Table("Country") };
@@ -434,12 +433,12 @@ namespace RepoDb.Schema.DuckDb.UnitTests
             await new CustomDbConnection().CopySchemaToAsync(new[] { "Person", "Country" }, destination);
 
             // Assert
-            var expected = new DuckDbSchemaComposer().ComposeSchemas(DuckDbSchemaReader.Order(schemas).Select(r => r.Schema)).Where(statement => statement.Length > 0).ToList();
+            var expected = new AuroraDbMySqlConnectorSchemaComposer().ComposeSchemas(AuroraDbMySqlConnectorSchemaReader.Order(schemas).Select(r => r.Schema)).ToList();
             CollectionAssert.AreEqual(expected, destination.ExecutedCommands);
         }
 
         [TestMethod]
-        public async Task TestDuckDbCopySchemasToAsyncOfTablesThatReferenceEachOther()
+        public async Task TestAuroraDbMySqlConnectorCopySchemasToAsyncOfTablesThatReferenceEachOther()
         {
             // Setup
             MapReader(Table("A", "B"), Table("B", "A"));
@@ -457,7 +456,7 @@ namespace RepoDb.Schema.DuckDb.UnitTests
         }
 
         [TestMethod]
-        public async Task TestDuckDbCopySchemasToAsyncCallbackResult()
+        public async Task TestAuroraDbMySqlConnectorCopySchemasToAsyncCallbackResult()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
@@ -470,14 +469,14 @@ namespace RepoDb.Schema.DuckDb.UnitTests
             // Assert
             CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.TableName).ToArray());
             Assert.AreEqual(CopySchemaExistsBehavior.Throw, results[1].Action);
-            StringAssert.Contains(results[1].Script, "CREATE TABLE \"main\".\"Person\"", StringComparison.Ordinal);
+            StringAssert.Contains(results[1].Script, "CREATE TABLE `dbo`.`Person`", StringComparison.Ordinal);
         }
 
         #endregion
 
         private static TableInfo Reference(string name)
         {
-            var (schema, table) = DuckDbSchemaHelper.ParseSchemaAndTable(name);
+            var (schema, table) = AuroraDbMySqlConnectorSchemaHelper.ParseSchemaAndTable(name);
             return new TableInfo(table, schema);
         }
     }

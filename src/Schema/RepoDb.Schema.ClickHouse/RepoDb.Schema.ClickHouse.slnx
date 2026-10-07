@@ -1,0 +1,13 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="../../Providers/RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="../../Providers/RepoDb.ClickHouse/RepoDb.ClickHouse/RepoDb.ClickHouse.csproj" />
+  <Project Path="../RepoDb.Schema.Core/RepoDb.Schema.Core/RepoDb.Schema.Core.csproj" />
+  <Project Path="RepoDb.Schema.ClickHouse/RepoDb.Schema.ClickHouse.csproj" />
+  <Project Path="RepoDb.Schema.ClickHouse.UnitTests/RepoDb.Schema.ClickHouse.UnitTests.csproj" />
+  <Project Path="RepoDb.Schema.ClickHouse.IntegrationTests/RepoDb.Schema.ClickHouse.IntegrationTests.csproj" />
+</Solution>
