@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Title>RepoDb.Schema.Sqlite</Title>
-    <AssemblyName>RepoDb.Schema.Sqlite</AssemblyName>
+    <Title>RepoDb.Schema.Sqlite.Microsoft</Title>
+    <AssemblyName>RepoDb.Schema.Sqlite.Microsoft</AssemblyName>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Description>The SQLite schema reader and composer of RepoDB library.</Description>
     <LangVersion>preview</LangVersion>
@@ -11,7 +11,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/mikependon/RepoDB/tree/master/src/Schema/RepoDb.Schema.Sqlite</RepositoryUrl>
+    <RepositoryUrl>https://github.com/mikependon/RepoDB/tree/master/src/Schema/RepoDb.Schema.Sqlite.Microsoft</RepositoryUrl>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
@@ -21,7 +21,7 @@
     <None Include="..\..\..\..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
   <ItemGroup>
-    <InternalsVisibleTo Include="RepoDb.Schema.Sqlite.UnitTests" />
+    <InternalsVisibleTo Include="RepoDb.Schema.Sqlite.Microsoft.UnitTests" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Schema.Core\RepoDb.Schema.Core\RepoDb.Schema.Core.csproj" />

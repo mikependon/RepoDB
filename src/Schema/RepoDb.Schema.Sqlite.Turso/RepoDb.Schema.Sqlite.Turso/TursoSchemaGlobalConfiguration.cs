@@ -8,7 +8,7 @@
 
 using Turso.Data.Sqlite;
 
-namespace RepoDb.Schema.Turso
+namespace RepoDb.Schema.Sqlite.Turso
 {
     /// <summary>
     /// A class that is being used to initialize the necessary settings of the SQLite schema objects for the <see cref="SqliteConnection"/> object.

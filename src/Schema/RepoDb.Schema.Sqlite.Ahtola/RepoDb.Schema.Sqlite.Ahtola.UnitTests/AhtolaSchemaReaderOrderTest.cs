@@ -12,7 +12,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Schema.Models;
 
-namespace RepoDb.Schema.Ahtola.UnitTests
+namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
 {
     /// <summary>
     /// Tests the ordering and the relationships of the tables, that are done in memory, with the graphs that are hard to build in a database.

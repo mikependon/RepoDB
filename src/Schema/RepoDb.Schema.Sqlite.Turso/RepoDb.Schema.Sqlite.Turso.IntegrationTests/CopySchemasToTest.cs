@@ -14,9 +14,9 @@ using Turso.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Exceptions;
 using RepoDb.Schema.Enumerations;
-using RepoDb.Schema.Turso.IntegrationTests.Setup;
+using RepoDb.Schema.Sqlite.Turso.IntegrationTests.Setup;
 
-namespace RepoDb.Schema.Turso.IntegrationTests
+namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
 {
     [TestClass]
     public class CopySchemasToTest

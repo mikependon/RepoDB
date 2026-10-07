@@ -9,7 +9,7 @@
 using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace RepoDb.Schema.Sqlite.UnitTests
+namespace RepoDb.Schema.Sqlite.Microsoft.UnitTests
 {
     [TestClass]
     public class SqliteSchemaGlobalConfigurationTest

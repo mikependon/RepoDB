@@ -13,9 +13,9 @@ using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Schema.Models;
-using RepoDb.Schema.Sqlite.IntegrationTests.Setup;
+using RepoDb.Schema.Sqlite.Microsoft.IntegrationTests.Setup;
 
-namespace RepoDb.Schema.Sqlite.IntegrationTests
+namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
 {
     [TestClass]
     public class SqliteSchemaRelationshipTest

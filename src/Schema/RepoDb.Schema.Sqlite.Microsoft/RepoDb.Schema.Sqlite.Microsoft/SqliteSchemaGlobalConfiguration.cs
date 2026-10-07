@@ -8,7 +8,7 @@
 
 using Microsoft.Data.Sqlite;
 
-namespace RepoDb.Schema.Sqlite
+namespace RepoDb.Schema.Sqlite.Microsoft
 {
     /// <summary>
     /// A class that is being used to initialize the necessary settings of the SQLite schema objects for the <see cref="SqliteConnection"/> object.

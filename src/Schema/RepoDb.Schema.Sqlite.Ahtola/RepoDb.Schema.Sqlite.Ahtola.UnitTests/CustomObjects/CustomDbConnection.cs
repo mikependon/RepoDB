@@ -11,7 +11,7 @@ using System.Data;
 using System.Data.Common;
 using RepoDb.DbSettings;
 
-namespace RepoDb.Schema.Ahtola.UnitTests.CustomObjects
+namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests.CustomObjects
 {
     public class CustomDbConnection : System.Data.Common.DbConnection, IDbConnection
     {

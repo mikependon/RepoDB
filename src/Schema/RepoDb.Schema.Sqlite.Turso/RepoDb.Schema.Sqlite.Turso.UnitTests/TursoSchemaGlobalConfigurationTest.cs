@@ -9,7 +9,7 @@
 using Turso.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace RepoDb.Schema.Turso.UnitTests
+namespace RepoDb.Schema.Sqlite.Turso.UnitTests
 {
     [TestClass]
     public class TursoSchemaGlobalConfigurationTest

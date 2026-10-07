@@ -9,7 +9,7 @@
 using System.Collections.Generic;
 using RepoDb.Schema.Models;
 
-namespace RepoDb.Schema.Turso.IntegrationTests.Setup
+namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests.Setup
 {
     /// <summary>
     /// A composer that does the same as the composer that it wraps, but does not compose the statements that check whether a table, a column or an index exists.

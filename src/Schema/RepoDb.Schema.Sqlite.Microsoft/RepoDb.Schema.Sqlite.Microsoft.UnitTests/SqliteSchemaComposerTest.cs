@@ -12,7 +12,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Schema.Enumerations;
 using RepoDb.Schema.Models;
 
-namespace RepoDb.Schema.Sqlite.UnitTests
+namespace RepoDb.Schema.Sqlite.Microsoft.UnitTests
 {
     [TestClass]
     public class SqliteSchemaComposerTest

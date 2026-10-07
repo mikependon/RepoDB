@@ -13,7 +13,7 @@ using System.IO;
 using System.Linq;
 using Turso.Data.Sqlite;
 
-namespace RepoDb.Schema.Turso.IntegrationTests.Setup
+namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests.Setup
 {
     public static class Database
     {

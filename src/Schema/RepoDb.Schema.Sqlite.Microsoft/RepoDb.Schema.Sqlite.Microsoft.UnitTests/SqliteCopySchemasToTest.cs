@@ -15,9 +15,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using RepoDb.Schema.Enumerations;
 using RepoDb.Schema.Models;
-using RepoDb.Schema.Sqlite.UnitTests.CustomObjects;
+using RepoDb.Schema.Sqlite.Microsoft.UnitTests.CustomObjects;
 
-namespace RepoDb.Schema.Sqlite.UnitTests
+namespace RepoDb.Schema.Sqlite.Microsoft.UnitTests
 {
     /// <summary>
     /// Tests the copy of the schema of multiple tables with the SQLite composer: the reader is faked (it returns the ordered relationships

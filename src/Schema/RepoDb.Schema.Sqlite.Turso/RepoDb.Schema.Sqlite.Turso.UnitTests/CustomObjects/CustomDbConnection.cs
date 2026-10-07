@@ -11,7 +11,7 @@ using System.Data;
 using System.Data.Common;
 using RepoDb.DbSettings;
 
-namespace RepoDb.Schema.Turso.UnitTests.CustomObjects
+namespace RepoDb.Schema.Sqlite.Turso.UnitTests.CustomObjects
 {
     public class CustomDbConnection : System.Data.Common.DbConnection, IDbConnection
     {

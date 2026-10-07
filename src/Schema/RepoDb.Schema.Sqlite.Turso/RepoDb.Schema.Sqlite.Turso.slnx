@@ -7,7 +7,7 @@
   <Project Path="../../Providers/RepoDb.Core/RepoDb/RepoDb.csproj" />
   <Project Path="../../Providers/RepoDb.Sqlite.Turso/RepoDb.Sqlite.Turso/RepoDb.Sqlite.Turso.csproj" />
   <Project Path="../RepoDb.Schema.Core/RepoDb.Schema.Core/RepoDb.Schema.Core.csproj" />
-  <Project Path="RepoDb.Schema.Turso/RepoDb.Schema.Turso.csproj" />
-  <Project Path="RepoDb.Schema.Turso.UnitTests/RepoDb.Schema.Turso.UnitTests.csproj" />
-  <Project Path="RepoDb.Schema.Turso.IntegrationTests/RepoDb.Schema.Turso.IntegrationTests.csproj" />
+  <Project Path="RepoDb.Schema.Sqlite.Turso/RepoDb.Schema.Sqlite.Turso.csproj" />
+  <Project Path="RepoDb.Schema.Sqlite.Turso.UnitTests/RepoDb.Schema.Sqlite.Turso.UnitTests.csproj" />
+  <Project Path="RepoDb.Schema.Sqlite.Turso.IntegrationTests/RepoDb.Schema.Sqlite.Turso.IntegrationTests.csproj" />
 </Solution>

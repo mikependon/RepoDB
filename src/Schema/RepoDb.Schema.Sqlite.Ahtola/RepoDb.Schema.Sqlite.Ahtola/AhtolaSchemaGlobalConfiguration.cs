@@ -8,7 +8,7 @@
 
 using Ahtola.Data.Sqlite;
 
-namespace RepoDb.Schema.Ahtola
+namespace RepoDb.Schema.Sqlite.Ahtola
 {
     /// <summary>
     /// A class that is being used to initialize the necessary settings of the SQLite schema objects for the <see cref="SqliteConnection"/> object.

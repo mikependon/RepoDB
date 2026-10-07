@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyName>RepoDb.Schema.Ahtola.UnitTests</AssemblyName>
+    <AssemblyName>RepoDb.Schema.Sqlite.Ahtola.UnitTests</AssemblyName>
     <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
@@ -19,6 +19,6 @@
     <ProjectReference Include="..\..\..\Providers\RepoDb.Core\RepoDb\RepoDb.csproj" />
     <ProjectReference Include="..\..\..\Providers\RepoDb.Sqlite.Ahtola\RepoDb.Sqlite.Ahtola\RepoDb.Sqlite.Ahtola.csproj" />
     <ProjectReference Include="..\..\RepoDb.Schema.Core\RepoDb.Schema.Core\RepoDb.Schema.Core.csproj" />
-    <ProjectReference Include="..\RepoDb.Schema.Ahtola\RepoDb.Schema.Ahtola.csproj" />
+    <ProjectReference Include="..\RepoDb.Schema.Sqlite.Ahtola\RepoDb.Schema.Sqlite.Ahtola.csproj" />
   </ItemGroup>
 </Project>

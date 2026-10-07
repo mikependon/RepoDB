@@ -10,7 +10,7 @@ using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Resolvers;
 
-namespace RepoDb.Schema.Turso.UnitTests.Resolvers
+namespace RepoDb.Schema.Sqlite.Turso.UnitTests.Resolvers
 {
     [TestClass]
     public class DbTypeNameToSqliteTypeNameResolverTest

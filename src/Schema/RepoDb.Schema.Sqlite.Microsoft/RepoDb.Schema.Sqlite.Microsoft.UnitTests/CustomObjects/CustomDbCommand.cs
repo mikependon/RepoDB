@@ -9,7 +9,7 @@
 using System.Data;
 using System.Data.Common;
 
-namespace RepoDb.Schema.Sqlite.UnitTests.CustomObjects
+namespace RepoDb.Schema.Sqlite.Microsoft.UnitTests.CustomObjects
 {
     public class CustomDbCommand : DbCommand, IDbCommand
     {

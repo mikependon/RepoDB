@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyName>RepoDb.Schema.Sqlite.IntegrationTests</AssemblyName>
+    <AssemblyName>RepoDb.Schema.Sqlite.Microsoft.IntegrationTests</AssemblyName>
     <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
@@ -18,6 +18,6 @@
     <ProjectReference Include="..\..\..\Providers\RepoDb.Core\RepoDb\RepoDb.csproj" />
     <ProjectReference Include="..\..\..\Providers\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.csproj" />
     <ProjectReference Include="..\..\RepoDb.Schema.Core\RepoDb.Schema.Core\RepoDb.Schema.Core.csproj" />
-    <ProjectReference Include="..\RepoDb.Schema.Sqlite\RepoDb.Schema.Sqlite.csproj" />
+    <ProjectReference Include="..\RepoDb.Schema.Sqlite.Microsoft\RepoDb.Schema.Sqlite.Microsoft.csproj" />
   </ItemGroup>
 </Project>

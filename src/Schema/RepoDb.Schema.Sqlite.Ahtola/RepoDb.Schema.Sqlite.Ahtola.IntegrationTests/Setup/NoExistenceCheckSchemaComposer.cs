@@ -9,7 +9,7 @@
 using System.Collections.Generic;
 using RepoDb.Schema.Models;
 
-namespace RepoDb.Schema.Ahtola.IntegrationTests.Setup
+namespace RepoDb.Schema.Sqlite.Ahtola.IntegrationTests.Setup
 {
     /// <summary>
     /// A composer that does the same as the composer that it wraps, but does not compose the statements that check whether a table, a column or an index exists.

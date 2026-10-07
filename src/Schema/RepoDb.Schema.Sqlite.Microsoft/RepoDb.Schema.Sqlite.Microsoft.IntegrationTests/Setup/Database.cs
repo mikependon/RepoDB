@@ -13,7 +13,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.Data.Sqlite;
 
-namespace RepoDb.Schema.Sqlite.IntegrationTests.Setup
+namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests.Setup
 {
     public static class Database
     {

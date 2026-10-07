@@ -12,9 +12,9 @@ using System.Linq;
 using Ahtola.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Schema.Models;
-using RepoDb.Schema.Ahtola.IntegrationTests.Setup;
+using RepoDb.Schema.Sqlite.Ahtola.IntegrationTests.Setup;
 
-namespace RepoDb.Schema.Ahtola.IntegrationTests
+namespace RepoDb.Schema.Sqlite.Ahtola.IntegrationTests
 {
     public static class Helper
     {

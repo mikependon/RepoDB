@@ -12,9 +12,9 @@ using System.Linq;
 using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Schema.Models;
-using RepoDb.Schema.Sqlite.IntegrationTests.Setup;
+using RepoDb.Schema.Sqlite.Microsoft.IntegrationTests.Setup;
 
-namespace RepoDb.Schema.Sqlite.IntegrationTests
+namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
 {
     public static class Helper
     {

@@ -13,7 +13,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Schema;
 using RepoDb.Schema.Enumerations;
 
-namespace RepoDb.Schema.Ahtola.UnitTests
+namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
 {
     [TestClass]
     public class AhtolaSchemaReaderTest

@@ -12,7 +12,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Schema.Enumerations;
 using RepoDb.Schema.Models;
 
-namespace RepoDb.Schema.Turso.UnitTests
+namespace RepoDb.Schema.Sqlite.Turso.UnitTests
 {
     [TestClass]
     public class TursoSchemaComposerTest

@@ -64,21 +64,21 @@
     <InternalsVisibleTo Include="RepoDb.Schema.ClickHouse" />
     <InternalsVisibleTo Include="RepoDb.Schema.ClickHouse.UnitTests" />
     <InternalsVisibleTo Include="RepoDb.Schema.ClickHouse.IntegrationTests" />
-    <InternalsVisibleTo Include="RepoDb.Schema.Ahtola" />
-    <InternalsVisibleTo Include="RepoDb.Schema.Ahtola.UnitTests" />
-    <InternalsVisibleTo Include="RepoDb.Schema.Ahtola.IntegrationTests" />
-    <InternalsVisibleTo Include="RepoDb.Schema.Turso" />
-    <InternalsVisibleTo Include="RepoDb.Schema.Turso.UnitTests" />
-    <InternalsVisibleTo Include="RepoDb.Schema.Turso.IntegrationTests" />
+    <InternalsVisibleTo Include="RepoDb.Schema.Sqlite.Ahtola" />
+    <InternalsVisibleTo Include="RepoDb.Schema.Sqlite.Ahtola.UnitTests" />
+    <InternalsVisibleTo Include="RepoDb.Schema.Sqlite.Ahtola.IntegrationTests" />
+    <InternalsVisibleTo Include="RepoDb.Schema.Sqlite.Turso" />
+    <InternalsVisibleTo Include="RepoDb.Schema.Sqlite.Turso.UnitTests" />
+    <InternalsVisibleTo Include="RepoDb.Schema.Sqlite.Turso.IntegrationTests" />
     <InternalsVisibleTo Include="RepoDb.Schema.MySqlConnector" />
     <InternalsVisibleTo Include="RepoDb.Schema.MySqlConnector.UnitTests" />
     <InternalsVisibleTo Include="RepoDb.Schema.MySqlConnector.IntegrationTests" />
     <InternalsVisibleTo Include="RepoDb.Schema.MariaDb" />
     <InternalsVisibleTo Include="RepoDb.Schema.MariaDb.UnitTests" />
     <InternalsVisibleTo Include="RepoDb.Schema.MariaDb.IntegrationTests" />
-    <InternalsVisibleTo Include="RepoDb.Schema.Sqlite" />
-    <InternalsVisibleTo Include="RepoDb.Schema.Sqlite.UnitTests" />
-    <InternalsVisibleTo Include="RepoDb.Schema.Sqlite.IntegrationTests" />
+    <InternalsVisibleTo Include="RepoDb.Schema.Sqlite.Microsoft" />
+    <InternalsVisibleTo Include="RepoDb.Schema.Sqlite.Microsoft.UnitTests" />
+    <InternalsVisibleTo Include="RepoDb.Schema.Sqlite.Microsoft.IntegrationTests" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" />

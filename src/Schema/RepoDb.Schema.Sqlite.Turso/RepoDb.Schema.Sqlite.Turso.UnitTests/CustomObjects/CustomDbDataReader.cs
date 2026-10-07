@@ -10,7 +10,7 @@ using System;
 using System.Collections;
 using System.Data.Common;
 
-namespace RepoDb.Schema.Turso.UnitTests.CustomObjects
+namespace RepoDb.Schema.Sqlite.Turso.UnitTests.CustomObjects
 {
     public class CustomDbDataReader : DbDataReader
     {

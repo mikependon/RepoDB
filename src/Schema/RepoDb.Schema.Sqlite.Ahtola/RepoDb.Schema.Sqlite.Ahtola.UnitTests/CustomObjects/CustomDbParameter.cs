@@ -9,7 +9,7 @@
 using System.Data;
 using System.Data.Common;
 
-namespace RepoDb.Schema.Ahtola.UnitTests.CustomObjects
+namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests.CustomObjects
 {
     public class CustomDbParameter : DbParameter
     {

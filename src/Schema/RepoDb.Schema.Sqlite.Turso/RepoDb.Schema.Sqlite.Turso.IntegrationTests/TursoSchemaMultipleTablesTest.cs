@@ -11,10 +11,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Turso.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RepoDb.Schema.Turso.IntegrationTests.Setup;
+using RepoDb.Schema.Sqlite.Turso.IntegrationTests.Setup;
 using RepoDb.Schema.Models;
 
-namespace RepoDb.Schema.Turso.IntegrationTests
+namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
 {
     [TestClass]
     public class TursoSchemaMultipleTablesTest

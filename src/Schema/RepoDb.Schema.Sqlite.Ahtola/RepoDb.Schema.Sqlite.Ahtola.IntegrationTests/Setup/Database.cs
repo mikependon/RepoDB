@@ -13,7 +13,7 @@ using System.IO;
 using System.Linq;
 using Ahtola.Data.Sqlite;
 
-namespace RepoDb.Schema.Ahtola.IntegrationTests.Setup
+namespace RepoDb.Schema.Sqlite.Ahtola.IntegrationTests.Setup
 {
     public static class Database
     {

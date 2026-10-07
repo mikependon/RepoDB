@@ -10,7 +10,7 @@ using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Schema;
 
-namespace RepoDb.Schema.Ahtola.UnitTests
+namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
 {
     [TestClass]
     public class AhtolaNamesTest

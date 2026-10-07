@@ -13,9 +13,9 @@ using System.Threading.Tasks;
 using Ahtola.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Schema.Enumerations;
-using RepoDb.Schema.Ahtola.IntegrationTests.Setup;
+using RepoDb.Schema.Sqlite.Ahtola.IntegrationTests.Setup;
 
-namespace RepoDb.Schema.Ahtola.IntegrationTests
+namespace RepoDb.Schema.Sqlite.Ahtola.IntegrationTests
 {
     [TestClass]
     public class AhtolaSchemaRelatedTablesTest

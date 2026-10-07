@@ -10,7 +10,7 @@ using System;
 using System.Collections;
 using System.Data.Common;
 
-namespace RepoDb.Schema.Ahtola.UnitTests.CustomObjects
+namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests.CustomObjects
 {
     public class CustomDbDataReader : DbDataReader
     {

@@ -97,7 +97,7 @@
     <InternalsVisibleTo Include="RepoDb.Schema.MySqlConnector" />
     <InternalsVisibleTo Include="RepoDb.Schema.PostgreSql" />
     <InternalsVisibleTo Include="RepoDb.Schema.SqlServer" />
-    <InternalsVisibleTo Include="RepoDb.Schema.Sqlite" />
+    <InternalsVisibleTo Include="RepoDb.Schema.Sqlite.Microsoft" />
     <InternalsVisibleTo Include="RepoDb.Schema.Db2" />
     <InternalsVisibleTo Include="RepoDb.Schema.DuckDb" />
     <InternalsVisibleTo Include="RepoDb.Schema.Firebird" />
@@ -109,8 +109,8 @@
     <InternalsVisibleTo Include="RepoDb.Schema.AuroraDbMySqlConnector" />
     <InternalsVisibleTo Include="RepoDb.Schema.AuroraDbPostgreSql" />
     <InternalsVisibleTo Include="RepoDb.Schema.ClickHouse" />
-    <InternalsVisibleTo Include="RepoDb.Schema.Ahtola" />
-    <InternalsVisibleTo Include="RepoDb.Schema.Turso" />
+    <InternalsVisibleTo Include="RepoDb.Schema.Sqlite.Ahtola" />
+    <InternalsVisibleTo Include="RepoDb.Schema.Sqlite.Turso" />
     <InternalsVisibleTo Include="RepoDb.SqlServer" />
     <InternalsVisibleTo Include="RepoDb.Sqlite.Microsoft" />
     <InternalsVisibleTo Include="RepoDb.Telemetry.Core" />

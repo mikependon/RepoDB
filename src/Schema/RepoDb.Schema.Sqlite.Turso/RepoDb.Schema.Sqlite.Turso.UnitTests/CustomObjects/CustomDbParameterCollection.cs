@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 
-namespace RepoDb.Schema.Turso.UnitTests.CustomObjects
+namespace RepoDb.Schema.Sqlite.Turso.UnitTests.CustomObjects
 {
     public class CustomDbParameterCollection : DbParameterCollection
     {

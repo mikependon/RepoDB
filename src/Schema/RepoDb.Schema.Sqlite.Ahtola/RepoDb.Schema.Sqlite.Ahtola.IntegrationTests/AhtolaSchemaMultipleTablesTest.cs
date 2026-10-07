@@ -11,10 +11,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Ahtola.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RepoDb.Schema.Ahtola.IntegrationTests.Setup;
+using RepoDb.Schema.Sqlite.Ahtola.IntegrationTests.Setup;
 using RepoDb.Schema.Models;
 
-namespace RepoDb.Schema.Ahtola.IntegrationTests
+namespace RepoDb.Schema.Sqlite.Ahtola.IntegrationTests
 {
     [TestClass]
     public class AhtolaSchemaMultipleTablesTest

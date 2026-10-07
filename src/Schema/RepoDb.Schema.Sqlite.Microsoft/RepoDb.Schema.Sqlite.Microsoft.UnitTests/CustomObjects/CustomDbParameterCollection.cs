@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 
-namespace RepoDb.Schema.Sqlite.UnitTests.CustomObjects
+namespace RepoDb.Schema.Sqlite.Microsoft.UnitTests.CustomObjects
 {
     public class CustomDbParameterCollection : DbParameterCollection
     {

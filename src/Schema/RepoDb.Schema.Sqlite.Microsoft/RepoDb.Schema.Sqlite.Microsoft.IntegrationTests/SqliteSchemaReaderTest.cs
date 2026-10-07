@@ -12,10 +12,10 @@ using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Schema.Enumerations;
-using RepoDb.Schema.Sqlite.IntegrationTests.Setup;
+using RepoDb.Schema.Sqlite.Microsoft.IntegrationTests.Setup;
 using RepoDb.Schema.Models;
 
-namespace RepoDb.Schema.Sqlite.IntegrationTests
+namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
 {
     [TestClass]
     public class SqliteSchemaReaderTest

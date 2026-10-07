@@ -7,7 +7,7 @@
   <Project Path="../../Providers/RepoDb.Core/RepoDb/RepoDb.csproj" />
   <Project Path="../../Providers/RepoDb.Sqlite.Ahtola/RepoDb.Sqlite.Ahtola/RepoDb.Sqlite.Ahtola.csproj" />
   <Project Path="../RepoDb.Schema.Core/RepoDb.Schema.Core/RepoDb.Schema.Core.csproj" />
-  <Project Path="RepoDb.Schema.Ahtola/RepoDb.Schema.Ahtola.csproj" />
-  <Project Path="RepoDb.Schema.Ahtola.UnitTests/RepoDb.Schema.Ahtola.UnitTests.csproj" />
-  <Project Path="RepoDb.Schema.Ahtola.IntegrationTests/RepoDb.Schema.Ahtola.IntegrationTests.csproj" />
+  <Project Path="RepoDb.Schema.Sqlite.Ahtola/RepoDb.Schema.Sqlite.Ahtola.csproj" />
+  <Project Path="RepoDb.Schema.Sqlite.Ahtola.UnitTests/RepoDb.Schema.Sqlite.Ahtola.UnitTests.csproj" />
+  <Project Path="RepoDb.Schema.Sqlite.Ahtola.IntegrationTests/RepoDb.Schema.Sqlite.Ahtola.IntegrationTests.csproj" />
 </Solution>

@@ -1,7 +1,7 @@
 <div align="center">
     <a href="https://repodb.net/tutorial/"><image src="SQLite.png" style="width:256px;" /></a>
     <br/>
-    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/"><strong>RepoDb.Schema.Sqlite</strong></a></span>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/"><strong>RepoDb.Schema.Sqlite.Microsoft</strong></a></span>
     <br/>
     <span style="font-size:16px;">The SQLite schema reader and composer of RepoDB library.</span>
 </div>

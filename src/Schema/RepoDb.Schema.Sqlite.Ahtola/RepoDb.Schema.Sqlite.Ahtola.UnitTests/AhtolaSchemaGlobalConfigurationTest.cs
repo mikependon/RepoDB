@@ -9,7 +9,7 @@
 using Ahtola.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace RepoDb.Schema.Ahtola.UnitTests
+namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
 {
     [TestClass]
     public class AhtolaSchemaGlobalConfigurationTest

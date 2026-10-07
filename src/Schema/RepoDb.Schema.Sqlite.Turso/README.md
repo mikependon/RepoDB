@@ -1,7 +1,7 @@
 <div align="center">
     <a href="https://repodb.net/tutorial/"><image src="SQLite.png" style="width:256px;" /></a>
     <br/>
-    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/"><strong>RepoDb.Schema.Turso</strong></a></span>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/"><strong>RepoDb.Schema.Sqlite.Turso</strong></a></span>
     <br/>
     <span style="font-size:16px;">The Turso schema reader and composer of RepoDB library.</span>
 </div>
