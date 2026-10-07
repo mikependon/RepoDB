@@ -230,6 +230,7 @@ Thanks to all [contributors](https://github.com/mikependon/RepoDb/graphs/contrib
 |---|---|
 | [AWS Advanced .NET Data Provider Wrapper](https://github.com/aws/aws-advanced-dotnet-data-provider-wrapper) | AWS wrapper (failover, read/write splitting, IAM and Secrets Manager authentication) behind the AuroraDB providers, via [RepoDb.Connector.AuroraDb.MySqlConnector](https://www.nuget.org/packages/RepoDb.Connector.AuroraDb.MySqlConnector/) and [RepoDb.Connector.AuroraDb.Npgsql](https://www.nuget.org/packages/RepoDb.Connector.AuroraDb.Npgsql/). |
 | [ClickHouse.Driver](https://www.nuget.org/packages/ClickHouse.Driver/) | ADO.NET driver behind the ClickHouse provider. |
+| [Devolutions.Ahtola.Data.Sqlite](https://www.nuget.org/packages/Devolutions.Ahtola.Data.Sqlite/) | ADO.NET driver behind the SQLite (Ahtola) provider. |
 | [Docker](https://www.docker.com/) | Runs the containerized databases used for integration testing. |
 | [DuckDB.NET.Data.Full](https://www.nuget.org/packages/DuckDB.NET.Data.Full/) | ADO.NET driver behind the DuckDB provider. |
 | [FirebirdSql.Data.FirebirdClient](https://www.nuget.org/packages/FirebirdSql.Data.FirebirdClient/) | ADO.NET driver behind the Firebird provider. |
@@ -258,6 +259,7 @@ Thanks to all [contributors](https://github.com/mikependon/RepoDb/graphs/contrib
 | [Sap.Data.Hana.Net.v6.0](https://www.nuget.org/packages/Sap.Data.Hana.Net.v6.0/) | ADO.NET driver behind the SAP HANA provider. |
 | [Shields](https://shields.io/) | Generates the build, version, and download badges shown in this README. |
 | [System.Data.SQLite.Core](https://www.nuget.org/packages/System.Data.SQLite.Core/) | ADO.NET driver behind the SQLite (System) provider. |
+| [Turso.Data.Sqlite.Provider](https://www.nuget.org/packages/Turso.Data.Sqlite.Provider/) | ADO.NET driver behind the SQLite (Turso) provider. |
 | [Vertica.Data](https://www.nuget.org/packages/Vertica.Data/) | ADO.NET driver behind the Vertica provider. |
 
 ## License
