@@ -1,0 +1,24 @@
+#region Copyright Attributions
+
+// Copyright (c) 2026 mamoreau-devolutions and Michael Camara Pendon.
+// Portions copyright their respective RepoDB contributors.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+using System.Reflection;
+using BenchmarkDotNet.Running;
+using RepoDb.Benchmarks.Core.Configurations;
+
+namespace RepoDb.Benchmarks.Sqlite.Turso
+{
+    internal static class Program
+    {
+        private static void Main(string[] args)
+        {
+            var switcher = new BenchmarkSwitcher(Assembly.GetExecutingAssembly());
+            switcher.Run(args, new BenchmarkConfigWitRows("Turso (Turso.Data.Sqlite.Provider)"));
+        }
+    }
+}

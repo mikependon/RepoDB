@@ -1,0 +1,34 @@
+#region Copyright Attributions
+
+// Copyright (c) 2026 mamoreau-devolutions and Michael Camara Pendon.
+// Portions copyright their respective RepoDB contributors.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+using System.Data;
+using BenchmarkDotNet.Attributes;
+using Turso.Data.Sqlite;
+using RepoDb.Benchmarks.Core;
+using RepoDb.Benchmarks.Sqlite.Turso.Setup;
+
+namespace RepoDb.Benchmarks.Sqlite.Turso
+{
+    public abstract class SqliteBenchmark : BaseBenchmark
+    {
+        [GlobalCleanup]
+        public override void Cleanup() => DatabaseHelper.Cleanup();
+
+        [IterationSetup]
+        public override void IterationSetup() => CurrentId++;
+
+        protected override void BaseSetup()
+        {
+            DatabaseHelper.Initialize(ElementsCount);
+            Bootstrap();
+        }
+
+        protected override IDbConnection GetConnection() => new SqliteConnection(DatabaseHelper.ConnectionString);
+    }
+}

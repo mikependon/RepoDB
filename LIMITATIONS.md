@@ -142,7 +142,7 @@ We want the .NET community to understand this library's limitations before using
 
 ### Turso Driver and Runtime Requirements
 
-`RepoDb.Turso` requires .NET 8 or later and registers
+`RepoDb.Sqlite.Turso` requires .NET 8 or later and registers
 `Turso.Data.Sqlite.SqliteConnection` from `Turso.Data.Sqlite.Provider`, not the
 lower-level `Turso.TursoConnection`. The provider is based on the Microsoft
 SQLite provider, but the Turso engine is not a complete SQLite implementation.
@@ -152,7 +152,7 @@ dirty reads, and async execution.
 
 Use explicit automatic conversion or property handlers when CLR entity types
 differ from SQLite storage types. `UseTurso()` does not change process-wide
-conversion options. The [provider README](src/Providers/RepoDb.Turso/README.md)
+conversion options. The [provider README](src/Providers/RepoDb.Sqlite.Turso/README.md)
 shows the recommended initialization.
 
 ### Turso Truncate Does Not Vacuum
