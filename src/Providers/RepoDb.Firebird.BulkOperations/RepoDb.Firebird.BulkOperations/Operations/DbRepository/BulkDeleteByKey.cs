@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using FirebirdSql.Data.FirebirdClient;
 using RepoDb.Enumerations.Firebird;
 using RepoDb.Interfaces;
@@ -41,7 +42,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of deleted rows.</returns>
-        public static int BulkDeleteByKey<TEntity, TPrimaryKey>(this DbRepository<FbConnection> repository,
+        public static int BulkDeleteByKey<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TPrimaryKey>(this DbRepository<FbConnection> repository,
             IEnumerable<TPrimaryKey> primaryKeys,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -111,7 +112,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of deleted rows.</returns>
-        public static async Task<int> BulkDeleteByKeyAsync<TEntity, TPrimaryKey>(this DbRepository<FbConnection> repository,
+        public static async Task<int> BulkDeleteByKeyAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TPrimaryKey>(this DbRepository<FbConnection> repository,
             IEnumerable<TPrimaryKey> primaryKeys,
             int? bulkCopyTimeout = null,
             int? batchSize = null,

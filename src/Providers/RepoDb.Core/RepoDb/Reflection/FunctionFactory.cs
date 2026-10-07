@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace RepoDb.Reflection
         /// <param name="dbFields">The list of the <see cref="DbField"/> objects to be used.</param>
         /// <param name="dbSetting">The instance of <see cref="IDbSetting"/> object to be used.</param>
         /// <returns></returns>
-        public static Func<DbDataReader, TResult> CompileDataReaderToType<TResult>(DbDataReader reader,
+        public static Func<DbDataReader, TResult> CompileDataReaderToType<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(DbDataReader reader,
             DbFieldCollection dbFields,
             IDbSetting dbSetting)
         {
@@ -68,7 +69,7 @@ namespace RepoDb.Reflection
         /// <param name="dbSetting"></param>
         /// <param name="dbHelper"></param>
         /// <returns></returns>
-        public static Action<DbCommand, object> CompileDataEntityDbParameterSetter(Type entityType,
+        public static Action<DbCommand, object> CompileDataEntityDbParameterSetter([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
             IDbSetting dbSetting,
@@ -91,7 +92,7 @@ namespace RepoDb.Reflection
         /// <param name="dbSetting"></param>
         /// <param name="dbHelper"></param>
         /// <returns></returns>
-        public static Action<DbCommand, IList<object>> CompileDataEntityListDbParameterSetter(Type entityType,
+        public static Action<DbCommand, IList<object>> CompileDataEntityListDbParameterSetter([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
             int batchSize,
@@ -172,7 +173,7 @@ namespace RepoDb.Reflection
         /// <param name="index"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        public static Action<TEntity, DbCommand> CompileDbCommandToProperty<TEntity>(Field field,
+        public static Action<TEntity, DbCommand> CompileDbCommandToProperty<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field,
             string parameterName,
             int index,
             IDbSetting dbSetting)
@@ -191,7 +192,7 @@ namespace RepoDb.Reflection
         /// <param name="entityType"></param>
         /// <param name="field"></param>
         /// <returns></returns>
-        public static Action<object, object> CompileDataEntityPropertySetter(Type entityType,
+        public static Action<object, object> CompileDataEntityPropertySetter([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             Field field)
         {
             return Compiler.CompileDataEntityPropertySetter(entityType, field);
@@ -208,8 +209,8 @@ namespace RepoDb.Reflection
         /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
         /// <returns></returns>
-        public static Action<DbCommand, object> GetPlainTypeToDbParametersCompiledFunction(Type paramType,
-            Type entityType,
+        public static Action<DbCommand, object> GetPlainTypeToDbParametersCompiledFunction([DynamicallyAccessedMembers(Trimming.Entity)] Type paramType,
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             DbFieldCollection dbFields = null)
         {
             return Compiler.GetPlainTypeToDbParametersCompiledFunction(paramType, entityType, dbFields);

@@ -21,6 +21,9 @@
     -->
     <PackageVersion Condition="'$(RepoDbMySqlBulkOperationsVersion)' != ''">$(RepoDbMySqlBulkOperationsVersion)</PackageVersion>
   </PropertyGroup>
+  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="MySql.Data" Version="9.7.0" />
   </ItemGroup>

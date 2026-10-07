@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -38,6 +39,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void CreatePseudoTable(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
@@ -65,6 +67,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task CreatePseudoTableAsync(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
@@ -92,6 +95,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void CreatePseudoTableIndex(MariaDbConnection connection,
             string pseudoTableName,
             IEnumerable<Field> qualifiers,
@@ -123,6 +127,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task CreatePseudoTableIndexAsync(MariaDbConnection connection,
             string pseudoTableName,
             IEnumerable<Field> qualifiers,
@@ -149,6 +154,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void TruncatePseudoTable(MariaDbConnection connection,
             string pseudoTableName,
             ITrace trace = null,
@@ -170,6 +176,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task TruncatePseudoTableAsync(MariaDbConnection connection,
             string pseudoTableName,
             ITrace trace = null,
@@ -190,6 +197,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void DropPseudoTable(MariaDbConnection connection,
             string pseudoTableName,
             ITrace trace = null,
@@ -211,6 +219,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task DropPseudoTableAsync(MariaDbConnection connection,
             string pseudoTableName,
             ITrace trace = null,
@@ -236,6 +245,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void AllowNullForColumn(MariaDbConnection connection,
             string pseudoTableName,
             string columnName,
@@ -259,6 +269,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task AllowNullForColumnAsync(MariaDbConnection connection,
             string pseudoTableName,
             string columnName,
@@ -282,6 +293,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static (string SequenceName, bool IsAlwaysGenerated) GetIdentitySequenceMetadata(MariaDbConnection connection,
             string tableName,
             Field identityField,
@@ -308,6 +320,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static async Task<(string SequenceName, bool IsAlwaysGenerated)> GetIdentitySequenceMetadataAsync(MariaDbConnection connection,
             string tableName,
             Field identityField,
@@ -338,7 +351,8 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        public static int InsertFromPseudoTableForReturnIdentity<TEntity>(MariaDbConnection connection,
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
+        public static int InsertFromPseudoTableForReturnIdentity<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -381,7 +395,8 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<int> InsertFromPseudoTableForReturnIdentityAsync<TEntity>(MariaDbConnection connection,
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
+        public static async Task<int> InsertFromPseudoTableForReturnIdentityAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -423,6 +438,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static int InsertFromPseudoTableForReturnIdentityForDataTable(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
@@ -463,6 +479,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task<int> InsertFromPseudoTableForReturnIdentityForDataTableAsync(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
@@ -507,6 +524,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static int MergeFromPseudoTable(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
@@ -536,6 +554,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task<int> MergeFromPseudoTableAsync(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
@@ -567,7 +586,8 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        public static int MergeFromPseudoTableForReturnIdentity<TEntity>(MariaDbConnection connection,
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
+        public static int MergeFromPseudoTableForReturnIdentity<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -612,7 +632,8 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<int> MergeFromPseudoTableForReturnIdentityAsync<TEntity>(MariaDbConnection connection,
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
+        public static async Task<int> MergeFromPseudoTableForReturnIdentityAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -656,6 +677,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static int MergeFromPseudoTableForReturnIdentityForDataTable(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
@@ -698,6 +720,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task<int> MergeFromPseudoTableForReturnIdentityForDataTableAsync(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
@@ -742,6 +765,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static int UpdateFromPseudoTable(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
@@ -769,6 +793,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task<int> UpdateFromPseudoTableAsync(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
@@ -799,6 +824,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static int DeleteFromPseudoTable(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
@@ -824,6 +850,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task<int> DeleteFromPseudoTableAsync(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,

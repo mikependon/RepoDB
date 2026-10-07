@@ -9,6 +9,7 @@
 
 using RepoDb.Interfaces;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Data;
 
 namespace RepoDb.Requests
@@ -40,7 +41,7 @@ namespace RepoDb.Requests
         /// <param name="connection">The connection object.</param>
         /// <param name="transaction">The transaction object.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public TruncateRequest(Type type,
+        public TruncateRequest([DynamicallyAccessedMembers(Trimming.Entity)] Type type,
             IDbConnection connection,
             IDbTransaction transaction,
             IStatementBuilder statementBuilder = null)

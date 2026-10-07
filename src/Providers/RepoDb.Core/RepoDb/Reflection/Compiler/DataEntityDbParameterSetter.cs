@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -25,7 +26,7 @@ namespace RepoDb.Reflection
         /// <param name="dbSetting"></param>
         /// <param name="dbHelper"></param>
         /// <returns></returns>
-        internal static Action<DbCommand, object> CompileDataEntityDbParameterSetter(Type entityType,
+        internal static Action<DbCommand, object> CompileDataEntityDbParameterSetter([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
             IDbSetting dbSetting,
@@ -34,7 +35,7 @@ namespace RepoDb.Reflection
             var dbCommandExpression = Expression.Parameter(StaticType.DbCommand, "command");
             var entityParameterExpression = Expression.Parameter(StaticType.Object, "entityParameter");
             var dbParameterCollectionExpression = Expression.Property(dbCommandExpression,
-                StaticType.DbCommand.GetProperty("Parameters"));
+                typeof(System.Data.Common.DbCommand).GetProperty("Parameters"));
             var entityVariableExpression = Expression.Variable(StaticType.Object, "entityVariable");
             var entityExpressions = new List<Expression>();
             var entityVariableExpressions = new List<ParameterExpression>();
@@ -63,6 +64,7 @@ namespace RepoDb.Reflection
             {
                 // Add the property block
                 var propertyBlock = GetPropertyFieldExpression(dbCommandExpression,
+                    entityType,
                     ConvertExpressionToTypeExpression(entityVariableExpression, entityType),
                     fieldDirection,
                     0,

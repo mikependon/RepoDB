@@ -27,7 +27,7 @@ namespace RepoDb.Reflection
         internal static Expression CreateClassHandlerGetOptionsExpression(Expression readerExpression)
         {
             // Get the 'Create' method
-            var method = StaticType.ClassHandlerGetOptions.GetMethod("Create",
+            var method = typeof(RepoDb.Options.ClassHandlerGetOptions).GetMethod("Create",
                 BindingFlags.Static | BindingFlags.NonPublic);
 
             // Set to default
@@ -45,7 +45,7 @@ namespace RepoDb.Reflection
         internal static Expression CreateClassHandlerSetOptionsExpression(Expression commandExpression)
         {
             // Get the 'Create' method
-            var method = StaticType.ClassHandlerSetOptions.GetMethod("Create",
+            var method = typeof(RepoDb.Options.ClassHandlerSetOptions).GetMethod("Create",
                 BindingFlags.Static | BindingFlags.NonPublic);
 
             // Set to default
@@ -82,7 +82,7 @@ namespace RepoDb.Reflection
             Expression classPropertyExpression)
         {
             // Get the 'Create' method
-            var method = StaticType.PropertyHandlerGetOptions.GetMethod("Create",
+            var method = typeof(RepoDb.Options.PropertyHandlerGetOptions).GetMethod("Create",
                 BindingFlags.Static | BindingFlags.NonPublic);
 
             // Set to default
@@ -116,7 +116,7 @@ namespace RepoDb.Reflection
             Expression classPropertyExpression)
         {
             // Get the 'Create' method
-            var method = StaticType.PropertyHandlerSetOptions.GetMethod("Create",
+            var method = typeof(RepoDb.Options.PropertyHandlerSetOptions).GetMethod("Create",
                 BindingFlags.Static | BindingFlags.NonPublic);
 
             // Set to default

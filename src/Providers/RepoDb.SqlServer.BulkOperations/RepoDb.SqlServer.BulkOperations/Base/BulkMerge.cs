@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -45,7 +46,8 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="trace"></param>
         /// <returns></returns>
-        private static int BulkMergeInternalBase<TEntity>(SqlConnection connection,
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
+        private static int BulkMergeInternalBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field>? qualifiers = null,
@@ -87,7 +89,7 @@ namespace RepoDb
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction, true);
 
                 // Variables needed
-                var entityType = entities.FirstOrDefault()?.GetType() ?? typeof(TEntity);
+                var entityType = DbConnectionExtension.GetEntityType<TEntity>(entities.FirstOrDefault());
                 var entityFields = TypeCache.Get(entityType).IsDictionaryStringObject() ?
                     GetDictionaryStringObjectFields(entities.FirstOrDefault() as IDictionary<string, object>) :
                     FieldCache.Get(entityType);
@@ -215,6 +217,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="trace"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static int BulkMergeInternalBase(SqlConnection connection,
             string tableName,
             DbDataReader reader,
@@ -373,6 +376,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="trace"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static int BulkMergeInternalBase(SqlConnection connection,
             string tableName,
             DataTable table,
@@ -558,7 +562,8 @@ namespace RepoDb
         /// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkMergeAsyncInternalBase<TEntity>(SqlConnection connection,
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
+        private static async Task<int> BulkMergeAsyncInternalBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field>? qualifiers = null,
@@ -601,7 +606,7 @@ namespace RepoDb
                 var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken).ConfigureAwait(false);
 
                 // Variables needed
-                var entityType = entities.FirstOrDefault()?.GetType() ?? typeof(TEntity);
+                var entityType = DbConnectionExtension.GetEntityType<TEntity>(entities.FirstOrDefault());
                 var entityFields = TypeCache.Get(entityType).IsDictionaryStringObject() ?
                     GetDictionaryStringObjectFields(entities.FirstOrDefault() as IDictionary<string, object>) :
                     FieldCache.Get(entityType);
@@ -733,6 +738,7 @@ namespace RepoDb
         /// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static async Task<int> BulkMergeAsyncInternalBase(SqlConnection connection,
             string tableName,
             DbDataReader reader,
@@ -894,6 +900,7 @@ namespace RepoDb
         /// <param name="cancellationToken"></param>
         /// <param name="trace"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static async Task<int> BulkMergeAsyncInternalBase(SqlConnection connection,
             string tableName,
             DataTable table,

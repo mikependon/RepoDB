@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Extensions;
 using System;
 using System.Collections.Concurrent;
@@ -32,7 +33,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
-        public static ClassProperty Get<TEntity>(Expression<Func<TEntity, object>> expression)
+        public static ClassProperty Get<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> expression)
             where TEntity : class
         {
             return Get(typeof(TEntity), ExpressionExtension.GetProperty<TEntity>(expression), includeMappings: false);
@@ -45,7 +46,7 @@ namespace RepoDb
         /// <param name="propertyName">The name of the property.</param>
         /// <param name="includeMappings">True to evaluate the existing mappings.</param>
         /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
-        public static ClassProperty Get<TEntity>(string propertyName,
+        public static ClassProperty Get<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string propertyName,
             bool includeMappings = false)
             where TEntity : class
         {
@@ -59,7 +60,7 @@ namespace RepoDb
         /// <param name="propertyName">The name of the property.</param>
         /// <param name="includeMappings">True to evaluate the existing mappings.</param>
         /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
-        public static ClassProperty Get(Type entityType,
+        public static ClassProperty Get([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             string propertyName,
             bool includeMappings = false)
         {
@@ -80,7 +81,7 @@ namespace RepoDb
         /// <param name="field">The instance of the <see cref="Field"/> object.</param>
         /// <param name="includeMappings">True to evaluate the existing mappings.</param>
         /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
-        public static ClassProperty Get<TEntity>(Field field,
+        public static ClassProperty Get<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field,
             bool includeMappings = false)
             where TEntity : class
         {
@@ -94,7 +95,7 @@ namespace RepoDb
         /// <param name="field">The instance of the <see cref="Field"/> object.</param>
         /// <param name="includeMappings">True to evaluate the existing mappings.</param>
         /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
-        public static ClassProperty Get(Type entityType,
+        public static ClassProperty Get([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             Field field,
             bool includeMappings = false)
         {
@@ -112,7 +113,7 @@ namespace RepoDb
         /// <param name="propertyInfo">The instance of the <see cref="PropertyInfo"/> object.</param>
         /// <param name="includeMappings">True to evaluate the existing mappings.</param>
         /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
-        internal static ClassProperty Get(Type entityType,
+        internal static ClassProperty Get([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             PropertyInfo propertyInfo,
             bool includeMappings = false)
         {
@@ -128,7 +129,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <returns>The cached list <see cref="ClassProperty"/> objects.</returns>
-        public static IEnumerable<ClassProperty> Get<TEntity>()
+        public static IEnumerable<ClassProperty> Get<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>()
             where TEntity : class
         {
             return Get(typeof(TEntity));
@@ -139,7 +140,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entityType">The type of the data entity.</param>
         /// <returns>The cached list <see cref="ClassProperty"/> objects.</returns>
-        public static IEnumerable<ClassProperty> Get(Type entityType)
+        public static IEnumerable<ClassProperty> Get([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType)
         {
             if (entityType is null || !TypeCache.Get(entityType).IsClassType())
             {

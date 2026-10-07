@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -48,7 +49,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BulkUpdateBase<TEntity>(this HanaConnection connection,
+        private static int BulkUpdateBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this HanaConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -303,7 +304,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkUpdateBaseAsync<TEntity>(this HanaConnection connection,
+        private static async Task<int> BulkUpdateBaseAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this HanaConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,

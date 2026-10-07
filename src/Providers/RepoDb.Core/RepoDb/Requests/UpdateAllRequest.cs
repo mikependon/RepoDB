@@ -10,6 +10,7 @@
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Collections.Generic;
 using System.Data;
 
@@ -54,7 +55,7 @@ namespace RepoDb.Requests
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public UpdateAllRequest(Type type,
+        public UpdateAllRequest([DynamicallyAccessedMembers(Trimming.Entity)] Type type,
             IDbConnection connection,
             IDbTransaction transaction,
             IEnumerable<Field> fields = null,

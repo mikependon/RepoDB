@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using Npgsql;
 using RepoDb.Enumerations.PostgreSql;
 using RepoDb.Extensions;
@@ -45,7 +46,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
         [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
-        public static int BinaryImport<TEntity>(this NpgsqlConnection connection,
+        public static int BinaryImport<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this NpgsqlConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<PostgreSqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
@@ -75,7 +76,7 @@ namespace RepoDb
         /// <param name="identityBehavior"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        internal static int BinaryImportInternal<TEntity>(this NpgsqlConnection connection,
+        internal static int BinaryImportInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this NpgsqlConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<PostgreSqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
@@ -109,7 +110,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
         [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
-        public static int BinaryImport<TEntity>(this NpgsqlConnection connection,
+        public static int BinaryImport<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<PostgreSqlBulkInsertMapItem> mappings = null,
@@ -142,7 +143,7 @@ namespace RepoDb
         /// <param name="identityBehavior"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        internal static int BinaryImportInternal<TEntity>(this NpgsqlConnection connection,
+        internal static int BinaryImportInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<PostgreSqlBulkInsertMapItem> mappings = null,
@@ -181,7 +182,7 @@ namespace RepoDb
         /// <param name="dbSetting"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BinaryImportInternal<TEntity>(this NpgsqlConnection connection,
+        private static int BinaryImportInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<PostgreSqlBulkInsertMapItem> mappings = null,
@@ -194,7 +195,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Solving the anonymous types
-            var entityType = (entities?.First()?.GetType() ?? typeof(TEntity));
+            var entityType = DbConnectionExtension.GetEntityType<TEntity>(entities?.First());
             var isDictionary = TypeCache.Get(entityType).IsDictionaryStringObject();
             var includeIdentity = (identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
             var isPrimaryAnIdentity = IsPrimaryAnIdentity(dbFields);
@@ -623,7 +624,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
         [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
-        public static Task<int> BinaryImportAsync<TEntity>(this NpgsqlConnection connection,
+        public static Task<int> BinaryImportAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this NpgsqlConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<PostgreSqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
@@ -656,7 +657,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        internal static Task<int> BinaryImportInternalAsync<TEntity>(this NpgsqlConnection connection,
+        internal static Task<int> BinaryImportInternalAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this NpgsqlConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<PostgreSqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
@@ -693,7 +694,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
         [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
-        public static async Task<int> BinaryImportAsync<TEntity>(this NpgsqlConnection connection,
+        public static async Task<int> BinaryImportAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<PostgreSqlBulkInsertMapItem> mappings = null,
@@ -729,7 +730,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        internal static async Task<int> BinaryImportInternalAsync<TEntity>(this NpgsqlConnection connection,
+        internal static async Task<int> BinaryImportInternalAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<PostgreSqlBulkInsertMapItem> mappings = null,
@@ -771,7 +772,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BinaryImportAsyncInternal<TEntity>(this NpgsqlConnection connection,
+        private static async Task<int> BinaryImportAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<PostgreSqlBulkInsertMapItem> mappings = null,
@@ -785,7 +786,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Solving the anonymous types
-            var entityType = (entities?.First()?.GetType() ?? typeof(TEntity));
+            var entityType = DbConnectionExtension.GetEntityType<TEntity>(entities?.First());
             var isDictionary = TypeCache.Get(entityType).IsDictionaryStringObject();
             var includeIdentity = (identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
             var isPrimaryAnIdentity = IsPrimaryAnIdentity(dbFields);

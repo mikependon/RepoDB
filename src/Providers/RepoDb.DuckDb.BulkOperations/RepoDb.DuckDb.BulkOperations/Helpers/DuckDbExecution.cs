@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -37,6 +38,7 @@ namespace RepoDb.DuckDb.BulkOperations.Extensions
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void CreatePseudoTable(DuckDBConnection connection,
             string tableName,
             string pseudoTableName,
@@ -60,6 +62,7 @@ namespace RepoDb.DuckDb.BulkOperations.Extensions
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static Task CreatePseudoTableAsync(DuckDBConnection connection,
             string tableName,
             string pseudoTableName,
@@ -80,6 +83,7 @@ namespace RepoDb.DuckDb.BulkOperations.Extensions
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void DropPseudoTable(DuckDBConnection connection,
             string pseudoTableName,
             ITrace trace = null,
@@ -97,6 +101,7 @@ namespace RepoDb.DuckDb.BulkOperations.Extensions
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static Task DropPseudoTableAsync(DuckDBConnection connection,
             string pseudoTableName,
             ITrace trace = null,
@@ -113,7 +118,7 @@ namespace RepoDb.DuckDb.BulkOperations.Extensions
         /// <param name="entities">The entities to set the identities to.</param>
         /// <param name="identityField">The identity field.</param>
         /// <returns>The identity setter.</returns>
-        private static Action<int, object> GetEntitySetter<TEntity>(IList<TEntity> entities,
+        private static Action<int, object> GetEntitySetter<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IList<TEntity> entities,
             Field identityField)
             where TEntity : class
         {
@@ -189,7 +194,7 @@ namespace RepoDb.DuckDb.BulkOperations.Extensions
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows.</returns>
-        public static int InsertFromPseudoTableForReturnIdentity<TEntity>(DuckDBConnection connection,
+        public static int InsertFromPseudoTableForReturnIdentity<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(DuckDBConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -216,7 +221,7 @@ namespace RepoDb.DuckDb.BulkOperations.Extensions
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The number of affected rows.</returns>
-        public static Task<int> InsertFromPseudoTableForReturnIdentityAsync<TEntity>(DuckDBConnection connection,
+        public static Task<int> InsertFromPseudoTableForReturnIdentityAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(DuckDBConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -292,6 +297,7 @@ namespace RepoDb.DuckDb.BulkOperations.Extensions
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static int InsertFromPseudoTableForReturnIdentity(DuckDBConnection connection,
             string tableName,
             string pseudoTableName,
@@ -321,6 +327,7 @@ namespace RepoDb.DuckDb.BulkOperations.Extensions
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The number of affected rows.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static async Task<int> InsertFromPseudoTableForReturnIdentityAsync(DuckDBConnection connection,
             string tableName,
             string pseudoTableName,
@@ -354,6 +361,7 @@ namespace RepoDb.DuckDb.BulkOperations.Extensions
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static int MergeFromPseudoTable(DuckDBConnection connection,
             string tableName,
             string pseudoTableName,
@@ -380,6 +388,7 @@ namespace RepoDb.DuckDb.BulkOperations.Extensions
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The number of affected rows.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static Task<int> MergeFromPseudoTableAsync(DuckDBConnection connection,
             string tableName,
             string pseudoTableName,
@@ -408,7 +417,7 @@ namespace RepoDb.DuckDb.BulkOperations.Extensions
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows.</returns>
-        public static int MergeFromPseudoTableForReturnIdentity<TEntity>(DuckDBConnection connection,
+        public static int MergeFromPseudoTableForReturnIdentity<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(DuckDBConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -437,7 +446,7 @@ namespace RepoDb.DuckDb.BulkOperations.Extensions
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The number of affected rows.</returns>
-        public static Task<int> MergeFromPseudoTableForReturnIdentityAsync<TEntity>(DuckDBConnection connection,
+        public static Task<int> MergeFromPseudoTableForReturnIdentityAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(DuckDBConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -519,6 +528,7 @@ namespace RepoDb.DuckDb.BulkOperations.Extensions
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static int MergeFromPseudoTableForReturnIdentity(DuckDBConnection connection,
             string tableName,
             string pseudoTableName,
@@ -577,6 +587,7 @@ namespace RepoDb.DuckDb.BulkOperations.Extensions
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The number of affected rows.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static async Task<int> MergeFromPseudoTableForReturnIdentityAsync(DuckDBConnection connection,
             string tableName,
             string pseudoTableName,
@@ -658,6 +669,7 @@ namespace RepoDb.DuckDb.BulkOperations.Extensions
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static int UpdateFromPseudoTable(DuckDBConnection connection,
             string tableName,
             string pseudoTableName,
@@ -682,6 +694,7 @@ namespace RepoDb.DuckDb.BulkOperations.Extensions
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The number of affected rows.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static Task<int> UpdateFromPseudoTableAsync(DuckDBConnection connection,
             string tableName,
             string pseudoTableName,
@@ -709,6 +722,7 @@ namespace RepoDb.DuckDb.BulkOperations.Extensions
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static int DeleteFromPseudoTable(DuckDBConnection connection,
             string tableName,
             string pseudoTableName,
@@ -731,6 +745,7 @@ namespace RepoDb.DuckDb.BulkOperations.Extensions
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The number of affected rows.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static Task<int> DeleteFromPseudoTableAsync(DuckDBConnection connection,
             string tableName,
             string pseudoTableName,

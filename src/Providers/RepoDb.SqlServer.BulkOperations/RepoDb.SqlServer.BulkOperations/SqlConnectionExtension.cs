@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -52,12 +53,12 @@ namespace RepoDb
         /// <param name="entities"></param>
         /// <param name="reader"></param>
         /// <param name="identityField"></param>
-        private static int SetIdentityForEntities<TEntity>(IEnumerable<TEntity> entities,
+        private static int SetIdentityForEntities<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IEnumerable<TEntity> entities,
             DbDataReader reader,
             Field identityField)
             where TEntity : class
         {
-            var entityType = entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity);
+            var entityType = DbConnectionExtension.GetEntityType<TEntity>(entities?.FirstOrDefault());
             var list = entities.AsList();
             var result = 0;
 
@@ -99,13 +100,13 @@ namespace RepoDb
         /// <param name="reader"></param>
         /// <param name="identityDbField"></param>
         /// <param name="cancellationToken"></param>
-        private static async Task<int> SetIdentityForEntitiesAsync<TEntity>(IEnumerable<TEntity> entities,
+        private static async Task<int> SetIdentityForEntitiesAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IEnumerable<TEntity> entities,
             DbDataReader reader,
             DbField identityDbField,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            var entityType = entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity);
+            var entityType = DbConnectionExtension.GetEntityType<TEntity>(entities?.FirstOrDefault());
             var list = entities.AsList();
             var result = 0;
 
@@ -219,7 +220,7 @@ namespace RepoDb
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="qualifiers"></param>
         /// <returns></returns>
-        private static IEnumerable<Field> ParseExpression<TEntity>(Expression<Func<TEntity, object>> qualifiers)
+        private static IEnumerable<Field> ParseExpression<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> qualifiers)
             where TEntity : class =>
             qualifiers != null ? Field.Parse<TEntity>(qualifiers) : default;
 
@@ -361,7 +362,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entities"></param>
-        internal static void ThrowIfNullOrEmpty<TEntity>(IEnumerable<TEntity> entities)
+        internal static void ThrowIfNullOrEmpty<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IEnumerable<TEntity> entities)
             where TEntity : class
         {
             if (entities == null)
@@ -492,9 +493,7 @@ namespace RepoDb
         {
             // Variables
             var table = new DataTable();
-            var column = table
-                .Columns
-                .Add(field.Name, field.Type);
+            var column = table.AddColumn(field.Name, field.Type);
 
             // Add the values
             foreach (var value in values)

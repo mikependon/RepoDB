@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -37,6 +38,7 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void CreatePseudoTable(FbConnection connection,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -63,6 +65,7 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task CreatePseudoTableAsync(FbConnection connection,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -86,6 +89,7 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void CreatePseudoTableIndex(FbConnection connection,
             string pseudoTableName,
             IEnumerable<Field> qualifiers,
@@ -108,6 +112,7 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task CreatePseudoTableIndexAsync(FbConnection connection,
             string pseudoTableName,
             IEnumerable<Field> qualifiers,
@@ -128,6 +133,7 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void DropPseudoTable(FbConnection connection,
             string pseudoTableName,
             ITrace trace = null,
@@ -148,6 +154,7 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task DropPseudoTableAsync(FbConnection connection,
             string pseudoTableName,
             ITrace trace = null,
@@ -189,7 +196,7 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        public static int InsertFromPseudoTableForReturnIdentity<TEntity>(FbConnection connection,
+        public static int InsertFromPseudoTableForReturnIdentity<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(FbConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -231,7 +238,7 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<int> InsertFromPseudoTableForReturnIdentityAsync<TEntity>(FbConnection connection,
+        public static async Task<int> InsertFromPseudoTableForReturnIdentityAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(FbConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -354,6 +361,7 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static int MergeFromPseudoTable(FbConnection connection,
             string tableName,
             string pseudoTableName,
@@ -384,6 +392,7 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task<int> MergeFromPseudoTableAsync(FbConnection connection,
             string tableName,
             string pseudoTableName,
@@ -416,7 +425,7 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        public static int MergeFromPseudoTableForReturnIdentity<TEntity>(FbConnection connection,
+        public static int MergeFromPseudoTableForReturnIdentity<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(FbConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -460,7 +469,7 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<int> MergeFromPseudoTableForReturnIdentityAsync<TEntity>(FbConnection connection,
+        public static async Task<int> MergeFromPseudoTableForReturnIdentityAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(FbConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -587,6 +596,7 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static int UpdateFromPseudoTable(FbConnection connection,
             string tableName,
             string pseudoTableName,
@@ -613,6 +623,7 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task<int> UpdateFromPseudoTableAsync(FbConnection connection,
             string tableName,
             string pseudoTableName,
@@ -642,6 +653,7 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static int DeleteFromPseudoTable(FbConnection connection,
             string tableName,
             string pseudoTableName,
@@ -666,6 +678,7 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task<int> DeleteFromPseudoTableAsync(FbConnection connection,
             string tableName,
             string pseudoTableName,

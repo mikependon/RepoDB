@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Contexts.Providers;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -41,7 +42,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public static object Insert<TEntity>(this IDbConnection connection,
+        public static object Insert<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
@@ -81,7 +82,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public static TResult Insert<TEntity, TResult>(this IDbConnection connection,
+        public static TResult Insert<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
@@ -119,7 +120,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public static object Insert<TEntity>(this IDbConnection connection,
+        public static object Insert<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -157,7 +158,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public static TResult Insert<TEntity, TResult>(this IDbConnection connection,
+        public static TResult Insert<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -196,7 +197,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        internal static TResult InsertInternal<TEntity, TResult>(this IDbConnection connection,
+        internal static TResult InsertInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
@@ -256,7 +257,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public static Task<object> InsertAsync<TEntity>(this IDbConnection connection,
+        public static Task<object> InsertAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
@@ -299,7 +300,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public static Task<TResult> InsertAsync<TEntity, TResult>(this IDbConnection connection,
+        public static Task<TResult> InsertAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
@@ -340,7 +341,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public static Task<object> InsertAsync<TEntity>(this IDbConnection connection,
+        public static Task<object> InsertAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -381,7 +382,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public static Task<TResult> InsertAsync<TEntity, TResult>(this IDbConnection connection,
+        public static Task<TResult> InsertAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -423,7 +424,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        internal static Task<TResult> InsertAsyncInternal<TEntity, TResult>(this IDbConnection connection,
+        internal static Task<TResult> InsertAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
@@ -484,6 +485,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static object Insert(this IDbConnection connection,
             string tableName,
             object entity,
@@ -522,6 +524,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static TResult Insert<TResult>(this IDbConnection connection,
             string tableName,
             object entity,
@@ -565,6 +568,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Task<object> InsertAsync(this IDbConnection connection,
             string tableName,
             object entity,
@@ -606,6 +610,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Task<TResult> InsertAsync<TResult>(this IDbConnection connection,
             string tableName,
             object entity,
@@ -651,7 +656,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        internal static TResult InsertInternalBase<TEntity, TResult>(this IDbConnection connection,
+        internal static TResult InsertInternalBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
@@ -667,7 +672,7 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
 
             // Get the context
-            var entityType = entity?.GetType() ?? typeof(TEntity);
+            var entityType = GetEntityType<TEntity>(entity);
             var context = InsertExecutionContextProvider.Create(entityType,
                 connection,
                 tableName,
@@ -741,7 +746,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        internal async static Task<TResult> InsertAsyncInternalBase<TEntity, TResult>(this IDbConnection connection,
+        internal async static Task<TResult> InsertAsyncInternalBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
@@ -758,7 +763,7 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
 
             // Get the context
-            var entityType = entity?.GetType() ?? typeof(TEntity);
+            var entityType = GetEntityType<TEntity>(entity);
             var context = await InsertExecutionContextProvider.CreateAsync(entityType,
                 connection,
                 tableName,

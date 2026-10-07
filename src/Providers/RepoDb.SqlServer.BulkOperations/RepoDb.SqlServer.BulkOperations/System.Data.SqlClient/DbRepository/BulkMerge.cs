@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Enumerations;
 using System;
 using System.Collections.Generic;
@@ -43,7 +44,7 @@ namespace RepoDb
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkMerge<TEntity>(this DbRepository<SqlConnection> repository,
+        public static int BulkMerge<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DbRepository<SqlConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
@@ -101,7 +102,7 @@ namespace RepoDb
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkMerge<TEntity>(this DbRepository<SqlConnection> repository,
+        public static int BulkMerge<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DbRepository<SqlConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
@@ -159,7 +160,7 @@ namespace RepoDb
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkMerge<TEntity>(this DbRepository<SqlConnection> repository,
+        public static int BulkMerge<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DbRepository<SqlConnection> repository,
             DbDataReader reader,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
@@ -274,7 +275,7 @@ namespace RepoDb
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkMerge<TEntity>(this DbRepository<SqlConnection> repository,
+        public static int BulkMerge<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DbRepository<SqlConnection> repository,
             DataTable dataTable,
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
@@ -399,7 +400,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkMergeAsync<TEntity>(this DbRepository<SqlConnection> repository,
+        public static async Task<int> BulkMergeAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DbRepository<SqlConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
@@ -460,7 +461,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkMergeAsync<TEntity>(this DbRepository<SqlConnection> repository,
+        public static async Task<int> BulkMergeAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DbRepository<SqlConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
@@ -521,7 +522,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkMergeAsync<TEntity>(this DbRepository<SqlConnection> repository,
+        public static async Task<int> BulkMergeAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DbRepository<SqlConnection> repository,
             DbDataReader reader,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
@@ -642,7 +643,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkMergeAsync<TEntity>(this DbRepository<SqlConnection> repository,
+        public static async Task<int> BulkMergeAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DbRepository<SqlConnection> repository,
             DataTable dataTable,
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,

@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using Vertica.Data.VerticaClient;
 using RepoDb.Enumerations.Vertica;
 using RepoDb.Interfaces;
@@ -41,7 +42,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows.</returns>
-        public static int BulkMerge<TEntity>(this VerticaConnection connection,
+        public static int BulkMerge<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this VerticaConnection connection,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<VerticaBulkInsertMapItem> mappings = null,
@@ -74,7 +75,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows.</returns>
-        public static int BulkMerge<TEntity>(this VerticaConnection connection,
+        public static int BulkMerge<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this VerticaConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -214,7 +215,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of affected rows.</returns>
-        public static Task<int> BulkMergeAsync<TEntity>(this VerticaConnection connection,
+        public static Task<int> BulkMergeAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this VerticaConnection connection,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<VerticaBulkInsertMapItem> mappings = null,
@@ -249,7 +250,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of affected rows.</returns>
-        public static Task<int> BulkMergeAsync<TEntity>(this VerticaConnection connection,
+        public static Task<int> BulkMergeAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this VerticaConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,

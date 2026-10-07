@@ -11,6 +11,7 @@ using RepoDb.Attributes;
 using RepoDb.Attributes.Parameter;
 using RepoDb.Extensions;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
@@ -28,6 +29,7 @@ namespace RepoDb
         /// Creates a new instance of <see cref="ClassProperty"/> object.
         /// </summary>
         /// <param name="property">The wrapped property.</param>
+        [RequiresUnreferencedCode("The properties of the declaring type of the property might be trimmed. Use the constructor that accepts the (annotated) declaring type instead.")]
         public ClassProperty(PropertyInfo property) :
             this(property.DeclaringType, property)
         { }
@@ -37,7 +39,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="parentType">The declaring type (avoiding the interface collision).</param>
         /// <param name="property">The wrapped property.</param>
-        public ClassProperty(Type parentType,
+        public ClassProperty([DynamicallyAccessedMembers(Trimming.Entity)] Type parentType,
             PropertyInfo property)
         {
             declaringType = parentType;
@@ -45,7 +47,6 @@ namespace RepoDb
 
             typeMapAttribute = new Lazy<TypeMapAttribute>(() => PropertyInfo.GetCustomAttribute<TypeMapAttribute>(), isThreadSafe: true);
             propertyHandlerAttribute = new Lazy<PropertyHandlerAttribute>(() => PropertyInfo.GetCustomAttribute<PropertyHandlerAttribute>(), isThreadSafe: true);
-            dbType = new Lazy<DbType?>(() => PropertyInfo.GetDbType(), isThreadSafe: true);
             propertyValueAttributes = new Lazy<IEnumerable<PropertyValueAttribute>>(() => PropertyInfo.GetPropertyValueAttributes(GetDeclaringType()), isThreadSafe: true);
             propertyValueAttribute = new Lazy<PropertyValueAttribute>(() =>
             {
@@ -60,6 +61,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the original declaring type (avoiding the interface collision).
         /// </summary>
+        [DynamicallyAccessedMembers(Trimming.Entity)]
         private readonly Type declaringType;
 
         /// <summary>
@@ -86,9 +88,10 @@ namespace RepoDb
         /// the derived class type instead (if there is), otherwise the <see cref="PropertyInfo.DeclaringType"/> property.
         /// </summary>
         /// <returns>The declaring type.</returns>
+        [return: DynamicallyAccessedMembers(Trimming.Entity)]
         public Type GetDeclaringType()
         {
-            return (declaringType ?? PropertyInfo.DeclaringType);
+            return (declaringType ?? PropertyInfoExtension.GetDeclaringType(PropertyInfo));
         }
 
         /*
@@ -239,7 +242,8 @@ namespace RepoDb
         /*
          * GetDbType
          */
-        private readonly Lazy<DbType?> dbType;
+        private DbType? dbType;
+        private bool isDbTypeResolved;
 
         /// <summary>
         /// Gets the mapped <see cref="DbType"/> for the current property.
@@ -247,7 +251,12 @@ namespace RepoDb
         /// <returns>The mapped <see cref="DbType"/> value.</returns>
         public DbType? GetDbType()
         {
-            return dbType.Value;
+            if (!isDbTypeResolved)
+            {
+                dbType = PropertyInfo.GetDbType();
+                isDbTypeResolved = true;
+            }
+            return dbType;
         }
 
         /*

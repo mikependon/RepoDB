@@ -7,6 +7,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Net.Security;
 using System.Reflection;
@@ -89,6 +90,11 @@ namespace RepoDb.Telemetry.Default
         /// to keep backward compatibility with those versions.
         /// </summary>
         /// <param name="trace">The trace object to assign as the default tracer.</param>
+        [DynamicDependency("Register", "RepoDb.GlobalTraceRegistration", "RepoDb")]
+        [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code",
+            Justification = "The 'RepoDb.GlobalTraceRegistration.Register' method (when present) is preserved via the DynamicDependency attribute.")]
+        [UnconditionalSuppressMessage("Trimming", "IL2075:'this' argument does not satisfy 'DynamicallyAccessedMembersAttribute' in call to target method.",
+            Justification = "The 'RepoDb.GlobalTraceRegistration.Register' method (when present) is preserved via the DynamicDependency attribute.")]
         private static void RegisterTrace(
             TelemetryTrace trace)
         {

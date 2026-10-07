@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -76,6 +77,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="trace"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         internal static int BulkDeleteByKeyInternalBase(SqlConnection connection,
             string tableName,
             IEnumerable<object> primaryKeys,
@@ -241,6 +243,7 @@ namespace RepoDb
         /// <param name="cancellationToken"></param>
         /// <param name="trace"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         internal static async Task<int> BulkDeleteByKeyAsyncInternalBase(SqlConnection connection,
             string tableName,
             IEnumerable<object> primaryKeys,

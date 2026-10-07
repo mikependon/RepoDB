@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using Npgsql;
 using RepoDb.Enumerations.PostgreSql;
@@ -39,7 +40,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been deleted from the target table.</returns>
         [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkDeleteByKey' instead.")]
-        public static int BinaryBulkDeleteByKey<TEntity, TPrimaryKey>(this BaseRepository<TEntity, NpgsqlConnection> repository,
+        public static int BinaryBulkDeleteByKey<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TPrimaryKey>(this BaseRepository<TEntity, NpgsqlConnection> repository,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
             int? bulkCopyTimeout = null,
@@ -78,7 +79,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the target table.</returns>
         [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkDeleteByKey' instead.")]
-        public static async Task<int> BinaryBulkDeleteByKeyAsync<TEntity, TPrimaryKey>(this BaseRepository<TEntity, NpgsqlConnection> repository,
+        public static async Task<int> BinaryBulkDeleteByKeyAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TPrimaryKey>(this BaseRepository<TEntity, NpgsqlConnection> repository,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
             int? bulkCopyTimeout = null,

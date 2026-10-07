@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -39,6 +40,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void CreatePseudoTable(OracleConnection connection,
             string tableName,
             string pseudoTableName,
@@ -66,6 +68,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task CreatePseudoTableAsync(OracleConnection connection,
             string tableName,
             string pseudoTableName,
@@ -90,6 +93,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void CreatePseudoTableIndex(OracleConnection connection,
             string pseudoTableName,
             IEnumerable<Field> qualifiers,
@@ -118,6 +122,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task CreatePseudoTableIndexAsync(OracleConnection connection,
             string pseudoTableName,
             IEnumerable<Field> qualifiers,
@@ -144,6 +149,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void TruncatePseudoTable(OracleConnection connection,
             string pseudoTableName,
             ITrace trace = null,
@@ -165,6 +171,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task TruncatePseudoTableAsync(OracleConnection connection,
             string pseudoTableName,
             ITrace trace = null,
@@ -185,6 +192,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void DropPseudoTable(OracleConnection connection,
             string pseudoTableName,
             ITrace trace = null,
@@ -206,6 +214,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task DropPseudoTableAsync(OracleConnection connection,
             string pseudoTableName,
             ITrace trace = null,
@@ -231,6 +240,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void AllowNullForColumn(OracleConnection connection,
             string pseudoTableName,
             string columnName,
@@ -254,6 +264,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task AllowNullForColumnAsync(OracleConnection connection,
             string pseudoTableName,
             string columnName,
@@ -277,6 +288,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "The parameter object passed to the RepoDB execute methods is either null or a Dictionary<string, object>, which is not reflected.")]
         private static (string SequenceName, bool IsAlwaysGenerated) GetIdentitySequenceMetadata(OracleConnection connection,
             string tableName,
             Field identityField,
@@ -286,11 +298,11 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = OracleText.GetIdentitySequenceMetadataSql();
-            var param = new
+            var param = new Dictionary<string, object>
             {
-                Schema = DataEntityExtension.GetSchema(tableName, dbSetting)?.AsUnquoted(dbSetting),
-                TableName = DataEntityExtension.GetTableName(tableName, dbSetting).AsUnquoted(dbSetting),
-                ColumnName = identityField.Name.AsUnquoted(dbSetting)
+                ["Schema"] = DataEntityExtension.GetSchema(tableName, dbSetting)?.AsUnquoted(dbSetting),
+                ["TableName"] = DataEntityExtension.GetTableName(tableName, dbSetting).AsUnquoted(dbSetting),
+                ["ColumnName"] = identityField.Name.AsUnquoted(dbSetting)
             };
 
             using var reader = (DbDataReader)connection.ExecuteReader(commandText, param: param, trace: trace, traceKey: traceKey, transaction: transaction);
@@ -309,6 +321,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "The parameter object passed to the RepoDB execute methods is either null or a Dictionary<string, object>, which is not reflected.")]
         private static async Task<(string SequenceName, bool IsAlwaysGenerated)> GetIdentitySequenceMetadataAsync(OracleConnection connection,
             string tableName,
             Field identityField,
@@ -319,11 +332,11 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = OracleText.GetIdentitySequenceMetadataSql();
-            var param = new
+            var param = new Dictionary<string, object>
             {
-                Schema = DataEntityExtension.GetSchema(tableName, dbSetting)?.AsUnquoted(dbSetting),
-                TableName = DataEntityExtension.GetTableName(tableName, dbSetting).AsUnquoted(dbSetting),
-                ColumnName = identityField.Name.AsUnquoted(dbSetting)
+                ["Schema"] = DataEntityExtension.GetSchema(tableName, dbSetting)?.AsUnquoted(dbSetting),
+                ["TableName"] = DataEntityExtension.GetTableName(tableName, dbSetting).AsUnquoted(dbSetting),
+                ["ColumnName"] = identityField.Name.AsUnquoted(dbSetting)
             };
 
             using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, param: param, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -345,7 +358,8 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        public static int InsertFromPseudoTableForReturnIdentity<TEntity>(OracleConnection connection,
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
+        public static int InsertFromPseudoTableForReturnIdentity<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(OracleConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -388,7 +402,8 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<int> InsertFromPseudoTableForReturnIdentityAsync<TEntity>(OracleConnection connection,
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
+        public static async Task<int> InsertFromPseudoTableForReturnIdentityAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(OracleConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -430,6 +445,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static int InsertFromPseudoTableForReturnIdentityForDataTable(OracleConnection connection,
             string tableName,
             string pseudoTableName,
@@ -470,6 +486,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task<int> InsertFromPseudoTableForReturnIdentityForDataTableAsync(OracleConnection connection,
             string tableName,
             string pseudoTableName,
@@ -514,6 +531,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static int MergeFromPseudoTable(OracleConnection connection,
             string tableName,
             string pseudoTableName,
@@ -543,6 +561,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task<int> MergeFromPseudoTableAsync(OracleConnection connection,
             string tableName,
             string pseudoTableName,
@@ -574,7 +593,8 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        public static int MergeFromPseudoTableForReturnIdentity<TEntity>(OracleConnection connection,
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
+        public static int MergeFromPseudoTableForReturnIdentity<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(OracleConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -619,7 +639,8 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<int> MergeFromPseudoTableForReturnIdentityAsync<TEntity>(OracleConnection connection,
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
+        public static async Task<int> MergeFromPseudoTableForReturnIdentityAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(OracleConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -663,6 +684,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static int MergeFromPseudoTableForReturnIdentityForDataTable(OracleConnection connection,
             string tableName,
             string pseudoTableName,
@@ -705,6 +727,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task<int> MergeFromPseudoTableForReturnIdentityForDataTableAsync(OracleConnection connection,
             string tableName,
             string pseudoTableName,
@@ -749,6 +772,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static int UpdateFromPseudoTable(OracleConnection connection,
             string tableName,
             string pseudoTableName,
@@ -776,6 +800,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task<int> UpdateFromPseudoTableAsync(OracleConnection connection,
             string tableName,
             string pseudoTableName,
@@ -806,6 +831,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static int DeleteFromPseudoTable(OracleConnection connection,
             string tableName,
             string pseudoTableName,
@@ -831,6 +857,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task<int> DeleteFromPseudoTableAsync(OracleConnection connection,
             string tableName,
             string pseudoTableName,

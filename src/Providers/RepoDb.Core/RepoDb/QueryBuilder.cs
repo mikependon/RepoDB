@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System.Collections.Generic;
 using RepoDb.Extensions;
 using System.Globalization;
@@ -354,7 +355,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of data entity object bound for the SQL Statement to be created.</typeparam>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder FieldsFrom<TEntity>(IDbSetting dbSetting)
+        public QueryBuilder FieldsFrom<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IDbSetting dbSetting)
             where TEntity : class
         {
             return FieldsFrom(PropertyCache.Get<TEntity>()?.AsFields(), dbSetting);
@@ -378,7 +379,7 @@ namespace RepoDb
         /// <param name="index">The parameter index.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder FieldsAndParametersFrom<TEntity>(int index, IDbSetting dbSetting)
+        public QueryBuilder FieldsAndParametersFrom<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(int index, IDbSetting dbSetting)
             where TEntity : class
         {
             return FieldsAndParametersFrom(FieldCache.Get<TEntity>(), index, dbSetting);
@@ -404,7 +405,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of data entity object bound for the SQL Statement to be created.</typeparam>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder FieldsAndAliasFieldsFrom<TEntity>(string leftAlias,
+        public QueryBuilder FieldsAndAliasFieldsFrom<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string leftAlias,
             string rightAlias,
             IDbSetting dbSetting)
             where TEntity : class
@@ -433,7 +434,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of data entity object bound for the SQL Statement to be created.</typeparam>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder AsAliasFieldsFrom<TEntity>(string alias,
+        public QueryBuilder AsAliasFieldsFrom<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string alias,
             IDbSetting dbSetting)
             where TEntity : class
         {
@@ -663,7 +664,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of data entity object bound for the SQL Statement to be created.</typeparam>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder TableNameFrom<TEntity>(IDbSetting dbSetting)
+        public QueryBuilder TableNameFrom<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IDbSetting dbSetting)
             where TEntity : class
         {
             return TableNameFrom(ClassMappedNameCache.Get<TEntity>(), dbSetting);
@@ -687,7 +688,7 @@ namespace RepoDb
         /// <param name="index">The parameter index.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder ParametersFrom<TEntity>(int index, IDbSetting dbSetting)
+        public QueryBuilder ParametersFrom<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(int index, IDbSetting dbSetting)
             where TEntity : class
         {
             return ParametersFrom(FieldCache.Get<TEntity>(), index, dbSetting);
@@ -712,7 +713,7 @@ namespace RepoDb
         /// <param name="index">The parameter index.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder ParametersAsFieldsFrom<TEntity>(int index,
+        public QueryBuilder ParametersAsFieldsFrom<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(int index,
             IDbSetting dbSetting)
             where TEntity : class
         {

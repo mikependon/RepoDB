@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -39,6 +40,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="nullableFields">See the remarks on <see cref="Db2Text.GetCreatePseudoTableSql"/>.</param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void CreatePseudoTable(DB2Connection connection,
             string tableName,
             string pseudoTableName,
@@ -68,6 +70,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         /// <param name="cancellationToken"></param>
         /// <param name="nullableFields">See the remarks on <see cref="Db2Text.GetCreatePseudoTableSql"/>.</param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task CreatePseudoTableAsync(DB2Connection connection,
             string tableName,
             string pseudoTableName,
@@ -93,6 +96,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void CreatePseudoTableIndex(DB2Connection connection,
             string pseudoTableName,
             IEnumerable<Field> qualifiers,
@@ -121,6 +125,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task CreatePseudoTableIndexAsync(DB2Connection connection,
             string pseudoTableName,
             IEnumerable<Field> qualifiers,
@@ -147,6 +152,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void TruncatePseudoTable(DB2Connection connection,
             string pseudoTableName,
             ITrace trace = null,
@@ -168,6 +174,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task TruncatePseudoTableAsync(DB2Connection connection,
             string pseudoTableName,
             ITrace trace = null,
@@ -188,6 +195,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void DropPseudoTable(DB2Connection connection,
             string pseudoTableName,
             ITrace trace = null,
@@ -209,6 +217,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task DropPseudoTableAsync(DB2Connection connection,
             string pseudoTableName,
             ITrace trace = null,
@@ -239,7 +248,8 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        public static int InsertFromPseudoTableForReturnIdentity<TEntity>(DB2Connection connection,
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
+        public static int InsertFromPseudoTableForReturnIdentity<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(DB2Connection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -281,7 +291,8 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<int> InsertFromPseudoTableForReturnIdentityAsync<TEntity>(DB2Connection connection,
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
+        public static async Task<int> InsertFromPseudoTableForReturnIdentityAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(DB2Connection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -322,6 +333,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static int InsertFromPseudoTableForReturnIdentityForDataTable(DB2Connection connection,
             string tableName,
             string pseudoTableName,
@@ -361,6 +373,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task<int> InsertFromPseudoTableForReturnIdentityForDataTableAsync(DB2Connection connection,
             string tableName,
             string pseudoTableName,
@@ -404,6 +417,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static int MergeFromPseudoTable(DB2Connection connection,
             string tableName,
             string pseudoTableName,
@@ -433,6 +447,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task<int> MergeFromPseudoTableAsync(DB2Connection connection,
             string tableName,
             string pseudoTableName,
@@ -464,7 +479,8 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        public static int MergeFromPseudoTableForReturnIdentity<TEntity>(DB2Connection connection,
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
+        public static int MergeFromPseudoTableForReturnIdentity<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(DB2Connection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -540,7 +556,8 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<int> MergeFromPseudoTableForReturnIdentityAsync<TEntity>(DB2Connection connection,
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
+        public static async Task<int> MergeFromPseudoTableForReturnIdentityAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(DB2Connection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -615,6 +632,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static int MergeFromPseudoTableForReturnIdentityForDataTable(DB2Connection connection,
             string tableName,
             string pseudoTableName,
@@ -688,6 +706,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task<int> MergeFromPseudoTableForReturnIdentityForDataTableAsync(DB2Connection connection,
             string tableName,
             string pseudoTableName,
@@ -763,6 +782,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static int UpdateFromPseudoTable(DB2Connection connection,
             string tableName,
             string pseudoTableName,
@@ -790,6 +810,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task<int> UpdateFromPseudoTableAsync(DB2Connection connection,
             string tableName,
             string pseudoTableName,
@@ -820,6 +841,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static int DeleteFromPseudoTable(DB2Connection connection,
             string tableName,
             string pseudoTableName,
@@ -845,6 +867,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task<int> DeleteFromPseudoTableAsync(DB2Connection connection,
             string tableName,
             string pseudoTableName,

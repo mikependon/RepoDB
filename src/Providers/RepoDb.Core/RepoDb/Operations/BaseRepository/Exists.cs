@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -27,6 +28,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public bool Exists(object what = null,
             string hints = null,
             string traceKey = TraceKeys.Exists,
@@ -47,7 +49,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        public bool Exists<TWhat>(TWhat what,
+        public bool Exists<[DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(TWhat what,
             string hints = null,
             string traceKey = TraceKeys.Exists,
 			IDbTransaction transaction = null)
@@ -147,6 +149,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Task<bool> ExistsAsync(object what,
             string hints = null,
             string traceKey = TraceKeys.Exists,
@@ -170,7 +173,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        public Task<bool> ExistsAsync<TWhat>(TWhat what,
+        public Task<bool> ExistsAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(TWhat what,
             string hints = null,
             string traceKey = TraceKeys.Exists,
 			IDbTransaction transaction = null,

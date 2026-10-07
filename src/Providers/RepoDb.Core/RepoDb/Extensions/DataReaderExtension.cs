@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -27,7 +28,7 @@ namespace RepoDb.Extensions
         /// <param name="reader">The data reader object to be converted.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         [Obsolete("This extended method will be removed soon.")]
-        public static IEnumerable<TEntity> AsEnumerable<TEntity>(this IDataReader reader)
+        public static IEnumerable<TEntity> AsEnumerable<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDataReader reader)
             where TEntity : class
         {
             var properties = PropertyCache.Get<TEntity>()

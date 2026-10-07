@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Resolvers;
@@ -37,7 +38,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>The cached column name mappings of the property.</returns>
-        public static string Get<TEntity>(Expression<Func<TEntity, object>> expression)
+        public static string Get<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> expression)
             where TEntity : class
         {
             return Get<TEntity>(ExpressionExtension.GetProperty<TEntity>(expression));
@@ -49,7 +50,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="propertyName">The name of the property.</param>
         /// <returns>The cached column name mappings of the property.</returns>
-        public static string Get<TEntity>(string propertyName)
+        public static string Get<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string propertyName)
             where TEntity : class
         {
             return Get<TEntity>(TypeExtension.GetProperty<TEntity>(propertyName));
@@ -61,7 +62,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
         /// <returns>The cached column name mappings of the property.</returns>
-        public static string Get<TEntity>(Field field)
+        public static string Get<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field)
             where TEntity : class
         {
             if (field == null)
@@ -78,7 +79,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="propertyInfo">The target property.</param>
         /// <returns>The cached column name mappings of the property.</returns>
-        internal static string Get<TEntity>(PropertyInfo propertyInfo)
+        internal static string Get<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(PropertyInfo propertyInfo)
             where TEntity : class
         {
             return Get(typeof(TEntity), propertyInfo);

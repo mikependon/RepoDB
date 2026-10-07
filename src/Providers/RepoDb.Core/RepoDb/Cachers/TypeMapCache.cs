@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Extensions;
 using RepoDb.Resolvers;
 using System;
@@ -76,7 +77,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
-        public static DbType? Get<TEntity>(Expression<Func<TEntity, object>> expression)
+        public static DbType? Get<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> expression)
             where TEntity : class
         {
             return Get<TEntity>(ExpressionExtension.GetProperty<TEntity>(expression));
@@ -88,7 +89,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="propertyName">The name of the property.</param>
         /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
-        public static DbType? Get<TEntity>(string propertyName)
+        public static DbType? Get<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string propertyName)
             where TEntity : class
         {
             return Get<TEntity>(TypeExtension.GetProperty<TEntity>(propertyName));
@@ -100,7 +101,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
         /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
-        public static DbType? Get<TEntity>(Field field)
+        public static DbType? Get<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field)
             where TEntity : class
         {
             return Get<TEntity>(TypeExtension.GetProperty<TEntity>(field.Name));
@@ -112,7 +113,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
         /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
-        internal static DbType? Get<TEntity>(PropertyInfo propertyInfo)
+        internal static DbType? Get<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(PropertyInfo propertyInfo)
             where TEntity : class
         {
             return Get(typeof(TEntity), propertyInfo) ?? Get(propertyInfo.PropertyType);

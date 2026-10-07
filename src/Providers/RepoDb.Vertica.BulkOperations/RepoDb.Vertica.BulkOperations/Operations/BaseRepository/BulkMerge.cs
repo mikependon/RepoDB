@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using Vertica.Data.VerticaClient;
 using System;
 using System.Linq.Expressions;
@@ -44,7 +45,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected (inserted or updated) rows.</returns>
-        public static int BulkMerge<TEntity>(this BaseRepository<TEntity, VerticaConnection> repository,
+        public static int BulkMerge<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this BaseRepository<TEntity, VerticaConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<VerticaBulkInsertMapItem> mappings = null,
@@ -77,7 +78,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected (inserted or updated) rows.</returns>
-        public static int BulkMerge<TEntity>(this BaseRepository<TEntity, VerticaConnection> repository,
+        public static int BulkMerge<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this BaseRepository<TEntity, VerticaConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
@@ -114,7 +115,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of affected (inserted or updated) rows.</returns>
-        public static Task<int> BulkMergeAsync<TEntity>(this BaseRepository<TEntity, VerticaConnection> repository,
+        public static Task<int> BulkMergeAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this BaseRepository<TEntity, VerticaConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<VerticaBulkInsertMapItem> mappings = null,
@@ -149,7 +150,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of affected (inserted or updated) rows.</returns>
-        public static Task<int> BulkMergeAsync<TEntity>(this BaseRepository<TEntity, VerticaConnection> repository,
+        public static Task<int> BulkMergeAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this BaseRepository<TEntity, VerticaConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,

@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -38,6 +39,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void CreatePseudoTable(MySqlConnection connection,
             string tableName,
             string pseudoTableName,
@@ -65,6 +67,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task CreatePseudoTableAsync(MySqlConnection connection,
             string tableName,
             string pseudoTableName,
@@ -93,6 +96,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void CreatePseudoTableIndex(MySqlConnection connection,
             string pseudoTableName,
             IEnumerable<Field> qualifiers,
@@ -125,6 +129,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task CreatePseudoTableIndexAsync(MySqlConnection connection,
             string pseudoTableName,
             IEnumerable<Field> qualifiers,
@@ -151,6 +156,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void TruncatePseudoTable(MySqlConnection connection,
             string pseudoTableName,
             ITrace trace = null,
@@ -172,6 +178,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task TruncatePseudoTableAsync(MySqlConnection connection,
             string pseudoTableName,
             ITrace trace = null,
@@ -192,6 +199,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void DropPseudoTable(MySqlConnection connection,
             string pseudoTableName,
             ITrace trace = null,
@@ -213,6 +221,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task DropPseudoTableAsync(MySqlConnection connection,
             string pseudoTableName,
             ITrace trace = null,
@@ -238,6 +247,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void AllowNullForColumn(MySqlConnection connection,
             string pseudoTableName,
             string columnName,
@@ -261,6 +271,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task AllowNullForColumnAsync(MySqlConnection connection,
             string pseudoTableName,
             string columnName,
@@ -284,6 +295,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static (string SequenceName, bool IsAlwaysGenerated) GetIdentitySequenceMetadata(MySqlConnection connection,
             string tableName,
             Field identityField,
@@ -310,6 +322,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static async Task<(string SequenceName, bool IsAlwaysGenerated)> GetIdentitySequenceMetadataAsync(MySqlConnection connection,
             string tableName,
             Field identityField,
@@ -340,7 +353,8 @@ namespace RepoDb.MySqlConnector.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        public static int InsertFromPseudoTableForReturnIdentity<TEntity>(MySqlConnection connection,
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
+        public static int InsertFromPseudoTableForReturnIdentity<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(MySqlConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -383,7 +397,8 @@ namespace RepoDb.MySqlConnector.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<int> InsertFromPseudoTableForReturnIdentityAsync<TEntity>(MySqlConnection connection,
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
+        public static async Task<int> InsertFromPseudoTableForReturnIdentityAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(MySqlConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -425,6 +440,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static int InsertFromPseudoTableForReturnIdentityForDataTable(MySqlConnection connection,
             string tableName,
             string pseudoTableName,
@@ -465,6 +481,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task<int> InsertFromPseudoTableForReturnIdentityForDataTableAsync(MySqlConnection connection,
             string tableName,
             string pseudoTableName,
@@ -509,6 +526,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static int MergeFromPseudoTable(MySqlConnection connection,
             string tableName,
             string pseudoTableName,
@@ -538,6 +556,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task<int> MergeFromPseudoTableAsync(MySqlConnection connection,
             string tableName,
             string pseudoTableName,
@@ -569,7 +588,8 @@ namespace RepoDb.MySqlConnector.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        public static int MergeFromPseudoTableForReturnIdentity<TEntity>(MySqlConnection connection,
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
+        public static int MergeFromPseudoTableForReturnIdentity<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(MySqlConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -614,7 +634,8 @@ namespace RepoDb.MySqlConnector.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<int> MergeFromPseudoTableForReturnIdentityAsync<TEntity>(MySqlConnection connection,
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
+        public static async Task<int> MergeFromPseudoTableForReturnIdentityAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(MySqlConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -658,6 +679,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static int MergeFromPseudoTableForReturnIdentityForDataTable(MySqlConnection connection,
             string tableName,
             string pseudoTableName,
@@ -700,6 +722,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task<int> MergeFromPseudoTableForReturnIdentityForDataTableAsync(MySqlConnection connection,
             string tableName,
             string pseudoTableName,
@@ -744,6 +767,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static int UpdateFromPseudoTable(MySqlConnection connection,
             string tableName,
             string pseudoTableName,
@@ -771,6 +795,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task<int> UpdateFromPseudoTableAsync(MySqlConnection connection,
             string tableName,
             string pseudoTableName,
@@ -801,6 +826,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static int DeleteFromPseudoTable(MySqlConnection connection,
             string tableName,
             string pseudoTableName,
@@ -826,6 +852,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task<int> DeleteFromPseudoTableAsync(MySqlConnection connection,
             string tableName,
             string pseudoTableName,

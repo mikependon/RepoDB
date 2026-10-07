@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Data.Common;
 using System.Linq.Expressions;
@@ -27,7 +28,7 @@ namespace RepoDb.Reflection
         /// <param name="dbFields"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        internal static Func<DbDataReader, TResult> CompileDataReaderToType<TResult>(DbDataReader reader,
+        internal static Func<DbDataReader, TResult> CompileDataReaderToType<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(DbDataReader reader,
             DbFieldCollection dbFields,
             IDbSetting dbSetting)
         {
@@ -56,7 +57,7 @@ namespace RepoDb.Reflection
         /// <param name="reader"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        internal static Func<DbDataReader, TResult> CompileDataReaderToTargetType<TResult>(DbDataReader reader,
+        internal static Func<DbDataReader, TResult> CompileDataReaderToTargetType<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(DbDataReader reader,
             IDbSetting dbSetting)
         {
             var typeOfResult = typeof(TResult);
@@ -88,7 +89,7 @@ namespace RepoDb.Reflection
         /// <param name="dbFields"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        internal static Func<DbDataReader, TResult> CompileDataReaderToDataEntity<TResult>(DbDataReader reader,
+        internal static Func<DbDataReader, TResult> CompileDataReaderToDataEntity<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(DbDataReader reader,
             DbFieldCollection dbFields,
             IDbSetting dbSetting)
         {

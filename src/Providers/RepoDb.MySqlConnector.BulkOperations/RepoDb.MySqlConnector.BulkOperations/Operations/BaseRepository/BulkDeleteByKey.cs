@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using MySqlConnector;
 using RepoDb.Enumerations.MySqlConnector;
 using RepoDb.Interfaces;
@@ -44,7 +45,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of deleted rows.</returns>
-        public static int BulkDeleteByKey<TEntity, TPrimaryKey>(this BaseRepository<TEntity, MySqlConnection> repository,
+        public static int BulkDeleteByKey<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TPrimaryKey>(this BaseRepository<TEntity, MySqlConnection> repository,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
             int? bulkCopyTimeout = null,
@@ -77,7 +78,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of deleted rows.</returns>
-        public static Task<int> BulkDeleteByKeyAsync<TEntity, TPrimaryKey>(this BaseRepository<TEntity, MySqlConnection> repository,
+        public static Task<int> BulkDeleteByKeyAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TPrimaryKey>(this BaseRepository<TEntity, MySqlConnection> repository,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
             int? bulkCopyTimeout = null,

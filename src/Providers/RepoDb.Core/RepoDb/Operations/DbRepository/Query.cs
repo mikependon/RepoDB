@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -36,7 +37,8 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(string tableName,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public IEnumerable<TEntity> Query<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             object what,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -90,7 +92,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> Query<TEntity, TWhat>(string tableName,
+        public IEnumerable<TEntity> Query<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(string tableName,
             TWhat what,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -143,7 +145,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(string tableName,
+        public IEnumerable<TEntity> Query<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -196,7 +198,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(string tableName,
+        public IEnumerable<TEntity> Query<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             QueryField where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -249,7 +251,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(string tableName,
+        public IEnumerable<TEntity> Query<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -302,7 +304,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(string tableName,
+        public IEnumerable<TEntity> Query<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             QueryGroup where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -354,7 +356,8 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(object what,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public IEnumerable<TEntity> Query<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(object what,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -405,7 +408,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> Query<TEntity, TWhat>(TWhat what,
+        public IEnumerable<TEntity> Query<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(TWhat what,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -455,7 +458,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(Expression<Func<TEntity, bool>> where,
+        public IEnumerable<TEntity> Query<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -505,7 +508,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(QueryField where,
+        public IEnumerable<TEntity> Query<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(QueryField where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -554,7 +557,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(IEnumerable<QueryField> where,
+        public IEnumerable<TEntity> Query<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -604,7 +607,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(QueryGroup where,
+        public IEnumerable<TEntity> Query<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(QueryGroup where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -660,7 +663,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(string tableName,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public async Task<IEnumerable<TEntity>> QueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             object what,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -717,7 +721,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity, TWhat>(string tableName,
+        public async Task<IEnumerable<TEntity>> QueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(string tableName,
             TWhat what,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -773,7 +777,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(string tableName,
+        public async Task<IEnumerable<TEntity>> QueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -829,7 +833,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(string tableName,
+        public async Task<IEnumerable<TEntity>> QueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             QueryField where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -885,7 +889,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(string tableName,
+        public async Task<IEnumerable<TEntity>> QueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -941,7 +945,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(string tableName,
+        public async Task<IEnumerable<TEntity>> QueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             QueryGroup where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -996,7 +1000,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object what,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public async Task<IEnumerable<TEntity>> QueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(object what,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -1050,7 +1055,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity, TWhat>(TWhat what,
+        public async Task<IEnumerable<TEntity>> QueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(TWhat what,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -1103,7 +1108,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(Expression<Func<TEntity, bool>> where,
+        public async Task<IEnumerable<TEntity>> QueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -1156,7 +1161,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(QueryField where,
+        public async Task<IEnumerable<TEntity>> QueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(QueryField where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -1209,7 +1214,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<QueryField> where,
+        public async Task<IEnumerable<TEntity>> QueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -1262,7 +1267,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(QueryGroup where,
+        public async Task<IEnumerable<TEntity>> QueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(QueryGroup where,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -1319,7 +1324,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
-        public IEnumerable<dynamic> Query<TWhat>(string tableName,
+        public IEnumerable<dynamic> Query<[DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(string tableName,
             TWhat what,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -1370,6 +1375,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public IEnumerable<dynamic> Query(string tableName,
             object what,
             IEnumerable<Field> fields = null,
@@ -1579,7 +1585,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
-        public async Task<IEnumerable<dynamic>> QueryAsync<TWhat>(string tableName,
+        public async Task<IEnumerable<dynamic>> QueryAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(string tableName,
             TWhat what,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -1633,6 +1639,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<IEnumerable<dynamic>> QueryAsync(string tableName,
             object what,
             IEnumerable<Field> fields = null,

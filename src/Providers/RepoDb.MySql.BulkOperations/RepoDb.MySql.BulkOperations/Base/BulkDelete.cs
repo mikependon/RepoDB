@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using MySql.Data.MySqlClient;
 using RepoDb.Enumerations.MySql;
 using RepoDb.Extensions;
@@ -45,7 +46,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BulkDeleteBase<TEntity>(this MySqlConnection connection,
+        private static int BulkDeleteBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this MySqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -270,7 +271,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkDeleteBaseAsync<TEntity>(this MySqlConnection connection,
+        private static async Task<int> BulkDeleteBaseAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this MySqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -492,7 +493,7 @@ namespace RepoDb
             IEnumerable<object> keyValues)
         {
             var table = new DataTable();
-            table.Columns.Add(qualifierField.Name, qualifierField.Type ?? typeof(object));
+            table.AddColumn(qualifierField.Name, qualifierField.Type ?? typeof(object));
 
             foreach (var keyValue in keyValues)
             {

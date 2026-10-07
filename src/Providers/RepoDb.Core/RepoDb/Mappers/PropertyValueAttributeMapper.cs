@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Attributes.Parameter;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
@@ -42,7 +43,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <param name="expression">The property expression.</param>
         /// <param name="attribute">The instance of <see cref="PropertyValueAttribute"/> object.</param>
-        public static void Add<TEntity>(Expression<Func<TEntity, object>> expression,
+        public static void Add<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> expression,
             PropertyValueAttribute attribute)
             where TEntity : class
         {
@@ -56,7 +57,7 @@ namespace RepoDb
         /// <param name="expression">The property expression.</param>
         /// <param name="attribute">The instance of <see cref="PropertyValueAttribute"/> object.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add<TEntity>(Expression<Func<TEntity, object>> expression,
+        public static void Add<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> expression,
             PropertyValueAttribute attribute,
             bool force)
             where TEntity : class
@@ -70,7 +71,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <param name="expression">The property expression.</param>
         /// <param name="attributes">The list of <see cref="PropertyValueAttribute"/> object.</param>
-        public static void Add<TEntity>(Expression<Func<TEntity, object>> expression,
+        public static void Add<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> expression,
             IEnumerable<PropertyValueAttribute> attributes)
             where TEntity : class
         {
@@ -84,7 +85,7 @@ namespace RepoDb
         /// <param name="expression">The property expression.</param>
         /// <param name="attributes">The list of <see cref="PropertyValueAttribute"/> object.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add<TEntity>(Expression<Func<TEntity, object>> expression,
+        public static void Add<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> expression,
             IEnumerable<PropertyValueAttribute> attributes,
             bool force)
             where TEntity : class
@@ -98,7 +99,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <param name="propertyName">The name of the target class property.</param>
         /// <param name="attribute">The instance of <see cref="PropertyValueAttribute"/> object.</param>
-        public static void Add<TEntity>(string propertyName,
+        public static void Add<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string propertyName,
             PropertyValueAttribute attribute)
             where TEntity : class
         {
@@ -112,7 +113,7 @@ namespace RepoDb
         /// <param name="propertyName">The name of the target class property.</param>
         /// <param name="attribute">The instance of <see cref="PropertyValueAttribute"/> object.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add<TEntity>(string propertyName,
+        public static void Add<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string propertyName,
             PropertyValueAttribute attribute,
             bool force)
             where TEntity : class
@@ -126,7 +127,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <param name="propertyName">The name of the target class property.</param>
         /// <param name="attributes">The list of <see cref="PropertyValueAttribute"/> object.</param>
-        public static void Add<TEntity>(string propertyName,
+        public static void Add<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string propertyName,
             IEnumerable<PropertyValueAttribute> attributes)
             where TEntity : class
         {
@@ -140,7 +141,7 @@ namespace RepoDb
         /// <param name="propertyName">The name of the target class property.</param>
         /// <param name="attributes">The list of <see cref="PropertyValueAttribute"/> object.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add<TEntity>(string propertyName,
+        public static void Add<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string propertyName,
             IEnumerable<PropertyValueAttribute> attributes,
             bool force)
             where TEntity : class
@@ -158,7 +159,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         /// <param name="attribute">The instance of <see cref="PropertyValueAttribute"/> object.</param>
-        public static void Add<TEntity>(Field field,
+        public static void Add<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field,
             PropertyValueAttribute attribute)
             where TEntity : class
         {
@@ -172,7 +173,7 @@ namespace RepoDb
         /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         /// <param name="attribute">The instance of <see cref="PropertyValueAttribute"/> object.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add<TEntity>(Field field,
+        public static void Add<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field,
             PropertyValueAttribute attribute,
             bool force)
             where TEntity : class
@@ -186,7 +187,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         /// <param name="attributes">The list of <see cref="PropertyValueAttribute"/> object.</param>
-        public static void Add<TEntity>(Field field,
+        public static void Add<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field,
             IEnumerable<PropertyValueAttribute> attributes)
             where TEntity : class
         {
@@ -200,7 +201,7 @@ namespace RepoDb
         /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         /// <param name="attributes">The list of <see cref="PropertyValueAttribute"/> object.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add<TEntity>(Field field,
+        public static void Add<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field,
             IEnumerable<PropertyValueAttribute> attributes,
             bool force)
             where TEntity : class
@@ -348,7 +349,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <param name="expression">The property expression.</param>
         /// <returns>The list of mapped <see cref="PropertyValueAttribute"/> objects.</returns>
-        public static IEnumerable<PropertyValueAttribute> Get<TEntity>(Expression<Func<TEntity, object>> expression)
+        public static IEnumerable<PropertyValueAttribute> Get<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> expression)
             where TEntity : class
         {
             return Get(typeof(TEntity), ExpressionExtension.GetProperty<TEntity>(expression));
@@ -360,7 +361,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <param name="propertyName">The name of the target class property.</param>
         /// <returns>The list of mapped <see cref="PropertyValueAttribute"/> objects.</returns>
-        public static IEnumerable<PropertyValueAttribute> Get<TEntity>(string propertyName)
+        public static IEnumerable<PropertyValueAttribute> Get<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string propertyName)
             where TEntity : class
         {
             return Get(typeof(TEntity), TypeExtension.GetProperty<TEntity>(propertyName));
@@ -372,7 +373,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
         /// <returns>The list of mapped <see cref="PropertyValueAttribute"/> objects.</returns>
-        public static IEnumerable<PropertyValueAttribute> Get<TEntity>(Field field)
+        public static IEnumerable<PropertyValueAttribute> Get<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field)
             where TEntity : class
         {
             return Get(typeof(TEntity), TypeExtension.GetProperty<TEntity>(field.Name));
@@ -419,7 +420,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <param name="expression">The property expression.</param>
-        public static void Remove<TEntity>(Expression<Func<TEntity, object>> expression)
+        public static void Remove<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> expression)
             where TEntity : class
         {
             Remove(typeof(TEntity), ExpressionExtension.GetProperty<TEntity>(expression));
@@ -430,7 +431,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <param name="propertyName">The name of the target class property.</param>
-        public static void Remove<TEntity>(string propertyName)
+        public static void Remove<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string propertyName)
             where TEntity : class
         {
             Remove(typeof(TEntity), TypeExtension.GetProperty<TEntity>(propertyName));
@@ -441,7 +442,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
-        public static void Remove<TEntity>(Field field)
+        public static void Remove<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field)
             where TEntity : class
         {
             Remove(typeof(TEntity), TypeExtension.GetProperty<TEntity>(field.Name));

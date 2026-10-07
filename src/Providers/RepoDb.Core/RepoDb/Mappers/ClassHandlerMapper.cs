@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -41,10 +42,10 @@ namespace RepoDb
         /// <typeparam name="TType">The target .NET CLR type.</typeparam>
         /// <typeparam name="TClassHandler">The type of the handler.</typeparam>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add<TType, TClassHandler>(bool force = false)
+        public static void Add<TType, [DynamicallyAccessedMembers(Trimming.Handler)] TClassHandler>(bool force = false)
             where TClassHandler : new()
         {
-            Add(typeof(TType), new TClassHandler(), force);
+            AddInternal(typeof(TType), new TClassHandler(), typeof(TClassHandler), force);
         }
 
         /// <summary>
@@ -54,10 +55,10 @@ namespace RepoDb
         /// <typeparam name="TClassHandler">The type of the handler.</typeparam>
         /// <param name="classHandler">The instance of the class handler. The type must implement the <see cref="IClassHandler{TEntity}"/> interface.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add<TType, TClassHandler>(TClassHandler classHandler,
+        public static void Add<TType, [DynamicallyAccessedMembers(Trimming.Handler)] TClassHandler>(TClassHandler classHandler,
             bool force = false)
         {
-            Add(typeof(TType), classHandler, force);
+            AddInternal(typeof(TType), classHandler, TypeExtension.GetHandlerType<TClassHandler>(classHandler), force);
         }
 
         /// <summary>
@@ -66,12 +67,28 @@ namespace RepoDb
         /// <param name="type">The target .NET CLR type.</param>
         /// <param name="classHandler">The instance of the class handler. The type must implement the <see cref="IClassHandler{TEntity}"/> interface.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
+        [RequiresUnreferencedCode("The implemented interfaces of the runtime type of the class handler might be trimmed. Use the generic 'Add' methods instead.")]
         public static void Add(Type type,
             object classHandler,
             bool force = false)
         {
+            AddInternal(type, classHandler, classHandler?.GetType(), force);
+        }
+
+        /// <summary>
+        /// Adds a mapping between a .NET CLR type and a <see cref="IClassHandler{TEntity}"/> object.
+        /// </summary>
+        /// <param name="type">The target .NET CLR type.</param>
+        /// <param name="classHandler">The instance of the class handler.</param>
+        /// <param name="classHandlerType">The type of the class handler.</param>
+        /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
+        internal static void AddInternal(Type type,
+            object classHandler,
+            [DynamicallyAccessedMembers(Trimming.Handler)] Type classHandlerType,
+            bool force)
+        {
             // Guard
-            Guard(classHandler?.GetType());
+            Guard(classHandlerType);
 
             // Variables for cache
             var key = GenerateHashCode(type);
@@ -104,7 +121,7 @@ namespace RepoDb
         /// <typeparam name="TType">The target .NET CLR type.</typeparam>
         /// <typeparam name="TClassHandler">The type of the handler.</typeparam>
         /// <returns>An instance of mapped class handler for .NET CLR type.</returns>
-        public static TClassHandler Get<TType, TClassHandler>()
+        public static TClassHandler Get<TType, [DynamicallyAccessedMembers(Trimming.Handler)] TClassHandler>()
         {
             return Get<TClassHandler>(typeof(TType));
         }
@@ -115,7 +132,7 @@ namespace RepoDb
         /// <typeparam name="TClassHandler">The type of the handler.</typeparam>
         /// <param name="type">The target .NET CLR type.</param>
         /// <returns>An instance of mapped class handler for .NET CLR type.</returns>
-        public static TClassHandler Get<TClassHandler>(Type type)
+        public static TClassHandler Get<[DynamicallyAccessedMembers(Trimming.Handler)] TClassHandler>(Type type)
         {
             // Check the presence
             ObjectExtension.ThrowIfNull(type, "type");
@@ -193,7 +210,7 @@ namespace RepoDb
         /// 
         /// </summary>
         /// <param name="type"></param>
-        private static void Guard(Type type)
+        private static void Guard([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)] Type type)
         {
             ObjectExtension.ThrowIfNull(type, "type");
             if (!type.IsInterfacedTo(StaticType.IClassHandler))

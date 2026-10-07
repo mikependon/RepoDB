@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -205,7 +206,7 @@ namespace RepoDb.Reflection
         internal static MethodInfo GetSystemConvertToTypeMethod(Type fromType,
             Type toType)
         {
-            return StaticType.Convert.GetMethod(string.Concat("To", TypeCache.Get(toType).GetUnderlyingType().Name),
+            return typeof(System.Convert).GetMethod(string.Concat("To", TypeCache.Get(toType).GetUnderlyingType().Name),
                 new[] { TypeCache.Get(fromType).GetUnderlyingType() });
         }
 
@@ -216,7 +217,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static MethodInfo GetSystemConvertChangeTypeMethod(Type conversionType)
         {
-            return StaticType.Convert.GetMethod("ChangeType",
+            return typeof(System.Convert).GetMethod("ChangeType",
                 new[] { StaticType.Object, TypeCache.Get(conversionType).GetUnderlyingType() });
         }
 
@@ -226,7 +227,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static MethodInfo GetConvertChangeTypeWithProviderMethod()
         {
-            return StaticType.Convert.GetMethod("ChangeType",
+            return typeof(System.Convert).GetMethod("ChangeType",
                 new[] { StaticType.Object, StaticType.Type, typeof(IFormatProvider) });
         }
 
@@ -256,9 +257,10 @@ namespace RepoDb.Reflection
         /// </summary>
         /// <param name="handlerInstance"></param>
         /// <returns></returns>
-        internal static MethodInfo GetClassHandlerGetMethod(object handlerInstance)
+        internal static MethodInfo GetClassHandlerGetMethod(object handlerInstance,
+            Type modelType)
         {
-            return handlerInstance?.GetType().GetMethod("Get");
+            return GetInterfaceMethod(GetClassHandlerInterface(handlerInstance, modelType), classHandlerGetMethodDefinition);
         }
 
         /// <summary>
@@ -266,25 +268,73 @@ namespace RepoDb.Reflection
         /// </summary>
         /// <param name="handlerInstance"></param>
         /// <returns></returns>
-        internal static MethodInfo GetClassHandlerSetMethod(object handlerInstance)
+        internal static MethodInfo GetClassHandlerSetMethod(object handlerInstance,
+            Type modelType)
         {
-            return handlerInstance?.GetType().GetMethod("Set");
+            return GetInterfaceMethod(GetClassHandlerInterface(handlerInstance, modelType), classHandlerSetMethodDefinition);
         }
+
+        private static readonly MethodInfo classHandlerGetMethodDefinition =
+            typeof(IClassHandler<>).GetMethod(nameof(IClassHandler<object>.Get));
+
+        private static readonly MethodInfo classHandlerSetMethodDefinition =
+            typeof(IClassHandler<>).GetMethod(nameof(IClassHandler<object>.Set));
+
+        private static readonly MethodInfo propertyHandlerGetMethodDefinition =
+            typeof(IPropertyHandler<,>).GetMethod(nameof(IPropertyHandler<object, object>.Get));
+
+        private static readonly MethodInfo propertyHandlerSetMethodDefinition =
+            typeof(IPropertyHandler<,>).GetMethod(nameof(IPropertyHandler<object, object>.Set));
+
+        /// <summary>
+        /// Returns the implemented <see cref="IClassHandler{TEntity}"/> interface of the class handler for the model type.
+        /// </summary>
+        /// <param name="handlerInstance">The class handler instance.</param>
+        /// <param name="modelType">The target model type.</param>
+        /// <returns>The implemented interface, or null if the handler cannot be used for the model type.</returns>
+        internal static Type GetClassHandlerInterface(object handlerInstance,
+            Type modelType)
+        {
+            return GetHandlerInterfaces(handlerInstance)?
+                .FirstOrDefault(interfaceType => interfaceType.IsGenericTypeOf(StaticType.IClassHandler) &&
+                    interfaceType.GetGenericArguments()[0] == modelType);
+        }
+
+        /// <summary>
+        /// Returns the method of a constructed generic interface based on the method of its generic type definition.
+        /// </summary>
+        /// <param name="interfaceType">The constructed generic interface.</param>
+        /// <param name="methodDefinition">The method of the generic type definition.</param>
+        /// <returns>The method of the constructed generic interface.</returns>
+        private static MethodInfo GetInterfaceMethod(Type interfaceType,
+            MethodInfo methodDefinition)
+        {
+            return interfaceType == null ? null :
+                (MethodInfo)MethodBase.GetMethodFromHandle(methodDefinition.MethodHandle, interfaceType.TypeHandle);
+        }
+
+        /// <summary>
+        /// Returns the interfaces implemented by the type of a property or class handler instance.
+        /// </summary>
+        /// <param name="handlerInstance">The handler instance.</param>
+        /// <returns>The list of implemented interfaces.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2075:'this' argument does not satisfy 'DynamicallyAccessedMembersAttribute' in call to target method.",
+            Justification = "The handler types are registered via the 'ClassHandler'/'PropertyHandler' attributes, or via the generic mapper " +
+                "methods, all of which are annotated to preserve the implemented interfaces (Trimming.Handler). The registration methods " +
+                "accepting an untyped handler object are annotated with RequiresUnreferencedCode.")]
+        private static Type[] GetHandlerInterfaces(object handlerInstance) =>
+            handlerInstance?.GetType().GetInterfaces();
 
         /// <summary>
         ///
         /// </summary>
         /// <param name="handlerInstance"></param>
         /// <returns></returns>
-        internal static Type GetPropertyHandlerInterfaceOrHandlerType(object handlerInstance)
+        internal static Type GetPropertyHandlerInterface(object handlerInstance)
         {
-            if (handlerInstance is null) return null;
-            Type handlerType = handlerInstance.GetType();
-            var propertyHandlerInterface = handlerType
-                .GetInterfaces()
-                .FirstOrDefault(interfaceType =>
-                    interfaceType.IsInterfacedTo(StaticType.IPropertyHandler));
-            return propertyHandlerInterface ?? handlerType;
+            // In F#, the instance is not a concrete class, therefore, we need to extract it by interface
+            return GetHandlerInterfaces(handlerInstance)?
+                .FirstOrDefault(interfaceType => interfaceType.IsGenericTypeOf(StaticType.IPropertyHandler));
         }
 
         /// <summary>
@@ -294,8 +344,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static MethodInfo GetPropertyHandlerGetMethod(object handlerInstance)
         {
-            // In F#, the instance is not a concrete class, therefore, we need to extract it by interface
-            return GetPropertyHandlerInterfaceOrHandlerType(handlerInstance)?.GetMethod("Get");
+            return GetInterfaceMethod(GetPropertyHandlerInterface(handlerInstance), propertyHandlerGetMethodDefinition);
         }
 
         /// <summary>
@@ -305,12 +354,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static MethodInfo GetPropertyHandlerGetMethodFromInterface(object handlerInstance)
         {
-            var propertyHandlerInterface = handlerInstance?
-                .GetType()?
-                .GetInterfaces()
-                .FirstOrDefault(interfaceType =>
-                    interfaceType.IsInterfacedTo(StaticType.IPropertyHandler));
-            return propertyHandlerInterface?.GetMethod("Get");
+            return GetPropertyHandlerGetMethod(handlerInstance);
         }
 
         /// <summary>
@@ -319,7 +363,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static MethodInfo GetDbCommandCreateParameterMethod()
         {
-            return StaticType.DbCommandExtension.GetMethod("CreateParameter", new[]
+            return typeof(RepoDb.Extensions.DbCommandExtension).GetMethod("CreateParameter", new[]
             {
                 StaticType.IDbCommand,
                 StaticType.String,
@@ -334,7 +378,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static MethodInfo GetDbParameterCollectionAddMethod()
         {
-            return StaticType.DbParameterCollection.GetMethod("Add");
+            return typeof(System.Data.Common.DbParameterCollection).GetMethod("Add");
         }
 
         /// <summary>
@@ -344,7 +388,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static MethodInfo GetPropertyHandlerSetMethod(object handlerInstance)
         {
-            return GetPropertyHandlerInterfaceOrHandlerType(handlerInstance)?.GetMethod("Set");
+            return GetInterfaceMethod(GetPropertyHandlerInterface(handlerInstance), propertyHandlerSetMethodDefinition);
         }
 
         /// <summary>
@@ -525,7 +569,24 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static MethodInfo GetDbReaderGetValueMethod(Type targetType)
         {
-            return StaticType.DbDataReader.GetMethod(string.Concat("Get", targetType?.Name));
+            // The typed getters of the DbDataReader (i.e.: 'Get' + the name of the type), statically defined for trimming.
+            return targetType == null || targetType.IsEnum ? null : Type.GetTypeCode(targetType) switch
+            {
+                TypeCode.Boolean => typeof(DbDataReader).GetMethod(nameof(DbDataReader.GetBoolean)),
+                TypeCode.Byte => typeof(DbDataReader).GetMethod(nameof(DbDataReader.GetByte)),
+                TypeCode.Char => typeof(DbDataReader).GetMethod(nameof(DbDataReader.GetChar)),
+                TypeCode.DateTime => typeof(DbDataReader).GetMethod(nameof(DbDataReader.GetDateTime)),
+                TypeCode.Decimal => typeof(DbDataReader).GetMethod(nameof(DbDataReader.GetDecimal)),
+                TypeCode.Double => typeof(DbDataReader).GetMethod(nameof(DbDataReader.GetDouble)),
+                TypeCode.Int16 => typeof(DbDataReader).GetMethod(nameof(DbDataReader.GetInt16)),
+                TypeCode.Int32 => typeof(DbDataReader).GetMethod(nameof(DbDataReader.GetInt32)),
+                TypeCode.Int64 => typeof(DbDataReader).GetMethod(nameof(DbDataReader.GetInt64)),
+                TypeCode.String => typeof(DbDataReader).GetMethod(nameof(DbDataReader.GetString)),
+                _ => targetType == StaticType.Guid ? typeof(DbDataReader).GetMethod(nameof(DbDataReader.GetGuid)) :
+                    targetType == typeof(System.IO.Stream) ? typeof(DbDataReader).GetMethod(nameof(DbDataReader.GetStream)) :
+                    targetType == typeof(System.IO.TextReader) ? typeof(DbDataReader).GetMethod(nameof(DbDataReader.GetTextReader)) :
+                    null
+            };
         }
 
         /// <summary>
@@ -534,7 +595,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static MethodInfo GetDbReaderGetValueMethod()
         {
-            return StaticType.DbDataReader.GetMethod("GetValue");
+            return typeof(System.Data.Common.DbDataReader).GetMethod("GetValue");
         }
 
         /// <summary>
@@ -563,7 +624,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static MethodInfo GetDbParameterValueSetMethod()
         {
-            return StaticType.DbParameter.GetProperty("Value").SetMethod;
+            return typeof(System.Data.Common.DbParameter).GetProperty("Value").SetMethod;
         }
 
         /// <summary>
@@ -572,7 +633,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static PropertyInfo GetTimeSpanTicksProperty()
         {
-            return StaticType.TimeSpan.GetProperty("Ticks");
+            return typeof(System.TimeSpan).GetProperty("Ticks");
         }
 
         /// <summary>
@@ -590,7 +651,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static PropertyInfo GetDateTimeTimeOfDayProperty()
         {
-            return StaticType.DateTime.GetProperty("TimeOfDay");
+            return typeof(System.DateTime).GetProperty("TimeOfDay");
         }
 
         /// <summary>
@@ -608,7 +669,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static MethodInfo GetDateOnlyFromDateTimeStaticMethod()
         {
-            return StaticType.DateOnly.GetMethod("FromDateTime");
+            return typeof(System.DateOnly).GetMethod("FromDateTime");
         }
 
         /// <summary>
@@ -617,7 +678,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static MethodInfo GetDateTimeFromDateOnlyMethod()
         {
-            return StaticType.DateOnly.GetMethod("ToDateTime", new Type[] { StaticType.TimeOnly });
+            return typeof(System.DateOnly).GetMethod("ToDateTime", new Type[] { StaticType.TimeOnly });
         }
 #endif
 
@@ -627,7 +688,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static MethodInfo GetEnumGetNameMethod()
         {
-            return StaticType.Enum.GetMethod("GetName", new[] { StaticType.Type, StaticType.Object });
+            return typeof(System.Enum).GetMethod("GetName", new[] { StaticType.Type, StaticType.Object });
         }
 
         /// <summary>
@@ -636,7 +697,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static MethodInfo GetEnumIsDefinedMethod()
         {
-            return StaticType.Enum.GetMethod("IsDefined", new[] { StaticType.Type, StaticType.Object });
+            return typeof(System.Enum).GetMethod("IsDefined", new[] { StaticType.Type, StaticType.Object });
         }
 
         internal static MethodInfo GetEnumParseNullMethod()
@@ -644,12 +705,10 @@ namespace RepoDb.Reflection
             return typeof(Compiler).GetMethod(nameof(EnumParseNull), BindingFlags.Static | BindingFlags.NonPublic);
         }
 
-        private static TEnum? EnumParseNull<TEnum>(string value) where TEnum : struct, System.Enum
+        private static object EnumParseNull(Type enumType,
+            string value)
         {
-            if (Enum.TryParse<TEnum>(value, ignoreCase: true, out var r))
-                return r;
-            else
-                return null;
+            return EnumTryParse(enumType, value, out var r) ? r : null;
         }
 
         internal static MethodInfo GetEnumParseNullDefinedMethod()
@@ -657,12 +716,42 @@ namespace RepoDb.Reflection
             return typeof(Compiler).GetMethod(nameof(EnumParseNullDefined), BindingFlags.Static | BindingFlags.NonPublic);
         }
 
-        private static TEnum? EnumParseNullDefined<TEnum>(string value) where TEnum : struct, System.Enum
+        private static object EnumParseNullDefined(Type enumType,
+            string value)
         {
-            if (Enum.TryParse<TEnum>(value, ignoreCase: true, out var r) && Enum.IsDefined(typeof(TEnum), r))
-                return r;
-            else
-                return null;
+            return EnumTryParse(enumType, value, out var r) && Enum.IsDefined(enumType, r) ? r : null;
+        }
+
+        /// <summary>
+        /// A non-generic equivalent of the case insensitive 'Enum.TryParse&lt;TEnum&gt;()' method, which does not require
+        /// the generic method to be instantiated at runtime (not possible with NativeAOT).
+        /// </summary>
+        private static bool EnumTryParse(Type enumType,
+            string value,
+            out object result)
+        {
+#if NET
+            return Enum.TryParse(enumType, value, ignoreCase: true, out result);
+#else
+            result = null;
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return false;
+            }
+            try
+            {
+                result = Enum.Parse(enumType, value, ignoreCase: true);
+                return true;
+            }
+            catch (ArgumentException)
+            {
+                return false;
+            }
+            catch (OverflowException)
+            {
+                return false;
+            }
+#endif
         }
 
         /// <summary>
@@ -671,11 +760,23 @@ namespace RepoDb.Reflection
         /// <param name="expression"></param>
         /// 
         /// <returns></returns>
+        internal static Expression GetNullableHasValueExpression(Expression expression)
+        {
+            // Equivalent to 'Nullable<T>.HasValue'
+            return Expression.NotEqual(expression, Expression.Constant(null, expression.Type));
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
         internal static Expression ConvertExpressionToNullableValue(Expression expression)
         {
             if (Nullable.GetUnderlyingType(expression.Type) is { } underlyingType)
             {
-                return Expression.Property(expression, nameof(Nullable<int>.Value));
+                // Equivalent to 'Nullable<T>.Value' (throws if the value is null)
+                return Expression.Convert(expression, underlyingType);
             }
             return expression;
         }
@@ -686,9 +787,9 @@ namespace RepoDb.Reflection
             if (Nullable.GetUnderlyingType(expression.Type) != null)
             {
                 var converted = converter(ConvertExpressionToNullableValue(expression));
-                var nullableType = typeof(Nullable<>).MakeGenericType(converted.Type);
+                var nullableType = converted.Type.MakeNullableType();
                 return Expression.Condition(
-                    Expression.Property(expression, nameof(Nullable<int>.HasValue)),
+                    GetNullableHasValueExpression(expression),
                     Expression.Convert(converted, nullableType),
                     Expression.Constant(null, nullableType)
                 );
@@ -705,10 +806,6 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static Expression ConvertExpressionToNullableValueExpression(Expression expression)
         {
-            if (Nullable.GetUnderlyingType(expression.Type) != null)
-            {
-                Expression.Call(expression, expression.Type.GetProperty("Value").GetMethod, expression);
-            }
             return expression;
         }
 
@@ -719,7 +816,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static Expression ConvertExpressionToGuidToStringExpression(Expression expression)
         {
-            return Expression.Call(ConvertExpressionToNullableValue(expression), StaticType.Guid.GetMethod("ToString", Array.Empty<Type>()));
+            return Expression.Call(ConvertExpressionToNullableValue(expression), typeof(System.Guid).GetMethod("ToString", Array.Empty<Type>()));
         }
 
         /// <summary>
@@ -729,7 +826,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static Expression ConvertExpressionToStringToGuidExpression(Expression expression)
         {
-            return Expression.New(StaticType.Guid.GetConstructor(new[] { StaticType.String }), ConvertExpressionToNullableValue(expression));
+            return Expression.New(typeof(System.Guid).GetConstructor(new[] { StaticType.String }), ConvertExpressionToNullableValue(expression));
         }
 
         /// <summary>
@@ -739,7 +836,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static Expression ConvertExpressionToTimeSpanToDateTimeExpression(Expression expression)
         {
-            return Expression.New(StaticType.DateTime.GetConstructor(new[] { StaticType.Int64 }),
+            return Expression.New(typeof(System.DateTime).GetConstructor(new[] { StaticType.Int64 }),
                 ConvertExpressionToNullableValue(ConvertExpressionToTimeSpanTicksExpression(expression)));
         }
 
@@ -844,7 +941,7 @@ namespace RepoDb.Reflection
             {
                 if (underlyingToType == StaticType.String)
                 {
-                    result = Expression.Call(result, nameof(ToString), Array.Empty<Type>());
+                    result = Expression.Call(result, typeof(Enum).GetMethod(nameof(Enum.ToString), Type.EmptyTypes));
                 }
                 else if (underlyingToType.IsPrimitive &&
                     (underlyingToType) == StaticType.Int16
@@ -889,7 +986,7 @@ namespace RepoDb.Reflection
                 if (underlyingFromType != fromType)
                 {
                     // E.g. Nullable<System.Int32> -> string
-                    condition = Expression.Property(expression, nameof(Nullable<int>.HasValue));
+                    condition = GetNullableHasValueExpression(expression);
                 }
                 else
                 {
@@ -913,6 +1010,10 @@ namespace RepoDb.Reflection
         /// <param name="expression"></param>
         /// <param name="toType"></param>
         /// <returns></returns>
+        // The conversions from/into these types are defined as user-defined conversion operators (i.e.: 'op_Implicit' and
+        // 'op_Explicit'), which are looked-up via reflection by the 'Expression.Convert()' method and must not be trimmed.
+        [DynamicDependency(DynamicallyAccessedMemberTypes.PublicMethods, typeof(decimal))]
+        [DynamicDependency(DynamicallyAccessedMemberTypes.PublicMethods, typeof(DateTimeOffset))]
         internal static Expression ConvertExpressionToTypeExpression(Expression expression,
             Type toType)
         {
@@ -948,17 +1049,19 @@ namespace RepoDb.Reflection
                 ? GetEnumParseNullMethod()
                 : GetEnumParseNullDefinedMethod();
 
-            return Expression.Coalesce(
-                        Expression.Call(checkMethod.MakeGenericMethod(toEnumType), expression),
+            return Expression.Convert(
+                    Expression.Coalesce(
+                        Expression.Call(checkMethod, Expression.Constant(toEnumType), expression),
 
                         (GlobalConfiguration.Options.EnumHandling == EnumHandling.UseDefault)
-                        ? Expression.Default(toEnumType)
+                        ? Expression.Convert(Expression.Default(toEnumType), StaticType.Object)
                         : Expression.Throw(Expression.New(
                             typeof(ArgumentOutOfRangeException).GetConstructor(new[] { StaticType.String, StaticType.Object, StaticType.String }),
                             Expression.Constant("value"),
                             expression,
                             Expression.Constant($"Invalid value for {toEnumType.Name}")),
-                            toEnumType));
+                            StaticType.Object)),
+                    toEnumType);
         }
 
         /// <summary>
@@ -1026,7 +1129,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static Expression ConvertEnumExpressionToTypeExpressionForString(Expression expression)
         {
-            var method = StaticType.Convert.GetMethod("ToString", new[] { StaticType.Object });
+            var method = typeof(System.Convert).GetMethod("ToString", new[] { StaticType.Object });
 
             // Variables
             var isNullExpression = (Expression)null;
@@ -1138,10 +1241,10 @@ namespace RepoDb.Reflection
 
             if (targetNullableType.IsValueType && (underlyingType == null || underlyingType != targetNullableType))
             {
-                var nullableType = StaticType.Nullable.MakeGenericType(targetNullableType);
-                var constructor = nullableType.GetConstructor(new[] { targetNullableType });
+                // Equivalent to 'new Nullable<T>(value)'
+                var nullableType = targetNullableType.MakeNullableType();
                 expression = TypeCache.Get(expression.Type).IsNullable() ? expression :
-                    Expression.New(constructor, ConvertExpressionToTypeExpression(expression, targetNullableType));
+                    Expression.Convert(ConvertExpressionToTypeExpression(expression, targetNullableType), nullableType);
             }
 
             return expression;
@@ -1246,7 +1349,7 @@ namespace RepoDb.Reflection
         /// <param name="entityExpression"></param>
         /// <param name="readerParameterExpression"></param>
         /// <returns></returns>
-        internal static Expression ConvertExpressionToClassHandlerGetExpression<TResult>(Expression entityExpression,
+        internal static Expression ConvertExpressionToClassHandlerGetExpression<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(Expression entityExpression,
             ParameterExpression readerParameterExpression)
         {
             var typeOfResult = typeof(TResult);
@@ -1259,14 +1362,13 @@ namespace RepoDb.Reflection
             }
 
             // Validate
-            var handlerType = handlerInstance.GetType();
-            if (!handlerType.IsClassHandlerValidForModel(typeOfResult))
+            var getMethod = GetClassHandlerGetMethod(handlerInstance, typeOfResult);
+            if (getMethod == null)
             {
-                throw new InvalidTypeException($"The class handler '{handlerType.FullName}' cannot be used for the type '{typeOfResult.FullName}'.");
+                throw new InvalidTypeException($"The class handler '{handlerInstance.GetType().FullName}' cannot be used for the type '{typeOfResult.FullName}'.");
             }
 
             // Call the ClassHandler.Get method
-            var getMethod = GetClassHandlerGetMethod(handlerInstance);
             return Expression.Call(Expression.Constant(handlerInstance),
                 getMethod,
                 entityExpression,
@@ -1353,17 +1455,13 @@ namespace RepoDb.Reflection
             }
 
             // Validate
-            var handlerType = handlerInstance.GetType();
-            if (!handlerType.IsClassHandlerValidForModel(resultType))
+            var setMethod = GetClassHandlerSetMethod(handlerInstance, resultType);
+            if (setMethod == null)
             {
-                throw new InvalidTypeException($"The class handler '{handlerType.FullName}' cannot be used for type '{resultType.FullName}'.");
+                throw new InvalidTypeException($"The class handler '{handlerInstance.GetType().FullName}' cannot be used for type '{resultType.FullName}'.");
             }
 
             // Call the IClassHandler.Set method
-            //var typeOfListEntity = typeof(IList<>).MakeGenericType(StaticType.Object);
-            //var type = typeOfListEntity.IsAssignableFrom(entityOrEntitiesExpression.Type) ?
-            //    typeOfListEntity : resultType;
-            var setMethod = GetClassHandlerSetMethod(handlerInstance);
             entityOrEntitiesExpression = Expression.Call(Expression.Constant(handlerInstance),
                 setMethod,
                 ConvertExpressionToTypeExpression(entityOrEntitiesExpression, resultType),
@@ -1434,7 +1532,7 @@ namespace RepoDb.Reflection
 
             // IsDbNull Check
             var isDbNullExpression = Expression.Call(readerParameterExpression,
-                StaticType.DbDataReader.GetMethod("IsDBNull"), Expression.Constant(readerField.Ordinal));
+                typeof(System.Data.Common.DbDataReader).GetMethod("IsDBNull"), Expression.Constant(readerField.Ordinal));
 
             // True Expression
             var trueExpression = GetClassPropertyParameterInfoIsDbNullTrueValueExpression(readerParameterExpression,
@@ -1607,7 +1705,8 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static Expression GetNullableTypeExpression(Type targetType)
         {
-            return Expression.New(StaticType.Nullable.MakeGenericType(TypeCache.Get(targetType).GetUnderlyingType()));
+            // Equivalent to 'new Nullable<T>()'
+            return Expression.Default(TypeCache.Get(targetType).GetUnderlyingType().MakeNullableType());
         }
 
         /// <summary>
@@ -1617,7 +1716,7 @@ namespace RepoDb.Reflection
         /// <param name="readerFieldsName"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        internal static IEnumerable<ClassPropertyParameterInfo> GetClassPropertyParameterInfos<TResult>(IEnumerable<string> readerFieldsName,
+        internal static IEnumerable<ClassPropertyParameterInfo> GetClassPropertyParameterInfos<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(IEnumerable<string> readerFieldsName,
             IDbSetting dbSetting)
         {
             var typeOfResult = typeof(TResult);
@@ -1680,7 +1779,7 @@ namespace RepoDb.Reflection
         /// <param name="readerFields">The list of fields to be bound from the data reader.</param>
         /// <param name="dbSetting">The database setting that is being used.</param>
         /// <returns>The enumerable list of <see cref="MemberBinding"/> objects.</returns>
-        internal static IEnumerable<MemberBinding> GetMemberBindingsForDataEntity<TResult>(ParameterExpression readerParameterExpression,
+        internal static IEnumerable<MemberBinding> GetMemberBindingsForDataEntity<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(ParameterExpression readerParameterExpression,
             IEnumerable<DataReaderField> readerFields,
             IDbSetting dbSetting)
         {
@@ -1764,7 +1863,7 @@ namespace RepoDb.Reflection
         internal static Expression GetDbNullExpression(ParameterExpression readerParameterExpression,
             ConstantExpression ordinalExpression)
         {
-            return Expression.Call(readerParameterExpression, StaticType.DbDataReader.GetMethod("IsDBNull"), ordinalExpression);
+            return Expression.Call(readerParameterExpression, typeof(System.Data.Common.DbDataReader).GetMethod("IsDBNull"), ordinalExpression);
         }
 
         /// <summary>
@@ -1831,7 +1930,7 @@ namespace RepoDb.Reflection
         {
             // Initialize variables
             var elementInits = new List<ElementInit>();
-            var addMethod = StaticType.IDictionaryStringObject.GetMethod("Add", new[] { StaticType.String, StaticType.Object });
+            var addMethod = typeof(IDictionary<string, object>).GetMethod("Add", new[] { StaticType.String, StaticType.Object });
 
             // Iterate each properties
             for (var ordinal = 0; ordinal < readerFields?.Count; ordinal++)
@@ -1918,11 +2017,11 @@ namespace RepoDb.Reflection
                         && targetType.IsValueType && TypeCache.Get(targetType).GetUnderlyingType() == targetType
                         && TypeCache.Get(origExpression.Type).GetUnderlyingType() != origExpression.Type)
                     {
-                        var nullableType = typeof(Nullable<>).MakeGenericType(expression.Type);
+                        var nullableType = expression.Type.MakeNullableType();
 
                         // Don't set '0' in the identity output property
                         expression = Expression.Condition(
-                            Expression.Property(origExpression, nameof(Nullable<int>.HasValue)),
+                            GetNullableHasValueExpression(origExpression),
                             Expression.Convert(expression, nullableType),
                             Expression.Constant(null, nullableType));
                     }
@@ -1984,7 +2083,7 @@ namespace RepoDb.Reflection
             Expression objectInstanceExpression,
             DbField dbField)
         {
-            var methodInfo = StaticType.PropertyInfo.GetMethod("GetValue", new[] { StaticType.Object });
+            var methodInfo = typeof(System.Reflection.PropertyInfo).GetMethod("GetValue", new[] { StaticType.Object });
             var expression = (Expression)Expression.Call(propertyExpression, methodInfo, objectInstanceExpression);
 
             // Property Handler
@@ -2004,7 +2103,7 @@ parameterExpression: null, classProperty: null, TypeCache.Get(dbField?.Type).Get
         internal static Expression GetDictionaryStringObjectPropertyValueExpression(Expression dictionaryInstanceExpression,
             DbField dbField)
         {
-            var methodInfo = StaticType.IDictionaryStringObject.GetMethod("get_Item", new[] { StaticType.String });
+            var methodInfo = typeof(IDictionary<string, object>).GetMethod("get_Item", new[] { StaticType.String });
             var expression = (Expression)Expression.Call(dictionaryInstanceExpression, methodInfo, Expression.Constant(dbField.Name));
 
             // Property Handler
@@ -2137,7 +2236,7 @@ parameterExpression: null, classProperty: null, TypeCache.Get(dbField.Type).GetU
             // Set the DB Type
             if (dbType != null)
             {
-                var dbParameterDbTypeSetMethod = StaticType.DbParameter.GetProperty("DbType").SetMethod;
+                var dbParameterDbTypeSetMethod = typeof(System.Data.Common.DbParameter).GetProperty("DbType").SetMethod;
                 expression = Expression.Call(dbParameterExpression, dbParameterDbTypeSetMethod, Expression.Constant(dbType));
             }
 
@@ -2154,7 +2253,7 @@ parameterExpression: null, classProperty: null, TypeCache.Get(dbField.Type).GetU
         internal static MethodCallExpression GetDbCommandCreateParameterExpression(ParameterExpression dbCommandExpression,
             DbField dbField)
         {
-            var dbCommandCreateParameterMethod = StaticType.DbCommand.GetMethod("CreateParameter");
+            var dbCommandCreateParameterMethod = typeof(System.Data.Common.DbCommand).GetMethod("CreateParameter");
             return Expression.Call(dbCommandExpression, dbCommandCreateParameterMethod);
         }
 
@@ -2195,7 +2294,7 @@ parameterExpression: null, classProperty: null, TypeCache.Get(dbField.Type).GetU
         internal static MethodCallExpression GetDbParameterNameAssignmentExpression(Expression dbParameterExpression,
             Expression paramaterNameExpression)
         {
-            var dbParameterValueNameMethod = StaticType.DbParameter.GetProperty("ParameterName").SetMethod;
+            var dbParameterValueNameMethod = typeof(System.Data.Common.DbParameter).GetProperty("ParameterName").SetMethod;
             return Expression.Call(dbParameterExpression, dbParameterValueNameMethod, paramaterNameExpression);
         }
 
@@ -2221,8 +2320,8 @@ parameterExpression: null, classProperty: null, TypeCache.Get(dbField.Type).GetU
             Expression valueExpression)
         {
             var parameterExpression = ConvertExpressionToTypeExpression(dbParameterExpression, StaticType.DbParameter);
-            var dbParameterValueSetMethod = StaticType.DbParameter.GetProperty("Value").SetMethod;
-            var convertToDbNullMethod = StaticType.Converter.GetMethod("NullToDbNull");
+            var dbParameterValueSetMethod = typeof(System.Data.Common.DbParameter).GetProperty("Value").SetMethod;
+            var convertToDbNullMethod = typeof(RepoDb.Converter).GetMethod("NullToDbNull");
             return Expression.Call(parameterExpression, dbParameterValueSetMethod,
                 Expression.Call(convertToDbNullMethod, ConvertExpressionToTypeExpression(valueExpression, StaticType.Object)));
         }
@@ -2249,7 +2348,7 @@ parameterExpression: null, classProperty: null, TypeCache.Get(dbField.Type).GetU
             Expression dbTypeExpression)
         {
             var parameterExpression = ConvertExpressionToTypeExpression(dbParameterExpression, StaticType.DbParameter);
-            var dbParameterDbTypeSetMethod = StaticType.DbParameter.GetProperty("DbType").SetMethod;
+            var dbParameterDbTypeSetMethod = typeof(System.Data.Common.DbParameter).GetProperty("DbType").SetMethod;
             return Expression.Call(parameterExpression, dbParameterDbTypeSetMethod, dbTypeExpression);
         }
 
@@ -2275,7 +2374,7 @@ parameterExpression: null, classProperty: null, TypeCache.Get(dbField.Type).GetU
             Expression directionExpression)
         {
             var parameterExpression = ConvertExpressionToTypeExpression(dbParameterExpression, StaticType.DbParameter);
-            var dbParameterDirectionSetMethod = StaticType.DbParameter.GetProperty("Direction").SetMethod;
+            var dbParameterDirectionSetMethod = typeof(System.Data.Common.DbParameter).GetProperty("Direction").SetMethod;
             return Expression.Call(parameterExpression, dbParameterDirectionSetMethod, directionExpression);
         }
 
@@ -2301,7 +2400,7 @@ parameterExpression: null, classProperty: null, TypeCache.Get(dbField.Type).GetU
             Expression sizeExpression)
         {
             var parameterExpression = ConvertExpressionToTypeExpression(dbParameterExpression, StaticType.DbParameter);
-            var dbParameterSizeSetMethod = StaticType.DbParameter.GetProperty("Size").SetMethod;
+            var dbParameterSizeSetMethod = typeof(System.Data.Common.DbParameter).GetProperty("Size").SetMethod;
             return Expression.Call(parameterExpression, dbParameterSizeSetMethod, sizeExpression);
         }
 
@@ -2327,7 +2426,7 @@ parameterExpression: null, classProperty: null, TypeCache.Get(dbField.Type).GetU
             Expression precisionExpression)
         {
             var parameterExpression = ConvertExpressionToTypeExpression(dbParameterExpression, StaticType.DbParameter);
-            var dbParameterPrecisionSetMethod = StaticType.DbParameter.GetProperty("Precision").SetMethod;
+            var dbParameterPrecisionSetMethod = typeof(System.Data.Common.DbParameter).GetProperty("Precision").SetMethod;
             return Expression.Call(parameterExpression, dbParameterPrecisionSetMethod, precisionExpression);
         }
 
@@ -2353,7 +2452,7 @@ parameterExpression: null, classProperty: null, TypeCache.Get(dbField.Type).GetU
             Expression scaleExpression)
         {
             var parameterExpression = ConvertExpressionToTypeExpression(dbParameterExpression, StaticType.DbParameter);
-            var dbParameterScaleSetMethod = StaticType.DbParameter.GetProperty("Scale").SetMethod;
+            var dbParameterScaleSetMethod = typeof(System.Data.Common.DbParameter).GetProperty("Scale").SetMethod;
             return Expression.Call(parameterExpression, dbParameterScaleSetMethod, scaleExpression);
         }
 
@@ -2364,7 +2463,7 @@ parameterExpression: null, classProperty: null, TypeCache.Get(dbField.Type).GetU
         /// <returns></returns>
         internal static MethodCallExpression EnsureTableValueParameterExpression(Expression dbParameterExpression)
         {
-            var method = StaticType.DbCommandExtension.GetMethod("EnsureTableValueParameter",
+            var method = typeof(RepoDb.Extensions.DbCommandExtension).GetMethod("EnsureTableValueParameter",
                 System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
             return Expression.Call(method, dbParameterExpression);
         }
@@ -2378,9 +2477,9 @@ parameterExpression: null, classProperty: null, TypeCache.Get(dbField.Type).GetU
         internal static MethodCallExpression GetDbCommandParametersAddExpression(Expression dbCommandExpression,
             Expression dbParameterExpression)
         {
-            var dbCommandParametersProperty = StaticType.DbCommand.GetProperty("Parameters");
+            var dbCommandParametersProperty = typeof(System.Data.Common.DbCommand).GetProperty("Parameters");
             var dbParameterCollection = Expression.Property(dbCommandExpression, dbCommandParametersProperty);
-            var dbParameterCollectionAddMethod = StaticType.DbParameterCollection.GetMethod("Add", new[] { StaticType.Object });
+            var dbParameterCollectionAddMethod = typeof(System.Data.Common.DbParameterCollection).GetMethod("Add", new[] { StaticType.Object });
             return Expression.Call(dbParameterCollection, dbParameterCollectionAddMethod, dbParameterExpression);
         }
 
@@ -2391,7 +2490,7 @@ parameterExpression: null, classProperty: null, TypeCache.Get(dbField.Type).GetU
         /// <returns></returns>
         internal static Expression GetDbParameterCollectionClearMethodExpression(MemberExpression dbParameterCollectionExpression)
         {
-            var dbParameterCollectionClearMethod = StaticType.DbParameterCollection.GetMethod("Clear");
+            var dbParameterCollectionClearMethod = typeof(System.Data.Common.DbParameterCollection).GetMethod("Clear");
             return Expression.Call(dbParameterCollectionExpression, dbParameterCollectionClearMethod);
         }
 
@@ -2406,6 +2505,7 @@ parameterExpression: null, classProperty: null, TypeCache.Get(dbField.Type).GetU
         /// <param name="dbHelper"></param>
         /// <returns></returns>
         internal static Expression GetPropertyFieldExpression(ParameterExpression dbCommandExpression,
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             Expression entityExpression,
             FieldDirection fieldDirection,
             int entityIndex,
@@ -2420,25 +2520,16 @@ parameterExpression: null, classProperty: null, TypeCache.Get(dbField.Type).GetU
             var propertyName = fieldDirection.DbField.Name.AsUnquoted(trim: true, dbSetting);
 
             // Set the proper assignments (property)
-            if (!TypeCache.Get(entityExpression.Type).IsClassType())
+            if (!TypeCache.Get(entityType).IsClassType())
             {
-                var typeGetPropertyMethod = StaticType.Type.GetMethod("GetProperty", new[]
-                {
-                    StaticType.String,
-                    StaticType.BindingFlags
-                });
-                var objectGetTypeMethod = StaticType.Object.GetMethod("GetType");
                 propertyVariableExpression = Expression.Variable(StaticType.PropertyInfo, string.Concat("propertyVariable", propertyName));
-                propertyInstanceExpression = Expression.Call(Expression.Call(entityExpression, objectGetTypeMethod),
-                    typeGetPropertyMethod, new[]
-                    {
-                        Expression.Constant(propertyName),
-                        Expression.Constant(BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase)
-                    });
+                propertyInstanceExpression = Expression.Call(GetRuntimePropertyMethod(),
+                    ConvertExpressionToTypeExpression(entityExpression, StaticType.Object),
+                    Expression.Constant(propertyName));
             }
             else
             {
-                var entityProperties = PropertyCache.Get(entityExpression.Type);
+                var entityProperties = PropertyCache.Get(entityType);
                 classProperty = entityProperties.FirstOrDefault(property =>
                     string.Equals(property.GetMappedName().AsUnquoted(trim: true, dbSetting),
                         propertyName.AsUnquoted(trim: true, dbSetting), StringComparison.OrdinalIgnoreCase));
@@ -2478,6 +2569,50 @@ parameterExpression: null, classProperty: null, TypeCache.Get(dbField.Type).GetU
         }
 
         /// <summary>
+        /// Returns the <see cref="GetRuntimeProperty(object, string)"/> method.
+        /// </summary>
+        /// <returns>The method.</returns>
+        private static MethodInfo GetRuntimePropertyMethod() =>
+            typeof(Compiler).GetMethod(nameof(GetRuntimeProperty), BindingFlags.Static | BindingFlags.NonPublic);
+
+        /// <summary>
+        /// Returns the public instance property (case insensitive) of the runtime type of the (non-class typed) entity.
+        /// </summary>
+        /// <param name="entity">The entity object.</param>
+        /// <param name="propertyName">The name of the property.</param>
+        /// <returns>The property, or null if not found.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2075:'this' argument does not satisfy 'DynamicallyAccessedMembersAttribute' in call to target method.",
+            Justification = "The entities without a static class type are only passed to the object-based operations, which are annotated with RequiresUnreferencedCode.")]
+        private static PropertyInfo GetRuntimeProperty(object entity,
+            string propertyName) =>
+            entity?.GetType().GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase);
+
+        /// <summary>
+        /// Returns an expression that converts the (object) value into the target type via the non-generic
+        /// 'Converter.ToType(object, Type)' method (equivalent to the generic 'Converter.ToType&lt;T&gt;(object)' method).
+        /// </summary>
+        /// <param name="valueExpression">The value expression (of type object).</param>
+        /// <param name="type">The target (non-nullable) type.</param>
+        /// <returns>The conversion expression.</returns>
+        internal static Expression GetConverterToTypeExpression(Expression valueExpression,
+            Type type)
+        {
+            var method = typeof(Converter).GetMethod(nameof(Converter.ToType), BindingFlags.Static | BindingFlags.NonPublic,
+                binder: null, new[] { StaticType.Object, StaticType.Type }, modifiers: null);
+            var convertedExpression = Expression.Call(method, valueExpression, Expression.Constant(type, StaticType.Type));
+            if (!type.IsValueType)
+            {
+                return Expression.Convert(convertedExpression, type);
+            }
+            var variable = Expression.Variable(StaticType.Object, "converted");
+            return Expression.Block(type, new[] { variable },
+                Expression.Assign(variable, convertedExpression),
+                Expression.Condition(Expression.Equal(variable, Expression.Constant(null)),
+                    Expression.Default(type),
+                    Expression.Convert(variable, type)));
+        }
+
+        /// <summary>
         ///
         /// </summary>
         /// <param name="dbCommandExpression"></param>
@@ -2485,8 +2620,8 @@ parameterExpression: null, classProperty: null, TypeCache.Get(dbField.Type).GetU
         internal static MethodCallExpression GetDbCommandParametersClearExpression(ParameterExpression dbCommandExpression)
         {
             var dbParameterCollection = Expression.Property(dbCommandExpression,
-                StaticType.DbCommand.GetProperty("Parameters"));
-            return Expression.Call(dbParameterCollection, StaticType.DbParameterCollection.GetMethod("Clear"));
+                typeof(System.Data.Common.DbCommand).GetProperty("Parameters"));
+            return Expression.Call(dbParameterCollection, typeof(System.Data.Common.DbParameterCollection).GetMethod("Clear"));
         }
 
         /// <summary>
@@ -2497,7 +2632,7 @@ parameterExpression: null, classProperty: null, TypeCache.Get(dbField.Type).GetU
         /// <param name="entityIndex"></param>
         /// <returns></returns>
         internal static MethodCallExpression GetListEntityIndexerExpression(Expression entitiesParameterExpression,
-            Type typeOfListEntity,
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] Type typeOfListEntity,
             int entityIndex)
         {
             var listIndexerMethod = typeOfListEntity.GetMethod("get_Item", new[] { StaticType.Int32 });
@@ -2530,7 +2665,7 @@ parameterExpression: null, classProperty: null, TypeCache.Get(dbField.Type).GetU
         /// <param name="dbSetting"></param>
         /// <param name="dbHelper"></param>
         /// <returns></returns>
-        private static Expression GetIndexDbParameterSetterExpression(Type entityType,
+        private static Expression GetIndexDbParameterSetterExpression([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             ParameterExpression dbCommandExpression,
             Expression entitiesParameterExpression,
             IEnumerable<FieldDirection> fieldDirections,
@@ -2540,7 +2675,7 @@ parameterExpression: null, classProperty: null, TypeCache.Get(dbField.Type).GetU
         {
             // Get the current instance
             var entityVariableExpression = Expression.Variable(StaticType.Object, "instance");
-            var typeOfListEntity = typeof(IList<>).MakeGenericType(StaticType.Object);
+            var typeOfListEntity = typeof(IList<object>);
             var entityParameter = (Expression)GetListEntityIndexerExpression(entitiesParameterExpression, typeOfListEntity, entityIndex);
             var entityExpressions = new List<Expression>();
             var entityVariables = new List<ParameterExpression>();
@@ -2560,6 +2695,7 @@ parameterExpression: null, classProperty: null, TypeCache.Get(dbField.Type).GetU
             {
                 // Add the property block
                 var propertyBlock = GetPropertyFieldExpression(dbCommandExpression,
+                    entityType,
                     ConvertExpressionToTypeExpression(entityVariableExpression, entityType),
                     fieldDirection,
                     entityIndex,

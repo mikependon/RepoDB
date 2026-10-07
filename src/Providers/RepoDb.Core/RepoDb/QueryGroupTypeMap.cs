@@ -8,6 +8,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace RepoDb
 {
@@ -21,7 +22,7 @@ namespace RepoDb
     /// <param name="queryGroup">The <see cref="RepoDb.QueryGroup"/> object.</param>
     /// <param name="type">The type where the <see cref="RepoDb.QueryGroup"/> object is mapped.</param>
     internal readonly struct QueryGroupTypeMap(QueryGroup queryGroup,
-        Type type)
+        [DynamicallyAccessedMembers(Trimming.Entity)] Type type)
     {
 
         /// <summary>
@@ -32,6 +33,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the type where the current <see cref="RepoDb.QueryGroup"/> is mapped.
         /// </summary>
+        [DynamicallyAccessedMembers(Trimming.Entity)]
         public Type MappedType { get; } = type;
     }
 }

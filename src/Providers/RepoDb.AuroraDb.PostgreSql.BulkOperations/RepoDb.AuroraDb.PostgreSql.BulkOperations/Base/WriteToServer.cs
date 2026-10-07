@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -44,7 +45,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="excludeField"></param>
         /// <returns></returns>
-        internal static int WriteToServerInternal<TEntity>(AuroraDbConnection connection,
+        internal static int WriteToServerInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(AuroraDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<AuroraDbBulkInsertMapItem> mappings = null,
@@ -134,7 +135,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="excludeField"></param>
         /// <returns></returns>
-        internal static async Task<int> WriteToServerAsyncInternal<TEntity>(AuroraDbConnection connection,
+        internal static async Task<int> WriteToServerAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(AuroraDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<AuroraDbBulkInsertMapItem> mappings = null,

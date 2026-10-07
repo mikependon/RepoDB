@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -174,6 +175,9 @@ namespace RepoDb.AuroraDb.PostgreSql.BulkOperations.Extensions
 
         public int GetOrdinal(string name) => _reader?.GetOrdinal(name) ?? _columns.IndexOf(name);
 
+        [UnconditionalSuppressMessage("Trimming", "IL2073:Target return value does not satisfy 'DynamicallyAccessedMembersAttribute' requirements.", Justification = "The coerced field types are the CLR types of the database fields, whose members are not reflected by the consumers of the reader.")]
+        [UnconditionalSuppressMessage("Trimming", "IL2063:Value returned from method can not be statically determined and may not meet 'DynamicallyAccessedMembersAttribute' requirements.", Justification = "The coerced field types are the CLR types of the database fields, whose members are not reflected by the consumers of the reader.")]
+        [return: DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.PublicProperties)]
         public Type GetFieldType(int i) => _targetTypes[i] ?? _reader?.GetFieldType(i) ?? _columns[i].DataType;
 
         public string GetDataTypeName(int i) => GetFieldType(i).Name;

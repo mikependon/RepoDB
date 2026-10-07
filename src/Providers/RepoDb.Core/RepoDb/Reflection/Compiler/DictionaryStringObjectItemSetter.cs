@@ -37,14 +37,8 @@ namespace RepoDb.Reflection
 
             if (targetType != null)
             {
-                // Get the converter
-                var toTypeMethod = StaticType
-                    .Converter
-                    .GetMethod("ToType", new[] { StaticType.Object })
-                    .MakeGenericMethod(TypeCache.Get(field.Type)?.GetUnderlyingType());
-
                 // Conversion (if needed)
-                valueExpression = ConvertExpressionToTypeExpression(Expression.Call(toTypeMethod, valueParameter), targetType);
+                valueExpression = ConvertExpressionToTypeExpression(GetConverterToTypeExpression(valueParameter, targetType), targetType);
             }
 
             // Property Handler
@@ -52,7 +46,7 @@ namespace RepoDb.Reflection
 
             // Assign the value into DataEntity.Property
             var dictionaryParameter = Expression.Parameter(StaticType.Object, "entity");
-            var itemIndexMethod = StaticType.IDictionaryStringObject.GetMethod("set_Item", new[]
+            var itemIndexMethod = typeof(System.Collections.Generic.IDictionary<string, object>).GetMethod("set_Item", new[]
             {
                 StaticType.String,
                 StaticType.Object

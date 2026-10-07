@@ -21,6 +21,9 @@
     -->
     <PackageVersion Condition="'$(RepoDbAuroraDbPostgreSqlBulkOperationsVersion)' != ''">$(RepoDbAuroraDbPostgreSqlBulkOperationsVersion)</PackageVersion>
   </PropertyGroup>
+  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="RepoDb.Connector.AuroraDb.Npgsql" Version="0.0.1-alpha1" />
   </ItemGroup>

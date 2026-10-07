@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -369,7 +370,7 @@ namespace RepoDb
         /// <summary>
         ///
         /// </summary>
-        private static DataTable BuildEntityDataTable<TEntity>(IList<TEntity> entities,
+        private static DataTable BuildEntityDataTable<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IList<TEntity> entities,
             IList<Field> fields = null,
             bool includeRowOrder = false)
             where TEntity : class
@@ -380,7 +381,7 @@ namespace RepoDb
             }
 
             var entityType = typeof(TEntity) == typeof(object)
-                ? (entities.FirstOrDefault()?.GetType() ?? typeof(TEntity))
+                ? DbConnectionExtension.GetEntityType<TEntity>(entities.FirstOrDefault())
                 : typeof(TEntity);
             var isDictionaryStringObject = TypeCache.Get(entityType).IsDictionaryStringObject();
             fields ??= GetEntityFieldsForWrite(entityType, entities, isDictionaryStringObject);
@@ -425,7 +426,7 @@ namespace RepoDb
         /// <param name="entities"></param>
         /// <param name="isDictionaryStringObject"></param>
         /// <returns></returns>
-        private static IList<Field> GetEntityFieldsForWrite(Type entityType,
+        private static IList<Field> GetEntityFieldsForWrite([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             IEnumerable<object> entities,
             bool isDictionaryStringObject)
         {
@@ -475,7 +476,7 @@ namespace RepoDb
             if (handler != null)
             {
                 var options = PropertyHandlerSetOptions.Create(null, property);
-                return ((dynamic)handler).Set((dynamic)rawValue, options) ?? (object)DBNull.Value;
+                return Reflection.Compiler.GetPropertyHandlerSetMethod(handler).Invoke(handler, new[] { rawValue, options }) ?? DBNull.Value;
             }
 
             return rawValue;

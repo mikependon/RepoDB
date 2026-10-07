@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using NpgsqlTypes;
 using RepoDb.Attributes.Parameter;
 using RepoDb.Attributes.Parameter.Npgsql;
@@ -420,7 +421,7 @@ namespace RepoDb
         /// <param name="dbFields"></param>
         /// <param name="identityResults"></param>
         /// <param name="dbSetting"></param>
-        private static void SetIdentities<TEntity>(Type entityType,
+        private static void SetIdentities<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             IEnumerable<TEntity> entities,
             DbFieldCollection dbFields,
             IEnumerable<IdentityResult> identityResults,
@@ -447,7 +448,7 @@ namespace RepoDb
         /// <param name="dbFields"></param>
         /// <param name="identityResults"></param>
         /// <param name="dbSetting"></param>
-        private static void SetEntityIdentities<TEntity>(Type entityType,
+        private static void SetEntityIdentities<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             IEnumerable<TEntity> entities,
             DbFieldCollection dbFields,
             IEnumerable<IdentityResult> identityResults,
@@ -464,7 +465,7 @@ namespace RepoDb
         /// <param name="entities"></param>
         /// <param name="identityField"></param>
         /// <param name="identityResults"></param>
-        private static void SetEntityIdentities<TEntity>(IEnumerable<TEntity> entities,
+        private static void SetEntityIdentities<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IEnumerable<TEntity> entities,
             Field identityField,
             IEnumerable<IdentityResult> identityResults)
             where TEntity : class
@@ -474,7 +475,7 @@ namespace RepoDb
                 return;
             }
 
-            var entityType = (entities?.FirstOrDefault().GetType() ?? typeof(TEntity));
+            var entityType = DbConnectionExtension.GetEntityType<TEntity>(entities?.FirstOrDefault());
             if (TypeCache.Get(entityType).IsClassType() != true)
             {
                 return;
@@ -577,7 +578,7 @@ namespace RepoDb
             var identityColumn = GetDataTableIdentityColumn(table, identityField, dbSetting);
             if (identityColumn == null)
             {
-                identityColumn = table.Columns.Add(identityField.Name, identityField.Type ?? typeof(object));
+                identityColumn = table.AddColumn(identityField.Name, identityField.Type ?? typeof(object));
             }
 
             var identityList = identityResults.ToList();
@@ -599,7 +600,7 @@ namespace RepoDb
         /// <param name="dbFields"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static Field GetEntityIdentityField(Type entityType,
+        private static Field GetEntityIdentityField([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             DbFieldCollection dbFields,
             IDbSetting dbSetting)
         {
@@ -628,7 +629,7 @@ namespace RepoDb
         /// <param name="dbFields"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static ClassProperty GetEntityIdentityProperty(Type entityType,
+        private static ClassProperty GetEntityIdentityProperty([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             DbFieldCollection dbFields,
             IDbSetting dbSetting)
         {

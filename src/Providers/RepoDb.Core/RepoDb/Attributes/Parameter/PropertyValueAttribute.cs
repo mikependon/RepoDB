@@ -9,6 +9,7 @@
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Data;
 using System.Reflection;
 
@@ -30,7 +31,7 @@ namespace RepoDb.Attributes.Parameter
         /// <param name="parameterType">The type of the <see cref="IDbDataParameter"/> object.</param>
         /// <param name="propertyName">The name to be set to the parameter.</param>
         /// <param name="value">The value to be set to the parameter.</param>
-        public PropertyValueAttribute(Type parameterType,
+        public PropertyValueAttribute([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] Type parameterType,
             string propertyName,
             object value)
             : this(parameterType, propertyName, value, includedInCompilation: true)
@@ -46,7 +47,7 @@ namespace RepoDb.Attributes.Parameter
         /// The value that indicates whether this current attribute method invocation 
         /// will be included on the ahead-of-time (AOT) compilation.
         /// </param>
-        internal PropertyValueAttribute(Type parameterType,
+        internal PropertyValueAttribute([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] Type parameterType,
             string propertyName,
             object value,
             bool includedInCompilation)
@@ -68,6 +69,7 @@ namespace RepoDb.Attributes.Parameter
         /// <summary>
         /// Gets the represented <see cref="Type"/> of the <see cref="IDbDataParameter"/> object.
         /// </summary>
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)]
         public Type ParameterType { get; }
 
         /// <summary>
@@ -171,7 +173,7 @@ namespace RepoDb.Attributes.Parameter
         /// </summary>
         /// <param name="parameterType"></param>
         /// <param name="propertyName"></param>
-        private void Validate(Type parameterType,
+        private void Validate([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] Type parameterType,
             string propertyName)
         {
             ObjectExtension.ThrowIfNull(parameterType, "ParameterType");
@@ -198,7 +200,7 @@ namespace RepoDb.Attributes.Parameter
         /// </summary>
         /// <param name="parameterType"></param>
         /// <param name="propertyName"></param>
-        private void EnsurePropertyInfo(Type parameterType,
+        private void EnsurePropertyInfo([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] Type parameterType,
             string propertyName)
         {
             // Property

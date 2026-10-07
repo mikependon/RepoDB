@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -40,7 +41,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <returns></returns>
-        internal static int WriteToServerInternal<TEntity>(OracleConnection connection,
+        internal static int WriteToServerInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(OracleConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
@@ -127,7 +128,7 @@ namespace RepoDb
         /// <param name="batchSize"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        internal static async Task<int> WriteToServerAsyncInternal<TEntity>(OracleConnection connection,
+        internal static async Task<int> WriteToServerAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(OracleConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,

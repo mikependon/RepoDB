@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System.Collections.Generic;
 using System.Linq;
 using System;
@@ -123,10 +124,22 @@ namespace RepoDb
         /// </summary>
         /// <param name="obj">An object to be parsed.</param>
         /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static IEnumerable<Field> Parse(object obj)
         {
-            return TypeCache.Get(obj?.GetType()).IsDictionaryStringObject() ?
-                ParseDictionaryStringObject((IDictionary<string, object>)obj) : Parse(obj?.GetType());
+            return ParseObject(obj);
+        }
+
+        /// <summary>
+        /// Parses an object (via its runtime type) and creates an enumerable of <see cref="Field"/> objects.
+        /// </summary>
+        /// <param name="obj">An object to be parsed.</param>
+        /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
+        internal static IEnumerable<Field> ParseObject(object obj)
+        {
+            var type = obj.GetRuntimeType();
+            return TypeCache.Get(type).IsDictionaryStringObject() ?
+                ParseDictionaryStringObject((IDictionary<string, object>)obj) : Parse(type);
         }
 
         /// <summary>
@@ -134,7 +147,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
-        public static IEnumerable<Field> Parse<TEntity>()
+        public static IEnumerable<Field> Parse<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>()
             where TEntity : class
         {
             return Parse(typeof(TEntity));
@@ -144,11 +157,11 @@ namespace RepoDb
         /// Parses a type and creates an enumerable of <see cref="Field"/> objects.
         /// </summary>
         /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
-        public static IEnumerable<Field> Parse(Type type)
+        public static IEnumerable<Field> Parse([DynamicallyAccessedMembers(Trimming.Entity)] Type type)
         {
             if (type != null)
             {
-                foreach (var property in TypeCache.Get(type).GetProperties())
+                foreach (var property in TypeCache.GetProperties(type))
                 {
                     yield return property.AsField();
                 }
@@ -178,7 +191,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity that contains the property to be parsed.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>An enumerable list of <see cref="Field"/> objects.</returns>
-        public static IEnumerable<Field> Parse<TEntity>(Expression<Func<TEntity, object>> expression)
+        public static IEnumerable<Field> Parse<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> expression)
             where TEntity : class
         {
             return Parse<TEntity, object>(expression);
@@ -192,7 +205,7 @@ namespace RepoDb
         /// <typeparam name="TResult">The type of the result and the property to be parsed.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>An enumerable list of <see cref="Field"/> objects.</returns>
-        public static IEnumerable<Field> Parse<TEntity, TResult>(Expression<Func<TEntity, TResult>> expression)
+        public static IEnumerable<Field> Parse<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Expression<Func<TEntity, TResult>> expression)
             where TEntity : class
         {
             return expression.Body switch
@@ -212,7 +225,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity that contains the property to be parsed.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>An enumerable list of <see cref="Field"/> objects.</returns>
-        internal static IEnumerable<Field> Parse<TEntity>(UnaryExpression expression)
+        internal static IEnumerable<Field> Parse<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(UnaryExpression expression)
             where TEntity : class
         {
             return expression.Operand switch
@@ -230,7 +243,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity that contains the property to be parsed.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>An enumerable list of <see cref="Field"/> objects.</returns>
-        internal static IEnumerable<Field> Parse<TEntity>(MemberExpression expression)
+        internal static IEnumerable<Field> Parse<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(MemberExpression expression)
             where TEntity : class
         {
             if (expression.Member is PropertyInfo propertyInfo)
@@ -250,7 +263,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity that contains the property to be parsed.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>An enumerable list of <see cref="Field"/> objects.</returns>
-        internal static IEnumerable<Field> Parse<TEntity>(BinaryExpression expression)
+        internal static IEnumerable<Field> Parse<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(BinaryExpression expression)
             where TEntity : class
         {
             return (new Field(expression.GetName())).AsEnumerable();
@@ -263,7 +276,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity that contains the property to be parsed.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>An enumerable list of <see cref="Field"/> objects.</returns>
-        internal static IEnumerable<Field> Parse<TEntity>(NewExpression expression)
+        internal static IEnumerable<Field> Parse<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(NewExpression expression)
             where TEntity : class
         {
             if (expression.Members?.Count >= 0)

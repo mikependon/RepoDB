@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -50,7 +51,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BulkMergeBase<TEntity>(this DB2Connection connection,
+        private static int BulkMergeBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DB2Connection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -121,7 +122,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BulkMergeBaseForReturnIdentity<TEntity>(this DB2Connection connection,
+        private static int BulkMergeBaseForReturnIdentity<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DB2Connection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -198,7 +199,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BulkMergeBaseNoReturnIdentity<TEntity>(this DB2Connection connection,
+        private static int BulkMergeBaseNoReturnIdentity<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DB2Connection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -589,7 +590,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkMergeBaseAsync<TEntity>(this DB2Connection connection,
+        private static async Task<int> BulkMergeBaseAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DB2Connection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -664,7 +665,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkMergeBaseForReturnIdentityAsync<TEntity>(this DB2Connection connection,
+        private static async Task<int> BulkMergeBaseForReturnIdentityAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DB2Connection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -743,7 +744,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkMergeBaseNoReturnIdentityAsync<TEntity>(this DB2Connection connection,
+        private static async Task<int> BulkMergeBaseNoReturnIdentityAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DB2Connection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,

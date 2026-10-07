@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -21,7 +22,7 @@ namespace RepoDb
     /// A data reader object that is used to manipulate the enumerable list of data entity objects.
     /// </summary>
     /// <typeparam name="TEntity">The type of the data entity</typeparam>
-    public class DataEntityDataReader<TEntity> : DbDataReader
+    public class DataEntityDataReader<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity> : DbDataReader
         where TEntity : class
     {
         #region Fields
@@ -108,8 +109,8 @@ namespace RepoDb
 
             // Type
             var entityType = typeof(TEntity);
-            EntityType = entityType == StaticType.Object ?
-                (entities.FirstOrDefault()?.GetType() ?? entityType) :
+            this.entityType = entityType == StaticType.Object ?
+                DbConnectionExtension.GetEntityType<TEntity>(entities.FirstOrDefault()) :
                 entityType;
             isDictionaryStringObject = TypeCache.Get(EntityType).IsDictionaryStringObject();
 
@@ -167,7 +168,11 @@ namespace RepoDb
         /// <summary>
         /// Gets the type of the entities.
         /// </summary>
-        private Type EntityType { get; set; }
+        [DynamicallyAccessedMembers(Trimming.Entity)]
+        private Type EntityType => entityType;
+
+        [DynamicallyAccessedMembers(Trimming.Entity)]
+        private readonly Type entityType;
 
         /// <summary>
         /// Gets the properties of data entity object.
@@ -388,6 +393,11 @@ namespace RepoDb
         /// </summary>
         /// <param name="i">The index of the property.</param>
         /// <returns>The property type from the property index.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2073:Target return value does not satisfy 'DynamicallyAccessedMembersAttribute' requirements.",
+            Justification = "The field types are the types of the values (i.e.: the entity property types), whose members are not accessed by the consumers of the reader.")]
+#if NET
+        [return: DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.PublicProperties)]
+#endif
         public override Type GetFieldType(int i)
         {
             return isDictionaryStringObject ? GetFieldTypeForDictionaryStringObject(i) : GetFieldTypeForEntities(i);

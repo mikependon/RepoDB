@@ -1,0 +1,35 @@
+name: PR - NativeAOT Smoke Test - RepoDb.Core
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'src/Providers/RepoDb.Core/**'
+      - 'src/Providers/RepoDb.Sqlite.Microsoft/**'
+      - '.github/workflows/build-pr-nativeaot.yml'
+
+jobs:
+  nativeaot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v5
+
+      - name: Setup .NET Versions
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: |
+            10.0.x
+
+      # Any trimming/AOT warning (e.g. a member of RepoDB that is not NativeAOT compatible) fails the publish.
+      - name: Publish (NativeAOT)
+        run: >
+          dotnet publish -c release -r linux-x64 -o nativeaot
+          -p:MSBuildWarningsAsErrors="IL2026%3BIL2055%3BIL2057%3BIL2060%3BIL2062%3BIL2063%3BIL2067%3BIL2068%3BIL2070%3BIL2072%3BIL2073%3BIL2075%3BIL2077%3BIL2078%3BIL2087%3BIL2090%3BIL2091%3BIL2093%3BIL3050%3BIL3051"
+          src/Providers/RepoDb.Core/RepoDb.NativeAotTests/RepoDb.NativeAotTests.csproj
+
+      - name: Run (ConversionType.Default)
+        run: ./nativeaot/RepoDb.NativeAotTests
+
+      - name: Run (ConversionType.Automatic)
+        run: ./nativeaot/RepoDb.NativeAotTests --automatic

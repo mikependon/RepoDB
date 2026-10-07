@@ -43,7 +43,7 @@ namespace RepoDb.Reflection
             }
 
             // Initialize the members
-            var body = Expression.ListInit(Expression.New(StaticType.ExpandoObject), memberBindings);
+            var body = Expression.ListInit(Expression.New(typeof(System.Dynamic.ExpandoObject)), memberBindings);
 
             // Set the function value
             return Expression

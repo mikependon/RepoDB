@@ -8,6 +8,8 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
 namespace RepoDb
 {
@@ -18,6 +20,7 @@ namespace RepoDb
     {
         private static readonly ConcurrentDictionary<Type, CachedType> cache = new ConcurrentDictionary<Type, CachedType>();
         private static readonly CachedType nullCachedType = new CachedType(type: null);
+        private static readonly ConcurrentDictionary<Type, PropertyInfo[]> propertiesCache = new ConcurrentDictionary<Type, PropertyInfo[]>();
 
         /// <summary>
         /// Gets the cached <see cref="CachedType"/> object that is being mapped on a type.
@@ -38,6 +41,24 @@ namespace RepoDb
 
             result = new CachedType(type);
             cache.TryAdd(type, result);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the cached public properties of the type.
+        /// </summary>
+        /// <param name="type">The target type.</param>
+        /// <returns>The list of the public properties of the type.</returns>
+        public static PropertyInfo[] GetProperties([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] Type type)
+        {
+            if (propertiesCache.TryGetValue(type, out var result))
+            {
+                return result;
+            }
+
+            result = type.GetProperties();
+            propertiesCache.TryAdd(type, result);
 
             return result;
         }

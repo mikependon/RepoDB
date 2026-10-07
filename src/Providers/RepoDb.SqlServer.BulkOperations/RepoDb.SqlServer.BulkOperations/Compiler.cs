@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -31,7 +32,7 @@ namespace RepoDb.SqlServer.BulkOperations
         /// <typeparam name="TResult"></typeparam>
         /// <param name="methodName"></param>
         /// <returns></returns>
-        public static Func<TEntity, TResult> GetMethodFunc<TEntity, TResult>(string methodName)
+        public static Func<TEntity, TResult> GetMethodFunc<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] TEntity, TResult>(string methodName)
             where TEntity : class =>
             MethodFuncCache<TEntity, TResult>.GetFunc(methodName);
 
@@ -40,7 +41,7 @@ namespace RepoDb.SqlServer.BulkOperations
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TResult"></typeparam>
-        private static class MethodFuncCache<TEntity, TResult>
+        private static class MethodFuncCache<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] TEntity, TResult>
             where TEntity : class
         {
             private static ConcurrentDictionary<int, Func<TEntity, TResult>> cache = new();
@@ -84,7 +85,7 @@ namespace RepoDb.SqlServer.BulkOperations
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="methodName"></param>
         /// <returns></returns>
-        public static Action<TEntity> GetMethodFunc<TEntity>(string methodName)
+        public static Action<TEntity> GetMethodFunc<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] TEntity>(string methodName)
             where TEntity : class =>
             VoidMethodFuncCache<TEntity>.GetFunc(methodName);
 
@@ -92,7 +93,7 @@ namespace RepoDb.SqlServer.BulkOperations
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        private static class VoidMethodFuncCache<TEntity>
+        private static class VoidMethodFuncCache<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] TEntity>
             where TEntity : class
         {
             private static ConcurrentDictionary<int, Action<TEntity>> cache = new();
@@ -138,7 +139,7 @@ namespace RepoDb.SqlServer.BulkOperations
         /// <param name="methodName"></param>
         /// <param name="types"></param>
         /// <returns></returns>
-        public static Func<TEntity, object[], TResult> GetParameterizedMethodFunc<TEntity, TResult>(string methodName,
+        public static Func<TEntity, object[], TResult> GetParameterizedMethodFunc<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] TEntity, TResult>(string methodName,
             Type[] types)
             where TEntity : class =>
             ParameterizedMethodFuncCache<TEntity, TResult>.GetFunc(methodName, types);
@@ -148,7 +149,7 @@ namespace RepoDb.SqlServer.BulkOperations
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TResult"></typeparam>
-        private static class ParameterizedMethodFuncCache<TEntity, TResult>
+        private static class ParameterizedMethodFuncCache<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] TEntity, TResult>
             where TEntity : class
         {
             private static ConcurrentDictionary<int, Func<TEntity, object[], TResult>> cache = new();
@@ -203,7 +204,7 @@ namespace RepoDb.SqlServer.BulkOperations
         /// <param name="methodName"></param>
         /// <param name="types"></param>
         /// <returns></returns>
-        public static Action<TEntity, object[]> GetParameterizedVoidMethodFunc<TEntity>(string methodName,
+        public static Action<TEntity, object[]> GetParameterizedVoidMethodFunc<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] TEntity>(string methodName,
             Type[] types)
             where TEntity : class =>
             ParameterizedVoidMethodFuncCache<TEntity>.GetFunc(methodName, types);
@@ -212,7 +213,7 @@ namespace RepoDb.SqlServer.BulkOperations
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        private static class ParameterizedVoidMethodFuncCache<TEntity>
+        private static class ParameterizedVoidMethodFuncCache<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] TEntity>
             where TEntity : class
         {
             private static ConcurrentDictionary<int, Action<TEntity, object[]>> cache = new();
@@ -267,7 +268,7 @@ namespace RepoDb.SqlServer.BulkOperations
         /// <typeparam name="TResult"></typeparam>
         /// <param name="propertyName"></param>
         /// <returns></returns>
-        public static Func<TEntity, TResult> GetPropertyGetterFunc<TEntity, TResult>(string propertyName)
+        public static Func<TEntity, TResult> GetPropertyGetterFunc<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(string propertyName)
             where TEntity : class =>
             PropertyGetterFuncCache<TEntity, TResult>.GetFunc(PropertyCache.Get<TEntity>(propertyName));
 
@@ -276,7 +277,7 @@ namespace RepoDb.SqlServer.BulkOperations
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TResult"></typeparam>
-        private static class PropertyGetterFuncCache<TEntity, TResult>
+        private static class PropertyGetterFuncCache<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>
             where TEntity : class
         {
             private static ConcurrentDictionary<int, Func<TEntity, TResult>> cache = new();
@@ -314,7 +315,7 @@ namespace RepoDb.SqlServer.BulkOperations
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="propertyName"></param>
         /// <returns></returns>
-        public static Action<TEntity, object> GetPropertySetterFunc<TEntity>(string propertyName)
+        public static Action<TEntity, object> GetPropertySetterFunc<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string propertyName)
             where TEntity : class =>
             PropertySetterFuncCache<TEntity>.GetFunc(PropertyCache.Get<TEntity>(propertyName, true));
 
@@ -322,7 +323,7 @@ namespace RepoDb.SqlServer.BulkOperations
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        private static class PropertySetterFuncCache<TEntity>
+        private static class PropertySetterFuncCache<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>
             where TEntity : class
         {
             private static ConcurrentDictionary<int, Action<TEntity, object>> cache = new();
@@ -370,7 +371,7 @@ namespace RepoDb.SqlServer.BulkOperations
         /// <typeparam name="TResult"></typeparam>
         /// <param name="fieldName"></param>
         /// <returns></returns>
-        public static Func<TEntity, TResult> GetFieldGetterFunc<TEntity, TResult>(string fieldName)
+        public static Func<TEntity, TResult> GetFieldGetterFunc<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicFields | DynamicallyAccessedMemberTypes.PublicProperties)] TEntity, TResult>(string fieldName)
             where TEntity : class =>
             FieldGetterFuncCache<TEntity, TResult>.GetFunc(fieldName);
 
@@ -379,7 +380,7 @@ namespace RepoDb.SqlServer.BulkOperations
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TResult"></typeparam>
-        private static class FieldGetterFuncCache<TEntity, TResult>
+        private static class FieldGetterFuncCache<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicFields | DynamicallyAccessedMemberTypes.PublicProperties)] TEntity, TResult>
             where TEntity : class
         {
             private static ConcurrentDictionary<int, Func<TEntity, TResult>> cache = new();
@@ -425,7 +426,7 @@ namespace RepoDb.SqlServer.BulkOperations
         /// <typeparam name="TEnum"></typeparam>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static Func<TEnum> GetEnumFunc<TEnum>(string value)
+        public static Func<TEnum> GetEnumFunc<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] TEnum>(string value)
             where TEnum : Enum =>
             EnumFuncCache<TEnum>.GetFunc(value);
 
@@ -433,7 +434,7 @@ namespace RepoDb.SqlServer.BulkOperations
         /// 
         /// </summary>
         /// <typeparam name="TEnum"></typeparam>
-        private static class EnumFuncCache<TEnum>
+        private static class EnumFuncCache<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] TEnum>
             where TEnum : Enum
         {
             private static ConcurrentDictionary<int, Func<TEnum>> cache = new();
@@ -477,7 +478,7 @@ namespace RepoDb.SqlServer.BulkOperations
         /// <param name="instance"></param>
         /// <param name="propertyName"></param>
         /// <param name="value"></param>
-        public static void SetProperty<TEntity>(TEntity instance,
+        public static void SetProperty<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(TEntity instance,
             string propertyName,
             object value)
             where TEntity : class

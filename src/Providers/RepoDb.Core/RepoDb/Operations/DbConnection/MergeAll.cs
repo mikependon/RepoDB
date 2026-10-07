@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Contexts.Providers;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
@@ -46,7 +47,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        public static int MergeAll<TEntity>(this IDbConnection connection,
+        public static int MergeAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -90,7 +91,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        public static int MergeAll<TEntity>(this IDbConnection connection,
+        public static int MergeAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             Field qualifier,
@@ -135,7 +136,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        public static int MergeAll<TEntity>(this IDbConnection connection,
+        public static int MergeAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
@@ -180,7 +181,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        public static int MergeAll<TEntity>(this IDbConnection connection,
+        public static int MergeAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers,
@@ -223,7 +224,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        public static int MergeAll<TEntity>(this IDbConnection connection,
+        public static int MergeAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
@@ -265,7 +266,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        public static int MergeAll<TEntity>(this IDbConnection connection,
+        public static int MergeAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             Field qualifier,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -308,7 +309,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        public static int MergeAll<TEntity>(this IDbConnection connection,
+        public static int MergeAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -351,7 +352,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        public static int MergeAll<TEntity>(this IDbConnection connection,
+        public static int MergeAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -395,7 +396,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        internal static int MergeAllInternal<TEntity>(this IDbConnection connection,
+        internal static int MergeAllInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
@@ -508,7 +509,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        public static Task<int> MergeAllAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> MergeAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -555,7 +556,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        public static Task<int> MergeAllAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> MergeAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             Field qualifier,
@@ -603,7 +604,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        public static Task<int> MergeAllAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> MergeAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
@@ -651,7 +652,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        public static Task<int> MergeAllAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> MergeAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers,
@@ -697,7 +698,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        public static Task<int> MergeAllAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> MergeAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
@@ -742,7 +743,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        public static Task<int> MergeAllAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> MergeAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             Field qualifier,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -788,7 +789,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        public static Task<int> MergeAllAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> MergeAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -834,7 +835,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        public static Task<int> MergeAllAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> MergeAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -881,7 +882,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        internal static async Task<int> MergeAllAsyncInternal<TEntity>(this IDbConnection connection,
+        internal static async Task<int> MergeAllAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
@@ -997,6 +998,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static int MergeAll(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
@@ -1039,6 +1041,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static int MergeAll(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
@@ -1082,6 +1085,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static int MergeAll(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
@@ -1129,6 +1133,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Task<int> MergeAllAsync(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
@@ -1174,6 +1179,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Task<int> MergeAllAsync(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
@@ -1220,6 +1226,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Task<int> MergeAllAsync(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
@@ -1270,7 +1277,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        internal static int MergeAllInternalBase<TEntity>(this IDbConnection connection,
+        internal static int MergeAllInternalBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
@@ -1517,7 +1524,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        internal static int UpsertAllInternalBase<TEntity>(this IDbConnection connection,
+        internal static int UpsertAllInternalBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -1655,7 +1662,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        internal static async Task<int> MergeAllAsyncInternalBase<TEntity>(this IDbConnection connection,
+        internal static async Task<int> MergeAllAsyncInternalBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
@@ -1911,7 +1918,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        internal static async Task<int> UpsertAllAsyncInternalBase<TEntity>(this IDbConnection connection,
+        internal static async Task<int> UpsertAllAsyncInternalBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,

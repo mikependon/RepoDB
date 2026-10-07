@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using Npgsql;
 using RepoDb.Enumerations.PostgreSql;
 using RepoDb.Extensions;
@@ -41,7 +42,7 @@ namespace RepoDb
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BulkUpdateBase<TEntity>(this NpgsqlConnection connection,
+        private static int BulkUpdateBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -54,7 +55,7 @@ namespace RepoDb
             NpgsqlTransaction transaction = null)
             where TEntity : class
         {
-            var entityType = entities?.First()?.GetType() ?? typeof(TEntity); // Solving the anonymous types
+            var entityType = DbConnectionExtension.GetEntityType<TEntity>(entities?.First()); // Solving the anonymous types
             var isDictionary = TypeCache.Get(entityType).IsDictionaryStringObject();
             var dbSetting = connection.GetDbSetting();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
@@ -348,7 +349,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkUpdateBaseAsync<TEntity>(this NpgsqlConnection connection,
+        private static async Task<int> BulkUpdateBaseAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -362,7 +363,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            var entityType = entities?.First()?.GetType() ?? typeof(TEntity); // Solving the anonymous types
+            var entityType = DbConnectionExtension.GetEntityType<TEntity>(entities?.First()); // Solving the anonymous types
             var isDictionary = TypeCache.Get(entityType).IsDictionaryStringObject();
             var dbSetting = connection.GetDbSetting();
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);

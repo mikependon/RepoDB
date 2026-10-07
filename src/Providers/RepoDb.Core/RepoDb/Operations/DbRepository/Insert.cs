@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -32,7 +33,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public object Insert<TEntity>(string tableName,
+        public object Insert<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -75,7 +76,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public TResult Insert<TEntity, TResult>(string tableName,
+        public TResult Insert<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -116,7 +117,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public object Insert<TEntity>(TEntity entity,
+        public object Insert<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.Insert,
@@ -156,7 +157,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public TResult Insert<TEntity, TResult>(TEntity entity,
+        public TResult Insert<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.Insert,
@@ -201,7 +202,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public async Task<object> InsertAsync<TEntity>(string tableName,
+        public async Task<object> InsertAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -247,7 +248,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public async Task<TResult> InsertAsync<TEntity, TResult>(string tableName,
+        public async Task<TResult> InsertAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -291,7 +292,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public async Task<object> InsertAsync<TEntity>(TEntity entity,
+        public async Task<object> InsertAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.Insert,
@@ -334,7 +335,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public async Task<TResult> InsertAsync<TEntity, TResult>(TEntity entity,
+        public async Task<TResult> InsertAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.Insert,
@@ -379,6 +380,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public object Insert(string tableName,
             object entity,
             IEnumerable<Field> fields = null,
@@ -420,6 +422,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public TResult Insert<TResult>(string tableName,
             object entity,
             IEnumerable<Field> fields = null,
@@ -465,6 +468,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<object> InsertAsync(string tableName,
             object entity,
             IEnumerable<Field> fields = null,
@@ -509,6 +513,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the primary key of the newly inserted data.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<TResult> InsertAsync<TResult>(string tableName,
             object entity,
             IEnumerable<Field> fields = null,

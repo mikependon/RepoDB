@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -28,8 +29,8 @@ namespace RepoDb.Reflection
         /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
         /// <returns></returns>
-        internal static Action<DbCommand, object> GetPlainTypeToDbParametersCompiledFunction(Type paramType,
-            Type entityType,
+        internal static Action<DbCommand, object> GetPlainTypeToDbParametersCompiledFunction([DynamicallyAccessedMembers(Trimming.Entity)] Type paramType,
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             DbFieldCollection dbFields = null)
         {
             var dbCommandExpression = Expression.Parameter(StaticType.DbCommand, "command");

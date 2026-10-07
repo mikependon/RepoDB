@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using RepoDb.Attributes.Parameter;
 using System.Collections.Generic;
@@ -46,7 +47,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="type">The current type.</param>
         /// <returns>The instance of <see cref="ConstructorInfo"/> with the most arguments.</returns>
-        public static ConstructorInfo GetConstructorWithMostArguments(this Type type)
+        public static ConstructorInfo GetConstructorWithMostArguments([DynamicallyAccessedMembers(Trimming.Entity)] this Type type)
         {
             return type.GetConstructors().Where(item => item.GetParameters().Length > 0)
                 .OrderByDescending(item => item.GetParameters().Length).FirstOrDefault();
@@ -110,7 +111,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="type">The current type.</param>
         /// <returns>Returns true if the current type is a plain class type.</returns>
-        internal static bool IsPlainType(this Type type)
+        internal static bool IsPlainType([DynamicallyAccessedMembers(Trimming.Entity)] this Type type)
         {
             var cachedType = TypeCache.Get(type);
             
@@ -135,7 +136,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="type">The current type.</param>
         /// <returns>A list of <see cref="Field"/> objects.</returns>
-        internal static IEnumerable<Field> AsFields(this Type type)
+        internal static IEnumerable<Field> AsFields([DynamicallyAccessedMembers(Trimming.Entity)] this Type type)
         {
             return PropertyCache.Get(type).AsFields();
         }
@@ -145,7 +146,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="type">The current type.</param>
         /// <returns>The list of the enumerable <see cref="ClassProperty"/> objects.</returns>
-        internal static IEnumerable<ClassProperty> GetEnumerableClassProperties(this Type type)
+        internal static IEnumerable<ClassProperty> GetEnumerableClassProperties([DynamicallyAccessedMembers(Trimming.Entity)] this Type type)
         {
             return PropertyCache.Get(type).Where(classProperty =>
             {
@@ -163,9 +164,9 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="type">The current type.</param>
         /// <returns>A list of <see cref="ClassProperty"/> objects.</returns>
-        public static IEnumerable<ClassProperty> GetClassProperties(this Type type)
+        public static IEnumerable<ClassProperty> GetClassProperties([DynamicallyAccessedMembers(Trimming.Entity)] this Type type)
         {
-            foreach (var property in TypeCache.Get(type).GetProperties())
+            foreach (var property in TypeCache.GetProperties(type))
             {
                 yield return new ClassProperty(type, property);
             }
@@ -187,7 +188,7 @@ namespace RepoDb.Extensions
         /// <param name="type">The current type.</param>
         /// <param name="mappedName">The name of the property mapping.</param>
         /// <returns>The instance of <see cref="ClassProperty"/>.</returns>
-        internal static ClassProperty GetMappedProperty(this Type type,
+        internal static ClassProperty GetMappedProperty([DynamicallyAccessedMembers(Trimming.Entity)] this Type type,
             string mappedName)
         {
             return PropertyCache.Get(type)?.FirstOrDefault(p => string.Equals(p.GetMappedName(), mappedName, StringComparison.OrdinalIgnoreCase));
@@ -199,7 +200,7 @@ namespace RepoDb.Extensions
         /// <param name="type">The current type.</param>
         /// <returns>The list of the interface types.</returns>
         [Obsolete("Please use the Type.GetInterfaces() method instead.")]
-        public static Type[] GetImplementedInterfaces(this Type type)
+        public static Type[] GetImplementedInterfaces([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)] this Type type)
         {
             return type?.GetInterfaces();
         }
@@ -210,6 +211,8 @@ namespace RepoDb.Extensions
         /// <param name="currentType">The current type.</param>
         /// <param name="sourceType">The source type.</param>
         /// <returns>The newly created generic type.</returns>
+        [RequiresDynamicCode(Trimming.DynamicCodeMessage)]
+        [RequiresUnreferencedCode("The generic type is constructed at runtime and its members might be trimmed.")]
         public static Type MakeGenericTypeFrom(this Type currentType,
             Type sourceType)
         {
@@ -227,16 +230,115 @@ namespace RepoDb.Extensions
         /// <param name="currentType">The current type.</param>
         /// <param name="interfaceType">The target interface type.</param>
         /// <returns>True if the current type has implemented the target interface.</returns>
-        public static bool IsInterfacedTo(this Type currentType,
+        public static bool IsInterfacedTo([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)] this Type currentType,
             Type interfaceType)
         {
-            var targetInterface = currentType.IsInterface ? currentType :
-                currentType?
-                    .GetInterfaces()?
-                    .FirstOrDefault(item => string.Equals(item.Name, interfaceType.Name, StringComparison.Ordinal) && string.Equals(item.Namespace, interfaceType.Namespace, StringComparison.Ordinal));
-            interfaceType = interfaceType?.MakeGenericTypeFrom(targetInterface);
-            return interfaceType?.IsAssignableFrom(currentType) == true;
+            if (currentType == null || interfaceType == null)
+            {
+                return false;
+            }
+            if (!interfaceType.IsGenericTypeDefinition)
+            {
+                return interfaceType.IsAssignableFrom(currentType);
+            }
+            return IsGenericTypeOf(currentType, interfaceType) ||
+                currentType.GetInterfaces().Any(item => IsGenericTypeOf(item, interfaceType));
         }
+
+        /// <summary>
+        /// Returns the type to be used when reflecting over the members of an object: the (annotated) generic type argument, or
+        /// the runtime type of the object if it differs (i.e.: a derived type, or the generic type argument was widened to 'object').
+        /// </summary>
+        /// <typeparam name="T">The static type of the object.</typeparam>
+        /// <param name="obj">The object.</param>
+        /// <returns>The type to be used when reflecting over the members of the object.</returns>
+        [return: DynamicallyAccessedMembers(Trimming.Entity)]
+        internal static Type GetRuntimeType<[DynamicallyAccessedMembers(Trimming.Entity)] T>(T obj)
+        {
+            var type = obj?.GetType();
+            return type == null || type == typeof(T) ? typeof(T) : GetRuntimeType((object)obj);
+        }
+
+        /// <summary>
+        /// Returns the runtime type of an untyped object, to be used when reflecting over its members.
+        /// </summary>
+        /// <param name="obj">The object.</param>
+        /// <returns>The runtime type of the object.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2073:Target return value does not satisfy 'DynamicallyAccessedMembersAttribute' requirements.",
+            Justification = "RepoDB only reflects over the runtime type of an untyped object when it was passed via the object-based public APIs " +
+                "(i.e.: the 'param', 'what', 'where' and 'entity' arguments of type object), which are annotated with RequiresUnreferencedCode, " +
+                "or when it is an instance of a data entity type whose generic type argument is annotated (Trimming.Entity).")]
+        [return: DynamicallyAccessedMembers(Trimming.Entity)]
+        internal static Type GetRuntimeType(this object obj) =>
+            obj?.GetType();
+
+        /// <summary>
+        /// Returns the type of a property/class handler instance: the (annotated) generic type argument, or the runtime type of
+        /// the handler if it differs (i.e.: a derived type, or the generic type argument was widened).
+        /// </summary>
+        /// <typeparam name="THandler">The static type of the handler.</typeparam>
+        /// <param name="handler">The handler instance.</param>
+        /// <returns>The type of the handler.</returns>
+        [return: DynamicallyAccessedMembers(Trimming.Handler)]
+        internal static Type GetHandlerType<[DynamicallyAccessedMembers(Trimming.Handler)] THandler>(THandler handler)
+        {
+            var type = handler?.GetType();
+            return type == null || type == typeof(THandler) ? typeof(THandler) : GetHandlerType((object)handler);
+        }
+
+        /// <summary>
+        /// Returns the runtime type of an untyped property/class handler instance.
+        /// </summary>
+        /// <param name="handler">The handler instance.</param>
+        /// <returns>The runtime type of the handler.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2073:Target return value does not satisfy 'DynamicallyAccessedMembersAttribute' requirements.",
+            Justification = "The untyped handler registration APIs are annotated with RequiresUnreferencedCode; otherwise, the runtime type only " +
+                "differs from the (annotated) generic type argument for derived handler types.")]
+        [return: DynamicallyAccessedMembers(Trimming.Handler)]
+        internal static Type GetHandlerType(object handler) =>
+            handler?.GetType();
+
+        /// <summary>
+        /// Returns the default value of the type (i.e.: the zero-initialized instance of a value type, or null).
+        /// </summary>
+        /// <param name="type">The current type.</param>
+        /// <returns>The default value of the type.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2067:Target parameter argument does not satisfy 'DynamicallyAccessedMembersAttribute' in call to target method.",
+            Justification = "The default value of a value type is its zero-initialized instance, no constructor is being invoked.")]
+        internal static object GetDefaultValue(this Type type)
+        {
+            // The default value of a reference type or a Nullable<T> is null
+            if (type?.IsValueType != true || Nullable.GetUnderlyingType(type) != null)
+            {
+                return null;
+            }
+#if NET
+            return System.Runtime.CompilerServices.RuntimeHelpers.GetUninitializedObject(type);
+#else
+            return Activator.CreateInstance(type);
+#endif
+        }
+
+        /// <summary>
+        /// Returns the <see cref="Nullable{T}"/> type of the current value type.
+        /// </summary>
+        /// <param name="type">The current value type.</param>
+        /// <returns>The nullable type.</returns>
+        [UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.",
+            Justification = "Nullable<T> has no code of its own that needs to be generated for the instantiation; the NativeAOT runtime " +
+                "can construct any Nullable<T> instantiation over an existing value type at runtime.")]
+        internal static Type MakeNullableType(this Type type) =>
+            typeof(Nullable<>).MakeGenericType(type);
+
+        /// <summary>
+        /// Checks whether the current type is a constructed type of the target generic type definition.
+        /// </summary>
+        /// <param name="currentType">The current type.</param>
+        /// <param name="genericTypeDefinition">The target generic type definition.</param>
+        /// <returns>True if the current type is a constructed type of the target generic type definition.</returns>
+        internal static bool IsGenericTypeOf(this Type currentType,
+            Type genericTypeDefinition) =>
+            currentType?.IsGenericType == true && currentType.GetGenericTypeDefinition() == genericTypeDefinition;
 
         /// <summary>
         /// Checks whether the current class handler type is valid to be used for the target model type.
@@ -244,7 +346,7 @@ namespace RepoDb.Extensions
         /// <param name="classHandlerType">The current class handler type type.</param>
         /// <param name="targetModelType">The target model type.</param>
         /// <returns>True if the current class handler type is valid to be used for the target model type.</returns>
-        internal static bool IsClassHandlerValidForModel(this Type classHandlerType,
+        internal static bool IsClassHandlerValidForModel([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)] this Type classHandlerType,
             Type targetModelType)
         {
             var targetInterface = classHandlerType?
@@ -287,7 +389,7 @@ namespace RepoDb.Extensions
         /// <typeparam name="T">The target .NET CLR type.</typeparam>
         /// <param name="propertyName">The name of the class property to be mapped.</param>
         /// <returns>An instance of <see cref="PropertyInfo"/> object.</returns>
-        public static PropertyInfo GetProperty<T>(string propertyName)
+        public static PropertyInfo GetProperty<[DynamicallyAccessedMembers(Trimming.Entity)] T>(string propertyName)
             where T : class
         {
             return GetProperty(typeof(T), propertyName);
@@ -299,11 +401,10 @@ namespace RepoDb.Extensions
         /// <param name="type">The target .NET CLR type.</param>
         /// <param name="propertyName">The name of the target class property.</param>
         /// <returns>An instance of <see cref="PropertyInfo"/> object.</returns>
-        public static PropertyInfo GetProperty(Type type,
+        public static PropertyInfo GetProperty([DynamicallyAccessedMembers(Trimming.Entity)] Type type,
             string propertyName)
         {
-            return TypeCache.Get(type)
-                .GetProperties()
+            return TypeCache.GetProperties(type)
                 .FirstOrDefault(p =>
                     string.Equals(p.Name, propertyName, StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(p.GetMappedName(), propertyName, StringComparison.OrdinalIgnoreCase));

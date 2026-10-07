@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -38,6 +39,7 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void CreatePseudoTable(ClickHouseConnection connection,
             string tableName,
             string pseudoTableName,
@@ -65,6 +67,7 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task CreatePseudoTableAsync(ClickHouseConnection connection,
             string tableName,
             string pseudoTableName,
@@ -88,6 +91,7 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void TruncatePseudoTable(ClickHouseConnection connection,
             string pseudoTableName,
             ITrace trace = null,
@@ -109,6 +113,7 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task TruncatePseudoTableAsync(ClickHouseConnection connection,
             string pseudoTableName,
             ITrace trace = null,
@@ -129,6 +134,7 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void DropPseudoTable(ClickHouseConnection connection,
             string pseudoTableName,
             ITrace trace = null,
@@ -150,6 +156,7 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task DropPseudoTableAsync(ClickHouseConnection connection,
             string pseudoTableName,
             ITrace trace = null,
@@ -177,6 +184,7 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void MergeFromPseudoTable(ClickHouseConnection connection,
             string tableName,
             string pseudoTableName,
@@ -226,6 +234,7 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task MergeFromPseudoTableAsync(ClickHouseConnection connection,
             string tableName,
             string pseudoTableName,
@@ -279,6 +288,7 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void UpdateFromPseudoTable(ClickHouseConnection connection,
             string tableName,
             string pseudoTableName,
@@ -323,6 +333,7 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task UpdateFromPseudoTableAsync(ClickHouseConnection connection,
             string tableName,
             string pseudoTableName,
@@ -368,6 +379,7 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static int DeleteFromPseudoTable(ClickHouseConnection connection,
             string tableName,
             string pseudoTableName,
@@ -401,6 +413,7 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns>The number of rows matched (and deleted).</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task<int> DeleteFromPseudoTableAsync(ClickHouseConnection connection,
             string tableName,
             string pseudoTableName,
@@ -450,6 +463,7 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
         /// <param name="pseudoTableName"></param>
         /// <param name="qualifiers"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static void CreatePseudoJoinTable(ClickHouseConnection connection,
             string pseudoTableName,
             IEnumerable<Field> qualifiers,
@@ -473,6 +487,7 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static async Task CreatePseudoJoinTableAsync(ClickHouseConnection connection,
             string pseudoTableName,
             IEnumerable<Field> qualifiers,
@@ -494,6 +509,7 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
         /// <param name="connection"></param>
         /// <param name="pseudoTableName"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static void DropPseudoJoinTable(ClickHouseConnection connection,
             string pseudoTableName,
             DbTransaction transaction = null,
@@ -513,6 +529,7 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static async Task DropPseudoJoinTableAsync(ClickHouseConnection connection,
             string pseudoTableName,
             DbTransaction transaction = null,

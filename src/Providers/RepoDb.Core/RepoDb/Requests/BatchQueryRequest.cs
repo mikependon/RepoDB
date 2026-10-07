@@ -10,6 +10,7 @@
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Collections.Generic;
 using System.Data;
 
@@ -60,7 +61,7 @@ namespace RepoDb.Requests
         /// <param name="where">The query expression.</param>
         /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public BatchQueryRequest(Type type,
+        public BatchQueryRequest([DynamicallyAccessedMembers(Trimming.Entity)] Type type,
             IDbConnection connection,
             IDbTransaction transaction,
             IEnumerable<Field> fields,

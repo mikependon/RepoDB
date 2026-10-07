@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -105,6 +106,7 @@ namespace RepoDb
         /// <summary>
         /// Creates the temporary (pseudo) table that mirrors <paramref name="tableName"/>.
         /// </summary>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static void CreateTemporaryTable(SqlConnection connection,
             string tableName,
             string tempTableName,
@@ -122,6 +124,7 @@ namespace RepoDb
         /// <summary>
         /// Creates the temporary (pseudo) table that mirrors <paramref name="tableName"/>.
         /// </summary>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static async Task CreateTemporaryTableAsync(SqlConnection connection,
             string tableName,
             string tempTableName,
@@ -176,6 +179,7 @@ namespace RepoDb
         /// <summary>
         /// Creates the clustered index on the temporary table's qualifier columns.
         /// </summary>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static void CreateTemporaryTableClusteredIndex(SqlConnection connection,
             string tempTableName,
             IEnumerable<Field> qualifiers,
@@ -190,6 +194,7 @@ namespace RepoDb
         /// <summary>
         /// Creates the clustered index on the temporary table's qualifier columns.
         /// </summary>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static async Task CreateTemporaryTableClusteredIndexAsync(SqlConnection connection,
             string tempTableName,
             IEnumerable<Field> qualifiers,
@@ -254,6 +259,7 @@ namespace RepoDb
         /// <summary>
         /// Drops the temporary (pseudo) table.
         /// </summary>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static void DropTemporaryTable(SqlConnection connection,
             string tempTableName,
             IDbSetting dbSetting,
@@ -267,6 +273,7 @@ namespace RepoDb
         /// <summary>
         /// Drops the temporary (pseudo) table.
         /// </summary>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static async Task DropTemporaryTableAsync(SqlConnection connection,
             string tempTableName,
             IDbSetting dbSetting,

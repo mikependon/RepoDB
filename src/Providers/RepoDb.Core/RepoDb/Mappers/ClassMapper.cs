@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Attributes;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
@@ -37,7 +38,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <param name="name">The name of the database object (ie: Table, View).</param>
-        public static void Add<TEntity>(string name)
+        public static void Add<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string name)
             where TEntity : class
         {
             Add(typeof(TEntity), name);
@@ -49,7 +50,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <param name="name">The name of the database object (ie: Table, View).</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add<TEntity>(string name,
+        public static void Add<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string name,
             bool force)
             where TEntity : class
         {
@@ -110,7 +111,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <returns>The mapped name of the class.</returns>
-        public static string Get<TEntity>()
+        public static string Get<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>()
             where TEntity : class
         {
             return Get(typeof(TEntity));
@@ -140,7 +141,7 @@ namespace RepoDb
         /// Remove the exising mapped database object on the .NET CLR type.
         /// </summary>
         /// <typeparam name="TEntity">The target type.</typeparam>
-        public static void Remove<TEntity>()
+        public static void Remove<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>()
             where TEntity : class
         {
             Remove(typeof(TEntity));

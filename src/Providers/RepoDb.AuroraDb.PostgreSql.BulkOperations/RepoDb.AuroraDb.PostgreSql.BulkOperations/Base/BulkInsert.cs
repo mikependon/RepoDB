@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Connector.AuroraDb.Npgsql;
 using RepoDb.Enumerations.AuroraDb;
 using RepoDb.Exceptions;
@@ -47,7 +48,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BulkInsertBase<TEntity>(this AuroraDbConnection connection,
+        private static int BulkInsertBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this AuroraDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<AuroraDbBulkInsertMapItem> mappings = null,
@@ -111,7 +112,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BulkInsertBaseForReturnIdentity<TEntity>(this AuroraDbConnection connection,
+        private static int BulkInsertBaseForReturnIdentity<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this AuroraDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<AuroraDbBulkInsertMapItem> mappings = null,
@@ -176,7 +177,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BulkInsertBaseNoReturnIdentity<TEntity>(this AuroraDbConnection connection,
+        private static int BulkInsertBaseNoReturnIdentity<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this AuroraDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<AuroraDbBulkInsertMapItem> mappings = null,
@@ -487,7 +488,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkInsertBaseAsync<TEntity>(this AuroraDbConnection connection,
+        private static async Task<int> BulkInsertBaseAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this AuroraDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<AuroraDbBulkInsertMapItem> mappings = null,
@@ -555,7 +556,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkInsertBaseForReturnIdentityAsync<TEntity>(this AuroraDbConnection connection,
+        private static async Task<int> BulkInsertBaseForReturnIdentityAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this AuroraDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<AuroraDbBulkInsertMapItem> mappings = null,
@@ -622,7 +623,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkInsertBaseNoReturnIdentityAsync<TEntity>(this AuroraDbConnection connection,
+        private static async Task<int> BulkInsertBaseNoReturnIdentityAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this AuroraDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<AuroraDbBulkInsertMapItem> mappings = null,

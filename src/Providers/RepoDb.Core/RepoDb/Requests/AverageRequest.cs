@@ -9,6 +9,7 @@
 
 using RepoDb.Interfaces;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Data;
 
 namespace RepoDb.Requests
@@ -49,7 +50,7 @@ namespace RepoDb.Requests
         /// <param name="where">The query expression.</param>
         /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public AverageRequest(Type type,
+        public AverageRequest([DynamicallyAccessedMembers(Trimming.Entity)] Type type,
             IDbConnection connection,
             IDbTransaction transaction,
             Field field = null,

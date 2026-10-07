@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -44,7 +45,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="excludeField"></param>
         /// <returns></returns>
-        internal static int WriteToServerInternal<TEntity>(HanaConnection connection,
+        internal static int WriteToServerInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(HanaConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<SapHanaBulkInsertMapItem> mappings = null,
@@ -156,7 +157,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="excludeField"></param>
         /// <returns></returns>
-        internal static async Task<int> WriteToServerAsyncInternal<TEntity>(HanaConnection connection,
+        internal static async Task<int> WriteToServerAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(HanaConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<SapHanaBulkInsertMapItem> mappings = null,
@@ -423,7 +424,7 @@ namespace RepoDb
                 var destinationField = dbFields.GetByUnquotedName(mappings[i].DestinationColumn.AsUnquoted(true, dbSetting));
                 var fieldType = destinationField?.Type ?? reader.GetFieldType(ordinals[i]) ?? typeof(object);
                 columnTypes[i] = Nullable.GetUnderlyingType(fieldType) ?? fieldType;
-                table.Columns.Add(mappings[i].SourceColumn, columnTypes[i]);
+                table.AddColumn(mappings[i].SourceColumn, columnTypes[i]);
             }
 
             while (reader.Read())
@@ -465,7 +466,7 @@ namespace RepoDb
                 var sourceColumnType = rows?.Length > 0 ? rows[0].Table.Columns[mappings[i].SourceColumn]?.DataType : null;
                 var fieldType = destinationField?.Type ?? sourceColumnType ?? typeof(object);
                 columnTypes[i] = Nullable.GetUnderlyingType(fieldType) ?? fieldType;
-                table.Columns.Add(mappings[i].SourceColumn, columnTypes[i]);
+                table.AddColumn(mappings[i].SourceColumn, columnTypes[i]);
             }
 
             if (rows != null)

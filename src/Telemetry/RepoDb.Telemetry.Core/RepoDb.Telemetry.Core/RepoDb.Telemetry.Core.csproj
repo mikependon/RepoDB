@@ -23,6 +23,9 @@
     -->
     <PackageVersion Condition="'$(RepoDbTelemetryCoreVersion)' != ''">$(RepoDbTelemetryCoreVersion)</PackageVersion>
   </PropertyGroup>
+  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Serilog" Version="4.3.1" />

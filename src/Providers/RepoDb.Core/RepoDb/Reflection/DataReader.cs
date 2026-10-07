@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Interfaces;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -30,7 +31,7 @@ namespace RepoDb.Reflection
         /// <param name="dbFields">The list of the <see cref="DbField"/> objects to be used.</param>
         /// <param name="dbSetting">The instance of <see cref="IDbSetting"/> object to be used.</param>
         /// <returns>A list of the target result type.</returns>
-        public static IEnumerable<TResult> ToEnumerable<TResult>(DbDataReader reader,
+        public static IEnumerable<TResult> ToEnumerable<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(DbDataReader reader,
             DbFieldCollection dbFields = null,
             IDbSetting dbSetting = null)
         {
@@ -61,7 +62,7 @@ namespace RepoDb.Reflection
         /// <param name="dbSetting">The instance of <see cref="IDbSetting"/> object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A list of the target result type.</returns>
-        public static async IAsyncEnumerable<TResult> ToEnumerableAsync<TResult>(DbDataReader reader,
+        public static async IAsyncEnumerable<TResult> ToEnumerableAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TResult>(DbDataReader reader,
             DbFieldCollection dbFields = null,
             IDbSetting dbSetting = null,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)

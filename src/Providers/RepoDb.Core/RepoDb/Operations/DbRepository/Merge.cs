@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -33,7 +34,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public object Merge<TEntity>(string tableName,
+        public object Merge<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -75,7 +76,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public object Merge<TEntity>(string tableName,
+        public object Merge<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             TEntity entity,
             Field qualifier,
             IEnumerable<Field> fields = null,
@@ -120,7 +121,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public object Merge<TEntity>(string tableName,
+        public object Merge<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             TEntity entity,
             IEnumerable<Field> qualifiers,
             IEnumerable<Field> fields = null,
@@ -165,7 +166,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public object Merge<TEntity>(string tableName,
+        public object Merge<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             TEntity entity,
             Expression<Func<TEntity, object>> qualifiers,
             IEnumerable<Field> fields = null,
@@ -210,7 +211,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public TResult Merge<TEntity, TResult>(string tableName,
+        public TResult Merge<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -254,7 +255,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public TResult Merge<TEntity, TResult>(string tableName,
+        public TResult Merge<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(string tableName,
             TEntity entity,
             Field qualifier,
             IEnumerable<Field> fields = null,
@@ -300,7 +301,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public TResult Merge<TEntity, TResult>(string tableName,
+        public TResult Merge<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(string tableName,
             TEntity entity,
             IEnumerable<Field> qualifiers,
             IEnumerable<Field> fields = null,
@@ -346,7 +347,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public TResult Merge<TEntity, TResult>(string tableName,
+        public TResult Merge<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(string tableName,
             TEntity entity,
             Expression<Func<TEntity, object>> qualifiers,
             IEnumerable<Field> fields = null,
@@ -389,7 +390,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public object Merge<TEntity>(TEntity entity,
+        public object Merge<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.Merge,
@@ -428,7 +429,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public object Merge<TEntity>(TEntity entity,
+        public object Merge<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(TEntity entity,
             Field qualifier,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -470,7 +471,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public object Merge<TEntity>(TEntity entity,
+        public object Merge<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(TEntity entity,
             IEnumerable<Field> qualifiers,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -512,7 +513,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public object Merge<TEntity>(TEntity entity,
+        public object Merge<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(TEntity entity,
             Expression<Func<TEntity, object>> qualifiers,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -554,7 +555,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public TResult Merge<TEntity, TResult>(TEntity entity,
+        public TResult Merge<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.Merge,
@@ -595,7 +596,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public TResult Merge<TEntity, TResult>(TEntity entity,
+        public TResult Merge<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(TEntity entity,
             Field qualifier,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -638,7 +639,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public TResult Merge<TEntity, TResult>(TEntity entity,
+        public TResult Merge<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(TEntity entity,
             IEnumerable<Field> qualifiers,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -681,7 +682,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public TResult Merge<TEntity, TResult>(TEntity entity,
+        public TResult Merge<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(TEntity entity,
             Expression<Func<TEntity, object>> qualifiers,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -728,7 +729,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public async Task<object> MergeAsync<TEntity>(string tableName,
+        public async Task<object> MergeAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -774,7 +775,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public async Task<object> MergeAsync<TEntity>(string tableName,
+        public async Task<object> MergeAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             TEntity entity,
             Field qualifier,
             IEnumerable<Field> fields = null,
@@ -822,7 +823,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public async Task<object> MergeAsync<TEntity>(string tableName,
+        public async Task<object> MergeAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             TEntity entity,
             IEnumerable<Field> qualifiers,
             IEnumerable<Field> fields = null,
@@ -870,7 +871,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public async Task<object> MergeAsync<TEntity>(string tableName,
+        public async Task<object> MergeAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             TEntity entity,
             Expression<Func<TEntity, object>> qualifiers,
             IEnumerable<Field> fields = null,
@@ -918,7 +919,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public async Task<TResult> MergeAsync<TEntity, TResult>(string tableName,
+        public async Task<TResult> MergeAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -965,7 +966,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public async Task<TResult> MergeAsync<TEntity, TResult>(string tableName,
+        public async Task<TResult> MergeAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(string tableName,
             TEntity entity,
             Field qualifier,
             IEnumerable<Field> fields = null,
@@ -1014,7 +1015,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public async Task<TResult> MergeAsync<TEntity, TResult>(string tableName,
+        public async Task<TResult> MergeAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(string tableName,
             TEntity entity,
             IEnumerable<Field> qualifiers,
             IEnumerable<Field> fields = null,
@@ -1063,7 +1064,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public async Task<TResult> MergeAsync<TEntity, TResult>(string tableName,
+        public async Task<TResult> MergeAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(string tableName,
             TEntity entity,
             Expression<Func<TEntity, object>> qualifiers,
             IEnumerable<Field> fields = null,
@@ -1109,7 +1110,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public async Task<object> MergeAsync<TEntity>(TEntity entity,
+        public async Task<object> MergeAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.Merge,
@@ -1152,7 +1153,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public async Task<object> MergeAsync<TEntity>(TEntity entity,
+        public async Task<object> MergeAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(TEntity entity,
             Field qualifier,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -1197,7 +1198,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public async Task<object> MergeAsync<TEntity>(TEntity entity,
+        public async Task<object> MergeAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(TEntity entity,
             IEnumerable<Field> qualifiers,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -1242,7 +1243,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public async Task<object> MergeAsync<TEntity>(TEntity entity,
+        public async Task<object> MergeAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(TEntity entity,
             Expression<Func<TEntity, object>> qualifiers,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -1287,7 +1288,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public async Task<TResult> MergeAsync<TEntity, TResult>(TEntity entity,
+        public async Task<TResult> MergeAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.Merge,
@@ -1331,7 +1332,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public async Task<TResult> MergeAsync<TEntity, TResult>(TEntity entity,
+        public async Task<TResult> MergeAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(TEntity entity,
             Field qualifier,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -1377,7 +1378,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public async Task<TResult> MergeAsync<TEntity, TResult>(TEntity entity,
+        public async Task<TResult> MergeAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(TEntity entity,
             IEnumerable<Field> qualifiers,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -1423,7 +1424,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        public async Task<TResult> MergeAsync<TEntity, TResult>(TEntity entity,
+        public async Task<TResult> MergeAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(TEntity entity,
             Expression<Func<TEntity, object>> qualifiers,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -1470,6 +1471,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public object Merge(string tableName,
             object entity,
             IEnumerable<Field> fields = null,
@@ -1511,6 +1513,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public object Merge(string tableName,
             object entity,
             Field qualifier,
@@ -1554,6 +1557,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public object Merge(string tableName,
             object entity,
             IEnumerable<Field> qualifiers,
@@ -1597,6 +1601,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public TResult Merge<TResult>(string tableName,
             object entity,
             IEnumerable<Field> fields = null,
@@ -1639,6 +1644,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public TResult Merge<TResult>(string tableName,
             object entity,
             Field qualifier,
@@ -1683,6 +1689,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public TResult Merge<TResult>(string tableName,
             object entity,
             IEnumerable<Field> qualifiers,
@@ -1730,6 +1737,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<object> MergeAsync(string tableName,
             object entity,
             IEnumerable<Field> fields = null,
@@ -1774,6 +1782,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<object> MergeAsync(string tableName,
             object entity,
             Field qualifier,
@@ -1820,6 +1829,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<object> MergeAsync(string tableName,
             object entity,
             IEnumerable<Field> qualifiers,
@@ -1866,6 +1876,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<TResult> MergeAsync<TResult>(string tableName,
             object entity,
             IEnumerable<Field> fields = null,
@@ -1911,6 +1922,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<TResult> MergeAsync<TResult>(string tableName,
             object entity,
             Field qualifier,
@@ -1958,6 +1970,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<TResult> MergeAsync<TResult>(string tableName,
             object entity,
             IEnumerable<Field> qualifiers,

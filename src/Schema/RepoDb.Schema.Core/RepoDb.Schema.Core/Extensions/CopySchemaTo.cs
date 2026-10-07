@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -46,7 +47,7 @@ namespace RepoDb.Schema
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <returns>The <see cref="CopySchemaResult"/> that describes the schema copy operation.</returns>
-        public static CopySchemaResult CopySchemaTo<TEntity>(this IDbConnection connection,
+        public static CopySchemaResult CopySchemaTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IDbConnection destinationConnection,
             string targetSchema = null,
             CopySchemaExistsBehavior tableExistenceBehavior = CopySchemaExistsBehavior.Skip,
@@ -125,6 +126,7 @@ namespace RepoDb.Schema
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopySchemasTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void CopySchemaTo(this IDbConnection connection,
             IEnumerable<string> tableNames,
             IDbConnection destinationConnection,
@@ -214,7 +216,7 @@ namespace RepoDb.Schema
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopySchemaResult"/> that describes the schema copy operation.</returns>
-        public static Task<CopySchemaResult> CopySchemaToAsync<TEntity>(this IDbConnection connection,
+        public static Task<CopySchemaResult> CopySchemaToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IDbConnection destinationConnection,
             string targetSchema = null,
             CopySchemaExistsBehavior tableExistenceBehavior = CopySchemaExistsBehavior.Skip,
@@ -297,6 +299,7 @@ namespace RepoDb.Schema
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task CopySchemaToAsync(this IDbConnection connection,
             IEnumerable<string> tableNames,
             IDbConnection destinationConnection,

@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Interfaces;
 using System;
 using System.Linq;
@@ -23,7 +24,9 @@ namespace RepoDb.Resolvers
         /// </summary>
         /// <param name="entityType">The type of the data entity.</param>
         /// <returns>The instance of the identity <see cref="ClassProperty"/> object.</returns>
-        public ClassProperty Resolve(Type entityType)
+        [UnconditionalSuppressMessage("Trimming", "IL2092:'DynamicallyAccessedMemberTypes' in 'DynamicallyAccessedMembersAttribute' on the parameter don't match overridden parameter.",
+            Justification = "RepoDB invokes the resolver through its concrete type (IdentityCache) with annotated entity types.")]
+        public ClassProperty Resolve([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType)
         {
             var properties = PropertyCache.Get(entityType);
 

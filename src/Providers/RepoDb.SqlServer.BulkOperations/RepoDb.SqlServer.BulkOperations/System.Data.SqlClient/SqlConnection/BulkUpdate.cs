@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -42,7 +43,7 @@ namespace RepoDb
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkUpdate<TEntity>(this SqlConnection connection,
+        public static int BulkUpdate<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this SqlConnection connection,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
@@ -85,7 +86,7 @@ namespace RepoDb
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkUpdate<TEntity>(this SqlConnection connection,
+        public static int BulkUpdate<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
@@ -128,7 +129,7 @@ namespace RepoDb
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkUpdate<TEntity>(this SqlConnection connection,
+        public static int BulkUpdate<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this SqlConnection connection,
             DbDataReader reader,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
@@ -213,7 +214,7 @@ namespace RepoDb
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkUpdate<TEntity>(this SqlConnection connection,
+        public static int BulkUpdate<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this SqlConnection connection,
             DataTable dataTable,
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
@@ -303,7 +304,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkUpdateAsync<TEntity>(this SqlConnection connection,
+        public static async Task<int> BulkUpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this SqlConnection connection,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
@@ -349,7 +350,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkUpdateAsync<TEntity>(this SqlConnection connection,
+        public static async Task<int> BulkUpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
@@ -395,7 +396,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static Task<int> BulkUpdateAsync<TEntity>(this SqlConnection connection,
+        public static Task<int> BulkUpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this SqlConnection connection,
             DbDataReader reader,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
@@ -486,7 +487,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static Task<int> BulkUpdateAsync<TEntity>(this SqlConnection connection,
+        public static Task<int> BulkUpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this SqlConnection connection,
             DataTable dataTable,
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,

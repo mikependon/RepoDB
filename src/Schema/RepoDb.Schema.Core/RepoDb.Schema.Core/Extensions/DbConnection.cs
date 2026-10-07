@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -64,6 +65,7 @@ namespace RepoDb.Schema
         /// <param name="commandTimeout"></param>
         /// <param name="trace"></param>
         /// <param name="transaction"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         internal static void ProbeTables(IEnumerable<CopySchemaTable> tables,
             CopySchemaExistsBehavior behavior,
             ISchemaComposer composer,
@@ -99,6 +101,7 @@ namespace RepoDb.Schema
         /// <param name="trace"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         internal static async Task ProbeTablesAsync(IEnumerable<CopySchemaTable> tables,
             CopySchemaExistsBehavior behavior,
             ISchemaComposer composer,

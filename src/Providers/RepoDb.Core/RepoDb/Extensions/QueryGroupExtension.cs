@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 
@@ -43,7 +44,7 @@ namespace RepoDb.Extensions
         /// <typeparam name="TEntity">The target type where the current <see cref="QueryGroup"/> is to be mapped.</typeparam>
         /// <param name="queryGroup">The <see cref="QueryGroup"/> object to be mapped.</param>
         /// <returns>An instance of <see cref="QueryGroupTypeMap"/> object that holds the mapping.</returns>
-        internal static QueryGroupTypeMap MapTo<TEntity>(this QueryGroup queryGroup)
+        internal static QueryGroupTypeMap MapTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this QueryGroup queryGroup)
             where TEntity : class
         {
             return new(queryGroup, typeof(TEntity));
@@ -56,7 +57,7 @@ namespace RepoDb.Extensions
         /// <param name="type">The target type where the current <see cref="QueryGroup"/> is to be mapped.</param>
         /// <returns>An instance of <see cref="QueryGroupTypeMap"/> object that holds the mapping.</returns>
         internal static QueryGroupTypeMap MapTo(this QueryGroup queryGroup,
-            Type type)
+            [DynamicallyAccessedMembers(Trimming.Entity)] Type type)
         {
             return new(queryGroup, type);
         }

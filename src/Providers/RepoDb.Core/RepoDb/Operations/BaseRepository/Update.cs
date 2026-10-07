@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -52,7 +53,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public int Update<TWhat>(TEntity entity,
+        public int Update<[DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(TEntity entity,
             TWhat what,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -77,6 +78,7 @@ namespace RepoDb
 		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public int Update(TEntity entity,
             object what,
             IEnumerable<Field> fields = null,
@@ -233,7 +235,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public Task<int> UpdateAsync<TWhat>(TEntity entity,
+        public Task<int> UpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(TEntity entity,
             TWhat what,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -261,6 +263,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Task<int> UpdateAsync(TEntity entity,
             object what,
             IEnumerable<Field> fields = null,

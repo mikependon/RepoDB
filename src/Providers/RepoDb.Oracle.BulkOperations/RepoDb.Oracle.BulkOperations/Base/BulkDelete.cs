@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using Oracle.ManagedDataAccess.Client;
 using RepoDb.Enumerations.Oracle;
 using RepoDb.Extensions;
@@ -61,7 +62,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns>The number of rows deleted.</returns>
-        private static int BulkDeleteBase<TEntity>(this OracleConnection connection,
+        private static int BulkDeleteBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this OracleConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -303,7 +304,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns>The number of rows deleted.</returns>
-        private static async Task<int> BulkDeleteBaseAsync<TEntity>(this OracleConnection connection,
+        private static async Task<int> BulkDeleteBaseAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this OracleConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -531,7 +532,7 @@ namespace RepoDb
             IEnumerable<object> keyValues)
         {
             var table = new DataTable();
-            table.Columns.Add(qualifierField.Name, qualifierField.Type ?? typeof(object));
+            table.AddColumn(qualifierField.Name, qualifierField.Type ?? typeof(object));
 
             foreach (var keyValue in keyValues)
             {

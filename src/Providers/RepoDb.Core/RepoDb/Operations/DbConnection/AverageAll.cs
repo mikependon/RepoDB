@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Interfaces;
 using RepoDb.Requests;
 using System;
@@ -39,7 +40,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The average value of the target field.</returns>
-        public static double AverageAll<TEntity>(this IDbConnection connection,
+        public static double AverageAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Field field,
             string hints = null,
             int? commandTimeout = null,
@@ -72,7 +73,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The average value of the target field.</returns>
-        public static double AverageAll<TEntity>(this IDbConnection connection,
+        public static double AverageAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             string hints = null,
             int? commandTimeout = null,
@@ -106,7 +107,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
-        public static Task<double> AverageAllAsync<TEntity>(this IDbConnection connection,
+        public static Task<double> AverageAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Field field,
             string hints = null,
             int? commandTimeout = null,
@@ -142,7 +143,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
-        public static Task<double> AverageAllAsync<TEntity>(this IDbConnection connection,
+        public static Task<double> AverageAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             string hints = null,
             int? commandTimeout = null,
@@ -182,7 +183,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The average value of the target field.</returns>
-        public static TResult AverageAll<TEntity, TResult>(this IDbConnection connection,
+        public static TResult AverageAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Field field,
             string hints = null,
             int? commandTimeout = null,
@@ -216,7 +217,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The average value of the target field.</returns>
-        public static TResult AverageAll<TEntity, TResult>(this IDbConnection connection,
+        public static TResult AverageAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Expression<Func<TEntity, TResult>> field,
             string hints = null,
             int? commandTimeout = null,
@@ -250,7 +251,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The average value of the target field.</returns>
-        internal static TResult AverageAllInternal<TEntity, TResult>(this IDbConnection connection,
+        internal static TResult AverageAllInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Field field,
             string hints = null,
             int? commandTimeout = null,
@@ -294,7 +295,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
-        public static Task<TResult> AverageAllAsync<TEntity, TResult>(this IDbConnection connection,
+        public static Task<TResult> AverageAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Field field,
             string hints = null,
             int? commandTimeout = null,
@@ -331,7 +332,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
-        public static Task<TResult> AverageAllAsync<TEntity, TResult>(this IDbConnection connection,
+        public static Task<TResult> AverageAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Expression<Func<TEntity, TResult>> field,
             string hints = null,
             int? commandTimeout = null,
@@ -368,7 +369,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
-        internal static Task<TResult> AverageAllAsyncInternal<TEntity, TResult>(this IDbConnection connection,
+        internal static Task<TResult> AverageAllAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(this IDbConnection connection,
             Field field,
             string hints = null,
             int? commandTimeout = null,

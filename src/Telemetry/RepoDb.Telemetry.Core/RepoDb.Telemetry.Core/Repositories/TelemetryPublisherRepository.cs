@@ -177,7 +177,7 @@ namespace RepoDb.Telemetry.Core
         private byte[] ToCompressedJsonBytes(
             IEnumerable<TelemetryItem> telemetryItems)
         {
-            var json = JsonSerializer.Serialize(telemetryItems);
+            var json = JsonSerializer.Serialize(telemetryItems, TelemetryJsonSerializerContext.Default.IEnumerableTelemetryItem);
             return Compress(json);
         }
 

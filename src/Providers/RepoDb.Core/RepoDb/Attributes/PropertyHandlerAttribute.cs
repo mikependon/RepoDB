@@ -9,6 +9,7 @@
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace RepoDb.Attributes
 {
@@ -22,7 +23,7 @@ namespace RepoDb.Attributes
         /// Creates a new instance of <see cref="PropertyHandlerAttribute"/> class.
         /// </summary>
         /// <param name="handlerType">The type of the handler.</param>
-        public PropertyHandlerAttribute(Type handlerType)
+        public PropertyHandlerAttribute([DynamicallyAccessedMembers(Trimming.Handler)] Type handlerType)
         {
             Validate(handlerType);
             HandlerType = handlerType;
@@ -33,6 +34,7 @@ namespace RepoDb.Attributes
         /// <summary>
         /// Gets the type of the handler that is being used.
         /// </summary>
+        [DynamicallyAccessedMembers(Trimming.Handler)]
         public Type HandlerType { get; }
 
         #endregion
@@ -43,7 +45,7 @@ namespace RepoDb.Attributes
         /// 
         /// </summary>
         /// <param name="handlerType"></param>
-        private void Validate(Type handlerType)
+        private void Validate([DynamicallyAccessedMembers(Trimming.Handler)] Type handlerType)
         {
             if (handlerType?.IsInterfacedTo(StaticType.IPropertyHandler) != true)
             {

@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Reflection;
@@ -57,7 +58,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(this IDbConnection connection,
             object what1,
             object what2,
             IEnumerable<Field> fields1 = null,
@@ -128,7 +130,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(this IDbConnection connection,
+        public static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(this IDbConnection connection,
             Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             IEnumerable<Field> fields1 = null,
@@ -199,7 +201,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(this IDbConnection connection,
+        public static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(this IDbConnection connection,
             QueryField where1,
             QueryField where2,
             IEnumerable<Field> fields1 = null,
@@ -270,7 +272,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(this IDbConnection connection,
+        public static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(this IDbConnection connection,
             IEnumerable<QueryField> where1,
             IEnumerable<QueryField> where2,
             IEnumerable<Field> fields1 = null,
@@ -341,7 +343,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(this IDbConnection connection,
+        public static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
             IEnumerable<Field> fields1 = null,
@@ -412,7 +414,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        internal static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultipleInternal<T1, T2>(this IDbConnection connection,
+        internal static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultipleInternal<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
             IEnumerable<Field> fields1 = null,
@@ -496,7 +498,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(this IDbConnection connection,
             object what1,
             object what2,
             object what3,
@@ -587,7 +590,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(this IDbConnection connection,
+        public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(this IDbConnection connection,
             Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
@@ -678,7 +681,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(this IDbConnection connection,
+        public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(this IDbConnection connection,
             QueryField where1,
             QueryField where2,
             QueryField where3,
@@ -769,7 +772,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(this IDbConnection connection,
+        public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(this IDbConnection connection,
             IEnumerable<QueryField> where1,
             IEnumerable<QueryField> where2,
             IEnumerable<QueryField> where3,
@@ -860,7 +863,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(this IDbConnection connection,
+        public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
@@ -951,7 +954,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        internal static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultipleInternal<T1, T2, T3>(this IDbConnection connection,
+        internal static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultipleInternal<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
@@ -1056,8 +1059,9 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
-            QueryMultiple<T1, T2, T3, T4>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(this IDbConnection connection,
             object what1,
             object what2,
             object what3,
@@ -1169,7 +1173,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
-            QueryMultiple<T1, T2, T3, T4>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(this IDbConnection connection,
             Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
@@ -1281,7 +1285,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
-            QueryMultiple<T1, T2, T3, T4>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(this IDbConnection connection,
             QueryField where1,
             QueryField where2,
             QueryField where3,
@@ -1393,7 +1397,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
-            QueryMultiple<T1, T2, T3, T4>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(this IDbConnection connection,
             IEnumerable<QueryField> where1,
             IEnumerable<QueryField> where2,
             IEnumerable<QueryField> where3,
@@ -1505,7 +1509,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
-            QueryMultiple<T1, T2, T3, T4>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
@@ -1617,7 +1621,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
-            QueryMultipleInternal<T1, T2, T3, T4>(this IDbConnection connection,
+            QueryMultipleInternal<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
@@ -1743,8 +1747,9 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
-            QueryMultiple<T1, T2, T3, T4, T5>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(this IDbConnection connection,
             object what1,
             object what2,
             object what3,
@@ -1876,7 +1881,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
-            QueryMultiple<T1, T2, T3, T4, T5>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(this IDbConnection connection,
             Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
@@ -2008,7 +2013,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
-            QueryMultiple<T1, T2, T3, T4, T5>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(this IDbConnection connection,
             QueryField where1,
             QueryField where2,
             QueryField where3,
@@ -2140,7 +2145,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
-            QueryMultiple<T1, T2, T3, T4, T5>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(this IDbConnection connection,
             IEnumerable<QueryField> where1,
             IEnumerable<QueryField> where2,
             IEnumerable<QueryField> where3,
@@ -2272,7 +2277,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
-            QueryMultiple<T1, T2, T3, T4, T5>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
@@ -2404,7 +2409,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         internal static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
-            QueryMultipleInternal<T1, T2, T3, T4, T5>(this IDbConnection connection,
+            QueryMultipleInternal<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
@@ -2551,8 +2556,9 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(this IDbConnection connection,
             object what1,
             object what2,
             object what3,
@@ -2704,7 +2710,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(this IDbConnection connection,
             Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
@@ -2856,7 +2862,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(this IDbConnection connection,
             QueryField where1,
             QueryField where2,
             QueryField where3,
@@ -3008,7 +3014,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(this IDbConnection connection,
             IEnumerable<QueryField> where1,
             IEnumerable<QueryField> where2,
             IEnumerable<QueryField> where3,
@@ -3160,7 +3166,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
@@ -3312,7 +3318,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         internal static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
-            QueryMultipleInternal<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
+            QueryMultipleInternal<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
@@ -3480,8 +3486,9 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(this IDbConnection connection,
             object what1,
             object what2,
             object what3,
@@ -3653,7 +3660,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(this IDbConnection connection,
             Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
@@ -3825,7 +3832,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(this IDbConnection connection,
             QueryField where1,
             QueryField where2,
             QueryField where3,
@@ -3997,7 +4004,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(this IDbConnection connection,
             IEnumerable<QueryField> where1,
             IEnumerable<QueryField> where2,
             IEnumerable<QueryField> where3,
@@ -4169,7 +4176,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
@@ -4341,7 +4348,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         internal static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
-            QueryMultipleInternal<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
+            QueryMultipleInternal<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
@@ -4493,7 +4500,8 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(this IDbConnection connection,
             object what1,
             object what2,
             IEnumerable<Field> fields1 = null,
@@ -4567,7 +4575,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(this IDbConnection connection,
+        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(this IDbConnection connection,
             Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             IEnumerable<Field> fields1 = null,
@@ -4641,7 +4649,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(this IDbConnection connection,
+        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(this IDbConnection connection,
             QueryField where1,
             QueryField where2,
             IEnumerable<Field> fields1 = null,
@@ -4715,7 +4723,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(this IDbConnection connection,
+        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(this IDbConnection connection,
             IEnumerable<QueryField> where1,
             IEnumerable<QueryField> where2,
             IEnumerable<Field> fields1 = null,
@@ -4789,7 +4797,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(this IDbConnection connection,
+        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
             IEnumerable<Field> fields1 = null,
@@ -4863,7 +4871,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        internal static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsyncInternal<T1, T2>(this IDbConnection connection,
+        internal static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
             IEnumerable<Field> fields1 = null,
@@ -4950,7 +4958,8 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(this IDbConnection connection,
             object what1,
             object what2,
             object what3,
@@ -5044,7 +5053,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(this IDbConnection connection,
+        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(this IDbConnection connection,
             Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
@@ -5138,7 +5147,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(this IDbConnection connection,
+        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(this IDbConnection connection,
             QueryField where1,
             QueryField where2,
             QueryField where3,
@@ -5232,7 +5241,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(this IDbConnection connection,
+        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(this IDbConnection connection,
             IEnumerable<QueryField> where1,
             IEnumerable<QueryField> where2,
             IEnumerable<QueryField> where3,
@@ -5326,7 +5335,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(this IDbConnection connection,
+        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
@@ -5420,7 +5429,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        internal static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsyncInternal<T1, T2, T3>(this IDbConnection connection,
+        internal static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
@@ -5528,8 +5537,9 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
-            QueryMultipleAsync<T1, T2, T3, T4>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(this IDbConnection connection,
             object what1,
             object what2,
             object what3,
@@ -5644,7 +5654,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
-            QueryMultipleAsync<T1, T2, T3, T4>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(this IDbConnection connection,
             Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
@@ -5759,7 +5769,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
-            QueryMultipleAsync<T1, T2, T3, T4>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(this IDbConnection connection,
             QueryField where1,
             QueryField where2,
             QueryField where3,
@@ -5874,7 +5884,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
-            QueryMultipleAsync<T1, T2, T3, T4>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(this IDbConnection connection,
             IEnumerable<QueryField> where1,
             IEnumerable<QueryField> where2,
             IEnumerable<QueryField> where3,
@@ -5989,7 +5999,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
-            QueryMultipleAsync<T1, T2, T3, T4>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
@@ -6104,7 +6114,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         internal static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
-            QueryMultipleAsyncInternal<T1, T2, T3, T4>(this IDbConnection connection,
+            QueryMultipleAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
@@ -6233,8 +6243,9 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(this IDbConnection connection,
             object what1,
             object what2,
             object what3,
@@ -6369,7 +6380,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(this IDbConnection connection,
             Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
@@ -6504,7 +6515,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(this IDbConnection connection,
             QueryField where1,
             QueryField where2,
             QueryField where3,
@@ -6639,7 +6650,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(this IDbConnection connection,
             IEnumerable<QueryField> where1,
             IEnumerable<QueryField> where2,
             IEnumerable<QueryField> where3,
@@ -6774,7 +6785,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
@@ -6909,7 +6920,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         internal static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
-            QueryMultipleAsyncInternal<T1, T2, T3, T4, T5>(this IDbConnection connection,
+            QueryMultipleAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
@@ -7059,8 +7070,9 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(this IDbConnection connection,
             object what1,
             object what2,
             object what3,
@@ -7215,7 +7227,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(this IDbConnection connection,
             Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
@@ -7370,7 +7382,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(this IDbConnection connection,
             QueryField where1,
             QueryField where2,
             QueryField where3,
@@ -7525,7 +7537,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(this IDbConnection connection,
             IEnumerable<QueryField> where1,
             IEnumerable<QueryField> where2,
             IEnumerable<QueryField> where3,
@@ -7680,7 +7692,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
@@ -7835,7 +7847,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         internal static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
-            QueryMultipleAsyncInternal<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
+            QueryMultipleAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
@@ -8006,8 +8018,9 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(this IDbConnection connection,
             object what1,
             object what2,
             object what3,
@@ -8182,7 +8195,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(this IDbConnection connection,
             Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
@@ -8357,7 +8370,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(this IDbConnection connection,
             QueryField where1,
             QueryField where2,
             QueryField where3,
@@ -8532,7 +8545,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(this IDbConnection connection,
             IEnumerable<QueryField> where1,
             IEnumerable<QueryField> where2,
             IEnumerable<QueryField> where3,
@@ -8707,7 +8720,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
@@ -8882,7 +8895,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         internal static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
-            QueryMultipleAsyncInternal<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
+            QueryMultipleAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
@@ -9039,7 +9052,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(this IDbConnection connection,
             string tableName1,
             object what1,
             string tableName2,
@@ -9116,7 +9130,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(this IDbConnection connection,
+        public static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(this IDbConnection connection,
             string tableName1,
             Expression<Func<T1, bool>> where1,
             string tableName2,
@@ -9193,7 +9207,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(this IDbConnection connection,
+        public static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(this IDbConnection connection,
             string tableName1,
             QueryField where1,
             string tableName2,
@@ -9270,7 +9284,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(this IDbConnection connection,
+        public static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(this IDbConnection connection,
             string tableName1,
             IEnumerable<QueryField> where1,
             string tableName2,
@@ -9347,7 +9361,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(this IDbConnection connection,
+        public static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(this IDbConnection connection,
             string tableName1,
             QueryGroup where1,
             string tableName2,
@@ -9424,7 +9438,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        internal static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultipleInternal<T1, T2>(this IDbConnection connection,
+        internal static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultipleInternal<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(this IDbConnection connection,
             string tableName1,
             QueryGroup where1,
             string tableName2,
@@ -9672,7 +9686,8 @@ forwardToNextResult: true);
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(this IDbConnection connection,
             string tableName1,
             object what1,
             string tableName2,
@@ -9772,7 +9787,7 @@ forwardToNextResult: true);
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(this IDbConnection connection,
+        public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(this IDbConnection connection,
             string tableName1,
             Expression<Func<T1, bool>> where1,
             string tableName2,
@@ -9872,7 +9887,7 @@ forwardToNextResult: true);
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(this IDbConnection connection,
+        public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(this IDbConnection connection,
             string tableName1,
             QueryField where1,
             string tableName2,
@@ -9972,7 +9987,7 @@ forwardToNextResult: true);
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(this IDbConnection connection,
+        public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(this IDbConnection connection,
             string tableName1,
             IEnumerable<QueryField> where1,
             string tableName2,
@@ -10072,7 +10087,7 @@ forwardToNextResult: true);
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(this IDbConnection connection,
+        public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(this IDbConnection connection,
             string tableName1,
             QueryGroup where1,
             string tableName2,
@@ -10172,7 +10187,7 @@ forwardToNextResult: true);
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        internal static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultipleInternal<T1, T2, T3>(this IDbConnection connection,
+        internal static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultipleInternal<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(this IDbConnection connection,
             string tableName1,
             QueryGroup where1,
             string tableName2,
@@ -10495,8 +10510,9 @@ forwardToNextResult: true);
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
-            QueryMultiple<T1, T2, T3, T4>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(this IDbConnection connection,
             string tableName1,
             object what1,
             string tableName2,
@@ -10620,7 +10636,7 @@ forwardToNextResult: true);
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
-            QueryMultiple<T1, T2, T3, T4>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(this IDbConnection connection,
             string tableName1,
             Expression<Func<T1, bool>> where1,
             string tableName2,
@@ -10744,7 +10760,7 @@ forwardToNextResult: true);
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
-            QueryMultiple<T1, T2, T3, T4>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(this IDbConnection connection,
             string tableName1,
             QueryField where1,
             string tableName2,
@@ -10868,7 +10884,7 @@ forwardToNextResult: true);
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
-            QueryMultiple<T1, T2, T3, T4>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(this IDbConnection connection,
             string tableName1,
             IEnumerable<QueryField> where1,
             string tableName2,
@@ -10992,7 +11008,7 @@ forwardToNextResult: true);
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
-            QueryMultiple<T1, T2, T3, T4>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(this IDbConnection connection,
             string tableName1,
             QueryGroup where1,
             string tableName2,
@@ -11116,7 +11132,7 @@ forwardToNextResult: true);
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
-            QueryMultipleInternal<T1, T2, T3, T4>(this IDbConnection connection,
+            QueryMultipleInternal<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(this IDbConnection connection,
             string tableName1,
             QueryGroup where1,
             string tableName2,
@@ -11513,8 +11529,9 @@ forwardToNextResult: true);
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
-            QueryMultiple<T1, T2, T3, T4, T5>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(this IDbConnection connection,
             string tableName1,
             object what1,
             string tableName2,
@@ -11661,7 +11678,7 @@ forwardToNextResult: true);
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
-            QueryMultiple<T1, T2, T3, T4, T5>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(this IDbConnection connection,
             string tableName1,
             Expression<Func<T1, bool>> where1,
             string tableName2,
@@ -11808,7 +11825,7 @@ forwardToNextResult: true);
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
-            QueryMultiple<T1, T2, T3, T4, T5>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(this IDbConnection connection,
             string tableName1,
             QueryField where1,
             string tableName2,
@@ -11955,7 +11972,7 @@ forwardToNextResult: true);
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
-            QueryMultiple<T1, T2, T3, T4, T5>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(this IDbConnection connection,
             string tableName1,
             IEnumerable<QueryField> where1,
             string tableName2,
@@ -12102,7 +12119,7 @@ forwardToNextResult: true);
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
-            QueryMultiple<T1, T2, T3, T4, T5>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(this IDbConnection connection,
             string tableName1,
             QueryGroup where1,
             string tableName2,
@@ -12249,7 +12266,7 @@ forwardToNextResult: true);
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         internal static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
-            QueryMultipleInternal<T1, T2, T3, T4, T5>(this IDbConnection connection,
+            QueryMultipleInternal<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(this IDbConnection connection,
             string tableName1,
             QueryGroup where1,
             string tableName2,
@@ -12719,8 +12736,9 @@ forwardToNextResult: true);
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(this IDbConnection connection,
             string tableName1,
             object what1,
             string tableName2,
@@ -12890,7 +12908,7 @@ forwardToNextResult: true);
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(this IDbConnection connection,
             string tableName1,
             Expression<Func<T1, bool>> where1,
             string tableName2,
@@ -13060,7 +13078,7 @@ forwardToNextResult: true);
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(this IDbConnection connection,
             string tableName1,
             QueryField where1,
             string tableName2,
@@ -13230,7 +13248,7 @@ forwardToNextResult: true);
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(this IDbConnection connection,
             string tableName1,
             IEnumerable<QueryField> where1,
             string tableName2,
@@ -13400,7 +13418,7 @@ forwardToNextResult: true);
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(this IDbConnection connection,
             string tableName1,
             QueryGroup where1,
             string tableName2,
@@ -13570,7 +13588,7 @@ forwardToNextResult: true);
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         internal static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
-            QueryMultipleInternal<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
+            QueryMultipleInternal<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(this IDbConnection connection,
             string tableName1,
             QueryGroup where1,
             string tableName2,
@@ -14114,8 +14132,9 @@ forwardToNextResult: true);
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(this IDbConnection connection,
             string tableName1,
             object what1,
             string tableName2,
@@ -14308,7 +14327,7 @@ forwardToNextResult: true);
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(this IDbConnection connection,
             string tableName1,
             Expression<Func<T1, bool>> where1,
             string tableName2,
@@ -14501,7 +14520,7 @@ forwardToNextResult: true);
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(this IDbConnection connection,
             string tableName1,
             QueryField where1,
             string tableName2,
@@ -14694,7 +14713,7 @@ forwardToNextResult: true);
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(this IDbConnection connection,
             string tableName1,
             IEnumerable<QueryField> where1,
             string tableName2,
@@ -14887,7 +14906,7 @@ forwardToNextResult: true);
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(this IDbConnection connection,
             string tableName1,
             QueryGroup where1,
             string tableName2,
@@ -15080,7 +15099,7 @@ forwardToNextResult: true);
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         internal static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
-            QueryMultipleInternal<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
+            QueryMultipleInternal<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(this IDbConnection connection,
             string tableName1,
             QueryGroup where1,
             string tableName2,
@@ -15652,6 +15671,7 @@ forwardToNextResult: true);
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>> QueryMultiple(this IDbConnection connection,
             string tableName1,
             object what1,
@@ -16127,6 +16147,7 @@ forwardToNextResult: true);
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> QueryMultiple(this IDbConnection connection,
             string tableName1,
             object what1,
@@ -16734,6 +16755,7 @@ forwardToNextResult: true);
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>
             QueryMultiple(this IDbConnection connection,
             string tableName1,
@@ -17476,6 +17498,7 @@ forwardToNextResult: true);
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>
             QueryMultiple(this IDbConnection connection,
             string tableName1,
@@ -18350,6 +18373,7 @@ forwardToNextResult: true);
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>
             QueryMultiple(this IDbConnection connection,
             string tableName1,
@@ -19355,6 +19379,7 @@ forwardToNextResult: true);
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>
             QueryMultiple(this IDbConnection connection,
             string tableName1,
@@ -20460,7 +20485,8 @@ forwardToNextResult: true);
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(this IDbConnection connection,
             string tableName1,
             object what1,
             string tableName2,
@@ -20540,7 +20566,7 @@ forwardToNextResult: true);
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(this IDbConnection connection,
+        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(this IDbConnection connection,
             string tableName1,
             Expression<Func<T1, bool>> where1,
             string tableName2,
@@ -20620,7 +20646,7 @@ forwardToNextResult: true);
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(this IDbConnection connection,
+        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(this IDbConnection connection,
             string tableName1,
             QueryField where1,
             string tableName2,
@@ -20700,7 +20726,7 @@ forwardToNextResult: true);
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(this IDbConnection connection,
+        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(this IDbConnection connection,
             string tableName1,
             IEnumerable<QueryField> where1,
             string tableName2,
@@ -20780,7 +20806,7 @@ forwardToNextResult: true);
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(this IDbConnection connection,
+        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(this IDbConnection connection,
             string tableName1,
             QueryGroup where1,
             string tableName2,
@@ -20860,7 +20886,7 @@ forwardToNextResult: true);
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        internal static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsyncInternal<T1, T2>(this IDbConnection connection,
+        internal static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(this IDbConnection connection,
             string tableName1,
             QueryGroup where1,
             string tableName2,
@@ -21117,7 +21143,8 @@ forwardToNextResult: true,
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(this IDbConnection connection,
             string tableName1,
             object what1,
             string tableName2,
@@ -21220,7 +21247,7 @@ forwardToNextResult: true,
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(this IDbConnection connection,
+        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(this IDbConnection connection,
             string tableName1,
             Expression<Func<T1, bool>> where1,
             string tableName2,
@@ -21323,7 +21350,7 @@ forwardToNextResult: true,
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(this IDbConnection connection,
+        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(this IDbConnection connection,
             string tableName1,
             QueryField where1,
             string tableName2,
@@ -21426,7 +21453,7 @@ forwardToNextResult: true,
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(this IDbConnection connection,
+        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(this IDbConnection connection,
             string tableName1,
             IEnumerable<QueryField> where1,
             string tableName2,
@@ -21529,7 +21556,7 @@ forwardToNextResult: true,
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(this IDbConnection connection,
+        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(this IDbConnection connection,
             string tableName1,
             QueryGroup where1,
             string tableName2,
@@ -21632,7 +21659,7 @@ forwardToNextResult: true,
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        internal static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsyncInternal<T1, T2, T3>(this IDbConnection connection,
+        internal static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(this IDbConnection connection,
             string tableName1,
             QueryGroup where1,
             string tableName2,
@@ -21966,8 +21993,9 @@ forwardToNextResult: true,
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
-            QueryMultipleAsync<T1, T2, T3, T4>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(this IDbConnection connection,
             string tableName1,
             object what1,
             string tableName2,
@@ -22094,7 +22122,7 @@ forwardToNextResult: true,
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
-            QueryMultipleAsync<T1, T2, T3, T4>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(this IDbConnection connection,
             string tableName1,
             Expression<Func<T1, bool>> where1,
             string tableName2,
@@ -22221,7 +22249,7 @@ forwardToNextResult: true,
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
-            QueryMultipleAsync<T1, T2, T3, T4>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(this IDbConnection connection,
             string tableName1,
             QueryField where1,
             string tableName2,
@@ -22348,7 +22376,7 @@ forwardToNextResult: true,
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
-            QueryMultipleAsync<T1, T2, T3, T4>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(this IDbConnection connection,
             string tableName1,
             IEnumerable<QueryField> where1,
             string tableName2,
@@ -22475,7 +22503,7 @@ forwardToNextResult: true,
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
-            QueryMultipleAsync<T1, T2, T3, T4>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(this IDbConnection connection,
             string tableName1,
             QueryGroup where1,
             string tableName2,
@@ -22602,7 +22630,7 @@ forwardToNextResult: true,
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         internal static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
-            QueryMultipleAsyncInternal<T1, T2, T3, T4>(this IDbConnection connection,
+            QueryMultipleAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(this IDbConnection connection,
             string tableName1,
             QueryGroup where1,
             string tableName2,
@@ -23013,8 +23041,9 @@ forwardToNextResult: true,
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(this IDbConnection connection,
             string tableName1,
             object what1,
             string tableName2,
@@ -23164,7 +23193,7 @@ forwardToNextResult: true,
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(this IDbConnection connection,
             string tableName1,
             Expression<Func<T1, bool>> where1,
             string tableName2,
@@ -23314,7 +23343,7 @@ forwardToNextResult: true,
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(this IDbConnection connection,
             string tableName1,
             QueryField where1,
             string tableName2,
@@ -23464,7 +23493,7 @@ forwardToNextResult: true,
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(this IDbConnection connection,
             string tableName1,
             IEnumerable<QueryField> where1,
             string tableName2,
@@ -23614,7 +23643,7 @@ forwardToNextResult: true,
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(this IDbConnection connection,
             string tableName1,
             QueryGroup where1,
             string tableName2,
@@ -23764,7 +23793,7 @@ forwardToNextResult: true,
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         internal static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
-            QueryMultipleAsyncInternal<T1, T2, T3, T4, T5>(this IDbConnection connection,
+            QueryMultipleAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(this IDbConnection connection,
             string tableName1,
             QueryGroup where1,
             string tableName2,
@@ -24252,8 +24281,9 @@ forwardToNextResult: true,
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(this IDbConnection connection,
             string tableName1,
             object what1,
             string tableName2,
@@ -24426,7 +24456,7 @@ forwardToNextResult: true,
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(this IDbConnection connection,
             string tableName1,
             Expression<Func<T1, bool>> where1,
             string tableName2,
@@ -24599,7 +24629,7 @@ forwardToNextResult: true,
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(this IDbConnection connection,
             string tableName1,
             QueryField where1,
             string tableName2,
@@ -24772,7 +24802,7 @@ forwardToNextResult: true,
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(this IDbConnection connection,
             string tableName1,
             IEnumerable<QueryField> where1,
             string tableName2,
@@ -24945,7 +24975,7 @@ forwardToNextResult: true,
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(this IDbConnection connection,
             string tableName1,
             QueryGroup where1,
             string tableName2,
@@ -25118,7 +25148,7 @@ forwardToNextResult: true,
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         internal static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
-            QueryMultipleAsyncInternal<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
+            QueryMultipleAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(this IDbConnection connection,
             string tableName1,
             QueryGroup where1,
             string tableName2,
@@ -25683,8 +25713,9 @@ forwardToNextResult: true,
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(this IDbConnection connection,
             string tableName1,
             object what1,
             string tableName2,
@@ -25880,7 +25911,7 @@ forwardToNextResult: true,
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(this IDbConnection connection,
             string tableName1,
             Expression<Func<T1, bool>> where1,
             string tableName2,
@@ -26076,7 +26107,7 @@ forwardToNextResult: true,
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(this IDbConnection connection,
             string tableName1,
             QueryField where1,
             string tableName2,
@@ -26272,7 +26303,7 @@ forwardToNextResult: true,
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(this IDbConnection connection,
             string tableName1,
             IEnumerable<QueryField> where1,
             string tableName2,
@@ -26468,7 +26499,7 @@ forwardToNextResult: true,
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(this IDbConnection connection,
             string tableName1,
             QueryGroup where1,
             string tableName2,
@@ -26664,7 +26695,7 @@ forwardToNextResult: true,
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         internal static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
-            QueryMultipleAsyncInternal<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
+            QueryMultipleAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(this IDbConnection connection,
             string tableName1,
             QueryGroup where1,
             string tableName2,
@@ -27260,6 +27291,7 @@ forwardToNextResult: true,
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>>> QueryMultipleAsync(this IDbConnection connection,
             string tableName1,
             object what1,
@@ -27754,6 +27786,7 @@ forwardToNextResult: true,
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>> QueryMultipleAsync(this IDbConnection connection,
             string tableName1,
             object what1,
@@ -28381,6 +28414,7 @@ forwardToNextResult: true,
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>>
             QueryMultipleAsync(this IDbConnection connection,
             string tableName1,
@@ -29146,6 +29180,7 @@ forwardToNextResult: true,
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>>
             QueryMultipleAsync(this IDbConnection connection,
             string tableName1,
@@ -30044,6 +30079,7 @@ forwardToNextResult: true,
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>>
             QueryMultipleAsync(this IDbConnection connection,
             string tableName1,
@@ -31075,6 +31111,7 @@ forwardToNextResult: true,
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>>
             QueryMultipleAsync(this IDbConnection connection,
             string tableName1,
@@ -32183,7 +32220,7 @@ forwardToNextResult: true,
         /// <param name="where"></param>
         /// <param name="queryGroups"></param>
         /// <returns></returns>
-        private static IEnumerable<T> QueryMultipleInternal<T>(string cacheKey,
+        private static IEnumerable<T> QueryMultipleInternal<[DynamicallyAccessedMembers(Trimming.Entity)] T>(string cacheKey,
             ICache cache,
             QueryGroup where,
             List<QueryGroup> queryGroups)
@@ -32246,7 +32283,7 @@ forwardToNextResult: true,
         /// <param name="cache"></param>
         /// <param name="forwardToNextResult"></param>
         /// <returns></returns>
-        private static IEnumerable<T> QueryMultipleInternal<T>(IDbConnection connection,
+        private static IEnumerable<T> QueryMultipleInternal<[DynamicallyAccessedMembers(Trimming.Entity)] T>(IDbConnection connection,
             DbDataReader reader,
             IEnumerable<T> items,
             string cacheKey = null,
@@ -32285,7 +32322,7 @@ forwardToNextResult: true,
         /// <param name="queryGroups"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<IEnumerable<T>> QueryMultipleAsyncInternal<T>(string cacheKey,
+        private static async Task<IEnumerable<T>> QueryMultipleAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] T>(string cacheKey,
             ICache cache,
             QueryGroup where,
             List<QueryGroup> queryGroups,
@@ -32352,7 +32389,7 @@ forwardToNextResult: true,
         /// <param name="forwardToNextResult"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<IEnumerable<T>> QueryMultipleAsyncInternal<T>(IDbConnection connection,
+        private static async Task<IEnumerable<T>> QueryMultipleAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] T>(IDbConnection connection,
             DbDataReader reader,
             IEnumerable<T> items,
             string cacheKey = null,
@@ -32401,7 +32438,7 @@ forwardToNextResult: true,
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>The resolved items for this sub-query.</returns>
-        private static IEnumerable<T> QueryMultipleSingleStatementInternal<T>(IDbConnection connection,
+        private static IEnumerable<T> QueryMultipleSingleStatementInternal<[DynamicallyAccessedMembers(Trimming.Entity)] T>(IDbConnection connection,
             string commandText,
             QueryGroupTypeMap map,
             string cacheKey,
@@ -32476,7 +32513,7 @@ forwardToNextResult: false);
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The resolved items for this sub-query.</returns>
-        private static async Task<IEnumerable<T>> QueryMultipleSingleStatementAsyncInternal<T>(IDbConnection connection,
+        private static async Task<IEnumerable<T>> QueryMultipleSingleStatementAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] T>(IDbConnection connection,
             string commandText,
             QueryGroupTypeMap map,
             string cacheKey,

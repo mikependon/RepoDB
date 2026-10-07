@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -33,7 +34,8 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The sum value of the target field.</returns>
-        public object Sum<TEntity>(Field field,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public object Sum<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field,
             object where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -72,7 +74,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The sum value of the target field.</returns>
-        public object Sum<TEntity>(Field field,
+        public object Sum<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -111,7 +113,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The sum value of the target field.</returns>
-        public object Sum<TEntity>(Field field,
+        public object Sum<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field,
             QueryField where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -150,7 +152,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The sum value of the target field.</returns>
-        public object Sum<TEntity>(Field field,
+        public object Sum<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field,
             IEnumerable<QueryField> where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -189,7 +191,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The sum value of the target field.</returns>
-        public object Sum<TEntity>(Field field,
+        public object Sum<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field,
             QueryGroup where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -228,7 +230,8 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The sum value of the target field.</returns>
-        public object Sum<TEntity>(Expression<Func<TEntity, object>> field,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public object Sum<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> field,
             object where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -267,7 +270,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The sum value of the target field.</returns>
-        public object Sum<TEntity>(Expression<Func<TEntity, object>> field,
+        public object Sum<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> field,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -306,7 +309,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The sum value of the target field.</returns>
-        public object Sum<TEntity>(Expression<Func<TEntity, object>> field,
+        public object Sum<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> field,
             QueryField where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -345,7 +348,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The sum value of the target field.</returns>
-        public object Sum<TEntity>(Expression<Func<TEntity, object>> field,
+        public object Sum<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> field,
             IEnumerable<QueryField> where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -384,7 +387,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The sum value of the target field.</returns>
-        public object Sum<TEntity>(Expression<Func<TEntity, object>> field,
+        public object Sum<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> field,
             QueryGroup where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -424,7 +427,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The sum value of the target field.</returns>
-        public async Task<object> SumAsync<TEntity>(Field field,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public async Task<object> SumAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field,
             object where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -466,7 +470,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The sum value of the target field.</returns>
-        public async Task<object> SumAsync<TEntity>(Field field,
+        public async Task<object> SumAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -508,7 +512,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The sum value of the target field.</returns>
-        public async Task<object> SumAsync<TEntity>(Field field,
+        public async Task<object> SumAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field,
             QueryField where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -550,7 +554,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The sum value of the target field.</returns>
-        public async Task<object> SumAsync<TEntity>(Field field,
+        public async Task<object> SumAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field,
             IEnumerable<QueryField> where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -592,7 +596,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The sum value of the target field.</returns>
-        public async Task<object> SumAsync<TEntity>(Field field,
+        public async Task<object> SumAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field,
             QueryGroup where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -634,7 +638,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The sum value of the target field.</returns>
-        public async Task<object> SumAsync<TEntity>(Expression<Func<TEntity, object>> field,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public async Task<object> SumAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> field,
             object where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -676,7 +681,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The sum value of the target field.</returns>
-        public async Task<object> SumAsync<TEntity>(Expression<Func<TEntity, object>> field,
+        public async Task<object> SumAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> field,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -718,7 +723,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The sum value of the target field.</returns>
-        public async Task<object> SumAsync<TEntity>(Expression<Func<TEntity, object>> field,
+        public async Task<object> SumAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> field,
             QueryField where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -760,7 +765,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The sum value of the target field.</returns>
-        public async Task<object> SumAsync<TEntity>(Expression<Func<TEntity, object>> field,
+        public async Task<object> SumAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> field,
             IEnumerable<QueryField> where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -802,7 +807,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The sum value of the target field.</returns>
-        public async Task<object> SumAsync<TEntity>(Expression<Func<TEntity, object>> field,
+        public async Task<object> SumAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> field,
             QueryGroup where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -848,7 +853,8 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The sum value of the target field.</returns>
-        public TResult Sum<TEntity, TResult>(Field field,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public TResult Sum<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Field field,
             object where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -888,7 +894,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The sum value of the target field.</returns>
-        public TResult Sum<TEntity, TResult>(Field field,
+        public TResult Sum<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Field field,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -928,7 +934,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The sum value of the target field.</returns>
-        public TResult Sum<TEntity, TResult>(Field field,
+        public TResult Sum<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Field field,
             QueryField where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -968,7 +974,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The sum value of the target field.</returns>
-        public TResult Sum<TEntity, TResult>(Field field,
+        public TResult Sum<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Field field,
             IEnumerable<QueryField> where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -1008,7 +1014,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The sum value of the target field.</returns>
-        public TResult Sum<TEntity, TResult>(Field field,
+        public TResult Sum<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Field field,
             QueryGroup where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -1048,7 +1054,8 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The sum value of the target field.</returns>
-        public TResult Sum<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public TResult Sum<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
             object where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -1088,7 +1095,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The sum value of the target field.</returns>
-        public TResult Sum<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
+        public TResult Sum<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -1128,7 +1135,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The sum value of the target field.</returns>
-        public TResult Sum<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
+        public TResult Sum<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
             QueryField where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -1168,7 +1175,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The sum value of the target field.</returns>
-        public TResult Sum<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
+        public TResult Sum<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
             IEnumerable<QueryField> where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -1208,7 +1215,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The sum value of the target field.</returns>
-        public TResult Sum<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
+        public TResult Sum<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
             QueryGroup where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -1249,7 +1256,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The sum value of the target field.</returns>
-        public async Task<TResult> SumAsync<TEntity, TResult>(Field field,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public async Task<TResult> SumAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Field field,
             object where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -1292,7 +1300,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The sum value of the target field.</returns>
-        public async Task<TResult> SumAsync<TEntity, TResult>(Field field,
+        public async Task<TResult> SumAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Field field,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -1335,7 +1343,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The sum value of the target field.</returns>
-        public async Task<TResult> SumAsync<TEntity, TResult>(Field field,
+        public async Task<TResult> SumAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Field field,
             QueryField where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -1378,7 +1386,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The sum value of the target field.</returns>
-        public async Task<TResult> SumAsync<TEntity, TResult>(Field field,
+        public async Task<TResult> SumAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Field field,
             IEnumerable<QueryField> where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -1421,7 +1429,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The sum value of the target field.</returns>
-        public async Task<TResult> SumAsync<TEntity, TResult>(Field field,
+        public async Task<TResult> SumAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Field field,
             QueryGroup where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -1464,7 +1472,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The sum value of the target field.</returns>
-        public async Task<TResult> SumAsync<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public async Task<TResult> SumAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
             object where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -1507,7 +1516,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The sum value of the target field.</returns>
-        public async Task<TResult> SumAsync<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
+        public async Task<TResult> SumAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -1550,7 +1559,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The sum value of the target field.</returns>
-        public async Task<TResult> SumAsync<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
+        public async Task<TResult> SumAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
             QueryField where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -1593,7 +1602,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The sum value of the target field.</returns>
-        public async Task<TResult> SumAsync<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
+        public async Task<TResult> SumAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
             IEnumerable<QueryField> where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -1636,7 +1645,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The sum value of the target field.</returns>
-        public async Task<TResult> SumAsync<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
+        public async Task<TResult> SumAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
             QueryGroup where,
             string hints = null,
             string traceKey = TraceKeys.Sum,
@@ -1681,6 +1690,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The sum value of the target field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public object Sum(string tableName,
             Field field,
             object where,
@@ -1842,6 +1852,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The sum value of the target field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<object> SumAsync(string tableName,
             Field field,
             object where,
@@ -2018,6 +2029,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The sum value of the target field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public TResult Sum<TResult>(string tableName,
             Field field,
             object where,
@@ -2183,6 +2195,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The sum value of the target field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<TResult> SumAsync<TResult>(string tableName,
             Field field,
             object where,

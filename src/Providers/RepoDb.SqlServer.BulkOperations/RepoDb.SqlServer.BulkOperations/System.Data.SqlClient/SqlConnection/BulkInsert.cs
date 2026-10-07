@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -40,7 +41,7 @@ namespace RepoDb
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'true'.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkInsert<TEntity>(this SqlConnection connection,
+        public static int BulkInsert<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this SqlConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
@@ -82,7 +83,7 @@ namespace RepoDb
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'true'.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkInsert<TEntity>(this SqlConnection connection,
+        public static int BulkInsert<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
@@ -121,7 +122,7 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkInsert<TEntity>(this SqlConnection connection,
+        public static int BulkInsert<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this SqlConnection connection,
             DbDataReader reader,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
@@ -193,7 +194,7 @@ namespace RepoDb
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'true'.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkInsert<TEntity>(this SqlConnection connection,
+        public static int BulkInsert<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this SqlConnection connection,
             DataTable dataTable,
             DataRowState? rowState = null,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
@@ -285,7 +286,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
+        public static Task<int> BulkInsertAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this SqlConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
@@ -330,7 +331,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
+        public static Task<int> BulkInsertAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
@@ -372,7 +373,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
+        public static Task<int> BulkInsertAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this SqlConnection connection,
             DbDataReader reader,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
@@ -450,7 +451,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
+        public static Task<int> BulkInsertAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this SqlConnection connection,
             DataTable dataTable,
             DataRowState? rowState = null,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
@@ -548,7 +549,7 @@ namespace RepoDb
         /// <param name="usePhysicalPseudoTempTable"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        internal static int BulkInsertInternal<TEntity>(SqlConnection connection,
+        internal static int BulkInsertInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<DbField> dbFields = null,
@@ -675,7 +676,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        internal static Task<int> BulkInsertAsyncInternal<TEntity>(SqlConnection connection,
+        internal static Task<int> BulkInsertAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<DbField> dbFields = null,

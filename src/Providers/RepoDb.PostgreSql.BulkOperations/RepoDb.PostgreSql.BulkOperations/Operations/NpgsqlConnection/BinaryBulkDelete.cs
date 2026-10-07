@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using Npgsql;
 using RepoDb.Enumerations.PostgreSql;
@@ -47,7 +48,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been deleted from the target table.</returns>
         [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkDelete' instead.")]
-        public static int BinaryBulkDelete<TEntity>(this NpgsqlConnection connection,
+        public static int BinaryBulkDelete<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this NpgsqlConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
@@ -86,7 +87,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been deleted from the target table.</returns>
         [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkDelete' instead.")]
-        public static int BinaryBulkDelete<TEntity>(this NpgsqlConnection connection,
+        public static int BinaryBulkDelete<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -251,7 +252,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the target table.</returns>
         [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkDelete' instead.")]
-        public static Task<int> BinaryBulkDeleteAsync<TEntity>(this NpgsqlConnection connection,
+        public static Task<int> BinaryBulkDeleteAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this NpgsqlConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
@@ -293,7 +294,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the target table.</returns>
         [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkDelete' instead.")]
-        public static async Task<int> BinaryBulkDeleteAsync<TEntity>(this NpgsqlConnection connection,
+        public static async Task<int> BinaryBulkDeleteAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,

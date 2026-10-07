@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -33,6 +34,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public TEntity QueryFirst(string tableName,
             object what,
             IEnumerable<Field> fields = null,
@@ -69,7 +71,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public TEntity QueryFirst<TWhat>(string tableName,
+        public TEntity QueryFirst<[DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(string tableName,
             TWhat what,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -243,6 +245,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public TEntity QueryFirst(object what,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -276,7 +279,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public TEntity QueryFirst<TWhat>(TWhat what,
+        public TEntity QueryFirst<[DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(TWhat what,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -442,6 +445,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Task<TEntity> QueryFirstAsync(string tableName,
             object what,
             IEnumerable<Field> fields = null,
@@ -481,7 +485,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public Task<TEntity> QueryFirstAsync<TWhat>(string tableName,
+        public Task<TEntity> QueryFirstAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(string tableName,
             TWhat what,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -670,6 +674,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Task<TEntity> QueryFirstAsync(object what,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -706,7 +711,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An instance of the target result type containing the converted result of the first row returned by the query.</returns>
         /// <remarks>An <see cref="EmptyException"/> is thrown if the query did not return any row.</remarks>
-        public Task<TEntity> QueryFirstAsync<TWhat>(TWhat what,
+        public Task<TEntity> QueryFirstAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(TWhat what,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,

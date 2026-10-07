@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    A NativeAOT smoke test for RepoDB. Publish it with:
+
+      dotnet publish -c Release -r win-x64 (or linux-x64, osx-arm64, ...)
+
+    The publish must produce no trim/AOT warnings that originate from RepoDB, and the produced
+    native executable must exit with code 0.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <IsPackable>false</IsPackable>
+    <PublishAot>true</PublishAot>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <TrimmerSingleWarn>false</TrimmerSingleWarn>
+    <NoWarn>$(NoWarn);MA0002;MA0004;MA0006;MA0011;MA0048;MA0051</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.csproj" />
+  </ItemGroup>
+</Project>

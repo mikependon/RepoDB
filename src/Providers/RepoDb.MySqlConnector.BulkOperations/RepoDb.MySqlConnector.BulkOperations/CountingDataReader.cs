@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Data;
 
@@ -32,6 +33,7 @@ namespace RepoDb.MySqlConnector.BulkOperations
         public int FieldCount => _inner.FieldCount;
         public string GetName(int i) => _inner.GetName(i);
         public string GetDataTypeName(int i) => _inner.GetDataTypeName(i);
+        [return: DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.PublicProperties)]
         public Type GetFieldType(int i) => _inner.GetFieldType(i);
         public object GetValue(int i) => _inner.GetValue(i);
         public int GetValues(object[] values) => _inner.GetValues(values);

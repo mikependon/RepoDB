@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Connector.AuroraDb.Npgsql;
 using RepoDb.Enumerations.AuroraDb;
 using RepoDb.Interfaces;
@@ -38,7 +39,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of inserted rows.</returns>
-        public static int BulkInsert<TEntity>(this DbRepository<AuroraDbConnection> repository,
+        public static int BulkInsert<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DbRepository<AuroraDbConnection> repository,
             IEnumerable<TEntity> entities,
             IEnumerable<AuroraDbBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
@@ -67,7 +68,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of inserted rows.</returns>
-        public static int BulkInsert<TEntity>(this DbRepository<AuroraDbConnection> repository,
+        public static int BulkInsert<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DbRepository<AuroraDbConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<AuroraDbBulkInsertMapItem> mappings = null,
@@ -113,7 +114,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of inserted rows.</returns>
-        public static async Task<int> BulkInsertAsync<TEntity>(this DbRepository<AuroraDbConnection> repository,
+        public static async Task<int> BulkInsertAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DbRepository<AuroraDbConnection> repository,
             IEnumerable<TEntity> entities,
             IEnumerable<AuroraDbBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
@@ -145,7 +146,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of inserted rows.</returns>
-        public static async Task<int> BulkInsertAsync<TEntity>(this DbRepository<AuroraDbConnection> repository,
+        public static async Task<int> BulkInsertAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DbRepository<AuroraDbConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<AuroraDbBulkInsertMapItem> mappings = null,

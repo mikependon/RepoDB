@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -44,7 +45,8 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(object what1,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(object what1,
             object what2,
             IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
@@ -114,7 +116,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(Expression<Func<T1, bool>> where1,
+        public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
@@ -184,7 +186,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(QueryField where1,
+        public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(QueryField where1,
             QueryField where2,
             IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
@@ -254,7 +256,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(IEnumerable<QueryField> where1,
+        public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(IEnumerable<QueryField> where1,
             IEnumerable<QueryField> where2,
             IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
@@ -324,7 +326,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(QueryGroup where1,
+        public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(QueryGroup where1,
             QueryGroup where2,
             IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
@@ -405,7 +407,8 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(object what1,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(object what1,
             object what2,
             object what3,
             IEnumerable<Field> fields1 = null,
@@ -495,7 +498,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(Expression<Func<T1, bool>> where1,
+        public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
             IEnumerable<Field> fields1 = null,
@@ -585,7 +588,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(QueryField where1,
+        public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(QueryField where1,
             QueryField where2,
             QueryField where3,
             IEnumerable<Field> fields1 = null,
@@ -675,7 +678,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(IEnumerable<QueryField> where1,
+        public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(IEnumerable<QueryField> where1,
             IEnumerable<QueryField> where2,
             IEnumerable<QueryField> where3,
             IEnumerable<Field> fields1 = null,
@@ -765,7 +768,8 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(QueryGroup where1,
+        [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with RequiresUnreferencedCodeAttribute require dynamic access otherwise can break functionality when trimming application code", Justification = "The QueryGroup arguments are not reflected.")]
+        public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
             IEnumerable<Field> fields1 = null,
@@ -866,8 +870,9 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
-            QueryMultiple<T1, T2, T3, T4>(object what1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(object what1,
             object what2,
             object what3,
             object what4,
@@ -978,7 +983,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
-            QueryMultiple<T1, T2, T3, T4>(Expression<Func<T1, bool>> where1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
             Expression<Func<T4, bool>> where4,
@@ -1089,7 +1094,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
-            QueryMultiple<T1, T2, T3, T4>(QueryField where1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(QueryField where1,
             QueryField where2,
             QueryField where3,
             QueryField where4,
@@ -1200,7 +1205,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
-            QueryMultiple<T1, T2, T3, T4>(IEnumerable<QueryField> where1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(IEnumerable<QueryField> where1,
             IEnumerable<QueryField> where2,
             IEnumerable<QueryField> where3,
             IEnumerable<QueryField> where4,
@@ -1311,7 +1316,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
-            QueryMultiple<T1, T2, T3, T4>(QueryGroup where1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
             QueryGroup where4,
@@ -1432,8 +1437,9 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
-            QueryMultiple<T1, T2, T3, T4, T5>(object what1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(object what1,
             object what2,
             object what3,
             object what4,
@@ -1564,7 +1570,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
-            QueryMultiple<T1, T2, T3, T4, T5>(Expression<Func<T1, bool>> where1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
             Expression<Func<T4, bool>> where4,
@@ -1695,7 +1701,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
-            QueryMultiple<T1, T2, T3, T4, T5>(QueryField where1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(QueryField where1,
             QueryField where2,
             QueryField where3,
             QueryField where4,
@@ -1826,7 +1832,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
-            QueryMultiple<T1, T2, T3, T4, T5>(IEnumerable<QueryField> where1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(IEnumerable<QueryField> where1,
             IEnumerable<QueryField> where2,
             IEnumerable<QueryField> where3,
             IEnumerable<QueryField> where4,
@@ -1957,7 +1963,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
-            QueryMultiple<T1, T2, T3, T4, T5>(QueryGroup where1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
             QueryGroup where4,
@@ -2098,8 +2104,9 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6>(object what1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(object what1,
             object what2,
             object what3,
             object what4,
@@ -2250,7 +2257,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6>(Expression<Func<T1, bool>> where1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
             Expression<Func<T4, bool>> where4,
@@ -2401,7 +2408,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6>(QueryField where1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(QueryField where1,
             QueryField where2,
             QueryField where3,
             QueryField where4,
@@ -2552,7 +2559,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6>(IEnumerable<QueryField> where1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(IEnumerable<QueryField> where1,
             IEnumerable<QueryField> where2,
             IEnumerable<QueryField> where3,
             IEnumerable<QueryField> where4,
@@ -2703,7 +2710,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6>(QueryGroup where1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
             QueryGroup where4,
@@ -2864,8 +2871,9 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(object what1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(object what1,
             object what2,
             object what3,
             object what4,
@@ -3036,7 +3044,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(Expression<Func<T1, bool>> where1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
             Expression<Func<T4, bool>> where4,
@@ -3207,7 +3215,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(QueryField where1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(QueryField where1,
             QueryField where2,
             QueryField where3,
             QueryField where4,
@@ -3378,7 +3386,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(IEnumerable<QueryField> where1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(IEnumerable<QueryField> where1,
             IEnumerable<QueryField> where2,
             IEnumerable<QueryField> where3,
             IEnumerable<QueryField> where4,
@@ -3549,7 +3557,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(QueryGroup where1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
             QueryGroup where4,
@@ -3693,7 +3701,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(object what1,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(object what1,
             object what2,
             IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
@@ -3766,7 +3775,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(Expression<Func<T1, bool>> where1,
+        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
@@ -3839,7 +3848,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(QueryField where1,
+        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(QueryField where1,
             QueryField where2,
             IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
@@ -3912,7 +3921,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(IEnumerable<QueryField> where1,
+        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(IEnumerable<QueryField> where1,
             IEnumerable<QueryField> where2,
             IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
@@ -3985,7 +3994,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(QueryGroup where1,
+        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(QueryGroup where1,
             QueryGroup where2,
             IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
@@ -4069,7 +4078,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(object what1,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(object what1,
             object what2,
             object what3,
             IEnumerable<Field> fields1 = null,
@@ -4162,7 +4172,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(Expression<Func<T1, bool>> where1,
+        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
             IEnumerable<Field> fields1 = null,
@@ -4255,7 +4265,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(QueryField where1,
+        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(QueryField where1,
             QueryField where2,
             QueryField where3,
             IEnumerable<Field> fields1 = null,
@@ -4348,7 +4358,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(IEnumerable<QueryField> where1,
+        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(IEnumerable<QueryField> where1,
             IEnumerable<QueryField> where2,
             IEnumerable<QueryField> where3,
             IEnumerable<Field> fields1 = null,
@@ -4441,7 +4451,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(QueryGroup where1,
+        [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with RequiresUnreferencedCodeAttribute require dynamic access otherwise can break functionality when trimming application code", Justification = "The QueryGroup arguments are not reflected.")]
+        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
             IEnumerable<Field> fields1 = null,
@@ -4545,8 +4556,9 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
-            QueryMultipleAsync<T1, T2, T3, T4>(object what1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(object what1,
             object what2,
             object what3,
             object what4,
@@ -4660,7 +4672,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
-            QueryMultipleAsync<T1, T2, T3, T4>(Expression<Func<T1, bool>> where1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
             Expression<Func<T4, bool>> where4,
@@ -4774,7 +4786,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
-            QueryMultipleAsync<T1, T2, T3, T4>(QueryField where1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(QueryField where1,
             QueryField where2,
             QueryField where3,
             QueryField where4,
@@ -4888,7 +4900,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
-            QueryMultipleAsync<T1, T2, T3, T4>(IEnumerable<QueryField> where1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(IEnumerable<QueryField> where1,
             IEnumerable<QueryField> where2,
             IEnumerable<QueryField> where3,
             IEnumerable<QueryField> where4,
@@ -5002,7 +5014,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
-            QueryMultipleAsync<T1, T2, T3, T4>(QueryGroup where1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
             QueryGroup where4,
@@ -5126,8 +5138,9 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5>(object what1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(object what1,
             object what2,
             object what3,
             object what4,
@@ -5261,7 +5274,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5>(Expression<Func<T1, bool>> where1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
             Expression<Func<T4, bool>> where4,
@@ -5395,7 +5408,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5>(QueryField where1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(QueryField where1,
             QueryField where2,
             QueryField where3,
             QueryField where4,
@@ -5529,7 +5542,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5>(IEnumerable<QueryField> where1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(IEnumerable<QueryField> where1,
             IEnumerable<QueryField> where2,
             IEnumerable<QueryField> where3,
             IEnumerable<QueryField> where4,
@@ -5663,7 +5676,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5>(QueryGroup where1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
             QueryGroup where4,
@@ -5807,8 +5820,9 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6>(object what1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(object what1,
             object what2,
             object what3,
             object what4,
@@ -5962,7 +5976,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6>(Expression<Func<T1, bool>> where1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
             Expression<Func<T4, bool>> where4,
@@ -6116,7 +6130,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6>(QueryField where1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(QueryField where1,
             QueryField where2,
             QueryField where3,
             QueryField where4,
@@ -6270,7 +6284,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6>(IEnumerable<QueryField> where1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(IEnumerable<QueryField> where1,
             IEnumerable<QueryField> where2,
             IEnumerable<QueryField> where3,
             IEnumerable<QueryField> where4,
@@ -6424,7 +6438,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6>(QueryGroup where1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
             QueryGroup where4,
@@ -6588,8 +6602,9 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>(object what1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(object what1,
             object what2,
             object what3,
             object what4,
@@ -6763,7 +6778,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>(Expression<Func<T1, bool>> where1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
             Expression<Func<T4, bool>> where4,
@@ -6937,7 +6952,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>(QueryField where1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(QueryField where1,
             QueryField where2,
             QueryField where3,
             QueryField where4,
@@ -7111,7 +7126,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>(IEnumerable<QueryField> where1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(IEnumerable<QueryField> where1,
             IEnumerable<QueryField> where2,
             IEnumerable<QueryField> where3,
             IEnumerable<QueryField> where4,
@@ -7285,7 +7300,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>(QueryGroup where1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
             QueryGroup where4,
@@ -7434,7 +7449,8 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(string tableName1,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(string tableName1,
             object what1,
             string tableName2,
             object what2,
@@ -7510,7 +7526,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(string tableName1,
+        public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(string tableName1,
             Expression<Func<T1, bool>> where1,
             string tableName2,
             Expression<Func<T2, bool>> where2,
@@ -7586,7 +7602,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(string tableName1,
+        public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(string tableName1,
             QueryField where1,
             string tableName2,
             QueryField where2,
@@ -7662,7 +7678,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(string tableName1,
+        public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(string tableName1,
             IEnumerable<QueryField> where1,
             string tableName2,
             IEnumerable<QueryField> where2,
@@ -7738,7 +7754,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(string tableName1,
+        public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(string tableName1,
             QueryGroup where1,
             string tableName2,
             QueryGroup where2,
@@ -7826,7 +7842,8 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(string tableName1,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(string tableName1,
             object what1,
             string tableName2,
             object what2,
@@ -7925,7 +7942,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(string tableName1,
+        public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(string tableName1,
             Expression<Func<T1, bool>> where1,
             string tableName2,
             Expression<Func<T2, bool>> where2,
@@ -8024,7 +8041,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(string tableName1,
+        public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(string tableName1,
             QueryField where1,
             string tableName2,
             QueryField where2,
@@ -8123,7 +8140,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(string tableName1,
+        public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(string tableName1,
             IEnumerable<QueryField> where1,
             string tableName2,
             IEnumerable<QueryField> where2,
@@ -8222,7 +8239,8 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(string tableName1,
+        [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with RequiresUnreferencedCodeAttribute require dynamic access otherwise can break functionality when trimming application code", Justification = "The QueryGroup arguments are not reflected.")]
+        public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(string tableName1,
             QueryGroup where1,
             string tableName2,
             QueryGroup where2,
@@ -8333,8 +8351,9 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
-            QueryMultiple<T1, T2, T3, T4>(string tableName1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(string tableName1,
             object what1,
             string tableName2,
             object what2,
@@ -8457,7 +8476,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
-            QueryMultiple<T1, T2, T3, T4>(string tableName1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(string tableName1,
             Expression<Func<T1, bool>> where1,
             string tableName2,
             Expression<Func<T2, bool>> where2,
@@ -8580,7 +8599,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
-            QueryMultiple<T1, T2, T3, T4>(string tableName1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(string tableName1,
             QueryField where1,
             string tableName2,
             QueryField where2,
@@ -8703,7 +8722,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
-            QueryMultiple<T1, T2, T3, T4>(string tableName1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(string tableName1,
             IEnumerable<QueryField> where1,
             string tableName2,
             IEnumerable<QueryField> where2,
@@ -8826,7 +8845,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
-            QueryMultiple<T1, T2, T3, T4>(string tableName1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(string tableName1,
             QueryGroup where1,
             string tableName2,
             QueryGroup where2,
@@ -8960,8 +8979,9 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
-            QueryMultiple<T1, T2, T3, T4, T5>(string tableName1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(string tableName1,
             object what1,
             string tableName2,
             object what2,
@@ -9107,7 +9127,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
-            QueryMultiple<T1, T2, T3, T4, T5>(string tableName1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(string tableName1,
             Expression<Func<T1, bool>> where1,
             string tableName2,
             Expression<Func<T2, bool>> where2,
@@ -9253,7 +9273,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
-            QueryMultiple<T1, T2, T3, T4, T5>(string tableName1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(string tableName1,
             QueryField where1,
             string tableName2,
             QueryField where2,
@@ -9399,7 +9419,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
-            QueryMultiple<T1, T2, T3, T4, T5>(string tableName1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(string tableName1,
             IEnumerable<QueryField> where1,
             string tableName2,
             IEnumerable<QueryField> where2,
@@ -9545,7 +9565,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
-            QueryMultiple<T1, T2, T3, T4, T5>(string tableName1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(string tableName1,
             QueryGroup where1,
             string tableName2,
             QueryGroup where2,
@@ -9702,8 +9722,9 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6>(string tableName1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(string tableName1,
             object what1,
             string tableName2,
             object what2,
@@ -9872,7 +9893,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6>(string tableName1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(string tableName1,
             Expression<Func<T1, bool>> where1,
             string tableName2,
             Expression<Func<T2, bool>> where2,
@@ -10041,7 +10062,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6>(string tableName1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(string tableName1,
             QueryField where1,
             string tableName2,
             QueryField where2,
@@ -10210,7 +10231,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6>(string tableName1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(string tableName1,
             IEnumerable<QueryField> where1,
             string tableName2,
             IEnumerable<QueryField> where2,
@@ -10379,7 +10400,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6>(string tableName1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(string tableName1,
             QueryGroup where1,
             string tableName2,
             QueryGroup where2,
@@ -10559,8 +10580,9 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(string tableName1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(string tableName1,
             object what1,
             string tableName2,
             object what2,
@@ -10752,7 +10774,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(string tableName1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(string tableName1,
             Expression<Func<T1, bool>> where1,
             string tableName2,
             Expression<Func<T2, bool>> where2,
@@ -10944,7 +10966,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(string tableName1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(string tableName1,
             QueryField where1,
             string tableName2,
             QueryField where2,
@@ -11136,7 +11158,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(string tableName1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(string tableName1,
             IEnumerable<QueryField> where1,
             string tableName2,
             IEnumerable<QueryField> where2,
@@ -11328,7 +11350,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
-            QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(string tableName1,
+            QueryMultiple<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(string tableName1,
             QueryGroup where1,
             string tableName2,
             QueryGroup where2,
@@ -11485,6 +11507,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>> QueryMultiple(string tableName1,
             object what1,
             string tableName2,
@@ -11784,6 +11807,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> QueryMultiple(string tableName1,
             object what1,
             string tableName2,
@@ -12063,6 +12087,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with RequiresUnreferencedCodeAttribute require dynamic access otherwise can break functionality when trimming application code", Justification = "The QueryGroup arguments are not reflected.")]
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> QueryMultiple(string tableName1,
             QueryGroup where1,
             string tableName2,
@@ -12167,6 +12192,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>
             QueryMultiple(string tableName1,
             object what1,
@@ -12638,6 +12664,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>
             QueryMultiple(string tableName1,
             object what1,
@@ -13193,6 +13220,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>
             QueryMultiple(string tableName1,
             object what1,
@@ -13832,6 +13860,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>
             QueryMultiple(string tableName1,
             object what1,
@@ -14524,7 +14553,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(string tableName1,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(string tableName1,
             object what1,
             string tableName2,
             object what2,
@@ -14603,7 +14633,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(string tableName1,
+        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(string tableName1,
             Expression<Func<T1, bool>> where1,
             string tableName2,
             Expression<Func<T2, bool>> where2,
@@ -14682,7 +14712,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(string tableName1,
+        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(string tableName1,
             QueryField where1,
             string tableName2,
             QueryField where2,
@@ -14761,7 +14791,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(string tableName1,
+        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(string tableName1,
             IEnumerable<QueryField> where1,
             string tableName2,
             IEnumerable<QueryField> where2,
@@ -14840,7 +14870,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(string tableName1,
+        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2>(string tableName1,
             QueryGroup where1,
             string tableName2,
             QueryGroup where2,
@@ -14931,7 +14961,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(string tableName1,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(string tableName1,
             object what1,
             string tableName2,
             object what2,
@@ -15033,7 +15064,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(string tableName1,
+        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(string tableName1,
             Expression<Func<T1, bool>> where1,
             string tableName2,
             Expression<Func<T2, bool>> where2,
@@ -15135,7 +15166,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(string tableName1,
+        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(string tableName1,
             QueryField where1,
             string tableName2,
             QueryField where2,
@@ -15237,7 +15268,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(string tableName1,
+        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(string tableName1,
             IEnumerable<QueryField> where1,
             string tableName2,
             IEnumerable<QueryField> where2,
@@ -15339,7 +15370,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(string tableName1,
+        [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with RequiresUnreferencedCodeAttribute require dynamic access otherwise can break functionality when trimming application code", Justification = "The QueryGroup arguments are not reflected.")]
+        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3>(string tableName1,
             QueryGroup where1,
             string tableName2,
             QueryGroup where2,
@@ -15453,8 +15485,9 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
-            QueryMultipleAsync<T1, T2, T3, T4>(string tableName1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(string tableName1,
             object what1,
             string tableName2,
             object what2,
@@ -15580,7 +15613,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
-            QueryMultipleAsync<T1, T2, T3, T4>(string tableName1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(string tableName1,
             Expression<Func<T1, bool>> where1,
             string tableName2,
             Expression<Func<T2, bool>> where2,
@@ -15706,7 +15739,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
-            QueryMultipleAsync<T1, T2, T3, T4>(string tableName1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(string tableName1,
             QueryField where1,
             string tableName2,
             QueryField where2,
@@ -15832,7 +15865,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
-            QueryMultipleAsync<T1, T2, T3, T4>(string tableName1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(string tableName1,
             IEnumerable<QueryField> where1,
             string tableName2,
             IEnumerable<QueryField> where2,
@@ -15958,7 +15991,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
-            QueryMultipleAsync<T1, T2, T3, T4>(string tableName1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4>(string tableName1,
             QueryGroup where1,
             string tableName2,
             QueryGroup where2,
@@ -16095,8 +16128,9 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5>(string tableName1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(string tableName1,
             object what1,
             string tableName2,
             object what2,
@@ -16245,7 +16279,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5>(string tableName1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(string tableName1,
             Expression<Func<T1, bool>> where1,
             string tableName2,
             Expression<Func<T2, bool>> where2,
@@ -16394,7 +16428,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5>(string tableName1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(string tableName1,
             QueryField where1,
             string tableName2,
             QueryField where2,
@@ -16543,7 +16577,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5>(string tableName1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(string tableName1,
             IEnumerable<QueryField> where1,
             string tableName2,
             IEnumerable<QueryField> where2,
@@ -16692,7 +16726,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5>(string tableName1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5>(string tableName1,
             QueryGroup where1,
             string tableName2,
             QueryGroup where2,
@@ -16852,8 +16886,9 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6>(string tableName1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(string tableName1,
             object what1,
             string tableName2,
             object what2,
@@ -17025,7 +17060,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6>(string tableName1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(string tableName1,
             Expression<Func<T1, bool>> where1,
             string tableName2,
             Expression<Func<T2, bool>> where2,
@@ -17197,7 +17232,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6>(string tableName1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(string tableName1,
             QueryField where1,
             string tableName2,
             QueryField where2,
@@ -17369,7 +17404,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6>(string tableName1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(string tableName1,
             IEnumerable<QueryField> where1,
             string tableName2,
             IEnumerable<QueryField> where2,
@@ -17541,7 +17576,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6>(string tableName1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6>(string tableName1,
             QueryGroup where1,
             string tableName2,
             QueryGroup where2,
@@ -17724,8 +17759,9 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>(string tableName1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(string tableName1,
             object what1,
             string tableName2,
             object what2,
@@ -17920,7 +17956,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>(string tableName1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(string tableName1,
             Expression<Func<T1, bool>> where1,
             string tableName2,
             Expression<Func<T2, bool>> where2,
@@ -18115,7 +18151,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>(string tableName1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(string tableName1,
             QueryField where1,
             string tableName2,
             QueryField where2,
@@ -18310,7 +18346,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>(string tableName1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(string tableName1,
             IEnumerable<QueryField> where1,
             string tableName2,
             IEnumerable<QueryField> where2,
@@ -18505,7 +18541,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
-            QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>(string tableName1,
+            QueryMultipleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] T1, [DynamicallyAccessedMembers(Trimming.Entity)] T2, [DynamicallyAccessedMembers(Trimming.Entity)] T3, [DynamicallyAccessedMembers(Trimming.Entity)] T4, [DynamicallyAccessedMembers(Trimming.Entity)] T5, [DynamicallyAccessedMembers(Trimming.Entity)] T6, [DynamicallyAccessedMembers(Trimming.Entity)] T7>(string tableName1,
             QueryGroup where1,
             string tableName2,
             QueryGroup where2,
@@ -18665,6 +18701,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>>> QueryMultipleAsync(string tableName1,
             object what1,
             string tableName2,
@@ -18976,6 +19013,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>> QueryMultipleAsync(string tableName1,
             object what1,
             string tableName2,
@@ -19264,6 +19302,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with RequiresUnreferencedCodeAttribute require dynamic access otherwise can break functionality when trimming application code", Justification = "The QueryGroup arguments are not reflected.")]
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>> QueryMultipleAsync(string tableName1,
             QueryGroup where1,
             string tableName2,
@@ -19371,6 +19410,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>>
             QueryMultipleAsync(string tableName1,
             object what1,
@@ -19854,6 +19894,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>>
             QueryMultipleAsync(string tableName1,
             object what1,
@@ -20421,6 +20462,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>>
             QueryMultipleAsync(string tableName1,
             object what1,
@@ -21072,6 +21114,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>>
             QueryMultipleAsync(string tableName1,
             object what1,

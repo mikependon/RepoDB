@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Requests;
@@ -39,7 +40,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public static int Delete<TEntity>(this IDbConnection connection,
+        public static int Delete<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             TEntity entity,
             string hints = null,
             int? commandTimeout = null,
@@ -74,7 +75,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public static int Delete<TEntity, TWhat>(this IDbConnection connection,
+        public static int Delete<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(this IDbConnection connection,
             TWhat what,
             string hints = null,
             int? commandTimeout = null,
@@ -107,7 +108,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public static int Delete<TEntity>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static int Delete<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             object what,
             string hints = null,
             int? commandTimeout = null,
@@ -140,7 +142,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public static int Delete<TEntity>(this IDbConnection connection,
+        public static int Delete<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
             int? commandTimeout = null,
@@ -173,7 +175,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public static int Delete<TEntity>(this IDbConnection connection,
+        public static int Delete<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             QueryField where,
             string hints = null,
             int? commandTimeout = null,
@@ -206,7 +208,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public static int Delete<TEntity>(this IDbConnection connection,
+        public static int Delete<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IEnumerable<QueryField> where,
             string hints = null,
             int? commandTimeout = null,
@@ -239,7 +241,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public static int Delete<TEntity>(this IDbConnection connection,
+        public static int Delete<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             QueryGroup where,
             string hints = null,
             int? commandTimeout = null,
@@ -272,7 +274,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        internal static int DeleteInternal<TEntity>(this IDbConnection connection,
+        internal static int DeleteInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             QueryGroup where,
             string hints = null,
             int? commandTimeout = null,
@@ -325,7 +327,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public static async Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
+        public static async Task<int> DeleteAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             TEntity entity,
             string hints = null,
             int? commandTimeout = null,
@@ -363,7 +365,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public static async Task<int> DeleteAsync<TEntity, TWhat>(this IDbConnection connection,
+        public static async Task<int> DeleteAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(this IDbConnection connection,
             TWhat what,
             string hints = null,
             int? commandTimeout = null,
@@ -399,7 +401,8 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public static async Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public static async Task<int> DeleteAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             object what,
             string hints = null,
             int? commandTimeout = null,
@@ -435,7 +438,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> DeleteAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
             int? commandTimeout = null,
@@ -471,7 +474,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> DeleteAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             QueryField where,
             string hints = null,
             int? commandTimeout = null,
@@ -507,7 +510,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> DeleteAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IEnumerable<QueryField> where,
             string hints = null,
             int? commandTimeout = null,
@@ -543,7 +546,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> DeleteAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             QueryGroup where,
             string hints = null,
             int? commandTimeout = null,
@@ -579,7 +582,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        internal static Task<int> DeleteAsyncInternal<TEntity>(this IDbConnection connection,
+        internal static Task<int> DeleteAsyncInternal<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             QueryGroup where,
             string hints = null,
             int? commandTimeout = null,
@@ -634,7 +637,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public static int Delete<TWhat>(this IDbConnection connection,
+        public static int Delete<[DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(this IDbConnection connection,
             string tableName,
             TWhat what,
             string hints = null,
@@ -668,6 +671,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static int Delete(this IDbConnection connection,
             string tableName,
             object what,
@@ -858,7 +862,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public static async Task<int> DeleteAsync<TWhat>(this IDbConnection connection,
+        public static async Task<int> DeleteAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(this IDbConnection connection,
             string tableName,
             TWhat what,
             string hints = null,
@@ -895,6 +899,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static async Task<int> DeleteAsync(this IDbConnection connection,
             string tableName,
             object what,

@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -34,7 +35,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        public int MergeAll<TEntity>(string tableName,
+        public int MergeAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
@@ -80,7 +81,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        public int MergeAll<TEntity>(string tableName,
+        public int MergeAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -128,7 +129,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        public int MergeAll<TEntity>(string tableName,
+        public int MergeAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -174,7 +175,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        public int MergeAll<TEntity>(IEnumerable<TEntity> entities,
+        public int MergeAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -217,7 +218,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        public int MergeAll<TEntity>(IEnumerable<TEntity> entities,
+        public int MergeAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
@@ -262,7 +263,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        public int MergeAll<TEntity>(IEnumerable<TEntity> entities,
+        public int MergeAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
@@ -312,7 +313,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        public async Task<int> MergeAllAsync<TEntity>(string tableName,
+        public async Task<int> MergeAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
@@ -361,7 +362,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        public async Task<int> MergeAllAsync<TEntity>(string tableName,
+        public async Task<int> MergeAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -412,7 +413,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        public async Task<int> MergeAllAsync<TEntity>(string tableName,
+        public async Task<int> MergeAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -461,7 +462,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        public async Task<int> MergeAllAsync<TEntity>(IEnumerable<TEntity> entities,
+        public async Task<int> MergeAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -507,7 +508,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        public async Task<int> MergeAllAsync<TEntity>(IEnumerable<TEntity> entities,
+        public async Task<int> MergeAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
@@ -555,7 +556,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        public async Task<int> MergeAllAsync<TEntity>(IEnumerable<TEntity> entities,
+        public async Task<int> MergeAllAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
@@ -605,6 +606,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public int MergeAll(string tableName,
             IEnumerable<object> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -649,6 +651,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public int MergeAll(string tableName,
             IEnumerable<object> entities,
             IEnumerable<Field> qualifiers,
@@ -699,6 +702,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<int> MergeAllAsync(string tableName,
             IEnumerable<object> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -746,6 +750,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<int> MergeAllAsync(string tableName,
             IEnumerable<object> entities,
             IEnumerable<Field> qualifiers,

@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -44,7 +45,8 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="trace"></param>
         /// <returns></returns>
-        private static int BulkInsertInternalBase<TEntity>(SqlConnection connection,
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
+        private static int BulkInsertInternalBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
@@ -85,7 +87,7 @@ namespace RepoDb
 
                 // Variables needed
                 var identityDbField = dbFields?.GetIdentity();
-                var entityType = entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity);
+                var entityType = DbConnectionExtension.GetEntityType<TEntity>(entities?.FirstOrDefault());
                 var entityFields = TypeCache.Get(entityType).IsDictionaryStringObject() ?
                     GetDictionaryStringObjectFields(entities?.FirstOrDefault() as IDictionary<string, object>) :
                     FieldCache.Get(entityType);
@@ -313,6 +315,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="trace"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         internal static int BulkInsertInternalBase(SqlConnection connection,
             string tableName,
             DataTable table,
@@ -485,7 +488,8 @@ namespace RepoDb
         /// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkInsertAsyncInternalBase<TEntity>(SqlConnection connection,
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
+        private static async Task<int> BulkInsertAsyncInternalBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
@@ -527,7 +531,7 @@ namespace RepoDb
 
                 // Variables needed
                 var identityDbField = dbFields?.GetIdentity();
-                var entityType = entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity);
+                var entityType = DbConnectionExtension.GetEntityType<TEntity>(entities?.FirstOrDefault());
                 var entityFields = TypeCache.Get(entityType).IsDictionaryStringObject() ?
                     GetDictionaryStringObjectFields(entities?.FirstOrDefault() as IDictionary<string, object>) :
                     FieldCache.Get(entityType);
@@ -763,6 +767,7 @@ namespace RepoDb
         /// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         internal static async Task<int> BulkInsertAsyncInternalBase(SqlConnection connection,
             string tableName,
             DataTable table,
@@ -920,6 +925,7 @@ namespace RepoDb
 
         #region Helpers
 
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static string CreateBulkInsertTempTableIfNecessary<TSqlTransaction>(
             IDbConnection connection,
             string tableName,
@@ -941,6 +947,7 @@ namespace RepoDb
             return tempTableName;
         }
 
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static async Task<string> CreateBulkInsertTempTableIfNecessaryAsync<TSqlTransaction>(IDbConnection connection,
             string tableName,
             bool? usePhysicalPseudoTempTable,

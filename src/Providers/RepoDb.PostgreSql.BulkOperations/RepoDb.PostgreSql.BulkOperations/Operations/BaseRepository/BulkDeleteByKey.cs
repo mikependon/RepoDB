@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using Npgsql;
 using RepoDb.Enumerations.PostgreSql;
 using RepoDb.Interfaces;
@@ -39,7 +40,7 @@ namespace RepoDb
         /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been deleted from the target table.</returns>
-        public static int BulkDeleteByKey<TEntity, TPrimaryKey>(this BaseRepository<TEntity, NpgsqlConnection> repository,
+        public static int BulkDeleteByKey<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TPrimaryKey>(this BaseRepository<TEntity, NpgsqlConnection> repository,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
             int? bulkCopyTimeout = null,
@@ -81,7 +82,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the target table.</returns>
-        public static async Task<int> BulkDeleteByKeyAsync<TEntity, TPrimaryKey>(this BaseRepository<TEntity, NpgsqlConnection> repository,
+        public static async Task<int> BulkDeleteByKeyAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, TPrimaryKey>(this BaseRepository<TEntity, NpgsqlConnection> repository,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
             int? bulkCopyTimeout = null,

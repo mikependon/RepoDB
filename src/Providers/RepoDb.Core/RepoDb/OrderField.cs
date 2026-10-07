@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
@@ -66,7 +67,7 @@ namespace RepoDb
         /// <param name="expression">The expression to be parsed.</param>
         /// <param name="order">The order of the property.</param>
         /// <returns>An instance of <see cref="OrderField"/> object.</returns>
-        public static OrderField Parse<TEntity>(Expression<Func<TEntity, object>> expression,
+        public static OrderField Parse<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> expression,
             Order order = Order.Ascending)
             where TEntity : class
         {
@@ -87,7 +88,7 @@ namespace RepoDb
         /// <param name="expression">The expression to be parsed.</param>
         /// <param name="order">The order of the property.</param>
         /// <returns>An instance of <see cref="OrderField"/> object.</returns>
-        internal static OrderField Parse<TEntity>(UnaryExpression expression,
+        internal static OrderField Parse<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(UnaryExpression expression,
             Order order = Order.Ascending)
             where TEntity : class
         {
@@ -107,7 +108,7 @@ namespace RepoDb
         /// <param name="expression">The expression to be parsed.</param>
         /// <param name="order">The order of the property.</param>
         /// <returns>An instance of <see cref="OrderField"/> object.</returns>
-        internal static OrderField Parse<TEntity>(MemberExpression expression,
+        internal static OrderField Parse<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(MemberExpression expression,
             Order order = Order.Ascending)
             where TEntity : class
         {
@@ -122,7 +123,7 @@ namespace RepoDb
         /// <param name="expression">The expression to be parsed.</param>
         /// <param name="order">The order of the property.</param>
         /// <returns>An instance of <see cref="OrderField"/> object.</returns>
-        internal static OrderField Parse<TEntity>(BinaryExpression expression,
+        internal static OrderField Parse<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(BinaryExpression expression,
             Order order = Order.Ascending)
             where TEntity : class
         {
@@ -136,7 +137,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity that contains the property to be parsed.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>An instance of <see cref="OrderField"/> object with <see cref="Order.Ascending"/> value.</returns>
-        public static OrderField Ascending<TEntity>(Expression<Func<TEntity, object>> expression)
+        public static OrderField Ascending<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> expression)
             where TEntity : class
         {
             return Parse(expression, Order.Ascending);
@@ -149,7 +150,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity that contains the property to be parsed.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>An instance of <see cref="OrderField"/> object with <see cref="Order.Descending"/> value.</returns>
-        public static OrderField Descending<TEntity>(Expression<Func<TEntity, object>> expression)
+        public static OrderField Descending<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, object>> expression)
             where TEntity : class
         {
             return Parse(expression, Order.Descending);
@@ -161,6 +162,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="obj">An object to be parsed.</param>
         /// <returns>An enumerable of <see cref="OrderField"/> object that holds the ordering values for every field.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public static IEnumerable<OrderField> Parse(object obj)
         {
             if (obj == null)
@@ -168,7 +170,7 @@ namespace RepoDb
                 throw new ArgumentNullException(nameof(obj), "The 'obj' must not be null.");
             }
 
-            var properties = TypeCache.Get(obj.GetType()).GetProperties();
+            var properties = TypeCache.GetProperties(obj.GetType());
             var list = new List<OrderField>(properties.Length);
             
             foreach (var property in properties)

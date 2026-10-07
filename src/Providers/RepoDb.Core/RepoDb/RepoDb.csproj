@@ -22,6 +22,9 @@
     -->
     <PackageVersion Condition="'$(RepoDbCoreVersion)' != ''">$(RepoDbCoreVersion)</PackageVersion>
   </PropertyGroup>
+  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Reflection\DataCommand.cs" />
     <Compile Remove="Reflection\DelegateCache.cs" />
@@ -72,5 +75,47 @@
     <InternalsVisibleTo Include="RepoDb.CockroachDb.BulkOperations" />
     <InternalsVisibleTo Include="RepoDb.AuroraDb.PostgreSql.BulkOperations" />
     <InternalsVisibleTo Include="RepoDb.AuroraDb.MySqlConnector.BulkOperations" />
+    <InternalsVisibleTo Include="RepoDb.Sqlite.Ahtola" />
+    <InternalsVisibleTo Include="RepoDb.AuroraDb.MySqlConnector" />
+    <InternalsVisibleTo Include="RepoDb.AuroraDb.PostgreSql" />
+    <InternalsVisibleTo Include="RepoDb.ClickHouse" />
+    <InternalsVisibleTo Include="RepoDb.CockroachDb" />
+    <InternalsVisibleTo Include="RepoDb.Data.Core" />
+    <InternalsVisibleTo Include="RepoDb.DuckDb" />
+    <InternalsVisibleTo Include="RepoDb.EnterpriseDb" />
+    <InternalsVisibleTo Include="RepoDb.Firebird" />
+    <InternalsVisibleTo Include="RepoDb.MariaDb" />
+    <InternalsVisibleTo Include="RepoDb.MariaDbConnector" />
+    <InternalsVisibleTo Include="RepoDb.MySql" />
+    <InternalsVisibleTo Include="RepoDb.MySqlConnector" />
+    <InternalsVisibleTo Include="RepoDb.PostgreSql" />
+    <InternalsVisibleTo Include="RepoDb.SQLite.System" />
+    <InternalsVisibleTo Include="RepoDb.SapHana" />
+    <InternalsVisibleTo Include="RepoDb.Schema.CockroachDb" />
+    <InternalsVisibleTo Include="RepoDb.Schema.Core" />
+    <InternalsVisibleTo Include="RepoDb.Schema.MariaDb" />
+    <InternalsVisibleTo Include="RepoDb.Schema.MySqlConnector" />
+    <InternalsVisibleTo Include="RepoDb.Schema.PostgreSql" />
+    <InternalsVisibleTo Include="RepoDb.Schema.SqlServer" />
+    <InternalsVisibleTo Include="RepoDb.Schema.Sqlite" />
+    <InternalsVisibleTo Include="RepoDb.Schema.Db2" />
+    <InternalsVisibleTo Include="RepoDb.Schema.DuckDb" />
+    <InternalsVisibleTo Include="RepoDb.Schema.Firebird" />
+    <InternalsVisibleTo Include="RepoDb.Schema.MariaDbConnector" />
+    <InternalsVisibleTo Include="RepoDb.Schema.MySql" />
+    <InternalsVisibleTo Include="RepoDb.Schema.Oracle" />
+    <InternalsVisibleTo Include="RepoDb.Schema.SapHana" />
+    <InternalsVisibleTo Include="RepoDb.Schema.Vertica" />
+    <InternalsVisibleTo Include="RepoDb.Schema.AuroraDbMySqlConnector" />
+    <InternalsVisibleTo Include="RepoDb.Schema.AuroraDbPostgreSql" />
+    <InternalsVisibleTo Include="RepoDb.Schema.ClickHouse" />
+    <InternalsVisibleTo Include="RepoDb.Schema.Ahtola" />
+    <InternalsVisibleTo Include="RepoDb.Schema.Turso" />
+    <InternalsVisibleTo Include="RepoDb.SqlServer" />
+    <InternalsVisibleTo Include="RepoDb.Sqlite.Microsoft" />
+    <InternalsVisibleTo Include="RepoDb.Telemetry.Core" />
+    <InternalsVisibleTo Include="RepoDb.Telemetry.Default" />
+    <InternalsVisibleTo Include="RepoDb.Sqlite.Turso" />
+    <InternalsVisibleTo Include="RepoDb.Vertica" />
   </ItemGroup>
 </Project>

@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
@@ -26,7 +27,7 @@ namespace RepoDb
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="field"></param>
         /// <returns></returns>
-        private static ClassProperty GetTargetProperty<TEntity>(Field field)
+        private static ClassProperty GetTargetProperty<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Field field)
             where TEntity : class
         {
             var properties = PropertyCache.Get<TEntity>();
@@ -151,7 +152,7 @@ namespace RepoDb
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="expression"></param>
         /// <returns></returns>
-        internal static IEnumerable<QueryField> Parse<TEntity>(BinaryExpression expression)
+        internal static IEnumerable<QueryField> Parse<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(BinaryExpression expression)
             where TEntity : class
         {
             // Only support the following expression type
@@ -220,7 +221,7 @@ namespace RepoDb
          * Member
          */
 
-        internal static IEnumerable<QueryField> Parse<TEntity>(MemberExpression expression,
+        internal static IEnumerable<QueryField> Parse<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(MemberExpression expression,
             ExpressionType? unaryNodeType = null)
             where TEntity : class
         {
@@ -256,7 +257,7 @@ namespace RepoDb
         /// <param name="expression"></param>
         /// <param name="unaryNodeType"></param>
         /// <returns></returns>
-        internal static IEnumerable<QueryField> Parse<TEntity>(MethodCallExpression expression,
+        internal static IEnumerable<QueryField> Parse<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(MethodCallExpression expression,
         ExpressionType? unaryNodeType = null)
         where TEntity : class
         {
@@ -296,7 +297,7 @@ string.Equals(expression.Method.Name, "EndsWith", StringComparison.Ordinal))
         /// <param name="expression"></param>
         /// <param name="unaryNodeType"></param>
         /// <returns></returns>
-        internal static QueryField ParseEquals<TEntity>(MethodCallExpression expression,
+        internal static QueryField ParseEquals<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(MethodCallExpression expression,
             ExpressionType? unaryNodeType = null)
             where TEntity : class
         {
@@ -324,7 +325,7 @@ string.Equals(expression.Method.Name, "EndsWith", StringComparison.Ordinal))
         /// <param name="expression"></param>
         /// <param name="unaryNodeType"></param>
         /// <returns></returns>
-        internal static QueryField ParseCompareString<TEntity>(MethodCallExpression expression,
+        internal static QueryField ParseCompareString<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(MethodCallExpression expression,
             ExpressionType? unaryNodeType = null)
             where TEntity : class
         {
@@ -345,7 +346,7 @@ string.Equals(expression.Method.Name, "EndsWith", StringComparison.Ordinal))
         /// <param name="expression"></param>
         /// <param name="unaryNodeType"></param>
         /// <returns></returns>
-        internal static QueryField ParseContains<TEntity>(MethodCallExpression expression,
+        internal static QueryField ParseContains<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(MethodCallExpression expression,
             ExpressionType? unaryNodeType = null)
             where TEntity : class
         {
@@ -392,7 +393,7 @@ string.Equals(expression.Method.Name, "EndsWith", StringComparison.Ordinal))
         /// <param name="expression"></param>
         /// <param name="unaryNodeType"></param>
         /// <returns></returns>
-        internal static QueryField ParseWith<TEntity>(MethodCallExpression expression,
+        internal static QueryField ParseWith<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(MethodCallExpression expression,
             ExpressionType? unaryNodeType = null)
             where TEntity : class
         {
@@ -414,7 +415,7 @@ string.Equals(expression.Method.Name, "EndsWith", StringComparison.Ordinal))
         /// <param name="expression"></param>
         /// <param name="unaryNodeType"></param>
         /// <returns></returns>
-        internal static IEnumerable<QueryField> ParseAll<TEntity>(MethodCallExpression expression,
+        internal static IEnumerable<QueryField> ParseAll<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(MethodCallExpression expression,
             ExpressionType? unaryNodeType = null)
             where TEntity : class
         {
@@ -433,7 +434,7 @@ string.Equals(expression.Method.Name, "EndsWith", StringComparison.Ordinal))
         /// <param name="expression"></param>
         /// <param name="unaryNodeType"></param>
         /// <returns></returns>
-        internal static IEnumerable<QueryField> ParseAny<TEntity>(MethodCallExpression expression,
+        internal static IEnumerable<QueryField> ParseAny<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(MethodCallExpression expression,
             ExpressionType? unaryNodeType = null)
             where TEntity : class
         {
@@ -480,7 +481,7 @@ string.Equals(expression.Method.Name, "EndsWith", StringComparison.Ordinal))
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        internal static ClassProperty GetProperty<TEntity>(Expression expression)
+        internal static ClassProperty GetProperty<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression expression)
             where TEntity : class
         {
             return expression switch
@@ -500,7 +501,7 @@ string.Equals(expression.Method.Name, "EndsWith", StringComparison.Ordinal))
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        internal static ClassProperty GetProperty<TEntity>(LambdaExpression expression)
+        internal static ClassProperty GetProperty<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(LambdaExpression expression)
             where TEntity : class
         {
             return GetProperty<TEntity>(expression.Body);
@@ -511,7 +512,7 @@ string.Equals(expression.Method.Name, "EndsWith", StringComparison.Ordinal))
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        internal static ClassProperty GetProperty<TEntity>(BinaryExpression expression)
+        internal static ClassProperty GetProperty<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(BinaryExpression expression)
             where TEntity : class
         {
             return GetProperty<TEntity>(expression.Left) ?? GetProperty<TEntity>(expression.Right);
@@ -522,7 +523,7 @@ string.Equals(expression.Method.Name, "EndsWith", StringComparison.Ordinal))
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        internal static ClassProperty GetProperty<TEntity>(MethodCallExpression expression)
+        internal static ClassProperty GetProperty<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(MethodCallExpression expression)
             where TEntity : class
         {
             return expression?.Object?.Type == StaticType.String ?
@@ -537,7 +538,7 @@ string.Equals(expression.Method.Name, "EndsWith", StringComparison.Ordinal))
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        internal static ClassProperty GetProperty<TEntity>(MemberExpression expression)
+        internal static ClassProperty GetProperty<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(MemberExpression expression)
             where TEntity : class
         {
             return expression.Member is PropertyInfo pi ? GetProperty<TEntity>(pi) : null;
@@ -549,7 +550,7 @@ string.Equals(expression.Method.Name, "EndsWith", StringComparison.Ordinal))
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="propertyInfo"></param>
         /// <returns></returns>
-        internal static ClassProperty GetProperty<TEntity>(PropertyInfo propertyInfo)
+        internal static ClassProperty GetProperty<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(PropertyInfo propertyInfo)
             where TEntity : class
         {
             if (propertyInfo == null)

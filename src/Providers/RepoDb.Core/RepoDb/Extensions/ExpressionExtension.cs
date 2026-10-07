@@ -9,6 +9,7 @@
 
 using RepoDb.Exceptions;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -401,12 +402,34 @@ string.Equals(expression.Method.Name, "EndsWith", StringComparison.Ordinal))
         public static object GetValue(this NewArrayExpression expression)
         {
             var arrayType = expression.Type.HasElementType ? expression.Type.GetElementType() : expression.Type;
-            var array = Array.CreateInstance(arrayType, expression.Expressions.Count);
+            var array = CreateArray(arrayType, expression.Expressions.Count);
             for (var i = 0; i < expression.Expressions.Count; i++)
             {
                 array.SetValue(expression.Expressions[i].GetValue(), i);
             }
             return array;
+        }
+
+        /// <summary>
+        /// Creates an array of the element type. If the array type is not available (i.e.: the native code of an array of a
+        /// value type was not generated when publishing with NativeAOT), an array of <see cref="object"/> is returned instead.
+        /// </summary>
+        /// <param name="elementType">The type of the elements.</param>
+        /// <param name="length">The length of the array.</param>
+        /// <returns>The created array.</returns>
+        [UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.",
+            Justification = "The NotSupportedException thrown when the array type is not available is handled by falling back to an array of objects.")]
+        private static Array CreateArray(Type elementType,
+            int length)
+        {
+            try
+            {
+                return Array.CreateInstance(elementType, length);
+            }
+            catch (NotSupportedException)
+            {
+                return new object[length];
+            }
         }
 
         /// <summary>
@@ -416,7 +439,7 @@ string.Equals(expression.Method.Name, "EndsWith", StringComparison.Ordinal))
         /// <returns>The extracted value from <see cref="ListInitExpression"/> object.</returns>
         public static object GetValue(this ListInitExpression expression)
         {
-            var list = Activator.CreateInstance(expression.Type);
+            var list = expression.NewExpression.GetValue();
             foreach (var item in expression.Initializers)
             {
                 item.AddMethod.Invoke(list, new[] { item.Arguments.FirstOrDefault().GetValue() });
@@ -431,15 +454,12 @@ string.Equals(expression.Method.Name, "EndsWith", StringComparison.Ordinal))
         /// <returns>The extracted value from <see cref="NewExpression"/> object.</returns>
         public static object GetValue(this NewExpression expression)
         {
-            if (expression.Arguments.Count > 0)
+            // The constructor is referenced by the expression itself (i.e.: it is null for the default value of a value type)
+            if (expression.Constructor == null)
             {
-                return Activator.CreateInstance(expression.Type,
-                    expression.Arguments.Select(arg => arg.GetValue()).ToArray());
+                return expression.Type.GetDefaultValue();
             }
-            else
-            {
-                return Activator.CreateInstance(expression.Type);
-            }
+            return expression.Constructor.Invoke(expression.Arguments.Select(arg => arg.GetValue()).ToArray());
         }
 
         /// <summary>
@@ -475,11 +495,30 @@ string.Equals(expression.Method.Name, "EndsWith", StringComparison.Ordinal))
         /// <returns>The extracted value from <see cref="ParameterExpression"/> object.</returns>
         public static object GetValue(this ParameterExpression expression)
         {
-            if (expression.Type.GetConstructors().Any(e => e.GetParameters().Length == 0))
+            var instance = CreateInstance(expression.Type);
+            if (instance != null)
             {
-                return Activator.CreateInstance(expression.Type);
+                return instance;
             }
             throw new InvalidExpressionException($"The default constructor for expression '{expression}' is not found.");
+        }
+
+        /// <summary>
+        /// Creates an instance of the type of a lambda parameter via its default constructor.
+        /// </summary>
+        /// <param name="type">The type of the parameter.</param>
+        /// <returns>The created instance, or null if the type has no default constructor.</returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2067:Target parameter argument does not satisfy 'DynamicallyAccessedMembersAttribute' in call to target method.",
+            Justification = "The parameters of the parsed lambda expressions are of the data entity types of the operations, whose public constructors are preserved (Trimming.Entity).")]
+        [UnconditionalSuppressMessage("Trimming", "IL2070:'this' argument does not satisfy 'DynamicallyAccessedMembersAttribute' in call to target method.",
+            Justification = "The parameters of the parsed lambda expressions are of the data entity types of the operations, whose public constructors are preserved (Trimming.Entity).")]
+        private static object CreateInstance(Type type)
+        {
+            if (type.IsValueType)
+            {
+                return type.GetDefaultValue();
+            }
+            return type.GetConstructor(Type.EmptyTypes) != null ? Activator.CreateInstance(type) : null;
         }
 
         /// <summary>
@@ -489,7 +528,7 @@ string.Equals(expression.Method.Name, "EndsWith", StringComparison.Ordinal))
         /// <returns>The extracted value from <see cref="DefaultExpression"/> object.</returns>
         public static object GetValue(this DefaultExpression expression)
         {
-            return expression.Type.IsValueType ? Activator.CreateInstance(expression.Type) : null;
+            return expression.Type.GetDefaultValue();
         }
 
         #endregion

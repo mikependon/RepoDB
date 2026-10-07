@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Resolvers;
@@ -21,7 +22,7 @@ namespace RepoDb
     public static class IdentityCache
     {
         private static readonly ConcurrentDictionary<int, ClassProperty> cache = new();
-        private static IResolver<Type, ClassProperty> resolver = new IdentityResolver();
+        private static readonly IdentityResolver resolver = new IdentityResolver();
 
         #region Methods
 
@@ -30,7 +31,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <returns>The cached identity property.</returns>
-        public static ClassProperty Get<TEntity>()
+        public static ClassProperty Get<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>()
             where TEntity : class
         {
             return Get(typeof(TEntity));
@@ -41,7 +42,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entityType">The type of the data entity.</param>
         /// <returns>The cached identity property.</returns>
-        public static ClassProperty Get(Type entityType)
+        public static ClassProperty Get([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType)
         {
             // Variables for the cache
             var key = GenerateHashCode(entityType);

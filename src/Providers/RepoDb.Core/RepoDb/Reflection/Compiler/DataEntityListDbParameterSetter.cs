@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -26,14 +27,14 @@ namespace RepoDb.Reflection
         /// <param name="dbSetting"></param>
         /// <param name="dbHelper"></param>
         /// <returns></returns>
-        internal static Action<DbCommand, IList<object>> CompileDataEntityListDbParameterSetter(Type entityType,
+        internal static Action<DbCommand, IList<object>> CompileDataEntityListDbParameterSetter([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
             int batchSize,
             IDbSetting dbSetting,
             IDbHelper dbHelper)
         {
-            var typeOfListEntity = typeof(IList<>).MakeGenericType(StaticType.Object);
+            var typeOfListEntity = typeof(IList<object>);
             var dbCommandExpression = Expression.Parameter(StaticType.DbCommand, "command");
             var entitiesParameterExpression = Expression.Parameter(typeOfListEntity, "entities");
             var fieldDirections = new List<FieldDirection>();

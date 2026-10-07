@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using Npgsql;
 using RepoDb.Enumerations;
 using RepoDb.Enumerations.PostgreSql;
@@ -44,7 +45,7 @@ namespace RepoDb
         /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
-        public static int BulkInsert<TEntity>(this DbRepository<NpgsqlConnection> repository,
+        public static int BulkInsert<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DbRepository<NpgsqlConnection> repository,
             IEnumerable<TEntity> entities,
             IEnumerable<PostgreSqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
@@ -103,7 +104,7 @@ namespace RepoDb
         /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
-        public static int BulkInsert<TEntity>(this DbRepository<NpgsqlConnection> repository,
+        public static int BulkInsert<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DbRepository<NpgsqlConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<PostgreSqlBulkInsertMapItem> mappings = null,
@@ -171,7 +172,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
-        public static async Task<int> BulkInsertAsync<TEntity>(this DbRepository<NpgsqlConnection> repository,
+        public static async Task<int> BulkInsertAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DbRepository<NpgsqlConnection> repository,
             IEnumerable<TEntity> entities,
             IEnumerable<PostgreSqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
@@ -233,7 +234,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
-        public static async Task<int> BulkInsertAsync<TEntity>(this DbRepository<NpgsqlConnection> repository,
+        public static async Task<int> BulkInsertAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DbRepository<NpgsqlConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<PostgreSqlBulkInsertMapItem> mappings = null,

@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -33,7 +34,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public int Update<TEntity>(string tableName,
+        public int Update<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -77,7 +78,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public int Update<TEntity, TWhat>(string tableName,
+        public int Update<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(string tableName,
             TEntity entity,
             TWhat what,
             IEnumerable<Field> fields = null,
@@ -122,7 +123,8 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public int Update<TEntity>(string tableName,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public int Update<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             TEntity entity,
             object what,
             IEnumerable<Field> fields = null,
@@ -167,7 +169,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public int Update<TEntity>(string tableName,
+        public int Update<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             TEntity entity,
             Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
@@ -212,7 +214,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public int Update<TEntity>(string tableName,
+        public int Update<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             TEntity entity,
             QueryField where,
             IEnumerable<Field> fields = null,
@@ -257,7 +259,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public int Update<TEntity>(string tableName,
+        public int Update<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             TEntity entity,
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
@@ -302,7 +304,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public int Update<TEntity>(string tableName,
+        public int Update<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             TEntity entity,
             QueryGroup where,
             IEnumerable<Field> fields = null,
@@ -345,7 +347,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public int Update<TEntity>(TEntity entity,
+        public int Update<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.Update,
@@ -386,7 +388,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public int Update<TEntity, TWhat>(TEntity entity,
+        public int Update<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(TEntity entity,
             TWhat what,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -428,7 +430,8 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public int Update<TEntity>(TEntity entity,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public int Update<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(TEntity entity,
             object what,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -470,7 +473,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public int Update<TEntity>(TEntity entity,
+        public int Update<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(TEntity entity,
             Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -512,7 +515,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public int Update<TEntity>(TEntity entity,
+        public int Update<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(TEntity entity,
             QueryField where,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -554,7 +557,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public int Update<TEntity>(TEntity entity,
+        public int Update<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(TEntity entity,
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -596,7 +599,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public int Update<TEntity>(TEntity entity,
+        public int Update<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(TEntity entity,
             QueryGroup where,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -643,7 +646,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public async Task<int> UpdateAsync<TEntity>(string tableName,
+        public async Task<int> UpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -690,7 +693,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public async Task<int> UpdateAsync<TEntity, TWhat>(string tableName,
+        public async Task<int> UpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(string tableName,
             TEntity entity,
             TWhat what,
             IEnumerable<Field> fields = null,
@@ -738,7 +741,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public async Task<int> UpdateAsync<TEntity>(string tableName,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public async Task<int> UpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             TEntity entity,
             object what,
             IEnumerable<Field> fields = null,
@@ -786,7 +790,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public async Task<int> UpdateAsync<TEntity>(string tableName,
+        public async Task<int> UpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             TEntity entity,
             Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
@@ -834,7 +838,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public async Task<int> UpdateAsync<TEntity>(string tableName,
+        public async Task<int> UpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             TEntity entity,
             QueryField where,
             IEnumerable<Field> fields = null,
@@ -882,7 +886,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public async Task<int> UpdateAsync<TEntity>(string tableName,
+        public async Task<int> UpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             TEntity entity,
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
@@ -930,7 +934,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public async Task<int> UpdateAsync<TEntity>(string tableName,
+        public async Task<int> UpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(string tableName,
             TEntity entity,
             QueryGroup where,
             IEnumerable<Field> fields = null,
@@ -976,7 +980,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public async Task<int> UpdateAsync<TEntity>(TEntity entity,
+        public async Task<int> UpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.Update,
@@ -1020,7 +1024,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public async Task<int> UpdateAsync<TEntity, TWhat>(TEntity entity,
+        public async Task<int> UpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity, [DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(TEntity entity,
             TWhat what,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -1065,7 +1069,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public async Task<int> UpdateAsync<TEntity>(TEntity entity,
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
+        public async Task<int> UpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(TEntity entity,
             object what,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -1110,7 +1115,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public async Task<int> UpdateAsync<TEntity>(TEntity entity,
+        public async Task<int> UpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(TEntity entity,
             Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -1155,7 +1160,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public async Task<int> UpdateAsync<TEntity>(TEntity entity,
+        public async Task<int> UpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(TEntity entity,
             QueryField where,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -1200,7 +1205,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public async Task<int> UpdateAsync<TEntity>(TEntity entity,
+        public async Task<int> UpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(TEntity entity,
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -1245,7 +1250,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public async Task<int> UpdateAsync<TEntity>(TEntity entity,
+        public async Task<int> UpdateAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(TEntity entity,
             QueryGroup where,
             IEnumerable<Field> fields = null,
             string hints = null,
@@ -1292,6 +1297,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public int Update(string tableName,
             object entity,
             IEnumerable<Field> fields = null,
@@ -1333,6 +1339,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public int Update(string tableName,
             object entity,
             object where,
@@ -1376,6 +1383,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public int Update(string tableName,
             object entity,
             QueryField where,
@@ -1419,6 +1427,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public int Update(string tableName,
             object entity,
             IEnumerable<QueryField> where,
@@ -1462,6 +1471,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public int Update(string tableName,
             object entity,
             QueryGroup where,
@@ -1509,6 +1519,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<int> UpdateAsync(string tableName,
             object entity,
             IEnumerable<Field> fields = null,
@@ -1553,6 +1564,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<int> UpdateAsync(string tableName,
             object entity,
             object where,
@@ -1599,6 +1611,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<int> UpdateAsync(string tableName,
             object entity,
             QueryField where,
@@ -1645,6 +1658,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<int> UpdateAsync(string tableName,
             object entity,
             IEnumerable<QueryField> where,
@@ -1691,6 +1705,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public async Task<int> UpdateAsync(string tableName,
             object entity,
             QueryGroup where,

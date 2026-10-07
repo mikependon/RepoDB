@@ -8,6 +8,7 @@
 
 using RepoDb.Interfaces;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Data;
 
 namespace RepoDb.Requests
@@ -24,6 +25,7 @@ namespace RepoDb.Requests
         /// <summary>
         /// Gets the type.
         /// </summary>
+        [DynamicallyAccessedMembers(Trimming.Entity)]
         public Type Type { get; internal set; }
 
         /// <summary>

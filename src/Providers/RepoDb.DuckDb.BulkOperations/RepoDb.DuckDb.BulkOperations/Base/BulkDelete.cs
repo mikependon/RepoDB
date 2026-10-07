@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using DuckDB.NET.Data;
 using RepoDb.Enumerations.DuckDb;
 using RepoDb.Exceptions;
@@ -45,7 +46,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BulkDeleteBase<TEntity>(this DuckDBConnection connection,
+        private static int BulkDeleteBase<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DuckDBConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -277,7 +278,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkDeleteBaseAsync<TEntity>(this DuckDBConnection connection,
+        private static async Task<int> BulkDeleteBaseAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this DuckDBConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -526,7 +527,7 @@ namespace RepoDb
         /// <param name="fields"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        private static DataTable BuildEntityDataTable<TEntity>(IList<TEntity> entities,
+        private static DataTable BuildEntityDataTable<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(IList<TEntity> entities,
             IList<Field> fields = null)
             where TEntity : class
         {
@@ -536,7 +537,7 @@ namespace RepoDb
             }
 
             var entityType = typeof(TEntity) == typeof(object)
-                ? (entities.FirstOrDefault()?.GetType() ?? typeof(TEntity))
+                ? DbConnectionExtension.GetEntityType<TEntity>(entities.FirstOrDefault())
                 : typeof(TEntity);
             var isDictionaryStringObject = TypeCache.Get(entityType).IsDictionaryStringObject();
             fields ??= GetEntityFieldsForWrite(entityType, entities, isDictionaryStringObject);
@@ -560,7 +561,7 @@ namespace RepoDb
                     .Select(row => row[i])
                     .FirstOrDefault(value => value != null && value != DBNull.Value)?
                     .GetType() ?? typeof(object);
-                table.Columns.Add(columns[i].Field.Name, columnType);
+                table.AddColumn(columns[i].Field.Name, columnType);
             }
 
             foreach (var rowValues in rows)
@@ -583,7 +584,7 @@ namespace RepoDb
         /// <param name="entities"></param>
         /// <param name="isDictionaryStringObject"></param>
         /// <returns></returns>
-        private static IList<Field> GetEntityFieldsForWrite(Type entityType,
+        private static IList<Field> GetEntityFieldsForWrite([DynamicallyAccessedMembers(Trimming.Entity)] Type entityType,
             IEnumerable<object> entities,
             bool isDictionaryStringObject)
         {
@@ -633,7 +634,7 @@ namespace RepoDb
             if (handler != null)
             {
                 var options = PropertyHandlerSetOptions.Create(null, property);
-                return ((dynamic)handler).Set((dynamic)rawValue, options) ?? (object)DBNull.Value;
+                return Reflection.Compiler.GetPropertyHandlerSetMethod(handler).Invoke(handler, new[] { rawValue, options }) ?? DBNull.Value;
             }
 
             return rawValue;
@@ -649,7 +650,7 @@ namespace RepoDb
             IEnumerable<object> keyValues)
         {
             var table = new DataTable();
-            table.Columns.Add(qualifierField.Name, qualifierField.Type ?? typeof(object));
+            table.AddColumn(qualifierField.Name, qualifierField.Type ?? typeof(object));
 
             foreach (var keyValue in keyValues)
             {

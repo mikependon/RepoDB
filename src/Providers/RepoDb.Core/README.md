@@ -141,3 +141,7 @@ using (var connection = new SqlConnection(ConnectionString))
 ```
 
 Visit the [get-started](http://repodb.net/tutorial/get-started-sqlserver) page for the full SQL Server guide.
+
+## NativeAOT and Trimming
+
+RepoDB is compatible with trimming and NativeAOT. The generic and lambda expression based operations (i.e.: `Query<T>(e => e.Id == id)`, `Insert<T>(entity)`) are fully supported. The operations that accept an untyped `object` argument (i.e.: an anonymous type passed as the `param` of `ExecuteQuery`) are annotated with `RequiresUnreferencedCode`, as the properties of the anonymous types are trimmed; pass a `Dictionary<string, object>` instead. See the [limitations](https://github.com/mikependon/RepoDB/blob/master/LIMITATIONS.md#nativeaot-and-trimming) page for the details.

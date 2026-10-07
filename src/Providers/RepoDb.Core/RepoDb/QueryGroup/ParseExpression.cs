@@ -7,6 +7,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -54,7 +55,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The target entity type</typeparam>
         /// <param name="expression">The expression to be converted to a <see cref="QueryGroup"/> object.</param>
         /// <returns>An instance of the <see cref="QueryGroup"/> object that contains the parsed query expression.</returns>
-        public static QueryGroup Parse<TEntity>(Expression<Func<TEntity, bool>> expression)
+        public static QueryGroup Parse<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression<Func<TEntity, bool>> expression)
             where TEntity : class
         {
             // Guard the presence of the expression
@@ -87,7 +88,7 @@ namespace RepoDb
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="expression"></param>
         /// <returns></returns>
-        private static QueryGroup Parse<TEntity>(Expression expression)
+        private static QueryGroup Parse<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(Expression expression)
             where TEntity : class
         {
             return expression switch
@@ -110,7 +111,7 @@ namespace RepoDb
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="expression"></param>
         /// <returns></returns>
-        private static QueryGroup Parse<TEntity>(BinaryExpression expression)
+        private static QueryGroup Parse<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(BinaryExpression expression)
             where TEntity : class
         {
             // Check directness
@@ -153,7 +154,7 @@ namespace RepoDb
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="expression"></param>
         /// <returns></returns>
-        private static QueryGroup Parse<TEntity>(UnaryExpression expression)
+        private static QueryGroup Parse<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(UnaryExpression expression)
             where TEntity : class
         {
             if (expression.NodeType == ExpressionType.Not || expression.NodeType == ExpressionType.Convert)
@@ -192,7 +193,7 @@ namespace RepoDb
         /// <param name="expression"></param>
         /// <param name="unaryNodeType"></param>
         /// <returns></returns>
-        private static QueryGroup Parse<TEntity>(MemberExpression expression,
+        private static QueryGroup Parse<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(MemberExpression expression,
             ExpressionType? unaryNodeType = null)
             where TEntity : class
         {
@@ -210,7 +211,7 @@ namespace RepoDb
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="expression"></param>
         /// <returns></returns>
-        private static QueryGroup Parse<TEntity>(MethodCallExpression expression)
+        private static QueryGroup Parse<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(MethodCallExpression expression)
             where TEntity : class
         {
             var unaryNodeType = (expression?.Object?.Type == StaticType.String) ? GetNodeType(expression.Object.ToMember()) :
@@ -225,7 +226,7 @@ namespace RepoDb
         /// <param name="expression"></param>
         /// <param name="unaryNodeType"></param>
         /// <returns></returns>
-        private static QueryGroup Parse<TEntity>(MethodCallExpression expression,
+        private static QueryGroup Parse<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(MethodCallExpression expression,
             ExpressionType? unaryNodeType = null)
             where TEntity : class
         {

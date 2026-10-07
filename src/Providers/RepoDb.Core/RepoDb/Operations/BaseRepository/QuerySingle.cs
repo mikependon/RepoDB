@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -36,6 +37,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public TEntity QuerySingle(string tableName,
             object what,
             IEnumerable<Field> fields = null,
@@ -75,7 +77,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public TEntity QuerySingle<TWhat>(string tableName,
+        public TEntity QuerySingle<[DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(string tableName,
             TWhat what,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -264,6 +266,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public TEntity QuerySingle(object what,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -300,7 +303,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public TEntity QuerySingle<TWhat>(TWhat what,
+        public TEntity QuerySingle<[DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(TWhat what,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -481,6 +484,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Task<TEntity> QuerySingleAsync(string tableName,
             object what,
             IEnumerable<Field> fields = null,
@@ -523,7 +527,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public Task<TEntity> QuerySingleAsync<TWhat>(string tableName,
+        public Task<TEntity> QuerySingleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(string tableName,
             TWhat what,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -727,6 +731,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
+        [RequiresUnreferencedCode(Trimming.ObjectReflectionMessage)]
         public Task<TEntity> QuerySingleAsync(object what,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -766,7 +771,7 @@ namespace RepoDb
         /// An <see cref="EmptyException"/> is thrown if the query did not return any row.
         /// A <see cref="MultipleRowsFoundException"/> is thrown if the query returned more than one row.
         /// </remarks>
-        public Task<TEntity> QuerySingleAsync<TWhat>(TWhat what,
+        public Task<TEntity> QuerySingleAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TWhat>(TWhat what,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
