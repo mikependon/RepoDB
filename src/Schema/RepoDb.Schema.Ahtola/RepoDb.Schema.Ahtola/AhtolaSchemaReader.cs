@@ -6,6 +6,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -439,6 +440,7 @@ namespace RepoDb.Schema
         /// <param name="map"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "The parameter object passed to the RepoDB execute methods is either null or a Dictionary<string, object>, which is not reflected.")]
         private IList<T> Query<T>(string sql,
             string traceKey,
             Func<IDataRecord, T> map,
@@ -468,6 +470,7 @@ namespace RepoDb.Schema
         /// <param name="cancellationToken"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "The parameter object passed to the RepoDB execute methods is either null or a Dictionary<string, object>, which is not reflected.")]
         private async Task<IList<T>> QueryAsync<T>(string sql,
             string traceKey,
             Func<IDataRecord, T> map,

@@ -109,6 +109,8 @@
     <InternalsVisibleTo Include="RepoDb.Schema.AuroraDbMySqlConnector" />
     <InternalsVisibleTo Include="RepoDb.Schema.AuroraDbPostgreSql" />
     <InternalsVisibleTo Include="RepoDb.Schema.ClickHouse" />
+    <InternalsVisibleTo Include="RepoDb.Schema.Ahtola" />
+    <InternalsVisibleTo Include="RepoDb.Schema.Turso" />
     <InternalsVisibleTo Include="RepoDb.SqlServer" />
     <InternalsVisibleTo Include="RepoDb.Sqlite.Microsoft" />
     <InternalsVisibleTo Include="RepoDb.Telemetry.Core" />
