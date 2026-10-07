@@ -1,0 +1,13 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="../../Providers/RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="../../Providers/RepoDb.AuroraDb.MySqlConnector/RepoDb.AuroraDb.MySqlConnector/RepoDb.AuroraDb.MySqlConnector.csproj" />
+  <Project Path="../RepoDb.Schema.Core/RepoDb.Schema.Core/RepoDb.Schema.Core.csproj" />
+  <Project Path="RepoDb.Schema.AuroraDbMySqlConnector/RepoDb.Schema.AuroraDbMySqlConnector.csproj" />
+  <Project Path="RepoDb.Schema.AuroraDbMySqlConnector.UnitTests/RepoDb.Schema.AuroraDbMySqlConnector.UnitTests.csproj" />
+  <Project Path="RepoDb.Schema.AuroraDbMySqlConnector.IntegrationTests/RepoDb.Schema.AuroraDbMySqlConnector.IntegrationTests.csproj" />
+</Solution>
