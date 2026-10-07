@@ -1,0 +1,13 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="../../Providers/RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="../../Providers/RepoDb.Sqlite.Turso/RepoDb.Sqlite.Turso/RepoDb.Sqlite.Turso.csproj" />
+  <Project Path="../RepoDb.Schema.Core/RepoDb.Schema.Core/RepoDb.Schema.Core.csproj" />
+  <Project Path="RepoDb.Schema.Turso/RepoDb.Schema.Turso.csproj" />
+  <Project Path="RepoDb.Schema.Turso.UnitTests/RepoDb.Schema.Turso.UnitTests.csproj" />
+  <Project Path="RepoDb.Schema.Turso.IntegrationTests/RepoDb.Schema.Turso.IntegrationTests.csproj" />
+</Solution>
