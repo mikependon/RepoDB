@@ -56,8 +56,8 @@ Read more about this through this [article](https://blogs.repodb.net/posts/2026/
 
 Fluent operations (Query, Insert, Merge, Delete, Update, and [more](http://repodb.net/operation)), batches and bulks are supported for DB providers mentioned below. Choose your database and follow the quick-start guide:
 
-- [AuroraDB (MySQL)](http://repodb.net/tutorial/get-started-auroradb-mysqlconnector)
-- [AuroraDB (PostgreSQL)](http://repodb.net/tutorial/get-started-auroradb-postgresql)
+- [AuroraDB for MySQL](http://repodb.net/tutorial/get-started-auroradb-mysqlconnector)
+- [AuroraDB for PostgreSQL](http://repodb.net/tutorial/get-started-auroradb-postgresql)
 - [ClickHouse](http://repodb.net/tutorial/get-started-clickhouse)
 - [CockroachDB](http://repodb.net/tutorial/get-started-cockroachdb)
 - [DB2](http://repodb.net/tutorial/get-started-db2)
@@ -70,8 +70,7 @@ Fluent operations (Query, Insert, Merge, Delete, Update, and [more](http://repod
 - [PostgreSQL](http://repodb.net/tutorial/get-started-postgresql)
 - [SAP HANA](http://repodb.net/tutorial/get-started-saphana)
 - [SQL Server](http://repodb.net/tutorial/get-started-sqlserver)
-- [SQLite](http://repodb.net/tutorial/get-started-sqlite)
-- [Turso](src/Providers/RepoDb.Sqlite.Turso)
+- [SQLite (Ahtola)](http://repodb.net/tutorial/get-started-sqlite) / [SQLite (Microsoft)](http://repodb.net/tutorial/get-started-sqlite) / [SQLite (Turso)](http://repodb.net/tutorial/get-started-sqlite)
 - [Vertica](http://repodb.net/tutorial/get-started-vertica)
 
 While raw SQL execution methods work with **any** ADO.NET-compatible provider:
