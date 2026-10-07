@@ -12,9 +12,9 @@ using System.ComponentModel;
 using System.Data;
 using BenchmarkDotNet.Attributes;
 using RepoDb.Benchmarks.Core.Models;
-using RepoDb.Benchmarks.Sqlite.Ahtola.PropertyHandlers;
+using RepoDb.Benchmarks.Sqlite.Turso.PropertyHandlers;
 
-namespace RepoDb.Benchmarks.Sqlite.Ahtola.RepoDb
+namespace RepoDb.Benchmarks.Sqlite.Turso.RepoDb
 {
     [Description("RepoDB")]
     public class RepoDbBaseBenchmarks : SqliteBenchmark
@@ -22,7 +22,7 @@ namespace RepoDb.Benchmarks.Sqlite.Ahtola.RepoDb
         [GlobalSetup]
         public void Setup()
         {
-            GlobalConfiguration.Setup().UseAhtola();
+            GlobalConfiguration.Setup().UseTurso();
             TypeMapper.Add(typeof(DateTime), DbType.DateTime2, true);
             PropertyHandlerMapper.Add(typeof(DateTime), new SqliteDateTimePropertyHandler(), true);
             BaseSetup();

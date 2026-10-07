@@ -9,13 +9,11 @@
 
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Engines;
-using Dapper;
-using Dapper.Contrib.Extensions;
 using RepoDb.Benchmarks.Core.Models;
 
-namespace RepoDb.Benchmarks.Sqlite.Ahtola.Dapper
+namespace RepoDb.Benchmarks.Sqlite.Turso.RepoDb
 {
-    public class GetAllDapperBenchmarks : DapperBaseBenchmarks
+    public class GetAllRepoDbBenchmarks : RepoDbBaseBenchmarks
     {
         private readonly Consumer consumer = new();
 
@@ -23,19 +21,19 @@ namespace RepoDb.Benchmarks.Sqlite.Ahtola.Dapper
         public int Rows { get; set; }
 
         [Benchmark]
-        public void GetAll()
+        public void QueryAll()
         {
-            using var connection = GetConnection();
+            using var connection = GetConnection().EnsureOpen();
 
-            connection.GetAll<Person>().Consume(consumer);
+            connection.QueryAll<Person>().Consume(consumer);
         }
 
         [Benchmark]
-        public void QueryAll()
+        public void ExecuteQueryAll()
         {
-            using var connection = GetConnection();
+            using var connection = GetConnection().EnsureOpen();
 
-            connection.Query<Person>("select * from Person", buffered: true).Consume(consumer);
+            connection.ExecuteQuery<Person>("select * from Person").Consume(consumer);
         }
     }
 }

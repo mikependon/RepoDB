@@ -12,9 +12,9 @@ using System.Collections.Generic;
 using BenchmarkDotNet.Attributes;
 using RepoDb.Benchmarks.Core.Models;
 
-namespace RepoDb.Benchmarks.Sqlite.Ahtola.RepoDb
+namespace RepoDb.Benchmarks.Sqlite.Turso.RepoDb
 {
-    // No RepoDb.Sqlite.Ahtola.BulkOperations package exists - SQLite has no server-side bulk-copy
+    // No RepoDb.Sqlite.Turso.BulkOperations package exists - SQLite has no server-side bulk-copy
     // protocol to wrap, so unlike the other providers in this suite, only the plain InsertAll benchmark
     // is exercised here.
     public class InsertAllRepoDbBenchmarks : RepoDbBaseBenchmarks

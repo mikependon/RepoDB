@@ -1,10 +1,10 @@
-# 🪶 RepoDb.Benchmarks.Ahtola
+# 🪶 RepoDb.Benchmarks.Sqlite.Ahtola
 
 Benchmarks for RepoDB (and Dapper, as a reference micro-ORM) on [Ahtola](https://www.nuget.org/packages/Devolutions.Ahtola.Data.Sqlite), a pure-managed, SQLite-compatible engine exposed through a `Microsoft.Data.Sqlite`-style ADO.NET facade (`Ahtola.Data.Sqlite`). It mirrors [RepoDb.Benchmarks.Sqlite.Microsoft](../RepoDb.Benchmarks.Sqlite.Microsoft) one-to-one (same schema, dataset, operations and configuration) so the two result sets can be compared directly. See the [main Benchmarks README](../README.md) for the full methodology.
 
 ## ❓ Why this Benchmark?
 
-To quantify the cost/benefit of swapping the native SQLite engine (via `Microsoft.Data.Sqlite`) for the fully-managed Ahtola engine when using [RepoDb.Ahtola](../../Providers/RepoDb.Ahtola).
+To quantify the cost/benefit of swapping the native SQLite engine (via `Microsoft.Data.Sqlite`) for the fully-managed Ahtola engine when using [RepoDb.Sqlite.Ahtola](../../Providers/RepoDb.Sqlite.Ahtola).
 
 Entity Framework Core and Linq2Db are not included: neither ships a provider for the Ahtola client library.
 
@@ -13,7 +13,7 @@ Entity Framework Core and Linq2Db are not included: neither ships a provider for
 1. Run the benchmark project in `Release` configuration:
 
    ```bash
-   cd src/Benchmarks/RepoDb.Benchmarks.Ahtola
+   cd src/Benchmarks/RepoDb.Benchmarks.Sqlite.Ahtola
    dotnet run -c Release
    ```
 
@@ -21,7 +21,7 @@ Entity Framework Core and Linq2Db are not included: neither ships a provider for
 
 > ⚠️ Always run in `Release` configuration — Debug builds produce misleading results.
 
-By default, the benchmark uses a `RepoDb.Ahtola.db` file created next to the compiled binaries (connection string `Data Source=<path>;Local Provider=Managed;`). Any leftover file is deleted at startup. To target a different database, set:
+By default, the benchmark uses a `RepoDb.Sqlite.Ahtola.db` file created next to the compiled binaries (connection string `Data Source=<path>;Local Provider=Managed;`). Any leftover file is deleted at startup. To target a different database, set:
 
 ```bash
 export REPODB_CONSTR="Data Source=/path/to/your.db;Local Provider=Managed;"

@@ -5,7 +5,7 @@ Providers compared:
 | Project | ADO.NET driver | RepoDB provider |
 |---|---|---|
 | `RepoDb.Benchmarks.Sqlite.Microsoft` | `Microsoft.Data.Sqlite` (native `e_sqlite3`) | `RepoDb.Sqlite.Microsoft` |
-| `RepoDb.Benchmarks.Ahtola` | `Devolutions.Ahtola.Data.Sqlite` 0.9.0 (`Local Provider=Managed`) | `RepoDb.Ahtola` |
+| `RepoDb.Benchmarks.Sqlite.Ahtola` | `Devolutions.Ahtola.Data.Sqlite` 0.9.0 (`Local Provider=Managed`) | `RepoDb.Sqlite.Ahtola` |
 
 Both use the same on-disk schema, seed data (5004 `Person` rows) and benchmark code.
 
@@ -72,7 +72,7 @@ Allocations follow the same pattern. For example, RepoDB `UpdateAll(1000)` alloc
 
 ## Takeaways
 
-* `RepoDb.Ahtola` is **functionally complete**: 680/680 integration tests and 103/103 unit tests pass.
+* `RepoDb.Sqlite.Ahtola` is **functionally complete**: 680/680 integration tests and 103/103 unit tests pass.
 * For **read-mostly workloads through RepoDB's typed materializer**, Ahtola is within about 2× of native SQLite.
 * For **write-heavy workloads**, or code paths that use `GetValue` (Dapper, `ExecuteReader` +
   `GetValue`, `dynamic` results), Ahtola 0.9.0 is orders of magnitude slower. Improving

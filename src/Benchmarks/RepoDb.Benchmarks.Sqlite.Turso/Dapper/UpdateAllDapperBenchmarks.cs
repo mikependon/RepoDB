@@ -15,7 +15,7 @@ using Dapper;
 using Dapper.Contrib.Extensions;
 using RepoDb.Benchmarks.Core.Models;
 
-namespace RepoDb.Benchmarks.Sqlite.Ahtola.Dapper
+namespace RepoDb.Benchmarks.Sqlite.Turso.Dapper
 {
     public class UpdateAllDapperBenchmarks : DapperBaseBenchmarks
     {

@@ -9,11 +9,11 @@
 
 using System.Data;
 using BenchmarkDotNet.Attributes;
-using Ahtola.Data.Sqlite;
+using Turso.Data.Sqlite;
 using RepoDb.Benchmarks.Core;
-using RepoDb.Benchmarks.Sqlite.Ahtola.Setup;
+using RepoDb.Benchmarks.Sqlite.Turso.Setup;
 
-namespace RepoDb.Benchmarks.Sqlite.Ahtola
+namespace RepoDb.Benchmarks.Sqlite.Turso
 {
     public abstract class SqliteBenchmark : BaseBenchmark
     {

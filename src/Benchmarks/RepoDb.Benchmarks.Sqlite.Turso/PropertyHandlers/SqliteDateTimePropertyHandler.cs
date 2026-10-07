@@ -12,7 +12,7 @@ using System.Globalization;
 using RepoDb.Interfaces;
 using RepoDb.Options;
 
-namespace RepoDb.Benchmarks.Sqlite.Ahtola.PropertyHandlers
+namespace RepoDb.Benchmarks.Sqlite.Turso.PropertyHandlers
 {
     // SQLite has no native date/time storage class - Microsoft.Data.Sqlite stores DATETIME columns as
     // plain TEXT and, unlike EF Core's or linq2db's own SQLite providers, does not convert them back to

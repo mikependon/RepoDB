@@ -7,35 +7,42 @@
 
 #endregion
 
+using System.Linq;
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Engines;
 using Dapper;
-using Dapper.Contrib.Extensions;
 using RepoDb.Benchmarks.Core.Models;
 
-namespace RepoDb.Benchmarks.Sqlite.Ahtola.Dapper
+namespace RepoDb.Benchmarks.Sqlite.Turso.Dapper
 {
-    public class GetAllDapperBenchmarks : DapperBaseBenchmarks
+    public class GetFirstDapperBenchmarks : DapperBaseBenchmarks
     {
-        private readonly Consumer consumer = new();
-
-        [Params(ElementsCount)]
+        [Params(1)]
         public int Rows { get; set; }
 
         [Benchmark]
-        public void GetAll()
+        public Person QueryFirst()
         {
             using var connection = GetConnection();
 
-            connection.GetAll<Person>().Consume(consumer);
+            var param = new
+            {
+                Id = CurrentId
+            };
+
+            return SqlMapper.QueryFirst<Person>(connection, "select * from Person where Id = @Id", param);
         }
 
         [Benchmark]
-        public void QueryAll()
+        public Person QueryLinqFirst()
         {
             using var connection = GetConnection();
 
-            connection.Query<Person>("select * from Person", buffered: true).Consume(consumer);
+            var param = new
+            {
+                Id = CurrentId
+            };
+
+            return connection.Query<Person>("select * from Person where Id = @Id", param, buffered: true).First();
         }
     }
 }

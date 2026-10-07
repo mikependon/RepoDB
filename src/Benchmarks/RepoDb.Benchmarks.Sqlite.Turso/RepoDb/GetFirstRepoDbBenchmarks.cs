@@ -11,7 +11,7 @@ using System.Linq;
 using BenchmarkDotNet.Attributes;
 using RepoDb.Benchmarks.Core.Models;
 
-namespace RepoDb.Benchmarks.Sqlite.Ahtola.RepoDb
+namespace RepoDb.Benchmarks.Sqlite.Turso.RepoDb
 {
     public class GetFirstRepoDbBenchmarks : RepoDbBaseBenchmarks
     {

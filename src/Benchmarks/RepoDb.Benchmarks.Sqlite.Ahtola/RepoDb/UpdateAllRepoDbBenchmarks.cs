@@ -13,7 +13,7 @@ using System.Linq;
 using BenchmarkDotNet.Attributes;
 using RepoDb.Benchmarks.Core.Models;
 
-namespace RepoDb.Benchmarks.Ahtola.RepoDb
+namespace RepoDb.Benchmarks.Sqlite.Ahtola.RepoDb
 {
     public class UpdateAllRepoDbBenchmarks : RepoDbBaseBenchmarks
     {

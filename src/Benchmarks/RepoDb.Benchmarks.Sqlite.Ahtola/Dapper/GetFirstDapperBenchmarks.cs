@@ -12,7 +12,7 @@ using BenchmarkDotNet.Attributes;
 using Dapper;
 using RepoDb.Benchmarks.Core.Models;
 
-namespace RepoDb.Benchmarks.Ahtola.Dapper
+namespace RepoDb.Benchmarks.Sqlite.Ahtola.Dapper
 {
     public class GetFirstDapperBenchmarks : DapperBaseBenchmarks
     {

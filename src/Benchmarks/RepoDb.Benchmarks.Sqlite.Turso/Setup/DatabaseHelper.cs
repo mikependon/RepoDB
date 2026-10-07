@@ -9,9 +9,9 @@
 
 using System;
 using System.IO;
-using Ahtola.Data.Sqlite;
+using Turso.Data.Sqlite;
 
-namespace RepoDb.Benchmarks.Sqlite.Ahtola.Setup
+namespace RepoDb.Benchmarks.Sqlite.Turso.Setup
 {
     public static class DatabaseHelper
     {
@@ -24,8 +24,8 @@ namespace RepoDb.Benchmarks.Sqlite.Ahtola.Setup
             // SQLite is a serverless, file-based database - there is no host/port/server to connect to,
             // so unlike every other benchmark in this suite, the default connection string points at a
             // local file next to the compiled benchmark instead of a Docker container.
-            var defaultDatabasePath = Path.Combine(AppContext.BaseDirectory, "RepoDb.Sqlite.Ahtola.db");
-            ConnectionString = connectionString ?? $"Data Source={defaultDatabasePath};Local Provider=Managed;";
+            var defaultDatabasePath = Path.Combine(AppContext.BaseDirectory, "RepoDb.Sqlite.Turso.db");
+            ConnectionString = connectionString ?? $"Data Source={defaultDatabasePath};";
 
             // Delete any leftover file from a previous run so every run starts from a clean slate -
             // there is no server-side DROP/RECREATE to reach for, the database is just a file.

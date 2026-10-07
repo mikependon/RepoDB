@@ -11,14 +11,14 @@ using System.Reflection;
 using BenchmarkDotNet.Running;
 using RepoDb.Benchmarks.Core.Configurations;
 
-namespace RepoDb.Benchmarks.Sqlite.Ahtola
+namespace RepoDb.Benchmarks.Sqlite.Turso
 {
     internal static class Program
     {
         private static void Main(string[] args)
         {
             var switcher = new BenchmarkSwitcher(Assembly.GetExecutingAssembly());
-            switcher.Run(args, new BenchmarkConfigWitRows("Ahtola (Devolutions.Ahtola.Data.Sqlite)"));
+            switcher.Run(args, new BenchmarkConfigWitRows("Turso (Turso.Data.Sqlite.Provider)"));
         }
     }
 }

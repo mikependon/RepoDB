@@ -54,6 +54,7 @@ Each supported database provider has its own dedicated benchmark project. This l
 | 🐘 PostgreSQL | [RepoDb.Benchmarks.PostgreSql](RepoDb.Benchmarks.PostgreSql) | ✅ Available |
 | 🏢 SAP HANA | [RepoDb.Benchmarks.SapHana](RepoDb.Benchmarks.SapHana) | ✅ Available |
 | 🪶 SQLite (Microsoft.Data.Sqlite) | [RepoDb.Benchmarks.Sqlite.Microsoft](RepoDb.Benchmarks.Sqlite.Microsoft) | ✅ Available |
+| 🪶 Turso (Turso.Data.Sqlite.Provider) | [RepoDb.Benchmarks.Sqlite.Turso](RepoDb.Benchmarks.Sqlite.Turso) | ✅ Available |
 | 🟦 SQL Server | [RepoDb.Benchmarks.SqlServer](RepoDb.Benchmarks.SqlServer) | ✅ Available |
 | 🔻 Vertica | [RepoDb.Benchmarks.Vertica](RepoDb.Benchmarks.Vertica) | ✅ Available |
 | ⚙️ Shared infrastructure | [RepoDb.Benchmarks.Core](RepoDb.Benchmarks.Core) | Common models, base classes, and configurations shared across all providers |

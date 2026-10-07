@@ -119,9 +119,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.DuckDb", "..\Provide
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.DuckDb.BulkOperations", "..\Providers\RepoDb.DuckDb.BulkOperations\RepoDb.DuckDb.BulkOperations\RepoDb.DuckDb.BulkOperations.csproj", "{835C61CF-B4DD-44DD-9FBD-444F43B6B8A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Benchmarks.Ahtola", "RepoDb.Benchmarks.Ahtola\RepoDb.Benchmarks.Ahtola.csproj", "{28208CD3-0D66-445B-A00F-1AE9DF2183C0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Benchmarks.Sqlite.Ahtola", "RepoDb.Benchmarks.Sqlite.Ahtola\RepoDb.Benchmarks.Sqlite.Ahtola.csproj", "{28208CD3-0D66-445B-A00F-1AE9DF2183C0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Sqlite.Ahtola", "..\Providers\RepoDb.Sqlite.Ahtola\RepoDb.Sqlite.Ahtola\RepoDb.Sqlite.Ahtola.csproj", "{09EFD3B9-1A03-4E83-BF10-CEDA46F0DA2F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Benchmarks.Sqlite.Turso", "RepoDb.Benchmarks.Sqlite.Turso\RepoDb.Benchmarks.Sqlite.Turso.csproj", "{3A7BEA82-DF5C-48AE-AC98-49311F7805C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Sqlite.Turso", "..\Providers\RepoDb.Sqlite.Turso\RepoDb.Sqlite.Turso\RepoDb.Sqlite.Turso.csproj", "{B133710E-3396-412E-BF9C-0FCF6E85D74F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -817,6 +821,30 @@ Global
 		{09EFD3B9-1A03-4E83-BF10-CEDA46F0DA2F}.Release|x64.Build.0 = Release|Any CPU
 		{09EFD3B9-1A03-4E83-BF10-CEDA46F0DA2F}.Release|x86.ActiveCfg = Release|Any CPU
 		{09EFD3B9-1A03-4E83-BF10-CEDA46F0DA2F}.Release|x86.Build.0 = Release|Any CPU
+		{3A7BEA82-DF5C-48AE-AC98-49311F7805C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A7BEA82-DF5C-48AE-AC98-49311F7805C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A7BEA82-DF5C-48AE-AC98-49311F7805C1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3A7BEA82-DF5C-48AE-AC98-49311F7805C1}.Debug|x64.Build.0 = Debug|Any CPU
+		{3A7BEA82-DF5C-48AE-AC98-49311F7805C1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3A7BEA82-DF5C-48AE-AC98-49311F7805C1}.Debug|x86.Build.0 = Debug|Any CPU
+		{3A7BEA82-DF5C-48AE-AC98-49311F7805C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A7BEA82-DF5C-48AE-AC98-49311F7805C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A7BEA82-DF5C-48AE-AC98-49311F7805C1}.Release|x64.ActiveCfg = Release|Any CPU
+		{3A7BEA82-DF5C-48AE-AC98-49311F7805C1}.Release|x64.Build.0 = Release|Any CPU
+		{3A7BEA82-DF5C-48AE-AC98-49311F7805C1}.Release|x86.ActiveCfg = Release|Any CPU
+		{3A7BEA82-DF5C-48AE-AC98-49311F7805C1}.Release|x86.Build.0 = Release|Any CPU
+		{B133710E-3396-412E-BF9C-0FCF6E85D74F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B133710E-3396-412E-BF9C-0FCF6E85D74F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B133710E-3396-412E-BF9C-0FCF6E85D74F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B133710E-3396-412E-BF9C-0FCF6E85D74F}.Debug|x64.Build.0 = Debug|Any CPU
+		{B133710E-3396-412E-BF9C-0FCF6E85D74F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B133710E-3396-412E-BF9C-0FCF6E85D74F}.Debug|x86.Build.0 = Debug|Any CPU
+		{B133710E-3396-412E-BF9C-0FCF6E85D74F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B133710E-3396-412E-BF9C-0FCF6E85D74F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B133710E-3396-412E-BF9C-0FCF6E85D74F}.Release|x64.ActiveCfg = Release|Any CPU
+		{B133710E-3396-412E-BF9C-0FCF6E85D74F}.Release|x64.Build.0 = Release|Any CPU
+		{B133710E-3396-412E-BF9C-0FCF6E85D74F}.Release|x86.ActiveCfg = Release|Any CPU
+		{B133710E-3396-412E-BF9C-0FCF6E85D74F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
