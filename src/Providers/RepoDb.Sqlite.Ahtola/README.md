@@ -1,20 +1,22 @@
 <div align="center">
-    <a href="https://github.com/Devolutions/ahtola"><image src="SQLite.png" style="width:256px;" /></a>
+    <a href="https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.Sqlite.Ahtola"><image src="SQLite.png" style="width:256px;" /></a>
     <br/>
-    <span style="font-size:28px;font-weight:bold;"><strong>RepoDb.Sqlite.Ahtola</strong></span>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.Sqlite.Ahtola"><strong>RepoDb.Sqlite.Ahtola</strong></a></span>
     <br/>
-    <span style="font-size:16px;">RepoDB for Ahtola, a pure managed (C#) SQLite-compatible engine.</span>
+    <span style="font-size:16px;">A high-performance data productivity platform for Ahtola (SQLite-compatible) in .NET.</span>
 </div>
 
 -----
 
-# RepoDb.Sqlite.Ahtola — RepoDB for Ahtola (Devolutions.Ahtola.Data.Sqlite)
+<br/>
 
-The [Ahtola](https://github.com/Devolutions/ahtola) provider for RepoDB — a fast, lightweight .NET ORM that lets you use raw SQL and fluent operations side by side on the same connection. Built on top of [RepoDb](https://repodb.net) and [Devolutions.Ahtola.Data.Sqlite](https://www.nuget.org/packages/Devolutions.Ahtola.Data.Sqlite), a pure managed port of Turso's SQLite-compatible engine (no native SQLite library required).
+[![SqLiteAhtolaBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlite-ahtola.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlite-ahtola.yml)
+[![SqLiteAhtolaHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
+[![SqLiteAhtolaVersion](https://img.shields.io/nuget/v/RepoDb.Sqlite.Ahtola?&logo=nuget)](https://www.nuget.org/packages/RepoDb.Sqlite.Ahtola)
 
-This provider is a copy of `RepoDb.Sqlite.Microsoft` re-targeted at Ahtola's `Microsoft.Data.Sqlite`-compatible facade (`Ahtola.Data.Sqlite.SqliteConnection`). The provider types are prefixed with `Ahtola` so both providers can be loaded side by side in the same process.
+# [RepoDb.Sqlite.Ahtola](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.Sqlite.Ahtola) — RepoDB for Ahtola (Devolutions.Ahtola.Data.Sqlite)
 
-> ⚠️ Ahtola is an experimental engine and is not production-ready. Targets `net8.0`, `net9.0` and `net10.0` only.
+The Ahtola provider for RepoDB — a fast, lightweight .NET ORM that lets you use raw SQL and fluent operations side by side on the same connection. Built on top of [RepoDb](https://repodb.net) and [Devolutions.Ahtola.Data.Sqlite](https://www.nuget.org/packages/Devolutions.Ahtola.Data.Sqlite).
 
 ## Important Pages
 
@@ -30,7 +32,7 @@ This provider is a copy of `RepoDb.Sqlite.Microsoft` re-targeted at Ahtola's `Mi
 
 ## Dependencies
 
-- [Devolutions.Ahtola.Data.Sqlite](https://www.nuget.org/packages/Devolutions.Ahtola.Data.Sqlite/) — Ahtola ADO.NET data provider.
+- [Devolutions.Ahtola.Data.Sqlite](https://www.nuget.org/packages/Devolutions.Ahtola.Data.Sqlite/) — Ahtola data provider.
 - [RepoDb](https://www.nuget.org/packages/RepoDb/) — the RepoDB core library.
 
 ## License
@@ -39,12 +41,6 @@ This provider is a copy of `RepoDb.Sqlite.Microsoft` re-targeted at Ahtola's `Mi
 
 --------
 
-## Known Differences from Microsoft.Data.Sqlite
-
-- **NUMERIC/DECIMAL column field types** — Ahtola's `SqliteDataReader.GetFieldType()` reports `System.String` for columns declared as `NUMERIC`/`DECIMAL` (or any unrecognized declared type), while `GetValue()` returns a `double`. RepoDB core handles this by converting string-typed reader fields into numeric target properties using the invariant culture.
-- **Multi-statement `ExecuteNonQuery`** — for `DELETE ...; VACUUM;` Ahtola returns only the rows affected by the `DELETE` (native SQLite carries the previous change count over `VACUUM`, doubling it).
-- **Truly asynchronous operations** — async methods may resume on a different thread, so wrap async work in `new TransactionScope(TransactionScopeAsyncFlowOption.Enabled)`.
-- **Performance** — Ahtola is fully managed (no native binaries); writes are slower than native SQLite. Use explicit transactions for batched writes. See `src/Benchmarks/RepoDb.Benchmarks.Ahtola`.
 ## Installation
 
 ```
@@ -63,7 +59,7 @@ GlobalConfiguration
     .UseAhtola();
 ```
 
-Then use any RepoDB operation directly on Ahtola's `SqliteConnection` (`using Ahtola.Data.Sqlite;`):
+Then use any RepoDB operation directly on your `SqliteConnection` (`using Ahtola.Data.Sqlite;`):
 
 ### Query
 
