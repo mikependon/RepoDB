@@ -37,7 +37,7 @@ The Turso provider for RepoDB — a fast, lightweight .NET ORM that lets you use
 
 ## License
 
-[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2019 [Michael Camara Pendon](https://x.com/mike_pendon)
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2019 [Michael Camara Pendon](https://x.com/mike_pendon), [Marc-André Moreau](https://x.com/awakecoding)
 
 --------
 
@@ -177,4 +177,4 @@ credentials; the copied integration suite runs locally without either.
 
 ## License
 
-[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2018 [Michael Camara Pendon](https://x.com/mike_pendon)
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2026 [Michael Camara Pendon](https://x.com/mike_pendon) and [Marc-André Moreau](https://x.com/awakecoding)
