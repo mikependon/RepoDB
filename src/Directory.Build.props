@@ -1,4 +1,8 @@
 <Project>
+  <!-- Every shipping library that targets net8.0+ is trim/AOT-analyzed. Test and benchmark projects are not. -->
+  <PropertyGroup Condition="'$(TargetFramework)' != '' And !$(MSBuildProjectName.Contains('Tests')) And !$(MSBuildProjectName.Contains('Benchmarks')) And !$(MSBuildProjectDirectory.Contains('Decommissioned')) And $([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
+    <IsAotCompatible Condition="'$(IsAotCompatible)' == ''">true</IsAotCompatible>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Meziantou.Analyzer" Version="3.0.236">
       <PrivateAssets>all</PrivateAssets>

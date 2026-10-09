@@ -23,9 +23,6 @@
 		-->
 		<PackageVersion Condition="'$(RepoDbSqlServerVersion)' != ''">$(RepoDbSqlServerVersion)</PackageVersion>
 	</PropertyGroup>
-	<PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
-		<IsAotCompatible>true</IsAotCompatible>
-	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.2" />

@@ -21,9 +21,6 @@
     -->
     <PackageVersion Condition="'$(RepoDbMariaDbVersion)' != ''">$(RepoDbMariaDbVersion)</PackageVersion>
   </PropertyGroup>
-  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
-    <IsAotCompatible>true</IsAotCompatible>
-  </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Attributes\MariaDbTypeMapAttribute.cs" />
   </ItemGroup>

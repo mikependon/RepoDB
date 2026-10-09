@@ -21,9 +21,6 @@
     -->
     <PackageVersion Condition="'$(RepoDbVerticaVersion)' != ''">$(RepoDbVerticaVersion)</PackageVersion>
   </PropertyGroup>
-  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
-    <IsAotCompatible>true</IsAotCompatible>
-  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Vertica.Data" Version="24.3.0" />
   </ItemGroup>

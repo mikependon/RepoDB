@@ -23,9 +23,6 @@
 	-->
     <PackageVersion Condition="'$(RepoDbDb2Version)' != ''">$(RepoDbDb2Version)</PackageVersion>
   </PropertyGroup>
-  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
-    <IsAotCompatible>true</IsAotCompatible>
-  </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net10.0' AND '$(OS)' == 'Windows_NT'">
     <PackageReference Include="Net.IBM.Data.Db2" Version="10.0.0.200" PrivateAssets="all" />

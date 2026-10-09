@@ -21,9 +21,6 @@
     -->
     <PackageVersion Condition="'$(RepoDbMySqlVersion)' != ''">$(RepoDbMySqlVersion)</PackageVersion>
   </PropertyGroup>
-  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
-    <IsAotCompatible>true</IsAotCompatible>
-  </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Attributes\MySqlTypeMapAttribute.cs" />
   </ItemGroup>

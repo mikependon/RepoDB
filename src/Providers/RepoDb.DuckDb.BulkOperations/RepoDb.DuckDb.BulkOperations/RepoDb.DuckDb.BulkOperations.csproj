@@ -21,9 +21,6 @@
     -->
     <PackageVersion Condition="'$(RepoDbDuckDbBulkOperationsVersion)' != ''">$(RepoDbDuckDbBulkOperationsVersion)</PackageVersion>
   </PropertyGroup>
-  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
-    <IsAotCompatible>true</IsAotCompatible>
-  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DuckDB.NET.Data.Full" Version="1.5.5" />
   </ItemGroup>
