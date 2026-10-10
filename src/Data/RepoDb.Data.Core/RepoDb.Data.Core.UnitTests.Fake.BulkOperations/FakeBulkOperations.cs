@@ -42,6 +42,8 @@ namespace RepoDb.Data.Core.UnitTests.Fake.BulkOperations
 
         public CancellationToken CancellationToken { get; set; }
 
+        public object Options { get; set; }
+
         public int RowCount { get; set; }
     }
 
@@ -98,6 +100,63 @@ namespace RepoDb.Data.Core.UnitTests.Fake.BulkOperations
     /// A connection that has a <c>BulkInsert</c> without a transaction, a trace and a trace key.
     /// </summary>
     public sealed class FakeBulkMinimalDbConnection : FakeBulkConnectionBase
+    {
+    }
+
+    /// <summary>
+    /// The options of the fake bulk insert that have the <c>KeepIdentity</c> option, as the <c>SqlBulkCopyOptions</c> of SQL Server.
+    /// </summary>
+    [Flags]
+    public enum FakeBulkCopyOptions
+    {
+        Default = 0,
+        CheckConstraints = 1,
+        KeepIdentity = 2,
+        TableLock = 4
+    }
+
+    /// <summary>
+    /// The options of the fake bulk insert that do not have the <c>KeepIdentity</c> option.
+    /// </summary>
+    [Flags]
+    public enum FakeBulkOtherOptions
+    {
+        Default = 0,
+        Fast = 1
+    }
+
+    /// <summary>
+    /// A connection whose <c>BulkInsert</c> has an <c>options</c> argument that has the <c>KeepIdentity</c> option.
+    /// </summary>
+    public sealed class FakeBulkOptionsDbConnection : FakeBulkConnectionBase
+    {
+    }
+
+    /// <summary>
+    /// A connection whose <c>BulkInsert</c> has an <c>options</c> argument that has the <c>KeepIdentity</c> option, and a default value other than the default of the type.
+    /// </summary>
+    public sealed class FakeBulkDefaultOptionsDbConnection : FakeBulkConnectionBase
+    {
+    }
+
+    /// <summary>
+    /// A connection whose <c>BulkInsert</c> has a nullable <c>options</c> argument that has the <c>KeepIdentity</c> option.
+    /// </summary>
+    public sealed class FakeBulkNullableOptionsDbConnection : FakeBulkConnectionBase
+    {
+    }
+
+    /// <summary>
+    /// A connection whose <c>BulkInsert</c> has an <c>options</c> argument that does not have the <c>KeepIdentity</c> option.
+    /// </summary>
+    public sealed class FakeBulkOtherOptionsDbConnection : FakeBulkConnectionBase
+    {
+    }
+
+    /// <summary>
+    /// A connection whose <c>BulkInsert</c> has an <c>options</c> argument that is not an enumeration.
+    /// </summary>
+    public sealed class FakeBulkTextOptionsDbConnection : FakeBulkConnectionBase
     {
     }
 
@@ -300,6 +359,69 @@ namespace RepoDb.Data.Core.UnitTests.Fake.BulkOperations
         {
             var count = Read(reader);
             _calls.Enqueue(new FakeBulkCall { Method = "BulkInsert (preferred)", TableName = tableName, RowCount = count });
+            return count;
+        }
+
+        // The options (the ones that have the KeepIdentity option)
+        public static int BulkInsert(this FakeBulkOptionsDbConnection connection,
+            string tableName,
+            IDataReader reader,
+            FakeBulkCopyOptions options = default)
+        {
+            var count = Read(reader);
+            _calls.Enqueue(new FakeBulkCall { Method = "BulkInsert (options)", TableName = tableName, Options = options, RowCount = count });
+            return count;
+        }
+
+        public static async Task<int> BulkInsertAsync(this FakeBulkOptionsDbConnection connection,
+            string tableName,
+            IDataReader reader,
+            FakeBulkCopyOptions options = default,
+            CancellationToken cancellationToken = default)
+        {
+            await Task.Yield();
+            var count = Read(reader);
+            _calls.Enqueue(new FakeBulkCall { Method = "BulkInsertAsync (options)", TableName = tableName, Options = options, RowCount = count });
+            return count;
+        }
+
+        public static int BulkInsert(this FakeBulkDefaultOptionsDbConnection connection,
+            string tableName,
+            IDataReader reader,
+            FakeBulkCopyOptions options = FakeBulkCopyOptions.TableLock)
+        {
+            var count = Read(reader);
+            _calls.Enqueue(new FakeBulkCall { Method = "BulkInsert (default options)", TableName = tableName, Options = options, RowCount = count });
+            return count;
+        }
+
+        public static int BulkInsert(this FakeBulkNullableOptionsDbConnection connection,
+            string tableName,
+            IDataReader reader,
+            FakeBulkCopyOptions? options = null)
+        {
+            var count = Read(reader);
+            _calls.Enqueue(new FakeBulkCall { Method = "BulkInsert (nullable options)", TableName = tableName, Options = options, RowCount = count });
+            return count;
+        }
+
+        public static int BulkInsert(this FakeBulkOtherOptionsDbConnection connection,
+            string tableName,
+            IDataReader reader,
+            FakeBulkOtherOptions options = FakeBulkOtherOptions.Fast)
+        {
+            var count = Read(reader);
+            _calls.Enqueue(new FakeBulkCall { Method = "BulkInsert (other options)", TableName = tableName, Options = options, RowCount = count });
+            return count;
+        }
+
+        public static int BulkInsert(this FakeBulkTextOptionsDbConnection connection,
+            string tableName,
+            IDataReader reader,
+            string options = "text")
+        {
+            var count = Read(reader);
+            _calls.Enqueue(new FakeBulkCall { Method = "BulkInsert (text options)", TableName = tableName, Options = options, RowCount = count });
             return count;
         }
 

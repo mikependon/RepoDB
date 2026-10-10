@@ -211,6 +211,66 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         }
 
         [TestMethod]
+        public void TestBulkInsertKeepsTheIdentityValuesIfTheOptionsHaveTheKeepIdentityOption()
+        {
+            // Act
+            BulkInsertInvoker.BulkInsert(new FakeBulkOptionsDbConnection(), "Person", GetReader(), 250, null, null, null, null);
+
+            // Assert
+            Assert.AreEqual(FakeBulkCopyOptions.KeepIdentity, FakeBulkOperations.Calls.Single().Options);
+        }
+
+        [TestMethod]
+        public async Task TestBulkInsertAsyncKeepsTheIdentityValuesIfTheOptionsHaveTheKeepIdentityOption()
+        {
+            // Act
+            await BulkInsertInvoker.BulkInsertAsync(new FakeBulkOptionsDbConnection(), "Person", GetReader(), 250, null, null, null, null, CancellationToken.None);
+
+            // Assert
+            Assert.AreEqual(FakeBulkCopyOptions.KeepIdentity, FakeBulkOperations.Calls.Single().Options);
+        }
+
+        [TestMethod]
+        public void TestBulkInsertKeepsTheOtherDefaultOptionsWhenItKeepsTheIdentityValues()
+        {
+            // Act
+            BulkInsertInvoker.BulkInsert(new FakeBulkDefaultOptionsDbConnection(), "Person", GetReader(), 250, null, null, null, null);
+
+            // Assert
+            Assert.AreEqual(FakeBulkCopyOptions.TableLock | FakeBulkCopyOptions.KeepIdentity, FakeBulkOperations.Calls.Single().Options);
+        }
+
+        [TestMethod]
+        public void TestBulkInsertKeepsTheIdentityValuesIfTheOptionsAreNullable()
+        {
+            // Act
+            BulkInsertInvoker.BulkInsert(new FakeBulkNullableOptionsDbConnection(), "Person", GetReader(), 250, null, null, null, null);
+
+            // Assert
+            Assert.AreEqual(FakeBulkCopyOptions.KeepIdentity, FakeBulkOperations.Calls.Single().Options);
+        }
+
+        [TestMethod]
+        public void TestBulkInsertDoesNotChangeTheOptionsThatHaveNoKeepIdentityOption()
+        {
+            // Act
+            BulkInsertInvoker.BulkInsert(new FakeBulkOtherOptionsDbConnection(), "Person", GetReader(), 250, null, null, null, null);
+
+            // Assert
+            Assert.AreEqual(FakeBulkOtherOptions.Fast, FakeBulkOperations.Calls.Single().Options);
+        }
+
+        [TestMethod]
+        public void TestBulkInsertDoesNotChangeTheOptionsThatAreNotAnEnumeration()
+        {
+            // Act
+            BulkInsertInvoker.BulkInsert(new FakeBulkTextOptionsDbConnection(), "Person", GetReader(), 250, null, null, null, null);
+
+            // Assert
+            Assert.AreEqual("text", FakeBulkOperations.Calls.Single().Options);
+        }
+
+        [TestMethod]
         public void TestBulkInsertOfAMethodWithOnlyTheRequiredArguments()
         {
             // Act

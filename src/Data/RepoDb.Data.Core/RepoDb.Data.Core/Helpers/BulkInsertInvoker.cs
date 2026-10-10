@@ -28,6 +28,7 @@ namespace RepoDb.Data.Helpers
         #region Private Variables
 
         private const string BulkOperationsSuffix = ".BulkOperations";
+        private const string KeepIdentityOption = "KeepIdentity";
         private static readonly ConcurrentDictionary<(Type Connection, Type Reader, bool IsAsync), MethodInfo> _methods =
             new ConcurrentDictionary<(Type, Type, bool), MethodInfo>();
 
@@ -302,6 +303,9 @@ namespace RepoDb.Data.Helpers
                     case "commandTimeout":
                         arguments[i] = commandTimeout;
                         break;
+                    case "options":
+                        arguments[i] = GetOptions(parameter);
+                        break;
                     case "transaction":
                         arguments[i] = parameter.ParameterType.IsInstanceOfType(transaction) ? transaction : GetDefault(parameter);
                         break;
@@ -320,6 +324,24 @@ namespace RepoDb.Data.Helpers
                 }
             }
             return arguments;
+        }
+
+        /// <summary>
+        /// Gets the value of the <c>options</c> argument: its default value with the <c>KeepIdentity</c> option when it has one (i.e.: <c>SqlBulkCopyOptions.KeepIdentity</c>),
+        /// so the values of the identity columns are copied as they are instead of being generated again by the destination database (the rows of the related tables reference them).
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        private static object GetOptions(ParameterInfo parameter)
+        {
+            var type = Nullable.GetUnderlyingType(parameter.ParameterType) ?? parameter.ParameterType;
+            if (!type.IsEnum || !Enum.GetNames(type).Contains(KeepIdentityOption, StringComparer.Ordinal))
+            {
+                return GetDefault(parameter);
+            }
+            var value = Convert.ToInt64(GetDefault(parameter) ?? 0, System.Globalization.CultureInfo.InvariantCulture);
+            var keepIdentity = Convert.ToInt64(Enum.Parse(type, KeepIdentityOption), System.Globalization.CultureInfo.InvariantCulture);
+            return Enum.ToObject(type, value | keepIdentity);
         }
 
         /// <summary>
