@@ -8,6 +8,11 @@
   <Project Path="../../Schema/RepoDb.Schema.Core/RepoDb.Schema.Core/RepoDb.Schema.Core.csproj" />
   <Project Path="RepoDb.Data.Core.UnitTests.Fake.BulkOperations/RepoDb.Data.Core.UnitTests.Fake.BulkOperations.csproj" />
   <Project Path="RepoDb.Data.Core.IntegrationTests/RepoDb.Data.SqlServer.IntegrationTests/RepoDb.Data.SqlServer.IntegrationTests.csproj" />
+  <Project Path="RepoDb.Data.Core.IntegrationTests/RepoDb.Data.PostgreSql.IntegrationTests/RepoDb.Data.PostgreSql.IntegrationTests.csproj" />
+  <Project Path="RepoDb.Data.Core.IntegrationTests/RepoDb.Data.MySql.IntegrationTests/RepoDb.Data.MySql.IntegrationTests.csproj" />
+  <Project Path="RepoDb.Data.Core.IntegrationTests/RepoDb.Data.MySqlConnector.IntegrationTests/RepoDb.Data.MySqlConnector.IntegrationTests.csproj" />
+  <Project Path="RepoDb.Data.Core.IntegrationTests/RepoDb.Data.Oracle.IntegrationTests/RepoDb.Data.Oracle.IntegrationTests.csproj" />
+  <Project Path="RepoDb.Data.Core.IntegrationTests/RepoDb.Data.Db2.IntegrationTests/RepoDb.Data.Db2.IntegrationTests.csproj" />
   <Project Path="RepoDb.Data.Core.UnitTests/RepoDb.Data.Core.UnitTests.csproj" />
   <Project Path="RepoDb.Data.Core/RepoDb.Data.Core.csproj" />
 </Solution>

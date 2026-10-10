@@ -422,7 +422,11 @@ namespace RepoDb.Data.Helpers
                         arguments[i] = commandTimeout;
                         break;
                     case "options":
+                    case "bulkCopyOptions":
                         arguments[i] = GetOptions(parameter);
+                        break;
+                    case "identityBehavior":
+                        arguments[i] = GetIdentityBehavior(parameter);
                         break;
                     case "transaction":
                         arguments[i] = parameter.ParameterType.IsInstanceOfType(transaction) ? transaction : GetDefault(parameter);
@@ -460,6 +464,19 @@ namespace RepoDb.Data.Helpers
             var value = Convert.ToInt64(GetDefault(parameter) ?? 0, System.Globalization.CultureInfo.InvariantCulture);
             var keepIdentity = Convert.ToInt64(Enum.Parse(type, KeepIdentityOption), System.Globalization.CultureInfo.InvariantCulture);
             return Enum.ToObject(type, value | keepIdentity);
+        }
+
+        /// <summary>
+        /// Gets the value of the <c>identityBehavior</c> argument: <c>KeepIdentity</c> when the enumeration has it, so the values of the identity columns are copied as they are.
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        private static object GetIdentityBehavior(ParameterInfo parameter)
+        {
+            var type = Nullable.GetUnderlyingType(parameter.ParameterType) ?? parameter.ParameterType;
+            return type.IsEnum && Enum.GetNames(type).Contains(KeepIdentityOption, StringComparer.Ordinal)
+                ? Enum.Parse(type, KeepIdentityOption)
+                : GetDefault(parameter);
         }
 
         /// <summary>

@@ -191,6 +191,11 @@ namespace RepoDb.Schema
             var statement = $"ALTER TABLE {Name(tableName)} ADD COLUMN {Column(column)}";
             if (string.IsNullOrWhiteSpace(column.ComputedExpression))
             {
+                // Db2 adds a column that is not nullable only with a default (the existing rows need a value), so the implicit default of the type is given when there is none
+                if (!column.Field.IsNullable && !column.Field.IsIdentity && string.IsNullOrWhiteSpace(column.DefaultExpression))
+                {
+                    statement += " WITH DEFAULT";
+                }
                 return statement;
             }
             return $"SET INTEGRITY FOR {Name(tableName)} OFF; {statement}; SET INTEGRITY FOR {Name(tableName)} IMMEDIATE CHECKED FORCE GENERATED";

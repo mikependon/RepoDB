@@ -255,6 +255,46 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         }
 
         [TestMethod]
+        public void TestBulkInsertKeepsTheIdentityValuesIfTheBulkCopyOptionsHaveTheKeepIdentityOption()
+        {
+            // Act
+            BulkInsertInvoker.BulkInsert(new FakeBulkCopyOptionsDbConnection(), "Person", GetReader(), 250, CopySchemaColumnMappingsBehavior.Automatic, null, null, null, null);
+
+            // Assert
+            Assert.AreEqual(FakeBulkCopyOptions.KeepIdentity, FakeBulkOperations.Calls.Single().Options);
+        }
+
+        [TestMethod]
+        public void TestBulkInsertKeepsTheIdentityValuesIfTheIdentityBehaviorHasTheKeepIdentityValue()
+        {
+            // Act
+            BulkInsertInvoker.BulkInsert(new FakeBulkIdentityBehaviorDbConnection(), "Person", GetReader(), 250, CopySchemaColumnMappingsBehavior.Automatic, null, null, null, null);
+
+            // Assert
+            Assert.AreEqual(FakeBulkImportIdentityBehavior.KeepIdentity, FakeBulkOperations.Calls.Single().IdentityBehavior);
+        }
+
+        [TestMethod]
+        public async Task TestBulkInsertAsyncKeepsTheIdentityValuesIfTheIdentityBehaviorHasTheKeepIdentityValue()
+        {
+            // Act
+            await BulkInsertInvoker.BulkInsertAsync(new FakeBulkIdentityBehaviorDbConnection(), "Person", GetReader(), 250, CopySchemaColumnMappingsBehavior.Automatic, null, null, null, null, CancellationToken.None);
+
+            // Assert
+            Assert.AreEqual(FakeBulkImportIdentityBehavior.KeepIdentity, FakeBulkOperations.Calls.Single().IdentityBehavior);
+        }
+
+        [TestMethod]
+        public void TestBulkInsertDoesNotChangeTheIdentityBehaviorThatHasNoKeepIdentityValue()
+        {
+            // Act
+            BulkInsertInvoker.BulkInsert(new FakeBulkOtherIdentityBehaviorDbConnection(), "Person", GetReader(), 250, CopySchemaColumnMappingsBehavior.Automatic, null, null, null, null);
+
+            // Assert
+            Assert.AreEqual(FakeBulkOtherIdentityBehavior.Return, FakeBulkOperations.Calls.Single().IdentityBehavior);
+        }
+
+        [TestMethod]
         public void TestBulkInsertDoesNotChangeTheOptionsThatHaveNoKeepIdentityOption()
         {
             // Act

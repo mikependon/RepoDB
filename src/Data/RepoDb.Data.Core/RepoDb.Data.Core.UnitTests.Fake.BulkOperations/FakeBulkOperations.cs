@@ -45,6 +45,8 @@ namespace RepoDb.Data.Core.UnitTests.Fake.BulkOperations
 
         public object Options { get; set; }
 
+        public object IdentityBehavior { get; set; }
+
         public string ColumnMappingsBehavior { get; set; }
 
         public int RowCount { get; set; }
@@ -153,6 +155,45 @@ namespace RepoDb.Data.Core.UnitTests.Fake.BulkOperations
     /// A connection whose <c>BulkInsert</c> has an <c>options</c> argument that does not have the <c>KeepIdentity</c> option.
     /// </summary>
     public sealed class FakeBulkOtherOptionsDbConnection : FakeBulkConnectionBase
+    {
+    }
+
+    /// <summary>
+    /// A connection whose <c>BulkInsert</c> has a <c>bulkCopyOptions</c> argument that has the <c>KeepIdentity</c> option (as the providers that are not SQL Server).
+    /// </summary>
+    public sealed class FakeBulkCopyOptionsDbConnection : FakeBulkConnectionBase
+    {
+    }
+
+    /// <summary>
+    /// The identity behavior of the fake bulk insert, as the <c>identityBehavior</c> of the bulk operations of the providers.
+    /// </summary>
+    public enum FakeBulkImportIdentityBehavior : short
+    {
+        KeepIdentity,
+        ReturnIdentity
+    }
+
+    /// <summary>
+    /// The identity behavior of the fake bulk insert that does not have the <c>KeepIdentity</c> value.
+    /// </summary>
+    public enum FakeBulkOtherIdentityBehavior : short
+    {
+        Generate,
+        Return
+    }
+
+    /// <summary>
+    /// A connection whose <c>BulkInsert</c> has a nullable <c>identityBehavior</c> argument that has the <c>KeepIdentity</c> value.
+    /// </summary>
+    public sealed class FakeBulkIdentityBehaviorDbConnection : FakeBulkConnectionBase
+    {
+    }
+
+    /// <summary>
+    /// A connection whose <c>BulkInsert</c> has an <c>identityBehavior</c> argument that does not have the <c>KeepIdentity</c> value.
+    /// </summary>
+    public sealed class FakeBulkOtherIdentityBehaviorDbConnection : FakeBulkConnectionBase
     {
     }
 
@@ -471,6 +512,48 @@ namespace RepoDb.Data.Core.UnitTests.Fake.BulkOperations
         {
             var count = Read(reader);
             _calls.Enqueue(new FakeBulkCall { Method = "BulkInsert (other options)", TableName = tableName, Options = options, RowCount = count });
+            return count;
+        }
+
+        public static int BulkInsert(this FakeBulkCopyOptionsDbConnection connection,
+            string tableName,
+            IDataReader reader,
+            FakeBulkCopyOptions bulkCopyOptions = default)
+        {
+            var count = Read(reader);
+            _calls.Enqueue(new FakeBulkCall { Method = "BulkInsert (bulk copy options)", TableName = tableName, Options = bulkCopyOptions, RowCount = count });
+            return count;
+        }
+
+        public static int BulkInsert(this FakeBulkIdentityBehaviorDbConnection connection,
+            string tableName,
+            IDataReader reader,
+            FakeBulkImportIdentityBehavior? identityBehavior = null)
+        {
+            var count = Read(reader);
+            _calls.Enqueue(new FakeBulkCall { Method = "BulkInsert (identity behavior)", TableName = tableName, IdentityBehavior = identityBehavior, RowCount = count });
+            return count;
+        }
+
+        public static async Task<int> BulkInsertAsync(this FakeBulkIdentityBehaviorDbConnection connection,
+            string tableName,
+            IDataReader reader,
+            FakeBulkImportIdentityBehavior? identityBehavior = null,
+            CancellationToken cancellationToken = default)
+        {
+            await Task.Yield();
+            var count = Read(reader);
+            _calls.Enqueue(new FakeBulkCall { Method = "BulkInsertAsync (identity behavior)", TableName = tableName, IdentityBehavior = identityBehavior, RowCount = count });
+            return count;
+        }
+
+        public static int BulkInsert(this FakeBulkOtherIdentityBehaviorDbConnection connection,
+            string tableName,
+            IDataReader reader,
+            FakeBulkOtherIdentityBehavior identityBehavior = FakeBulkOtherIdentityBehavior.Return)
+        {
+            var count = Read(reader);
+            _calls.Enqueue(new FakeBulkCall { Method = "BulkInsert (other identity behavior)", TableName = tableName, IdentityBehavior = identityBehavior, RowCount = count });
             return count;
         }
 
