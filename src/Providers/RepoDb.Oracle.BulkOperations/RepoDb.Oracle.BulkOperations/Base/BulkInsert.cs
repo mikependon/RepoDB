@@ -470,6 +470,7 @@ namespace RepoDb
             OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            OracleBulkImportIdentityBehavior? identityBehavior = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = OracleTraceKeys.OracleBulkInsert,
@@ -491,7 +492,8 @@ namespace RepoDb
                 mappings,
                 bulkCopyOptions,
                 bulkCopyTimeout,
-                batchSize);
+                batchSize,
+                identityBehavior == OracleBulkImportIdentityBehavior.KeepIdentity);
 
             // After Execution
             Tracer
@@ -942,6 +944,7 @@ namespace RepoDb
             OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            OracleBulkImportIdentityBehavior? identityBehavior = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = OracleTraceKeys.OracleBulkInsert,
@@ -965,7 +968,8 @@ namespace RepoDb
                 bulkCopyOptions,
                 bulkCopyTimeout,
                 batchSize,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken,
+                identityBehavior == OracleBulkImportIdentityBehavior.KeepIdentity).ConfigureAwait(false);
 
             // After Execution
             await Tracer

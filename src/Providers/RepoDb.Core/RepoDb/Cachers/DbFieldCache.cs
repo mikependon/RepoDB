@@ -101,10 +101,16 @@ namespace RepoDb
             var type = connection.GetType();
             var key = (long)type.GetHashCode();
 
-            // Note: For SqlConnection, the ConnectionString is changing if the (Integrated Security=False). Actually for this isolation, the database name is enough.
+            // The database name isolates the tables of the databases of the same server
             if (!string.IsNullOrWhiteSpace(connection.Database))
             {
                 key = HashCode.Combine(key, StringComparer.Ordinal.GetHashCode(connection.Database));
+            }
+
+            // The database name is not enough: some providers (i.e.: Oracle, Db2) isolate the tables by the user or the current schema of the connection. Note that the ConnectionString of some connections changes once opened (the password is removed), which only caches the fields once more.
+            if (!string.IsNullOrWhiteSpace(connection.ConnectionString))
+            {
+                key = HashCode.Combine(key, StringComparer.Ordinal.GetHashCode(connection.ConnectionString));
             }
 
             // Add the hashcode of the table name
@@ -193,10 +199,16 @@ namespace RepoDb
             var type = connection.GetType();
             var key = (long)type.GetHashCode();
 
-            // Note: For SqlConnection, the ConnectionString is changing if the (Integrated Security=False). Actually for this isolation, the database name is enough.
+            // The database name isolates the tables of the databases of the same server
             if (!string.IsNullOrWhiteSpace(connection.Database))
             {
                 key = HashCode.Combine(key, StringComparer.Ordinal.GetHashCode(connection.Database));
+            }
+
+            // The database name is not enough: some providers (i.e.: Oracle, Db2) isolate the tables by the user or the current schema of the connection. Note that the ConnectionString of some connections changes once opened (the password is removed), which only caches the fields once more.
+            if (!string.IsNullOrWhiteSpace(connection.ConnectionString))
+            {
+                key = HashCode.Combine(key, StringComparer.Ordinal.GetHashCode(connection.ConnectionString));
             }
 
             // Add the hashcode of the table name

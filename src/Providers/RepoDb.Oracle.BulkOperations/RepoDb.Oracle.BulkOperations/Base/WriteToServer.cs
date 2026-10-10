@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Collections.Generic;
 using System.Data;
@@ -18,6 +19,7 @@ using RepoDb;
 using RepoDb.Enumerations.Oracle;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using RepoDb.Oracle.BulkOperations;
 
 namespace RepoDb
@@ -102,10 +104,19 @@ namespace RepoDb
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
-            int? batchSize = null)
+            int? batchSize = null,
+            bool keepIdentity = false)
         {
             connection.EnsureOpen();
             var countingReader = new CountingDataReader(reader);
+
+            // The bulk copy of Oracle loads the tables of the user of the connection only, so the tables of the other schemas are loaded by binding arrays
+            if (IsTableOfAnotherSchema(connection, tableName, connection.GetDbSetting()))
+            {
+                using var arrayBinder = CreateOracleBulkArrayBinder(connection, tableName, countingReader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, keepIdentity);
+                return arrayBinder.WriteToServerAsync(countingReader, CancellationToken.None).GetAwaiter().GetResult();
+            }
+
             using var bulkCopy = CreateOracleBulkCopy(connection, tableName, countingReader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
             bulkCopy.WriteToServer(countingReader);
             return countingReader.Count;
@@ -191,17 +202,49 @@ namespace RepoDb
             OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            bool keepIdentity = false)
         {
             await connection.EnsureOpenAsync(cancellationToken).ConfigureAwait(false);
             var countingReader = new CountingDataReader(reader);
-            using var bulkCopy = CreateOracleBulkArrayBinder(connection, tableName, countingReader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+            using var bulkCopy = CreateOracleBulkArrayBinder(connection, tableName, countingReader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, keepIdentity);
             return await bulkCopy.WriteToServerAsync(countingReader, cancellationToken).ConfigureAwait(false);
         }
 
         #endregion
 
         #region Helpers
+
+        /// <summary>
+        /// Gets the (quoted) name of the destination table of the bulk copy. The bulk copy of Oracle loads the tables of the user of the connection only, and it does not
+        /// accept the name of the table to be qualified with the schema, so the schema is removed when it is the one of the user of the connection.
+        /// </summary>
+        private static string GetDestinationTableName(OracleConnection connection,
+            string tableName,
+            IDbSetting dbSetting)
+        {
+            var schema = DataEntityExtension.GetSchema(tableName, dbSetting)?.AsUnquoted(true, dbSetting);
+            if (!string.IsNullOrEmpty(schema) && IsUserOfConnection(connection, schema))
+            {
+                return DataEntityExtension.GetTableName(tableName, dbSetting).AsQuoted(true, dbSetting);
+            }
+            return tableName.AsQuoted(true, dbSetting);
+        }
+
+        /// <summary>
+        /// Checks whether the table is qualified with a schema that is not the one of the user of the connection.
+        /// </summary>
+        private static bool IsTableOfAnotherSchema(OracleConnection connection,
+            string tableName,
+            IDbSetting dbSetting)
+        {
+            var schema = DataEntityExtension.GetSchema(tableName, dbSetting)?.AsUnquoted(true, dbSetting);
+            return !string.IsNullOrEmpty(schema) && !IsUserOfConnection(connection, schema);
+        }
+
+        private static bool IsUserOfConnection(OracleConnection connection,
+            string schema) =>
+            string.Equals(schema, new OracleConnectionStringBuilder(connection.ConnectionString).UserID, StringComparison.OrdinalIgnoreCase);
 
         /// <summary>
         /// 
@@ -262,7 +305,7 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
             var bulkCopy = new OracleBulkCopy(connection, bulkCopyOptions)
             {
-                DestinationTableName = tableName.AsQuoted(true, dbSetting)
+                DestinationTableName = GetDestinationTableName(connection, tableName, dbSetting)
             };
             if (bulkCopyTimeout.HasValue)
             {
@@ -311,8 +354,7 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
             var bulkCopy = new OracleBulkCopy(connection, bulkCopyOptions)
             {
-                // See the remarks in CreateOracleBulkCopy - same quoting requirement applies here.
-                DestinationTableName = tableName.AsQuoted(true, dbSetting)
+                DestinationTableName = GetDestinationTableName(connection, tableName, dbSetting)
             };
             if (bulkCopyTimeout.HasValue)
             {
@@ -351,7 +393,7 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
             var arrayBinder = new OracleBulkArrayBinder(connection)
             {
-                DestinationTableName = tableName.AsQuoted(true, dbSetting)
+                DestinationTableName = GetDestinationTableName(connection, tableName, dbSetting)
             };
             if (bulkCopyTimeout.HasValue)
             {
@@ -395,13 +437,14 @@ namespace RepoDb
             IEnumerable<OracleBulkInsertMapItem> mappings,
             OracleBulkCopyOptions bulkCopyOptions,
             int? bulkCopyTimeout,
-            int? batchSize = null)
+            int? batchSize = null,
+            bool keepIdentity = false)
         {
             var dbSetting = connection.GetDbSetting();
             var arrayBinder = new OracleBulkArrayBinder(connection)
             {
-                // See the remarks in CreateOracleBulkCopy - same quoting requirement applies here.
-                DestinationTableName = tableName.AsQuoted(true, dbSetting)
+                KeepIdentity = keepIdentity,
+                DestinationTableName = GetDestinationTableName(connection, tableName, dbSetting)
             };
             if (bulkCopyTimeout.HasValue)
             {

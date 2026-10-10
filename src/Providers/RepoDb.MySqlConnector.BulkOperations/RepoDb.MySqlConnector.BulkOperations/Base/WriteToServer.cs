@@ -370,7 +370,7 @@ namespace RepoDb
             Field excludeField = null)
         {
             var dbSetting = connection.GetDbSetting();
-            var bulkCopy = new MySqlBulkCopy(connection)
+            var bulkCopy = new MySqlBulkCopy(connection, transaction)
             {
                 DestinationTableName = tableName.AsQuoted(true, dbSetting)
             };

@@ -113,9 +113,18 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             DB2Transaction transaction = null,
-            Field excludeField = null)
+            Field excludeField = null,
+            bool keepIdentity = false)
         {
             connection.EnsureOpen();
+
+            // The bulk copy of Db2 can not operate under a transaction, so the rows are loaded by binding arrays when there is one
+            if (transaction != null)
+            {
+                using var arrayBinder = CreateDb2BulkArrayBinder(connection, tableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, transaction, excludeField, keepIdentity);
+                return arrayBinder.WriteToServerAsync(reader, CancellationToken.None).GetAwaiter().GetResult();
+            }
+
             var countingReader = new CountingDataReader(reader);
             var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, countingReader, mappings, bulkCopyOptions, bulkCopyTimeout, transaction, excludeField);
             bulkCopy.WriteToServer(filteredReader);
@@ -212,10 +221,11 @@ namespace RepoDb
             int? batchSize = null,
             CancellationToken cancellationToken = default,
             DB2Transaction transaction = null,
-            Field excludeField = null)
+            Field excludeField = null,
+            bool keepIdentity = false)
         {
             await connection.EnsureOpenAsync(cancellationToken).ConfigureAwait(false);
-            using var arrayBinder = CreateDb2BulkArrayBinder(connection, tableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, transaction, excludeField);
+            using var arrayBinder = CreateDb2BulkArrayBinder(connection, tableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, transaction, excludeField, keepIdentity);
             return await arrayBinder.WriteToServerAsync(reader, cancellationToken).ConfigureAwait(false);
         }
 
@@ -536,13 +546,15 @@ namespace RepoDb
             int? bulkCopyTimeout,
             int? batchSize,
             DB2Transaction transaction,
-            Field excludeField = null)
+            Field excludeField = null,
+            bool keepIdentity = false)
         {
             var dbSetting = connection.GetDbSetting();
             var arrayBinder = new Db2BulkArrayBinder(connection)
             {
                 DestinationTableName = tableName.AsQuoted(true, dbSetting),
-                Transaction = transaction
+                Transaction = transaction,
+                KeepIdentity = keepIdentity
             };
             if (bulkCopyTimeout.HasValue)
             {
