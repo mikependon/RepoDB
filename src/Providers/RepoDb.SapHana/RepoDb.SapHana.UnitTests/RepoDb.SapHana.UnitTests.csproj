@@ -8,7 +8,7 @@
     <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MSTest" Version="4.2.3" />
+    <PackageReference Include="MSTest" Version="4.5.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RepoDb.SapHana\RepoDb.SapHana.csproj" />

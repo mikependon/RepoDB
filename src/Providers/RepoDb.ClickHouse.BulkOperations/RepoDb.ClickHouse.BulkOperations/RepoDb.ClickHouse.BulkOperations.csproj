@@ -22,7 +22,7 @@
     <PackageVersion Condition="'$(RepoDbClickHouseBulkOperationsVersion)' != ''">$(RepoDbClickHouseBulkOperationsVersion)</PackageVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="ClickHouse.Driver" Version="1.3.0" />
+    <PackageReference Include="ClickHouse.Driver" Version="1.5.0" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />

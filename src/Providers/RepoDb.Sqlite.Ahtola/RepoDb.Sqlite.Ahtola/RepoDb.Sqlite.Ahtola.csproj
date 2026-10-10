@@ -20,7 +20,7 @@
     <None Remove="Properties\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Devolutions.Ahtola.Data.Sqlite" Version="0.9.0" />
+    <PackageReference Include="Devolutions.Ahtola.Data.Sqlite" Version="0.10.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />

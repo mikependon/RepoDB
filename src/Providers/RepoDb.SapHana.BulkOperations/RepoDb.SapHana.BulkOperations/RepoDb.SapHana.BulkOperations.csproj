@@ -22,7 +22,7 @@
     <PackageVersion Condition="'$(RepoDbSapHanaBulkOperationsVersion)' != ''">$(RepoDbSapHanaBulkOperationsVersion)</PackageVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Sap.Data.Hana.Net.v6.0" Version="2.29.25" />
+    <PackageReference Include="Sap.Data.Hana.Net.v6.0" Version="2.30.27" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />

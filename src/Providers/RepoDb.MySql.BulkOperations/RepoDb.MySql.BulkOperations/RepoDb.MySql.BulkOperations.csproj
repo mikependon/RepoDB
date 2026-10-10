@@ -22,7 +22,7 @@
     <PackageVersion Condition="'$(RepoDbMySqlBulkOperationsVersion)' != ''">$(RepoDbMySqlBulkOperationsVersion)</PackageVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MySql.Data" Version="9.7.0" />
+    <PackageReference Include="MySql.Data" Version="26.7.0" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />

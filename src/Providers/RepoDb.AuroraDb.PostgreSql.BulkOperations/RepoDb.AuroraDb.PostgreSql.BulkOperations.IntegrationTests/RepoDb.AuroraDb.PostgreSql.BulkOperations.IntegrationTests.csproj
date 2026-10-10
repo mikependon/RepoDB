@@ -9,11 +9,11 @@
     <TestTfmsInParallel>false</TestTfmsInParallel>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="coverlet.collector" Version="10.0.1">
+    <PackageReference Include="coverlet.collector" Version="10.1.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="MSTest" Version="4.2.3" />
+    <PackageReference Include="MSTest" Version="4.5.1" />
     <PackageReference Include="RepoDb.Connector.AuroraDb.Npgsql" Version="0.0.1-alpha1" />
   </ItemGroup>
   <ItemGroup>

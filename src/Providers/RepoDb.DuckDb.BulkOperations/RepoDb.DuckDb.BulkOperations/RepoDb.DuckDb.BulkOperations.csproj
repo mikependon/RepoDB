@@ -22,7 +22,7 @@
     <PackageVersion Condition="'$(RepoDbDuckDbBulkOperationsVersion)' != ''">$(RepoDbDuckDbBulkOperationsVersion)</PackageVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="DuckDB.NET.Data.Full" Version="1.5.5" />
+    <PackageReference Include="DuckDB.NET.Data.Full" Version="1.5.6" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />

@@ -25,8 +25,8 @@
     <Compile Remove="Attributes\MySqlTypeMapAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="BouncyCastle.Cryptography" Version="2.6.2" />
-    <PackageReference Include="MySql.Data" Version="9.7.0" />
+    <PackageReference Include="BouncyCastle.Cryptography" Version="2.7.0" />
+    <PackageReference Include="MySql.Data" Version="26.7.0" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />

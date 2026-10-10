@@ -19,7 +19,7 @@
     <None Remove="Properties\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Turso.Data.Sqlite.Provider" Version="0.8.1" />
+    <PackageReference Include="Turso.Data.Sqlite.Provider" Version="0.8.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />

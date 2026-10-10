@@ -12,8 +12,8 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MSTest" Version="4.2.3" />
-    <PackageReference Include="Sap.Data.Hana.Net.v6.0" Version="2.29.25" />
+    <PackageReference Include="MSTest" Version="4.5.1" />
+    <PackageReference Include="Sap.Data.Hana.Net.v6.0" Version="2.30.27" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />

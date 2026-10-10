@@ -27,7 +27,7 @@
     <None Include="..\Oracle.png" Pack="True" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="23.9.1" />
+    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="23.26.301" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
