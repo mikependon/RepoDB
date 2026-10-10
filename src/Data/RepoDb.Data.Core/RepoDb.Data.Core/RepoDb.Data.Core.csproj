@@ -15,6 +15,9 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="RepoDb.Data.Core.UnitTests" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\..\Providers\RepoDb.Core\RepoDb\RepoDb.csproj" />
     <ProjectReference Include="..\..\..\Schema\RepoDb.Schema.Core\RepoDb.Schema.Core\RepoDb.Schema.Core.csproj" />
   </ItemGroup>

@@ -18,5 +18,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Providers\RepoDb.Core\RepoDb\RepoDb.csproj" />
     <ProjectReference Include="..\RepoDb.Data.Core\RepoDb.Data.Core.csproj" />
+    <ProjectReference Include="..\RepoDb.Data.Core.UnitTests.Fake.BulkOperations\RepoDb.Data.Core.UnitTests.Fake.BulkOperations.csproj" />
   </ItemGroup>
 </Project>

@@ -323,7 +323,7 @@ namespace RepoDb.Data
             var targetSchema = GetTargetSchema(destinationConnection, targetTable);
             Validate(connection, sourceTable, targetTable, destinationConnection, targetSchema, batchSize, relationshipBehavior, tableExistenceBehavior);
             var options = new CopyDataProgress { StartTime = DateTime.UtcNow };
-            foreach (var (source, target, filter) in GetTables(connection, destinationConnection, targetSchema, sourceTable, targetTable, where, relationshipBehavior, tableExistenceBehavior, commandTimeout, trace, transaction))
+            foreach (var (source, target, filter) in GetTables(connection, destinationConnection, sourceTable, targetTable, targetSchema, where, relationshipBehavior, tableExistenceBehavior, commandTimeout, trace, transaction))
             {
                 CopyRows(connection, destinationConnection, source, target, filter, batchSize, options, progressCallback, commandTimeout, traceKey, trace, transaction);
             }
@@ -638,7 +638,7 @@ namespace RepoDb.Data
             var targetSchema = GetTargetSchema(destinationConnection, targetTable);
             Validate(connection, sourceTable, targetTable, destinationConnection, targetSchema, batchSize, relationshipBehavior, tableExistenceBehavior);
             var options = new CopyDataProgress { StartTime = DateTime.UtcNow };
-            var tables = await GetTablesAsync(connection, destinationConnection, targetSchema, sourceTable, targetTable, where, relationshipBehavior, tableExistenceBehavior, commandTimeout, trace, transaction, cancellationToken).ConfigureAwait(false);
+            var tables = await GetTablesAsync(connection, destinationConnection, sourceTable, targetTable, targetSchema, where, relationshipBehavior, tableExistenceBehavior, commandTimeout, trace, transaction, cancellationToken).ConfigureAwait(false);
             foreach (var (source, target, filter) in tables)
             {
                 await CopyRowsAsync(connection, destinationConnection, source, target, filter, batchSize, options, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);

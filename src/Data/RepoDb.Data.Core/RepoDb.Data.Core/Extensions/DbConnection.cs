@@ -39,9 +39,9 @@ namespace RepoDb.Data
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="destinationConnection"></param>
-        /// <param name="targetSchema"></param>
         /// <param name="sourceTable"></param>
         /// <param name="targetTable"></param>
+        /// <param name="targetSchema"></param>
         /// <param name="where"></param>
         /// <param name="relationshipBehavior"></param>
         /// <param name="tableExistenceBehavior"></param>
@@ -51,9 +51,9 @@ namespace RepoDb.Data
         /// <returns>The source table, the target table and the filter of each table.</returns>
         internal static IList<(string Source, string Target, QueryGroup Where)> GetTables(IDbConnection connection,
             IDbConnection destinationConnection,
-            string targetSchema,
             string sourceTable,
             string targetTable,
+            string targetSchema,
             QueryGroup where,
             CopyDataRelationshipBehavior relationshipBehavior,
             CopySchemaExistsBehavior tableExistenceBehavior,
@@ -91,9 +91,9 @@ namespace RepoDb.Data
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="destinationConnection"></param>
-        /// <param name="targetSchema"></param>
         /// <param name="sourceTable"></param>
         /// <param name="targetTable"></param>
+        /// <param name="targetSchema"></param>
         /// <param name="where"></param>
         /// <param name="relationshipBehavior"></param>
         /// <param name="tableExistenceBehavior"></param>
@@ -104,9 +104,9 @@ namespace RepoDb.Data
         /// <returns>The source table, the target table and the filter of each table.</returns>
         internal static async Task<IList<(string Source, string Target, QueryGroup Where)>> GetTablesAsync(IDbConnection connection,
             IDbConnection destinationConnection,
-            string targetSchema,
             string sourceTable,
             string targetTable,
+            string targetSchema,
             QueryGroup where,
             CopyDataRelationshipBehavior relationshipBehavior,
             CopySchemaExistsBehavior tableExistenceBehavior,
@@ -302,19 +302,21 @@ namespace RepoDb.Data
                     Report(options, inserted, progressCallback);
                     return;
                 }
+                var action = new Action<IList<object>>((IList<object> b) =>
+                    Report(options, destinationConnection.InsertAll(targetTable, b, batchSize, commandTimeout: commandTimeout, traceKey: traceKey, transaction: transaction, trace: trace), progressCallback));
                 var batch = new List<object>(batchSize);
                 while (reader.Read())
                 {
                     batch.Add(ToRow(reader));
                     if (batch.Count == batchSize)
                     {
-                        Report(options, destinationConnection.InsertAll(targetTable, batch, batchSize, commandTimeout: commandTimeout, traceKey: traceKey, transaction: transaction, trace: trace), progressCallback);
+                        action(batch);
                         batch.Clear();
                     }
                 }
                 if (batch.Count > 0)
                 {
-                    Report(options, destinationConnection.InsertAll(targetTable, batch, batchSize, commandTimeout: commandTimeout, traceKey: traceKey, transaction: transaction, trace: trace), progressCallback);
+                    action(batch);
                 }
             }
         }
@@ -358,19 +360,21 @@ namespace RepoDb.Data
                     Report(options, inserted, progressCallback);
                     return;
                 }
+                var action = new Action<IList<object>>((IList<object> b) =>
+                    Report(options, destinationConnection.InsertAll(targetTable, b, batchSize, commandTimeout: commandTimeout, traceKey: traceKey, transaction: transaction, trace: trace), progressCallback));
                 var batch = new List<object>(batchSize);
                 while (await ReadAsync(reader, cancellationToken).ConfigureAwait(false))
                 {
                     batch.Add(ToRow(reader));
                     if (batch.Count == batchSize)
                     {
-                        Report(options, await destinationConnection.InsertAllAsync(targetTable, batch, batchSize, commandTimeout: commandTimeout, traceKey: traceKey, transaction: transaction, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false), progressCallback);
+                        action(batch);
                         batch.Clear();
                     }
                 }
                 if (batch.Count > 0)
                 {
-                    Report(options, await destinationConnection.InsertAllAsync(targetTable, batch, batchSize, commandTimeout: commandTimeout, traceKey: traceKey, transaction: transaction, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false), progressCallback);
+                    action(batch);
                 }
             }
         }
