@@ -274,6 +274,7 @@ namespace RepoDb.Data
         /// <param name="targetTable"></param>
         /// <param name="where"></param>
         /// <param name="batchSize"></param>
+        /// <param name="columnMappingsBehavior"></param>
         /// <param name="options"></param>
         /// <param name="progressCallback"></param>
         /// <param name="commandTimeout"></param>
@@ -286,6 +287,7 @@ namespace RepoDb.Data
             string targetTable,
             QueryGroup where,
             int batchSize,
+            CopySchemaColumnMappingsBehavior columnMappingsBehavior,
             CopyDataProgress options,
             Action<CopyDataProgress> progressCallback,
             int? commandTimeout,
@@ -298,7 +300,7 @@ namespace RepoDb.Data
             {
                 if (BulkInsertInvoker.IsAvailable(destinationConnection, reader, false))
                 {
-                    var inserted = BulkInsertInvoker.BulkInsert(destinationConnection, targetTable, reader, batchSize, commandTimeout, null, trace, transaction);
+                    var inserted = BulkInsertInvoker.BulkInsert(destinationConnection, targetTable, reader, batchSize, columnMappingsBehavior, commandTimeout, null, trace, transaction);
                     Report(options, inserted, progressCallback);
                     return;
                 }
@@ -330,6 +332,7 @@ namespace RepoDb.Data
         /// <param name="targetTable"></param>
         /// <param name="where"></param>
         /// <param name="batchSize"></param>
+        /// <param name="columnMappingsBehavior"></param>
         /// <param name="options"></param>
         /// <param name="progressCallback"></param>
         /// <param name="commandTimeout"></param>
@@ -343,6 +346,7 @@ namespace RepoDb.Data
             string targetTable,
             QueryGroup where,
             int batchSize,
+            CopySchemaColumnMappingsBehavior columnMappingsBehavior,
             CopyDataProgress options,
             Action<CopyDataProgress> progressCallback,
             int? commandTimeout,
@@ -356,7 +360,7 @@ namespace RepoDb.Data
             {
                 if (BulkInsertInvoker.IsAvailable(destinationConnection, reader, true))
                 {
-                    var inserted = await BulkInsertInvoker.BulkInsertAsync(destinationConnection, targetTable, reader, batchSize, commandTimeout, null, trace, transaction, cancellationToken).ConfigureAwait(false);
+                    var inserted = await BulkInsertInvoker.BulkInsertAsync(destinationConnection, targetTable, reader, batchSize, columnMappingsBehavior, commandTimeout, null, trace, transaction, cancellationToken).ConfigureAwait(false);
                     Report(options, inserted, progressCallback);
                     return;
                 }
@@ -498,6 +502,7 @@ namespace RepoDb.Data
         /// <param name="batchSize"></param>
         /// <param name="relationshipBehavior"></param>
         /// <param name="tableExistenceBehavior"></param>
+        /// <param name="columnMappingsBehavior"></param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         internal static void Validate(IDbConnection connection,
@@ -507,7 +512,8 @@ namespace RepoDb.Data
             string targetSchema,
             int batchSize,
             CopyDataRelationshipBehavior relationshipBehavior,
-            CopySchemaExistsBehavior tableExistenceBehavior)
+            CopySchemaExistsBehavior tableExistenceBehavior,
+            CopySchemaColumnMappingsBehavior columnMappingsBehavior)
         {
             if (connection == null)
             {
@@ -528,6 +534,10 @@ namespace RepoDb.Data
             if (batchSize <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(batchSize), "The batch size must be greater than zero.");
+            }
+            if (!Enum.IsDefined(typeof(CopySchemaColumnMappingsBehavior), columnMappingsBehavior))
+            {
+                throw new ArgumentOutOfRangeException(nameof(columnMappingsBehavior), "The column mappings behavior is not defined.");
             }
             if (IsSchemaRequested(relationshipBehavior, tableExistenceBehavior, targetSchema) && !string.Equals(GetTableName(connection, sourceTable), GetTableName(destinationConnection, targetTable), StringComparison.Ordinal))
             {

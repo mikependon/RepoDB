@@ -8,6 +8,7 @@
 
 using System;
 using Microsoft.Data.SqlClient;
+using RepoDb.DbSettings;
 using RepoDb.Schema.SqlServer;
 
 namespace RepoDb.Data.SqlServer.IntegrationTests.Setup
@@ -55,7 +56,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests.Setup
             // Initialize the SqlServer
             GlobalConfiguration
                 .Setup()
-                .UseSqlServer()
+                .UseSqlServer(new SqlServerBulkOperationsDbSetting())
                 .UseSqlServerSchema();
 
             // Create databases
