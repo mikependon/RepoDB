@@ -308,6 +308,26 @@ namespace RepoDb.Schema.Core.UnitTests.Models
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void TestForeignKeyInfoToStringReturnsTheName()
+        {
+            // Act
+            var actual = Create().ToString();
+
+            // Assert
+            Assert.AreEqual("FK_Person_Country", actual);
+        }
+
+        [TestMethod]
+        public void TestForeignKeyInfoToStringWithoutANameReturnsNull()
+        {
+            // Act
+            var actual = new ForeignKeyInfo(null).ToString();
+
+            // Assert
+            Assert.IsNull(actual);
+        }
+
         #endregion
 
         #region Helpers

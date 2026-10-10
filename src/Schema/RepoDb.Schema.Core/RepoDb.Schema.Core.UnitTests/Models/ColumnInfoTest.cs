@@ -390,6 +390,26 @@ namespace RepoDb.Schema.Core.UnitTests.Models
             Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
+        [TestMethod]
+        public void TestColumnInfoToStringReturnsTheNameOfTheField()
+        {
+            // Act
+            var actual = Create().ToString();
+
+            // Assert
+            Assert.AreEqual("Id", actual);
+        }
+
+        [TestMethod]
+        public void TestColumnInfoToStringWithoutAFieldReturnsNull()
+        {
+            // Act
+            var actual = new ColumnInfo().ToString();
+
+            // Assert
+            Assert.IsNull(actual);
+        }
+
         #endregion
 
         #region Helpers

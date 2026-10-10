@@ -149,6 +149,26 @@ namespace RepoDb.Schema.Core.UnitTests.Models
             Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
+        [TestMethod]
+        public void TestTableInfoToStringReturnsTheName()
+        {
+            // Act
+            var actual = Create().ToString();
+
+            // Assert
+            Assert.AreEqual("Person", actual);
+        }
+
+        [TestMethod]
+        public void TestTableInfoToStringWithoutANameReturnsNull()
+        {
+            // Act
+            var actual = new TableInfo(null, "dbo").ToString();
+
+            // Assert
+            Assert.IsNull(actual);
+        }
+
         #endregion
 
         #region Helpers

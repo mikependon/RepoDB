@@ -71,6 +71,17 @@ namespace RepoDb.Schema.Models
 
         #endregion
 
+        #region Overrides
+
+        /// <summary>
+        /// Gets the string that represents the instance of this <see cref="TableSchema"/> object.
+        /// </summary>
+        /// <returns>The name of the table of this <see cref="TableSchema"/> object (<c>null</c> if it has no table).</returns>
+        public override string ToString() =>
+            Table?.Name;
+
+        #endregion
+
         #region Equality and comparers
 
         /// <summary>

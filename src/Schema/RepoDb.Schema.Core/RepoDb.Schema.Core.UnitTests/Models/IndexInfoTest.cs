@@ -343,6 +343,26 @@ namespace RepoDb.Schema.Core.UnitTests.Models
             CollectionAssert.AreEqual(new[] { "Price" }, actual.ToArray());
         }
 
+        [TestMethod]
+        public void TestIndexInfoToStringReturnsTheName()
+        {
+            // Act
+            var actual = Create().ToString();
+
+            // Assert
+            Assert.AreEqual("IX_Person_Name", actual);
+        }
+
+        [TestMethod]
+        public void TestIndexInfoToStringWithoutANameReturnsNull()
+        {
+            // Act
+            var actual = new IndexInfo(null).ToString();
+
+            // Assert
+            Assert.IsNull(actual);
+        }
+
         #endregion
 
         #region Helpers

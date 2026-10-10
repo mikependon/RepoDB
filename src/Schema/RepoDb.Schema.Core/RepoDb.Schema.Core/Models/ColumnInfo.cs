@@ -59,6 +59,17 @@ namespace RepoDb.Schema.Models
 
         #endregion
 
+        #region Overrides
+
+        /// <summary>
+        /// Gets the string that represents the instance of this <see cref="ColumnInfo"/> object.
+        /// </summary>
+        /// <returns>The name of the field of this <see cref="ColumnInfo"/> object (<c>null</c> if it has no field).</returns>
+        public override string ToString() =>
+            Field?.Name;
+
+        #endregion
+
         #region Equality and comparers
 
         /// <summary>

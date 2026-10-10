@@ -147,6 +147,26 @@ namespace RepoDb.Schema.Core.UnitTests.Models
             CollectionAssert.AreEqual(expected, actual.ToArray());
         }
 
+        [TestMethod]
+        public void TestUniqueConstraintInfoToStringReturnsTheName()
+        {
+            // Act
+            var actual = Create().ToString();
+
+            // Assert
+            Assert.AreEqual("UQ_Person_Email", actual);
+        }
+
+        [TestMethod]
+        public void TestUniqueConstraintInfoToStringWithoutANameReturnsNull()
+        {
+            // Act
+            var actual = new UniqueConstraintInfo(null).ToString();
+
+            // Assert
+            Assert.IsNull(actual);
+        }
+
         #endregion
 
         #region Helpers

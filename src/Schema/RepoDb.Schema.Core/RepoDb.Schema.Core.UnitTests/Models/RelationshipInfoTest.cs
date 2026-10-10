@@ -196,6 +196,26 @@ namespace RepoDb.Schema.Core.UnitTests.Models
             Assert.AreSame(a, a.Parents[0].Parents[0]);
         }
 
+        [TestMethod]
+        public void TestRelationshipInfoToStringReturnsTheNameOfTheTableOfTheSchema()
+        {
+            // Act
+            var actual = Create().ToString();
+
+            // Assert
+            Assert.AreEqual("Person", actual);
+        }
+
+        [TestMethod]
+        public void TestRelationshipInfoToStringWithoutASchemaReturnsNull()
+        {
+            // Act
+            var actual = new RelationshipInfo().ToString();
+
+            // Assert
+            Assert.IsNull(actual);
+        }
+
         #endregion
 
         #region Helpers

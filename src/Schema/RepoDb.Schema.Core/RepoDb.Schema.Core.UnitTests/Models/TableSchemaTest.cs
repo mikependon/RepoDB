@@ -327,6 +327,36 @@ namespace RepoDb.Schema.Core.UnitTests.Models
             Assert.AreEqual(0, second.Columns.Count);
         }
 
+        [TestMethod]
+        public void TestTableSchemaToStringReturnsTheNameOfTheTable()
+        {
+            // Act
+            var actual = Create().ToString();
+
+            // Assert
+            Assert.AreEqual("Person", actual);
+        }
+
+        [TestMethod]
+        public void TestTableSchemaToStringDoesNotIncludeTheSchemaName()
+        {
+            // Act
+            var actual = new TableSchema("Customer", "Sales").ToString();
+
+            // Assert
+            Assert.AreEqual("Customer", actual);
+        }
+
+        [TestMethod]
+        public void TestTableSchemaToStringWithoutATableReturnsNull()
+        {
+            // Act
+            var actual = new TableSchema("Person", "dbo") { Table = null }.ToString();
+
+            // Assert
+            Assert.IsNull(actual);
+        }
+
         #endregion
 
         #region Helpers

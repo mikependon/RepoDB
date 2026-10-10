@@ -145,6 +145,26 @@ namespace RepoDb.Schema.Core.UnitTests.Models
             Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
+        [TestMethod]
+        public void TestCheckConstraintInfoToStringReturnsTheName()
+        {
+            // Act
+            var actual = Create().ToString();
+
+            // Assert
+            Assert.AreEqual("CK_Person_Age", actual);
+        }
+
+        [TestMethod]
+        public void TestCheckConstraintInfoToStringWithoutANameReturnsNull()
+        {
+            // Act
+            var actual = new CheckConstraintInfo(null).ToString();
+
+            // Assert
+            Assert.IsNull(actual);
+        }
+
         #endregion
 
         #region Helpers

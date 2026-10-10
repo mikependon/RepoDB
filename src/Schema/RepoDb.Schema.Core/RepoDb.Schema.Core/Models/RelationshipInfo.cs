@@ -40,6 +40,17 @@ namespace RepoDb.Schema.Models
 
         #endregion
 
+        #region Overrides
+
+        /// <summary>
+        /// Gets the string that represents the instance of this <see cref="RelationshipInfo"/> object.
+        /// </summary>
+        /// <returns>The name of the table of the schema of this <see cref="RelationshipInfo"/> object (<c>null</c> if it has no schema).</returns>
+        public override string ToString() =>
+            Schema?.ToString();
+
+        #endregion
+
         #region Equality and comparers
 
         /// <summary>

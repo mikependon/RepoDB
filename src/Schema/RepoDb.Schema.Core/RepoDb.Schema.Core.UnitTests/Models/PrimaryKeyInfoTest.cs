@@ -186,6 +186,26 @@ namespace RepoDb.Schema.Core.UnitTests.Models
             Assert.IsFalse(actual);
         }
 
+        [TestMethod]
+        public void TestPrimaryKeyInfoToStringReturnsTheName()
+        {
+            // Act
+            var actual = Create().ToString();
+
+            // Assert
+            Assert.AreEqual("PK_Person", actual);
+        }
+
+        [TestMethod]
+        public void TestPrimaryKeyInfoToStringWithoutANameReturnsNull()
+        {
+            // Act
+            var actual = new PrimaryKeyInfo(null).ToString();
+
+            // Assert
+            Assert.IsNull(actual);
+        }
+
         #endregion
 
         #region Helpers
