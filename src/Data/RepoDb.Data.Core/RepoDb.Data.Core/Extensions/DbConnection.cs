@@ -300,7 +300,9 @@ namespace RepoDb.Data
             {
                 if (BulkInsertInvoker.IsAvailable(destinationConnection, reader, false))
                 {
+                    var before = CopyDataLogger.Count(destinationConnection, targetTable, transaction);
                     var inserted = BulkInsertInvoker.BulkInsert(destinationConnection, targetTable, reader, batchSize, columnMappingsBehavior, commandTimeout, null, trace, transaction);
+                    CopyDataLogger.LogBulkInsert(options, destinationConnection, targetTable, inserted, before, CopyDataLogger.Count(destinationConnection, targetTable, transaction), CopyDataLogger.HasUnusableIndex(destinationConnection, targetTable, transaction));
                     Report(options, inserted, progressCallback);
                     return;
                 }
@@ -360,7 +362,10 @@ namespace RepoDb.Data
             {
                 if (BulkInsertInvoker.IsAvailable(destinationConnection, reader, true))
                 {
+                    var before = await CopyDataLogger.CountAsync(destinationConnection, targetTable, transaction, cancellationToken).ConfigureAwait(false);
                     var inserted = await BulkInsertInvoker.BulkInsertAsync(destinationConnection, targetTable, reader, batchSize, columnMappingsBehavior, commandTimeout, null, trace, transaction, cancellationToken).ConfigureAwait(false);
+                    var after = await CopyDataLogger.CountAsync(destinationConnection, targetTable, transaction, cancellationToken).ConfigureAwait(false);
+                    CopyDataLogger.LogBulkInsert(options, destinationConnection, targetTable, inserted, before, after, CopyDataLogger.HasUnusableIndex(destinationConnection, targetTable, transaction));
                     Report(options, inserted, progressCallback);
                     return;
                 }

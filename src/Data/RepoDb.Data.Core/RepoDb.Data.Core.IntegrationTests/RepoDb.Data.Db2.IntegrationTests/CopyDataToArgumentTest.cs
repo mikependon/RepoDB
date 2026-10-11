@@ -12,6 +12,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using IBM.Data.Db2;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Data.Enumerations;
+using RepoDb.Data.Models;
 using RepoDb.Data.Db2.IntegrationTests.Entities;
 using RepoDb.Data.Db2.IntegrationTests.Setup;
 using RepoDb.Exceptions;
@@ -319,10 +321,13 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.ExecuteOnTarget("INSERT INTO \"Currency\" (\"Code\", \"Name\") VALUES ('XXX', 'Euro');");
 
                 // Act (the bulk copy of Db2 skips the rows that violate a constraint, when the other rows are valid)
-                source.CopyDataTo("Currency", target);
+                CopyDataProgress progress = null;
+                source.CopyDataTo("Currency", target, progressCallback: p => progress = p);
 
                 // Assert (the row of Euro is skipped, since the name is unique)
                 Assert.AreEqual(3, Helper.TargetCount("\"Currency\""));
+                Assert.IsTrue(progress.Logs.Any(log => log.Level == CopyDataLogLevel.Warning && log.Text.Contains("1 of 3 row(s) were skipped", StringComparison.Ordinal)));
+                Assert.IsTrue(progress.Logs.All(log => log.DatabaseType == target.GetType()));
             }
         }
 

@@ -7,6 +7,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 
 namespace RepoDb.Data.Models
 {
@@ -26,6 +27,11 @@ namespace RepoDb.Data.Models
         /// Gets or sets the time (in UTC) when the copy operation has ended.
         /// </summary>
         public DateTime EndTime { get; set; }
+
+        /// <summary>
+        /// Gets or sets the logs (information and warnings) of the copy operation, i.e.: the rows that were skipped by the database provider.
+        /// </summary>
+        public List<CopyDataLog> Logs { get; set; } = new List<CopyDataLog>();
 
         /// <summary>
         /// Gets or sets the current number of rows that were copied.

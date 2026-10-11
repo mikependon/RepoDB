@@ -12,6 +12,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Oracle.ManagedDataAccess.Client;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Data.Enumerations;
+using RepoDb.Data.Models;
 using RepoDb.Data.Oracle.IntegrationTests.Entities;
 using RepoDb.Data.Oracle.IntegrationTests.Setup;
 using RepoDb.Exceptions;
@@ -322,11 +324,14 @@ namespace RepoDb.Data.Oracle.IntegrationTests
                 Helper.ExecuteOnTarget("INSERT INTO \"Currency\" (\"Code\", \"Name\") VALUES ('XXX', 'Euro');");
 
                 // Act (the bulk copy of Oracle is a direct path load, that does not enforce the unique constraints)
-                source.CopyDataTo("Currency", target);
+                CopyDataProgress progress = null;
+                source.CopyDataTo("Currency", target, progressCallback: p => progress = p);
 
                 // Assert
                 Assert.AreEqual(4, Helper.TargetCount("\"Currency\""));
                 Assert.AreEqual("UNUSABLE", Helper.TargetIndexStatus("UQ_Currency_Name"));
+                Assert.IsTrue(progress.Logs.Any(log => log.Level == CopyDataLogLevel.Warning && log.Text.Contains("unusable index", StringComparison.Ordinal)));
+                Assert.IsTrue(progress.Logs.All(log => log.DatabaseType == target.GetType()));
             }
         }
 
