@@ -21,6 +21,7 @@
   <Project Path="RepoDb.Data.Core.IntegrationTests/RepoDb.Data.AuroraDbMySqlConnector.IntegrationTests/RepoDb.Data.AuroraDbMySqlConnector.IntegrationTests.csproj" />
   <Project Path="RepoDb.Data.Core.IntegrationTests/RepoDb.Data.CockroachDb.IntegrationTests/RepoDb.Data.CockroachDb.IntegrationTests.csproj" />
   <Project Path="RepoDb.Data.Core.IntegrationTests/RepoDb.Data.SqliteMicrosoft.IntegrationTests/RepoDb.Data.SqliteMicrosoft.IntegrationTests.csproj" />
+  <Project Path="RepoDb.Data.Core.IntegrationTests/RepoDb.Data.DuckDb.IntegrationTests/RepoDb.Data.DuckDb.IntegrationTests.csproj" />
   <Project Path="RepoDb.Data.Core.IntegrationTests/RepoDb.Data.SqliteTurso.IntegrationTests/RepoDb.Data.SqliteTurso.IntegrationTests.csproj" />
   <Project Path="RepoDb.Data.Core.IntegrationTests/RepoDb.Data.SqliteAhtola.IntegrationTests/RepoDb.Data.SqliteAhtola.IntegrationTests.csproj" />
   <Project Path="RepoDb.Data.Core.IntegrationTests/RepoDb.Data.AuroraDbPostgreSql.IntegrationTests/RepoDb.Data.AuroraDbPostgreSql.IntegrationTests.csproj" />

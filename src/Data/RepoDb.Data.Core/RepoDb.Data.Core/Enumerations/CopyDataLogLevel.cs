@@ -19,7 +19,7 @@ namespace RepoDb.Data.Enumerations
         Info,
 
         /// <summary>
-        /// A warning: the copy operation continued, but the result may not be the expected one (i.e.: the rows were skipped or duplicated by the provider).
+        /// A warning: the copy operation continued, but the result may not be the expected one (i.e.: the rows were skipped by the provider).
         /// </summary>
         Warning,
 
