@@ -155,6 +155,7 @@ namespace RepoDb
         /// <param name="mappings">The explicit mapping of the source columns to the destination columns.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
+        /// <param name="identityBehavior">The behavior of the identity column during the operation. When null, the identity column is not written (the target generates it); <see cref="DuckDbBulkImportIdentityBehavior.KeepIdentity"/> writes the values of the reader.</param>
         /// <param name="pseudoTableType">Unused for a plain streaming insert - accepted for signature symmetry with the other <c>DbDataReader</c> bulk operations.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
@@ -166,11 +167,12 @@ namespace RepoDb
             IEnumerable<DuckDbBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            DuckDbBulkImportIdentityBehavior? identityBehavior = null,
             DuckDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = DuckDbTraceKeys.DuckDbBulkInsert,
             DuckDBTransaction transaction = null) =>
-            BulkInsertBase(connection, tableName, reader, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
+            BulkInsertBase(connection, tableName, reader, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction);
 
         #endregion
 
@@ -316,6 +318,7 @@ namespace RepoDb
         /// <param name="mappings">The explicit mapping of the source columns to the destination columns.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
+        /// <param name="identityBehavior">The behavior of the identity column during the operation. When null, the identity column is not written (the target generates it); <see cref="DuckDbBulkImportIdentityBehavior.KeepIdentity"/> writes the values of the reader.</param>
         /// <param name="pseudoTableType">Unused for a plain streaming insert - accepted for signature symmetry with the other <c>DbDataReader</c> bulk operations.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="traceKey">The tracing key to be used.</param>
@@ -328,12 +331,13 @@ namespace RepoDb
             IEnumerable<DuckDbBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            DuckDbBulkImportIdentityBehavior? identityBehavior = null,
             DuckDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = DuckDbTraceKeys.DuckDbBulkInsert,
             DuckDBTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            BulkInsertBaseAsync(connection, tableName, reader, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+            BulkInsertBaseAsync(connection, tableName, reader, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         #endregion
     }

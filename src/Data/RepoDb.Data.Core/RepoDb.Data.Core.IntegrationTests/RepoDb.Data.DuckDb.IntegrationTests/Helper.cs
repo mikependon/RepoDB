@@ -20,16 +20,16 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
     public static class Helper
     {
         /// <summary>
-        /// The schema of a table is a schema of the database in Firebird: the <c>Sales</c> schema of the tests is a schema of the source and another one of the target.
+        /// The statement is executed as it is (the terminator of the statement is removed).
         /// </summary>
         /// <param name="connectionString">The connection string of the database (the source or the target).</param>
-        /// <param name="commandText">The statement, with the tables of the Sales schema as <c>`Sales`.`Table`</c>.</param>
+        /// <param name="commandText">The statement, of the source or the target database.</param>
         public static string Qualify(string connectionString,
             string commandText)
         {
             var qualified = commandText;
 
-            // The terminator of the statement is not accepted
+            // The terminator of the statement is removed
             return qualified.TrimStart().StartsWith("BEGIN", StringComparison.OrdinalIgnoreCase) ? qualified : qualified.Trim().TrimEnd(';');
         }
 
@@ -54,7 +54,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                         var row = new Dictionary<string, object>(StringComparer.Ordinal);
                         for (var i = 0; i < reader.FieldCount; i++)
                         {
-                            row[reader.GetName(i)] = reader.IsDBNull(i) ? null : reader.GetValue(i);
+                            row[reader.GetName(i)] = reader.IsDBNull(i) ? null : ReadValue(reader.GetValue(i));
                         }
                         rows.Add(row);
                     }
@@ -115,9 +115,8 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         /// Gets the names of the (user) tables of the target database, in the <c>[schema].[table]</c> form, in alphabetical order.
         /// </summary>
         public static List<string> TargetTables() =>
-            Read(Database.ConnectionStringForTarget, "SELECT '\"' || name || '\"' AS \"Name\" FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%'")
+            Read(Database.ConnectionStringForTarget, "SELECT CASE WHEN schema_name = 'main' THEN '\"' || table_name || '\"' ELSE '\"' || schema_name || '\".\"' || table_name || '\"' END AS \"Name\" FROM duckdb_tables() WHERE database_name = current_database() AND NOT internal ORDER BY schema_name, table_name")
                 .Select(row => (string)row["Name"])
-                .OrderBy(name => name.Replace("\"", string.Empty), StringComparer.Ordinal)
                 .ToList();
 
         /// <summary>
@@ -143,7 +142,10 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 {
                     foreach (var statement in composer.ComposeSchema(reader.GetTableSchema(tableName)))
                     {
-                        target.ExecuteNonQuery(statement);
+                        if (!string.IsNullOrWhiteSpace(statement))
+                        {
+                            target.ExecuteNonQuery(statement);
+                        }
                     }
                 }
             }
@@ -206,20 +208,35 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
             }
         }
 
+        private static object ReadValue(object value) =>
+            value is System.IO.Stream stream ? ReadAllBytes(stream) : value;
+
+        private static byte[] ReadAllBytes(System.IO.Stream stream)
+        {
+            using (var memory = new System.IO.MemoryStream())
+            {
+                stream.CopyTo(memory);
+                return memory.ToArray();
+            }
+        }
+
         private static void AssertValuesEqual(object expected,
             object actual,
             string message)
         {
+            if (expected is System.IO.Stream expectedStream)
+            {
+                // DuckDB reads the BLOB values as streams
+                expected = ReadAllBytes(expectedStream);
+            }
+            if (actual is System.IO.Stream actualStream)
+            {
+                actual = ReadAllBytes(actualStream);
+            }
             if (expected is byte[] expectedBytes)
             {
                 Assert.IsInstanceOfType<byte[]>(actual, message);
                 CollectionAssert.AreEqual(expectedBytes, (byte[])actual, message);
-                return;
-            }
-            // TINYINT(1) is read as a boolean, while the columns that are created in the target (TINYINT) are read as numbers
-            if (expected is bool expectedBool && actual is sbyte actualSByte)
-            {
-                Assert.AreEqual(expectedBool, actualSByte != 0, message);
                 return;
             }
             Assert.AreEqual(expected, actual, message);

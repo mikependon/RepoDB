@@ -42,14 +42,26 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
 
         #region Helpers
 
-        private static string[] TargetColumns(string quotedName) =>
-            Helper.Read(Database.ConnectionStringForTarget, $"SELECT name AS \"name\" FROM pragma_table_info('{quotedName.Trim('\"')}') ORDER BY cid")
+        private static (string Schema, string Table) Split(string quotedName)
+        {
+            var parts = quotedName.Replace("\"", string.Empty).Split('.');
+            return parts.Length == 1 ? ("main", parts[0]) : (parts[0], parts[1]);
+        }
+
+        private static string[] TargetColumns(string quotedName)
+        {
+            var (schema, table) = Split(quotedName);
+            return Helper.Read(Database.ConnectionStringForTarget, $"SELECT column_name AS \"name\" FROM duckdb_columns() WHERE schema_name = '{schema}' AND table_name = '{table}' ORDER BY column_index")
                 .Select(row => (string)row["name"])
                 .ToArray();
+        }
 
         private static bool TargetIndexExists(string quotedName,
-            string indexName) =>
-            Helper.Read(Database.ConnectionStringForTarget, $"SELECT name AS \"index_name\" FROM pragma_index_list('{quotedName.Trim('\"')}') WHERE name = '{indexName}'").Count == 1;
+            string indexName)
+        {
+            var (schema, table) = Split(quotedName);
+            return Helper.Read(Database.ConnectionStringForTarget, $"SELECT index_name AS \"name\" FROM duckdb_indexes() WHERE schema_name = '{schema}' AND table_name = '{table}' AND index_name = '{indexName}'").Count == 1;
+        }
 
         #endregion
 
@@ -83,7 +95,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
             {
                 // Setup
                 Helper.MapSchemaReader(source);
-                Helper.ExecuteOnTarget("CREATE TABLE \"Currency\" (\"Code\" CHAR(3) NOT NULL, \"Name\" VARCHAR(50) NOT NULL, \"Extra\" INTEGER, CONSTRAINT \"PK_Currency\" PRIMARY KEY (\"Code\"));");
+                Helper.ExecuteOnTarget("CREATE TABLE \"Currency\" (\"Code\" CHAR(3) NOT NULL, \"Name\" varchar(50) NOT NULL, \"Extra\" INT NULL, CONSTRAINT \"PK_Currency\" PRIMARY KEY (\"Code\"));");
 
                 // Act
                 var actual = source.CopyDataTo("Currency", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, tableExistenceBehavior: CopySchemaExistsBehavior.Skip);
@@ -349,7 +361,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
             {
                 // Setup
                 Helper.MapSchemaReader(source);
-                Helper.ExecuteOnTarget("CREATE TABLE \"Currency\" (\"Code\" INTEGER NOT NULL, \"Foo\" VARCHAR(10));");
+                Helper.ExecuteOnTarget("CREATE TABLE \"Currency\" (\"Code\" INT NOT NULL, \"Foo\" varchar(10) NULL);");
 
                 // Act
                 var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: CopySchemaExistsBehavior.Drop);
@@ -521,7 +533,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
             {
                 // Setup
                 Helper.MapSchemaReader(source);
-                Helper.ExecuteOnTarget("CREATE TABLE \"Currency\" (\"Code\" CHAR(3) NOT NULL, \"Name\" VARCHAR(50) NOT NULL, \"Extra\" INTEGER, CONSTRAINT \"PK_Currency\" PRIMARY KEY (\"Code\"));");
+                Helper.ExecuteOnTarget("CREATE TABLE \"Currency\" (\"Code\" CHAR(3) NOT NULL, \"Name\" varchar(50) NOT NULL, \"Extra\" INT NULL, CONSTRAINT \"PK_Currency\" PRIMARY KEY (\"Code\"));");
 
                 // Act
                 var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: CopySchemaExistsBehavior.Align);

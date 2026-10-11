@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using DuckDB.NET.Data;
+using RepoDb.DbSettings;
 using RepoDb.Schema.DuckDb;
 
 namespace RepoDb.Data.DuckDb.IntegrationTests.Setup
@@ -45,16 +46,16 @@ namespace RepoDb.Data.DuckDb.IntegrationTests.Setup
 
         public static void Initialize()
         {
-            // The connections (SQLite has no server: the source and the target are 2 files)
-            SourcePath = Environment.GetEnvironmentVariable("REPODB_DUCKDB_DATA_SOURCE") ?? Path.Combine(Path.GetTempPath(), "repodb_data_duckdb_source.db");
-            TargetPath = Environment.GetEnvironmentVariable("REPODB_DUCKDB_DATA_TARGET") ?? Path.Combine(Path.GetTempPath(), "repodb_data_duckdb_target.db");
-            ConnectionStringForSource = $"Data Source={SourcePath};Pooling=False;";
-            ConnectionStringForTarget = $"Data Source={TargetPath};Pooling=False;";
+            // The connections (DuckDB has no server: the source and the target are 2 files)
+            SourcePath = Environment.GetEnvironmentVariable("REPODB_DUCKDB_DATA_SOURCE") ?? Path.Combine(Path.GetTempPath(), "repodb_data_duckdb_source.duckdb");
+            TargetPath = Environment.GetEnvironmentVariable("REPODB_DUCKDB_DATA_TARGET") ?? Path.Combine(Path.GetTempPath(), "repodb_data_duckdb_target.duckdb");
+            ConnectionStringForSource = $"Data Source={SourcePath}";
+            ConnectionStringForTarget = $"Data Source={TargetPath}";
 
-            // Initialize the SQLite
+            // Initialize the DuckDB
             GlobalConfiguration
                 .Setup()
-                .UseDuckDb()
+                .UseDuckDb(new DuckDbBulkOperationsDbSetting())
                 .UseDuckDbSchema();
 
             // Create the source tables (with their rows) and clean the target database
@@ -64,10 +65,10 @@ namespace RepoDb.Data.DuckDb.IntegrationTests.Setup
 
         public static void Cleanup()
         {
-            // The target database is dedicated to the tests, so all of its tables are dropped
+            // The target database is dedicated to the tests, so all of its tables and sequences are dropped
             using (var connection = new DuckDBConnection(ConnectionStringForTarget).EnsureOpen())
             {
-                DropTables(connection);
+                DropObjects(connection);
             }
 
             // The fields of the tables are cached (by the connection string and the name of the table), and the tables are not the same in the next test
@@ -78,23 +79,54 @@ namespace RepoDb.Data.DuckDb.IntegrationTests.Setup
 
         #region Helpers
 
-        private static void DropTables(IDbConnection connection)
+        private static void DropObjects(IDbConnection connection)
         {
-            // The foreign keys are not checked while the tables are dropped, so they can be dropped in any order
-            connection.ExecuteNonQuery("PRAGMA foreign_keys = OFF");
-            var tables = new List<string>();
-            using (var reader = connection.ExecuteReader("SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%'"))
+            var tables = new List<(string Schema, string Name)>();
+            using (var reader = connection.ExecuteReader("SELECT schema_name, table_name FROM duckdb_tables() WHERE database_name = current_database() AND NOT internal"))
             {
                 while (reader.Read())
                 {
-                    tables.Add(reader.GetString(0));
+                    tables.Add((reader.GetString(0), reader.GetString(1)));
                 }
             }
-            foreach (var table in tables)
+
+            // DuckDB can not drop a table that another table references, so the tables are dropped in as many passes as needed
+            while (tables.Count > 0)
             {
-                connection.ExecuteNonQuery($"DROP TABLE IF EXISTS \"{table}\"");
+                var remaining = new List<(string Schema, string Name)>();
+                foreach (var (schema, name) in tables)
+                {
+                    try
+                    {
+                        connection.ExecuteNonQuery($"DROP TABLE IF EXISTS \"{schema}\".\"{name}\"");
+                    }
+                    catch (DuckDBException)
+                    {
+                        remaining.Add((schema, name));
+                    }
+                }
+                if (remaining.Count == tables.Count)
+                {
+                    throw new InvalidOperationException("The tables can not be dropped.");
+                }
+                tables = remaining;
             }
-            connection.ExecuteNonQuery("PRAGMA foreign_keys = ON");
+
+            var sequences = new List<(string Schema, string Name)>();
+            using (var reader = connection.ExecuteReader("SELECT schema_name, sequence_name FROM duckdb_sequences() WHERE database_name = current_database() AND NOT temporary"))
+            {
+                while (reader.Read())
+                {
+                    sequences.Add((reader.GetString(0), reader.GetString(1)));
+                }
+            }
+            foreach (var (schema, name) in sequences)
+            {
+                connection.ExecuteNonQuery($"DROP SEQUENCE IF EXISTS \"{schema}\".\"{name}\"");
+            }
+
+            // The schema of the tests (the tables of the schema are dropped, but the schema itself stays)
+            connection.ExecuteNonQuery("CREATE SCHEMA IF NOT EXISTS \"Sales\"");
         }
 
         private static void Execute(IDbConnection connection, params string[] statements)
@@ -114,33 +146,33 @@ namespace RepoDb.Data.DuckDb.IntegrationTests.Setup
             using (var master = new DuckDBConnection(ConnectionStringForSource).EnsureOpen())
             {
                 // The source tables are created (with their rows) only once: they are not changed by the tests
-                var exists = Convert.ToInt32(master.ExecuteScalar("SELECT COUNT(*) FROM sqlite_master WHERE type = 'table' AND name = 'Empty'"));
+                var exists = Convert.ToInt32(master.ExecuteScalar("SELECT COUNT(*) FROM duckdb_tables() WHERE database_name = current_database() AND ((schema_name = 'main' AND table_name = 'Empty') OR (schema_name = 'Sales' AND table_name = 'Invoice'))")) == 2 ? 1 : 0;
                 if (exists > 0)
                 {
                     return;
                 }
-                DropTables(master);
+                DropObjects(master);
             }
 
             using (var connection = new DuckDBConnection(ConnectionStringForSource).EnsureOpen())
             {
-                // The foreign keys are not checked while the rows are inserted (the tables are related to each other)
-                connection.ExecuteNonQuery("PRAGMA foreign_keys = OFF");
-
                 // The root of the tree: Country <- Person <- Pet <- Toy
                 Execute(connection,
+                    @"CREATE SEQUENCE ""Country_Id_seq""",
                     @"CREATE TABLE ""Country""
                     (
-                        ""Id"" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        ""Id"" INTEGER DEFAULT nextval('""Country_Id_seq""') NOT NULL,
                         ""Name"" VARCHAR(100) NOT NULL,
+                        CONSTRAINT ""PK_Country"" PRIMARY KEY (""Id""),
                         CONSTRAINT ""UQ_Country_Name"" UNIQUE (""Name"")
                     )",
                     @"INSERT INTO ""Country"" (""Name"") VALUES ('Philippines')",
                     @"INSERT INTO ""Country"" (""Name"") VALUES ('Japan')",
                     @"INSERT INTO ""Country"" (""Name"") VALUES ('Germany')",
+                    @"CREATE SEQUENCE ""Person_Id_seq""",
                     @"CREATE TABLE ""Person""
                     (
-                        ""Id"" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        ""Id"" INTEGER DEFAULT nextval('""Person_Id_seq""') NOT NULL,
                         ""Name"" VARCHAR(128) NOT NULL,
                         ""Age"" INTEGER,
                         ""CountryId"" INTEGER,
@@ -148,21 +180,24 @@ namespace RepoDb.Data.DuckDb.IntegrationTests.Setup
                         ""Birthday"" DATE,
                         ""IsActive"" BOOLEAN NOT NULL,
                         ""CreatedDateUtc"" TIMESTAMP NOT NULL,
+                        CONSTRAINT ""PK_Person"" PRIMARY KEY (""Id""),
                         CONSTRAINT ""CK_Person_Age"" CHECK (""Age"" >= 0),
                         CONSTRAINT ""FK_Person_Country"" FOREIGN KEY (""CountryId"") REFERENCES ""Country"" (""Id"")
                     )",
                     @"CREATE INDEX ""IX_Person_Name"" ON ""Person"" (""Name"")",
-                    @"INSERT INTO ""Person"" (""Name"", ""Age"", ""CountryId"", ""Salary"", ""Birthday"", ""IsActive"", ""CreatedDateUtc"") VALUES ('Alice', 30, 1, 1000.50, '1990-01-15', 1, '2026-01-01 10:00:00.123')",
-                    @"INSERT INTO ""Person"" (""Name"", ""Age"", ""CountryId"", ""Salary"", ""Birthday"", ""IsActive"", ""CreatedDateUtc"") VALUES ('Bob', 45, 2, 2500.00, '1975-06-30', 1, '2026-01-02 11:00:00.456')",
-                    @"INSERT INTO ""Person"" (""Name"", ""Age"", ""CountryId"", ""Salary"", ""Birthday"", ""IsActive"", ""CreatedDateUtc"") VALUES ('Carol', NULL, NULL, NULL, NULL, 0, '2026-01-03 12:00:00.789')",
-                    @"INSERT INTO ""Person"" (""Name"", ""Age"", ""CountryId"", ""Salary"", ""Birthday"", ""IsActive"", ""CreatedDateUtc"") VALUES ('Dave', 22, 1, 800.25, '2003-12-01', 1, '2026-01-04 13:00:00.000')",
-                    @"INSERT INTO ""Person"" (""Name"", ""Age"", ""CountryId"", ""Salary"", ""Birthday"", ""IsActive"", ""CreatedDateUtc"") VALUES ('Eve', 37, 3, 3100.75, '1988-03-09', 0, '2026-01-05 14:00:00.321')",
-                    @"INSERT INTO ""Person"" (""Name"", ""Age"", ""CountryId"", ""Salary"", ""Birthday"", ""IsActive"", ""CreatedDateUtc"") VALUES ('Frank', 52, 2, NULL, '1970-11-22', 1, '2026-01-06 15:00:00.654')",
+                    @"INSERT INTO ""Person"" (""Name"", ""Age"", ""CountryId"", ""Salary"", ""Birthday"", ""IsActive"", ""CreatedDateUtc"") VALUES ('Alice', 30, 1, 1000.50, '1990-01-15', true, '2026-01-01 10:00:00.123')",
+                    @"INSERT INTO ""Person"" (""Name"", ""Age"", ""CountryId"", ""Salary"", ""Birthday"", ""IsActive"", ""CreatedDateUtc"") VALUES ('Bob', 45, 2, 2500.00, '1975-06-30', true, '2026-01-02 11:00:00.456')",
+                    @"INSERT INTO ""Person"" (""Name"", ""Age"", ""CountryId"", ""Salary"", ""Birthday"", ""IsActive"", ""CreatedDateUtc"") VALUES ('Carol', NULL, NULL, NULL, NULL, false, '2026-01-03 12:00:00.789')",
+                    @"INSERT INTO ""Person"" (""Name"", ""Age"", ""CountryId"", ""Salary"", ""Birthday"", ""IsActive"", ""CreatedDateUtc"") VALUES ('Dave', 22, 1, 800.25, '2003-12-01', true, '2026-01-04 13:00:00.000')",
+                    @"INSERT INTO ""Person"" (""Name"", ""Age"", ""CountryId"", ""Salary"", ""Birthday"", ""IsActive"", ""CreatedDateUtc"") VALUES ('Eve', 37, 3, 3100.75, '1988-03-09', false, '2026-01-05 14:00:00.321')",
+                    @"INSERT INTO ""Person"" (""Name"", ""Age"", ""CountryId"", ""Salary"", ""Birthday"", ""IsActive"", ""CreatedDateUtc"") VALUES ('Frank', 52, 2, NULL, '1970-11-22', true, '2026-01-06 15:00:00.654')",
+                    @"CREATE SEQUENCE ""Pet_Id_seq""",
                     @"CREATE TABLE ""Pet""
                     (
-                        ""Id"" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        ""Id"" INTEGER DEFAULT nextval('""Pet_Id_seq""') NOT NULL,
                         ""Name"" VARCHAR(50) NOT NULL,
                         ""PersonId"" INTEGER NOT NULL,
+                        CONSTRAINT ""PK_Pet"" PRIMARY KEY (""Id""),
                         CONSTRAINT ""FK_Pet_Person"" FOREIGN KEY (""PersonId"") REFERENCES ""Person"" (""Id"")
                     )",
                     @"INSERT INTO ""Pet"" (""Name"", ""PersonId"") VALUES ('Rex', 1)",
@@ -170,11 +205,13 @@ namespace RepoDb.Data.DuckDb.IntegrationTests.Setup
                     @"INSERT INTO ""Pet"" (""Name"", ""PersonId"") VALUES ('Kiko', 2)",
                     @"INSERT INTO ""Pet"" (""Name"", ""PersonId"") VALUES ('Luna', 4)",
                     @"INSERT INTO ""Pet"" (""Name"", ""PersonId"") VALUES ('Milo', 5)",
+                    @"CREATE SEQUENCE ""Toy_Id_seq""",
                     @"CREATE TABLE ""Toy""
                     (
-                        ""Id"" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        ""Id"" INTEGER DEFAULT nextval('""Toy_Id_seq""') NOT NULL,
                         ""Name"" VARCHAR(50) NOT NULL,
                         ""PetId"" INTEGER NOT NULL,
+                        CONSTRAINT ""PK_Toy"" PRIMARY KEY (""Id""),
                         CONSTRAINT ""FK_Toy_Pet"" FOREIGN KEY (""PetId"") REFERENCES ""Pet"" (""Id"")
                     )",
                     @"INSERT INTO ""Toy"" (""Name"", ""PetId"") VALUES ('Ball', 1)",
@@ -206,14 +243,14 @@ namespace RepoDb.Data.DuckDb.IntegrationTests.Setup
                         ""FloatValue"" DOUBLE,
                         ""DateTime2Value"" TIMESTAMP,
                         ""DateValue"" DATE,
-                        ""GuidValue"" CHAR(36),
+                        ""GuidValue"" UUID,
                         ""BinaryValue"" BLOB,
                         ""TextValue"" TEXT,
                         ""CharValue"" VARCHAR(50),
                         CONSTRAINT ""PK_Sample"" PRIMARY KEY (""Id"")
                     )",
-                    @"INSERT INTO ""Sample"" VALUES (1, 9223372036854775807, 1, 12345.6789, 3.14159265358979, '2026-02-03 04:05:06.123456', '2026-02-03', '6f9619ff-8b86-d011-b42d-00c04fc964ff', x'0102030405', 'A long text with unicode: ñ é 日本語', 'abc')",
-                    @"INSERT INTO ""Sample"" VALUES (2, -9223372036854775807, 0, -0.0001, -2.5E-10, '0001-01-01 00:00:00', '9999-12-31', '00000000-0000-0000-0000-000000000000', x'FF', 'text', '')",
+                    @"INSERT INTO ""Sample"" VALUES (1, 9223372036854775807, true, 12345.6789, 3.14159265358979, '2026-02-03 04:05:06.123456', '2026-02-03', '6f9619ff-8b86-d011-b42d-00c04fc964ff', '\x01\x02\x03\x04\x05'::BLOB, 'A long text with unicode: ñ é 日本語', 'abc')",
+                    @"INSERT INTO ""Sample"" VALUES (2, -9223372036854775807, false, -0.0001, -2.5E-10, '0001-01-01 00:00:00', '9999-12-31', '00000000-0000-0000-0000-000000000000', ''::BLOB, '', '')",
                     @"INSERT INTO ""Sample"" VALUES (3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)");
 
                 // A table whose name and column have a space
@@ -235,8 +272,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests.Setup
                         ""Label"" VARCHAR(20) NOT NULL,
                         CONSTRAINT ""PK_Number"" PRIMARY KEY (""Value"")
                     )",
-                    @"WITH RECURSIVE ""Numbers"" (""N"") AS (SELECT 1 UNION ALL SELECT ""N"" + 1 FROM ""Numbers"" WHERE ""N"" < 2500)
-                        INSERT INTO ""Number"" (""Value"", ""Label"") SELECT ""N"", 'Number ' || ""N"" FROM ""Numbers""");
+                    @"INSERT INTO ""Number"" (""Value"", ""Label"") SELECT i, 'Number ' || i FROM range(1, 2501) t(i)");
 
                 // A self-referencing foreign key
                 Execute(connection,
@@ -252,13 +288,6 @@ namespace RepoDb.Data.DuckDb.IntegrationTests.Setup
                     @"INSERT INTO ""Employee"" (""Id"", ""Name"", ""ManagerId"") VALUES (2, 'VP', 1)",
                     @"INSERT INTO ""Employee"" (""Id"", ""Name"", ""ManagerId"") VALUES (3, 'Developer', 2)");
 
-                // A cycle of 2 tables
-                Execute(connection,
-                    @"CREATE TABLE ""CycleA"" (""Id"" INTEGER NOT NULL, ""BId"" INTEGER, CONSTRAINT ""PK_CycleA"" PRIMARY KEY (""Id""), CONSTRAINT ""FK_CycleA_CycleB"" FOREIGN KEY (""BId"") REFERENCES ""CycleB"" (""Id""))",
-                    @"CREATE TABLE ""CycleB"" (""Id"" INTEGER NOT NULL, ""AId"" INTEGER, CONSTRAINT ""PK_CycleB"" PRIMARY KEY (""Id""), CONSTRAINT ""FK_CycleB_CycleA"" FOREIGN KEY (""AId"") REFERENCES ""CycleA"" (""Id""))",
-                    @"INSERT INTO ""CycleA"" (""Id"", ""BId"") VALUES (1, 1)",
-                    @"INSERT INTO ""CycleB"" (""Id"", ""AId"") VALUES (1, 1)");
-
                 // A table without a primary key
                 Execute(connection,
                     @"CREATE TABLE ""NoKey"" (""Value"" VARCHAR(50), ""Amount"" INTEGER)",
@@ -266,36 +295,32 @@ namespace RepoDb.Data.DuckDb.IntegrationTests.Setup
                     @"INSERT INTO ""NoKey"" (""Value"", ""Amount"") VALUES ('A', 1)",
                     @"INSERT INTO ""NoKey"" (""Value"", ""Amount"") VALUES (NULL, NULL)");
 
-                // The tables that SQLite keeps in the default schema (an invoice, its lines, and a ledger that references it)
+                // Tables of a schema that is not the default one (DuckDB can not create a foreign key across the schemas)
                 Execute(connection,
-                    @"CREATE TABLE ""Invoice""
+                    @"CREATE TABLE ""Sales"".""Invoice""
                     (
                         ""Id"" INTEGER NOT NULL,
-                        ""Total"" DECIMAL(18, 4) NOT NULL,
+                        ""Total"" DECIMAL(19, 4) NOT NULL,
                         CONSTRAINT ""PK_Invoice"" PRIMARY KEY (""Id"")
                     )",
-                    @"CREATE TABLE ""InvoiceLine""
+                    @"CREATE TABLE ""Sales"".""InvoiceLine""
                     (
                         ""Id"" INTEGER NOT NULL,
                         ""InvoiceId"" INTEGER NOT NULL,
                         ""Description"" VARCHAR(100) NOT NULL,
                         CONSTRAINT ""PK_InvoiceLine"" PRIMARY KEY (""Id""),
-                        CONSTRAINT ""FK_InvoiceLine_Invoice"" FOREIGN KEY (""InvoiceId"") REFERENCES ""Invoice"" (""Id"")
+                        CONSTRAINT ""FK_InvoiceLine_Invoice"" FOREIGN KEY (""InvoiceId"") REFERENCES ""Sales"".""Invoice"" (""Id"")
                     )",
-                    @"CREATE TABLE ""Ledger""
+                    @"CREATE TABLE ""Sales"".""Ledger""
                     (
                         ""Id"" INTEGER NOT NULL,
                         ""InvoiceId"" INTEGER NOT NULL,
                         CONSTRAINT ""PK_Ledger"" PRIMARY KEY (""Id""),
-                        CONSTRAINT ""FK_Ledger_Invoice"" FOREIGN KEY (""InvoiceId"") REFERENCES ""Invoice"" (""Id"")
+                        CONSTRAINT ""FK_Ledger_Invoice"" FOREIGN KEY (""InvoiceId"") REFERENCES ""Sales"".""Invoice"" (""Id"")
                     )",
-                    @"INSERT INTO ""Invoice"" (""Id"", ""Total"") VALUES (1, 100.0000)",
-                    @"INSERT INTO ""Invoice"" (""Id"", ""Total"") VALUES (2, 250.5000)",
-                    @"INSERT INTO ""InvoiceLine"" (""Id"", ""InvoiceId"", ""Description"") VALUES (1, 1, 'Line 1')",
-                    @"INSERT INTO ""InvoiceLine"" (""Id"", ""InvoiceId"", ""Description"") VALUES (2, 1, 'Line 2')",
-                    @"INSERT INTO ""InvoiceLine"" (""Id"", ""InvoiceId"", ""Description"") VALUES (3, 2, 'Line 3')",
-                    @"INSERT INTO ""Ledger"" (""Id"", ""InvoiceId"") VALUES (1, 1)",
-                    @"INSERT INTO ""Ledger"" (""Id"", ""InvoiceId"") VALUES (2, 2)");
+                    @"INSERT INTO ""Sales"".""Invoice"" (""Id"", ""Total"") VALUES (1, 100.0000), (2, 250.5000)",
+                    @"INSERT INTO ""Sales"".""InvoiceLine"" (""Id"", ""InvoiceId"", ""Description"") VALUES (1, 1, 'Line 1'), (2, 1, 'Line 2'), (3, 2, 'Line 3')",
+                    @"INSERT INTO ""Sales"".""Ledger"" (""Id"", ""InvoiceId"") VALUES (1, 1), (2, 2)");
 
                 // A table without rows (it is the last one: it tells that the source tables are all created)
                 Execute(connection,

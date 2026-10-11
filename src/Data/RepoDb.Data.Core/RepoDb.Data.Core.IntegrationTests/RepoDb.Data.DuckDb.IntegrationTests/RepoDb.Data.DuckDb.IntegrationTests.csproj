@@ -20,7 +20,6 @@
     <ProjectReference Include="..\..\..\..\Providers\RepoDb.DuckDb.BulkOperations\RepoDb.DuckDb.BulkOperations\RepoDb.DuckDb.BulkOperations.csproj" />
     <ProjectReference Include="..\..\..\..\Schema\RepoDb.Schema.DuckDb\RepoDb.Schema.DuckDb\RepoDb.Schema.DuckDb.csproj" />
     <ProjectReference Include="..\..\..\..\Schema\RepoDb.Schema.Core\RepoDb.Schema.Core\RepoDb.Schema.Core.csproj" />
-    <ProjectReference Include="..\..\..\..\Schema\RepoDb.Schema.DuckDb\RepoDb.Schema.DuckDb\RepoDb.Schema.DuckDb.csproj" />
     <ProjectReference Include="..\..\RepoDb.Data.Core\RepoDb.Data.Core.csproj" />
   </ItemGroup>
 </Project>

@@ -422,6 +422,7 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
@@ -433,6 +434,7 @@ namespace RepoDb
             IEnumerable<DuckDbBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            DuckDbBulkImportIdentityBehavior? identityBehavior = null,
             DuckDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = DuckDbTraceKeys.DuckDbBulkInsert,
@@ -456,7 +458,7 @@ namespace RepoDb
                 bulkCopyTimeout,
                 batchSize,
                 transaction,
-                identityField);
+                identityBehavior == DuckDbBulkImportIdentityBehavior.KeepIdentity ? null : identityField);
 
             // After Execution
             Tracer
@@ -879,6 +881,7 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
@@ -891,6 +894,7 @@ namespace RepoDb
             IEnumerable<DuckDbBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            DuckDbBulkImportIdentityBehavior? identityBehavior = null,
             DuckDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = DuckDbTraceKeys.DuckDbBulkInsert,
@@ -916,7 +920,7 @@ namespace RepoDb
                 batchSize,
                 cancellationToken,
                 transaction,
-                identityField).ConfigureAwait(false);
+                identityBehavior == DuckDbBulkImportIdentityBehavior.KeepIdentity ? null : identityField).ConfigureAwait(false);
 
             // After Execution
             await Tracer

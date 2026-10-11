@@ -203,7 +203,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
-                Helper.ExecuteOnTarget("CREATE TABLE \"DoesNotExist\" (\"Id\" INTEGER NOT NULL);");
+                Helper.ExecuteOnTarget("CREATE TABLE \"DoesNotExist\" (\"Id\" INT NOT NULL);");
 
                 // Act/Assert
                 Assert.Throws<MissingFieldsException>(() => source.CopyDataTo("DoesNotExist", target));
@@ -248,7 +248,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
-                Helper.ExecuteOnTarget("CREATE TABLE \"Currency\" (\"Code\" CHAR(3) NOT NULL, \"Name\" VARCHAR(50) NOT NULL, \"Required\" INTEGER NOT NULL, CONSTRAINT \"PK_Currency\" PRIMARY KEY (\"Code\"));");
+                Helper.ExecuteOnTarget("CREATE TABLE \"Currency\" (\"Code\" CHAR(3) NOT NULL, \"Name\" varchar(50) NOT NULL, \"Required\" INT NOT NULL, CONSTRAINT \"PK_Currency\" PRIMARY KEY (\"Code\"));");
 
                 // Act/Assert
                 Assert.Throws<DuckDBException>(() => source.CopyDataTo("Currency", target));
@@ -263,7 +263,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
-                Helper.ExecuteOnTarget("CREATE TABLE \"Currency\" (\"Code\" CHAR(3) NOT NULL, \"Name\" VARCHAR(50) NOT NULL, \"Extra\" INTEGER DEFAULT 7, CONSTRAINT \"PK_Currency\" PRIMARY KEY (\"Code\"));");
+                Helper.ExecuteOnTarget("CREATE TABLE \"Currency\" (\"Code\" CHAR(3) NOT NULL, \"Name\" varchar(50) NOT NULL, \"Extra\" INT NULL DEFAULT ((7)), CONSTRAINT \"PK_Currency\" PRIMARY KEY (\"Code\"));");
 
                 // Act
                 var actual = source.CopyDataTo("Currency", target);
@@ -291,20 +291,17 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopyDataToLoadsTheValuesThatAreTooLongForTheTargetTable()
+        public void ThrowExceptionOnCopyDataToIfTheValuesAreNotValidForTheTargetTable()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
-                Helper.ExecuteOnTarget("CREATE TABLE \"Currency\" (\"Code\" CHAR(3) NOT NULL, \"Name\" VARCHAR(5) NOT NULL, CONSTRAINT \"PK_Currency\" PRIMARY KEY (\"Code\"));");
+                Helper.ExecuteOnTarget("CREATE TABLE \"Currency\" (\"Code\" CHAR(3) NOT NULL, \"Name\" varchar(50) NOT NULL, CONSTRAINT \"PK_Currency\" PRIMARY KEY (\"Code\"), CONSTRAINT \"CK_Currency_Name\" CHECK (length(\"Name\") <= 5));");
 
-                // Act
-                var actual = source.CopyDataTo("Currency", target);
-
-                // Assert
-                Assert.AreEqual(3, actual);
-                Assert.AreEqual(3, Helper.TargetCount("\"Currency\""));
+                // Act/Assert
+                Assert.Throws<DuckDBException>(() => source.CopyDataTo("Currency", target));
+                Assert.AreEqual(0, Helper.TargetCount("\"Currency\""));
             }
         }
 
@@ -315,12 +312,11 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
-                Helper.ExecuteOnTarget("CREATE TABLE \"Currency\" (\"Code\" CHAR(3) NOT NULL, \"Name\" VARCHAR(50) NOT NULL, CONSTRAINT \"PK_Currency\" PRIMARY KEY (\"Code\"), CONSTRAINT \"UQ_Currency_Name\" UNIQUE (\"Name\"));");
+                Helper.ExecuteOnTarget("CREATE TABLE \"Currency\" (\"Code\" CHAR(3) NOT NULL, \"Name\" varchar(50) NOT NULL, CONSTRAINT \"PK_Currency\" PRIMARY KEY (\"Code\"), CONSTRAINT \"UQ_Currency_Name\" UNIQUE (\"Name\"));");
                 Helper.ExecuteOnTarget("INSERT INTO \"Currency\" (\"Code\", \"Name\") VALUES ('XXX', 'Euro');");
 
                 // Act/Assert
                 Assert.Throws<DuckDBException>(() => source.CopyDataTo("Currency", target));
-                // (the rows are inserted in a transaction, that is rolled back)
                 Assert.AreEqual(1, Helper.TargetCount("\"Currency\""));
             }
         }

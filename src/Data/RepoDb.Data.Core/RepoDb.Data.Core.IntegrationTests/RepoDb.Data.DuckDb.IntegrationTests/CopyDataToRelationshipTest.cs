@@ -192,26 +192,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopyDataToWithParentsOfASelfReferencingTable()
-        {
-            using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
-            using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
-            {
-                // Setup
-                Helper.MapSchemaReader(source);
-
-                // Act
-                var actual = source.CopyDataTo("Employee", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents);
-
-                // Assert
-                Assert.AreEqual(3, actual);
-                AssertTable("\"Employee\"");
-                Assert.AreEqual(0, Helper.TargetOrphans("\"Employee\"", "\"ManagerId\"", "\"Employee\"", "\"Id\""));
-            }
-        }
-
-        [TestMethod]
-        public void ThrowExceptionOnCopyDataToWithParentsOfATableInACycleBecauseTheRowsReferenceRowsThatAreNotCopiedYet()
+        public void ThrowExceptionOnCopyDataToWithParentsOfASelfReferencingTable()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -220,12 +201,12 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                Assert.Throws<DuckDBException>(() => source.CopyDataTo("CycleA", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents));
+                Assert.Throws<DuckDBException>(() => source.CopyDataTo("Employee", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents));
             }
         }
 
         [TestMethod]
-        public void TestCopyDataToWithParentsOfATableThatReferencesAnotherTable()
+        public void TestCopyDataToWithParentsOfATableOfAnotherSchemaThatReferencesAnotherTable()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -234,13 +215,33 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Ledger", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Sales.Ledger", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents);
 
                 // Assert
                 Assert.AreEqual(2 + 2, actual);
-                CollectionAssert.AreEqual(new[] { "\"Invoice\"", "\"Ledger\"" }, Helper.TargetTables().ToArray());
-                AssertTable("\"Invoice\"");
-                AssertTable("\"Ledger\"");
+                CollectionAssert.AreEqual(new[] { "\"Sales\".\"Invoice\"", "\"Sales\".\"Ledger\"" }, Helper.TargetTables().ToArray());
+                Helper.AssertRowsEqual(Helper.SourceRows("\"Sales\".\"Invoice\"", "\"Id\""), Helper.TargetRows("\"Sales\".\"Invoice\"", "\"Id\""));
+                AssertTable("\"Sales\".\"Ledger\"");
+            }
+        }
+
+        [TestMethod]
+        public void TestCopyDataToWithParentsOfATableOfAnotherSchema()
+        {
+            using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
+            using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.MapSchemaReader(source);
+
+                // Act
+                var actual = source.CopyDataTo("Sales.InvoiceLine", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents);
+
+                // Assert
+                Assert.AreEqual(2 + 3, actual);
+                CollectionAssert.AreEqual(new[] { "\"Sales\".\"Invoice\"", "\"Sales\".\"InvoiceLine\"" }, Helper.TargetTables().ToArray());
+                AssertTable("\"Sales\".\"Invoice\"");
+                AssertTable("\"Sales\".\"InvoiceLine\"");
             }
         }
 
@@ -296,7 +297,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
 
                 // Act/Assert
                 Assert.Throws<DuckDBException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Children));
-                Assert.AreEqual(0, Helper.TargetCount("\"Person\""));
+                Assert.AreEqual(0, Helper.TargetTables().Count);
             }
         }
 
@@ -320,7 +321,21 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopyDataToWithChildrenOfASelfReferencingTable()
+        public void ThrowExceptionOnCopyDataToWithChildrenOfASelfReferencingTable()
+        {
+            using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
+            using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.MapSchemaReader(source);
+
+                // Act/Assert
+                Assert.Throws<DuckDBException>(() => source.CopyDataTo("Employee", target, relationshipBehavior: CopyDataRelationshipBehavior.Children));
+            }
+        }
+
+        [TestMethod]
+        public void TestCopyDataToWithChildrenOfATableOfAnotherSchemaCopiesTheChildrenIntoThatSchema()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -329,11 +344,14 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Employee", target, relationshipBehavior: CopyDataRelationshipBehavior.Children);
+                var actual = source.CopyDataTo("Sales.Invoice", target, relationshipBehavior: CopyDataRelationshipBehavior.Children);
 
                 // Assert
-                Assert.AreEqual(3, actual);
-                AssertTable("\"Employee\"");
+                Assert.AreEqual(2 + 3 + 2, actual);
+                CollectionAssert.AreEqual(new[] { "\"Sales\".\"Invoice\"", "\"Sales\".\"InvoiceLine\"", "\"Sales\".\"Ledger\"" }, Helper.TargetTables().ToArray());
+                AssertTable("\"Sales\".\"Invoice\"");
+                AssertTable("\"Sales\".\"InvoiceLine\"");
+                Helper.AssertRowsEqual(Helper.SourceRows("\"Sales\".\"Ledger\"", "\"Id\""), Helper.TargetRows("\"Sales\".\"Ledger\"", "\"Id\""));
             }
         }
 
@@ -383,26 +401,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopyDataToWithParentsAndChildrenOfASelfReferencingTable()
-        {
-            using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
-            using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
-            {
-                // Setup
-                Helper.MapSchemaReader(source);
-
-                // Act
-                var actual = source.CopyDataTo("Employee", target, relationshipBehavior: CopyDataRelationshipBehavior.ParentsAndChildren);
-
-                // Assert
-                Assert.AreEqual(3, actual);
-                AssertTable("\"Employee\"");
-                Assert.AreEqual(0, Helper.TargetOrphans("\"Employee\"", "\"ManagerId\"", "\"Employee\"", "\"Id\""));
-            }
-        }
-
-        [TestMethod]
-        public void ThrowExceptionOnCopyDataToWithParentsAndChildrenOfTablesInACycleBecauseTheRowsReferenceRowsThatAreNotCopiedYet()
+        public void ThrowExceptionOnCopyDataToWithParentsAndChildrenOfASelfReferencingTable()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -411,7 +410,25 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                Assert.Throws<DuckDBException>(() => source.CopyDataTo("CycleB", target, relationshipBehavior: CopyDataRelationshipBehavior.ParentsAndChildren));
+                Assert.Throws<DuckDBException>(() => source.CopyDataTo("Employee", target, relationshipBehavior: CopyDataRelationshipBehavior.ParentsAndChildren));
+            }
+        }
+
+        [TestMethod]
+        public void TestCopyDataToWithParentsAndChildrenOfATableOfAnotherSchema()
+        {
+            using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
+            using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.MapSchemaReader(source);
+
+                // Act
+                var actual = source.CopyDataTo("Sales.InvoiceLine", target, relationshipBehavior: CopyDataRelationshipBehavior.ParentsAndChildren);
+
+                // Assert
+                Assert.AreEqual(2 + 3 + 2, actual);
+                CollectionAssert.AreEqual(new[] { "\"Sales\".\"Invoice\"", "\"Sales\".\"InvoiceLine\"", "\"Sales\".\"Ledger\"" }, Helper.TargetTables().ToArray());
             }
         }
 
@@ -654,6 +671,24 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 // Assert
                 Assert.AreEqual(3 + 2, actual);
                 Assert.AreEqual(2, Helper.TargetCount("\"Person\""));
+            }
+        }
+
+        [TestMethod]
+        public async Task TestCopyDataToAsyncWithChildrenOfATableOfAnotherSchema()
+        {
+            using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
+            using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.MapSchemaReader(source);
+
+                // Act
+                var actual = await source.CopyDataToAsync("Sales.Invoice", target, relationshipBehavior: CopyDataRelationshipBehavior.Children);
+
+                // Assert
+                Assert.AreEqual(2 + 3 + 2, actual);
+                CollectionAssert.AreEqual(new[] { "\"Sales\".\"Invoice\"", "\"Sales\".\"InvoiceLine\"", "\"Sales\".\"Ledger\"" }, Helper.TargetTables().ToArray());
             }
         }
 

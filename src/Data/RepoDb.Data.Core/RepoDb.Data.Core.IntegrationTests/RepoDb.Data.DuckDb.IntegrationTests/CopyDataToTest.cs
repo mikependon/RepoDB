@@ -63,6 +63,36 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         }
 
         [TestMethod]
+        [DataRow("Country", "\"Country\"", "\"Id\"", 3)]
+        [DataRow("Currency", "\"Currency\"", "\"Code\"", 3)]
+        [DataRow("Sample", "\"Sample\"", "\"Id\"", 3)]
+        [DataRow("\"Order Details\"", "\"Order Details\"", "\"Id\"", 2)]
+        [DataRow("Sales.Invoice", "\"Sales\".\"Invoice\"", "\"Id\"", 2)]
+        [DataRow("Number", "\"Number\"", "\"Value\"", 2500)]
+        [DataRow("NoKey", "\"NoKey\"", "\"Value\", \"Amount\"", 3)]
+        public void TestCopyDataToCopiesTheRowsOfDifferentTables(string tableName,
+            string quotedName,
+            string orderBy,
+            int expected)
+        {
+            using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
+            using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.MapSchemaReader(source);
+                Helper.CreateTargetTables(tableName);
+
+                // Act
+                var actual = source.CopyDataTo(tableName, target);
+
+                // Assert
+                Assert.AreEqual(expected, actual);
+                Assert.AreEqual(expected, Helper.TargetCount(quotedName));
+                Helper.AssertRowsEqual(Helper.SourceRows(quotedName, orderBy), Helper.TargetRows(quotedName, orderBy));
+            }
+        }
+
+        [TestMethod]
         public void TestCopyDataToCopiesTheValuesOfAllTheDataTypes()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
@@ -77,17 +107,17 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 // Assert
                 var rows = Helper.TargetRows("\"Sample\"", "\"Id\"");
                 Assert.AreEqual(long.MaxValue, rows[0]["BigIntValue"]);
-                Assert.IsTrue(Convert.ToBoolean(rows[0]["BitValue"]));
-                Assert.AreEqual(12345.6789m, Convert.ToDecimal(rows[0]["DecimalValue"], System.Globalization.CultureInfo.InvariantCulture));
-                Assert.AreEqual("2026-02-03 04:05:06.123456", rows[0]["DateTime2Value"]);
-                Assert.AreEqual("6f9619ff-8b86-d011-b42d-00c04fc964ff", rows[0]["GuidValue"]);
+                Assert.AreEqual(true, rows[0]["BitValue"]);
+                Assert.AreEqual(12345.6789m, rows[0]["DecimalValue"]);
+                Assert.AreEqual(new DateTime(2026, 2, 3, 4, 5, 6).AddTicks(1234560), rows[0]["DateTime2Value"]);
+                Assert.AreEqual(new Guid("6F9619FF-8B86-D011-B42D-00C04FC964FF"), rows[0]["GuidValue"]);
                 CollectionAssert.AreEqual(new byte[] { 1, 2, 3, 4, 5 }, (byte[])rows[0]["BinaryValue"]);
                 Assert.AreEqual("A long text with unicode: ñ é 日本語", rows[0]["TextValue"]);
                 Assert.AreEqual(long.MinValue + 1, rows[1]["BigIntValue"]);
-                Assert.IsFalse(Convert.ToBoolean(rows[1]["BitValue"]));
-                Assert.AreEqual("9999-12-31", rows[1]["DateValue"]);
-                CollectionAssert.AreEqual(new byte[] { 255 }, (byte[])rows[1]["BinaryValue"]);
-                Assert.AreEqual("text", rows[1]["TextValue"]);
+                Assert.AreEqual(false, rows[1]["BitValue"]);
+                Assert.AreEqual(new DateOnly(9999, 12, 31), rows[1]["DateValue"]);
+                CollectionAssert.AreEqual(Array.Empty<byte>(), (byte[])rows[1]["BinaryValue"]);
+                Assert.AreEqual(string.Empty, rows[1]["TextValue"]);
                 Assert.IsTrue(rows[2].Where(c => c.Key != "Id").All(c => c.Value == null));
             }
         }
@@ -105,7 +135,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 source.CopyDataTo("Country", target, where: new QueryGroup(new QueryField("Id", Operation.GreaterThan, 1)));
 
                 // Assert
-                var ids = Helper.TargetRows("\"Country\"", "\"Id\"").Select(r => Convert.ToInt32(r["Id"])).ToArray();
+                var ids = Helper.TargetRows("\"Country\"", "\"Id\"").Select(r => (int)r["Id"]).ToArray();
                 CollectionAssert.AreEqual(new[] { 2, 3 }, ids);
             }
         }
@@ -153,7 +183,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
-                Helper.ExecuteOnTarget("CREATE TABLE \"CurrencyCopy\" (\"Code\" CHAR(3) NOT NULL, \"Name\" VARCHAR(50) NOT NULL, CONSTRAINT \"PK_CurrencyCopy\" PRIMARY KEY (\"Code\"));");
+                Helper.ExecuteOnTarget("CREATE TABLE \"CurrencyCopy\" (\"Code\" CHAR(3) NOT NULL, \"Name\" varchar(50) NOT NULL, CONSTRAINT \"PK_CurrencyCopy\" PRIMARY KEY (\"Code\"));");
 
                 // Act
                 var actual = source.CopyDataTo("Currency", "CurrencyCopy", target);
@@ -336,7 +366,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
-                Helper.ExecuteOnTarget("CREATE TABLE \"CurrencyCopy\" (\"Code\" CHAR(3) NOT NULL, \"Name\" VARCHAR(50) NOT NULL, CONSTRAINT \"PK_CurrencyCopy\" PRIMARY KEY (\"Code\"));");
+                Helper.ExecuteOnTarget("CREATE TABLE \"CurrencyCopy\" (\"Code\" CHAR(3) NOT NULL, \"Name\" varchar(50) NOT NULL, CONSTRAINT \"PK_CurrencyCopy\" PRIMARY KEY (\"Code\"));");
                 var name = "Target-" + Guid.NewGuid().ToString("N");
                 ConnectionManager.Register(name, target);
 
@@ -392,7 +422,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
-                Helper.ExecuteOnTarget("CREATE TABLE \"CurrencyCopy\" (\"Code\" CHAR(3) NOT NULL, \"Name\" VARCHAR(50) NOT NULL, CONSTRAINT \"PK_CurrencyCopy\" PRIMARY KEY (\"Code\"));");
+                Helper.ExecuteOnTarget("CREATE TABLE \"CurrencyCopy\" (\"Code\" CHAR(3) NOT NULL, \"Name\" varchar(50) NOT NULL, CONSTRAINT \"PK_CurrencyCopy\" PRIMARY KEY (\"Code\"));");
 
                 // Act
                 var actual = source.CopyDataTo<Currency>("CurrencyCopy", target, c => c.Code != "JPY");
@@ -450,6 +480,35 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         }
 
         [TestMethod]
+        [DataRow("Country", "\"Country\"", "\"Id\"", 3)]
+        [DataRow("Currency", "\"Currency\"", "\"Code\"", 3)]
+        [DataRow("Sample", "\"Sample\"", "\"Id\"", 3)]
+        [DataRow("\"Order Details\"", "\"Order Details\"", "\"Id\"", 2)]
+        [DataRow("Sales.Invoice", "\"Sales\".\"Invoice\"", "\"Id\"", 2)]
+        [DataRow("Number", "\"Number\"", "\"Value\"", 2500)]
+        [DataRow("NoKey", "\"NoKey\"", "\"Value\", \"Amount\"", 3)]
+        public async Task TestCopyDataToAsyncCopiesTheRowsOfDifferentTables(string tableName,
+            string quotedName,
+            string orderBy,
+            int expected)
+        {
+            using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
+            using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.MapSchemaReader(source);
+                Helper.CreateTargetTables(tableName);
+
+                // Act
+                var actual = await source.CopyDataToAsync(tableName, target);
+
+                // Assert
+                Assert.AreEqual(expected, actual);
+                Helper.AssertRowsEqual(Helper.SourceRows(quotedName, orderBy), Helper.TargetRows(quotedName, orderBy));
+            }
+        }
+
+        [TestMethod]
         public async Task TestCopyDataToAsyncKeepsTheIdentityValuesOfTheSourceRows()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
@@ -462,7 +521,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 await source.CopyDataToAsync("Country", target, where: new QueryGroup(new QueryField("Id", Operation.GreaterThan, 1)));
 
                 // Assert
-                var ids = Helper.TargetRows("\"Country\"", "\"Id\"").Select(r => Convert.ToInt32(r["Id"])).ToArray();
+                var ids = Helper.TargetRows("\"Country\"", "\"Id\"").Select(r => (int)r["Id"]).ToArray();
                 CollectionAssert.AreEqual(new[] { 2, 3 }, ids);
             }
         }
@@ -474,7 +533,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
-                Helper.ExecuteOnTarget("CREATE TABLE \"CurrencyCopy\" (\"Code\" CHAR(3) NOT NULL, \"Name\" VARCHAR(50) NOT NULL, CONSTRAINT \"PK_CurrencyCopy\" PRIMARY KEY (\"Code\"));");
+                Helper.ExecuteOnTarget("CREATE TABLE \"CurrencyCopy\" (\"Code\" CHAR(3) NOT NULL, \"Name\" varchar(50) NOT NULL, CONSTRAINT \"PK_CurrencyCopy\" PRIMARY KEY (\"Code\"));");
 
                 // Act
                 var actual = await source.CopyDataToAsync("Currency", "CurrencyCopy", target);
@@ -572,7 +631,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
-                Helper.ExecuteOnTarget("CREATE TABLE \"CurrencyCopy\" (\"Code\" CHAR(3) NOT NULL, \"Name\" VARCHAR(50) NOT NULL, CONSTRAINT \"PK_CurrencyCopy\" PRIMARY KEY (\"Code\"));");
+                Helper.ExecuteOnTarget("CREATE TABLE \"CurrencyCopy\" (\"Code\" CHAR(3) NOT NULL, \"Name\" varchar(50) NOT NULL, CONSTRAINT \"PK_CurrencyCopy\" PRIMARY KEY (\"Code\"));");
                 var name = "Target-" + Guid.NewGuid().ToString("N");
                 ConnectionManager.Register(name, target);
 

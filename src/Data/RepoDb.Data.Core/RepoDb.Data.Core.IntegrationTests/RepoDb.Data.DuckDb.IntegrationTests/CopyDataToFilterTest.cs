@@ -43,14 +43,14 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         private static void CreatePersonTableWithoutKeys() =>
             Helper.ExecuteOnTarget(@"CREATE TABLE ""Person""
                 (
-                    ""Id"" INTEGER NOT NULL,
-                    ""Name"" VARCHAR(128) NOT NULL,
-                    ""Age"" INTEGER,
-                    ""CountryId"" INTEGER,
-                    ""Salary"" DECIMAL(18, 2),
-                    ""Birthday"" DATE,
-                    ""IsActive"" BOOLEAN NOT NULL,
-                    ""CreatedDateUtc"" TIMESTAMP NOT NULL,
+                    ""Id"" INT NOT NULL,
+                    ""Name"" varchar(128) NOT NULL,
+                    ""Age"" INT NULL,
+                    ""CountryId"" INT NULL,
+                    ""Salary"" DECIMAL(18, 2) NULL,
+                    ""Birthday"" DATE NULL,
+                    ""IsActive"" boolean NOT NULL,
+                    ""CreatedDateUtc"" timestamp(3) NOT NULL,
                     CONSTRAINT ""PK_Person"" PRIMARY KEY (""Id"")
                 );");
 
@@ -347,7 +347,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var actual = source.CopyDataTo("Person", target, where: where);
 
                 // Assert
-                AssertPersons("\"Age\" > 30 AND \"IsActive\" = TRUE", actual);
+                AssertPersons("\"Age\" > 30 AND \"IsActive\" = true", actual);
                 CollectionAssert.AreEqual(new[] { "Bob", "Frank" }, Helper.TargetRows("\"Person\"", "\"Id\"").Select(r => (string)r["Name"]).ToArray());
             }
         }
@@ -390,7 +390,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var actual = source.CopyDataTo("Person", target, where: where);
 
                 // Assert
-                AssertPersons("\"IsActive\" = TRUE AND (\"Age\" < 25 OR \"Age\" > 50)", actual);
+                AssertPersons("\"IsActive\" = true AND (\"Age\" < 25 OR \"Age\" > 50)", actual);
                 CollectionAssert.AreEqual(new[] { "Dave", "Frank" }, Helper.TargetRows("\"Person\"", "\"Id\"").Select(r => (string)r["Name"]).ToArray());
             }
         }
@@ -423,10 +423,10 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 CreatePersonTableWithoutKeys();
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Birthday", Operation.GreaterThanOrEqual, new DateTime(1990, 1, 14))));
+                var actual = source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Birthday", Operation.GreaterThanOrEqual, new DateTime(1990, 1, 15))));
 
                 // Assert
-                AssertPersons("\"Birthday\" >= '1990-01-14'", actual);
+                AssertPersons("\"Birthday\" >= '1990-01-15'", actual);
                 CollectionAssert.AreEqual(new[] { "Alice", "Dave" }, Helper.TargetRows("\"Person\"", "\"Id\"").Select(r => (string)r["Name"]).ToArray());
             }
         }
@@ -495,7 +495,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.CreateTargetTables("Currency");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, where: new QueryGroup(new QueryField("Name", "x'; DROP TABLE \"Currency\"; --")));
+                var actual = source.CopyDataTo("Currency", target, where: new QueryGroup(new QueryField("Code", "x'; DROP TABLE \"Currency\"; --")));
 
                 // Assert
                 Assert.AreEqual(0, actual);
@@ -519,7 +519,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopyDataToWithAFilterOfAValueThatIsNotOfTheTypeOfTheColumnCopiesNothing()
+        public void ThrowExceptionOnCopyDataToIfTheFilterIsOfAValueThatIsNotOfTheTypeOfTheColumn()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -527,11 +527,8 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 // Setup
                 Helper.CreateTargetTables("Number");
 
-                // Act
-                var actual = source.CopyDataTo("Number", target, where: new QueryGroup(new QueryField("Value", "not a number")));
-
-                // Assert
-                Assert.AreEqual(0, actual);
+                // Act/Assert
+                Assert.Throws<DuckDBException>(() => source.CopyDataTo("Number", target, where: new QueryGroup(new QueryField("Value", "not a number"))));
                 Assert.AreEqual(0, Helper.TargetCount("\"Number\""));
             }
         }
@@ -688,7 +685,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var actual = source.CopyDataTo<Person>(target, p => p.Age > 30 && p.IsActive == true);
 
                 // Assert
-                AssertPersons("\"Age\" > 30 AND \"IsActive\" = TRUE", actual);
+                AssertPersons("\"Age\" > 30 AND \"IsActive\" = true", actual);
                 Assert.AreEqual(2, actual);
             }
         }
@@ -802,7 +799,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var actual = await source.CopyDataToAsync<Person>(target, p => p.Age > 30 && p.IsActive == true);
 
                 // Assert
-                AssertPersons("\"Age\" > 30 AND \"IsActive\" = TRUE", actual);
+                AssertPersons("\"Age\" > 30 AND \"IsActive\" = true", actual);
                 Assert.AreEqual(2, actual);
             }
         }
