@@ -1,0 +1,240 @@
+#region Copyright Attributions
+
+// Copyright (c) 2026 Michael Camara Pendon.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using ClickHouse.Driver;
+using ClickHouse.Driver.ADO;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Data.Enumerations;
+using RepoDb.Data.ClickHouse.IntegrationTests.Setup;
+using RepoDb.Enumerations;
+using RepoDb.Schema;
+using RepoDb.Schema.Enumerations;
+
+namespace RepoDb.Data.ClickHouse.IntegrationTests
+{
+    /// <summary>
+    /// Copies the rows of a table into a target table of another schema (the schema of the name of the target table, i.e.: <c>Sales.Person</c>).
+    /// The tables are created in that schema, and the copy of the schema requires the source and the target tables to have the same name.
+    /// </summary>
+    [TestClass]
+    public class CopyDataToTargetSchemaTest
+    {
+        [TestInitialize]
+        public void Initialize()
+        {
+            Database.Initialize();
+            Cleanup();
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            SchemaReaderMapper.Clear();
+            Database.Cleanup();
+        }
+
+        #region Sync
+
+        [TestMethod]
+        public void TestCopyDataToWithATargetTableOfAnotherSchemaCreatesTheTableInThatSchema()
+        {
+            using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
+            using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.MapSchemaReader(source);
+
+                // Act
+                var actual = source.CopyDataTo("Currency", "repodb_data_target_sales.Currency", target);
+
+                // Assert
+                Assert.AreEqual(3, actual);
+                CollectionAssert.AreEqual(new[] { "`Sales`.`Currency`" }, Helper.TargetTables().ToArray());
+                Helper.AssertRowsEqual(Helper.SourceRows("`Currency`", "`Code`"), Helper.TargetRows("`Sales`.`Currency`", "`Code`"));
+            }
+        }
+
+        [TestMethod]
+        public void TestCopyDataToWithAQuotedTargetTableOfAnotherSchema()
+        {
+            using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
+            using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.MapSchemaReader(source);
+
+                // Act
+                var actual = source.CopyDataTo("Currency", "`repodb_data_target_sales`.`Currency`", target);
+
+                // Assert
+                Assert.AreEqual(3, actual);
+                Assert.AreEqual(3, Helper.TargetCount("`Sales`.`Currency`"));
+            }
+        }
+
+        [TestMethod]
+        public void TestCopyDataToWithATargetTableOfTheDefaultSchema()
+        {
+            using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
+            using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.MapSchemaReader(source);
+
+                // Act
+                var actual = source.CopyDataTo("Currency", "repodb_data_target.Currency", target);
+
+                // Assert
+                Assert.AreEqual(3, actual);
+                CollectionAssert.AreEqual(new[] { "`Currency`" }, Helper.TargetTables().ToArray());
+            }
+        }
+
+        [TestMethod]
+        public void TestCopyDataToFromATableOfAnotherSchemaIntoTheDefaultSchema()
+        {
+            using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
+            using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.MapSchemaReader(source);
+
+                // Act
+                var actual = source.CopyDataTo("repodb_data_source_sales.Invoice", "repodb_data_target.Invoice", target);
+
+                // Assert
+                Assert.AreEqual(2, actual);
+                Helper.AssertRowsEqual(Helper.SourceRows("`Sales`.`Invoice`", "`Id`"), Helper.TargetRows("`Invoice`", "`Id`"));
+            }
+        }
+
+        [TestMethod]
+        public void TestCopyDataToWithATargetTableOfAnotherSchemaAddsTheRowsToTheTableThatExists()
+        {
+            using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
+            using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.MapSchemaReader(source);
+                Helper.ExecuteOnTarget("CREATE TABLE `Sales`.`Currency` (`Code` String, `Name` String) ENGINE = MergeTree ORDER BY (`Code`)");
+                Helper.ExecuteOnTarget("INSERT INTO `Sales`.`Currency` (`Code`, `Name`) VALUES ('USD', 'US Dollar')");
+
+                // Act
+                var actual = source.CopyDataTo("Currency", "repodb_data_target_sales.Currency", target);
+
+                // Assert
+                Assert.AreEqual(3, actual);
+                Assert.AreEqual(4, Helper.TargetCount("`Sales`.`Currency`"));
+            }
+        }
+
+        [TestMethod]
+        public void TestCopyDataToWithATargetTableOfAnotherSchemaAndDropReplacesTheTableThatExists()
+        {
+            using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
+            using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.MapSchemaReader(source);
+                source.CopyDataTo("Currency", "repodb_data_target_sales.Currency", target);
+
+                // Act
+                var actual = source.CopyDataTo("Currency", "repodb_data_target_sales.Currency", target, tableExistenceBehavior: CopySchemaExistsBehavior.Drop);
+
+                // Assert
+                Assert.AreEqual(3, actual);
+                Assert.AreEqual(3, Helper.TargetCount("`Sales`.`Currency`"));
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnCopyDataToIfTheTablesHaveDifferentNamesAndTheTargetTableHasASchema()
+        {
+            using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
+            using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.MapSchemaReader(source);
+
+                // Act/Assert
+                Assert.Throws<ArgumentException>(() => source.CopyDataTo("Currency", "repodb_data_target_sales.Money", target));
+                Assert.AreEqual(0, Helper.TargetTables().Count);
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnCopyDataToIfTheTargetSchemaDoesNotExist()
+        {
+            using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
+            using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.MapSchemaReader(source);
+
+                // Act/Assert
+                Assert.ThrowsExactly<ClickHouseServerException>(() => source.CopyDataTo("Currency", "Missing.Currency", target));
+                Assert.AreEqual(0, Helper.TargetTables().Count);
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestCopyDataToAsyncWithATargetTableOfAnotherSchemaCreatesTheTableInThatSchema()
+        {
+            using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
+            using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.MapSchemaReader(source);
+
+                // Act
+                var actual = await source.CopyDataToAsync("Currency", "repodb_data_target_sales.Currency", target);
+
+                // Assert
+                Assert.AreEqual(3, actual);
+                Helper.AssertRowsEqual(Helper.SourceRows("`Currency`", "`Code`"), Helper.TargetRows("`Sales`.`Currency`", "`Code`"));
+            }
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnCopyDataToAsyncIfTheTablesHaveDifferentNamesAndTheTargetTableHasASchema()
+        {
+            using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
+            using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.MapSchemaReader(source);
+
+                // Act/Assert
+                await Assert.ThrowsAsync<ArgumentException>(() => source.CopyDataToAsync("Currency", "repodb_data_target_sales.Money", target));
+            }
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnCopyDataToAsyncIfTheTargetSchemaDoesNotExist()
+        {
+            using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
+            using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.MapSchemaReader(source);
+
+                // Act/Assert
+                await Assert.ThrowsExactlyAsync<ClickHouseServerException>(() => source.CopyDataToAsync("Currency", "Missing.Currency", target));
+            }
+        }
+
+        #endregion
+    }
+}

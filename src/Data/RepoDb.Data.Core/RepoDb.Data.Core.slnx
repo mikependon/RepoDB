@@ -13,6 +13,14 @@
   <Project Path="RepoDb.Data.Core.IntegrationTests/RepoDb.Data.MySqlConnector.IntegrationTests/RepoDb.Data.MySqlConnector.IntegrationTests.csproj" />
   <Project Path="RepoDb.Data.Core.IntegrationTests/RepoDb.Data.Oracle.IntegrationTests/RepoDb.Data.Oracle.IntegrationTests.csproj" />
   <Project Path="RepoDb.Data.Core.IntegrationTests/RepoDb.Data.Db2.IntegrationTests/RepoDb.Data.Db2.IntegrationTests.csproj" />
+  <Project Path="RepoDb.Data.Core.IntegrationTests/RepoDb.Data.Firebird.IntegrationTests/RepoDb.Data.Firebird.IntegrationTests.csproj" />
+  <Project Path="RepoDb.Data.Core.IntegrationTests/RepoDb.Data.ClickHouse.IntegrationTests/RepoDb.Data.ClickHouse.IntegrationTests.csproj" />
+  <Project Path="RepoDb.Data.Core.IntegrationTests/RepoDb.Data.Vertica.IntegrationTests/RepoDb.Data.Vertica.IntegrationTests.csproj" />
+  <Project Path="RepoDb.Data.Core.IntegrationTests/RepoDb.Data.SapHana.IntegrationTests/RepoDb.Data.SapHana.IntegrationTests.csproj" />
+  <Project Path="RepoDb.Data.Core.IntegrationTests/RepoDb.Data.EnterpriseDb.IntegrationTests/RepoDb.Data.EnterpriseDb.IntegrationTests.csproj" />
+  <Project Path="RepoDb.Data.Core.IntegrationTests/RepoDb.Data.AuroraDbMySqlConnector.IntegrationTests/RepoDb.Data.AuroraDbMySqlConnector.IntegrationTests.csproj" />
+  <Project Path="RepoDb.Data.Core.IntegrationTests/RepoDb.Data.MariaDbConnector.IntegrationTests/RepoDb.Data.MariaDbConnector.IntegrationTests.csproj" />
+  <Project Path="RepoDb.Data.Core.IntegrationTests/RepoDb.Data.MariaDb.IntegrationTests/RepoDb.Data.MariaDb.IntegrationTests.csproj" />
   <Project Path="RepoDb.Data.Core.UnitTests/RepoDb.Data.Core.UnitTests.csproj" />
   <Project Path="RepoDb.Data.Core/RepoDb.Data.Core.csproj" />
 </Solution>
