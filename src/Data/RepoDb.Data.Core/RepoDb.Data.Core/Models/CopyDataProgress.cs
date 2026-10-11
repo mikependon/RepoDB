@@ -19,34 +19,79 @@ namespace RepoDb.Data.Models
         #region Properties
 
         /// <summary>
-        /// Gets or sets the batch number of the copy operation.
+        /// Gets the number of rows that were copied in the current batch.
         /// </summary>
-        public int BatchNumber { get; set; }
+        public int BatchCopiedRowCount { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the time (in UTC) when the copy operation has ended.
+        /// Gets the time (in UTC) when the current batch has ended.
         /// </summary>
-        public DateTime EndTime { get; set; }
+        public DateTime BatchEndTime { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the logs (information and warnings) of the copy operation, i.e.: the rows that were skipped by the database provider.
+        /// Gets the batch number of the copy operation.
         /// </summary>
-        public List<CopyDataLog> Logs { get; set; } = new List<CopyDataLog>();
+        public int BatchNumber { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the current number of rows that were copied.
+        /// Gets the time (in UTC) when the current batch has started.
         /// </summary>
-        public int RowCount { get; set; }
+        public DateTime BatchStartTime { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the time (in UTC) when the copy operation has started.
+        /// Gets the time (in UTC) when the copy operation has ended (the end of the last batch that is copied so far).
         /// </summary>
-        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the total number of rows that were copied.
+        /// Gets the logs (information and warnings) of the copy operation, i.e.: the rows that were skipped by the database provider.
         /// </summary>
-        public int TotalCopiedRowCount { get; set; }
+        public List<CopyDataLog> Logs { get; internal set; } = new List<CopyDataLog>();
+
+        /// <summary>
+        /// Gets the current number of rows that were copied.
+        /// </summary>
+        public int RowCount { get; internal set; }
+
+        /// <summary>
+        /// Gets the name of the source database.
+        /// </summary>
+        public string SourceDatabase { get; internal set; }
+
+        /// <summary>
+        /// Gets the name of the source server (the data source of the source connection).
+        /// </summary>
+        public string SourceServer { get; internal set; }
+
+        /// <summary>
+        /// Gets the name of the source table that is being copied.
+        /// </summary>
+        public string SourceTable { get; internal set; }
+
+        /// <summary>
+        /// Gets the time (in UTC) when the copy operation has started.
+        /// </summary>
+        public DateTime StartTime { get; internal set; }
+
+        /// <summary>
+        /// Gets the name of the target database.
+        /// </summary>
+        public string TargetDatabase { get; internal set; }
+
+        /// <summary>
+        /// Gets the name of the target server (the data source of the destination connection).
+        /// </summary>
+        public string TargetServer { get; internal set; }
+
+        /// <summary>
+        /// Gets the name of the target table that is being copied into.
+        /// </summary>
+        public string TargetTable { get; internal set; }
+
+        /// <summary>
+        /// Gets the total number of rows that were copied.
+        /// </summary>
+        public int TotalCopiedRowCount { get; internal set; }
 
         #endregion
     }

@@ -19,24 +19,24 @@ namespace RepoDb.Data.Models
         #region Properties
 
         /// <summary>
-        /// Gets or sets the type of the database provider (the type of the destination connection) where the activity has happened.
+        /// Gets the type of the database provider (the type of the destination connection) where the activity has happened.
         /// </summary>
-        public Type DatabaseType { get; set; }
+        public Type DatabaseType { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the level (the kind) of the log: information, warning, error or critical.
+        /// Gets the level (the kind) of the log: information, warning, error or critical.
         /// </summary>
-        public CopyDataLogLevel Level { get; set; }
+        public CopyDataLogLevel Level { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the text of the log.
+        /// Gets the text of the log.
         /// </summary>
-        public string Text { get; set; }
+        public string Text { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the time (in UTC) when the activity has happened.
+        /// Gets the time (in UTC) when the activity has happened.
         /// </summary>
-        public DateTime Timestamp { get; set; }
+        public DateTime Timestamp { get; internal set; }
 
         #endregion
 

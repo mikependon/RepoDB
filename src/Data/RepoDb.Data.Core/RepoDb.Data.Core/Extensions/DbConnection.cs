@@ -295,6 +295,7 @@ namespace RepoDb.Data
             ITrace trace,
             IDbTransaction transaction)
         {
+            SetTables(options, connection, destinationConnection, sourceTable, targetTable);
             var (commandText, param) = CreateSelect(connection, sourceTable, where);
             using (var reader = connection.ExecuteReader(commandText, param, commandTimeout: commandTimeout, traceKey: traceKey ?? TraceKeys.ExecuteReader, trace: trace))
             {
@@ -357,6 +358,7 @@ namespace RepoDb.Data
             IDbTransaction transaction,
             CancellationToken cancellationToken)
         {
+            SetTables(options, connection, destinationConnection, sourceTable, targetTable);
             var (commandText, param) = CreateSelect(connection, sourceTable, where);
             using (var reader = await connection.ExecuteReaderAsync(commandText, param, commandTimeout: commandTimeout, traceKey: traceKey ?? TraceKeys.ExecuteReader, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false))
             {
@@ -480,6 +482,28 @@ namespace RepoDb.Data
         }
 
         /// <summary>
+        /// Sets the details of the tables (and the databases) that are being copied into the progress.
+        /// </summary>
+        private static void SetTables(CopyDataProgress options,
+            IDbConnection connection,
+            IDbConnection destinationConnection,
+            string sourceTable,
+            string targetTable)
+        {
+            if (options == null)
+            {
+                return;
+            }
+            options.SourceServer = (connection as System.Data.Common.DbConnection)?.DataSource;
+            options.SourceDatabase = connection.Database;
+            options.SourceTable = sourceTable;
+            options.TargetServer = (destinationConnection as System.Data.Common.DbConnection)?.DataSource;
+            options.TargetDatabase = destinationConnection.Database;
+            options.TargetTable = targetTable;
+            options.BatchStartTime = DateTime.UtcNow;
+        }
+
+        /// <summary>
         /// Reports the progress of the copy: a batch of rows was copied.
         /// </summary>
         /// <param name="options"></param>
@@ -491,9 +515,12 @@ namespace RepoDb.Data
         {
             options.BatchNumber++;
             options.RowCount = inserted;
+            options.BatchCopiedRowCount = inserted;
             options.TotalCopiedRowCount += inserted;
-            options.EndTime = DateTime.UtcNow;
+            options.BatchEndTime = DateTime.UtcNow;
+            options.EndTime = options.BatchEndTime;
             progressCallback?.Invoke(options);
+            options.BatchStartTime = DateTime.UtcNow;
         }
 
         /// <summary>

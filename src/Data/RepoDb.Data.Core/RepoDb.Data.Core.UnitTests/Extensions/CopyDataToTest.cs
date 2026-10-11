@@ -17,6 +17,7 @@ using Moq;
 using RepoDb.Data.Core.UnitTests.CustomObjects;
 using RepoDb.Data.Core.UnitTests.Fake.BulkOperations;
 using RepoDb.Data.Enumerations;
+using RepoDb.Data.Models;
 using RepoDb.DbSettings;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
@@ -426,6 +427,45 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             Assert.AreEqual((1, 3, 3), (progress[0].Batch, progress[0].Rows, progress[0].Total));
             Assert.AreNotEqual(default(DateTime), progress[0].Start);
             Assert.IsTrue(progress[0].End >= progress[0].Start);
+        }
+
+        [TestMethod]
+        public void TestCopyDataToSetsTheTablesAndTheDatabasesOfTheProgress()
+        {
+            // Setup
+            var source = new FakeDbConnection { Data = FakeDbConnection.CreatePersons(3) };
+            var destination = new FakeDbConnection();
+            CopyDataProgress progress = null;
+
+            // Act
+            source.CopyDataTo("Person", "Customer", destination, progressCallback: p => progress = p);
+
+            // Assert
+            Assert.AreEqual(3, progress.BatchCopiedRowCount);
+            Assert.AreEqual("FakeDataSource", progress.SourceServer);
+            Assert.AreEqual("FakeDatabase", progress.SourceDatabase);
+            Assert.AreEqual("Person", progress.SourceTable);
+            Assert.AreEqual("FakeDataSource", progress.TargetServer);
+            Assert.AreEqual("FakeDatabase", progress.TargetDatabase);
+            Assert.AreEqual("Customer", progress.TargetTable);
+        }
+
+        [TestMethod]
+        public void TestCopyDataToSetsTheTimesOfTheBatchesOfTheProgress()
+        {
+            // Setup
+            var source = new FakeDbConnection { Data = FakeDbConnection.CreatePersons(4) };
+            var destination = new FakeDbConnection();
+            var times = new List<(DateTime Start, DateTime End, DateTime OperationStart, DateTime OperationEnd)>();
+
+            // Act
+            source.CopyDataTo("Person", "Customer", destination, batchSize: 2, progressCallback: p => times.Add((p.BatchStartTime, p.BatchEndTime, p.StartTime, p.EndTime)));
+
+            // Assert
+            Assert.AreEqual(2, times.Count);
+            Assert.IsTrue(times.All(t => t.Start != default && t.Start <= t.End));
+            Assert.IsTrue(times.All(t => t.OperationStart <= t.Start && t.End == t.OperationEnd));
+            Assert.IsTrue(times[0].End <= times[1].Start);
         }
 
         [TestMethod]
