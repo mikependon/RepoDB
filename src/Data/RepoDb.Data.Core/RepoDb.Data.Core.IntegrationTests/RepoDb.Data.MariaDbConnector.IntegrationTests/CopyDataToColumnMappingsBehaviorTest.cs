@@ -786,7 +786,7 @@ namespace RepoDb.Data.MariaDbConnector.IntegrationTests
             using (var target = new MariaDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
-                GlobalConfiguration.Setup().UseMariaDbConnector(new MariaDbConnectorDbSetting());
+                GlobalConfiguration.Setup().UseMariaDbConnector(new MariaDbDbSetting());
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
@@ -805,7 +805,7 @@ namespace RepoDb.Data.MariaDbConnector.IntegrationTests
             using (var target = new MariaDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
-                GlobalConfiguration.Setup().UseMariaDbConnector(new MariaDbConnectorDbSetting());
+                GlobalConfiguration.Setup().UseMariaDbConnector(new MariaDbDbSetting());
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act

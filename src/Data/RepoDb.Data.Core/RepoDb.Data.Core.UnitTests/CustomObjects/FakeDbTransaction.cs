@@ -14,9 +14,16 @@ namespace RepoDb.Data.Core.UnitTests.CustomObjects
 {
     public class FakeDbTransaction : DbTransaction
     {
+        private readonly DbConnectionBase _connection;
+
+        public FakeDbTransaction(DbConnectionBase connection = null)
+        {
+            _connection = connection;
+        }
+
         public override IsolationLevel IsolationLevel { get; }
 
-        protected override DbConnectionBase DbConnection { get; }
+        protected override DbConnectionBase DbConnection => _connection;
 
         public override void Commit()
         {

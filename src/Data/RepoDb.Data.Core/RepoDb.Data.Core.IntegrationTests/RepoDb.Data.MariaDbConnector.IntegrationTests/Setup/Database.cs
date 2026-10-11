@@ -229,10 +229,7 @@ namespace RepoDb.Data.MariaDbConnector.IntegrationTests.Setup
                         `Label` VARCHAR(20) NOT NULL,
                         PRIMARY KEY (`Value`)
                     );");
-                connection.ExecuteNonQuery(@"SET SESSION cte_max_recursion_depth = 3000;
-                    INSERT INTO `Number` (`Value`, `Label`)
-                        WITH RECURSIVE `Numbers` (`N`) AS (SELECT 1 UNION ALL SELECT `N` + 1 FROM `Numbers` WHERE `N` < 2500)
-                        SELECT `N`, CONCAT('Number ', `N`) FROM `Numbers`;");
+                connection.ExecuteNonQuery(@"INSERT INTO `Number` (`Value`, `Label`) SELECT `seq`, CONCAT('Number ', `seq`) FROM `seq_1_to_2500`;");
 
                 // A self-referencing foreign key
                 connection.ExecuteNonQuery(@"CREATE TABLE `Employee`

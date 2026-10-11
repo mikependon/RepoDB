@@ -516,7 +516,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             DataDbConnection.CopyRows(source, destination, "Person", "Customer", null, 2, CopySchemaColumnMappingsBehavior.Automatic, options, p => reported.Add((p.BatchNumber, p.RowCount, p.TotalCopiedRowCount)), null, null, null, null);
 
             // Assert
-            Assert.AreEqual(5, destination.Executions.Count(e => e.Kind == "Scalar"));
+            Assert.AreEqual(5, destination.Executions.Count(e => e.Kind == "NonQuery" && e.CommandText.StartsWith("INSERT", StringComparison.Ordinal)));
             CollectionAssert.AreEqual(new[] { (1, 2, 2), (2, 2, 4), (3, 1, 5) }, reported);
             Assert.AreEqual(3, options.BatchNumber);
             Assert.AreEqual(5, options.TotalCopiedRowCount);
@@ -534,7 +534,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             await DataDbConnection.CopyRowsAsync(source, destination, "Person", "Customer", null, 2, CopySchemaColumnMappingsBehavior.Automatic, options, p => reported.Add((p.BatchNumber, p.RowCount, p.TotalCopiedRowCount)), null, null, null, null, CancellationToken.None);
 
             // Assert
-            Assert.AreEqual(5, destination.Executions.Count(e => e.Kind == "Scalar"));
+            Assert.AreEqual(5, destination.Executions.Count(e => e.Kind == "NonQuery" && e.CommandText.StartsWith("INSERT", StringComparison.Ordinal)));
             CollectionAssert.AreEqual(new[] { (1, 2, 2), (2, 2, 4), (3, 1, 5) }, reported);
             Assert.AreEqual(5, options.TotalCopiedRowCount);
         }
@@ -596,7 +596,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
 
             // Assert
             Assert.AreEqual(3, options.TotalCopiedRowCount);
-            Assert.AreEqual(3, destination.Executions.Count(e => e.Kind == "Scalar"));
+            Assert.AreEqual(3, destination.Executions.Count(e => e.Kind == "NonQuery" && e.CommandText.StartsWith("INSERT", StringComparison.Ordinal)));
         }
 
         [TestMethod]
@@ -656,7 +656,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             DataDbConnection.CopyRows(source, destination, "Person", "Customer", null, 3, CopySchemaColumnMappingsBehavior.Automatic, new CopyDataProgress(), null, null, null, null, null);
 
             // Assert
-            var insert = destination.Executions.First(e => e.Kind == "Scalar");
+            var insert = destination.Executions.First(e => e.Kind == "NonQuery" && e.CommandText.StartsWith("INSERT", StringComparison.Ordinal));
             StringAssert.Contains(insert.CommandText, "[Customer]");
             StringAssert.Contains(insert.CommandText, "[Name]");
             StringAssert.Contains(insert.CommandText, "[Birthday]");
@@ -673,7 +673,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             DataDbConnection.CopyRows(source, destination, "Person", "Customer", null, 3, CopySchemaColumnMappingsBehavior.Automatic, new CopyDataProgress(), null, null, null, null, null);
 
             // Assert
-            var withoutBirthday = destination.Executions.Where(e => e.Kind == "Scalar").Single(e => e.Parameters.Values.Contains("Name 2"));
+            var withoutBirthday = destination.Executions.Where(e => e.Kind == "NonQuery" && e.CommandText.StartsWith("INSERT", StringComparison.Ordinal)).Single(e => e.Parameters.Values.Contains("Name 2"));
             Assert.IsFalse(withoutBirthday.Parameters.Values.Any(v => v is DateTime));
         }
 

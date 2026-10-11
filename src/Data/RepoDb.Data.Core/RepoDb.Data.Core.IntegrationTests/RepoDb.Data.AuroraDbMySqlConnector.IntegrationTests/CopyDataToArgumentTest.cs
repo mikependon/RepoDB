@@ -288,7 +288,7 @@ namespace RepoDb.Data.AuroraDbMySqlConnector.IntegrationTests
                 source.CopyDataTo("Currency", target);
 
                 // Act/Assert
-                Assert.Throws<AuroraDbException>(() => source.CopyDataTo("Currency", target));
+                Assert.Throws<MySqlConnector.MySqlException>(() => source.CopyDataTo("Currency", target));
                 Assert.AreEqual(3, Helper.TargetCount("`Currency`"));
             }
         }
@@ -322,7 +322,7 @@ namespace RepoDb.Data.AuroraDbMySqlConnector.IntegrationTests
                 Helper.ExecuteOnTarget("INSERT INTO `Currency` (`Code`, `Name`) VALUES ('XXX', 'Euro');");
 
                 // Act/Assert
-                Assert.Throws<AuroraDbException>(() => source.CopyDataTo("Currency", target));
+                Assert.Throws<MySqlConnector.MySqlException>(() => source.CopyDataTo("Currency", target));
                 Assert.AreEqual(3, Helper.TargetCount("`Currency`"));
             }
         }
@@ -364,7 +364,7 @@ namespace RepoDb.Data.AuroraDbMySqlConnector.IntegrationTests
                 await source.CopyDataToAsync("Currency", target);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<AuroraDbException>(() => source.CopyDataToAsync("Currency", target));
+                await Assert.ThrowsAsync<MySqlConnector.MySqlException>(() => source.CopyDataToAsync("Currency", target));
                 Assert.AreEqual(3, Helper.TargetCount("`Currency`"));
             }
         }

@@ -307,7 +307,7 @@ namespace RepoDb.Data
                     return;
                 }
                 var action = new Action<IList<object>>((IList<object> b) =>
-                    Report(options, destinationConnection.InsertAll(targetTable, b, batchSize, commandTimeout: commandTimeout, traceKey: traceKey, transaction: transaction, trace: trace), progressCallback));
+                    Report(options, RowInserter.Insert(destinationConnection, targetTable, b, commandTimeout, traceKey, trace, transaction), progressCallback));
                 var batch = new List<object>(batchSize);
                 while (reader.Read())
                 {
@@ -369,21 +369,21 @@ namespace RepoDb.Data
                     Report(options, inserted, progressCallback);
                     return;
                 }
-                var action = new Action<IList<object>>((IList<object> b) =>
-                    Report(options, destinationConnection.InsertAll(targetTable, b, batchSize, commandTimeout: commandTimeout, traceKey: traceKey, transaction: transaction, trace: trace), progressCallback));
+                var action = new Func<IList<object>, Task>(async (IList<object> b) =>
+                    Report(options, await RowInserter.InsertAsync(destinationConnection, targetTable, b, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false), progressCallback));
                 var batch = new List<object>(batchSize);
                 while (await ReadAsync(reader, cancellationToken).ConfigureAwait(false))
                 {
                     batch.Add(ToRow(reader));
                     if (batch.Count == batchSize)
                     {
-                        action(batch);
+                        await action(batch).ConfigureAwait(false);
                         batch.Clear();
                     }
                 }
                 if (batch.Count > 0)
                 {
-                    action(batch);
+                    await action(batch).ConfigureAwait(false);
                 }
             }
         }

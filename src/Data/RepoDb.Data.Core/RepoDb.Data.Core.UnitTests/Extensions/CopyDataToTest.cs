@@ -486,7 +486,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
 
             // Assert
             Assert.AreEqual(3, actual);
-            Assert.AreEqual(3, destination.Executions.Count(e => e.Kind == "Scalar"));
+            Assert.AreEqual(3, destination.Executions.Count(e => e.Kind == "NonQuery" && e.CommandText.StartsWith("INSERT", StringComparison.Ordinal)));
         }
 
         [TestMethod]
@@ -524,7 +524,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             // Assert
             Assert.AreEqual(3, actual);
             Assert.AreEqual("CREATE TABLE Sales.Person;", destination.Executions.First(e => e.Kind == "NonQuery").CommandText);
-            StringAssert.Contains(destination.Executions.Last(e => e.Kind == "Scalar").CommandText, "[Sales].[Person]");
+            StringAssert.Contains(destination.Executions.Last(e => e.Kind == "NonQuery" && e.CommandText.StartsWith("INSERT", StringComparison.Ordinal)).CommandText, "[Sales].[Person]");
         }
 
         [TestMethod]
@@ -552,7 +552,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
 
             // Assert
             Assert.AreEqual(6, actual);
-            var inserts = destination.Executions.Where(e => e.Kind == "Scalar").Select(e => e.CommandText).ToList();
+            var inserts = destination.Executions.Where(e => e.Kind == "NonQuery" && e.CommandText.StartsWith("INSERT", StringComparison.Ordinal)).Select(e => e.CommandText).ToList();
             Assert.IsTrue(inserts.Take(3).All(t => t.Contains("[Country]")));
             Assert.IsTrue(inserts.Skip(3).All(t => t.Contains("[Person]")));
         }
@@ -817,7 +817,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
 
             // Assert
             Assert.AreEqual(6, actual);
-            var inserts = destination.Executions.Where(e => e.Kind == "Scalar").Select(e => e.CommandText).ToList();
+            var inserts = destination.Executions.Where(e => e.Kind == "NonQuery" && e.CommandText.StartsWith("INSERT", StringComparison.Ordinal)).Select(e => e.CommandText).ToList();
             Assert.IsTrue(inserts.Take(3).All(t => t.Contains("[Country]")));
             Assert.IsTrue(inserts.Skip(3).All(t => t.Contains("[Person]")));
         }

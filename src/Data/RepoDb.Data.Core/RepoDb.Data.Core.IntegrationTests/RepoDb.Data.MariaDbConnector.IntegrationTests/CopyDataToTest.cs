@@ -295,7 +295,7 @@ namespace RepoDb.Data.MariaDbConnector.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopyDataToWithACommittedTransactionKeepsTheRows()
+        public void ThrowExceptionOnCopyDataToWithATransactionBecauseTheBulkCopyDoesNotOperateUnderIt()
         {
             using (var source = new MariaDbConnection(Database.ConnectionStringForSource))
             using (var target = new MariaDbConnection(Database.ConnectionStringForTarget))
@@ -305,18 +305,14 @@ namespace RepoDb.Data.MariaDbConnector.IntegrationTests
                 target.Open();
                 using (var transaction = target.BeginTransaction())
                 {
-                    // Act
-                    source.CopyDataTo("Country", target, transaction: transaction);
-                    transaction.Commit();
+                    // Act/Assert
+                    Assert.Throws<InvalidOperationException>(() => source.CopyDataTo("Country", target, transaction: transaction));
                 }
-
-                // Assert
-                Assert.AreEqual(3, Helper.TargetCount("`Country`"));
             }
         }
 
         [TestMethod]
-        public void TestCopyDataToWithARolledBackTransactionLeavesTheTargetTableEmpty()
+        public void ThrowExceptionOnCopyDataToWithARolledBackTransactionBecauseTheBulkCopyDoesNotOperateUnderIt()
         {
             using (var source = new MariaDbConnection(Database.ConnectionStringForSource))
             using (var target = new MariaDbConnection(Database.ConnectionStringForTarget))
@@ -326,14 +322,9 @@ namespace RepoDb.Data.MariaDbConnector.IntegrationTests
                 target.Open();
                 using (var transaction = target.BeginTransaction())
                 {
-                    // Act
-                    var actual = source.CopyDataTo("Country", target, transaction: transaction);
-                    transaction.Rollback();
-
-                    // Assert
-                    Assert.AreEqual(3, actual);
+                    // Act/Assert
+                    Assert.Throws<InvalidOperationException>(() => source.CopyDataTo("Country", target, transaction: transaction));
                 }
-                Assert.AreEqual(0, Helper.TargetCount("`Country`"));
             }
         }
 
@@ -569,24 +560,19 @@ namespace RepoDb.Data.MariaDbConnector.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestCopyDataToAsyncWithARolledBackTransactionLeavesTheTargetTableEmpty()
+        public async Task ThrowExceptionOnCopyDataToAsyncWithATransactionBecauseTheBulkCopyDoesNotOperateUnderIt()
         {
             using (var source = new MariaDbConnection(Database.ConnectionStringForSource))
             using (var target = new MariaDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 Helper.CreateTargetTables("Country");
-                await target.OpenAsync();
+                target.Open();
                 using (var transaction = target.BeginTransaction())
                 {
-                    // Act
-                    var actual = await source.CopyDataToAsync("Country", target, transaction: transaction);
-                    transaction.Rollback();
-
-                    // Assert
-                    Assert.AreEqual(3, actual);
+                    // Act/Assert
+                    await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopyDataToAsync("Country", target, transaction: transaction));
                 }
-                Assert.AreEqual(0, Helper.TargetCount("`Country`"));
             }
         }
 

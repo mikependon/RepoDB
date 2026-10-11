@@ -268,7 +268,7 @@ namespace RepoDb.Data.MariaDbConnector.IntegrationTests
                 source.CopyDataTo("Currency", "repodb_mdbc_target_sales.Currency", target);
 
                 // Act/Assert
-                Assert.Throws<MariaDbException>(() => source.CopyDataTo("Currency", "repodb_mdbc_target_sales.Currency", target));
+                Assert.Throws<MySqlConnector.MySqlException>(() => source.CopyDataTo("Currency", "repodb_mdbc_target_sales.Currency", target));
                 Assert.AreEqual(3, Helper.TargetCount("`Sales`.`Currency`"));
             }
         }

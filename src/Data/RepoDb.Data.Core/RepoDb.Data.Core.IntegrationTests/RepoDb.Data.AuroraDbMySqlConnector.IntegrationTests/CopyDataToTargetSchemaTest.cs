@@ -268,7 +268,7 @@ namespace RepoDb.Data.AuroraDbMySqlConnector.IntegrationTests
                 source.CopyDataTo("Currency", "repodb_amy_target_sales.Currency", target);
 
                 // Act/Assert
-                Assert.Throws<AuroraDbException>(() => source.CopyDataTo("Currency", "repodb_amy_target_sales.Currency", target));
+                Assert.Throws<MySqlConnector.MySqlException>(() => source.CopyDataTo("Currency", "repodb_amy_target_sales.Currency", target));
                 Assert.AreEqual(3, Helper.TargetCount("`Sales`.`Currency`"));
             }
         }

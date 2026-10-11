@@ -220,7 +220,7 @@ namespace RepoDb.Data.MariaDbConnector.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                Assert.Throws<MariaDbException>(() => source.CopyDataTo("CycleA", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents));
+                Assert.Throws<MySqlConnector.MySqlException>(() => source.CopyDataTo("CycleA", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents));
             }
         }
 
@@ -234,7 +234,7 @@ namespace RepoDb.Data.MariaDbConnector.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                Assert.Throws<MariaDbException>(() => source.CopyDataTo("Ledger", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents));
+                Assert.Throws<MySqlConnector.MySqlException>(() => source.CopyDataTo("Ledger", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents));
             }
         }
 
@@ -446,7 +446,7 @@ namespace RepoDb.Data.MariaDbConnector.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                Assert.Throws<MariaDbException>(() => source.CopyDataTo("CycleB", target, relationshipBehavior: CopyDataRelationshipBehavior.ParentsAndChildren));
+                Assert.Throws<MySqlConnector.MySqlException>(() => source.CopyDataTo("CycleB", target, relationshipBehavior: CopyDataRelationshipBehavior.ParentsAndChildren));
             }
         }
 
@@ -502,7 +502,7 @@ namespace RepoDb.Data.MariaDbConnector.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                Assert.Throws<MariaDbException>(() => source.CopyDataTo("Country", target, where: new QueryGroup(new QueryField("Name", "Japan")), relationshipBehavior: CopyDataRelationshipBehavior.Children));
+                Assert.Throws<MySqlConnector.MySqlException>(() => source.CopyDataTo("Country", target, where: new QueryGroup(new QueryField("Name", "Japan")), relationshipBehavior: CopyDataRelationshipBehavior.Children));
             }
         }
 
@@ -516,7 +516,7 @@ namespace RepoDb.Data.MariaDbConnector.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                Assert.Throws<MariaDbException>(() => source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyDataRelationshipBehavior.ParentsAndChildren));
+                Assert.Throws<MySqlConnector.MySqlException>(() => source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyDataRelationshipBehavior.ParentsAndChildren));
             }
         }
 
@@ -572,7 +572,7 @@ namespace RepoDb.Data.MariaDbConnector.IntegrationTests
                 source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents);
 
                 // Act/Assert
-                Assert.Throws<MariaDbException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents));
+                Assert.Throws<MySqlConnector.MySqlException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents));
                 Assert.AreEqual(3, Helper.TargetCount("`Country`"));
                 Assert.AreEqual(6, Helper.TargetCount("`Person`"));
             }
