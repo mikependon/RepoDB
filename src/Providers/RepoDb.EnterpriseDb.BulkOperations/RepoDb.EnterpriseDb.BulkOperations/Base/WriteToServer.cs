@@ -21,6 +21,7 @@ using RepoDb.Enumerations.EnterpriseDb;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.EnterpriseDb.BulkOperations;
+using RepoDb.Interfaces;
 
 namespace RepoDb
 {
@@ -210,6 +211,27 @@ namespace RepoDb
         #region Helpers
 
         /// <summary>
+        /// Gets the (quoted) name of the destination table of the bulk copy. The bulk copy of EnterpriseDB can not load the table that is qualified with its schema,
+        /// so the schema is removed when it is the public schema or the current schema of the connection.
+        /// </summary>
+        private static string GetDestinationTableName(EDBConnection connection,
+            string tableName,
+            IDbSetting dbSetting)
+        {
+            var schema = DataEntityExtension.GetSchema(tableName, dbSetting)?.AsUnquoted(true, dbSetting);
+            if (!string.IsNullOrEmpty(schema))
+            {
+                var currentSchema = Convert.ToString(connection.EnsureOpen().ExecuteScalar("SELECT current_schema()"), System.Globalization.CultureInfo.InvariantCulture);
+                if (string.Equals(schema, "public", StringComparison.OrdinalIgnoreCase) || string.Equals(schema, currentSchema, StringComparison.Ordinal))
+                {
+                    return DataEntityExtension.GetTableName(tableName, dbSetting).AsQuoted(true, dbSetting);
+                }
+            }
+            return tableName.AsQuoted(true, dbSetting);
+        }
+
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="pseudoTableType"></param>
@@ -274,7 +296,7 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
             var bulkCopy = new EDBBulkCopy(connection)
             {
-                DestinationTableName = tableName.AsQuoted(true, dbSetting)
+                DestinationTableName = GetDestinationTableName(connection, tableName, dbSetting)
             };
             if (bulkCopyTimeout.HasValue)
             {
@@ -371,7 +393,7 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
             var bulkCopy = new EDBBulkCopy(connection)
             {
-                DestinationTableName = tableName.AsQuoted(true, dbSetting)
+                DestinationTableName = GetDestinationTableName(connection, tableName, dbSetting)
             };
             if (bulkCopyTimeout.HasValue)
             {

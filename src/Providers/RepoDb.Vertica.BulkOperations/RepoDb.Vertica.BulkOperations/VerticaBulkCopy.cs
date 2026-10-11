@@ -65,6 +65,11 @@ namespace RepoDb.Vertica.BulkOperations
         /// </summary>
         public List<VerticaBulkInsertMapItem> ColumnMappings { get; } = new();
 
+        /// <summary>
+        /// The positions (in the mappings) of the columns whose values are binary: written to the stream as hex text, and converted back to bytes by the COPY statement.
+        /// </summary>
+        private readonly HashSet<int> binaryColumns = new();
+
         #region Helpers
 
         /// <summary>
@@ -113,9 +118,11 @@ namespace RepoDb.Vertica.BulkOperations
         private string BuildCopyStatement(IReadOnlyList<VerticaBulkInsertMapItem> mappings)
         {
             var dbSetting = connection.GetDbSetting();
-            var columnList = string.Join(", ", mappings.Select(m => m.DestinationColumn.AsQuoted(true, dbSetting)));
+            var columnList = string.Join(", ", mappings.Select((m, i) => binaryColumns.Contains(i) ?
+                $"{("RepoDbHex" + i.ToString(CultureInfo.InvariantCulture)).AsQuoted(true, dbSetting)} FILLER VARCHAR(65000), {m.DestinationColumn.AsQuoted(true, dbSetting)} AS HEX_TO_BINARY({("RepoDbHex" + i.ToString(CultureInfo.InvariantCulture)).AsQuoted(true, dbSetting)})" :
+                m.DestinationColumn.AsQuoted(true, dbSetting)));
             return $"COPY {DestinationTableName} ({columnList}) FROM STDIN " +
-                $"DELIMITER E'\\t' RECORD TERMINATOR E'\\n' NULL E'{NullMarker}' ENFORCELENGTH ABORT ON ERROR";
+                $"DELIMITER E'\\t' RECORD TERMINATOR E'\\n' NULL E'{NullMarker.Replace("\\", "\\\\", StringComparison.Ordinal)}' ENFORCELENGTH ABORT ON ERROR";
         }
 
         /// <summary>
@@ -125,7 +132,7 @@ namespace RepoDb.Vertica.BulkOperations
         /// <param name="writer">The in-memory stream writer.</param>
         /// <param name="sourceOrdinals">The source ordinal for each mapping, in write order.</param>
         /// <param name="getValue">Resolves a source ordinal to its raw CLR value (or <see langword="null"/> for a database <c>NULL</c>).</param>
-        private static void WriteRow(TextWriter writer,
+        private void WriteRow(TextWriter writer,
             int[] sourceOrdinals,
             Func<int, object> getValue)
         {
@@ -135,7 +142,12 @@ namespace RepoDb.Vertica.BulkOperations
                 {
                     writer.Write(FieldDelimiter);
                 }
-                writer.Write(FormatValue(getValue(sourceOrdinals[i])));
+                var value = getValue(sourceOrdinals[i]);
+                if (value is byte[])
+                {
+                    binaryColumns.Add(i);
+                }
+                writer.Write(FormatValue(value));
             }
             writer.Write(RecordTerminator);
         }

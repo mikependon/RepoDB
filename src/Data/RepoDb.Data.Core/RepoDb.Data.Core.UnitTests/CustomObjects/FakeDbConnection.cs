@@ -54,7 +54,7 @@ namespace RepoDb.Data.Core.UnitTests.CustomObjects
         }
 
         protected override DbTransaction BeginDbTransaction(IsolationLevel isolationLevel) =>
-            new FakeDbTransaction();
+            new FakeDbTransaction(this);
 
         protected override DbCommand CreateDbCommand() =>
             new FakeDbCommand(this);

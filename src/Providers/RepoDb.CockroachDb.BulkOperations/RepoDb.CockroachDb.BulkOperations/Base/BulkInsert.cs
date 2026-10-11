@@ -431,6 +431,7 @@ namespace RepoDb
             IEnumerable<CockroachDbBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            CockroachDbBulkImportIdentityBehavior? identityBehavior = null,
             CockroachDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = CockroachDbTraceKeys.CockroachDbBulkInsert,
@@ -447,6 +448,8 @@ namespace RepoDb
 
             // Actual Execution
             var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
+            if (identityBehavior == CockroachDbBulkImportIdentityBehavior.KeepIdentity)
+                identityField = null;
             var result = WriteToServerInternal(connection,
                 tableName,
                 reader,
@@ -884,6 +887,7 @@ namespace RepoDb
             IEnumerable<CockroachDbBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            CockroachDbBulkImportIdentityBehavior? identityBehavior = null,
             CockroachDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = CockroachDbTraceKeys.CockroachDbBulkInsert,
@@ -901,6 +905,8 @@ namespace RepoDb
 
             // Actual Execution
             var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false))?.GetIdentity()?.AsField();
+            if (identityBehavior == CockroachDbBulkImportIdentityBehavior.KeepIdentity)
+                identityField = null;
             var result = await WriteToServerAsyncInternal(connection,
                 tableName,
                 reader,

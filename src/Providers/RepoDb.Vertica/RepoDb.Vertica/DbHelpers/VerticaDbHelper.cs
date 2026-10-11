@@ -61,7 +61,7 @@ namespace RepoDb.DbHelpers
         /// tables - the real Vertica equivalent of Firebird's <c>RDB$RELATION_FIELDS</c>/<c>RDB$FIELDS</c>.
         /// </summary>
         /// <returns></returns>
-        private string GetCommandText()
+        private string GetCommandText(bool withSchema)
         {
             // IsIdentity/IsNullable are selected straight from v_catalog.columns' own genuinely-boolean
             // columns; IsPrimary/HasDefaultValue are derived, so they use TRUE/FALSE (not 1/0) to keep
@@ -84,7 +84,8 @@ namespace RepoDb.DbHelpers
                 AND pk.table_name = c.table_name
                 AND pk.column_name = c.column_name
                 AND pk.constraint_type = 'p'
-            WHERE c.table_name = @TableName
+            WHERE c.table_name = @TableName" + (withSchema ? @"
+                AND c.table_schema = @TableSchema" : string.Empty) + @"
             ORDER BY c.ordinal_position;";
         }
 
@@ -172,26 +173,41 @@ namespace RepoDb.DbHelpers
             string tableName,
             IDbTransaction transaction = null)
         {
-            // Variables
-            var commandText = GetCommandText();
+            // The tables of the same name of the other schemas must not be mixed up: the schema is the one of the name, or the current one
+            var setting = connection.GetDbSetting();
+            var schema = DataEntityExtension.GetSchema(tableName, setting)?.AsUnquoted(setting);
+            if (!string.IsNullOrEmpty(schema))
+            {
+                return ReadFields(connection, tableName, schema, transaction);
+            }
+            var currentSchema = Convert.ToString(connection.ExecuteScalar("SELECT CURRENT_SCHEMA()", transaction: transaction), System.Globalization.CultureInfo.InvariantCulture);
+            var dbFields = string.IsNullOrEmpty(currentSchema) ? new List<DbField>() : ReadFields(connection, tableName, currentSchema, transaction);
+            return dbFields.Count > 0 ? dbFields : ReadFields(connection, tableName, null, transaction);
+        }
+
+        private List<DbField> ReadFields(IDbConnection connection,
+            string tableName,
+            string schema,
+            IDbTransaction transaction)
+        {
             var setting = connection.GetDbSetting();
             var param = new Dictionary<string, object>
             {
                 ["TableName"] = DataEntityExtension.GetTableName(tableName, setting).AsUnquoted(setting)
             };
+            if (schema != null)
+            {
+                param["TableSchema"] = schema;
+            }
 
             // Iterate and extract
-            using var reader = (DbDataReader)connection.ExecuteReader(commandText, param, transaction: transaction);
+            using var reader = (DbDataReader)connection.ExecuteReader(GetCommandText(schema != null), param, transaction: transaction);
 
             var dbFields = new List<DbField>();
-
-            // Iterate the list of the fields
             while (reader.Read())
             {
                 dbFields.Add(ReaderToDbField(reader));
             }
-
-            // Return the list of fields
             return dbFields;
         }
 
@@ -211,27 +227,43 @@ namespace RepoDb.DbHelpers
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            // Variables
-            var commandText = GetCommandText();
+            // The tables of the same name of the other schemas must not be mixed up: the schema is the one of the name, or the current one
+            var setting = connection.GetDbSetting();
+            var schema = DataEntityExtension.GetSchema(tableName, setting)?.AsUnquoted(setting);
+            if (!string.IsNullOrEmpty(schema))
+            {
+                return await ReadFieldsAsync(connection, tableName, schema, transaction, cancellationToken).ConfigureAwait(false);
+            }
+            var currentSchema = Convert.ToString(await connection.ExecuteScalarAsync("SELECT CURRENT_SCHEMA()", transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false), System.Globalization.CultureInfo.InvariantCulture);
+            var dbFields = string.IsNullOrEmpty(currentSchema) ? new List<DbField>() : await ReadFieldsAsync(connection, tableName, currentSchema, transaction, cancellationToken).ConfigureAwait(false);
+            return dbFields.Count > 0 ? dbFields : await ReadFieldsAsync(connection, tableName, null, transaction, cancellationToken).ConfigureAwait(false);
+        }
+
+        private async Task<List<DbField>> ReadFieldsAsync(IDbConnection connection,
+            string tableName,
+            string schema,
+            IDbTransaction transaction,
+            CancellationToken cancellationToken)
+        {
             var setting = connection.GetDbSetting();
             var param = new Dictionary<string, object>
             {
                 ["TableName"] = DataEntityExtension.GetTableName(tableName, setting).AsUnquoted(setting)
             };
+            if (schema != null)
+            {
+                param["TableSchema"] = schema;
+            }
 
             // Iterate and extract
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, param, transaction: transaction,
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(GetCommandText(schema != null), param, transaction: transaction,
                 cancellationToken: cancellationToken).ConfigureAwait(false);
 
             var dbFields = new List<DbField>();
-
-            // Iterate the list of the fields
             while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
                 dbFields.Add(await ReaderToDbFieldAsync(reader, cancellationToken).ConfigureAwait(false));
             }
-
-            // Return the list of fields
             return dbFields;
         }
 

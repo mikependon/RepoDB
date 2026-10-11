@@ -274,6 +274,7 @@ namespace RepoDb.Data
         /// <param name="targetTable"></param>
         /// <param name="where"></param>
         /// <param name="batchSize"></param>
+        /// <param name="columnMappingsBehavior"></param>
         /// <param name="options"></param>
         /// <param name="progressCallback"></param>
         /// <param name="commandTimeout"></param>
@@ -286,6 +287,7 @@ namespace RepoDb.Data
             string targetTable,
             QueryGroup where,
             int batchSize,
+            CopySchemaColumnMappingsBehavior columnMappingsBehavior,
             CopyDataProgress options,
             Action<CopyDataProgress> progressCallback,
             int? commandTimeout,
@@ -293,17 +295,20 @@ namespace RepoDb.Data
             ITrace trace,
             IDbTransaction transaction)
         {
+            SetTables(options, connection, destinationConnection, sourceTable, targetTable);
             var (commandText, param) = CreateSelect(connection, sourceTable, where);
             using (var reader = connection.ExecuteReader(commandText, param, commandTimeout: commandTimeout, traceKey: traceKey ?? TraceKeys.ExecuteReader, trace: trace))
             {
                 if (BulkInsertInvoker.IsAvailable(destinationConnection, reader, false))
                 {
-                    var inserted = BulkInsertInvoker.BulkInsert(destinationConnection, targetTable, reader, batchSize, commandTimeout, null, trace, transaction);
+                    var before = CopyDataLogger.Count(destinationConnection, targetTable, transaction);
+                    var inserted = BulkInsertInvoker.BulkInsert(destinationConnection, targetTable, reader, batchSize, columnMappingsBehavior, commandTimeout, null, trace, transaction);
+                    CopyDataLogger.LogBulkInsert(options, destinationConnection, targetTable, inserted, before, CopyDataLogger.Count(destinationConnection, targetTable, transaction));
                     Report(options, inserted, progressCallback);
                     return;
                 }
                 var action = new Action<IList<object>>((IList<object> b) =>
-                    Report(options, destinationConnection.InsertAll(targetTable, b, batchSize, commandTimeout: commandTimeout, traceKey: traceKey, transaction: transaction, trace: trace), progressCallback));
+                    Report(options, RowInserter.Insert(destinationConnection, targetTable, b, commandTimeout, traceKey, trace, transaction), progressCallback));
                 var batch = new List<object>(batchSize);
                 while (reader.Read())
                 {
@@ -330,6 +335,7 @@ namespace RepoDb.Data
         /// <param name="targetTable"></param>
         /// <param name="where"></param>
         /// <param name="batchSize"></param>
+        /// <param name="columnMappingsBehavior"></param>
         /// <param name="options"></param>
         /// <param name="progressCallback"></param>
         /// <param name="commandTimeout"></param>
@@ -343,6 +349,7 @@ namespace RepoDb.Data
             string targetTable,
             QueryGroup where,
             int batchSize,
+            CopySchemaColumnMappingsBehavior columnMappingsBehavior,
             CopyDataProgress options,
             Action<CopyDataProgress> progressCallback,
             int? commandTimeout,
@@ -351,30 +358,34 @@ namespace RepoDb.Data
             IDbTransaction transaction,
             CancellationToken cancellationToken)
         {
+            SetTables(options, connection, destinationConnection, sourceTable, targetTable);
             var (commandText, param) = CreateSelect(connection, sourceTable, where);
             using (var reader = await connection.ExecuteReaderAsync(commandText, param, commandTimeout: commandTimeout, traceKey: traceKey ?? TraceKeys.ExecuteReader, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false))
             {
                 if (BulkInsertInvoker.IsAvailable(destinationConnection, reader, true))
                 {
-                    var inserted = await BulkInsertInvoker.BulkInsertAsync(destinationConnection, targetTable, reader, batchSize, commandTimeout, null, trace, transaction, cancellationToken).ConfigureAwait(false);
+                    var before = await CopyDataLogger.CountAsync(destinationConnection, targetTable, transaction, cancellationToken).ConfigureAwait(false);
+                    var inserted = await BulkInsertInvoker.BulkInsertAsync(destinationConnection, targetTable, reader, batchSize, columnMappingsBehavior, commandTimeout, null, trace, transaction, cancellationToken).ConfigureAwait(false);
+                    var after = await CopyDataLogger.CountAsync(destinationConnection, targetTable, transaction, cancellationToken).ConfigureAwait(false);
+                    CopyDataLogger.LogBulkInsert(options, destinationConnection, targetTable, inserted, before, after);
                     Report(options, inserted, progressCallback);
                     return;
                 }
-                var action = new Action<IList<object>>((IList<object> b) =>
-                    Report(options, destinationConnection.InsertAll(targetTable, b, batchSize, commandTimeout: commandTimeout, traceKey: traceKey, transaction: transaction, trace: trace), progressCallback));
+                var action = new Func<IList<object>, Task>(async (IList<object> b) =>
+                    Report(options, await RowInserter.InsertAsync(destinationConnection, targetTable, b, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false), progressCallback));
                 var batch = new List<object>(batchSize);
                 while (await ReadAsync(reader, cancellationToken).ConfigureAwait(false))
                 {
                     batch.Add(ToRow(reader));
                     if (batch.Count == batchSize)
                     {
-                        action(batch);
+                        await action(batch).ConfigureAwait(false);
                         batch.Clear();
                     }
                 }
                 if (batch.Count > 0)
                 {
-                    action(batch);
+                    await action(batch).ConfigureAwait(false);
                 }
             }
         }
@@ -471,6 +482,28 @@ namespace RepoDb.Data
         }
 
         /// <summary>
+        /// Sets the details of the tables (and the databases) that are being copied into the progress.
+        /// </summary>
+        private static void SetTables(CopyDataProgress options,
+            IDbConnection connection,
+            IDbConnection destinationConnection,
+            string sourceTable,
+            string targetTable)
+        {
+            if (options == null)
+            {
+                return;
+            }
+            options.SourceServer = (connection as System.Data.Common.DbConnection)?.DataSource;
+            options.SourceDatabase = connection.Database;
+            options.SourceTable = sourceTable;
+            options.TargetServer = (destinationConnection as System.Data.Common.DbConnection)?.DataSource;
+            options.TargetDatabase = destinationConnection.Database;
+            options.TargetTable = targetTable;
+            options.BatchStartTime = DateTime.UtcNow;
+        }
+
+        /// <summary>
         /// Reports the progress of the copy: a batch of rows was copied.
         /// </summary>
         /// <param name="options"></param>
@@ -482,9 +515,12 @@ namespace RepoDb.Data
         {
             options.BatchNumber++;
             options.RowCount = inserted;
+            options.BatchCopiedRowCount = inserted;
             options.TotalCopiedRowCount += inserted;
-            options.EndTime = DateTime.UtcNow;
+            options.BatchEndTime = DateTime.UtcNow;
+            options.EndTime = options.BatchEndTime;
             progressCallback?.Invoke(options);
+            options.BatchStartTime = DateTime.UtcNow;
         }
 
         /// <summary>
@@ -498,6 +534,7 @@ namespace RepoDb.Data
         /// <param name="batchSize"></param>
         /// <param name="relationshipBehavior"></param>
         /// <param name="tableExistenceBehavior"></param>
+        /// <param name="columnMappingsBehavior"></param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         internal static void Validate(IDbConnection connection,
@@ -507,7 +544,8 @@ namespace RepoDb.Data
             string targetSchema,
             int batchSize,
             CopyDataRelationshipBehavior relationshipBehavior,
-            CopySchemaExistsBehavior tableExistenceBehavior)
+            CopySchemaExistsBehavior tableExistenceBehavior,
+            CopySchemaColumnMappingsBehavior columnMappingsBehavior)
         {
             if (connection == null)
             {
@@ -528,6 +566,10 @@ namespace RepoDb.Data
             if (batchSize <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(batchSize), "The batch size must be greater than zero.");
+            }
+            if (!Enum.IsDefined(typeof(CopySchemaColumnMappingsBehavior), columnMappingsBehavior))
+            {
+                throw new ArgumentOutOfRangeException(nameof(columnMappingsBehavior), "The column mappings behavior is not defined.");
             }
             if (IsSchemaRequested(relationshipBehavior, tableExistenceBehavior, targetSchema) && !string.Equals(GetTableName(connection, sourceTable), GetTableName(destinationConnection, targetTable), StringComparison.Ordinal))
             {

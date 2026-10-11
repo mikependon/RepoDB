@@ -26,6 +26,12 @@ namespace RepoDb.MySql.BulkOperations
         private readonly MySqlConnection connection;
 
         /// <summary>
+        /// The positions (in <see cref="ColumnMappings"/>) of the columns whose values are binary: written to the temp file as hex text,
+        /// and converted back to bytes by the <c>LOAD DATA</c> statement itself (via <c>UNHEX</c>).
+        /// </summary>
+        private readonly HashSet<int> binaryColumns = new();
+
+        /// <summary>
         /// Creates a new instance of <see cref="MySqlBulkCopy"/> bound to <paramref name="connection"/>.
         /// </summary>
         /// <param name="connection">The connection <see cref="MySqlBulkLoader"/> will load through.</param>
@@ -158,7 +164,12 @@ namespace RepoDb.MySql.BulkOperations
                 {
                     writer.Write(FieldTerminator);
                 }
-                writer.Write(FormatValue(getValue(ColumnMappings[i].SourceOrdinal)));
+                var value = getValue(ColumnMappings[i].SourceOrdinal);
+                if (value is byte[])
+                {
+                    binaryColumns.Add(i);
+                }
+                writer.Write(FormatValue(value));
             }
             writer.Write(LineTerminator);
         }
@@ -240,9 +251,19 @@ namespace RepoDb.MySql.BulkOperations
                 CharacterSet = "utf8mb4",
                 Timeout = BulkCopyTimeout,
             };
-            foreach (var mapping in ColumnMappings)
+            for (var i = 0; i < ColumnMappings.Count; i++)
             {
-                bulkLoader.Columns.Add(QuoteIdentifier(mapping.DestinationColumn));
+                var column = QuoteIdentifier(ColumnMappings[i].DestinationColumn);
+                if (binaryColumns.Contains(i))
+                {
+                    // The hex text is loaded into a user variable first, then converted back to the bytes
+                    bulkLoader.Columns.Add($"@RepoDbHex{i}");
+                    bulkLoader.Expressions.Add($"{column} = UNHEX(@RepoDbHex{i})");
+                }
+                else
+                {
+                    bulkLoader.Columns.Add(column);
+                }
             }
 
             cancellationToken.ThrowIfCancellationRequested();

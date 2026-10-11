@@ -14,6 +14,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using RepoDb.Data.Enumerations;
 using RepoDb.Interfaces;
 
 namespace RepoDb.Data.Helpers
@@ -28,6 +29,8 @@ namespace RepoDb.Data.Helpers
         #region Private Variables
 
         private const string BulkOperationsSuffix = ".BulkOperations";
+        private const string ColumnMappingsBehaviorProperty = "BulkColumnMappingsBehavior";
+        private const string KeepIdentityOption = "KeepIdentity";
         private static readonly ConcurrentDictionary<(Type Connection, Type Reader, bool IsAsync), MethodInfo> _methods =
             new ConcurrentDictionary<(Type, Type, bool), MethodInfo>();
 
@@ -54,6 +57,7 @@ namespace RepoDb.Data.Helpers
         /// <param name="tableName"></param>
         /// <param name="reader"></param>
         /// <param name="batchSize"></param>
+        /// <param name="columnMappingsBehavior"></param>
         /// <param name="commandTimeout"></param>
         /// <param name="traceKey"></param>
         /// <param name="trace"></param>
@@ -63,20 +67,24 @@ namespace RepoDb.Data.Helpers
             string tableName,
             IDataReader reader,
             int batchSize,
+            CopySchemaColumnMappingsBehavior columnMappingsBehavior,
             int? commandTimeout,
             string traceKey,
             ITrace trace,
             IDbTransaction transaction)
         {
             var method = Find(connection, reader, false) ?? throw CreateMissingException(connection);
-            try
+            using (ColumnMappingsScope.Enter(connection, columnMappingsBehavior))
             {
-                return Convert.ToInt32(method.Invoke(null, CreateArguments(method, connection, tableName, reader, batchSize, commandTimeout, traceKey, trace, transaction, CancellationToken.None)), System.Globalization.CultureInfo.InvariantCulture);
-            }
-            catch (TargetInvocationException e) when (e.InnerException != null)
-            {
-                System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(e.InnerException).Throw();
-                throw;
+                try
+                {
+                    return Convert.ToInt32(method.Invoke(null, CreateArguments(method, connection, tableName, reader, batchSize, commandTimeout, traceKey, trace, transaction, CancellationToken.None)), System.Globalization.CultureInfo.InvariantCulture);
+                }
+                catch (TargetInvocationException e) when (e.InnerException != null)
+                {
+                    System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(e.InnerException).Throw();
+                    throw;
+                }
             }
         }
 
@@ -87,6 +95,7 @@ namespace RepoDb.Data.Helpers
         /// <param name="tableName"></param>
         /// <param name="reader"></param>
         /// <param name="batchSize"></param>
+        /// <param name="columnMappingsBehavior"></param>
         /// <param name="commandTimeout"></param>
         /// <param name="traceKey"></param>
         /// <param name="trace"></param>
@@ -97,6 +106,7 @@ namespace RepoDb.Data.Helpers
             string tableName,
             IDataReader reader,
             int batchSize,
+            CopySchemaColumnMappingsBehavior columnMappingsBehavior,
             int? commandTimeout,
             string traceKey,
             ITrace trace,
@@ -104,16 +114,125 @@ namespace RepoDb.Data.Helpers
             CancellationToken cancellationToken)
         {
             var method = Find(connection, reader, true) ?? throw CreateMissingException(connection);
-            try
+            using (await ColumnMappingsScope.EnterAsync(connection, columnMappingsBehavior, cancellationToken).ConfigureAwait(false))
             {
-                var task = (Task)method.Invoke(null, CreateArguments(method, connection, tableName, reader, batchSize, commandTimeout, traceKey, trace, transaction, cancellationToken));
-                await task.ConfigureAwait(false);
-                return Convert.ToInt32(task.GetType().GetProperty(nameof(Task<int>.Result)).GetValue(task), System.Globalization.CultureInfo.InvariantCulture);
+                try
+                {
+                    var task = (Task)method.Invoke(null, CreateArguments(method, connection, tableName, reader, batchSize, commandTimeout, traceKey, trace, transaction, cancellationToken));
+                    await task.ConfigureAwait(false);
+                    return Convert.ToInt32(task.GetType().GetProperty(nameof(Task<int>.Result)).GetValue(task), System.Globalization.CultureInfo.InvariantCulture);
+                }
+                catch (TargetInvocationException e) when (e.InnerException != null)
+                {
+                    System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(e.InnerException).Throw();
+                    throw;
+                }
             }
-            catch (TargetInvocationException e) when (e.InnerException != null)
+        }
+
+        #endregion
+
+        #region Column Mappings
+
+        /// <summary>
+        /// Applies the column mappings behavior to the bulk insert for as long as the scope lives. The bulk operations package of a provider reads the behavior
+        /// from the setting of the connection (the <c>BulkColumnMappingsBehavior</c> property of its <c>&lt;Provider&gt;BulkOperationsDbSetting</c>, of the enumeration
+        /// <c>&lt;Provider&gt;BulkColumnMappingsBehavior</c> that has the same names and values as <see cref="CopySchemaColumnMappingsBehavior"/>), so the behavior is set on the
+        /// setting and then set back. The setting is shared by every connection of the same type, so the bulk inserts of the setting take turns while the behavior is applied.
+        /// </summary>
+        private sealed class ColumnMappingsScope : IDisposable
+        {
+            private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<object, SemaphoreSlim> _gates =
+                new System.Runtime.CompilerServices.ConditionalWeakTable<object, SemaphoreSlim>();
+
+            private readonly object _setting;
+            private readonly PropertyInfo _property;
+            private readonly SemaphoreSlim _gate;
+            private object _previous;
+            private bool _applied;
+
+            private ColumnMappingsScope(object setting,
+                PropertyInfo property,
+                SemaphoreSlim gate)
             {
-                System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(e.InnerException).Throw();
-                throw;
+                _setting = setting;
+                _property = property;
+                _gate = gate;
+            }
+
+            internal static ColumnMappingsScope Enter(IDbConnection connection,
+                CopySchemaColumnMappingsBehavior behavior)
+            {
+                var scope = Create(connection, behavior);
+                if (scope?._gate == null)
+                {
+                    return scope;
+                }
+                scope._gate.Wait();
+                return scope.Apply(behavior);
+            }
+
+            internal static async Task<ColumnMappingsScope> EnterAsync(IDbConnection connection,
+                CopySchemaColumnMappingsBehavior behavior,
+                CancellationToken cancellationToken)
+            {
+                var scope = Create(connection, behavior);
+                if (scope?._gate == null)
+                {
+                    return scope;
+                }
+                await scope._gate.WaitAsync(cancellationToken).ConfigureAwait(false);
+                return scope.Apply(behavior);
+            }
+
+            /// <summary>
+            /// Finds the property of the setting of the connection that defines the behavior (<c>null</c> scope if the setting has none and the behavior is the default one).
+            /// </summary>
+            private static ColumnMappingsScope Create(IDbConnection connection,
+                CopySchemaColumnMappingsBehavior behavior)
+            {
+                var setting = DbSettingMapper.Get(connection);
+                var property = setting?.GetType().GetProperty(ColumnMappingsBehaviorProperty, BindingFlags.Public | BindingFlags.Instance);
+                if (property == null || !property.CanRead || !property.CanWrite || !property.PropertyType.IsEnum)
+                {
+                    if (behavior == CopySchemaColumnMappingsBehavior.Automatic)
+                    {
+                        return new ColumnMappingsScope(null, null, null);
+                    }
+                    throw new InvalidOperationException($"The column mappings behavior '{behavior}' requires the setting of the bulk operations package of the provider " +
+                        $"(a setting with the '{ColumnMappingsBehaviorProperty}' property) to be mapped to the connection '{connection.GetType().FullName}'.");
+                }
+                if (!Enum.IsDefined(property.PropertyType, behavior.ToString()))
+                {
+                    throw new InvalidOperationException($"The column mappings behavior '{behavior}' is not defined by '{property.PropertyType.FullName}'.");
+                }
+                return new ColumnMappingsScope(setting, property, _gates.GetValue(setting, _ => new SemaphoreSlim(1, 1)));
+            }
+
+            private ColumnMappingsScope Apply(CopySchemaColumnMappingsBehavior behavior)
+            {
+                try
+                {
+                    _previous = _property.GetValue(_setting);
+                    _property.SetValue(_setting, Enum.Parse(_property.PropertyType, behavior.ToString()));
+                    _applied = true;
+                }
+                catch
+                {
+                    _gate.Release();
+                    throw;
+                }
+                return this;
+            }
+
+            public void Dispose()
+            {
+                if (_applied)
+                {
+                    _property.SetValue(_setting, _previous);
+                    _applied = false;
+                    _gate.Release();
+                }
             }
         }
 
@@ -302,6 +421,13 @@ namespace RepoDb.Data.Helpers
                     case "commandTimeout":
                         arguments[i] = commandTimeout;
                         break;
+                    case "options":
+                    case "bulkCopyOptions":
+                        arguments[i] = GetOptions(parameter);
+                        break;
+                    case "identityBehavior":
+                        arguments[i] = GetIdentityBehavior(parameter);
+                        break;
                     case "transaction":
                         arguments[i] = parameter.ParameterType.IsInstanceOfType(transaction) ? transaction : GetDefault(parameter);
                         break;
@@ -320,6 +446,37 @@ namespace RepoDb.Data.Helpers
                 }
             }
             return arguments;
+        }
+
+        /// <summary>
+        /// Gets the value of the <c>options</c> argument: its default value with the <c>KeepIdentity</c> option when it has one (i.e.: <c>SqlBulkCopyOptions.KeepIdentity</c>),
+        /// so the values of the identity columns are copied as they are instead of being generated again by the destination database (the rows of the related tables reference them).
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        private static object GetOptions(ParameterInfo parameter)
+        {
+            var type = Nullable.GetUnderlyingType(parameter.ParameterType) ?? parameter.ParameterType;
+            if (!type.IsEnum || !Enum.GetNames(type).Contains(KeepIdentityOption, StringComparer.Ordinal))
+            {
+                return GetDefault(parameter);
+            }
+            var value = Convert.ToInt64(GetDefault(parameter) ?? 0, System.Globalization.CultureInfo.InvariantCulture);
+            var keepIdentity = Convert.ToInt64(Enum.Parse(type, KeepIdentityOption), System.Globalization.CultureInfo.InvariantCulture);
+            return Enum.ToObject(type, value | keepIdentity);
+        }
+
+        /// <summary>
+        /// Gets the value of the <c>identityBehavior</c> argument: <c>KeepIdentity</c> when the enumeration has it, so the values of the identity columns are copied as they are.
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        private static object GetIdentityBehavior(ParameterInfo parameter)
+        {
+            var type = Nullable.GetUnderlyingType(parameter.ParameterType) ?? parameter.ParameterType;
+            return type.IsEnum && Enum.GetNames(type).Contains(KeepIdentityOption, StringComparer.Ordinal)
+                ? Enum.Parse(type, KeepIdentityOption)
+                : GetDefault(parameter);
         }
 
         /// <summary>

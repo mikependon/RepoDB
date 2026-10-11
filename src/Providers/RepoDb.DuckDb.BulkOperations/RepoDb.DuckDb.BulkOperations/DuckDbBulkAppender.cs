@@ -7,6 +7,7 @@
 #endregion
 
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
@@ -322,6 +323,7 @@ namespace RepoDb.DuckDb.BulkOperations
                 null => row.AppendNullValue(),
                 bool v => row.AppendValue(v),
                 byte[] v => row.AppendValue(v),
+                Stream v => row.AppendValue(ReadAllBytes(v)),
                 string v => row.AppendValue(v),
                 decimal v => row.AppendValue(v),
                 Guid v => row.AppendValue(v),
@@ -344,6 +346,13 @@ namespace RepoDb.DuckDb.BulkOperations
                 char v => row.AppendValue(v.ToString()),
                 _ => throw new NotSupportedException($"The type '{value.GetType()}' is not supported by the DuckDB appender.")
             };
+        }
+
+        private static byte[] ReadAllBytes(Stream stream)
+        {
+            using var memory = new MemoryStream();
+            stream.CopyTo(memory);
+            return memory.ToArray();
         }
 
         #endregion

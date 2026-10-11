@@ -433,6 +433,7 @@ namespace RepoDb
             IEnumerable<AuroraDbBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            AuroraDbBulkImportIdentityBehavior? identityBehavior = null,
             AuroraDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = AuroraDbTraceKeys.AuroraDbBulkInsert,
@@ -449,6 +450,8 @@ namespace RepoDb
 
             // Actual Execution
             var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
+            if (identityBehavior == AuroraDbBulkImportIdentityBehavior.KeepIdentity)
+                identityField = null;
             var result = WriteToServerInternal(connection,
                 tableName,
                 reader,
@@ -888,6 +891,7 @@ namespace RepoDb
             IEnumerable<AuroraDbBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            AuroraDbBulkImportIdentityBehavior? identityBehavior = null,
             AuroraDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = AuroraDbTraceKeys.AuroraDbBulkInsert,
@@ -905,6 +909,8 @@ namespace RepoDb
 
             // Actual Execution
             var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false))?.GetIdentity()?.AsField();
+            if (identityBehavior == AuroraDbBulkImportIdentityBehavior.KeepIdentity)
+                identityField = null;
             var result = await WriteToServerAsyncInternal(connection,
                 tableName,
                 reader,

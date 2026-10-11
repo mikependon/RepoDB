@@ -94,7 +94,7 @@ namespace RepoDb.DbHelpers
 
             var tableSchemaParameter = command.CreateParameter();
             tableSchemaParameter.ParameterName = "TableSchema";
-            tableSchemaParameter.Value = connection.Database;
+            tableSchemaParameter.Value = DataEntityExtension.GetSchema(tableName, m_dbSetting)?.AsUnquoted(m_dbSetting) ?? connection.Database;
             command.Parameters.Add(tableSchemaParameter);
 
             var tableNameParameter = command.CreateParameter();

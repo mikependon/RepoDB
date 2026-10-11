@@ -173,7 +173,7 @@ namespace RepoDb.DbHelpers
             var commandText = GetCommandText();
             var param = new Dictionary<string, object>
             {
-                ["TableSchema"] = connection.ExecuteScalar<string>("SELECT CURRENT_SCHEMA FROM DUMMY;", transaction: transaction),
+                ["TableSchema"] = DataEntityExtension.GetSchema(tableName, m_dbSetting)?.AsUnquoted(m_dbSetting) ?? connection.ExecuteScalar<string>("SELECT CURRENT_SCHEMA FROM DUMMY;", transaction: transaction),
                 ["TableName"] = DataEntityExtension.GetTableName(tableName, m_dbSetting).AsUnquoted(m_dbSetting)
             };
 
@@ -203,7 +203,7 @@ namespace RepoDb.DbHelpers
             var commandText = GetCommandText();
             var param = new Dictionary<string, object>
             {
-                ["TableSchema"] = await connection.ExecuteScalarAsync<string>("SELECT CURRENT_SCHEMA FROM DUMMY;", transaction: transaction,
+                ["TableSchema"] = DataEntityExtension.GetSchema(tableName, m_dbSetting)?.AsUnquoted(m_dbSetting) ?? await connection.ExecuteScalarAsync<string>("SELECT CURRENT_SCHEMA FROM DUMMY;", transaction: transaction,
                     cancellationToken: cancellationToken).ConfigureAwait(false),
                 ["TableName"] = DataEntityExtension.GetTableName(tableName, m_dbSetting).AsUnquoted(m_dbSetting)
             };

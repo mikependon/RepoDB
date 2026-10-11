@@ -338,6 +338,7 @@ namespace RepoDb
             IEnumerable<FirebirdCommandBatcherMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            FirebirdBulkImportIdentityBehavior? identityBehavior = null,
             ITrace trace = null,
             string traceKey = FirebirdTraceKeys.FirebirdBulkInsert,
             FbTransaction transaction = null)
@@ -349,6 +350,8 @@ namespace RepoDb
             var traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command);
 
             var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
+            if (identityBehavior == FirebirdBulkImportIdentityBehavior.KeepIdentity)
+                identityField = null;
             var result = WriteToServerInternal(connection, tableName, reader, mappings ?? GetDefaultMappingsForDataReader(connection, tableName, reader, transaction, identityField).AsList(), bulkCopyTimeout, batchSize, transaction);
 
             Tracer.InvokeAfterExecution(traceResult, trace, result);
@@ -682,6 +685,7 @@ namespace RepoDb
             IEnumerable<FirebirdCommandBatcherMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            FirebirdBulkImportIdentityBehavior? identityBehavior = null,
             ITrace trace = null,
             string traceKey = FirebirdTraceKeys.FirebirdBulkInsert,
             FbTransaction transaction = null,
@@ -694,6 +698,8 @@ namespace RepoDb
             var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
             var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false))?.GetIdentity()?.AsField();
+            if (identityBehavior == FirebirdBulkImportIdentityBehavior.KeepIdentity)
+                identityField = null;
             var result = await WriteToServerAsyncInternal(connection, tableName, reader, mappings ?? GetDefaultMappingsForDataReader(connection, tableName, reader, transaction, identityField).AsList(), bulkCopyTimeout, batchSize, transaction, cancellationToken).ConfigureAwait(false);
 
             await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);

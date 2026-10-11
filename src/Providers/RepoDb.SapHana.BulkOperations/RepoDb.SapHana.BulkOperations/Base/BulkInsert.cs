@@ -434,6 +434,7 @@ namespace RepoDb
             IEnumerable<SapHanaBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            SapHanaBulkImportIdentityBehavior? identityBehavior = null,
             SapHanaBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = SapHanaTraceKeys.SapHanaBulkInsert,
@@ -450,6 +451,8 @@ namespace RepoDb
 
             // Actual Execution
             var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
+            if (identityBehavior == SapHanaBulkImportIdentityBehavior.KeepIdentity)
+                identityField = null;
             var result = WriteToServerInternal(connection,
                 tableName,
                 reader,
@@ -457,7 +460,8 @@ namespace RepoDb
                 bulkCopyTimeout,
                 batchSize,
                 transaction,
-                identityField);
+                identityField,
+                identityBehavior == SapHanaBulkImportIdentityBehavior.KeepIdentity);
 
             // After Execution
             Tracer
@@ -889,6 +893,7 @@ namespace RepoDb
             IEnumerable<SapHanaBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            SapHanaBulkImportIdentityBehavior? identityBehavior = null,
             SapHanaBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = SapHanaTraceKeys.SapHanaBulkInsert,
@@ -906,6 +911,8 @@ namespace RepoDb
 
             // Actual Execution
             var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false))?.GetIdentity()?.AsField();
+            if (identityBehavior == SapHanaBulkImportIdentityBehavior.KeepIdentity)
+                identityField = null;
             var result = await WriteToServerAsyncInternal(connection,
                 tableName,
                 reader,
@@ -914,7 +921,8 @@ namespace RepoDb
                 batchSize,
                 cancellationToken,
                 transaction,
-                identityField).ConfigureAwait(false);
+                identityField,
+                identityBehavior == SapHanaBulkImportIdentityBehavior.KeepIdentity).ConfigureAwait(false);
 
             // After Execution
             await Tracer

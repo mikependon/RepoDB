@@ -433,6 +433,7 @@ namespace RepoDb
             IEnumerable<MySqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            MySqlBulkImportIdentityBehavior? identityBehavior = null,
             MySqlBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MySqlTraceKeys.MySqlBulkInsert,
@@ -449,6 +450,8 @@ namespace RepoDb
 
             // Actual Execution
             var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
+            if (identityBehavior == MySqlBulkImportIdentityBehavior.KeepIdentity)
+                identityField = null;
             var result = WriteToServerInternal(connection,
                 tableName,
                 reader,
@@ -888,6 +891,7 @@ namespace RepoDb
             IEnumerable<MySqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            MySqlBulkImportIdentityBehavior? identityBehavior = null,
             MySqlBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MySqlTraceKeys.MySqlBulkInsert,
@@ -905,6 +909,8 @@ namespace RepoDb
 
             // Actual Execution
             var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false))?.GetIdentity()?.AsField();
+            if (identityBehavior == MySqlBulkImportIdentityBehavior.KeepIdentity)
+                identityField = null;
             var result = await WriteToServerAsyncInternal(connection,
                 tableName,
                 reader,

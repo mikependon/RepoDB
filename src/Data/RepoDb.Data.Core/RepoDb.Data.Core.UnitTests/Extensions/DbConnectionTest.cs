@@ -18,6 +18,7 @@ using RepoDb.Data.Core.UnitTests.CustomObjects;
 using RepoDb.Data.Core.UnitTests.Fake.BulkOperations;
 using RepoDb.Data.Enumerations;
 using RepoDb.Data.Models;
+using RepoDb.DbSettings;
 using RepoDb.Enumerations;
 using RepoDb.Interfaces;
 using RepoDb.Schema;
@@ -456,7 +457,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             FakeBulkOperations.Reset();
 
             // Act
-            DataDbConnection.CopyRows(source, destination, "Person", "Customer", null, 500, options, p => reported.Add((p.BatchNumber, p.RowCount, p.TotalCopiedRowCount)), 33, "MyTraceKey", null, null);
+            DataDbConnection.CopyRows(source, destination, "Person", "Customer", null, 500, CopySchemaColumnMappingsBehavior.Automatic, options, p => reported.Add((p.BatchNumber, p.RowCount, p.TotalCopiedRowCount)), 33, "MyTraceKey", null, null);
 
             // Assert
             var call = FakeBulkOperations.Calls.Single();
@@ -488,7 +489,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
                 FakeBulkOperations.Reset();
 
                 // Act
-                await DataDbConnection.CopyRowsAsync(source, destination, "Person", "Customer", null, 500, options, p => reported.Add((p.BatchNumber, p.RowCount, p.TotalCopiedRowCount)), 33, null, null, null, tokenSource.Token);
+                await DataDbConnection.CopyRowsAsync(source, destination, "Person", "Customer", null, 500, CopySchemaColumnMappingsBehavior.Automatic, options, p => reported.Add((p.BatchNumber, p.RowCount, p.TotalCopiedRowCount)), 33, null, null, null, tokenSource.Token);
 
                 // Assert
                 var call = FakeBulkOperations.Calls.Single();
@@ -512,10 +513,10 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var reported = new List<(int Batch, int Rows, int Total)>();
 
             // Act
-            DataDbConnection.CopyRows(source, destination, "Person", "Customer", null, 2, options, p => reported.Add((p.BatchNumber, p.RowCount, p.TotalCopiedRowCount)), null, null, null, null);
+            DataDbConnection.CopyRows(source, destination, "Person", "Customer", null, 2, CopySchemaColumnMappingsBehavior.Automatic, options, p => reported.Add((p.BatchNumber, p.RowCount, p.TotalCopiedRowCount)), null, null, null, null);
 
             // Assert
-            Assert.AreEqual(5, destination.Executions.Count(e => e.Kind == "Scalar"));
+            Assert.AreEqual(5, destination.Executions.Count(e => e.Kind == "NonQuery" && e.CommandText.StartsWith("INSERT", StringComparison.Ordinal)));
             CollectionAssert.AreEqual(new[] { (1, 2, 2), (2, 2, 4), (3, 1, 5) }, reported);
             Assert.AreEqual(3, options.BatchNumber);
             Assert.AreEqual(5, options.TotalCopiedRowCount);
@@ -530,10 +531,10 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var reported = new List<(int Batch, int Rows, int Total)>();
 
             // Act
-            await DataDbConnection.CopyRowsAsync(source, destination, "Person", "Customer", null, 2, options, p => reported.Add((p.BatchNumber, p.RowCount, p.TotalCopiedRowCount)), null, null, null, null, CancellationToken.None);
+            await DataDbConnection.CopyRowsAsync(source, destination, "Person", "Customer", null, 2, CopySchemaColumnMappingsBehavior.Automatic, options, p => reported.Add((p.BatchNumber, p.RowCount, p.TotalCopiedRowCount)), null, null, null, null, CancellationToken.None);
 
             // Assert
-            Assert.AreEqual(5, destination.Executions.Count(e => e.Kind == "Scalar"));
+            Assert.AreEqual(5, destination.Executions.Count(e => e.Kind == "NonQuery" && e.CommandText.StartsWith("INSERT", StringComparison.Ordinal)));
             CollectionAssert.AreEqual(new[] { (1, 2, 2), (2, 2, 4), (3, 1, 5) }, reported);
             Assert.AreEqual(5, options.TotalCopiedRowCount);
         }
@@ -546,11 +547,70 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var options = new CopyDataProgress();
 
             // Act
-            DataDbConnection.CopyRows(source, destination, "Person", "Customer", null, 2, options, null, null, null, null, null);
+            DataDbConnection.CopyRows(source, destination, "Person", "Customer", null, 2, CopySchemaColumnMappingsBehavior.Automatic, options, null, null, null, null, null);
 
             // Assert
             Assert.AreEqual(2, options.BatchNumber);
             Assert.AreEqual(4, options.TotalCopiedRowCount);
+        }
+
+        [TestMethod]
+        public void TestCopyRowsGivesTheColumnMappingsBehaviorToTheBulkInsert()
+        {
+            // Setup
+            var destination = new FakeBulkSettingDbConnection();
+            DbSettingMapper.Add<FakeBulkSettingDbConnection>(new FakeBulkDbSetting(), true);
+            FakeBulkOperations.Reset();
+
+            // Act
+            DataDbConnection.CopyRows(new FakeDbConnection(), destination, "Person", "Customer", null, 500, CopySchemaColumnMappingsBehavior.Strict, new CopyDataProgress(), null, null, null, null, null);
+
+            // Assert
+            Assert.AreEqual("Strict", FakeBulkOperations.Calls.Single().ColumnMappingsBehavior);
+        }
+
+        [TestMethod]
+        public async Task TestCopyRowsAsyncGivesTheColumnMappingsBehaviorToTheBulkInsert()
+        {
+            // Setup
+            var destination = new FakeBulkSettingDbConnection();
+            DbSettingMapper.Add<FakeBulkSettingDbConnection>(new FakeBulkDbSetting(), true);
+            FakeBulkOperations.Reset();
+
+            // Act
+            await DataDbConnection.CopyRowsAsync(new FakeDbConnection(), destination, "Person", "Customer", null, 500, CopySchemaColumnMappingsBehavior.StrictBypass, new CopyDataProgress(), null, null, null, null, null, CancellationToken.None);
+
+            // Assert
+            Assert.AreEqual("StrictBypass", FakeBulkOperations.Calls.Single().ColumnMappingsBehavior);
+        }
+
+        [TestMethod]
+        public void TestCopyRowsWithoutABulkInsertIgnoresTheColumnMappingsBehavior()
+        {
+            // Setup
+            var (source, destination) = GetConnections(3);
+            var options = new CopyDataProgress();
+
+            // Act
+            DataDbConnection.CopyRows(source, destination, "Person", "Customer", null, 2, CopySchemaColumnMappingsBehavior.Strict, options, null, null, null, null, null);
+
+            // Assert
+            Assert.AreEqual(3, options.TotalCopiedRowCount);
+            Assert.AreEqual(3, destination.Executions.Count(e => e.Kind == "NonQuery" && e.CommandText.StartsWith("INSERT", StringComparison.Ordinal)));
+        }
+
+        [TestMethod]
+        public async Task TestCopyRowsAsyncWithoutABulkInsertIgnoresTheColumnMappingsBehavior()
+        {
+            // Setup
+            var (source, destination) = GetConnections(3);
+            var options = new CopyDataProgress();
+
+            // Act
+            await DataDbConnection.CopyRowsAsync(source, destination, "Person", "Customer", null, 2, CopySchemaColumnMappingsBehavior.StrictBypass, options, null, null, null, null, null, CancellationToken.None);
+
+            // Assert
+            Assert.AreEqual(3, options.TotalCopiedRowCount);
         }
 
         [TestMethod]
@@ -562,7 +622,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var called = false;
 
             // Act
-            DataDbConnection.CopyRows(source, destination, "Person", "Customer", null, 2, options, p => called = true, null, null, null, null);
+            DataDbConnection.CopyRows(source, destination, "Person", "Customer", null, 2, CopySchemaColumnMappingsBehavior.Automatic, options, p => called = true, null, null, null, null);
 
             // Assert
             Assert.IsFalse(called);
@@ -579,7 +639,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var options = new CopyDataProgress();
 
             // Act
-            await DataDbConnection.CopyRowsAsync(source, destination, "Person", "Customer", null, 2, options, null, null, null, null, null, CancellationToken.None);
+            await DataDbConnection.CopyRowsAsync(source, destination, "Person", "Customer", null, 2, CopySchemaColumnMappingsBehavior.Automatic, options, null, null, null, null, null, CancellationToken.None);
 
             // Assert
             Assert.AreEqual(0, options.BatchNumber);
@@ -593,10 +653,10 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var (source, destination) = GetConnections(3);
 
             // Act
-            DataDbConnection.CopyRows(source, destination, "Person", "Customer", null, 3, new CopyDataProgress(), null, null, null, null, null);
+            DataDbConnection.CopyRows(source, destination, "Person", "Customer", null, 3, CopySchemaColumnMappingsBehavior.Automatic, new CopyDataProgress(), null, null, null, null, null);
 
             // Assert
-            var insert = destination.Executions.First(e => e.Kind == "Scalar");
+            var insert = destination.Executions.First(e => e.Kind == "NonQuery" && e.CommandText.StartsWith("INSERT", StringComparison.Ordinal));
             StringAssert.Contains(insert.CommandText, "[Customer]");
             StringAssert.Contains(insert.CommandText, "[Name]");
             StringAssert.Contains(insert.CommandText, "[Birthday]");
@@ -610,10 +670,10 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var (source, destination) = GetConnections(3);
 
             // Act
-            DataDbConnection.CopyRows(source, destination, "Person", "Customer", null, 3, new CopyDataProgress(), null, null, null, null, null);
+            DataDbConnection.CopyRows(source, destination, "Person", "Customer", null, 3, CopySchemaColumnMappingsBehavior.Automatic, new CopyDataProgress(), null, null, null, null, null);
 
             // Assert
-            var withoutBirthday = destination.Executions.Where(e => e.Kind == "Scalar").Single(e => e.Parameters.Values.Contains("Name 2"));
+            var withoutBirthday = destination.Executions.Where(e => e.Kind == "NonQuery" && e.CommandText.StartsWith("INSERT", StringComparison.Ordinal)).Single(e => e.Parameters.Values.Contains("Name 2"));
             Assert.IsFalse(withoutBirthday.Parameters.Values.Any(v => v is DateTime));
         }
 
@@ -624,7 +684,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var (source, destination) = GetConnections();
 
             // Act
-            DataDbConnection.CopyRows(source, destination, "Person", "Person", null, 1000, new CopyDataProgress(), null, null, null, null, null);
+            DataDbConnection.CopyRows(source, destination, "Person", "Person", null, 1000, CopySchemaColumnMappingsBehavior.Automatic, new CopyDataProgress(), null, null, null, null, null);
 
             // Assert
             var select = source.Executions.Single();
@@ -642,7 +702,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var where = new QueryGroup(new QueryField("Id", Operation.GreaterThan, 1));
 
             // Act
-            DataDbConnection.CopyRows(source, destination, "Person", "Person", where, 1000, new CopyDataProgress(), null, null, null, null, null);
+            DataDbConnection.CopyRows(source, destination, "Person", "Person", where, 1000, CopySchemaColumnMappingsBehavior.Automatic, new CopyDataProgress(), null, null, null, null, null);
 
             // Assert
             var select = source.Executions.Single();
@@ -659,7 +719,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var where = new QueryGroup(new QueryField("Id", Operation.Between, new[] { 1, 3 }));
 
             // Act
-            DataDbConnection.CopyRows(source, destination, "Person", "Person", where, 1000, new CopyDataProgress(), null, null, null, null, null);
+            DataDbConnection.CopyRows(source, destination, "Person", "Person", where, 1000, CopySchemaColumnMappingsBehavior.Automatic, new CopyDataProgress(), null, null, null, null, null);
 
             // Assert
             var parameters = source.Executions.Single().Parameters;
@@ -676,7 +736,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var where = new QueryGroup(new QueryField("Id", Operation.Between, new[] { 1 }));
 
             // Act
-            DataDbConnection.CopyRows(source, destination, "Person", "Person", where, 1000, new CopyDataProgress(), null, null, null, null, null);
+            DataDbConnection.CopyRows(source, destination, "Person", "Person", where, 1000, CopySchemaColumnMappingsBehavior.Automatic, new CopyDataProgress(), null, null, null, null, null);
 
             // Assert
             var parameters = source.Executions.Single().Parameters;
@@ -693,7 +753,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var where = new QueryGroup(new QueryField("Id", Operation.In, new[] { 1, 2, 3 }));
 
             // Act
-            DataDbConnection.CopyRows(source, destination, "Person", "Person", where, 1000, new CopyDataProgress(), null, null, null, null, null);
+            DataDbConnection.CopyRows(source, destination, "Person", "Person", where, 1000, CopySchemaColumnMappingsBehavior.Automatic, new CopyDataProgress(), null, null, null, null, null);
 
             // Assert
             var parameters = source.Executions.Single().Parameters;
@@ -710,7 +770,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var where = new QueryGroup(new QueryField("Name", "Name 2"));
 
             // Act
-            DataDbConnection.CopyRows(source, destination, "Person", "Person", where, 1000, new CopyDataProgress(), null, null, null, null, null);
+            DataDbConnection.CopyRows(source, destination, "Person", "Person", where, 1000, CopySchemaColumnMappingsBehavior.Automatic, new CopyDataProgress(), null, null, null, null, null);
 
             // Assert
             var parameters = source.Executions.Single().Parameters;
@@ -726,7 +786,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var where = new QueryGroup(new QueryField("Id", Operation.In, new[] { 1, 2 }));
 
             // Act
-            await DataDbConnection.CopyRowsAsync(source, destination, "Person", "Person", where, 1000, new CopyDataProgress(), null, null, null, null, null, CancellationToken.None);
+            await DataDbConnection.CopyRowsAsync(source, destination, "Person", "Person", where, 1000, CopySchemaColumnMappingsBehavior.Automatic, new CopyDataProgress(), null, null, null, null, null, CancellationToken.None);
 
             // Assert
             var parameters = source.Executions.First().Parameters;
@@ -741,7 +801,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var options = new CopyDataProgress();
 
             // Act
-            DataDbConnection.CopyRows(source, destination, "Person", "Person", null, 1000, options, null, null, null, null, null);
+            DataDbConnection.CopyRows(source, destination, "Person", "Person", null, 1000, CopySchemaColumnMappingsBehavior.Automatic, options, null, null, null, null, null);
 
             // Assert
             Assert.AreEqual(1, options.BatchNumber);
@@ -753,7 +813,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Act/Assert
             Assert.Throws<InvalidOperationException>(() =>
-                DataDbConnection.CopyRows(new Mock<IDbConnection>().Object, new FakeDbConnection(), "Person", "Person", null, 1000, new CopyDataProgress(), null, null, null, null, null));
+                DataDbConnection.CopyRows(new Mock<IDbConnection>().Object, new FakeDbConnection(), "Person", "Person", null, 1000, CopySchemaColumnMappingsBehavior.Automatic, new CopyDataProgress(), null, null, null, null, null));
         }
 
         [TestMethod]
@@ -761,7 +821,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Act/Assert
             await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                DataDbConnection.CopyRowsAsync(new Mock<IDbConnection>().Object, new FakeDbConnection(), "Person", "Person", null, 1000, new CopyDataProgress(), null, null, null, null, null, CancellationToken.None));
+                DataDbConnection.CopyRowsAsync(new Mock<IDbConnection>().Object, new FakeDbConnection(), "Person", "Person", null, 1000, CopySchemaColumnMappingsBehavior.Automatic, new CopyDataProgress(), null, null, null, null, null, CancellationToken.None));
         }
 
         [TestMethod]
@@ -775,7 +835,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
 
                 // Act/Assert
                 await Assert.ThrowsAsync<OperationCanceledException>(() =>
-                    DataDbConnection.CopyRowsAsync(source, destination, "Person", "Person", null, 1000, new CopyDataProgress(), null, null, null, null, null, tokenSource.Token));
+                    DataDbConnection.CopyRowsAsync(source, destination, "Person", "Person", null, 1000, CopySchemaColumnMappingsBehavior.Automatic, new CopyDataProgress(), null, null, null, null, null, tokenSource.Token));
             }
         }
 
@@ -787,7 +847,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var trace = new Mock<ITrace>();
 
             // Act
-            DataDbConnection.CopyRows(source, destination, "Person", "Person", null, 1000, new CopyDataProgress(), null, null, "MyTraceKey", trace.Object, null);
+            DataDbConnection.CopyRows(source, destination, "Person", "Person", null, 1000, CopySchemaColumnMappingsBehavior.Automatic, new CopyDataProgress(), null, null, "MyTraceKey", trace.Object, null);
 
             // Assert
             trace.Verify(t => t.BeforeExecution(It.Is<CancellableTraceLog>(l => l.Key == "MyTraceKey")), Times.AtLeastOnce);
@@ -798,11 +858,29 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         #region Validate
 
         [TestMethod]
+        public void ThrowExceptionOnValidateIfTheColumnMappingsBehaviorIsNotDefined()
+        {
+            // Act/Assert
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                DataDbConnection.Validate(GetConnection(), "Person", "Person", GetConnection(), null, 1, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Skip, (CopySchemaColumnMappingsBehavior)99));
+        }
+
+        [TestMethod]
+        public void TestValidateAcceptsEveryColumnMappingsBehavior()
+        {
+            foreach (var behavior in new[] { CopySchemaColumnMappingsBehavior.Automatic, CopySchemaColumnMappingsBehavior.Strict, CopySchemaColumnMappingsBehavior.StrictBypass })
+            {
+                // Act/Assert
+                DataDbConnection.Validate(GetConnection(), "Person", "Person", GetConnection(), null, 1, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Skip, behavior);
+            }
+        }
+
+        [TestMethod]
         public void ThrowExceptionOnValidateIfTheConnectionIsNull()
         {
             // Act/Assert
             Assert.Throws<ArgumentNullException>(() =>
-                DataDbConnection.Validate(null, "Person", "Person", GetConnection(), null, 1, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Skip));
+                DataDbConnection.Validate(null, "Person", "Person", GetConnection(), null, 1, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Skip, CopySchemaColumnMappingsBehavior.Automatic));
         }
 
         [TestMethod]
@@ -810,9 +888,9 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Act/Assert
             Assert.Throws<ArgumentNullException>(() =>
-                DataDbConnection.Validate(GetConnection(), null, "Person", GetConnection(), null, 1, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Skip));
+                DataDbConnection.Validate(GetConnection(), null, "Person", GetConnection(), null, 1, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Skip, CopySchemaColumnMappingsBehavior.Automatic));
             Assert.Throws<ArgumentNullException>(() =>
-                DataDbConnection.Validate(GetConnection(), " ", "Person", GetConnection(), null, 1, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Skip));
+                DataDbConnection.Validate(GetConnection(), " ", "Person", GetConnection(), null, 1, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Skip, CopySchemaColumnMappingsBehavior.Automatic));
         }
 
         [TestMethod]
@@ -820,9 +898,9 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Act/Assert
             Assert.Throws<ArgumentNullException>(() =>
-                DataDbConnection.Validate(GetConnection(), "Person", null, GetConnection(), null, 1, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Skip));
+                DataDbConnection.Validate(GetConnection(), "Person", null, GetConnection(), null, 1, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Skip, CopySchemaColumnMappingsBehavior.Automatic));
             Assert.Throws<ArgumentNullException>(() =>
-                DataDbConnection.Validate(GetConnection(), "Person", " ", GetConnection(), null, 1, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Skip));
+                DataDbConnection.Validate(GetConnection(), "Person", " ", GetConnection(), null, 1, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Skip, CopySchemaColumnMappingsBehavior.Automatic));
         }
 
         [TestMethod]
@@ -830,7 +908,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Act/Assert
             Assert.Throws<ArgumentNullException>(() =>
-                DataDbConnection.Validate(GetConnection(), "Person", "Person", null, null, 1, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Skip));
+                DataDbConnection.Validate(GetConnection(), "Person", "Person", null, null, 1, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Skip, CopySchemaColumnMappingsBehavior.Automatic));
         }
 
         [TestMethod]
@@ -838,9 +916,9 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Act/Assert
             Assert.Throws<ArgumentOutOfRangeException>(() =>
-                DataDbConnection.Validate(GetConnection(), "Person", "Person", GetConnection(), null, 0, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Skip));
+                DataDbConnection.Validate(GetConnection(), "Person", "Person", GetConnection(), null, 0, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Skip, CopySchemaColumnMappingsBehavior.Automatic));
             Assert.Throws<ArgumentOutOfRangeException>(() =>
-                DataDbConnection.Validate(GetConnection(), "Person", "Person", GetConnection(), null, -1, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Skip));
+                DataDbConnection.Validate(GetConnection(), "Person", "Person", GetConnection(), null, -1, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Skip, CopySchemaColumnMappingsBehavior.Automatic));
         }
 
         [TestMethod]
@@ -848,25 +926,25 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Act/Assert
             Assert.Throws<ArgumentException>(() =>
-                DataDbConnection.Validate(new FakeDbConnection(), "Person", "Customer", new FakeDbConnection(), null, 1, CopyDataRelationshipBehavior.Parents, CopySchemaExistsBehavior.Skip));
+                DataDbConnection.Validate(new FakeDbConnection(), "Person", "Customer", new FakeDbConnection(), null, 1, CopyDataRelationshipBehavior.Parents, CopySchemaExistsBehavior.Skip, CopySchemaColumnMappingsBehavior.Automatic));
             Assert.Throws<ArgumentException>(() =>
-                DataDbConnection.Validate(new FakeDbConnection(), "Person", "Customer", new FakeDbConnection(), null, 1, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Drop));
+                DataDbConnection.Validate(new FakeDbConnection(), "Person", "Customer", new FakeDbConnection(), null, 1, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Drop, CopySchemaColumnMappingsBehavior.Automatic));
             Assert.Throws<ArgumentException>(() =>
-                DataDbConnection.Validate(new FakeDbConnection(), "Person", "Customer", new FakeDbConnection(), "Sales", 1, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Skip));
+                DataDbConnection.Validate(new FakeDbConnection(), "Person", "Customer", new FakeDbConnection(), "Sales", 1, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Skip, CopySchemaColumnMappingsBehavior.Automatic));
         }
 
         [TestMethod]
         public void TestValidateAcceptsTablesWithDifferentNamesIfTheSchemaIsNotRequested()
         {
             // Act/Assert
-            DataDbConnection.Validate(new FakeDbConnection(), "Person", "Customer", new FakeDbConnection(), null, 1, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Skip);
+            DataDbConnection.Validate(new FakeDbConnection(), "Person", "Customer", new FakeDbConnection(), null, 1, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Skip, CopySchemaColumnMappingsBehavior.Automatic);
         }
 
         [TestMethod]
         public void TestValidateAcceptsTablesWithTheSameNameInDifferentSchemasIfTheSchemaIsRequested()
         {
             // Act/Assert
-            DataDbConnection.Validate(new FakeDbConnection(), "[dbo].[Person]", "[Sales].[Person]", new FakeDbConnection(), "Sales", 1, CopyDataRelationshipBehavior.Parents, CopySchemaExistsBehavior.Drop);
+            DataDbConnection.Validate(new FakeDbConnection(), "[dbo].[Person]", "[Sales].[Person]", new FakeDbConnection(), "Sales", 1, CopyDataRelationshipBehavior.Parents, CopySchemaExistsBehavior.Drop, CopySchemaColumnMappingsBehavior.Automatic);
         }
 
         #endregion

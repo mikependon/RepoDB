@@ -184,7 +184,7 @@ namespace RepoDb.DbHelpers
             var commandText = GetCommandText();
             var param = new Dictionary<string, object>
             {
-                ["TableSchema"] = connection.Database,
+                ["TableSchema"] = DataEntityExtension.GetSchema(tableName, m_dbSetting)?.AsUnquoted(m_dbSetting) ?? connection.Database,
                 ["TableName"] = DataEntityExtension.GetTableName(tableName, m_dbSetting).AsUnquoted(m_dbSetting)
             };
 
@@ -223,7 +223,7 @@ namespace RepoDb.DbHelpers
             var commandText = GetCommandText();
             var param = new Dictionary<string, object>
             {
-                ["TableSchema"] = connection.Database,
+                ["TableSchema"] = DataEntityExtension.GetSchema(tableName, m_dbSetting)?.AsUnquoted(m_dbSetting) ?? connection.Database,
                 ["TableName"] = DataEntityExtension.GetTableName(tableName, m_dbSetting).AsUnquoted(m_dbSetting)
             };
 

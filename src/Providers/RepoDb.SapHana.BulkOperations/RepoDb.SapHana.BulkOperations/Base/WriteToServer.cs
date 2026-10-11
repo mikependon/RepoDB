@@ -124,7 +124,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             HanaTransaction transaction = null,
-            Field excludeField = null)
+            Field excludeField = null,
+            bool keepIdentity = false)
         {
             connection.EnsureOpen();
             var dbSetting = connection.GetDbSetting();
@@ -134,7 +135,7 @@ namespace RepoDb
                 return 0;
             }
             using var table = BuildDataTableFromReader(connection, tableName, reader, resolvedMappings, transaction, dbSetting);
-            using var bulkCopy = CreateHanaBulkCopy(connection, tableName, resolvedMappings, bulkCopyTimeout, batchSize, transaction, dbSetting);
+            using var bulkCopy = CreateHanaBulkCopy(connection, tableName, resolvedMappings, bulkCopyTimeout, batchSize, transaction, dbSetting, keepIdentity);
             bulkCopy.WriteToServer(table);
             return table.Rows.Count;
         }
@@ -247,13 +248,14 @@ namespace RepoDb
             int? batchSize = null,
             CancellationToken cancellationToken = default,
             HanaTransaction transaction = null,
-            Field excludeField = null)
+            Field excludeField = null,
+            bool keepIdentity = false)
         {
             await connection.EnsureOpenAsync(cancellationToken).ConfigureAwait(false);
             var dbSetting = connection.GetDbSetting();
             if (dbSetting is SapHanaBulkDbSetting bulkDbSetting && bulkDbSetting.WriteToServerExecution == SapHanaWriteToServerExecution.AsyncOverSync)
             {
-                return await Task.Run(() => WriteToServerInternal(connection, tableName, reader, mappings, bulkCopyTimeout, batchSize, transaction, excludeField), cancellationToken).ConfigureAwait(false);
+                return await Task.Run(() => WriteToServerInternal(connection, tableName, reader, mappings, bulkCopyTimeout, batchSize, transaction, excludeField, keepIdentity), cancellationToken).ConfigureAwait(false);
             }
             var resolvedMappings = ResolveMappings(connection, tableName, reader, mappings, transaction, excludeField, dbSetting);
             if (resolvedMappings.Count == 0)
@@ -329,9 +331,10 @@ namespace RepoDb
             int? bulkCopyTimeout,
             int? batchSize,
             HanaTransaction transaction,
-            IDbSetting dbSetting)
+            IDbSetting dbSetting,
+            bool keepIdentity = false)
         {
-            var bulkCopy = new HanaBulkCopy(connection, HanaBulkCopyOptions.Default, transaction)
+            var bulkCopy = new HanaBulkCopy(connection, keepIdentity ? HanaBulkCopyOptions.KeepIdentity : HanaBulkCopyOptions.Default, transaction)
             {
                 DestinationTableName = tableName.AsQuoted(true, dbSetting)
             };

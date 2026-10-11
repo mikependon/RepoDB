@@ -455,6 +455,7 @@ namespace RepoDb
             DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            Db2BulkImportIdentityBehavior? identityBehavior = null,
             Db2BulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = Db2TraceKeys.Db2BulkInsert,
@@ -471,6 +472,8 @@ namespace RepoDb
 
             // Actual Execution
             var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
+            if (identityBehavior == Db2BulkImportIdentityBehavior.KeepIdentity)
+                identityField = null;
             var result = WriteToServerInternal(connection,
                 tableName,
                 reader,
@@ -479,7 +482,8 @@ namespace RepoDb
                 bulkCopyTimeout,
                 batchSize,
                 transaction,
-                identityField);
+                identityField,
+                identityBehavior == Db2BulkImportIdentityBehavior.KeepIdentity);
 
             // After Execution
             Tracer
@@ -933,6 +937,7 @@ namespace RepoDb
             DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            Db2BulkImportIdentityBehavior? identityBehavior = null,
             Db2BulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = Db2TraceKeys.Db2BulkInsert,
@@ -950,6 +955,8 @@ namespace RepoDb
 
             // Actual Execution
             var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false))?.GetIdentity()?.AsField();
+            if (identityBehavior == Db2BulkImportIdentityBehavior.KeepIdentity)
+                identityField = null;
             var result = await WriteToServerAsyncInternal(connection,
                 tableName,
                 reader,
@@ -959,7 +966,8 @@ namespace RepoDb
                 batchSize,
                 cancellationToken,
                 transaction,
-                identityField).ConfigureAwait(false);
+                identityField,
+                identityBehavior == Db2BulkImportIdentityBehavior.KeepIdentity).ConfigureAwait(false);
 
             // After Execution
             await Tracer
