@@ -1,0 +1,14 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="../../../../Providers/RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="../../../../Providers/RepoDb.Db2.BulkOperations/RepoDb.Db2.BulkOperations/RepoDb.Db2.BulkOperations.csproj" />
+  <Project Path="../../../../Providers/RepoDb.Db2/RepoDb.Db2/RepoDb.Db2.csproj" />
+  <Project Path="../../../../Schema/RepoDb.Schema.Core/RepoDb.Schema.Core/RepoDb.Schema.Core.csproj" />
+  <Project Path="../../../../Schema/RepoDb.Schema.Db2/RepoDb.Schema.Db2/RepoDb.Schema.Db2.csproj" />
+  <Project Path="../../RepoDb.Data.Core/RepoDb.Data.Core.csproj" />
+  <Project Path="RepoDb.Data.Db2.IntegrationTests.csproj" />
+</Solution>

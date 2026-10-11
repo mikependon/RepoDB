@@ -9,9 +9,10 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Npgsql;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Npgsql;
 using RepoDb.Data.Enumerations;
+using RepoDb.Data.Models;
 using RepoDb.Data.PostgreSql.IntegrationTests.Entities;
 using RepoDb.Data.PostgreSql.IntegrationTests.Setup;
 using RepoDb.DbSettings;
