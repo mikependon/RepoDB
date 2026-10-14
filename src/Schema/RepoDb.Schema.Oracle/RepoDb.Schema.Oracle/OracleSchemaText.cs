@@ -113,5 +113,10 @@ namespace RepoDb.Schema
                 AND r.OWNER IN (SELECT USERNAME FROM ALL_USERS WHERE ORACLE_MAINTAINED = 'N')";
 
         #endregion
+
+        /// <summary>
+        /// Reads the schemas of the database (the system schemas are not included).
+        /// </summary>
+        internal const string SchemasSql = @"SELECT USERNAME AS SchemaName FROM ALL_USERS WHERE ORACLE_MAINTAINED = 'N' ORDER BY USERNAME";
     }
 }

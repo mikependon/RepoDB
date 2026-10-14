@@ -96,5 +96,10 @@ namespace RepoDb.Schema
                 AND f.REFERENCED_SCHEMA_NAME NOT LIKE '\_SYS%' ESCAPE '\' AND f.REFERENCED_SCHEMA_NAME <> 'SYS'";
 
         #endregion
+
+        /// <summary>
+        /// Reads the schemas of the database (the system schemas are not included).
+        /// </summary>
+        internal const string SchemasSql = @"SELECT SCHEMA_NAME AS SchemaName FROM SYS.SCHEMAS WHERE SCHEMA_NAME NOT LIKE '$_SYS%' ESCAPE '$' AND SCHEMA_NAME NOT IN ('SYS', 'PUBLIC') ORDER BY SCHEMA_NAME";
     }
 }

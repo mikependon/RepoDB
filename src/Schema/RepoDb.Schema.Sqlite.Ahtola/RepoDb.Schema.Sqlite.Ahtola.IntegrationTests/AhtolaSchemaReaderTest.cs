@@ -844,6 +844,54 @@ namespace RepoDb.Schema.Sqlite.Ahtola.IntegrationTests
 
         #endregion
 
+        #region GetSchemas
+
+        #region Sync
+
+        [TestMethod]
+        public void TestAhtolaSchemaReaderGetSchemas()
+        {
+            using (var connection = Database.CreateSource())
+            {
+                // Setup
+                var reader = new AhtolaSchemaReader(connection);
+
+                // Act
+                var actual = reader.GetSchemas().Select(schema => schema.Name).ToList();
+
+                // Assert
+                Assert.IsTrue(actual.Count > 0);
+                CollectionAssert.Contains(actual, "main");
+                CollectionAssert.DoesNotContain(actual, "temp");
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestAhtolaSchemaReaderGetSchemasAsync()
+        {
+            using (var connection = Database.CreateSource())
+            {
+                // Setup
+                var reader = new AhtolaSchemaReader(connection);
+
+                // Act
+                var actual = (await reader.GetSchemasAsync()).Select(schema => schema.Name).ToList();
+
+                // Assert
+                Assert.IsTrue(actual.Count > 0);
+                CollectionAssert.Contains(actual, "main");
+                CollectionAssert.DoesNotContain(actual, "temp");
+            }
+        }
+
+        #endregion
+
+        #endregion
+
         #region GetTables
 
         #region Sync

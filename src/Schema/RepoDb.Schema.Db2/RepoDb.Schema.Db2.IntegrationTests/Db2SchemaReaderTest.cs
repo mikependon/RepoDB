@@ -843,6 +843,52 @@ namespace RepoDb.Schema.Db2.IntegrationTests
 
         #endregion
 
+        #region GetSchemas
+
+        #region Sync
+
+        [TestMethod]
+        public void TestDb2SchemaReaderGetSchemas()
+        {
+            using (var connection = new DB2Connection(Database.ConnectionStringForSource))
+            {
+                // Setup
+                var reader = new Db2SchemaReader(connection);
+
+                // Act
+                var actual = reader.GetSchemas().Select(schema => schema.Name).ToList();
+
+                // Assert
+                Assert.IsTrue(actual.Count > 0);
+                CollectionAssert.DoesNotContain(actual, "SYSIBM");
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestDb2SchemaReaderGetSchemasAsync()
+        {
+            using (var connection = new DB2Connection(Database.ConnectionStringForSource))
+            {
+                // Setup
+                var reader = new Db2SchemaReader(connection);
+
+                // Act
+                var actual = (await reader.GetSchemasAsync()).Select(schema => schema.Name).ToList();
+
+                // Assert
+                Assert.IsTrue(actual.Count > 0);
+                CollectionAssert.DoesNotContain(actual, "SYSIBM");
+            }
+        }
+
+        #endregion
+
+        #endregion
+
         #region GetTables
 
         #region Sync

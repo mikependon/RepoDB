@@ -844,6 +844,56 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
 
         #endregion
 
+        #region GetSchemas
+
+        #region Sync
+
+        [TestMethod]
+        public void TestSqlServerSchemaReaderGetSchemas()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForSource))
+            {
+                // Setup
+                var reader = new SqlServerSchemaReader(connection);
+
+                // Act
+                var actual = reader.GetSchemas().Select(schema => schema.Name).ToList();
+
+                // Assert
+                Assert.IsTrue(actual.Count > 0);
+                CollectionAssert.Contains(actual, "dbo");
+                CollectionAssert.DoesNotContain(actual, "sys");
+                CollectionAssert.DoesNotContain(actual, "INFORMATION_SCHEMA");
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestSqlServerSchemaReaderGetSchemasAsync()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForSource))
+            {
+                // Setup
+                var reader = new SqlServerSchemaReader(connection);
+
+                // Act
+                var actual = (await reader.GetSchemasAsync()).Select(schema => schema.Name).ToList();
+
+                // Assert
+                Assert.IsTrue(actual.Count > 0);
+                CollectionAssert.Contains(actual, "dbo");
+                CollectionAssert.DoesNotContain(actual, "sys");
+                CollectionAssert.DoesNotContain(actual, "INFORMATION_SCHEMA");
+            }
+        }
+
+        #endregion
+
+        #endregion
+
         #region GetTables
 
         #region Sync

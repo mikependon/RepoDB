@@ -841,6 +841,56 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
 
         #endregion
 
+        #region GetSchemas
+
+        #region Sync
+
+        [TestMethod]
+        public void TestDuckDbSchemaReaderGetSchemas()
+        {
+            using (var connection = new DuckDBConnection(Database.ConnectionStringForSource))
+            {
+                // Setup
+                var reader = new DuckDbSchemaReader(connection);
+
+                // Act
+                var actual = reader.GetSchemas().Select(schema => schema.Name).ToList();
+
+                // Assert
+                Assert.IsTrue(actual.Count > 0);
+                CollectionAssert.Contains(actual, "main");
+                CollectionAssert.Contains(actual, Database.SourceSalesName);
+                CollectionAssert.DoesNotContain(actual, "information_schema");
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestDuckDbSchemaReaderGetSchemasAsync()
+        {
+            using (var connection = new DuckDBConnection(Database.ConnectionStringForSource))
+            {
+                // Setup
+                var reader = new DuckDbSchemaReader(connection);
+
+                // Act
+                var actual = (await reader.GetSchemasAsync()).Select(schema => schema.Name).ToList();
+
+                // Assert
+                Assert.IsTrue(actual.Count > 0);
+                CollectionAssert.Contains(actual, "main");
+                CollectionAssert.Contains(actual, Database.SourceSalesName);
+                CollectionAssert.DoesNotContain(actual, "information_schema");
+            }
+        }
+
+        #endregion
+
+        #endregion
+
         #region GetTables
 
         #region Sync

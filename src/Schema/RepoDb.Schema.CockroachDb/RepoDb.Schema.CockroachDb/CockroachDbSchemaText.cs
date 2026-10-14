@@ -113,5 +113,9 @@ namespace RepoDb.Schema
                 AND ct.relkind IN ('r', 'p')
                 AND pt.relkind IN ('r', 'p');";
 
+        /// <summary>
+        /// Reads the schemas of the database (the system schemas are not included).
+        /// </summary>
+        internal const string SchemasSql = @"SELECT schema_name AS SchemaName FROM information_schema.schemata WHERE schema_name NOT IN ('information_schema', 'crdb_internal', 'pg_catalog', 'pg_extension') ORDER BY schema_name";
     }
 }

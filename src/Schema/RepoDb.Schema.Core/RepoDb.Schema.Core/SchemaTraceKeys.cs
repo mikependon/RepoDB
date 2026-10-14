@@ -54,6 +54,11 @@ namespace RepoDb.Schema
         public const string GetRelationships = "GetRelationships";
 
         /// <summary>
+        /// The trace key used when the schemas of a database are being read.
+        /// </summary>
+        public const string GetSchemas = "GetSchemas";
+
+        /// <summary>
         /// The trace key used when the tables of a database are being read.
         /// </summary>
         public const string GetTables = "GetTables";

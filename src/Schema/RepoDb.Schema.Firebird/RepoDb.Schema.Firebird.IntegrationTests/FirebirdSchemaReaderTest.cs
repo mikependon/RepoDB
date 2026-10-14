@@ -779,6 +779,50 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
 
         #endregion
 
+        #region GetSchemas
+
+        #region Sync
+
+        [TestMethod]
+        public void TestFirebirdSchemaReaderGetSchemas()
+        {
+            using (var connection = new FbConnection(Database.ConnectionStringForSource))
+            {
+                // Setup
+                var reader = new FirebirdSchemaReader(connection);
+
+                // Act
+                var actual = reader.GetSchemas().Select(schema => schema.Name).ToList();
+
+                // Assert
+                Assert.AreEqual(0, actual.Count);
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestFirebirdSchemaReaderGetSchemasAsync()
+        {
+            using (var connection = new FbConnection(Database.ConnectionStringForSource))
+            {
+                // Setup
+                var reader = new FirebirdSchemaReader(connection);
+
+                // Act
+                var actual = (await reader.GetSchemasAsync()).Select(schema => schema.Name).ToList();
+
+                // Assert
+                Assert.AreEqual(0, actual.Count);
+            }
+        }
+
+        #endregion
+
+        #endregion
+
         #region GetTables
 
         #region Sync

@@ -88,5 +88,10 @@ namespace RepoDb.Schema
                 AND f.reference_table_schema NOT IN ('v_catalog', 'v_monitor', 'v_internal', 'v_txtindex', 'v_func')";
 
         #endregion
+
+        /// <summary>
+        /// Reads the schemas of the database (the system schemas are not included).
+        /// </summary>
+        internal const string SchemasSql = @"SELECT schema_name AS SchemaName FROM v_catalog.schemata WHERE is_system_schema = false ORDER BY schema_name";
     }
 }

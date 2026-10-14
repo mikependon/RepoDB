@@ -98,5 +98,10 @@ namespace RepoDb.Schema
             WHERE f.TABSCHEMA NOT LIKE 'SYS%' AND f.REFTABSCHEMA NOT LIKE 'SYS%'";
 
         #endregion
+
+        /// <summary>
+        /// Reads the schemas of the database (the system schemas are not included).
+        /// </summary>
+        internal const string SchemasSql = @"SELECT SCHEMANAME AS SchemaName FROM SYSCAT.SCHEMATA WHERE SCHEMANAME NOT LIKE 'SYS%' AND SCHEMANAME NOT IN ('NULLID', 'SQLJ', 'DB2GSE', 'IBM_RTMON') ORDER BY SCHEMANAME";
     }
 }

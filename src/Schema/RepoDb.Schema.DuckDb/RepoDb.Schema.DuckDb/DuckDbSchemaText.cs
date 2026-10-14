@@ -93,5 +93,10 @@ namespace RepoDb.Schema
             WHERE k.database_name = current_database() AND k.constraint_type = 'FOREIGN KEY'";
 
         #endregion
+
+        /// <summary>
+        /// Reads the schemas of the database (the system schemas are not included).
+        /// </summary>
+        internal const string SchemasSql = @"SELECT schema_name AS SchemaName FROM duckdb_schemas() WHERE database_name = current_database() AND schema_name NOT IN ('information_schema', 'pg_catalog') ORDER BY schema_name";
     }
 }

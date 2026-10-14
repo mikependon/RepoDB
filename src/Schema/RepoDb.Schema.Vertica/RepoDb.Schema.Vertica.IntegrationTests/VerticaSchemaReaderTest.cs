@@ -819,6 +819,54 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
 
         #endregion
 
+        #region GetSchemas
+
+        #region Sync
+
+        [TestMethod]
+        public void TestVerticaSchemaReaderGetSchemas()
+        {
+            using (var connection = new VerticaConnection(Database.ConnectionStringForSource))
+            {
+                // Setup
+                var reader = new VerticaSchemaReader(connection);
+
+                // Act
+                var actual = reader.GetSchemas().Select(schema => schema.Name).ToList();
+
+                // Assert
+                Assert.IsTrue(actual.Count > 0);
+                CollectionAssert.Contains(actual, "public");
+                CollectionAssert.DoesNotContain(actual, "v_catalog");
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestVerticaSchemaReaderGetSchemasAsync()
+        {
+            using (var connection = new VerticaConnection(Database.ConnectionStringForSource))
+            {
+                // Setup
+                var reader = new VerticaSchemaReader(connection);
+
+                // Act
+                var actual = (await reader.GetSchemasAsync()).Select(schema => schema.Name).ToList();
+
+                // Assert
+                Assert.IsTrue(actual.Count > 0);
+                CollectionAssert.Contains(actual, "public");
+                CollectionAssert.DoesNotContain(actual, "v_catalog");
+            }
+        }
+
+        #endregion
+
+        #endregion
+
         #region GetTables
 
         #region Sync

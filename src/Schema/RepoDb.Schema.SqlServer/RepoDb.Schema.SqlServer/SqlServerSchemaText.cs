@@ -109,5 +109,9 @@ namespace RepoDb.Schema
             INNER JOIN sys.tables ct ON ct.object_id = fk.parent_object_id
             INNER JOIN sys.tables pt ON pt.object_id = fk.referenced_object_id;";
 
+        /// <summary>
+        /// Reads the schemas of the database (the system schemas are not included).
+        /// </summary>
+        internal const string SchemasSql = @"SELECT s.name AS SchemaName FROM sys.schemas s WHERE s.name NOT IN ('sys', 'INFORMATION_SCHEMA', 'guest') AND s.schema_id < 16384 ORDER BY s.name";
     }
 }

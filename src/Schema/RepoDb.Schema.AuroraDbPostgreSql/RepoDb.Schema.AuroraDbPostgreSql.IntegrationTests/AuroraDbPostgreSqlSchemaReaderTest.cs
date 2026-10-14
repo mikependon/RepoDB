@@ -180,6 +180,34 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         }
 
         [TestMethod]
+        public void TestAuroraDbPostgreSqlSchemaReaderGetSchemas()
+        {
+            // Act
+            var actual = CreateReader().GetSchemas().Select(schema => schema.Name).ToList();
+
+            // Assert
+            Assert.IsTrue(actual.Count > 0);
+            CollectionAssert.Contains(actual, "public");
+            CollectionAssert.Contains(actual, "sales");
+            CollectionAssert.DoesNotContain(actual, "information_schema");
+            CollectionAssert.DoesNotContain(actual, "pg_catalog");
+        }
+
+        [TestMethod]
+        public async Task TestAuroraDbPostgreSqlSchemaReaderGetSchemasAsync()
+        {
+            // Act
+            var actual = (await CreateReader().GetSchemasAsync()).Select(schema => schema.Name).ToList();
+
+            // Assert
+            Assert.IsTrue(actual.Count > 0);
+            CollectionAssert.Contains(actual, "public");
+            CollectionAssert.Contains(actual, "sales");
+            CollectionAssert.DoesNotContain(actual, "information_schema");
+            CollectionAssert.DoesNotContain(actual, "pg_catalog");
+        }
+
+        [TestMethod]
         public void TestAuroraDbPostgreSqlSchemaReaderGetTables()
         {
             // Act

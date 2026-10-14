@@ -844,6 +844,54 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
 
         #endregion
 
+        #region GetSchemas
+
+        #region Sync
+
+        [TestMethod]
+        public void TestSqliteSchemaReaderGetSchemas()
+        {
+            using (var connection = Database.CreateSource())
+            {
+                // Setup
+                var reader = new SqliteSchemaReader(connection);
+
+                // Act
+                var actual = reader.GetSchemas().Select(schema => schema.Name).ToList();
+
+                // Assert
+                Assert.IsTrue(actual.Count > 0);
+                CollectionAssert.Contains(actual, "main");
+                CollectionAssert.DoesNotContain(actual, "temp");
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestSqliteSchemaReaderGetSchemasAsync()
+        {
+            using (var connection = Database.CreateSource())
+            {
+                // Setup
+                var reader = new SqliteSchemaReader(connection);
+
+                // Act
+                var actual = (await reader.GetSchemasAsync()).Select(schema => schema.Name).ToList();
+
+                // Assert
+                Assert.IsTrue(actual.Count > 0);
+                CollectionAssert.Contains(actual, "main");
+                CollectionAssert.DoesNotContain(actual, "temp");
+            }
+        }
+
+        #endregion
+
+        #endregion
+
         #region GetTables
 
         #region Sync

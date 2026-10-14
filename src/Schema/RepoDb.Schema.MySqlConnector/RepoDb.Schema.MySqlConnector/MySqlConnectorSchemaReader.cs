@@ -142,6 +142,10 @@ namespace RepoDb.Schema
         public IEnumerable<CheckConstraintInfo> GetCheckConstraints(string tableName) =>
             Query(MySqlConnectorSchemaText.CheckConstraintsSql, SchemaTraceKeys.GetCheckConstraints, MapCheckConstraint, FullNameParameter(Resolve(tableName)));
 
+        /// <inheritdoc />
+        public IEnumerable<SchemaInfo> GetSchemas() =>
+            Query(MySqlConnectorSchemaText.SchemasSql, SchemaTraceKeys.GetSchemas, r => new SchemaInfo(Text(r, "SchemaName")));
+
         /// <summary>
         /// Gets the names of the tables of the database.
         /// </summary>
@@ -296,6 +300,10 @@ namespace RepoDb.Schema
         public async Task<IEnumerable<CheckConstraintInfo>> GetCheckConstraintsAsync(string tableName,
             CancellationToken cancellationToken = default) =>
             await QueryAsync(MySqlConnectorSchemaText.CheckConstraintsSql, SchemaTraceKeys.GetCheckConstraints, MapCheckConstraint, cancellationToken, FullNameParameter(await ResolveFullNameAsync(tableName, cancellationToken).ConfigureAwait(false))).ConfigureAwait(false);
+
+        /// <inheritdoc />
+        public async Task<IEnumerable<SchemaInfo>> GetSchemasAsync(CancellationToken cancellationToken = default) =>
+            await QueryAsync(MySqlConnectorSchemaText.SchemasSql, SchemaTraceKeys.GetSchemas, r => new SchemaInfo(Text(r, "SchemaName")), cancellationToken).ConfigureAwait(false);
 
         /// <summary>
         /// Gets the names of the tables of the database.

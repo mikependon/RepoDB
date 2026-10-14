@@ -644,6 +644,54 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
 
         #endregion
 
+        #region GetSchemas
+
+        #region Sync
+
+        [TestMethod]
+        public void TestClickHouseSchemaReaderGetSchemas()
+        {
+            using (var connection = new ClickHouseConnection(Database.ConnectionStringForSource))
+            {
+                // Setup
+                var reader = new ClickHouseSchemaReader(connection);
+
+                // Act
+                var actual = reader.GetSchemas().Select(schema => schema.Name).ToList();
+
+                // Assert
+                Assert.IsTrue(actual.Count > 0);
+                CollectionAssert.Contains(actual, connection.Database);
+                CollectionAssert.DoesNotContain(actual, "system");
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestClickHouseSchemaReaderGetSchemasAsync()
+        {
+            using (var connection = new ClickHouseConnection(Database.ConnectionStringForSource))
+            {
+                // Setup
+                var reader = new ClickHouseSchemaReader(connection);
+
+                // Act
+                var actual = (await reader.GetSchemasAsync()).Select(schema => schema.Name).ToList();
+
+                // Assert
+                Assert.IsTrue(actual.Count > 0);
+                CollectionAssert.Contains(actual, connection.Database);
+                CollectionAssert.DoesNotContain(actual, "system");
+            }
+        }
+
+        #endregion
+
+        #endregion
+
         #region GetTables
 
         #region Sync

@@ -843,6 +843,54 @@ namespace RepoDb.Schema.Oracle.IntegrationTests
 
         #endregion
 
+        #region GetSchemas
+
+        #region Sync
+
+        [TestMethod]
+        public void TestOracleSchemaReaderGetSchemas()
+        {
+            using (var connection = new OracleConnection(Database.ConnectionStringForSource))
+            {
+                // Setup
+                var reader = new OracleSchemaReader(connection);
+
+                // Act
+                var actual = reader.GetSchemas().Select(schema => schema.Name).ToList();
+
+                // Assert
+                Assert.IsTrue(actual.Count > 0);
+                CollectionAssert.DoesNotContain(actual, "SYS");
+                CollectionAssert.DoesNotContain(actual, "SYSTEM");
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestOracleSchemaReaderGetSchemasAsync()
+        {
+            using (var connection = new OracleConnection(Database.ConnectionStringForSource))
+            {
+                // Setup
+                var reader = new OracleSchemaReader(connection);
+
+                // Act
+                var actual = (await reader.GetSchemasAsync()).Select(schema => schema.Name).ToList();
+
+                // Assert
+                Assert.IsTrue(actual.Count > 0);
+                CollectionAssert.DoesNotContain(actual, "SYS");
+                CollectionAssert.DoesNotContain(actual, "SYSTEM");
+            }
+        }
+
+        #endregion
+
+        #endregion
+
         #region GetTables
 
         #region Sync

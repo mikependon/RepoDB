@@ -135,6 +135,10 @@ namespace RepoDb.Schema
         public IEnumerable<CheckConstraintInfo> GetCheckConstraints(string tableName) =>
             GetTableSchema(tableName).CheckConstraints;
 
+        /// <inheritdoc />
+        public IEnumerable<SchemaInfo> GetSchemas() =>
+            Query(SqliteSchemaText.DatabasesSql, SchemaTraceKeys.GetSchemas, r => new SchemaInfo(Text(r, "SchemaName")));
+
         /// <summary>
         /// Gets the names of the tables of a schema (the tables of the engine are not included).
         /// </summary>
@@ -294,6 +298,10 @@ namespace RepoDb.Schema
         public async Task<IEnumerable<CheckConstraintInfo>> GetCheckConstraintsAsync(string tableName,
             CancellationToken cancellationToken = default) =>
             (await GetTableSchemaAsync(tableName, cancellationToken).ConfigureAwait(false)).CheckConstraints;
+
+        /// <inheritdoc />
+        public async Task<IEnumerable<SchemaInfo>> GetSchemasAsync(CancellationToken cancellationToken = default) =>
+            await QueryAsync(SqliteSchemaText.DatabasesSql, SchemaTraceKeys.GetSchemas, r => new SchemaInfo(Text(r, "SchemaName")), cancellationToken).ConfigureAwait(false);
 
         /// <summary>
         /// Gets the names of the tables of a schema (the tables of the engine are not included).

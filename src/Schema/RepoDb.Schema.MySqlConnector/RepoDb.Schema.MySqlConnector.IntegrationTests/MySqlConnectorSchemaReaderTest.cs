@@ -844,6 +844,56 @@ namespace RepoDb.Schema.MySqlConnector.IntegrationTests
 
         #endregion
 
+        #region GetSchemas
+
+        #region Sync
+
+        [TestMethod]
+        public void TestMySqlConnectorSchemaReaderGetSchemas()
+        {
+            using (var connection = new MySqlConnection(Database.ConnectionStringForSource))
+            {
+                // Setup
+                var reader = new MySqlConnectorSchemaReader(connection);
+
+                // Act
+                var actual = reader.GetSchemas().Select(schema => schema.Name).ToList();
+
+                // Assert
+                Assert.IsTrue(actual.Count > 0);
+                CollectionAssert.Contains(actual, connection.Database);
+                CollectionAssert.DoesNotContain(actual, "mysql");
+                CollectionAssert.DoesNotContain(actual, "information_schema");
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestMySqlConnectorSchemaReaderGetSchemasAsync()
+        {
+            using (var connection = new MySqlConnection(Database.ConnectionStringForSource))
+            {
+                // Setup
+                var reader = new MySqlConnectorSchemaReader(connection);
+
+                // Act
+                var actual = (await reader.GetSchemasAsync()).Select(schema => schema.Name).ToList();
+
+                // Assert
+                Assert.IsTrue(actual.Count > 0);
+                CollectionAssert.Contains(actual, connection.Database);
+                CollectionAssert.DoesNotContain(actual, "mysql");
+                CollectionAssert.DoesNotContain(actual, "information_schema");
+            }
+        }
+
+        #endregion
+
+        #endregion
+
         #region GetTables
 
         #region Sync

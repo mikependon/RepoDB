@@ -845,6 +845,56 @@ namespace RepoDb.Schema.AuroraDbMySqlConnector.IntegrationTests
 
         #endregion
 
+        #region GetSchemas
+
+        #region Sync
+
+        [TestMethod]
+        public void TestAuroraDbMySqlConnectorSchemaReaderGetSchemas()
+        {
+            using (var connection = new AuroraDbConnection(Database.ConnectionStringForSource))
+            {
+                // Setup
+                var reader = new AuroraDbMySqlConnectorSchemaReader(connection);
+
+                // Act
+                var actual = reader.GetSchemas().Select(schema => schema.Name).ToList();
+
+                // Assert
+                Assert.IsTrue(actual.Count > 0);
+                CollectionAssert.Contains(actual, connection.Database);
+                CollectionAssert.DoesNotContain(actual, "mysql");
+                CollectionAssert.DoesNotContain(actual, "information_schema");
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestAuroraDbMySqlConnectorSchemaReaderGetSchemasAsync()
+        {
+            using (var connection = new AuroraDbConnection(Database.ConnectionStringForSource))
+            {
+                // Setup
+                var reader = new AuroraDbMySqlConnectorSchemaReader(connection);
+
+                // Act
+                var actual = (await reader.GetSchemasAsync()).Select(schema => schema.Name).ToList();
+
+                // Assert
+                Assert.IsTrue(actual.Count > 0);
+                CollectionAssert.Contains(actual, connection.Database);
+                CollectionAssert.DoesNotContain(actual, "mysql");
+                CollectionAssert.DoesNotContain(actual, "information_schema");
+            }
+        }
+
+        #endregion
+
+        #endregion
+
         #region GetTables
 
         #region Sync

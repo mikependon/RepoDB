@@ -97,5 +97,10 @@ namespace RepoDb.Schema
             WHERE kcu.REFERENCED_TABLE_NAME IS NOT NULL
                 AND kcu.TABLE_SCHEMA NOT IN ('mysql', 'sys', 'information_schema', 'performance_schema')
                 AND kcu.REFERENCED_TABLE_SCHEMA NOT IN ('mysql', 'sys', 'information_schema', 'performance_schema');";
+
+        /// <summary>
+        /// Reads the schemas of the database (the system schemas are not included).
+        /// </summary>
+        internal const string SchemasSql = @"SELECT SCHEMA_NAME AS SchemaName FROM information_schema.SCHEMATA WHERE SCHEMA_NAME NOT IN ('information_schema', 'mysql', 'performance_schema', 'sys') ORDER BY SCHEMA_NAME";
     }
 }

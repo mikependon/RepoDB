@@ -843,6 +843,52 @@ namespace RepoDb.Schema.SapHana.IntegrationTests
 
         #endregion
 
+        #region GetSchemas
+
+        #region Sync
+
+        [TestMethod]
+        public void TestSapHanaSchemaReaderGetSchemas()
+        {
+            using (var connection = new HanaConnection(Database.ConnectionStringForSource))
+            {
+                // Setup
+                var reader = new SapHanaSchemaReader(connection);
+
+                // Act
+                var actual = reader.GetSchemas().Select(schema => schema.Name).ToList();
+
+                // Assert
+                Assert.IsTrue(actual.Count > 0);
+                CollectionAssert.DoesNotContain(actual, "SYS");
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestSapHanaSchemaReaderGetSchemasAsync()
+        {
+            using (var connection = new HanaConnection(Database.ConnectionStringForSource))
+            {
+                // Setup
+                var reader = new SapHanaSchemaReader(connection);
+
+                // Act
+                var actual = (await reader.GetSchemasAsync()).Select(schema => schema.Name).ToList();
+
+                // Assert
+                Assert.IsTrue(actual.Count > 0);
+                CollectionAssert.DoesNotContain(actual, "SYS");
+            }
+        }
+
+        #endregion
+
+        #endregion
+
         #region GetTables
 
         #region Sync

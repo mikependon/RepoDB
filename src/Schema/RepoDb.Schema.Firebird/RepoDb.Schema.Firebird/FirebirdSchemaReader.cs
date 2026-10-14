@@ -141,6 +141,10 @@ namespace RepoDb.Schema
         public IEnumerable<CheckConstraintInfo> GetCheckConstraints(string tableName) =>
             Query(FirebirdSchemaText.CheckConstraintsSql, SchemaTraceKeys.GetCheckConstraints, MapCheckConstraint, FullNameParameter(Resolve(tableName)));
 
+        /// <inheritdoc />
+        public IEnumerable<SchemaInfo> GetSchemas() =>
+            Array.Empty<SchemaInfo>();
+
         /// <summary>
         /// Gets the names of the tables of the database.
         /// </summary>
@@ -295,6 +299,10 @@ namespace RepoDb.Schema
         public async Task<IEnumerable<CheckConstraintInfo>> GetCheckConstraintsAsync(string tableName,
             CancellationToken cancellationToken = default) =>
             await QueryAsync(FirebirdSchemaText.CheckConstraintsSql, SchemaTraceKeys.GetCheckConstraints, MapCheckConstraint, cancellationToken, FullNameParameter(await ResolveFullNameAsync(tableName, cancellationToken).ConfigureAwait(false))).ConfigureAwait(false);
+
+        /// <inheritdoc />
+        public Task<IEnumerable<SchemaInfo>> GetSchemasAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult<IEnumerable<SchemaInfo>>(Array.Empty<SchemaInfo>());
 
         /// <summary>
         /// Gets the names of the tables of the database.

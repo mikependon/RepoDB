@@ -179,6 +179,34 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
         }
 
         [TestMethod]
+        public void TestCockroachDbSchemaReaderGetSchemas()
+        {
+            // Act
+            var actual = CreateReader().GetSchemas().Select(schema => schema.Name).ToList();
+
+            // Assert
+            Assert.IsTrue(actual.Count > 0);
+            CollectionAssert.Contains(actual, "public");
+            CollectionAssert.Contains(actual, "sales");
+            CollectionAssert.DoesNotContain(actual, "information_schema");
+            CollectionAssert.DoesNotContain(actual, "pg_catalog");
+        }
+
+        [TestMethod]
+        public async Task TestCockroachDbSchemaReaderGetSchemasAsync()
+        {
+            // Act
+            var actual = (await CreateReader().GetSchemasAsync()).Select(schema => schema.Name).ToList();
+
+            // Assert
+            Assert.IsTrue(actual.Count > 0);
+            CollectionAssert.Contains(actual, "public");
+            CollectionAssert.Contains(actual, "sales");
+            CollectionAssert.DoesNotContain(actual, "information_schema");
+            CollectionAssert.DoesNotContain(actual, "pg_catalog");
+        }
+
+        [TestMethod]
         public void TestCockroachDbSchemaReaderGetTables()
         {
             // Act

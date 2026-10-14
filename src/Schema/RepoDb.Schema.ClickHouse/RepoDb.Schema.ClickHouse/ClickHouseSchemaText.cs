@@ -73,5 +73,10 @@ namespace RepoDb.Schema
                 CAST(NULL AS Nullable(String)) AS ParentSchema,
                 '' AS ParentTable
             WHERE 0";
+
+        /// <summary>
+        /// Reads the schemas of the database (the system schemas are not included).
+        /// </summary>
+        internal const string SchemasSql = @"SELECT name AS SchemaName FROM system.databases WHERE name NOT IN ('system', 'information_schema', 'INFORMATION_SCHEMA') ORDER BY name";
     }
 }

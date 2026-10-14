@@ -144,6 +144,10 @@ namespace RepoDb.Schema
         public IEnumerable<CheckConstraintInfo> GetCheckConstraints(string tableName) =>
             Query(CockroachDbSchemaText.CheckConstraintsSql, SchemaTraceKeys.GetCheckConstraints, MapCheckConstraint, FullNameParameter(Resolve(tableName)));
 
+        /// <inheritdoc />
+        public IEnumerable<SchemaInfo> GetSchemas() =>
+            Query(CockroachDbSchemaText.SchemasSql, SchemaTraceKeys.GetSchemas, r => new SchemaInfo(Text(r, "SchemaName")));
+
         /// <summary>
         /// Gets the names of the tables of the database.
         /// </summary>
@@ -298,6 +302,10 @@ namespace RepoDb.Schema
         public async Task<IEnumerable<CheckConstraintInfo>> GetCheckConstraintsAsync(string tableName,
             CancellationToken cancellationToken = default) =>
             await QueryAsync(CockroachDbSchemaText.CheckConstraintsSql, SchemaTraceKeys.GetCheckConstraints, MapCheckConstraint, cancellationToken, await ResolveFullNameParameterAsync(tableName, cancellationToken).ConfigureAwait(false)).ConfigureAwait(false);
+
+        /// <inheritdoc />
+        public async Task<IEnumerable<SchemaInfo>> GetSchemasAsync(CancellationToken cancellationToken = default) =>
+            await QueryAsync(CockroachDbSchemaText.SchemasSql, SchemaTraceKeys.GetSchemas, r => new SchemaInfo(Text(r, "SchemaName")), cancellationToken).ConfigureAwait(false);
 
         /// <summary>
         /// Gets the names of the tables of the database.
