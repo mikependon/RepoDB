@@ -84,6 +84,16 @@ namespace RepoDb.MariaDb.UnitTests
         }
 
         [TestMethod]
+        public void TestMariaDbDbSettingIsSchemaSupportedProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<MariaDbConnection>();
+
+            // Assert
+            Assert.IsFalse(setting.IsSchemaSupported);
+        }
+
+        [TestMethod]
         public void TestMariaDbDbSettingIsUseUpsertProperty()
         {
             // Setup

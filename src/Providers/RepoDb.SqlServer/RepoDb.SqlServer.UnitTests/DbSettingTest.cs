@@ -83,6 +83,16 @@ namespace RepoDb.SqlServer.UnitTests
         }
 
         [TestMethod]
+        public void TestSqlServerDbSettingIsSchemaSupportedProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<SqlConnection>();
+
+            // Assert
+            Assert.IsTrue(setting.IsSchemaSupported);
+        }
+
+        [TestMethod]
         public void TestSqlServerDbSettingIsUseUpsertProperty()
         {
             // Setup

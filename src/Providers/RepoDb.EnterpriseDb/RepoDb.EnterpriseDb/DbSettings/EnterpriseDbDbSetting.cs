@@ -28,6 +28,7 @@ namespace RepoDb.DbSettings
             IsExecuteReaderDisposable = true;
             IsMultiStatementExecutable = true;
             IsPreparable = true;
+            IsSchemaSupported = true;
             IsTransactionSupported = true;
             IsUseUpsert = false;
             OpeningQuote = "\"";

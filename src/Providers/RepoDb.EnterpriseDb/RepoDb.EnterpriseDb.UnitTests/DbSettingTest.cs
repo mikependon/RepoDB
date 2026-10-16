@@ -84,6 +84,16 @@ namespace RepoDb.EnterpriseDb.UnitTests
         }
 
         [TestMethod]
+        public void TestEnterpriseDbDbSettingIsSchemaSupportedProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<EDBConnection>();
+
+            // Assert
+            Assert.IsTrue(setting.IsSchemaSupported);
+        }
+
+        [TestMethod]
         public void TestEnterpriseDbDbSettingIsUseUpsertProperty()
         {
             // Setup

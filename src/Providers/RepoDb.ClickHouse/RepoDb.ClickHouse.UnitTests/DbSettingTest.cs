@@ -85,6 +85,16 @@ namespace RepoDb.ClickHouse.UnitTests
         }
 
         [TestMethod]
+        public void TestClickHouseDbSettingIsSchemaSupportedProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<ClickHouseConnection>();
+
+            // Assert
+            Assert.IsFalse(setting.IsSchemaSupported);
+        }
+
+        [TestMethod]
         public void TestClickHouseDbSettingIsUseUpsertProperty()
         {
             // Setup

@@ -84,6 +84,16 @@ namespace RepoDb.MySql.UnitTests
         }
 
         [TestMethod]
+        public void TestMySqlDbSettingIsSchemaSupportedProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<MySqlConnection>();
+
+            // Assert
+            Assert.IsFalse(setting.IsSchemaSupported);
+        }
+
+        [TestMethod]
         public void TestMySqlDbSettingIsUseUpsertProperty()
         {
             // Setup

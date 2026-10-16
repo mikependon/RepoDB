@@ -85,6 +85,16 @@ namespace RepoDb.Firebird.UnitTests
         }
 
         [TestMethod]
+        public void TestFirebirdDbSettingIsSchemaSupportedProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<FbConnection>();
+
+            // Assert
+            Assert.IsFalse(setting.IsSchemaSupported);
+        }
+
+        [TestMethod]
         public void TestFirebirdDbSettingIsUseUpsertProperty()
         {
             // Setup

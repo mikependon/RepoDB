@@ -74,6 +74,12 @@ namespace RepoDb.Interfaces
         bool IsPreparable { get; }
 
         /// <summary>
+        /// Gets a value that indicates whether the current DB Provider supports the schemas (i.e.: <c>dbo</c> or <c>public</c>) that own the tables of a database.
+        /// When <c>false</c>, a table is only identified by its name (and by the database, if the provider has one).
+        /// </summary>
+        bool IsSchemaSupported { get; }
+
+        /// <summary>
         /// Gets a value that indicates whether the current DB Provider's <see cref="System.Data.IDbConnection.BeginTransaction()"/>
         /// (or its <see cref="DbConnection.BeginDbTransaction(System.Data.IsolationLevel)"/> equivalent) is supported.
         /// </summary>

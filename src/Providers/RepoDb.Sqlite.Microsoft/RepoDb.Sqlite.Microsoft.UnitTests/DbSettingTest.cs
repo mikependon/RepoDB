@@ -86,6 +86,16 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
         }
 
         [TestMethod]
+        public void TestMdsSqLiteDbSettingIsSchemaSupportedProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<SqliteConnection>();
+
+            // Assert
+            Assert.IsFalse(setting.IsSchemaSupported);
+        }
+
+        [TestMethod]
         public void TestMdsSqLiteDbSettingIsUseUpsertProperty()
         {
             // Setup

@@ -84,6 +84,16 @@ namespace RepoDb.PostgreSql.UnitTests
         }
 
         [TestMethod]
+        public void TestPostgreSqlDbSettingIsSchemaSupportedProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<NpgsqlConnection>();
+
+            // Assert
+            Assert.IsTrue(setting.IsSchemaSupported);
+        }
+
+        [TestMethod]
         public void TestPostgreSqlDbSettingIsUseUpsertProperty()
         {
             // Setup

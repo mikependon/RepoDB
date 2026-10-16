@@ -83,6 +83,16 @@ namespace RepoDb.SapHana.UnitTests
         }
 
         [TestMethod]
+        public void TestSapHanaDbSettingIsSchemaSupportedProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<HanaConnection>();
+
+            // Assert
+            Assert.IsTrue(setting.IsSchemaSupported);
+        }
+
+        [TestMethod]
         public void TestSapHanaDbSettingIsUseUpsertProperty()
         {
             // Setup

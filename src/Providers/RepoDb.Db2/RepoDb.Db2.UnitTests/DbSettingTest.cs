@@ -106,6 +106,16 @@ namespace RepoDb.Db2.UnitTests
         }
 
         [TestMethod]
+        public void TestDb2DbSettingIsSchemaSupportedProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<DB2Connection>();
+
+            // Assert
+            Assert.IsTrue(setting.IsSchemaSupported);
+        }
+
+        [TestMethod]
         public void TestDb2DbSettingIsUseUpsertProperty()
         {
             // Setup

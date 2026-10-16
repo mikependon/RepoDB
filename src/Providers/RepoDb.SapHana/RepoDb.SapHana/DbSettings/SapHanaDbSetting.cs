@@ -28,6 +28,7 @@ namespace RepoDb.DbSettings
             IsExecuteReaderDisposable = true;
             IsMultiStatementExecutable = false;
             IsPreparable = true;
+            IsSchemaSupported = true;
             IsTransactionSupported = true;
             IsUseUpsert = false;
             RequiresDbTypeBeforeValue = false;

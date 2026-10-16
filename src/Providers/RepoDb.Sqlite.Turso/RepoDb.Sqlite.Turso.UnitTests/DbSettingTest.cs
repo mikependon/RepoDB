@@ -87,6 +87,16 @@ namespace RepoDb.Turso.UnitTests
         }
 
         [TestMethod]
+        public void TestMdsTursoDbSettingIsSchemaSupportedProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<SqliteConnection>();
+
+            // Assert
+            Assert.IsFalse(setting.IsSchemaSupported);
+        }
+
+        [TestMethod]
         public void TestMdsTursoDbSettingIsUseUpsertProperty()
         {
             // Setup

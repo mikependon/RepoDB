@@ -84,6 +84,16 @@ namespace RepoDb.DuckDb.UnitTests
         }
 
         [TestMethod]
+        public void TestDuckDbDbSettingIsSchemaSupportedProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<DuckDBConnection>();
+
+            // Assert
+            Assert.IsTrue(setting.IsSchemaSupported);
+        }
+
+        [TestMethod]
         public void TestDuckDbDbSettingIsUseUpsertProperty()
         {
             // Setup

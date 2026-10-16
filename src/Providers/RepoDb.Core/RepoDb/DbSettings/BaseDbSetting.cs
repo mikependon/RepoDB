@@ -32,6 +32,7 @@ namespace RepoDb.DbSettings
             IsExecuteReaderDisposable = true;
             IsMultiStatementExecutable = true;
             IsPreparable = true;
+            IsSchemaSupported = true;
             IsTransactionSupported = true;
             IsUseUpsert = false;
             RequiresDbTypeBeforeValue = false;
@@ -101,6 +102,12 @@ namespace RepoDb.DbSettings
         /// Gets a value that indicates whether the current DB Provider supports the <see cref="DbCommand.Prepare()"/> calls.
         /// </summary>
         public bool IsPreparable { get; protected set; }
+
+        /// <summary>
+        /// Gets a value that indicates whether the current DB Provider supports the schemas (i.e.: <c>dbo</c> or <c>public</c>) that own the tables of a database.
+        /// When <c>false</c>, a table is only identified by its name (and by the database, if the provider has one).
+        /// </summary>
+        public bool IsSchemaSupported { get; protected set; }
 
         /// <summary>
         /// Gets the value that indicates whether the current DB Provider's transaction support (e.g. <c>BeginTransaction()</c>)
@@ -207,6 +214,9 @@ namespace RepoDb.DbSettings
 
             // IsPreparable
             hashCode = HashCode.Combine(hashCode, IsPreparable);
+
+            // IsSchemaSupported
+            hashCode = HashCode.Combine(hashCode, IsSchemaSupported);
 
             // IsTransactionSupported
             hashCode = HashCode.Combine(hashCode, IsTransactionSupported);

@@ -29,6 +29,7 @@ namespace RepoDb.DbSettings
             IsMultiStatementExecutable = false;
             IsInsertAllBatchable = false;
             IsPreparable = false;
+            IsSchemaSupported = false;
             IsTransactionSupported = false;
             IsUseUpsert = false;
             RequiresDbTypeBeforeValue = false;

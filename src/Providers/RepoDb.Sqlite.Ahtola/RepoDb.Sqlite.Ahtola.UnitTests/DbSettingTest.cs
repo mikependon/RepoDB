@@ -87,6 +87,16 @@ namespace RepoDb.Ahtola.UnitTests
         }
 
         [TestMethod]
+        public void TestMdsAhtolaDbSettingIsSchemaSupportedProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<SqliteConnection>();
+
+            // Assert
+            Assert.IsFalse(setting.IsSchemaSupported);
+        }
+
+        [TestMethod]
         public void TestMdsAhtolaDbSettingIsUseUpsertProperty()
         {
             // Setup

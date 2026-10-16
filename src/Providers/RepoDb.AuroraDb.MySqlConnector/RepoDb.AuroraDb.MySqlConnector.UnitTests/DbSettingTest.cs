@@ -84,6 +84,16 @@ namespace RepoDb.AuroraDb.MySqlConnector.UnitTests
         }
 
         [TestMethod]
+        public void TestAuroraDbDbSettingIsSchemaSupportedProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<AuroraDbConnection>();
+
+            // Assert
+            Assert.IsFalse(setting.IsSchemaSupported);
+        }
+
+        [TestMethod]
         public void TestAuroraDbDbSettingIsUseUpsertProperty()
         {
             // Setup

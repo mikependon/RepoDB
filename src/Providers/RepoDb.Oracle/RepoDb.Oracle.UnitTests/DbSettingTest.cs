@@ -84,6 +84,16 @@ namespace RepoDb.Oracle.UnitTests
         }
 
         [TestMethod]
+        public void TestOracleDbSettingIsSchemaSupportedProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<OracleConnection>();
+
+            // Assert
+            Assert.IsTrue(setting.IsSchemaSupported);
+        }
+
+        [TestMethod]
         public void TestOracleDbSettingIsUseUpsertProperty()
         {
             // Setup

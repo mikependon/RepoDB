@@ -35,6 +35,7 @@ namespace RepoDb.DbSettings
             IsMultiStatementExecutable = true;
             IsInsertAllBatchable = true;
             IsPreparable = true;
+            IsSchemaSupported = false;
             IsTransactionSupported = true;
             IsUseUpsert = true;
             RequiresDbTypeBeforeValue = false;

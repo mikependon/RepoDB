@@ -84,6 +84,16 @@ namespace RepoDb.CockroachDb.UnitTests
         }
 
         [TestMethod]
+        public void TestCockroachDbDbSettingIsSchemaSupportedProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<CockroachDbConnection>();
+
+            // Assert
+            Assert.IsTrue(setting.IsSchemaSupported);
+        }
+
+        [TestMethod]
         public void TestCockroachDbDbSettingIsUseUpsertProperty()
         {
             // Setup
