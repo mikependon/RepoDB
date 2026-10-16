@@ -56,7 +56,7 @@ Read more about this through this [article](https://blogs.repodb.net/posts/2026/
 
 Improve your productivity with Desktop Studio. Plan, priorities and manage your work in your home and organization. Move your schema and data from all supported databases, and work with various files like CSV, JSON, XML, Parquet and AVRO.
 
-<img width="1706" height="925" alt="image" src="https://github.com/user-attachments/assets/47c93fa4-0930-4802-a799-583bd16ab46a" />
+<img width="2559" height="1389" alt="image" src="https://github.com/user-attachments/assets/b0b4f5c5-9b86-4170-a00b-c313724cd503" />
 
 The Desktop Studio is still being developed, but it is available as per request. Please send us an email if you would like to try.
 
