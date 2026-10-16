@@ -230,7 +230,8 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Quotes a string for database, schema and a table.
+        /// Quotes a string for database, schema and a table. The parts are separated by the periods that are not inside of a quoted part, so a quoted
+        /// part can have periods on its own (i.e.: <c>[dbo].[Dotted.Table.Name]</c>). An unquoted value is read as <c>Database.Schema.Table</c>.
         /// </summary>
         /// <param name="value">The string value to be quoted.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
@@ -238,59 +239,47 @@ namespace RepoDb.Extensions
         private static string AsQuotedForDatabaseSchemaTableInternal(this string value,
             IDbSetting dbSetting)
         {
-            var splitted = value.Split(CharConstant.Period);
-            if (splitted.Length > 2)
+            var parts = new List<string>();
+            var current = new System.Text.StringBuilder(value.Length);
+            var opening = dbSetting.OpeningQuote;
+            var closing = dbSetting.ClosingQuote;
+            var isQuoted = false;
+            var index = 0;
+            while (index < value.Length)
             {
-                var list = new List<string>(splitted.Length);
-                var current = default(string);
-                foreach (var item in splitted)
+                if (isQuoted)
                 {
-                    if (!string.IsNullOrWhiteSpace(current))
+                    if (string.CompareOrdinal(value, index, closing, 0, closing.Length) == 0)
                     {
-                        if (current.StartsWith(dbSetting.OpeningQuote, StringComparison.OrdinalIgnoreCase)
-                            && item.EndsWith(dbSetting.ClosingQuote, StringComparison.OrdinalIgnoreCase))
-                        {
-                            list.Add(string.Concat(current, CharConstant.Period, item));
-                            current = null;
-                        }
-                    }
-                    else
-                    {
-                        if (item.StartsWith(dbSetting.OpeningQuote, StringComparison.OrdinalIgnoreCase))
-                        {
-                            if (item.EndsWith(dbSetting.ClosingQuote, StringComparison.OrdinalIgnoreCase))
-                            {
-                                list.Add(item.AsQuotedInternal(dbSetting));
-                            }
-                            else
-                            {
-                                current = item;
-                            }
-                        }
-                        else
-                        {
-                            list.Add(item.AsQuotedInternal(dbSetting));
-                        }
+                        current.Append(closing);
+                        index += closing.Length;
+                        isQuoted = false;
+                        continue;
                     }
                 }
-                if (current != null)
+                else if (current.Length == 0 && string.CompareOrdinal(value, index, opening, 0, opening.Length) == 0)
                 {
-                    list.Add(current.AsQuotedInternal(dbSetting));
+                    current.Append(opening);
+                    index += opening.Length;
+                    isQuoted = true;
+                    continue;
                 }
-#if NETSTANDARD2_0
-                return string.Join(CharConstant.Period.ToString(), list);
-#else
-                return string.Join(CharConstant.Period, list);
-#endif
+                else if (value[index] == CharConstant.Period)
+                {
+                    parts.Add(current.ToString());
+                    current.Clear();
+                    index++;
+                    continue;
+                }
+                current.Append(value[index]);
+                index++;
             }
-            else
-            {
+            parts.Add(current.ToString());
 #if NETSTANDARD2_0
-                return string.Join(CharConstant.Period.ToString(), splitted.Select(item => item.AsQuotedInternal(dbSetting)));
+            return string.Join(CharConstant.Period.ToString(), parts.Select(part => part.AsQuotedInternal(dbSetting)));
 #else
-                return string.Join(CharConstant.Period, splitted.Select(item => item.AsQuotedInternal(dbSetting)));
+            return string.Join(CharConstant.Period, parts.Select(part => part.AsQuotedInternal(dbSetting)));
 #endif
-            }
         }
 
         /// <summary>

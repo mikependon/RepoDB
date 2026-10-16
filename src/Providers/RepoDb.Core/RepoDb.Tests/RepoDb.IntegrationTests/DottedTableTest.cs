@@ -448,6 +448,80 @@ namespace RepoDb.IntegrationTests
 
         #endregion
 
+        #region Table Name
+
+        [TestMethod]
+        [DataRow("[dbo].[Dotted.Table]")]
+        [DataRow("dbo.[Dotted.Table]")]
+        [DataRow("[Dotted.Table]")]
+        public void TestQueryAllByTableNameOfDottedTable(string tableName)
+        {
+            // Setup
+            var entities = Helper.CreateDottedTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll<DottedTable>(entities);
+                var queryAllResult = connection.QueryAll(tableName);
+
+                // Assert
+                Assert.AreEqual(entities.Count, queryAllResult.Count());
+            }
+        }
+
+        [TestMethod]
+        [DataRow("[dbo].[Dotted.Table]")]
+        [DataRow("dbo.[Dotted.Table]")]
+        [DataRow("[Dotted.Table]")]
+        public async Task TestQueryAllAsyncByTableNameOfDottedTable(string tableName)
+        {
+            // Setup
+            var entities = Helper.CreateDottedTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync<DottedTable>(entities).ConfigureAwait(false);
+                var queryAllResult = await connection.QueryAllAsync(tableName).ConfigureAwait(false);
+
+                // Assert
+                Assert.AreEqual(entities.Count, queryAllResult.Count());
+            }
+        }
+
+        [TestMethod]
+        [DataRow("[dbo].[Dotted.Table]")]
+        [DataRow("dbo.[Dotted.Table]")]
+        [DataRow("[Dotted.Table]")]
+        public void TestCountByTableNameOfDottedTable(string tableName)
+        {
+            // Setup
+            var entities = Helper.CreateDottedTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll<DottedTable>(entities);
+                var count = connection.Count(tableName, where: (object)null);
+
+                // Assert
+                Assert.AreEqual(entities.Count, count);
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnQueryAllByTableNameOfDottedTableThatIsNotQuoted()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act/Assert (the unquoted "dbo.Dotted.Table" is read as Database.Schema.Table)
+                Assert.ThrowsExactly<SqlException>(() => connection.QueryAll("dbo.Dotted.Table"));
+            }
+        }
+
+        #endregion
+
         #region Update
 
         [TestMethod]

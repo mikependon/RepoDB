@@ -61,7 +61,7 @@ namespace RepoDb.DbHelpers
         /// <param name="tableName"></param>
         /// <returns></returns>
         private string GetCommandText(string tableName) =>
-            $"pragma table_info({DataEntityExtension.GetTableName(tableName, DbSetting).AsUnquoted(DbSetting)});";
+            $"pragma table_info({DataEntityExtension.GetTableName(tableName, DbSetting).AsQuoted(DbSetting)});";
 
         /// <summary>
         ///

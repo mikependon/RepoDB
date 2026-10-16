@@ -121,6 +121,136 @@ namespace RepoDb.UnitTests
 
         #endregion
 
+        #region AsQuoted (Dotted Names)
+
+        [TestMethod]
+        public void TestAsQuotedWithDottedTableWithoutSchema()
+        {
+            // Setup
+            var text = "[Dotted.Name]";
+
+            // Act
+            var actual = text.AsQuoted(true, m_dbSetting);
+            var expected = "[Dotted.Name]";
+
+            // Assert
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestAsQuotedWithDottedTableWithoutSchemaAndWithManyDots()
+        {
+            // Setup
+            var text = "[Dotted.Table.Name]";
+
+            // Act
+            var actual = text.AsQuoted(true, m_dbSetting);
+            var expected = "[Dotted.Table.Name]";
+
+            // Assert
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestAsQuotedWithDottedTableWithManyDots()
+        {
+            // Setup
+            var text = "[Schema].[Dotted.Table.Name]";
+
+            // Act
+            var actual = text.AsQuoted(true, m_dbSetting);
+            var expected = "[Schema].[Dotted.Table.Name]";
+
+            // Assert
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestAsQuotedWithDottedTableWithManyDotsAndUnquotedSchema()
+        {
+            // Setup
+            var text = "Schema.[Dotted.Table.Name]";
+
+            // Act
+            var actual = text.AsQuoted(true, m_dbSetting);
+            var expected = "[Schema].[Dotted.Table.Name]";
+
+            // Assert
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestAsQuotedWithDottedTableWithManyDotsWithDatabase()
+        {
+            // Setup
+            var text = "[Database].[Schema].[Dotted.Table.Name]";
+
+            // Act
+            var actual = text.AsQuoted(true, m_dbSetting);
+            var expected = "[Database].[Schema].[Dotted.Table.Name]";
+
+            // Assert
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestAsQuotedWithDottedSchema()
+        {
+            // Setup
+            var text = "[Dotted.Schema].[Name]";
+
+            // Act
+            var actual = text.AsQuoted(true, m_dbSetting);
+            var expected = "[Dotted.Schema].[Name]";
+
+            // Assert
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestAsQuotedWithDottedSchemaAndDottedTable()
+        {
+            // Setup
+            var text = "[Dotted.Schema].[Dotted.Name]";
+
+            // Act
+            var actual = text.AsQuoted(true, m_dbSetting);
+            var expected = "[Dotted.Schema].[Dotted.Name]";
+
+            // Assert
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestAsQuotedWithDottedTableAndUnquotedDatabaseAndSchema()
+        {
+            // Setup
+            var text = "Database.Schema.[Dotted.Table.Name]";
+
+            // Act
+            var actual = text.AsQuoted(true, m_dbSetting);
+            var expected = "[Database].[Schema].[Dotted.Table.Name]";
+
+            // Assert
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestAsQuotedWithUnquotedDottedNameIsReadAsDatabaseSchemaAndTable()
+        {
+            // Setup
+            var text = "dbo.Dotted.Table";
+
+            // Act
+            var actual = text.AsQuoted(true, m_dbSetting);
+            var expected = "[dbo].[Dotted].[Table]";
+
+            // Assert
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
+        }
+
+        #endregion
+
         #region AsUnQuoted
 
         [TestMethod]

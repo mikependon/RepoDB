@@ -254,5 +254,67 @@ namespace RepoDb.Ahtola.IntegrationTests
         #endregion
 
         #endregion
+
+        #region GetFields (Dotted Table)
+
+        [TestMethod]
+        [DataRow("[Dotted.Table]")]
+        [DataRow("main.[Dotted.Table]")]
+        [DataRow("[main].[Dotted.Table]")]
+        public void TestDbHelperGetFieldsOfDottedTable(string tableName)
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var helper = connection.GetDbHelper();
+                connection.ExecuteNonQuery("DROP TABLE IF EXISTS [Dotted.Table]; CREATE TABLE [Dotted.Table] ([Id] INTEGER PRIMARY KEY, [Column.Name] TEXT);");
+
+                try
+                {
+                    // Act
+                    var fields = helper.GetFields(connection, tableName, null).ToList();
+
+                    // Assert
+                    Assert.AreEqual(2, fields.Count);
+                    Assert.IsTrue(fields.Any(f => string.Equals(f.Name, "Id", StringComparison.OrdinalIgnoreCase) && f.IsPrimary));
+                    Assert.IsTrue(fields.Any(f => string.Equals(f.Name, "Column.Name", StringComparison.OrdinalIgnoreCase)));
+                }
+                finally
+                {
+                    connection.ExecuteNonQuery("DROP TABLE IF EXISTS [Dotted.Table];");
+                }
+            }
+        }
+
+        [TestMethod]
+        [DataRow("[Dotted.Table]")]
+        [DataRow("main.[Dotted.Table]")]
+        [DataRow("[main].[Dotted.Table]")]
+        public async Task TestDbHelperGetFieldsAsyncOfDottedTable(string tableName)
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var helper = connection.GetDbHelper();
+                connection.ExecuteNonQuery("DROP TABLE IF EXISTS [Dotted.Table]; CREATE TABLE [Dotted.Table] ([Id] INTEGER PRIMARY KEY, [Column.Name] TEXT);");
+
+                try
+                {
+                    // Act
+                    var fields = (await helper.GetFieldsAsync(connection, tableName, null).ConfigureAwait(false)).ToList();
+
+                    // Assert
+                    Assert.AreEqual(2, fields.Count);
+                    Assert.IsTrue(fields.Any(f => string.Equals(f.Name, "Id", StringComparison.OrdinalIgnoreCase) && f.IsPrimary));
+                    Assert.IsTrue(fields.Any(f => string.Equals(f.Name, "Column.Name", StringComparison.OrdinalIgnoreCase)));
+                }
+                finally
+                {
+                    connection.ExecuteNonQuery("DROP TABLE IF EXISTS [Dotted.Table];");
+                }
+            }
+        }
+
+        #endregion
     }
 }
