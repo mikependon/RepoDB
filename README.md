@@ -52,6 +52,14 @@ RepoDB is evolving from an ORM into a broader data productivity platform, with D
 
 Read more about this through this [article](https://blogs.repodb.net/posts/2026/08/repodb-new-architecture).
 
+## Desktop Studio
+
+Improve your productivity with Desktop Studio. Plan, priorities and manage your work in your home and organization. Move your schema and data from all supported databases, and work with various files like CSV, JSON, XML, Parquet and AVRO.
+
+<img width="1706" height="925" alt="image" src="https://github.com/user-attachments/assets/47c93fa4-0930-4802-a799-583bd16ab46a" />
+
+The Desktop Studio is still being developed, but it is available as per request. Please send us an email if you would like to try.
+
 ## Get Started
 
 Fluent operations (Query, Insert, Merge, Delete, Update, and [more](http://repodb.net/operation)), batches and bulks are supported for DB providers mentioned below. Choose your database and follow the quick-start guide:
