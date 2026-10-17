@@ -634,6 +634,20 @@ namespace RepoDb.Schema.PostgreSql.UnitTests
         }
 
         [TestMethod]
+        public void TestPostgreSqlSchemaComposerComposeForeignKeyExists()
+        {
+            // Act/Assert
+            Assert.AreEqual("SELECT CASE WHEN EXISTS (SELECT 1 FROM pg_constraint WHERE contype = 'f' AND conrelid = to_regclass('\"public\".\"Person\"') AND conname = 'FK_Person_Country') THEN 1 ELSE 0 END;", new PostgreSqlSchemaComposer().ComposeForeignKeyExists("public.Person", "FK_Person_Country"));
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlSchemaComposerComposeForeignKeyExistsEscapesTheSingleQuotes()
+        {
+            // Act/Assert
+            StringAssert.Contains(new PostgreSqlSchemaComposer().ComposeForeignKeyExists("public.Person", "FK_O'Brien"), "FK_O''Brien", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
         public void TestPostgreSqlSchemaComposerComposeIndexNameExists()
         {
             // Act/Assert

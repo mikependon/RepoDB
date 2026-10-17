@@ -355,6 +355,13 @@ namespace RepoDb.Schema.ClickHouse.UnitTests
         }
 
         [TestMethod]
+        public void TestClickHouseSchemaComposerComposeForeignKeyExistsIsNotComposed()
+        {
+            // Act/Assert
+            Assert.IsNull(new ClickHouseSchemaComposer().ComposeForeignKeyExists("Person", "FK_Person_Country"));
+        }
+
+        [TestMethod]
         public void TestClickHouseSchemaComposerComposeIndexNameExistsIsNotComposed()
         {
             // Act/Assert

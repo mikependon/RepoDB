@@ -1079,6 +1079,13 @@ namespace RepoDb.Schema.DuckDb.UnitTests
         }
 
         [TestMethod]
+        public void TestDuckDbSchemaComposerComposeForeignKeyExistsIsNotComposed()
+        {
+            // Act/Assert
+            Assert.IsNull(new DuckDbSchemaComposer().ComposeForeignKeyExists("Person", "FK_Person_Country"));
+        }
+
+        [TestMethod]
         public void TestDuckDbSchemaComposerComposeIndexNameExists()
         {
             // Act/Assert

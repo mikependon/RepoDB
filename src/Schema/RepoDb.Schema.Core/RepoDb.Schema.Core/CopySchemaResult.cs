@@ -35,6 +35,11 @@ namespace RepoDb.Schema
         public IList<string> AddedIndexes { get; set; } = new List<string>();
 
         /// <summary>
+        /// Gets or sets the names of the foreign keys that were added to an already existing table (see <see cref="CopySchemaOutcome.Aligned"/>).
+        /// </summary>
+        public IList<string> AddedForeignKeys { get; set; } = new List<string>();
+
+        /// <summary>
         /// Gets or sets the number of check constraints that were created.
         /// </summary>
         public int CheckConstraintCount { get; set; }

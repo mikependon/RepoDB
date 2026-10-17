@@ -78,7 +78,7 @@ namespace RepoDb.Schema
         /// <summary>
         /// Creates the plan for the tables, from their state in the destination database.
         /// </summary>
-        /// <param name="tables">The state of the tables (see <see cref="CopySchemaTable.Exists"/>, <see cref="CopySchemaTable.MissingColumns"/> and <see cref="CopySchemaTable.MissingIndexes"/>).</param>
+        /// <param name="tables">The state of the tables (see <see cref="CopySchemaTable.Exists"/>, <see cref="CopySchemaTable.MissingColumns"/>, <see cref="CopySchemaTable.MissingIndexes"/> and <see cref="CopySchemaTable.MissingForeignKeys"/>).</param>
         /// <param name="behavior">Defines what happens to the tables that already exist in the destination database.</param>
         /// <param name="composer">The composer of the destination database.</param>
         /// <returns>The plan.</returns>
@@ -91,13 +91,15 @@ namespace RepoDb.Schema
             var created = tables.Where(table => table.Exists != true || behavior == CopySchemaExistsBehavior.Drop).ToList();
             var steps = GetDropSteps(tables, composer).Concat(GetAlignSteps(tables, composer)).ToList();
             var createSteps = GetCreateSteps(created, composer);
-            var completions = GetAlignCompletions(tables)
+            var foreignKeyOffset = steps.Count + createSteps.Count;
+            var completions = GetAlignCompletions(tables, foreignKeyOffset)
                 .Concat(GetCreateCompletions(created, createSteps.Count, steps.Count))
                 .ToLookup(x => x.Key, x => x.Table);
             var owners = GetCreateOwners(created, createSteps.Count);
             steps.AddRange(createSteps.Select((statement, i) => new CopySchemaStep(statement, owners[i])));
+            steps.AddRange(GetAlignForeignKeySteps(tables, composer).ToList());
             var immediate = tables.Where(table => table.Outcome == CopySchemaOutcome.Skipped ||
-                (table.Outcome == CopySchemaOutcome.Aligned && !table.MissingColumns.Any() && !table.MissingIndexes.Any())).ToList();
+                (table.Outcome == CopySchemaOutcome.Aligned && !table.MissingColumns.Any() && !table.MissingIndexes.Any() && !table.MissingForeignKeys.Any())).ToList();
             return new CopySchemaPlan(steps, completions, immediate);
         }
 
@@ -249,6 +251,27 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
+        /// Gets the steps that add the missing foreign keys to the tables that are aligned. They are the last steps of the plan, so the tables that they reference
+        /// (the tables that are created, and the columns that are added) exist when the foreign keys are added.
+        /// </summary>
+        /// <param name="tables"></param>
+        /// <param name="composer"></param>
+        /// <returns></returns>
+        private static IEnumerable<CopySchemaStep> GetAlignForeignKeySteps(IEnumerable<CopySchemaTable> tables,
+            ISchemaComposer composer)
+        {
+            foreach (var table in tables.Where(table => table.Outcome == CopySchemaOutcome.Aligned))
+            {
+                var statements = table.MissingForeignKeys.Select(foreignKey => composer.ComposeAddForeignKey(table.Name, foreignKey)).ToList();
+                table.AlignStatements = table.AlignStatements.Concat(statements).ToList();
+                foreach (var statement in statements)
+                {
+                    yield return new CopySchemaStep(statement, table);
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets the statements that create the tables (see <see cref="ISchemaComposer.ComposeSchemas"/>).
         /// </summary>
         /// <param name="created"></param>
@@ -261,20 +284,30 @@ namespace RepoDb.Schema
                 : composer.ComposeSchemas(created.Select(table => table.Schema)).ToList();
 
         /// <summary>
-        /// Gets the table that completes at the last statement of an align step: the tables are aligned one after the other.
+        /// Gets the table that completes at the last statement of an align step: the tables are aligned one after the other (the columns and the indexes), and then
+        /// their foreign keys are added (they are the last steps of the plan). A table is completed by its last statement.
         /// </summary>
         /// <param name="tables"></param>
+        /// <param name="foreignKeyOffset">The index of the first step that adds a foreign key.</param>
         /// <returns></returns>
-        private static IEnumerable<(int Key, CopySchemaTable Table)> GetAlignCompletions(IList<CopySchemaTable> tables)
+        private static IEnumerable<(int Key, CopySchemaTable Table)> GetAlignCompletions(IList<CopySchemaTable> tables,
+            int foreignKeyOffset)
         {
             var cursor = tables.Count(table => table.Outcome == CopySchemaOutcome.Dropped);
+            var foreignKeyCursor = foreignKeyOffset;
             foreach (var table in tables.Where(table => table.Outcome == CopySchemaOutcome.Aligned))
             {
                 var count = table.MissingColumns.Count + table.MissingIndexes.Count;
                 cursor += count;
-                if (count > 0)
+                var last = count > 0 ? cursor - 1 : -1;
+                foreignKeyCursor += table.MissingForeignKeys.Count;
+                if (table.MissingForeignKeys.Count > 0)
                 {
-                    yield return (cursor - 1, table);
+                    last = foreignKeyCursor - 1;
+                }
+                if (last >= 0)
+                {
+                    yield return (last, table);
                 }
             }
         }

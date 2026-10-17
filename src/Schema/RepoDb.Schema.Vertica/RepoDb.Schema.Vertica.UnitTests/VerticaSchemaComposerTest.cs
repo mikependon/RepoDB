@@ -953,6 +953,20 @@ namespace RepoDb.Schema.Vertica.UnitTests
         }
 
         [TestMethod]
+        public void TestVerticaSchemaComposerComposeForeignKeyExists()
+        {
+            // Act/Assert
+            Assert.AreEqual("SELECT CASE WHEN EXISTS (SELECT 1 FROM v_catalog.foreign_keys WHERE table_schema = 'dbo' AND table_name = 'Person' AND constraint_name = 'FK_Person_Country') THEN 1 ELSE 0 END", new VerticaSchemaComposer().ComposeForeignKeyExists("dbo.Person", "FK_Person_Country"));
+        }
+
+        [TestMethod]
+        public void TestVerticaSchemaComposerComposeForeignKeyExistsEscapesTheSingleQuotes()
+        {
+            // Act/Assert
+            StringAssert.Contains(new VerticaSchemaComposer().ComposeForeignKeyExists("dbo.Person", "FK_O'Brien"), "FK_O''Brien", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
         public void TestVerticaSchemaComposerComposeIndexNameExistsIsNotComposed()
         {
             // Act/Assert

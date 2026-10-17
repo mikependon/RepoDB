@@ -1111,6 +1111,13 @@ namespace RepoDb.Schema.Sqlite.Turso.UnitTests
         }
 
         [TestMethod]
+        public void TestTursoSchemaComposerComposeForeignKeyExistsIsNotComposed()
+        {
+            // Act/Assert
+            Assert.IsNull(new TursoSchemaComposer().ComposeForeignKeyExists("Person", "FK_Person_Country"));
+        }
+
+        [TestMethod]
         public void TestTursoSchemaComposerComposeIndexNameExists()
         {
             // Act/Assert

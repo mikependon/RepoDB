@@ -257,6 +257,19 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
+        /// Composes the statement that checks whether a foreign key exists in a table of the destination database.
+        /// </summary>
+        /// <param name="tableName">The name of the table.</param>
+        /// <param name="foreignKeyName">The name of the foreign key.</param>
+        /// <returns>The SQL statement, that returns <c>1</c> if the foreign key exists, and <c>0</c> if not.</returns>
+        public string ComposeForeignKeyExists(string tableName,
+            string foreignKeyName)
+        {
+            var (schema, table) = SapHanaSchemaHelper.ParseSchemaAndTable(tableName);
+            return $"SELECT CASE WHEN EXISTS (SELECT 1 FROM SYS.REFERENTIAL_CONSTRAINTS WHERE SCHEMA_NAME = {Owner(schema)} AND TABLE_NAME = '{Literal(table)}' AND CONSTRAINT_NAME = '{Literal(foreignKeyName)}') THEN 1 ELSE 0 END FROM DUMMY";
+        }
+
+        /// <summary>
         /// Composes the data type of a column (including its size, precision and scale) in the dialect of the destination database.
         /// A column that comes from SapHana keeps the type that it declares.
         /// </summary>

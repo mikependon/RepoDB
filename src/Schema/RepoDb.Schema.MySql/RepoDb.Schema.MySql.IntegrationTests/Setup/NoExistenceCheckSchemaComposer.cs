@@ -129,6 +129,14 @@ namespace RepoDb.Schema.MySql.IntegrationTests.Setup
         public string ComposeIndexNameExists(string tableName, string indexName) => null;
 
         /// <summary>
+        /// Does not compose the statement that checks whether the foreign key exists, so the existence of the foreign key is not known.
+        /// </summary>
+        /// <param name="tableName">The name of the table.</param>
+        /// <param name="foreignKeyName">The name of the foreign key.</param>
+        /// <returns><c>null</c>.</returns>
+        public string ComposeForeignKeyExists(string tableName, string foreignKeyName) => null;
+
+        /// <summary>
         /// Composes the data type of a column (including its size, precision and scale) in the dialect of the destination database.
         /// </summary>
         /// <param name="column">The column (as read from the source database) to be mapped.</param>

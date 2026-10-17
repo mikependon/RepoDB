@@ -1111,6 +1111,13 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
         }
 
         [TestMethod]
+        public void TestAhtolaSchemaComposerComposeForeignKeyExistsIsNotComposed()
+        {
+            // Act/Assert
+            Assert.IsNull(new AhtolaSchemaComposer().ComposeForeignKeyExists("Person", "FK_Person_Country"));
+        }
+
+        [TestMethod]
         public void TestAhtolaSchemaComposerComposeIndexNameExists()
         {
             // Act/Assert

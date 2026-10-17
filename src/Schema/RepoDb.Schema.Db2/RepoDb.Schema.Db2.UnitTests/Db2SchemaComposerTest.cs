@@ -1114,6 +1114,20 @@ namespace RepoDb.Schema.Db2.UnitTests
         }
 
         [TestMethod]
+        public void TestDb2SchemaComposerComposeForeignKeyExists()
+        {
+            // Act/Assert
+            Assert.AreEqual("SELECT CASE WHEN EXISTS (SELECT 1 FROM SYSCAT.REFERENCES WHERE TABSCHEMA = 'dbo' AND TABNAME = 'Person' AND CONSTNAME = 'FK_Person_Country') THEN 1 ELSE 0 END FROM SYSIBM.SYSDUMMY1", new Db2SchemaComposer().ComposeForeignKeyExists("dbo.Person", "FK_Person_Country"));
+        }
+
+        [TestMethod]
+        public void TestDb2SchemaComposerComposeForeignKeyExistsEscapesTheSingleQuotes()
+        {
+            // Act/Assert
+            StringAssert.Contains(new Db2SchemaComposer().ComposeForeignKeyExists("dbo.Person", "FK_O'Brien"), "FK_O''Brien", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
         public void TestDb2SchemaComposerComposeIndexNameExists()
         {
             // Act/Assert

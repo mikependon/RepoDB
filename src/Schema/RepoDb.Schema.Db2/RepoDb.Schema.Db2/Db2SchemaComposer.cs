@@ -273,6 +273,19 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
+        /// Composes the statement that checks whether a foreign key exists in a table of the destination database.
+        /// </summary>
+        /// <param name="tableName">The name of the table.</param>
+        /// <param name="foreignKeyName">The name of the foreign key.</param>
+        /// <returns>The SQL statement, that returns <c>1</c> if the foreign key exists, and <c>0</c> if not.</returns>
+        public string ComposeForeignKeyExists(string tableName,
+            string foreignKeyName)
+        {
+            var (schema, table) = Db2SchemaHelper.ParseSchemaAndTable(tableName);
+            return $"SELECT CASE WHEN EXISTS (SELECT 1 FROM SYSCAT.REFERENCES WHERE TABSCHEMA = {Owner(schema)} AND TABNAME = '{Literal(table)}' AND CONSTNAME = '{Literal(foreignKeyName)}') THEN 1 ELSE 0 END FROM SYSIBM.SYSDUMMY1";
+        }
+
+        /// <summary>
         /// Composes the data type of a column (including its size, precision and scale) in the dialect of the destination database.
         /// A column that comes from Db2 keeps the type that it declares.
         /// </summary>

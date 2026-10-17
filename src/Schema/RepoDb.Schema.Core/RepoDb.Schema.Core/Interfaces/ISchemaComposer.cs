@@ -115,6 +115,15 @@ namespace RepoDb.Schema
         string ComposeIndexNameExists(string tableName, string indexName);
 
         /// <summary>
+        /// Composes the statement that checks whether a foreign key exists in a table of the destination database.
+        /// A database that can not add a foreign key to a table that exists (i.e.: SQLite) does not compose it, so the foreign keys of the tables that exist are not aligned.
+        /// </summary>
+        /// <param name="tableName">The name of the table (see <see cref="ComposeName"/>).</param>
+        /// <param name="foreignKeyName">The name of the foreign key.</param>
+        /// <returns>The SQL statement, that returns <c>1</c> if the foreign key exists, and <c>0</c> if not (<c>null</c> if the database does not compose it).</returns>
+        string ComposeForeignKeyExists(string tableName, string foreignKeyName);
+
+        /// <summary>
         /// Composes the data type of a column (including its size, precision and scale) in the dialect of the destination database.
         /// </summary>
         /// <param name="column">The column (as read from the source database) to be mapped.</param>

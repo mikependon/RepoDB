@@ -234,6 +234,16 @@ namespace RepoDb.Schema
             null;
 
         /// <summary>
+        /// Composes the statement that checks whether a foreign key exists in a table of the destination database.
+        /// </summary>
+        /// <param name="tableName">The name of the table.</param>
+        /// <param name="foreignKeyName">The name of the foreign key.</param>
+        /// <returns>The SQL statement, that returns <c>1</c> if the foreign key exists, and <c>0</c> if not.</returns>
+        public string ComposeForeignKeyExists(string tableName,
+            string foreignKeyName) =>
+            $"SELECT CASE WHEN EXISTS (SELECT 1 FROM information_schema.TABLE_CONSTRAINTS WHERE {TableFilter(tableName, "TABLE_SCHEMA", "TABLE_NAME")} AND CONSTRAINT_TYPE = 'FOREIGN KEY' AND CONSTRAINT_NAME = '{Literal(foreignKeyName)}') THEN 1 ELSE 0 END;";
+
+        /// <summary>
         /// Composes the data type of a column (including its size, precision and scale) in the dialect of the destination database.
         /// </summary>
         /// <param name="column">The column (as read from the source database) to be mapped.</param>

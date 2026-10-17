@@ -1111,6 +1111,13 @@ namespace RepoDb.Schema.Sqlite.Microsoft.UnitTests
         }
 
         [TestMethod]
+        public void TestSqliteSchemaComposerComposeForeignKeyExistsIsNotComposed()
+        {
+            // Act/Assert
+            Assert.IsNull(new SqliteSchemaComposer().ComposeForeignKeyExists("Person", "FK_Person_Country"));
+        }
+
+        [TestMethod]
         public void TestSqliteSchemaComposerComposeIndexNameExists()
         {
             // Act/Assert

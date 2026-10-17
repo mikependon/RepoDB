@@ -1125,6 +1125,20 @@ namespace RepoDb.Schema.Firebird.UnitTests
         }
 
         [TestMethod]
+        public void TestFirebirdSchemaComposerComposeForeignKeyExists()
+        {
+            // Act/Assert
+            Assert.AreEqual("SELECT CASE WHEN EXISTS (SELECT 1 FROM RDB$RELATION_CONSTRAINTS WHERE RDB$CONSTRAINT_TYPE = 'FOREIGN KEY' AND RDB$RELATION_NAME = 'Person' AND RDB$CONSTRAINT_NAME = 'FK_Person_Country') THEN 1 ELSE 0 END FROM RDB$DATABASE", new FirebirdSchemaComposer().ComposeForeignKeyExists("Person", "FK_Person_Country"));
+        }
+
+        [TestMethod]
+        public void TestFirebirdSchemaComposerComposeForeignKeyExistsEscapesTheSingleQuotes()
+        {
+            // Act/Assert
+            StringAssert.Contains(new FirebirdSchemaComposer().ComposeForeignKeyExists("Person", "FK_O'Brien"), "FK_O''Brien", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
         public void TestFirebirdSchemaComposerComposeIndexNameExists()
         {
             // Act/Assert

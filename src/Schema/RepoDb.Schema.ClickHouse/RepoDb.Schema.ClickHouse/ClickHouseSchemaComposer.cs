@@ -208,6 +208,16 @@ namespace RepoDb.Schema
             null;
 
         /// <summary>
+        /// Composes the statement that checks whether a foreign key exists in a table of the destination database.
+        /// </summary>
+        /// <param name="tableName">The name of the table.</param>
+        /// <param name="foreignKeyName">The name of the foreign key.</param>
+        /// <returns><c>null</c>, as the foreign keys can not be added to a table that exists, so they are not aligned.</returns>
+        public string ComposeForeignKeyExists(string tableName,
+            string foreignKeyName) =>
+            null;
+
+        /// <summary>
         /// Composes the data type of a column (including its size, precision and scale) in the dialect of the destination database.
         /// A column that comes from ClickHouse keeps the type that it declares. The column is wrapped in <c>Nullable</c> if it is nullable.
         /// </summary>

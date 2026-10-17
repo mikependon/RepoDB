@@ -1096,6 +1096,20 @@ namespace RepoDb.Schema.AuroraDbMySqlConnector.UnitTests
         }
 
         [TestMethod]
+        public void TestAuroraDbMySqlConnectorSchemaComposerComposeForeignKeyExists()
+        {
+            // Act/Assert
+            Assert.AreEqual("SELECT CASE WHEN EXISTS (SELECT 1 FROM information_schema.TABLE_CONSTRAINTS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'Person' AND CONSTRAINT_TYPE = 'FOREIGN KEY' AND CONSTRAINT_NAME = 'FK_Person_Country') THEN 1 ELSE 0 END;", new AuroraDbMySqlConnectorSchemaComposer().ComposeForeignKeyExists("dbo.Person", "FK_Person_Country"));
+        }
+
+        [TestMethod]
+        public void TestAuroraDbMySqlConnectorSchemaComposerComposeForeignKeyExistsEscapesTheSingleQuotes()
+        {
+            // Act/Assert
+            StringAssert.Contains(new AuroraDbMySqlConnectorSchemaComposer().ComposeForeignKeyExists("dbo.Person", "FK_O'Brien"), "FK_O''Brien", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
         public void TestAuroraDbMySqlConnectorSchemaComposerComposeIndexNameExistsIsNotComposed()
         {
             // Act/Assert

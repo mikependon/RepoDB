@@ -1096,6 +1096,20 @@ namespace RepoDb.Schema.Oracle.UnitTests
         }
 
         [TestMethod]
+        public void TestOracleSchemaComposerComposeForeignKeyExists()
+        {
+            // Act/Assert
+            Assert.AreEqual("SELECT CASE WHEN EXISTS (SELECT 1 FROM ALL_CONSTRAINTS WHERE CONSTRAINT_TYPE = 'R' AND OWNER = 'dbo' AND TABLE_NAME = 'Person' AND CONSTRAINT_NAME = 'FK_Person_Country') THEN 1 ELSE 0 END FROM DUAL", new OracleSchemaComposer().ComposeForeignKeyExists("dbo.Person", "FK_Person_Country"));
+        }
+
+        [TestMethod]
+        public void TestOracleSchemaComposerComposeForeignKeyExistsEscapesTheSingleQuotes()
+        {
+            // Act/Assert
+            StringAssert.Contains(new OracleSchemaComposer().ComposeForeignKeyExists("dbo.Person", "FK_O'Brien"), "FK_O''Brien", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
         public void TestOracleSchemaComposerComposeIndexNameExists()
         {
             // Act/Assert

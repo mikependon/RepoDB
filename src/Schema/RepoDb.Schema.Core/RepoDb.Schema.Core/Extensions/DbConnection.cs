@@ -56,7 +56,7 @@ namespace RepoDb.Schema
 
         /// <summary>
         /// Reads the state of the tables in the destination database: whether each one exists and, when the existing tables are aligned,
-        /// the columns and the indexes that they are missing. A statement that the composer does not compose leaves the state unknown.
+        /// the columns, the indexes and the foreign keys that they are missing. A statement that the composer does not compose leaves the state unknown.
         /// </summary>
         /// <param name="tables"></param>
         /// <param name="behavior"></param>
@@ -86,6 +86,7 @@ namespace RepoDb.Schema
                 {
                     table.MissingColumns = table.Schema.Columns.Where(column => Probe(composer.ComposeColumnExists(table.Name, column.Field.Name)) == false).ToList();
                     table.MissingIndexes = table.Schema.Indexes.Where(index => index.Name != null && Probe(composer.ComposeIndexExists(table.Name, index.Name)) == false).ToList();
+                    table.MissingForeignKeys = table.Schema.ForeignKeys.Where(foreignKey => foreignKey.Name != null && Probe(composer.ComposeForeignKeyExists(table.Name, foreignKey.Name)) == false).ToList();
                 }
             }
             CopySchemaIndexNames.Resolve(tables, behavior, composer, destinationConnection.GetDbSetting()?.AreIndexNamesUniquePerSchema == true, Probe);
@@ -136,6 +137,14 @@ namespace RepoDb.Schema
                         if (await Probe(composer.ComposeIndexExists(table.Name, index.Name)).ConfigureAwait(false) == false)
                         {
                             table.MissingIndexes.Add(index);
+                        }
+                    }
+                    table.MissingForeignKeys = new List<ForeignKeyInfo>();
+                    foreach (var foreignKey in table.Schema.ForeignKeys.Where(foreignKey => foreignKey.Name != null))
+                    {
+                        if (await Probe(composer.ComposeForeignKeyExists(table.Name, foreignKey.Name)).ConfigureAwait(false) == false)
+                        {
+                            table.MissingForeignKeys.Add(foreignKey);
                         }
                     }
                 }
@@ -233,6 +242,7 @@ namespace RepoDb.Schema
                     TableExisted = table.Exists,
                     AddedColumns = aligned ? table.MissingColumns.Select(column => column.Field.Name).ToList() : new List<string>(),
                     AddedIndexes = aligned ? table.MissingIndexes.Select(index => index.Name).ToList() : new List<string>(),
+                    AddedForeignKeys = aligned ? table.MissingForeignKeys.Select(foreignKey => foreignKey.Name).ToList() : new List<string>(),
                     Errors = schemaErrors,
                     TableName = schema.Table.Name,
                     SourceSchema = table.Source.Table.Schema,

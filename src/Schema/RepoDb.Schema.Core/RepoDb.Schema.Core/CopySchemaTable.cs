@@ -70,6 +70,11 @@ namespace RepoDb.Schema
         public IList<IndexInfo> MissingIndexes { get; set; } = new List<IndexInfo>();
 
         /// <summary>
+        /// Gets or sets the foreign keys of the table that are missing in the destination table.
+        /// </summary>
+        public IList<ForeignKeyInfo> MissingForeignKeys { get; set; } = new List<ForeignKeyInfo>();
+
+        /// <summary>
         /// Gets or sets what is going to be done to the table.
         /// </summary>
         public CopySchemaOutcome Outcome { get; set; } = CopySchemaOutcome.Created;
@@ -80,7 +85,7 @@ namespace RepoDb.Schema
         public string DropStatement { get; set; }
 
         /// <summary>
-        /// Gets or sets the statements that add the missing columns and indexes to the existing table (when the table is aligned).
+        /// Gets or sets the statements that add the missing columns, indexes and foreign keys to the existing table (when the table is aligned).
         /// </summary>
         public IList<string> AlignStatements { get; set; } = new List<string>();
 

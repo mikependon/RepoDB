@@ -1099,6 +1099,20 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         }
 
         [TestMethod]
+        public void TestSqlServerSchemaComposerComposeForeignKeyExists()
+        {
+            // Act/Assert
+            Assert.AreEqual("SELECT CASE WHEN EXISTS (SELECT 1 FROM sys.foreign_keys WHERE parent_object_id = OBJECT_ID(N'[dbo].[Person]') AND name = N'FK_Person_Country') THEN 1 ELSE 0 END;", new SqlServerSchemaComposer().ComposeForeignKeyExists("dbo.Person", "FK_Person_Country"));
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeForeignKeyExistsEscapesTheSingleQuotes()
+        {
+            // Act/Assert
+            StringAssert.Contains(new SqlServerSchemaComposer().ComposeForeignKeyExists("dbo.Person", "FK_O'Brien"), "FK_O''Brien", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
         public void TestSqlServerSchemaComposerComposeIndexNameExistsIsNotComposed()
         {
             // Act/Assert

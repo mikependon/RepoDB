@@ -1096,6 +1096,20 @@ namespace RepoDb.Schema.MySql.UnitTests
         }
 
         [TestMethod]
+        public void TestMySqlSchemaComposerComposeForeignKeyExists()
+        {
+            // Act/Assert
+            Assert.AreEqual("SELECT CASE WHEN EXISTS (SELECT 1 FROM information_schema.TABLE_CONSTRAINTS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'Person' AND CONSTRAINT_TYPE = 'FOREIGN KEY' AND CONSTRAINT_NAME = 'FK_Person_Country') THEN 1 ELSE 0 END;", new MySqlSchemaComposer().ComposeForeignKeyExists("dbo.Person", "FK_Person_Country"));
+        }
+
+        [TestMethod]
+        public void TestMySqlSchemaComposerComposeForeignKeyExistsEscapesTheSingleQuotes()
+        {
+            // Act/Assert
+            StringAssert.Contains(new MySqlSchemaComposer().ComposeForeignKeyExists("dbo.Person", "FK_O'Brien"), "FK_O''Brien", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
         public void TestMySqlSchemaComposerComposeIndexNameExistsIsNotComposed()
         {
             // Act/Assert

@@ -1111,6 +1111,20 @@ namespace RepoDb.Schema.SapHana.UnitTests
         }
 
         [TestMethod]
+        public void TestSapHanaSchemaComposerComposeForeignKeyExists()
+        {
+            // Act/Assert
+            Assert.AreEqual("SELECT CASE WHEN EXISTS (SELECT 1 FROM SYS.REFERENTIAL_CONSTRAINTS WHERE SCHEMA_NAME = 'dbo' AND TABLE_NAME = 'Person' AND CONSTRAINT_NAME = 'FK_Person_Country') THEN 1 ELSE 0 END FROM DUMMY", new SapHanaSchemaComposer().ComposeForeignKeyExists("dbo.Person", "FK_Person_Country"));
+        }
+
+        [TestMethod]
+        public void TestSapHanaSchemaComposerComposeForeignKeyExistsEscapesTheSingleQuotes()
+        {
+            // Act/Assert
+            StringAssert.Contains(new SapHanaSchemaComposer().ComposeForeignKeyExists("dbo.Person", "FK_O'Brien"), "FK_O''Brien", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
         public void TestSapHanaSchemaComposerComposeIndexNameExists()
         {
             // Act/Assert
