@@ -636,13 +636,6 @@ namespace RepoDb.Schema.CockroachDb.UnitTests
         }
 
         [TestMethod]
-        public void TestCockroachDbSchemaComposerAreIndexNamesUniquePerSchema()
-        {
-            // Act/Assert
-            Assert.IsFalse(new CockroachDbSchemaComposer().AreIndexNamesUniquePerSchema);
-        }
-
-        [TestMethod]
         public void TestCockroachDbSchemaComposerComposeIndexNameExistsIsNotComposed()
         {
             // Act/Assert

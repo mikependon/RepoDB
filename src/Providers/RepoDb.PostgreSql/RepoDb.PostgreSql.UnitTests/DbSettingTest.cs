@@ -24,6 +24,16 @@ namespace RepoDb.PostgreSql.UnitTests
         }
 
         [TestMethod]
+        public void TestPostgreSqlDbSettingAreIndexNamesUniquePerSchemaProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<NpgsqlConnection>();
+
+            // Assert
+            Assert.IsTrue(setting.AreIndexNamesUniquePerSchema);
+        }
+
+        [TestMethod]
         public void TestPostgreSqlDbSettingAreTableHintsSupportedProperty()
         {
             // Setup

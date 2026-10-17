@@ -20,6 +20,7 @@ namespace RepoDb.DbSettings
         /// </summary>
         public AuroraDbDbSetting()
         {
+            AreIndexNamesUniquePerSchema = true;
             AreTableHintsSupported = false;
             ClosingQuote = "\"";
             DefaultSchema = "public";

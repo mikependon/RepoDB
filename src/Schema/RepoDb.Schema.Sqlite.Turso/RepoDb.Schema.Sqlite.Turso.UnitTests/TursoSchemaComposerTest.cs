@@ -1111,13 +1111,6 @@ namespace RepoDb.Schema.Sqlite.Turso.UnitTests
         }
 
         [TestMethod]
-        public void TestTursoSchemaComposerAreIndexNamesUniquePerSchema()
-        {
-            // Act/Assert
-            Assert.IsTrue(new TursoSchemaComposer().AreIndexNamesUniquePerSchema);
-        }
-
-        [TestMethod]
         public void TestTursoSchemaComposerComposeIndexNameExists()
         {
             // Act/Assert

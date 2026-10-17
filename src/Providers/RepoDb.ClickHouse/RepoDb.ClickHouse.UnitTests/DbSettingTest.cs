@@ -25,6 +25,16 @@ namespace RepoDb.ClickHouse.UnitTests
         }
 
         [TestMethod]
+        public void TestClickHouseDbSettingAreIndexNamesUniquePerSchemaProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<ClickHouseConnection>();
+
+            // Assert
+            Assert.IsFalse(setting.AreIndexNamesUniquePerSchema);
+        }
+
+        [TestMethod]
         public void TestClickHouseDbSettingAreTableHintsSupportedProperty()
         {
             // Setup

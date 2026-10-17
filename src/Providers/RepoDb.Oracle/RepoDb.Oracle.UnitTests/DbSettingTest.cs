@@ -24,6 +24,16 @@ namespace RepoDb.Oracle.UnitTests
         }
 
         [TestMethod]
+        public void TestOracleDbSettingAreIndexNamesUniquePerSchemaProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<OracleConnection>();
+
+            // Assert
+            Assert.IsTrue(setting.AreIndexNamesUniquePerSchema);
+        }
+
+        [TestMethod]
         public void TestOracleDbSettingAreTableHintsSupportedProperty()
         {
             // Setup

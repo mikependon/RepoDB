@@ -1079,13 +1079,6 @@ namespace RepoDb.Schema.DuckDb.UnitTests
         }
 
         [TestMethod]
-        public void TestDuckDbSchemaComposerAreIndexNamesUniquePerSchema()
-        {
-            // Act/Assert
-            Assert.IsTrue(new DuckDbSchemaComposer().AreIndexNamesUniquePerSchema);
-        }
-
-        [TestMethod]
         public void TestDuckDbSchemaComposerComposeIndexNameExists()
         {
             // Act/Assert

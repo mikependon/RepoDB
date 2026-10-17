@@ -26,6 +26,7 @@ namespace RepoDb.DbSettings
         /// </summary>
         public AhtolaDbSetting(bool isExecuteReaderDisposable)
         {
+            AreIndexNamesUniquePerSchema = true;
             AreTableHintsSupported = false;
             ClosingQuote = "]";
             DefaultSchema = null;

@@ -24,6 +24,16 @@ namespace RepoDb.MariaDb.UnitTests
         }
 
         [TestMethod]
+        public void TestMariaDbDbSettingAreIndexNamesUniquePerSchemaProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<MariaDbConnection>();
+
+            // Assert
+            Assert.IsFalse(setting.AreIndexNamesUniquePerSchema);
+        }
+
+        [TestMethod]
         public void TestMariaDbDbSettingAreTableHintsSupportedProperty()
         {
             // Setup

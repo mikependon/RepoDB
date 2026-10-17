@@ -24,6 +24,16 @@ namespace RepoDb.CockroachDb.UnitTests
         }
 
         [TestMethod]
+        public void TestCockroachDbDbSettingAreIndexNamesUniquePerSchemaProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<CockroachDbConnection>();
+
+            // Assert
+            Assert.IsFalse(setting.AreIndexNamesUniquePerSchema);
+        }
+
+        [TestMethod]
         public void TestCockroachDbDbSettingAreTableHintsSupportedProperty()
         {
             // Setup

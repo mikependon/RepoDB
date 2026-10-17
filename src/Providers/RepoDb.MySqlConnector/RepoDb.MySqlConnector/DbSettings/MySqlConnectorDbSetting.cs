@@ -21,6 +21,7 @@ namespace RepoDb.DbSettings
         /// </summary>
         public MySqlConnectorDbSetting()
         {
+            AreIndexNamesUniquePerSchema = false;
             AreTableHintsSupported = false;
             ClosingQuote = "`";
             DefaultSchema = null;

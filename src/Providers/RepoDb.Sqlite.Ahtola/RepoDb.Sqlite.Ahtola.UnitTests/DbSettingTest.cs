@@ -27,6 +27,16 @@ namespace RepoDb.Ahtola.UnitTests
         #region MDS
 
         [TestMethod]
+        public void TestMdsAhtolaDbSettingAreIndexNamesUniquePerSchemaProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<SqliteConnection>();
+
+            // Assert
+            Assert.IsTrue(setting.AreIndexNamesUniquePerSchema);
+        }
+
+        [TestMethod]
         public void TestMdsAhtolaDbSettingAreTableHintsSupportedProperty()
         {
             // Setup

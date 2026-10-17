@@ -25,6 +25,16 @@ namespace RepoDb.Db2.UnitTests
         }
 
         [TestMethod]
+        public void TestDb2DbSettingAreIndexNamesUniquePerSchemaProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<DB2Connection>();
+
+            // Assert
+            Assert.IsTrue(setting.AreIndexNamesUniquePerSchema);
+        }
+
+        [TestMethod]
         public void TestDb2DbSettingAreTableHintsSupportedProperty()
         {
             // Setup

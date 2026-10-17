@@ -34,11 +34,6 @@ namespace RepoDb.Schema
         #region Public Methods
 
         /// <summary>
-        /// Gets a value that indicates whether the name of an index must be unique in the whole schema (or database), instead of only in its table.
-        /// </summary>
-        public bool AreIndexNamesUniquePerSchema => true;
-
-        /// <summary>
         /// Composes the whole script that creates the table, its indexes and its foreign keys, as an ordered list of statements.
         /// </summary>
         /// <param name="schema">The schema of the table.</param>
@@ -248,10 +243,15 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="tableName">The name of the table that the index is going to be created in.</param>
         /// <param name="indexName">The name of the index.</param>
-        /// <returns>The SQL statement, that returns <c>1</c> if the name is used, and <c>0</c> if not.</returns>
+        /// <returns>The SQL statement, that returns <c>1</c> if the name is used, and <c>0</c> if not (<c>null</c> if the setting of the provider says that the names of the indexes are only unique in their table).</returns>
         public string ComposeIndexNameExists(string tableName,
             string indexName)
         {
+            if (!SapHanaSchemaHelper.AreIndexNamesUniquePerSchema)
+            {
+                return null;
+            }
+
             var (schema, _) = SapHanaSchemaHelper.ParseSchemaAndTable(tableName);
             return $"SELECT CASE WHEN EXISTS (SELECT 1 FROM SYS.INDEXES WHERE SCHEMA_NAME = {Owner(schema)} AND INDEX_NAME = '{Literal(indexName)}') THEN 1 ELSE 0 END FROM DUMMY";
         }

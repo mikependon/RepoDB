@@ -1096,13 +1096,6 @@ namespace RepoDb.Schema.MariaDb.UnitTests
         }
 
         [TestMethod]
-        public void TestMariaDbSchemaComposerAreIndexNamesUniquePerSchema()
-        {
-            // Act/Assert
-            Assert.IsFalse(new MariaDbSchemaComposer().AreIndexNamesUniquePerSchema);
-        }
-
-        [TestMethod]
         public void TestMariaDbSchemaComposerComposeIndexNameExistsIsNotComposed()
         {
             // Act/Assert

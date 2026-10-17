@@ -20,6 +20,7 @@ namespace RepoDb.DbSettings
         /// </summary>
         public DuckDbDbSetting()
         {
+            AreIndexNamesUniquePerSchema = true;
             AreTableHintsSupported = false;
             ClosingQuote = "\"";
             DefaultSchema = "main";

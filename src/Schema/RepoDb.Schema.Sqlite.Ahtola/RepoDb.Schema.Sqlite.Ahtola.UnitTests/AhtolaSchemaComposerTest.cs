@@ -1111,13 +1111,6 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
         }
 
         [TestMethod]
-        public void TestAhtolaSchemaComposerAreIndexNamesUniquePerSchema()
-        {
-            // Act/Assert
-            Assert.IsTrue(new AhtolaSchemaComposer().AreIndexNamesUniquePerSchema);
-        }
-
-        [TestMethod]
         public void TestAhtolaSchemaComposerComposeIndexNameExists()
         {
             // Act/Assert

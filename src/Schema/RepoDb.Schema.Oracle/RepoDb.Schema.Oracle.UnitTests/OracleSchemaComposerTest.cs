@@ -1096,13 +1096,6 @@ namespace RepoDb.Schema.Oracle.UnitTests
         }
 
         [TestMethod]
-        public void TestOracleSchemaComposerAreIndexNamesUniquePerSchema()
-        {
-            // Act/Assert
-            Assert.IsTrue(new OracleSchemaComposer().AreIndexNamesUniquePerSchema);
-        }
-
-        [TestMethod]
         public void TestOracleSchemaComposerComposeIndexNameExists()
         {
             // Act/Assert

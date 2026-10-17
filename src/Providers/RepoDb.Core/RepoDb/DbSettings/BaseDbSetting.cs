@@ -24,6 +24,7 @@ namespace RepoDb.DbSettings
 
         protected BaseDbSetting()
         {
+            AreIndexNamesUniquePerSchema = false;
             AreTableHintsSupported = true;
             ClosingQuote = "]";
             DefaultSchema = "dbo";
@@ -47,6 +48,12 @@ namespace RepoDb.DbSettings
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Gets a value that indicates whether the name of an index must be unique in the whole schema (or database) of the current DB Provider, instead of only in its table
+        /// (i.e.: the indexes of two tables can not have the same name in PostgreSQL, Oracle or Firebird, but they can in SQL Server or MySQL).
+        /// </summary>
+        public bool AreIndexNamesUniquePerSchema { get; protected set; }
 
         /// <summary>
         /// Gets the value that indicates whether the table hints are supported.
@@ -181,6 +188,9 @@ namespace RepoDb.DbSettings
             {
                 return hashCode.Value;
             }
+
+            // AreIndexNamesUniquePerSchema
+            hashCode = HashCode.Combine(hashCode, AreIndexNamesUniquePerSchema);
 
             // AreTableHintsSupported
             hashCode = HashCode.Combine(hashCode, AreTableHintsSupported);

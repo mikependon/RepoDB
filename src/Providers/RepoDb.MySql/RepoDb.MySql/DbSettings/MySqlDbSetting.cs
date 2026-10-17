@@ -20,6 +20,7 @@ namespace RepoDb.DbSettings
         /// </summary>
         public MySqlDbSetting()
         {
+            AreIndexNamesUniquePerSchema = false;
             AreTableHintsSupported = false;
             ClosingQuote = "`";
             DefaultSchema = null;

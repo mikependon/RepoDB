@@ -17,7 +17,7 @@ namespace RepoDb.Schema
 {
     /// <summary>
     /// A class that resolves the names of the indexes that are going to be created in a destination database where the name of an index must be unique in the whole schema
-    /// (or database), see <see cref="ISchemaComposer.AreIndexNamesUniquePerSchema"/>. The source database may allow the same name for the indexes of different tables
+    /// (or database), see <see cref="RepoDb.Interfaces.IDbSetting.AreIndexNamesUniquePerSchema"/>. The source database may allow the same name for the indexes of different tables
     /// (i.e.: <c>PostalCode</c> in <c>Customers</c> and <c>Employees</c> of SQL Server): the index whose name is already used is created with the name of its table as a prefix
     /// (i.e.: <c>Employees_PostalCode</c>), so it is not lost.
     /// </summary>
@@ -40,13 +40,15 @@ namespace RepoDb.Schema
         /// <param name="tables">The state of the tables (see <see cref="CopySchemaTable"/>), after their existence was probed.</param>
         /// <param name="behavior">Defines what happens to the tables that already exist in the destination database.</param>
         /// <param name="composer">The composer of the destination database.</param>
+        /// <param name="areIndexNamesUniquePerSchema">Whether the name of an index must be unique in the whole schema (or database) of the destination database (see <see cref="RepoDb.Interfaces.IDbSetting.AreIndexNamesUniquePerSchema"/>).</param>
         /// <param name="probe">Executes an existence statement (<c>null</c> if the statement is not composed, or its result is not known).</param>
         public static void Resolve(IEnumerable<CopySchemaTable> tables,
             CopySchemaExistsBehavior behavior,
             ISchemaComposer composer,
+            bool areIndexNamesUniquePerSchema,
             Func<string, bool?> probe)
         {
-            if (!composer.AreIndexNamesUniquePerSchema)
+            if (!areIndexNamesUniquePerSchema)
             {
                 return;
             }
@@ -74,13 +76,15 @@ namespace RepoDb.Schema
         /// <param name="tables">The state of the tables (see <see cref="CopySchemaTable"/>), after their existence was probed.</param>
         /// <param name="behavior">Defines what happens to the tables that already exist in the destination database.</param>
         /// <param name="composer">The composer of the destination database.</param>
+        /// <param name="areIndexNamesUniquePerSchema">Whether the name of an index must be unique in the whole schema (or database) of the destination database (see <see cref="RepoDb.Interfaces.IDbSetting.AreIndexNamesUniquePerSchema"/>).</param>
         /// <param name="probe">Executes an existence statement (<c>null</c> if the statement is not composed, or its result is not known).</param>
         public static async Task ResolveAsync(IEnumerable<CopySchemaTable> tables,
             CopySchemaExistsBehavior behavior,
             ISchemaComposer composer,
+            bool areIndexNamesUniquePerSchema,
             Func<string, Task<bool?>> probe)
         {
-            if (!composer.AreIndexNamesUniquePerSchema)
+            if (!areIndexNamesUniquePerSchema)
             {
                 return;
             }

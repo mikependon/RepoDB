@@ -17,6 +17,12 @@ namespace RepoDb.Interfaces
     public interface IDbSetting
     {
         /// <summary>
+        /// Gets a value that indicates whether the name of an index must be unique in the whole schema (or database) of the current DB Provider, instead of only in its table
+        /// (i.e.: the indexes of two tables can not have the same name in PostgreSQL, Oracle or Firebird, but they can in SQL Server or MySQL).
+        /// </summary>
+        bool AreIndexNamesUniquePerSchema { get; }
+
+        /// <summary>
         /// Gets the value that indicates whether the table hints are supported.
         /// </summary>
         bool AreTableHintsSupported { get; }

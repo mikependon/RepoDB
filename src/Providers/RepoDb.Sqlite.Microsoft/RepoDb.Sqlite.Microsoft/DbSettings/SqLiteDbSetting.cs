@@ -26,6 +26,7 @@ namespace RepoDb.DbSettings
         /// </summary>
         public SqLiteDbSetting(bool isExecuteReaderDisposable)
         {
+            AreIndexNamesUniquePerSchema = true;
             AreTableHintsSupported = false;
             ClosingQuote = "]";
             DefaultSchema = null;

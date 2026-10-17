@@ -33,6 +33,13 @@ namespace RepoDb.Schema
             DbSettingMapper.Get<ClickHouseConnection>() ?? new ClickHouseDbSetting();
 
         /// <summary>
+        /// Gets a value that indicates whether the name of an index must be unique in the whole schema (or database), instead of only in its table
+        /// (see <see cref="IDbSetting.AreIndexNamesUniquePerSchema"/> of the setting of the provider).
+        /// </summary>
+        internal static bool AreIndexNamesUniquePerSchema =>
+            Setting.AreIndexNamesUniquePerSchema;
+
+        /// <summary>
         /// Gets the default schema of the setting, which owns the tables whose names have no schema.
         /// </summary>
         public static string DefaultSchema =>

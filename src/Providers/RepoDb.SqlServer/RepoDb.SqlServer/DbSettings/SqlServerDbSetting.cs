@@ -20,6 +20,7 @@ namespace RepoDb.DbSettings
         /// </summary>
         public SqlServerDbSetting()
         {
+            AreIndexNamesUniquePerSchema = false;
             AreTableHintsSupported = true;
             ClosingQuote = "]";
             DefaultSchema = "dbo";

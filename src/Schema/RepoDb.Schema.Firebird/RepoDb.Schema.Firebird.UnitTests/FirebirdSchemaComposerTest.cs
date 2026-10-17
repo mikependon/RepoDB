@@ -1125,13 +1125,6 @@ namespace RepoDb.Schema.Firebird.UnitTests
         }
 
         [TestMethod]
-        public void TestFirebirdSchemaComposerAreIndexNamesUniquePerSchema()
-        {
-            // Act/Assert
-            Assert.IsTrue(new FirebirdSchemaComposer().AreIndexNamesUniquePerSchema);
-        }
-
-        [TestMethod]
         public void TestFirebirdSchemaComposerComposeIndexNameExists()
         {
             // Act/Assert

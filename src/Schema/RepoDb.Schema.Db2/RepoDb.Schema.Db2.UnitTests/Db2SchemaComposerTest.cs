@@ -1114,13 +1114,6 @@ namespace RepoDb.Schema.Db2.UnitTests
         }
 
         [TestMethod]
-        public void TestDb2SchemaComposerAreIndexNamesUniquePerSchema()
-        {
-            // Act/Assert
-            Assert.IsTrue(new Db2SchemaComposer().AreIndexNamesUniquePerSchema);
-        }
-
-        [TestMethod]
         public void TestDb2SchemaComposerComposeIndexNameExists()
         {
             // Act/Assert

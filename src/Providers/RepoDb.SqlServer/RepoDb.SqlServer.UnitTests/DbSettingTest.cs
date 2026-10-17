@@ -23,6 +23,16 @@ namespace RepoDb.SqlServer.UnitTests
         }
 
         [TestMethod]
+        public void TestSqlServerDbSettingAreIndexNamesUniquePerSchemaProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<SqlConnection>();
+
+            // Assert
+            Assert.IsFalse(setting.AreIndexNamesUniquePerSchema);
+        }
+
+        [TestMethod]
         public void TestSqlServerDbSettingAreTableHintsSupportedProperty()
         {
             // Setup

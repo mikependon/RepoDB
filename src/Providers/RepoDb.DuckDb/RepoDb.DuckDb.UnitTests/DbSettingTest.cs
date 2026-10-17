@@ -24,6 +24,16 @@ namespace RepoDb.DuckDb.UnitTests
         }
 
         [TestMethod]
+        public void TestDuckDbDbSettingAreIndexNamesUniquePerSchemaProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<DuckDBConnection>();
+
+            // Assert
+            Assert.IsTrue(setting.AreIndexNamesUniquePerSchema);
+        }
+
+        [TestMethod]
         public void TestDuckDbDbSettingAreTableHintsSupportedProperty()
         {
             // Setup

@@ -17,10 +17,13 @@ namespace RepoDb.Schema.Core.UnitTests.CustomObjects
         /// Maps the setting of the <see cref="CustomDbConnection"/>, with the given default schema (<c>null</c> if the database has no default schema).
         /// </summary>
         /// <param name="defaultSchema">The default schema.</param>
-        public static void Map(string defaultSchema)
+        /// <param name="areIndexNamesUniquePerSchema">Whether the name of an index must be unique in the whole schema (or database) of the database.</param>
+        public static void Map(string defaultSchema,
+            bool areIndexNamesUniquePerSchema = false)
         {
             var setting = new Mock<IDbSetting>();
             setting.SetupGet(s => s.DefaultSchema).Returns(defaultSchema);
+            setting.SetupGet(s => s.AreIndexNamesUniquePerSchema).Returns(areIndexNamesUniquePerSchema);
             DbSettingMapper.Add<CustomDbConnection>(setting.Object, true);
         }
     }

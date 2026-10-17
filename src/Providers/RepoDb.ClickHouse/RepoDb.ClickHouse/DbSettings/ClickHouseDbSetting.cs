@@ -20,6 +20,7 @@ namespace RepoDb.DbSettings
         /// </summary>
         public ClickHouseDbSetting()
         {
+            AreIndexNamesUniquePerSchema = false;
             AreTableHintsSupported = false;
             ClosingQuote = "`";
             DefaultSchema = null;

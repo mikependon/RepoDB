@@ -33,11 +33,6 @@ namespace RepoDb.Schema
         #region Public Methods
 
         /// <summary>
-        /// Gets a value that indicates whether the name of an index must be unique in the whole schema (or database), instead of only in its table.
-        /// </summary>
-        public bool AreIndexNamesUniquePerSchema => false;
-
-        /// <summary>
         /// Composes the whole script that creates the table and its foreign keys, as an ordered list of statements.
         /// </summary>
         /// <param name="schema">The schema of the table.</param>

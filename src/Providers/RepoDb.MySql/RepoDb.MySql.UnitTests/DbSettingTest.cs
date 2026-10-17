@@ -24,6 +24,16 @@ namespace RepoDb.MySql.UnitTests
         }
 
         [TestMethod]
+        public void TestMySqlDbSettingAreIndexNamesUniquePerSchemaProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<MySqlConnection>();
+
+            // Assert
+            Assert.IsFalse(setting.AreIndexNamesUniquePerSchema);
+        }
+
+        [TestMethod]
         public void TestMySqlDbSettingAreTableHintsSupportedProperty()
         {
             // Setup

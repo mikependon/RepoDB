@@ -20,6 +20,7 @@ namespace RepoDb.DbSettings
         /// </summary>
         public FirebirdDbSetting()
         {
+            AreIndexNamesUniquePerSchema = true;
             AreTableHintsSupported = false;
             ClosingQuote = "\"";
             DefaultSchema = null;

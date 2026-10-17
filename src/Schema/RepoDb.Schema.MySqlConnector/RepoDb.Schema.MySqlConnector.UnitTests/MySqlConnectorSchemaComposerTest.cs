@@ -1096,13 +1096,6 @@ namespace RepoDb.Schema.MySqlConnector.UnitTests
         }
 
         [TestMethod]
-        public void TestMySqlConnectorSchemaComposerAreIndexNamesUniquePerSchema()
-        {
-            // Act/Assert
-            Assert.IsFalse(new MySqlConnectorSchemaComposer().AreIndexNamesUniquePerSchema);
-        }
-
-        [TestMethod]
         public void TestMySqlConnectorSchemaComposerComposeIndexNameExistsIsNotComposed()
         {
             // Act/Assert

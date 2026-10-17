@@ -1096,13 +1096,6 @@ namespace RepoDb.Schema.MariaDbConnector.UnitTests
         }
 
         [TestMethod]
-        public void TestMariaDbConnectorSchemaComposerAreIndexNamesUniquePerSchema()
-        {
-            // Act/Assert
-            Assert.IsFalse(new MariaDbConnectorSchemaComposer().AreIndexNamesUniquePerSchema);
-        }
-
-        [TestMethod]
         public void TestMariaDbConnectorSchemaComposerComposeIndexNameExistsIsNotComposed()
         {
             // Act/Assert

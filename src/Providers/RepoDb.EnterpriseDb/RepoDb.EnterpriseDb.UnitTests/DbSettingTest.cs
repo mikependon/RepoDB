@@ -24,6 +24,16 @@ namespace RepoDb.EnterpriseDb.UnitTests
         }
 
         [TestMethod]
+        public void TestEnterpriseDbDbSettingAreIndexNamesUniquePerSchemaProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<EDBConnection>();
+
+            // Assert
+            Assert.IsTrue(setting.AreIndexNamesUniquePerSchema);
+        }
+
+        [TestMethod]
         public void TestEnterpriseDbDbSettingAreTableHintsSupportedProperty()
         {
             // Setup

@@ -24,6 +24,16 @@ namespace RepoDb.AuroraDb.PostgreSql.UnitTests
         }
 
         [TestMethod]
+        public void TestAuroraDbDbSettingAreIndexNamesUniquePerSchemaProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<AuroraDbConnection>();
+
+            // Assert
+            Assert.IsTrue(setting.AreIndexNamesUniquePerSchema);
+        }
+
+        [TestMethod]
         public void TestAuroraDbDbSettingAreTableHintsSupportedProperty()
         {
             // Setup

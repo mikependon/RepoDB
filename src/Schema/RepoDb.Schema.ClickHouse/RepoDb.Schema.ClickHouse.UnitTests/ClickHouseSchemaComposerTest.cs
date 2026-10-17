@@ -355,13 +355,6 @@ namespace RepoDb.Schema.ClickHouse.UnitTests
         }
 
         [TestMethod]
-        public void TestClickHouseSchemaComposerAreIndexNamesUniquePerSchema()
-        {
-            // Act/Assert
-            Assert.IsFalse(new ClickHouseSchemaComposer().AreIndexNamesUniquePerSchema);
-        }
-
-        [TestMethod]
         public void TestClickHouseSchemaComposerComposeIndexNameExistsIsNotComposed()
         {
             // Act/Assert

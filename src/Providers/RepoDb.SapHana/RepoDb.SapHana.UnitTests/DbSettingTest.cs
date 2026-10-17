@@ -23,6 +23,16 @@ namespace RepoDb.SapHana.UnitTests
         }
 
         [TestMethod]
+        public void TestSapHanaDbSettingAreIndexNamesUniquePerSchemaProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<HanaConnection>();
+
+            // Assert
+            Assert.IsTrue(setting.AreIndexNamesUniquePerSchema);
+        }
+
+        [TestMethod]
         public void TestSapHanaDbSettingAreTableHintsSupportedProperty()
         {
             // Setup

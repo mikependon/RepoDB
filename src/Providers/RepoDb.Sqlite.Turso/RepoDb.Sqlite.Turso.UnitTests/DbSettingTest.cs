@@ -27,6 +27,16 @@ namespace RepoDb.Turso.UnitTests
         #region MDS
 
         [TestMethod]
+        public void TestMdsTursoDbSettingAreIndexNamesUniquePerSchemaProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<SqliteConnection>();
+
+            // Assert
+            Assert.IsTrue(setting.AreIndexNamesUniquePerSchema);
+        }
+
+        [TestMethod]
         public void TestMdsTursoDbSettingAreTableHintsSupportedProperty()
         {
             // Setup

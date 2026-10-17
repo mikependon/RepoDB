@@ -1111,13 +1111,6 @@ namespace RepoDb.Schema.SapHana.UnitTests
         }
 
         [TestMethod]
-        public void TestSapHanaSchemaComposerAreIndexNamesUniquePerSchema()
-        {
-            // Act/Assert
-            Assert.IsTrue(new SapHanaSchemaComposer().AreIndexNamesUniquePerSchema);
-        }
-
-        [TestMethod]
         public void TestSapHanaSchemaComposerComposeIndexNameExists()
         {
             // Act/Assert

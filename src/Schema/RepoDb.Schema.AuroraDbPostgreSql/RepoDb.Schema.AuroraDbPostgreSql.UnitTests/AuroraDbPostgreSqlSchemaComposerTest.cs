@@ -634,13 +634,6 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.UnitTests
         }
 
         [TestMethod]
-        public void TestAuroraDbPostgreSqlSchemaComposerAreIndexNamesUniquePerSchema()
-        {
-            // Act/Assert
-            Assert.IsTrue(new AuroraDbPostgreSqlSchemaComposer().AreIndexNamesUniquePerSchema);
-        }
-
-        [TestMethod]
         public void TestAuroraDbPostgreSqlSchemaComposerComposeIndexNameExists()
         {
             // Act/Assert

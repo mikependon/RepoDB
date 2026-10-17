@@ -22,6 +22,7 @@ namespace RepoDb.DbSettings
         /// </summary>
         public PostgreSqlDbSetting()
         {
+            AreIndexNamesUniquePerSchema = true;
             AreTableHintsSupported = false;
             ClosingQuote = "\"";
             DefaultSchema = "public";

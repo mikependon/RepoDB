@@ -26,6 +26,16 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
         #region MDS
 
         [TestMethod]
+        public void TestMdsSqLiteDbSettingAreIndexNamesUniquePerSchemaProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<SqliteConnection>();
+
+            // Assert
+            Assert.IsTrue(setting.AreIndexNamesUniquePerSchema);
+        }
+
+        [TestMethod]
         public void TestMdsSqLiteDbSettingAreTableHintsSupportedProperty()
         {
             // Setup

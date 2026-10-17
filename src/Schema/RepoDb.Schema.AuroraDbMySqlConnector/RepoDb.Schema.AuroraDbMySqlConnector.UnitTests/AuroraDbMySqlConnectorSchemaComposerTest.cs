@@ -1096,13 +1096,6 @@ namespace RepoDb.Schema.AuroraDbMySqlConnector.UnitTests
         }
 
         [TestMethod]
-        public void TestAuroraDbMySqlConnectorSchemaComposerAreIndexNamesUniquePerSchema()
-        {
-            // Act/Assert
-            Assert.IsFalse(new AuroraDbMySqlConnectorSchemaComposer().AreIndexNamesUniquePerSchema);
-        }
-
-        [TestMethod]
         public void TestAuroraDbMySqlConnectorSchemaComposerComposeIndexNameExistsIsNotComposed()
         {
             // Act/Assert

@@ -1111,13 +1111,6 @@ namespace RepoDb.Schema.Sqlite.Microsoft.UnitTests
         }
 
         [TestMethod]
-        public void TestSqliteSchemaComposerAreIndexNamesUniquePerSchema()
-        {
-            // Act/Assert
-            Assert.IsTrue(new SqliteSchemaComposer().AreIndexNamesUniquePerSchema);
-        }
-
-        [TestMethod]
         public void TestSqliteSchemaComposerComposeIndexNameExists()
         {
             // Act/Assert

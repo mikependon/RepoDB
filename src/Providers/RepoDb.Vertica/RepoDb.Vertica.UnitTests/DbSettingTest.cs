@@ -23,6 +23,16 @@ namespace RepoDb.Vertica.UnitTests
         }
 
         [TestMethod]
+        public void TestVerticaDbSettingAreIndexNamesUniquePerSchemaProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<VerticaConnection>();
+
+            // Assert
+            Assert.IsFalse(setting.AreIndexNamesUniquePerSchema);
+        }
+
+        [TestMethod]
         public void TestVerticaDbSettingAreTableHintsSupportedProperty()
         {
             // Setup

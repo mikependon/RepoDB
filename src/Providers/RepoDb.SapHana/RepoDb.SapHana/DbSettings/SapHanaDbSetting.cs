@@ -20,6 +20,7 @@ namespace RepoDb.DbSettings
         /// </summary>
         public SapHanaDbSetting()
         {
+            AreIndexNamesUniquePerSchema = true;
             AreTableHintsSupported = false;
             ClosingQuote = "\"";
             DefaultSchema = null;

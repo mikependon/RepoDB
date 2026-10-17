@@ -18,6 +18,7 @@ namespace RepoDb.DbSettings
         /// </summary>
         public Db2DbSetting()
         {
+            AreIndexNamesUniquePerSchema = true;
             AreTableHintsSupported = false;
             ClosingQuote = "\"";
             DefaultSchema = null;

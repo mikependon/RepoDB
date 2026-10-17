@@ -20,6 +20,7 @@ namespace RepoDb.DbSettings
         /// </summary>
         public CockroachDbDbSetting()
         {
+            AreIndexNamesUniquePerSchema = false;
             AreTableHintsSupported = false;
             ClosingQuote = "\"";
             DefaultSchema = "public";

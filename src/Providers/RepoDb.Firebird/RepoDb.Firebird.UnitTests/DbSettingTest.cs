@@ -24,6 +24,16 @@ namespace RepoDb.Firebird.UnitTests
         }
 
         [TestMethod]
+        public void TestFirebirdDbSettingAreIndexNamesUniquePerSchemaProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<FbConnection>();
+
+            // Assert
+            Assert.IsTrue(setting.AreIndexNamesUniquePerSchema);
+        }
+
+        [TestMethod]
         public void TestFirebirdDbSettingAreTableHintsSupportedProperty()
         {
             // Setup

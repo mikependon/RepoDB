@@ -18,6 +18,7 @@ namespace RepoDb.DbSettings
         /// </summary>
         public OracleDbSetting()
         {
+            AreIndexNamesUniquePerSchema = true;
             AreTableHintsSupported = false;
             ClosingQuote = "\"";
             DefaultSchema = null;

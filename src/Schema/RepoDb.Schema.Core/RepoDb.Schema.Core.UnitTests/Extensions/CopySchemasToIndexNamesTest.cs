@@ -67,7 +67,6 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         private static void MapComposer(bool areIndexNamesUniquePerSchema)
         {
             var composer = new Mock<ISchemaComposer>();
-            composer.Setup(c => c.AreIndexNamesUniquePerSchema).Returns(areIndexNamesUniquePerSchema);
             composer.Setup(c => c.ComposeName(It.IsAny<TableInfo>())).Returns<TableInfo>(t => t.Name);
             composer.Setup(c => c.ComposeSchemas(It.IsAny<IEnumerable<TableSchema>>())).Returns<IEnumerable<TableSchema>>(Script);
             composer.Setup(c => c.ComposeSchema(It.IsAny<TableSchema>())).Returns<TableSchema>(s => Script(new[] { s }));
@@ -78,6 +77,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             composer.Setup(c => c.ComposeIndexExists(It.IsAny<string>(), It.IsAny<string>())).Returns<string, string>((n, i) => $"INDEX_EXISTS {n}.{i}");
             composer.Setup(c => c.ComposeIndexNameExists(It.IsAny<string>(), It.IsAny<string>())).Returns<string, string>((n, i) => $"INDEX_NAME_EXISTS {i}");
             SchemaComposerMapper.Add<CustomDbConnection>(composer.Object, true);
+            CustomDbSetting.Map(null, areIndexNamesUniquePerSchema);
         }
 
         private static CustomDbConnection GetDestination(params string[] existing) =>

@@ -24,6 +24,16 @@ namespace RepoDb.AuroraDb.MySqlConnector.UnitTests
         }
 
         [TestMethod]
+        public void TestAuroraDbDbSettingAreIndexNamesUniquePerSchemaProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<AuroraDbConnection>();
+
+            // Assert
+            Assert.IsFalse(setting.AreIndexNamesUniquePerSchema);
+        }
+
+        [TestMethod]
         public void TestAuroraDbDbSettingAreTableHintsSupportedProperty()
         {
             // Setup
