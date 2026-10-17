@@ -634,6 +634,27 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.UnitTests
         }
 
         [TestMethod]
+        public void TestAuroraDbPostgreSqlSchemaComposerAreIndexNamesUniquePerSchema()
+        {
+            // Act/Assert
+            Assert.IsTrue(new AuroraDbPostgreSqlSchemaComposer().AreIndexNamesUniquePerSchema);
+        }
+
+        [TestMethod]
+        public void TestAuroraDbPostgreSqlSchemaComposerComposeIndexNameExists()
+        {
+            // Act/Assert
+            Assert.AreEqual("SELECT CASE WHEN EXISTS (SELECT 1 FROM pg_class ic INNER JOIN pg_namespace n ON n.oid = ic.relnamespace WHERE ic.relkind = 'i' AND ic.relname = 'IX_Person_Name' AND n.nspname = 'public') THEN 1 ELSE 0 END;", new AuroraDbPostgreSqlSchemaComposer().ComposeIndexNameExists("public.Person", "IX_Person_Name"));
+        }
+
+        [TestMethod]
+        public void TestAuroraDbPostgreSqlSchemaComposerComposeIndexNameExistsEscapesTheSingleQuotes()
+        {
+            // Act/Assert
+            StringAssert.Contains(new AuroraDbPostgreSqlSchemaComposer().ComposeIndexNameExists("public.Person", "IX_O'Brien"), "IX_O''Brien", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
         public void TestAuroraDbPostgreSqlSchemaComposerComposeExistsEscapesTheSingleQuotes()
         {
             // Act

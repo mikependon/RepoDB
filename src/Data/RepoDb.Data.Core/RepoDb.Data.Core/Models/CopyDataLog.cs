@@ -40,11 +40,15 @@ namespace RepoDb.Data.Models
 
         #endregion
 
+        #region Public Methods
+
         /// <summary>
         /// Returns the string representation of the log.
         /// </summary>
         /// <returns>The string representation of this object.</returns>
         public override string ToString() =>
             $"{Timestamp:O} [{Level}] {DatabaseType?.Name}: {Text}";
+
+        #endregion
     }
 }

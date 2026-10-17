@@ -1079,6 +1079,27 @@ namespace RepoDb.Schema.DuckDb.UnitTests
         }
 
         [TestMethod]
+        public void TestDuckDbSchemaComposerAreIndexNamesUniquePerSchema()
+        {
+            // Act/Assert
+            Assert.IsTrue(new DuckDbSchemaComposer().AreIndexNamesUniquePerSchema);
+        }
+
+        [TestMethod]
+        public void TestDuckDbSchemaComposerComposeIndexNameExists()
+        {
+            // Act/Assert
+            Assert.AreEqual("SELECT CASE WHEN EXISTS (SELECT 1 FROM duckdb_indexes() WHERE database_name = current_database() AND schema_name = 'dbo' AND index_name = 'IX_Person_Name') THEN 1 ELSE 0 END", new DuckDbSchemaComposer().ComposeIndexNameExists("dbo.Person", "IX_Person_Name"));
+        }
+
+        [TestMethod]
+        public void TestDuckDbSchemaComposerComposeIndexNameExistsEscapesTheSingleQuotes()
+        {
+            // Act/Assert
+            StringAssert.Contains(new DuckDbSchemaComposer().ComposeIndexNameExists("dbo.Person", "IX_O'Brien"), "IX_O''Brien", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
         public void TestDuckDbSchemaComposerComposeExistsEscapesTheSingleQuotes()
         {
             // Act

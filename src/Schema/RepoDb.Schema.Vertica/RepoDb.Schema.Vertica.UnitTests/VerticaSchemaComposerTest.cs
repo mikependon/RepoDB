@@ -953,6 +953,20 @@ namespace RepoDb.Schema.Vertica.UnitTests
         }
 
         [TestMethod]
+        public void TestVerticaSchemaComposerAreIndexNamesUniquePerSchema()
+        {
+            // Act/Assert
+            Assert.IsFalse(new VerticaSchemaComposer().AreIndexNamesUniquePerSchema);
+        }
+
+        [TestMethod]
+        public void TestVerticaSchemaComposerComposeIndexNameExistsIsNotComposed()
+        {
+            // Act/Assert
+            Assert.IsNull(new VerticaSchemaComposer().ComposeIndexNameExists("Person", "IX_Person_Name"));
+        }
+
+        [TestMethod]
         public void TestVerticaSchemaComposerComposeExistsEscapesTheSingleQuotes()
         {
             // Act

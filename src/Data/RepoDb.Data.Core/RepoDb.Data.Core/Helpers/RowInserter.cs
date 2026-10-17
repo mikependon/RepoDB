@@ -24,9 +24,18 @@ namespace RepoDb.Data.Helpers
     /// </summary>
     internal static class RowInserter
     {
+        #region Public Methods
+
         /// <summary>
         /// Inserts the rows (the dictionaries of the column names and the values) into the table.
         /// </summary>
+        /// <param name="connection">The destination connection.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="rows">The rows to be inserted: the dictionaries of the column names and the values.</param>
+        /// <param name="commandTimeout">The command timeout, in seconds.</param>
+        /// <param name="traceKey">The trace key of the operation.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="transaction">The transaction of the destination connection. The rows are inserted in a transaction of their own if it is <c>null</c>.</param>
         /// <returns>The number of inserted rows.</returns>
         public static int Insert(IDbConnection connection,
             string tableName,
@@ -70,7 +79,15 @@ namespace RepoDb.Data.Helpers
         /// <summary>
         /// Inserts the rows (the dictionaries of the column names and the values) into the table in an asynchronous way.
         /// </summary>
-        /// <returns>The number of inserted rows.</returns>
+        /// <param name="connection">The destination connection.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="rows">The rows to be inserted: the dictionaries of the column names and the values.</param>
+        /// <param name="commandTimeout">The command timeout, in seconds.</param>
+        /// <param name="traceKey">The trace key of the operation.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="transaction">The transaction of the destination connection. The rows are inserted in a transaction of their own if it is <c>null</c>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains: the number of inserted rows.</returns>
         public static async Task<int> InsertAsync(IDbConnection connection,
             string tableName,
             IList<object> rows,
@@ -113,6 +130,19 @@ namespace RepoDb.Data.Helpers
             }
         }
 
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Composes the <c>INSERT</c> statement for the columns that both the first row and the target table have.
+        /// </summary>
+        /// <param name="connection">The destination connection.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="rows">The rows to be inserted (the first row defines the columns).</param>
+        /// <param name="transaction">The transaction of the destination connection.</param>
+        /// <returns>The statement, and the columns of the statement with the name of their parameter.</returns>
+        /// <exception cref="InvalidOperationException">No column of the rows matches a column of the target table.</exception>
         private static (string CommandText, List<(string Column, string Parameter)> Columns) Compose(IDbConnection connection,
             string tableName,
             IList<object> rows,
@@ -137,6 +167,15 @@ namespace RepoDb.Data.Helpers
             return (commandText, columns);
         }
 
+        /// <summary>
+        /// Creates the command (with the parameters) that inserts a row.
+        /// </summary>
+        /// <param name="connection">The destination connection.</param>
+        /// <param name="commandText">The <c>INSERT</c> statement.</param>
+        /// <param name="columns">The columns of the statement with the name of their parameter.</param>
+        /// <param name="commandTimeout">The command timeout, in seconds.</param>
+        /// <param name="transaction">The transaction of the destination connection.</param>
+        /// <returns>The command.</returns>
         private static IDbCommand CreateCommand(IDbConnection connection,
             string commandText,
             List<(string Column, string Parameter)> columns,
@@ -160,6 +199,12 @@ namespace RepoDb.Data.Helpers
             return command;
         }
 
+        /// <summary>
+        /// Sets the values of a row to the parameters of the command (a missing value is set as <see cref="DBNull"/>).
+        /// </summary>
+        /// <param name="command">The command that inserts a row.</param>
+        /// <param name="columns">The columns of the statement with the name of their parameter.</param>
+        /// <param name="row">The row: the dictionary of the column names and the values.</param>
         private static void SetValues(IDbCommand command,
             List<(string Column, string Parameter)> columns,
             IDictionary<string, object> row)
@@ -169,5 +214,7 @@ namespace RepoDb.Data.Helpers
                 ((IDbDataParameter)command.Parameters[i]).Value = row.TryGetValue(columns[i].Column, out var value) && value != null ? value : DBNull.Value;
             }
         }
+
+        #endregion
     }
 }

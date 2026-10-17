@@ -37,7 +37,7 @@ namespace RepoDb.Schema.Models
 
         #endregion
 
-        #region Overrides
+        #region Public Methods
 
         /// <summary>
         /// Gets the string that represents the instance of this <see cref="SchemaInfo"/> object.
@@ -45,10 +45,6 @@ namespace RepoDb.Schema.Models
         /// <returns>The name of this <see cref="SchemaInfo"/> object.</returns>
         public override string ToString() =>
             Name;
-
-        #endregion
-
-        #region Equality and comparers
 
         /// <summary>
         /// Returns the hashcode for this <see cref="SchemaInfo"/>.

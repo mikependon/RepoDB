@@ -24,6 +24,8 @@ namespace RepoDb.Schema.MySql.IntegrationTests.Setup
             _composer = composer;
         }
 
+        public bool AreIndexNamesUniquePerSchema => _composer.AreIndexNamesUniquePerSchema;
+
         public IEnumerable<string> ComposeSchema(TableSchema schema) => _composer.ComposeSchema(schema);
 
         public IEnumerable<string> ComposeSchemas(IEnumerable<TableSchema> schemas) => _composer.ComposeSchemas(schemas);
@@ -45,6 +47,8 @@ namespace RepoDb.Schema.MySql.IntegrationTests.Setup
         public string ComposeColumnExists(string tableName, string columnName) => null;
 
         public string ComposeIndexExists(string tableName, string indexName) => null;
+
+        public string ComposeIndexNameExists(string tableName, string indexName) => null;
 
         public string ComposeTypeName(ColumnInfo column) => _composer.ComposeTypeName(column);
     }

@@ -1096,6 +1096,27 @@ namespace RepoDb.Schema.Oracle.UnitTests
         }
 
         [TestMethod]
+        public void TestOracleSchemaComposerAreIndexNamesUniquePerSchema()
+        {
+            // Act/Assert
+            Assert.IsTrue(new OracleSchemaComposer().AreIndexNamesUniquePerSchema);
+        }
+
+        [TestMethod]
+        public void TestOracleSchemaComposerComposeIndexNameExists()
+        {
+            // Act/Assert
+            Assert.AreEqual("SELECT CASE WHEN EXISTS (SELECT 1 FROM ALL_INDEXES WHERE OWNER = 'dbo' AND INDEX_NAME = 'IX_Person_Name') THEN 1 ELSE 0 END FROM DUAL", new OracleSchemaComposer().ComposeIndexNameExists("dbo.Person", "IX_Person_Name"));
+        }
+
+        [TestMethod]
+        public void TestOracleSchemaComposerComposeIndexNameExistsEscapesTheSingleQuotes()
+        {
+            // Act/Assert
+            StringAssert.Contains(new OracleSchemaComposer().ComposeIndexNameExists("dbo.Person", "IX_O'Brien"), "IX_O''Brien", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
         public void TestOracleSchemaComposerComposeExistsEscapesTheSingleQuotes()
         {
             // Act

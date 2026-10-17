@@ -21,9 +21,15 @@ namespace RepoDb.Data.Helpers
     /// </summary>
     internal static class CopyDataLogger
     {
+        #region Public Methods
+
         /// <summary>
         /// Adds a log to the progress.
         /// </summary>
+        /// <param name="progress">The progress that holds the logs (nothing is added if it is <c>null</c>).</param>
+        /// <param name="destinationConnection">The destination connection, where the activity has happened.</param>
+        /// <param name="level">The level (the kind) of the log.</param>
+        /// <param name="text">The text of the log.</param>
         public static void Add(CopyDataProgress progress,
             IDbConnection destinationConnection,
             CopyDataLogLevel level,
@@ -39,6 +45,10 @@ namespace RepoDb.Data.Helpers
         /// <summary>
         /// Counts the rows of the table (<c>null</c> if the count is not possible).
         /// </summary>
+        /// <param name="destinationConnection">The destination connection.</param>
+        /// <param name="table">The name of the table.</param>
+        /// <param name="transaction">The transaction of the destination connection.</param>
+        /// <returns>The number of rows of the table, or <c>null</c> if the count is not possible.</returns>
         public static long? Count(IDbConnection destinationConnection,
             string table,
             IDbTransaction transaction)
@@ -56,6 +66,11 @@ namespace RepoDb.Data.Helpers
         /// <summary>
         /// Counts the rows of the table in an asynchronous way (<c>null</c> if the count is not possible).
         /// </summary>
+        /// <param name="destinationConnection">The destination connection.</param>
+        /// <param name="table">The name of the table.</param>
+        /// <param name="transaction">The transaction of the destination connection.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains: the number of rows of the table, or <c>null</c> if the count is not possible.</returns>
         public static async Task<long?> CountAsync(IDbConnection destinationConnection,
             string table,
             IDbTransaction transaction,
@@ -98,5 +113,7 @@ namespace RepoDb.Data.Helpers
                 }
             }
         }
+
+        #endregion
     }
 }

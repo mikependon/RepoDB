@@ -18,6 +18,13 @@ namespace RepoDb.Schema
     public interface ISchemaComposer
     {
         /// <summary>
+        /// Gets a value that indicates whether the name of an index must be unique in the whole schema (or database) of the destination database, instead of only in its table
+        /// (i.e.: the indexes of two tables can not have the same name in PostgreSQL, Oracle or Firebird, but they can in SQL Server or MySQL).
+        /// When it is <c>true</c>, an index that is going to be created with a name that is already used is created with the name of its table as a prefix (i.e.: <c>Employees_PostalCode</c>).
+        /// </summary>
+        bool AreIndexNamesUniquePerSchema { get; }
+
+        /// <summary>
         /// Composes the whole script that creates the table, its indexes and its foreign keys, as an ordered list of statements.
         /// </summary>
         /// <param name="schema">The schema of the table.</param>
@@ -104,6 +111,15 @@ namespace RepoDb.Schema
         /// <param name="indexName">The name of the index.</param>
         /// <returns>The SQL statement, that returns <c>1</c> if the index exists, and <c>0</c> if not.</returns>
         string ComposeIndexExists(string tableName, string indexName);
+
+        /// <summary>
+        /// Composes the statement that checks whether the name of an index is already used in the destination database, by any table of the schema (or of the database) of the given table.
+        /// Only the databases whose index names are unique in a whole schema (or database) have to compose it (see <see cref="AreIndexNamesUniquePerSchema"/>).
+        /// </summary>
+        /// <param name="tableName">The name of the table (see <see cref="ComposeName"/>) that the index is going to be created in.</param>
+        /// <param name="indexName">The name of the index.</param>
+        /// <returns>The SQL statement, that returns <c>1</c> if the name is used, and <c>0</c> if not (<c>null</c> if the database does not need it).</returns>
+        string ComposeIndexNameExists(string tableName, string indexName);
 
         /// <summary>
         /// Composes the data type of a column (including its size, precision and scale) in the dialect of the destination database.

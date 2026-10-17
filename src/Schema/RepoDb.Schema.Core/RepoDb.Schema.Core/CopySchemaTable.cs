@@ -47,7 +47,7 @@ namespace RepoDb.Schema
         /// <summary>
         /// Gets the schema of the table that is created in the destination database.
         /// </summary>
-        public TableSchema Schema { get; }
+        public TableSchema Schema { get; set; }
 
         /// <summary>
         /// Gets the name of the table in the dialect of the destination database (see <see cref="ISchemaComposer.ComposeName"/>).

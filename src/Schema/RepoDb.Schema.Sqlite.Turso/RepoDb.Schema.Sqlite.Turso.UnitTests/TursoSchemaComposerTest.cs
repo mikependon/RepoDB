@@ -1111,6 +1111,27 @@ namespace RepoDb.Schema.Sqlite.Turso.UnitTests
         }
 
         [TestMethod]
+        public void TestTursoSchemaComposerAreIndexNamesUniquePerSchema()
+        {
+            // Act/Assert
+            Assert.IsTrue(new TursoSchemaComposer().AreIndexNamesUniquePerSchema);
+        }
+
+        [TestMethod]
+        public void TestTursoSchemaComposerComposeIndexNameExists()
+        {
+            // Act/Assert
+            Assert.AreEqual("SELECT CASE WHEN EXISTS (SELECT 1 FROM [main].sqlite_master WHERE type = 'index' AND name = 'IX_Person_Name' COLLATE NOCASE) THEN 1 ELSE 0 END;", new TursoSchemaComposer().ComposeIndexNameExists("Person", "IX_Person_Name"));
+        }
+
+        [TestMethod]
+        public void TestTursoSchemaComposerComposeIndexNameExistsEscapesTheSingleQuotes()
+        {
+            // Act/Assert
+            StringAssert.Contains(new TursoSchemaComposer().ComposeIndexNameExists("Person", "IX_O'Brien"), "IX_O''Brien", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
         public void TestTursoSchemaComposerComposeExistsEscapesTheSingleQuotes()
         {
             // Act

@@ -34,6 +34,11 @@ namespace RepoDb.Schema
         #region Public Methods
 
         /// <summary>
+        /// Gets a value that indicates whether the name of an index must be unique in the whole schema (or database), instead of only in its table.
+        /// </summary>
+        public bool AreIndexNamesUniquePerSchema => true;
+
+        /// <summary>
         /// Composes the whole script that creates the table, its indexes and its foreign keys, as an ordered list of statements.
         /// </summary>
         /// <param name="schema">The schema of the table.</param>
@@ -252,6 +257,19 @@ namespace RepoDb.Schema
         {
             var (schema, table) = Db2SchemaHelper.ParseSchemaAndTable(tableName);
             return $"SELECT CASE WHEN EXISTS (SELECT 1 FROM SYSCAT.INDEXES WHERE TABSCHEMA = {Owner(schema)} AND TABNAME = '{Literal(table)}' AND INDNAME = '{Literal(indexName)}') THEN 1 ELSE 0 END FROM SYSIBM.SYSDUMMY1";
+        }
+
+        /// <summary>
+        /// Composes the statement that checks whether the name of an index is already used in the destination database, by any table of the schema of the given table.
+        /// </summary>
+        /// <param name="tableName">The name of the table that the index is going to be created in.</param>
+        /// <param name="indexName">The name of the index.</param>
+        /// <returns>The SQL statement, that returns <c>1</c> if the name is used, and <c>0</c> if not.</returns>
+        public string ComposeIndexNameExists(string tableName,
+            string indexName)
+        {
+            var (schema, _) = Db2SchemaHelper.ParseSchemaAndTable(tableName);
+            return $"SELECT CASE WHEN EXISTS (SELECT 1 FROM SYSCAT.INDEXES WHERE INDSCHEMA = {Owner(schema)} AND INDNAME = '{Literal(indexName)}') THEN 1 ELSE 0 END FROM SYSIBM.SYSDUMMY1";
         }
 
         /// <summary>

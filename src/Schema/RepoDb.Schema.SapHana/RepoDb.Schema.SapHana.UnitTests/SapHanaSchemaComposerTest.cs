@@ -1111,6 +1111,27 @@ namespace RepoDb.Schema.SapHana.UnitTests
         }
 
         [TestMethod]
+        public void TestSapHanaSchemaComposerAreIndexNamesUniquePerSchema()
+        {
+            // Act/Assert
+            Assert.IsTrue(new SapHanaSchemaComposer().AreIndexNamesUniquePerSchema);
+        }
+
+        [TestMethod]
+        public void TestSapHanaSchemaComposerComposeIndexNameExists()
+        {
+            // Act/Assert
+            Assert.AreEqual("SELECT CASE WHEN EXISTS (SELECT 1 FROM SYS.INDEXES WHERE SCHEMA_NAME = 'dbo' AND INDEX_NAME = 'IX_Person_Name') THEN 1 ELSE 0 END FROM DUMMY", new SapHanaSchemaComposer().ComposeIndexNameExists("dbo.Person", "IX_Person_Name"));
+        }
+
+        [TestMethod]
+        public void TestSapHanaSchemaComposerComposeIndexNameExistsEscapesTheSingleQuotes()
+        {
+            // Act/Assert
+            StringAssert.Contains(new SapHanaSchemaComposer().ComposeIndexNameExists("dbo.Person", "IX_O'Brien"), "IX_O''Brien", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
         public void TestSapHanaSchemaComposerComposeExistsEscapesTheSingleQuotes()
         {
             // Act

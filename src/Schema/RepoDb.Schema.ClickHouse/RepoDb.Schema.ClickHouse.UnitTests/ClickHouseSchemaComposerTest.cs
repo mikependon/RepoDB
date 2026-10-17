@@ -354,6 +354,20 @@ namespace RepoDb.Schema.ClickHouse.UnitTests
             Assert.AreEqual("SELECT toUInt8(count() > 0) FROM system.data_skipping_indices WHERE database = currentDatabase() AND table = 'Person' AND name = 'IX_Person_Name'", actual, StringComparer.Ordinal);
         }
 
+        [TestMethod]
+        public void TestClickHouseSchemaComposerAreIndexNamesUniquePerSchema()
+        {
+            // Act/Assert
+            Assert.IsFalse(new ClickHouseSchemaComposer().AreIndexNamesUniquePerSchema);
+        }
+
+        [TestMethod]
+        public void TestClickHouseSchemaComposerComposeIndexNameExistsIsNotComposed()
+        {
+            // Act/Assert
+            Assert.IsNull(new ClickHouseSchemaComposer().ComposeIndexNameExists("Person", "IX_Person_Name"));
+        }
+
         #endregion
 
         #region ComposeTypeName

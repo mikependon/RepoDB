@@ -32,6 +32,11 @@ namespace RepoDb.Schema
         #region Public Methods
 
         /// <summary>
+        /// Gets a value that indicates whether the name of an index must be unique in the whole schema (or database), instead of only in its table.
+        /// </summary>
+        public bool AreIndexNamesUniquePerSchema => false;
+
+        /// <summary>
         /// Composes the whole script that creates the table, its indexes and its foreign keys, as an ordered list of statements.
         /// </summary>
         /// <param name="schema">The schema of the table.</param>
@@ -232,6 +237,16 @@ namespace RepoDb.Schema
         public string ComposeIndexExists(string tableName,
             string indexName) =>
             $"SELECT CASE WHEN EXISTS (SELECT 1 FROM sys.indexes WHERE object_id = OBJECT_ID(N'{Literal(Name(tableName))}') AND name = N'{Literal(indexName)}') THEN 1 ELSE 0 END;";
+
+        /// <summary>
+        /// Composes the statement that checks whether the name of an index is already used in the destination database. The names of the indexes are only unique in their table, so there is nothing to check.
+        /// </summary>
+        /// <param name="tableName">The name of the table that the index is going to be created in.</param>
+        /// <param name="indexName">The name of the index.</param>
+        /// <returns><c>null</c>.</returns>
+        public string ComposeIndexNameExists(string tableName,
+            string indexName) =>
+            null;
 
         /// <summary>
         /// Composes the data type of a column (including its size, precision and scale) in the dialect of the destination database.

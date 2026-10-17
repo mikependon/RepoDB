@@ -33,6 +33,11 @@ namespace RepoDb.Schema
         #region Public Methods
 
         /// <summary>
+        /// Gets a value that indicates whether the name of an index must be unique in the whole schema (or database), instead of only in its table.
+        /// </summary>
+        public bool AreIndexNamesUniquePerSchema => true;
+
+        /// <summary>
         /// Composes the whole script that creates the table, its indexes and its foreign keys, as an ordered list of statements.
         /// </summary>
         /// <param name="schema">The schema of the table.</param>
@@ -234,6 +239,18 @@ namespace RepoDb.Schema
             string indexName)
         {
             return $"SELECT CASE WHEN EXISTS (SELECT 1 FROM RDB$INDICES WHERE RDB$RELATION_NAME = '{Literal(ParseTable(tableName))}' AND RDB$INDEX_NAME = '{Literal(indexName)}') THEN 1 ELSE 0 END FROM RDB$DATABASE";
+        }
+
+        /// <summary>
+        /// Composes the statement that checks whether the name of an index is already used in the destination database, by any table of the schema of the given table.
+        /// </summary>
+        /// <param name="tableName">The name of the table that the index is going to be created in.</param>
+        /// <param name="indexName">The name of the index.</param>
+        /// <returns>The SQL statement, that returns <c>1</c> if the name is used, and <c>0</c> if not.</returns>
+        public string ComposeIndexNameExists(string tableName,
+            string indexName)
+        {
+            return $"SELECT CASE WHEN EXISTS (SELECT 1 FROM RDB$INDICES WHERE RDB$INDEX_NAME = '{Literal(indexName)}') THEN 1 ELSE 0 END FROM RDB$DATABASE";
         }
 
         /// <summary>

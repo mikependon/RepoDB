@@ -1114,6 +1114,27 @@ namespace RepoDb.Schema.Db2.UnitTests
         }
 
         [TestMethod]
+        public void TestDb2SchemaComposerAreIndexNamesUniquePerSchema()
+        {
+            // Act/Assert
+            Assert.IsTrue(new Db2SchemaComposer().AreIndexNamesUniquePerSchema);
+        }
+
+        [TestMethod]
+        public void TestDb2SchemaComposerComposeIndexNameExists()
+        {
+            // Act/Assert
+            Assert.AreEqual("SELECT CASE WHEN EXISTS (SELECT 1 FROM SYSCAT.INDEXES WHERE INDSCHEMA = 'dbo' AND INDNAME = 'IX_Person_Name') THEN 1 ELSE 0 END FROM SYSIBM.SYSDUMMY1", new Db2SchemaComposer().ComposeIndexNameExists("dbo.Person", "IX_Person_Name"));
+        }
+
+        [TestMethod]
+        public void TestDb2SchemaComposerComposeIndexNameExistsEscapesTheSingleQuotes()
+        {
+            // Act/Assert
+            StringAssert.Contains(new Db2SchemaComposer().ComposeIndexNameExists("dbo.Person", "IX_O'Brien"), "IX_O''Brien", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
         public void TestDb2SchemaComposerComposeExistsEscapesTheSingleQuotes()
         {
             // Act

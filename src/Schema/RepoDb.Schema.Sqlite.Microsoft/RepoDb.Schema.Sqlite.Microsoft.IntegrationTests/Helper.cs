@@ -26,7 +26,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
             SchemaComposerMapper.Add<SqliteConnection>(new NoExistenceCheckSchemaComposer(new SqliteSchemaComposer()), force: true);
 
         /// <summary>
-        /// Creates a table in the target database that owns the name of an index, so the statement that creates the index with the same name fails.
+        /// Creates a table in the target database that owns the name of an index, so the statement that creates the index with the same name fails (the copy does not check the existence of the names).
         /// </summary>
         /// <param name="indexName">The name of the index.</param>
         public static void BlockIndexName(string indexName)
@@ -36,6 +36,9 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
                 connection.ExecuteNonQuery("CREATE TABLE [Blocker] ([Id] INT);");
                 connection.ExecuteNonQuery($"CREATE INDEX [{indexName}] ON [Blocker] ([Id]);");
             }
+
+            // The copy does not check the names that exist in the destination database (it would create the index with another name), so the statement fails
+            DisableExistenceChecks();
         }
 
         /// <summary>

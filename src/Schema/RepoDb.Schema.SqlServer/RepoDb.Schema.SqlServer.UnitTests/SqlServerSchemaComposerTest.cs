@@ -1099,6 +1099,20 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         }
 
         [TestMethod]
+        public void TestSqlServerSchemaComposerAreIndexNamesUniquePerSchema()
+        {
+            // Act/Assert
+            Assert.IsFalse(new SqlServerSchemaComposer().AreIndexNamesUniquePerSchema);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeIndexNameExistsIsNotComposed()
+        {
+            // Act/Assert
+            Assert.IsNull(new SqlServerSchemaComposer().ComposeIndexNameExists("Person", "IX_Person_Name"));
+        }
+
+        [TestMethod]
         public void TestSqlServerSchemaComposerComposeExistsEscapesTheSingleQuotes()
         {
             // Act

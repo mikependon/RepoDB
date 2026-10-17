@@ -1125,6 +1125,27 @@ namespace RepoDb.Schema.Firebird.UnitTests
         }
 
         [TestMethod]
+        public void TestFirebirdSchemaComposerAreIndexNamesUniquePerSchema()
+        {
+            // Act/Assert
+            Assert.IsTrue(new FirebirdSchemaComposer().AreIndexNamesUniquePerSchema);
+        }
+
+        [TestMethod]
+        public void TestFirebirdSchemaComposerComposeIndexNameExists()
+        {
+            // Act/Assert
+            Assert.AreEqual("SELECT CASE WHEN EXISTS (SELECT 1 FROM RDB$INDICES WHERE RDB$INDEX_NAME = 'IX_Person_Name') THEN 1 ELSE 0 END FROM RDB$DATABASE", new FirebirdSchemaComposer().ComposeIndexNameExists("Person", "IX_Person_Name"));
+        }
+
+        [TestMethod]
+        public void TestFirebirdSchemaComposerComposeIndexNameExistsEscapesTheSingleQuotes()
+        {
+            // Act/Assert
+            StringAssert.Contains(new FirebirdSchemaComposer().ComposeIndexNameExists("Person", "IX_O'Brien"), "IX_O''Brien", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
         public void TestFirebirdSchemaComposerComposeExistsEscapesTheSingleQuotes()
         {
             // Act

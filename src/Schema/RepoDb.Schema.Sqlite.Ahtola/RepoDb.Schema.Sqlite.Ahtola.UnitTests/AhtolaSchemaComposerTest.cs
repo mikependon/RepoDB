@@ -1111,6 +1111,27 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
         }
 
         [TestMethod]
+        public void TestAhtolaSchemaComposerAreIndexNamesUniquePerSchema()
+        {
+            // Act/Assert
+            Assert.IsTrue(new AhtolaSchemaComposer().AreIndexNamesUniquePerSchema);
+        }
+
+        [TestMethod]
+        public void TestAhtolaSchemaComposerComposeIndexNameExists()
+        {
+            // Act/Assert
+            Assert.AreEqual("SELECT CASE WHEN EXISTS (SELECT 1 FROM [main].sqlite_master WHERE type = 'index' AND name = 'IX_Person_Name' COLLATE NOCASE) THEN 1 ELSE 0 END;", new AhtolaSchemaComposer().ComposeIndexNameExists("Person", "IX_Person_Name"));
+        }
+
+        [TestMethod]
+        public void TestAhtolaSchemaComposerComposeIndexNameExistsEscapesTheSingleQuotes()
+        {
+            // Act/Assert
+            StringAssert.Contains(new AhtolaSchemaComposer().ComposeIndexNameExists("Person", "IX_O'Brien"), "IX_O''Brien", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
         public void TestAhtolaSchemaComposerComposeExistsEscapesTheSingleQuotes()
         {
             // Act

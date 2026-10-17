@@ -88,6 +88,7 @@ namespace RepoDb.Schema
                     table.MissingIndexes = table.Schema.Indexes.Where(index => index.Name != null && Probe(composer.ComposeIndexExists(table.Name, index.Name)) == false).ToList();
                 }
             }
+            CopySchemaIndexNames.Resolve(tables, behavior, composer, Probe);
         }
 
         /// <summary>
@@ -139,6 +140,7 @@ namespace RepoDb.Schema
                     }
                 }
             }
+            await CopySchemaIndexNames.ResolveAsync(tables, behavior, composer, Probe).ConfigureAwait(false);
         }
 
         /// <summary>

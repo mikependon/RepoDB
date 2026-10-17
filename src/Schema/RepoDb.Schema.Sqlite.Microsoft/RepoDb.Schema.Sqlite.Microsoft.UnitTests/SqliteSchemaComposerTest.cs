@@ -1111,6 +1111,27 @@ namespace RepoDb.Schema.Sqlite.Microsoft.UnitTests
         }
 
         [TestMethod]
+        public void TestSqliteSchemaComposerAreIndexNamesUniquePerSchema()
+        {
+            // Act/Assert
+            Assert.IsTrue(new SqliteSchemaComposer().AreIndexNamesUniquePerSchema);
+        }
+
+        [TestMethod]
+        public void TestSqliteSchemaComposerComposeIndexNameExists()
+        {
+            // Act/Assert
+            Assert.AreEqual("SELECT CASE WHEN EXISTS (SELECT 1 FROM [main].sqlite_master WHERE type = 'index' AND name = 'IX_Person_Name' COLLATE NOCASE) THEN 1 ELSE 0 END;", new SqliteSchemaComposer().ComposeIndexNameExists("Person", "IX_Person_Name"));
+        }
+
+        [TestMethod]
+        public void TestSqliteSchemaComposerComposeIndexNameExistsEscapesTheSingleQuotes()
+        {
+            // Act/Assert
+            StringAssert.Contains(new SqliteSchemaComposer().ComposeIndexNameExists("Person", "IX_O'Brien"), "IX_O''Brien", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
         public void TestSqliteSchemaComposerComposeExistsEscapesTheSingleQuotes()
         {
             // Act
