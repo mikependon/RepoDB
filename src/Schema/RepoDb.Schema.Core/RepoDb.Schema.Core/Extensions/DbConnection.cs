@@ -79,6 +79,13 @@ namespace RepoDb.Schema
                     ? (bool?)null
                     : ToBoolean(destinationConnection.ExecuteScalar(statement, commandTimeout: commandTimeout, transaction: transaction, trace: trace));
 
+            // A foreign key is added to a table that exists only if the table that it references is copied, or already exists (a table is not created to be referenced)
+            bool CanBeReferenced(ForeignKeyInfo foreignKey)
+            {
+                var name = composer.ComposeName(foreignKey.ReferencedTable);
+                return tables.Any(item => string.Equals(item.Name, name, StringComparison.Ordinal)) || Probe(composer.ComposeTableExists(name)) == true;
+            }
+
             foreach (var table in tables)
             {
                 table.Exists = Probe(composer.ComposeTableExists(table.Name));
@@ -86,7 +93,7 @@ namespace RepoDb.Schema
                 {
                     table.MissingColumns = table.Schema.Columns.Where(column => Probe(composer.ComposeColumnExists(table.Name, column.Field.Name)) == false).ToList();
                     table.MissingIndexes = table.Schema.Indexes.Where(index => index.Name != null && Probe(composer.ComposeIndexExists(table.Name, index.Name)) == false).ToList();
-                    table.MissingForeignKeys = table.Schema.ForeignKeys.Where(foreignKey => foreignKey.Name != null && Probe(composer.ComposeForeignKeyExists(table.Name, foreignKey.Name)) == false).ToList();
+                    table.MissingForeignKeys = table.Schema.ForeignKeys.Where(foreignKey => foreignKey.Name != null && Probe(composer.ComposeForeignKeyExists(table.Name, foreignKey.Name)) == false && CanBeReferenced(foreignKey)).ToList();
                 }
             }
             CopySchemaIndexNames.Resolve(tables, behavior, composer, destinationConnection.GetDbSetting()?.AreIndexNamesUniquePerSchema == true, Probe);
@@ -118,6 +125,13 @@ namespace RepoDb.Schema
                     ? (bool?)null
                     : ToBoolean(await destinationConnection.ExecuteScalarAsync(statement, commandTimeout: commandTimeout, transaction: transaction, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false));
 
+            // A foreign key is added to a table that exists only if the table that it references is copied, or already exists (a table is not created to be referenced)
+            async Task<bool> CanBeReferenced(ForeignKeyInfo foreignKey)
+            {
+                var name = composer.ComposeName(foreignKey.ReferencedTable);
+                return tables.Any(item => string.Equals(item.Name, name, StringComparison.Ordinal)) || await Probe(composer.ComposeTableExists(name)).ConfigureAwait(false) == true;
+            }
+
             foreach (var table in tables)
             {
                 table.Exists = await Probe(composer.ComposeTableExists(table.Name)).ConfigureAwait(false);
@@ -142,7 +156,7 @@ namespace RepoDb.Schema
                     table.MissingForeignKeys = new List<ForeignKeyInfo>();
                     foreach (var foreignKey in table.Schema.ForeignKeys.Where(foreignKey => foreignKey.Name != null))
                     {
-                        if (await Probe(composer.ComposeForeignKeyExists(table.Name, foreignKey.Name)).ConfigureAwait(false) == false)
+                        if (await Probe(composer.ComposeForeignKeyExists(table.Name, foreignKey.Name)).ConfigureAwait(false) == false && await CanBeReferenced(foreignKey).ConfigureAwait(false))
                         {
                             table.MissingForeignKeys.Add(foreignKey);
                         }
