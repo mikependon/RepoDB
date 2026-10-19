@@ -977,6 +977,117 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
                 new FakeDbConnection().CopyDataToAsync("Person", "Customer", new FakeDbConnection(), mappings: new[] { new CopyDataColumnMapping("Missing", "Id") }));
         }
 
+        [TestMethod]
+        public void TestCopyDataToOfAnEntityWithMappingsToARegisteredConnectionSelectsTheMappedColumns()
+        {
+            // Setup
+            var source = new FakeDbConnection();
+            var name = Register(new FakeDbConnection());
+
+            // Act
+            var actual = source.CopyDataTo<Person>("Customer", name, new[] { new CopyDataColumnMapping("Name", "Birthday") });
+
+            // Assert
+            Assert.AreEqual(3, actual);
+            StringAssert.Contains(source.Executions.Single().CommandText, "[Name] AS [Birthday]");
+        }
+
+        [TestMethod]
+        public void TestCopyDataToOfAnEntityWithMappingsSelectsTheMappedColumns()
+        {
+            // Setup
+            var source = new FakeDbConnection();
+
+            // Act
+            var actual = source.CopyDataTo<Person>(new FakeDbConnection(), new[] { new CopyDataColumnMapping("Name", "Birthday") });
+
+            // Assert
+            Assert.AreEqual(3, actual);
+            StringAssert.Contains(source.Executions.Single().CommandText, "[Name] AS [Birthday]");
+        }
+
+        [TestMethod]
+        public void TestCopyDataToOfATableWithMappingsToARegisteredConnectionSelectsTheMappedColumns()
+        {
+            // Setup
+            var source = new FakeDbConnection();
+            var name = Register(new FakeDbConnection());
+
+            // Act
+            source.CopyDataTo("Person", name, new[] { new CopyDataColumnMapping("Name", "Birthday") });
+
+            // Assert
+            StringAssert.Contains(source.Executions.Single().CommandText, "[Name] AS [Birthday]");
+        }
+
+        [TestMethod]
+        public void TestCopyDataToWithMappingsAndAFilterSelectsTheMappedColumnsOfTheMatchingRows()
+        {
+            // Setup
+            var source = new FakeDbConnection();
+
+            // Act
+            source.CopyDataTo("Person", "Customer", new FakeDbConnection(), new[] { new CopyDataColumnMapping("Name", "Birthday") }, Filter());
+
+            // Assert
+            StringAssert.Contains(source.Executions.Single().CommandText, "[Name] AS [Birthday]");
+            StringAssert.Contains(source.Executions.Single().CommandText, "WHERE");
+        }
+
+        [TestMethod]
+        public async Task TestCopyDataToAsyncOfAnEntityWithMappingsToARegisteredConnectionSelectsTheMappedColumns()
+        {
+            // Setup
+            var source = new FakeDbConnection();
+            var name = Register(new FakeDbConnection());
+
+            // Act
+            var actual = await source.CopyDataToAsync<Person>("Customer", name, new[] { new CopyDataColumnMapping("Name", "Birthday") });
+
+            // Assert
+            Assert.AreEqual(3, actual);
+            StringAssert.Contains(source.Executions.Single().CommandText, "[Name] AS [Birthday]");
+        }
+
+        [TestMethod]
+        public async Task TestCopyDataToAsyncOfAnEntityWithMappingsSelectsTheMappedColumns()
+        {
+            // Setup
+            var source = new FakeDbConnection();
+
+            // Act
+            var actual = await source.CopyDataToAsync<Person>(new FakeDbConnection(), new[] { new CopyDataColumnMapping("Name", "Birthday") });
+
+            // Assert
+            Assert.AreEqual(3, actual);
+            StringAssert.Contains(source.Executions.Single().CommandText, "[Name] AS [Birthday]");
+        }
+
+        [TestMethod]
+        public async Task TestCopyDataToAsyncOfATableWithMappingsToARegisteredConnectionSelectsTheMappedColumns()
+        {
+            // Setup
+            var source = new FakeDbConnection();
+            var name = Register(new FakeDbConnection());
+
+            // Act
+            await source.CopyDataToAsync("Person", name, new[] { new CopyDataColumnMapping("Name", "Birthday") });
+
+            // Assert
+            StringAssert.Contains(source.Executions.Single().CommandText, "[Name] AS [Birthday]");
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnCopyDataToWithMappingsToARegisteredConnectionIfASourceColumnDoesNotExist()
+        {
+            // Setup
+            var name = Register(new FakeDbConnection());
+
+            // Act/Assert
+            Assert.Throws<ArgumentException>(() =>
+                new FakeDbConnection().CopyDataTo<Person>("Customer", name, new[] { new CopyDataColumnMapping("Missing", "Id") }));
+        }
+
         #endregion
 
     }
