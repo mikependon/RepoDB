@@ -275,6 +275,7 @@ namespace RepoDb.Data
         /// <param name="where"></param>
         /// <param name="batchSize"></param>
         /// <param name="columnMappingsBehavior"></param>
+        /// <param name="mappings"></param>
         /// <param name="options"></param>
         /// <param name="progressCallback"></param>
         /// <param name="commandTimeout"></param>
@@ -288,6 +289,7 @@ namespace RepoDb.Data
             QueryGroup where,
             int batchSize,
             CopySchemaColumnMappingsBehavior columnMappingsBehavior,
+            IList<CopyDataColumnMapping> mappings,
             CopyDataProgress options,
             Action<CopyDataProgress> progressCallback,
             int? commandTimeout,
@@ -296,7 +298,8 @@ namespace RepoDb.Data
             IDbTransaction transaction)
         {
             SetTables(options, connection, destinationConnection, sourceTable, targetTable);
-            var (commandText, param) = CreateSelect(connection, sourceTable, where);
+            ValidateMappings(connection, destinationConnection, sourceTable, targetTable, mappings);
+            var (commandText, param) = CreateSelect(connection, sourceTable, where, mappings);
             using (var reader = connection.ExecuteReader(commandText, param, commandTimeout: commandTimeout, traceKey: traceKey ?? TraceKeys.ExecuteReader, trace: trace))
             {
                 if (BulkInsertInvoker.IsAvailable(destinationConnection, reader, false))
@@ -336,6 +339,7 @@ namespace RepoDb.Data
         /// <param name="where"></param>
         /// <param name="batchSize"></param>
         /// <param name="columnMappingsBehavior"></param>
+        /// <param name="mappings"></param>
         /// <param name="options"></param>
         /// <param name="progressCallback"></param>
         /// <param name="commandTimeout"></param>
@@ -350,6 +354,7 @@ namespace RepoDb.Data
             QueryGroup where,
             int batchSize,
             CopySchemaColumnMappingsBehavior columnMappingsBehavior,
+            IList<CopyDataColumnMapping> mappings,
             CopyDataProgress options,
             Action<CopyDataProgress> progressCallback,
             int? commandTimeout,
@@ -359,7 +364,8 @@ namespace RepoDb.Data
             CancellationToken cancellationToken)
         {
             SetTables(options, connection, destinationConnection, sourceTable, targetTable);
-            var (commandText, param) = CreateSelect(connection, sourceTable, where);
+            ValidateMappings(connection, destinationConnection, sourceTable, targetTable, mappings);
+            var (commandText, param) = CreateSelect(connection, sourceTable, where, mappings);
             using (var reader = await connection.ExecuteReaderAsync(commandText, param, commandTimeout: commandTimeout, traceKey: traceKey ?? TraceKeys.ExecuteReader, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false))
             {
                 if (BulkInsertInvoker.IsAvailable(destinationConnection, reader, true))
@@ -392,20 +398,88 @@ namespace RepoDb.Data
 
         /// <summary>
         /// Composes the <c>SELECT</c> statement of the source table with the statement builder of the connection, and the parameters of its filter.
+        /// If there are column mappings, only the mapped columns are selected, each one aliased with the name of its destination column.
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="sourceTable"></param>
         /// <param name="where"></param>
+        /// <param name="mappings"></param>
         /// <returns>The statement and its parameters (<c>null</c> if there is no filter).</returns>
         private static (string CommandText, object Param) CreateSelect(IDbConnection connection,
             string sourceTable,
-            QueryGroup where)
+            QueryGroup where,
+            IList<CopyDataColumnMapping> mappings)
         {
             var statementBuilder = StatementBuilderMapper.Get(connection) ?? throw new InvalidOperationException($"No statement builder is mapped to the connection '{connection.GetType().FullName}'.");
-            var fields = DbFieldCache.Get(connection, sourceTable, null)?.GetAsFields();
+            var hasMappings = mappings?.Count > 0;
+            var fields = hasMappings
+                ? mappings.Select(mapping => mapping.SourceColumn).Distinct(StringComparer.OrdinalIgnoreCase).Select(column => new Field(column)).ToList()
+                : DbFieldCache.Get(connection, sourceTable, null)?.GetAsFields();
             where?.Fix();
             var commandText = statementBuilder.CreateQuery(sourceTable, fields, where);
+            if (hasMappings)
+            {
+                commandText = Alias(connection, commandText, mappings);
+            }
             return (commandText, where == null ? null : ToParameters(where));
+        }
+
+        /// <summary>
+        /// Replaces the list of the columns of the <c>SELECT</c> statement with the mapped columns, each one aliased with the name of its destination column.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="commandText"></param>
+        /// <param name="mappings"></param>
+        /// <returns>The statement.</returns>
+        private static string Alias(IDbConnection connection,
+            string commandText,
+            IList<CopyDataColumnMapping> mappings)
+        {
+            const string select = "SELECT ";
+            const string from = " FROM ";
+            var dbSetting = DbSettingMapper.Get(connection);
+            var start = commandText.IndexOf(select, StringComparison.OrdinalIgnoreCase);
+            var end = commandText.IndexOf(from, StringComparison.OrdinalIgnoreCase);
+            if (start < 0 || end < start)
+            {
+                throw new InvalidOperationException($"The column mappings cannot be applied to the statement '{commandText}'.");
+            }
+            var columns = string.Join(", ", mappings.Select(mapping => $"{mapping.SourceColumn.AsQuoted(dbSetting)} AS {mapping.DestinationColumn.AsQuoted(dbSetting)}"));
+            return string.Concat(commandText.Substring(0, start + select.Length), columns, commandText.Substring(end));
+        }
+
+        /// <summary>
+        /// Ensures that the source columns of the mappings exist on the source table and that the destination columns exist on the target table.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="destinationConnection"></param>
+        /// <param name="sourceTable"></param>
+        /// <param name="targetTable"></param>
+        /// <param name="mappings"></param>
+        /// <exception cref="ArgumentException"></exception>
+        private static void ValidateMappings(IDbConnection connection,
+            IDbConnection destinationConnection,
+            string sourceTable,
+            string targetTable,
+            IList<CopyDataColumnMapping> mappings)
+        {
+            if (mappings == null || mappings.Count == 0)
+            {
+                return;
+            }
+            var sourceColumns = new HashSet<string>(DbFieldCache.Get(connection, sourceTable, null).GetAsFields().Select(field => field.Name), StringComparer.OrdinalIgnoreCase);
+            var targetColumns = new HashSet<string>(DbFieldCache.Get(destinationConnection, targetTable, null).GetAsFields().Select(field => field.Name), StringComparer.OrdinalIgnoreCase);
+            foreach (var mapping in mappings)
+            {
+                if (!sourceColumns.Contains(mapping.SourceColumn))
+                {
+                    throw new ArgumentException($"The source column '{mapping.SourceColumn}' does not exist on the source table '{sourceTable}'.", nameof(mappings));
+                }
+                if (!targetColumns.Contains(mapping.DestinationColumn))
+                {
+                    throw new ArgumentException($"The destination column '{mapping.DestinationColumn}' does not exist on the target table '{targetTable}'.", nameof(mappings));
+                }
+            }
         }
 
         /// <summary>
@@ -535,6 +609,7 @@ namespace RepoDb.Data
         /// <param name="relationshipBehavior"></param>
         /// <param name="tableExistenceBehavior"></param>
         /// <param name="columnMappingsBehavior"></param>
+        /// <param name="mappings"></param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         internal static void Validate(IDbConnection connection,
@@ -545,7 +620,8 @@ namespace RepoDb.Data
             int batchSize,
             CopyDataRelationshipBehavior relationshipBehavior,
             CopySchemaExistsBehavior tableExistenceBehavior,
-            CopySchemaColumnMappingsBehavior columnMappingsBehavior)
+            CopySchemaColumnMappingsBehavior columnMappingsBehavior,
+            IList<CopyDataColumnMapping> mappings)
         {
             if (connection == null)
             {
@@ -570,6 +646,25 @@ namespace RepoDb.Data
             if (!Enum.IsDefined(typeof(CopySchemaColumnMappingsBehavior), columnMappingsBehavior))
             {
                 throw new ArgumentOutOfRangeException(nameof(columnMappingsBehavior), "The column mappings behavior is not defined.");
+            }
+            if (mappings != null)
+            {
+                foreach (var mapping in mappings)
+                {
+                    if (mapping == null)
+                    {
+                        throw new ArgumentException("The column mappings must not contain a null item.", nameof(mappings));
+                    }
+                    if (string.IsNullOrWhiteSpace(mapping.SourceColumn) || string.IsNullOrWhiteSpace(mapping.DestinationColumn))
+                    {
+                        throw new ArgumentException("The source and the destination columns of a column mapping must not be empty.", nameof(mappings));
+                    }
+                }
+                var duplicate = mappings.GroupBy(mapping => mapping.DestinationColumn, StringComparer.OrdinalIgnoreCase).FirstOrDefault(group => group.Count() > 1);
+                if (duplicate != null)
+                {
+                    throw new ArgumentException($"The destination column '{duplicate.Key}' is mapped more than once.", nameof(mappings));
+                }
             }
             if (IsSchemaRequested(relationshipBehavior, tableExistenceBehavior, targetSchema) && !string.Equals(GetTableName(connection, sourceTable), GetTableName(destinationConnection, targetTable), StringComparison.Ordinal))
             {

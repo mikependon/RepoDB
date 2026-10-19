@@ -877,5 +877,107 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         #endregion
+
+        #region Mappings
+
+        [TestMethod]
+        public void TestCopyDataToWithMappingsSelectsOnlyTheMappedColumnsAliasedWithTheDestinationColumns()
+        {
+            // Setup
+            var source = new FakeDbConnection();
+            var mappings = new[] { new CopyDataColumnMapping("Id", "Id"), new CopyDataColumnMapping("Name", "Birthday") };
+
+            // Act
+            source.CopyDataTo("Person", "Customer", new FakeDbConnection(), mappings: mappings);
+
+            // Assert
+            var commandText = source.Executions.Single().CommandText;
+            StringAssert.Contains(commandText, "[Id] AS [Id], [Name] AS [Birthday]");
+            Assert.IsFalse(commandText.Contains("[Birthday],"));
+        }
+
+        [TestMethod]
+        public async Task TestCopyDataToAsyncWithMappingsSelectsOnlyTheMappedColumnsAliasedWithTheDestinationColumns()
+        {
+            // Setup
+            var source = new FakeDbConnection();
+            var mappings = new[] { new CopyDataColumnMapping("Name", "Birthday") };
+
+            // Act
+            await source.CopyDataToAsync("Person", "Customer", new FakeDbConnection(), mappings: mappings);
+
+            // Assert
+            StringAssert.Contains(source.Executions.Single().CommandText, "[Name] AS [Birthday]");
+        }
+
+        [TestMethod]
+        public void TestCopyDataToWithMappingsSelectsAllTheColumnsIfTheMappingsAreNullOrEmpty()
+        {
+            // Setup
+            var source = new FakeDbConnection();
+
+            // Act
+            source.CopyDataTo("Person", "Customer", new FakeDbConnection(), mappings: null);
+            source.CopyDataTo("Person", "Customer", new FakeDbConnection(), mappings: new List<CopyDataColumnMapping>());
+
+            // Assert
+            Assert.IsTrue(source.Executions.All(e => !e.CommandText.Contains(" AS ")));
+            Assert.IsTrue(source.Executions.All(e => e.CommandText.Contains("[Id]") && e.CommandText.Contains("[Name]") && e.CommandText.Contains("[Birthday]")));
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnCopyDataToIfTheMappingsHaveANullItem()
+        {
+            // Act/Assert
+            Assert.Throws<ArgumentException>(() =>
+                new FakeDbConnection().CopyDataTo("Person", "Customer", new FakeDbConnection(), mappings: new CopyDataColumnMapping[] { null }));
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnCopyDataToIfAMappingHasAnEmptyColumn()
+        {
+            // Act/Assert
+            Assert.Throws<ArgumentException>(() =>
+                new FakeDbConnection().CopyDataTo("Person", "Customer", new FakeDbConnection(), mappings: new[] { new CopyDataColumnMapping(" ", "Id") }));
+            Assert.Throws<ArgumentException>(() =>
+                new FakeDbConnection().CopyDataTo("Person", "Customer", new FakeDbConnection(), mappings: new[] { new CopyDataColumnMapping("Id", null) }));
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnCopyDataToIfADestinationColumnIsMappedMoreThanOnce()
+        {
+            // Act/Assert
+            Assert.Throws<ArgumentException>(() =>
+                new FakeDbConnection().CopyDataTo("Person", "Customer", new FakeDbConnection(), mappings: new[] { new CopyDataColumnMapping("Id", "Name"), new CopyDataColumnMapping("Name", "name") }));
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnCopyDataToIfASourceColumnDoesNotExistOnTheSourceTable()
+        {
+            // Act/Assert
+            var ex = Assert.Throws<ArgumentException>(() =>
+                new FakeDbConnection().CopyDataTo("Person", "Customer", new FakeDbConnection(), mappings: new[] { new CopyDataColumnMapping("Missing", "Id") }));
+            StringAssert.Contains(ex.Message, "Missing");
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnCopyDataToIfADestinationColumnDoesNotExistOnTheTargetTable()
+        {
+            // Act/Assert
+            var ex = Assert.Throws<ArgumentException>(() =>
+                new FakeDbConnection().CopyDataTo("Person", "Customer", new FakeDbConnection(), mappings: new[] { new CopyDataColumnMapping("Id", "Missing") }));
+            StringAssert.Contains(ex.Message, "Missing");
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnCopyDataToAsyncIfASourceColumnDoesNotExistOnTheSourceTable()
+        {
+            // Act/Assert
+            await Assert.ThrowsAsync<ArgumentException>(() =>
+                new FakeDbConnection().CopyDataToAsync("Person", "Customer", new FakeDbConnection(), mappings: new[] { new CopyDataColumnMapping("Missing", "Id") }));
+        }
+
+        #endregion
+
     }
 }
