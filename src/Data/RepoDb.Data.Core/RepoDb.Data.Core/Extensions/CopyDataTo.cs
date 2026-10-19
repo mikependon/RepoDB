@@ -986,7 +986,7 @@ namespace RepoDb.Data
             var targetSchema = GetTargetSchema(destinationConnection, targetTable);
             Validate(connection, sourceTable, targetTable, destinationConnection, targetSchema, batchSize, relationshipBehavior, tableExistenceBehavior, CopySchemaColumnMappingsBehavior.Automatic, mappings);
             var options = new CopyDataProgress { StartTime = DateTime.UtcNow };
-            foreach (var (source, target, filter) in GetTables(connection, destinationConnection, sourceTable, targetTable, targetSchema, where, relationshipBehavior, tableExistenceBehavior, commandTimeout, trace, transaction))
+            foreach (var (source, target, filter) in GetTables(connection, destinationConnection, sourceTable, targetTable, targetSchema, where, relationshipBehavior, tableExistenceBehavior, commandTimeout, trace, transaction, mappings))
             {
                 CopyRows(connection, destinationConnection, source, target, filter, batchSize, CopySchemaColumnMappingsBehavior.Automatic, string.Equals(source, sourceTable, StringComparison.Ordinal) ? mappings : null, options, progressCallback, commandTimeout, traceKey, trace, transaction);
             }
@@ -1317,7 +1317,7 @@ namespace RepoDb.Data
             var targetSchema = GetTargetSchema(destinationConnection, targetTable);
             Validate(connection, sourceTable, targetTable, destinationConnection, targetSchema, batchSize, relationshipBehavior, tableExistenceBehavior, CopySchemaColumnMappingsBehavior.Automatic, mappings);
             var options = new CopyDataProgress { StartTime = DateTime.UtcNow };
-            var tables = await GetTablesAsync(connection, destinationConnection, sourceTable, targetTable, targetSchema, where, relationshipBehavior, tableExistenceBehavior, commandTimeout, trace, transaction, cancellationToken).ConfigureAwait(false);
+            var tables = await GetTablesAsync(connection, destinationConnection, sourceTable, targetTable, targetSchema, where, relationshipBehavior, tableExistenceBehavior, commandTimeout, trace, transaction, cancellationToken, mappings).ConfigureAwait(false);
             foreach (var (source, target, filter) in tables)
             {
                 await CopyRowsAsync(connection, destinationConnection, source, target, filter, batchSize, CopySchemaColumnMappingsBehavior.Automatic, string.Equals(source, sourceTable, StringComparison.Ordinal) ? mappings : null, options, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);

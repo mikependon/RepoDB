@@ -48,6 +48,7 @@ namespace RepoDb.Data
         /// <param name="commandTimeout"></param>
         /// <param name="trace"></param>
         /// <param name="transaction"></param>
+        /// <param name="mappings">The column mappings of the requested table: only the mapped columns of the source table are created in the target table when the schema is copied.</param>
         /// <returns>The source table, the target table and the filter of each table.</returns>
         internal static IList<(string Source, string Target, QueryGroup Where)> GetTables(IDbConnection connection,
             IDbConnection destinationConnection,
@@ -59,7 +60,8 @@ namespace RepoDb.Data
             CopySchemaExistsBehavior tableExistenceBehavior,
             int? commandTimeout,
             ITrace trace,
-            IDbTransaction transaction)
+            IDbTransaction transaction,
+            IList<CopyDataColumnMapping> mappings = null)
         {
             var requested = new List<(string, string, QueryGroup)> { (sourceTable, targetTable, where) };
             if (!IsSchemaRequested(relationshipBehavior, tableExistenceBehavior, targetSchema))
@@ -70,6 +72,7 @@ namespace RepoDb.Data
             var schemaBehavior = ToSchemaBehavior(relationshipBehavior);
             connection.CopySchemaTo(new[] { sourceTable },
                 destinationConnection,
+                columns: ToColumns(mappings),
                 targetSchema: targetSchema,
                 tableExistenceBehavior: tableExistenceBehavior,
                 relationshipBehavior: schemaBehavior,
@@ -101,6 +104,7 @@ namespace RepoDb.Data
         /// <param name="trace"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
+        /// <param name="mappings">The column mappings of the requested table: only the mapped columns of the source table are created in the target table when the schema is copied.</param>
         /// <returns>The source table, the target table and the filter of each table.</returns>
         internal static async Task<IList<(string Source, string Target, QueryGroup Where)>> GetTablesAsync(IDbConnection connection,
             IDbConnection destinationConnection,
@@ -113,7 +117,8 @@ namespace RepoDb.Data
             int? commandTimeout,
             ITrace trace,
             IDbTransaction transaction,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken,
+            IList<CopyDataColumnMapping> mappings = null)
         {
             var requested = new List<(string, string, QueryGroup)> { (sourceTable, targetTable, where) };
             if (!IsSchemaRequested(relationshipBehavior, tableExistenceBehavior, targetSchema))
@@ -124,6 +129,7 @@ namespace RepoDb.Data
             var schemaBehavior = ToSchemaBehavior(relationshipBehavior);
             await connection.CopySchemaToAsync(new[] { sourceTable },
                 destinationConnection,
+                columns: ToColumns(mappings),
                 targetSchema: targetSchema,
                 tableExistenceBehavior: tableExistenceBehavior,
                 relationshipBehavior: schemaBehavior,
@@ -395,6 +401,16 @@ namespace RepoDb.Data
                 }
             }
         }
+
+        /// <summary>
+        /// Gets the names of the source columns of the mappings, so the schema of the target table is created with only the mapped columns.
+        /// </summary>
+        /// <param name="mappings"></param>
+        /// <returns>The distinct names of the source columns (<c>null</c> if there are no mappings, which creates all the columns).</returns>
+        private static string[] ToColumns(IList<CopyDataColumnMapping> mappings) =>
+            mappings == null || mappings.Count == 0
+                ? null
+                : mappings.Select(mapping => mapping.SourceColumn).Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
 
         /// <summary>
         /// Composes the <c>SELECT</c> statement of the source table with the statement builder of the connection, and the parameters of its filter.

@@ -79,6 +79,41 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             return reader;
         }
 
+        private static TableSchema GetSchemaOfPerson()
+        {
+            var schema = new TableSchema("Person", "dbo");
+            foreach (var name in new[] { "Id", "Name", "Birthday" })
+            {
+                var column = new ColumnInfo();
+                typeof(ColumnInfo).GetProperty(nameof(ColumnInfo.Field)).SetValue(column, new DbField(name, false, false, true, typeof(string), null, null, null, null));
+                schema.Columns.Add(column);
+            }
+            return schema;
+        }
+
+        private static List<string[]> MapColumnsOfPerson()
+        {
+            var composed = new List<string[]>();
+            var reader = MapReader(new[] { "Person" }, "Person");
+            reader.Setup(r => r.GetTableSchema(It.IsAny<string>())).Returns<string>(_ => GetSchemaOfPerson());
+            reader.Setup(r => r.GetDependencyOrder(It.IsAny<IEnumerable<string>>())).Returns(() => new[] { CreateRelationship(GetSchemaOfPerson()) }.ToList());
+            reader.Setup(r => r.GetDependencyOrderAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(() => new[] { CreateRelationship(GetSchemaOfPerson()) }.ToList());
+            reader.Setup(r => r.GetTableSchemaAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).Returns<string, CancellationToken>((_, __) => Task.FromResult(GetSchemaOfPerson()));
+            var composer = new Mock<ISchemaComposer>();
+            composer.Setup(c => c.ComposeSchemas(It.IsAny<IEnumerable<TableSchema>>())).Returns<IEnumerable<TableSchema>>(schemas =>
+            {
+                composed.AddRange(schemas.Select(x => x.Columns.Select(c => c.Field.Name).ToArray()));
+                return schemas.Select(x => $"CREATE TABLE {x.Table.Name};").ToList();
+            });
+            composer.Setup(c => c.ComposeSchema(It.IsAny<TableSchema>())).Returns<TableSchema>(x =>
+            {
+                composed.Add(x.Columns.Select(c => c.Field.Name).ToArray());
+                return new[] { $"CREATE TABLE {x.Table.Name};" };
+            });
+            SchemaComposerMapper.Add<FakeDbConnection>(composer.Object, true);
+            return composed;
+        }
+
         private static Mock<ISchemaComposer> MapComposer()
         {
             var composer = new Mock<ISchemaComposer>();
@@ -434,6 +469,59 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
 
             // Assert
             Assert.IsTrue(destination.Executions.Any(e => e.CommandTimeout == 77));
+        }
+
+        [TestMethod]
+        public void TestGetTablesWithMappingsCreatesTheTargetTableWithOnlyTheMappedColumns()
+        {
+            // Setup
+            var composed = MapColumnsOfPerson();
+
+            // Act
+            DataDbConnection.GetTables(new FakeDbConnection(), new FakeDbConnection(), "Person", "Person", "Sales", null, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Skip, null, null, null,
+                new[] { new CopyDataColumnMapping("Name", "Name"), new CopyDataColumnMapping("name", "Alias") });
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { "Name" }, composed.First());
+        }
+
+        [TestMethod]
+        public async Task TestGetTablesAsyncWithMappingsCreatesTheTargetTableWithOnlyTheMappedColumns()
+        {
+            // Setup
+            var composed = MapColumnsOfPerson();
+
+            // Act
+            await DataDbConnection.GetTablesAsync(new FakeDbConnection(), new FakeDbConnection(), "Person", "Person", "Sales", null, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Skip, null, null, null, CancellationToken.None,
+                new[] { new CopyDataColumnMapping("Id", "Id"), new CopyDataColumnMapping("Birthday", "Birthday") });
+
+            // Assert
+            CollectionAssert.AreEquivalent(new[] { "Id", "Birthday" }, composed.First());
+        }
+
+        [TestMethod]
+        public void TestGetTablesWithoutMappingsCreatesTheTargetTableWithAllTheColumns()
+        {
+            // Setup
+            var composed = MapColumnsOfPerson();
+
+            // Act
+            DataDbConnection.GetTables(new FakeDbConnection(), new FakeDbConnection(), "Person", "Person", "Sales", null, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Skip, null, null, null);
+
+            // Assert
+            CollectionAssert.AreEquivalent(new[] { "Id", "Name", "Birthday" }, composed.First());
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnGetTablesIfAMappedSourceColumnDoesNotExistOnTheSourceTable()
+        {
+            // Setup
+            MapColumnsOfPerson();
+
+            // Act/Assert
+            Assert.Throws<ArgumentException>(() =>
+                DataDbConnection.GetTables(new FakeDbConnection(), new FakeDbConnection(), "Person", "Person", "Sales", null, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Skip, null, null, null,
+                    new[] { new CopyDataColumnMapping("Missing", "Missing") }));
         }
 
         #endregion
