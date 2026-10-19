@@ -73,6 +73,7 @@ namespace RepoDb.Data
             connection.CopySchemaTo(new[] { sourceTable },
                 destinationConnection,
                 columns: ToColumns(mappings),
+                renamedColumns: ToRenamedColumns(mappings),
                 targetSchema: targetSchema,
                 tableExistenceBehavior: tableExistenceBehavior,
                 relationshipBehavior: schemaBehavior,
@@ -130,6 +131,7 @@ namespace RepoDb.Data
             await connection.CopySchemaToAsync(new[] { sourceTable },
                 destinationConnection,
                 columns: ToColumns(mappings),
+                renamedColumns: ToRenamedColumns(mappings),
                 targetSchema: targetSchema,
                 tableExistenceBehavior: tableExistenceBehavior,
                 relationshipBehavior: schemaBehavior,
@@ -411,6 +413,29 @@ namespace RepoDb.Data
             mappings == null || mappings.Count == 0
                 ? null
                 : mappings.Select(mapping => mapping.SourceColumn).Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
+
+        /// <summary>
+        /// Gets the new names of the columns of the target table by the source column, so the schema of the target table is created with the destination names of the mappings.
+        /// </summary>
+        /// <param name="mappings"></param>
+        /// <returns>The destination column by the source column, for the columns that have another name (<c>null</c> if there are none). A source column that is mapped more than once is created with its first destination column.</returns>
+        private static IDictionary<string, string> ToRenamedColumns(IList<CopyDataColumnMapping> mappings)
+        {
+            if (mappings == null || mappings.Count == 0)
+            {
+                return null;
+            }
+            var renamed = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var mapping in mappings)
+            {
+                if (seen.Add(mapping.SourceColumn) && !string.Equals(mapping.SourceColumn, mapping.DestinationColumn, StringComparison.Ordinal))
+                {
+                    renamed[mapping.SourceColumn] = mapping.DestinationColumn;
+                }
+            }
+            return renamed.Count == 0 ? null : renamed;
+        }
 
         /// <summary>
         /// Composes the <c>SELECT</c> statement of the source table with the statement builder of the connection, and the parameters of its filter.

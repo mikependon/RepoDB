@@ -47,6 +47,7 @@ namespace RepoDb.Schema
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopySchemaTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
+        /// <param name="renamedColumns">The new names of the columns (the source column name and the name that the column has in the destination database; the names are not case sensitive), i.e.: when a table is copied to receive the data of other column names. The columns that are not listed keep their name. The primary key, the indexes, the unique constraints, the check constraints and the foreign keys follow the renamed columns. The default is <c>null</c>, which keeps all the names.</param>
         /// <returns>The <see cref="CopySchemaResult"/> that describes the schema copy operation.</returns>
         public static CopySchemaResult CopySchemaTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IDbConnection destinationConnection,
@@ -57,9 +58,10 @@ namespace RepoDb.Schema
             int? commandTimeout = null,
             string traceKey = SchemaTraceKeys.CopySchemaTo,
             ITrace trace = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            IDictionary<string, string> renamedColumns = null)
             where TEntity : class =>
-            connection.CopySchemaTo(ClassMappedNameCache.Get<TEntity>(), destinationConnection, targetSchema, columns, tableExistenceBehavior, relationshipBehavior, commandTimeout, traceKey, trace, transaction);
+            connection.CopySchemaTo(ClassMappedNameCache.Get<TEntity>(), destinationConnection, targetSchema, columns, tableExistenceBehavior, relationshipBehavior, commandTimeout, traceKey, trace, transaction, renamedColumns);
 
         /// <summary>
         /// Copies the schema of the source table of the current connection into the same-named table of the destination connection.
@@ -76,6 +78,7 @@ namespace RepoDb.Schema
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopySchemaTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
+        /// <param name="renamedColumns">The new names of the columns (the source column name and the name that the column has in the destination database; the names are not case sensitive), i.e.: when a table is copied to receive the data of other column names. The columns that are not listed keep their name. The primary key, the indexes, the unique constraints, the check constraints and the foreign keys follow the renamed columns. The default is <c>null</c>, which keeps all the names.</param>
         /// <returns>The <see cref="CopySchemaResult"/> that describes the schema copy operation.</returns>
         public static CopySchemaResult CopySchemaTo(this IDbConnection connection,
             string tableName,
@@ -87,7 +90,8 @@ namespace RepoDb.Schema
             int? commandTimeout = null,
             string traceKey = SchemaTraceKeys.CopySchemaTo,
             ITrace trace = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            IDictionary<string, string> renamedColumns = null)
         {
             Validate(connection, tableName, destinationConnection);
 
@@ -100,6 +104,7 @@ namespace RepoDb.Schema
                 tableExistenceBehavior,
                 relationshipBehavior,
                 createdCallback: results.Add,
+                renamedColumns: renamedColumns,
                 commandTimeout: commandTimeout,
                 traceKey: traceKey,
                 trace: trace,
@@ -132,6 +137,7 @@ namespace RepoDb.Schema
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopySchemasTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
+        /// <param name="renamedColumns">The new names of the columns (the source column name and the name that the column has in the destination database; the names are not case sensitive), i.e.: when a table is copied to receive the data of other column names. The columns that are not listed keep their name. The primary key, the indexes, the unique constraints, the check constraints and the foreign keys follow the renamed columns. The default is <c>null</c>, which keeps all the names.</param>
         [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static void CopySchemaTo(this IDbConnection connection,
             IEnumerable<string> tableNames,
@@ -145,12 +151,14 @@ namespace RepoDb.Schema
             int? commandTimeout = null,
             string traceKey = SchemaTraceKeys.CopySchemasTo,
             ITrace trace = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            IDictionary<string, string> renamedColumns = null)
         {
             // Validate
             var names = Validate(connection, tableNames, destinationConnection);
             var requestedNames = names;
             var selectedColumns = CopySchemaColumns.Normalize(columns);
+            var renamed = CopySchemaColumns.NormalizeRenamed(renamedColumns);
             if (names.Count == 0)
             {
                 return;
@@ -167,10 +175,10 @@ namespace RepoDb.Schema
                 names = schemaReader.GetRelatedTables(names, relationshipBehavior).ToList();
             }
             var schemas = schemaReader.GetDependencyOrder(names).Select(r => r.Schema).ToList();
-            if (selectedColumns != null)
+            if (selectedColumns != null || renamed != null)
             {
                 var requestedSchemas = requestedNames.Select(schemaReader.GetTableSchema).ToList();
-                schemas = CopySchemaColumns.Apply(schemas, requestedSchemas, selectedColumns).ToList();
+                schemas = CopySchemaColumns.Apply(schemas, requestedSchemas, selectedColumns, renamed).ToList();
             }
             var tables = CopySchemaPlan.CreateTables(schemas, GetTargetSchema(targetSchema, destinationConnection), schemaComposer);
             ProbeTables(tables, tableExistenceBehavior, schemaComposer, destinationConnection, commandTimeout, trace, transaction);
@@ -230,6 +238,7 @@ namespace RepoDb.Schema
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <param name="renamedColumns">The new names of the columns (the source column name and the name that the column has in the destination database; the names are not case sensitive), i.e.: when a table is copied to receive the data of other column names. The columns that are not listed keep their name. The primary key, the indexes, the unique constraints, the check constraints and the foreign keys follow the renamed columns. The default is <c>null</c>, which keeps all the names.</param>
         /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopySchemaResult"/> that describes the schema copy operation.</returns>
         public static Task<CopySchemaResult> CopySchemaToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IDbConnection destinationConnection,
@@ -241,9 +250,10 @@ namespace RepoDb.Schema
             string traceKey = SchemaTraceKeys.CopySchemaTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            IDictionary<string, string> renamedColumns = null)
             where TEntity : class =>
-            connection.CopySchemaToAsync(ClassMappedNameCache.Get<TEntity>(), destinationConnection, targetSchema, columns, tableExistenceBehavior, relationshipBehavior, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopySchemaToAsync(ClassMappedNameCache.Get<TEntity>(), destinationConnection, targetSchema, columns, tableExistenceBehavior, relationshipBehavior, commandTimeout, traceKey, trace, transaction, cancellationToken, renamedColumns);
 
         /// <summary>
         /// Copies the schema of the source table of the current connection into the same-named table of the destination connection.
@@ -261,6 +271,7 @@ namespace RepoDb.Schema
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <param name="renamedColumns">The new names of the columns (the source column name and the name that the column has in the destination database; the names are not case sensitive), i.e.: when a table is copied to receive the data of other column names. The columns that are not listed keep their name. The primary key, the indexes, the unique constraints, the check constraints and the foreign keys follow the renamed columns. The default is <c>null</c>, which keeps all the names.</param>
         /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopySchemaResult"/> that describes the schema copy operation.</returns>
         public static async Task<CopySchemaResult> CopySchemaToAsync(this IDbConnection connection,
             string tableName,
@@ -273,7 +284,8 @@ namespace RepoDb.Schema
             string traceKey = SchemaTraceKeys.CopySchemaTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            IDictionary<string, string> renamedColumns = null)
         {
             Validate(connection, tableName, destinationConnection);
             var results = new List<CopySchemaResult>();
@@ -284,6 +296,7 @@ namespace RepoDb.Schema
                 tableExistenceBehavior,
                 relationshipBehavior,
                 createdCallback: results.Add,
+                renamedColumns: renamedColumns,
                 commandTimeout: commandTimeout,
                 traceKey: traceKey,
                 trace: trace,
@@ -318,6 +331,7 @@ namespace RepoDb.Schema
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <param name="renamedColumns">The new names of the columns (the source column name and the name that the column has in the destination database; the names are not case sensitive), i.e.: when a table is copied to receive the data of other column names. The columns that are not listed keep their name. The primary key, the indexes, the unique constraints, the check constraints and the foreign keys follow the renamed columns. The default is <c>null</c>, which keeps all the names.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
         [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task CopySchemaToAsync(this IDbConnection connection,
@@ -333,12 +347,14 @@ namespace RepoDb.Schema
             string traceKey = SchemaTraceKeys.CopySchemasTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            IDictionary<string, string> renamedColumns = null)
         {
             // Validate
             var names = Validate(connection, tableNames, destinationConnection);
             var requestedNames = names;
             var selectedColumns = CopySchemaColumns.Normalize(columns);
+            var renamed = CopySchemaColumns.NormalizeRenamed(renamedColumns);
             if (names.Count == 0)
             {
                 return;
@@ -356,14 +372,14 @@ namespace RepoDb.Schema
             }
             var relationships = await schemaReader.GetDependencyOrderAsync(names, cancellationToken).ConfigureAwait(false);
             var schemas = relationships.Select(r => r.Schema).ToList();
-            if (selectedColumns != null)
+            if (selectedColumns != null || renamed != null)
             {
                 var requestedSchemas = new List<TableSchema>();
                 foreach (var name in requestedNames)
                 {
                     requestedSchemas.Add(await schemaReader.GetTableSchemaAsync(name, cancellationToken).ConfigureAwait(false));
                 }
-                schemas = CopySchemaColumns.Apply(schemas, requestedSchemas, selectedColumns).ToList();
+                schemas = CopySchemaColumns.Apply(schemas, requestedSchemas, selectedColumns, renamed).ToList();
             }
             var tables = CopySchemaPlan.CreateTables(schemas, GetTargetSchema(targetSchema, destinationConnection), schemaComposer);
             await ProbeTablesAsync(tables, tableExistenceBehavior, schemaComposer, destinationConnection, commandTimeout, trace, transaction, cancellationToken).ConfigureAwait(false);

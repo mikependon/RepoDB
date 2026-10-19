@@ -524,6 +524,48 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
                     new[] { new CopyDataColumnMapping("Missing", "Missing") }));
         }
 
+        [TestMethod]
+        public void TestGetTablesWithMappingsCreatesTheTargetTableWithTheDestinationColumnNames()
+        {
+            // Setup
+            var composed = MapColumnsOfPerson();
+
+            // Act
+            DataDbConnection.GetTables(new FakeDbConnection(), new FakeDbConnection(), "Person", "Person", "Sales", null, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Skip, null, null, null,
+                new[] { new CopyDataColumnMapping("Id", "PersonId"), new CopyDataColumnMapping("Name", "FullName") });
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { "PersonId", "FullName" }, composed.First());
+        }
+
+        [TestMethod]
+        public async Task TestGetTablesAsyncWithMappingsCreatesTheTargetTableWithTheDestinationColumnNames()
+        {
+            // Setup
+            var composed = MapColumnsOfPerson();
+
+            // Act
+            await DataDbConnection.GetTablesAsync(new FakeDbConnection(), new FakeDbConnection(), "Person", "Person", "Sales", null, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Skip, null, null, null, CancellationToken.None,
+                new[] { new CopyDataColumnMapping("Id", "PersonId"), new CopyDataColumnMapping("Name", "FullName") });
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { "PersonId", "FullName" }, composed.First());
+        }
+
+        [TestMethod]
+        public void TestGetTablesWithASourceColumnMappedMoreThanOnceCreatesTheColumnWithTheFirstDestinationColumn()
+        {
+            // Setup
+            var composed = MapColumnsOfPerson();
+
+            // Act
+            DataDbConnection.GetTables(new FakeDbConnection(), new FakeDbConnection(), "Person", "Person", "Sales", null, CopyDataRelationshipBehavior.TableOnly, CopySchemaExistsBehavior.Skip, null, null, null,
+                new[] { new CopyDataColumnMapping("Name", "Name"), new CopyDataColumnMapping("Name", "Alias") });
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { "Name" }, composed.First());
+        }
+
         #endregion
 
         #region CopyRows
