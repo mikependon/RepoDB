@@ -526,7 +526,7 @@ namespace RepoDb.Schema.DuckDb.UnitTests
                 Columns = { "CountryId" },
                 ReferencedTable = new TableInfo("Country", null),
                 ReferencedColumns = { "Id" },
-                DeleteRule = CopySchemaForeignKeyRule.SetDefault
+                DeleteRule = CopyTableSchemaForeignKeyRule.SetDefault
             };
 
             // Act

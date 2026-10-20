@@ -518,8 +518,8 @@ namespace RepoDb.Schema.Firebird.UnitTests
                 Columns = { "CountryId" },
                 ReferencedTable = new TableInfo("Country", null),
                 ReferencedColumns = { "Id" },
-                DeleteRule = CopySchemaForeignKeyRule.SetNull,
-                UpdateRule = CopySchemaForeignKeyRule.Cascade
+                DeleteRule = CopyTableSchemaForeignKeyRule.SetNull,
+                UpdateRule = CopyTableSchemaForeignKeyRule.Cascade
             };
 
             // Act
@@ -539,7 +539,7 @@ namespace RepoDb.Schema.Firebird.UnitTests
                 Columns = { "CountryId" },
                 ReferencedTable = new TableInfo("Country", null),
                 ReferencedColumns = { "Id" },
-                DeleteRule = CopySchemaForeignKeyRule.SetDefault
+                DeleteRule = CopyTableSchemaForeignKeyRule.SetDefault
             };
 
             // Act
@@ -559,8 +559,8 @@ namespace RepoDb.Schema.Firebird.UnitTests
                 Columns = { "CountryId" },
                 ReferencedTable = new TableInfo("Country", null),
                 ReferencedColumns = { "Id" },
-                DeleteRule = CopySchemaForeignKeyRule.Restrict,
-                UpdateRule = CopySchemaForeignKeyRule.Restrict
+                DeleteRule = CopyTableSchemaForeignKeyRule.Restrict,
+                UpdateRule = CopyTableSchemaForeignKeyRule.Restrict
             };
 
             // Act

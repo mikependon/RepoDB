@@ -13,26 +13,26 @@ using RepoDb.Schema.Enumerations;
 namespace RepoDb.Schema.Core.UnitTests.Enumerations
 {
     [TestClass]
-    public class CopySchemaRelationshipBehaviorTest
+    public class CopyTableSchemaRelationshipBehaviorTest
     {
         #region Methods
 
         [TestMethod]
-        public void TestCopySchemaRelationshipBehaviorDefaultValue()
+        public void TestCopyTableSchemaRelationshipBehaviorDefaultValue()
         {
             // Act
-            var actual = default(CopySchemaRelationshipBehavior);
-            var expected = CopySchemaRelationshipBehavior.TableOnly;
+            var actual = default(CopyTableSchemaRelationshipBehavior);
+            var expected = CopyTableSchemaRelationshipBehavior.TableOnly;
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void TestCopySchemaRelationshipBehaviorValues()
+        public void TestCopyTableSchemaRelationshipBehaviorValues()
         {
             // Act
-            var actual = Enum.GetNames(typeof(CopySchemaRelationshipBehavior));
+            var actual = Enum.GetNames(typeof(CopyTableSchemaRelationshipBehavior));
             var expected = new[] { "TableOnly", "Parents", "Children", "ParentsAndChildren" };
 
             // Assert

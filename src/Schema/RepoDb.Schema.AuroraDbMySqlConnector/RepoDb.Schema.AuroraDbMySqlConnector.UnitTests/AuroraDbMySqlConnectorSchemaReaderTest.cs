@@ -76,7 +76,7 @@ namespace RepoDb.Schema.AuroraDbMySqlConnector.UnitTests
             var reader = new AuroraDbMySqlConnectorSchemaReader(new AuroraDbConnection());
 
             // Act/Assert
-            Assert.Throws<ArgumentNullException>(() => reader.GetRelatedTables(null, CopySchemaRelationshipBehavior.ParentsAndChildren));
+            Assert.Throws<ArgumentNullException>(() => reader.GetRelatedTables(null, CopyTableSchemaRelationshipBehavior.ParentsAndChildren));
         }
 
         [TestMethod]
@@ -86,7 +86,7 @@ namespace RepoDb.Schema.AuroraDbMySqlConnector.UnitTests
             var reader = new AuroraDbMySqlConnectorSchemaReader(new AuroraDbConnection());
 
             // Act/Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(() => reader.GetRelatedTablesAsync(null, CopySchemaRelationshipBehavior.ParentsAndChildren));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => reader.GetRelatedTablesAsync(null, CopyTableSchemaRelationshipBehavior.ParentsAndChildren));
         }
 
         #endregion

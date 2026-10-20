@@ -50,7 +50,7 @@ namespace RepoDb.Schema.CockroachDb.UnitTests
                 UniqueConstraints = { new UniqueConstraintInfo("uq_person_name") { Columns = { "Name" } } },
                 CheckConstraints = { new CheckConstraintInfo("ck_person_age") { Expression = "\"Age\" >= 0" } },
                 Indexes = { new IndexInfo("ix_person_name") { Columns = { "Name", "Age" }, DescendingColumns = { "Name" }, IncludedColumns = { "Double" }, IsUnique = true, Filter = "\"Age\" > 0" } },
-                ForeignKeys = { new ForeignKeyInfo("fk_person_country") { Columns = { "Id" }, ReferencedTable = new TableInfo("country", "public"), ReferencedColumns = { "id" }, DeleteRule = CopySchemaForeignKeyRule.Cascade, UpdateRule = CopySchemaForeignKeyRule.SetNull } }
+                ForeignKeys = { new ForeignKeyInfo("fk_person_country") { Columns = { "Id" }, ReferencedTable = new TableInfo("country", "public"), ReferencedColumns = { "id" }, DeleteRule = CopyTableSchemaForeignKeyRule.Cascade, UpdateRule = CopyTableSchemaForeignKeyRule.SetNull } }
             };
 
         #endregion
@@ -199,10 +199,10 @@ namespace RepoDb.Schema.CockroachDb.UnitTests
         }
 
         [TestMethod]
-        [DataRow(CopySchemaForeignKeyRule.NoAction, "")]
-        [DataRow(CopySchemaForeignKeyRule.Restrict, " ON DELETE RESTRICT ON UPDATE RESTRICT")]
-        [DataRow(CopySchemaForeignKeyRule.SetDefault, " ON DELETE SET DEFAULT ON UPDATE SET DEFAULT")]
-        public void TestCockroachDbSchemaComposerComposeAddForeignKeyRules(CopySchemaForeignKeyRule rule, string expected)
+        [DataRow(CopyTableSchemaForeignKeyRule.NoAction, "")]
+        [DataRow(CopyTableSchemaForeignKeyRule.Restrict, " ON DELETE RESTRICT ON UPDATE RESTRICT")]
+        [DataRow(CopyTableSchemaForeignKeyRule.SetDefault, " ON DELETE SET DEFAULT ON UPDATE SET DEFAULT")]
+        public void TestCockroachDbSchemaComposerComposeAddForeignKeyRules(CopyTableSchemaForeignKeyRule rule, string expected)
         {
             // Setup
             var foreignKey = new ForeignKeyInfo(null) { Columns = { "a" }, ReferencedTable = new TableInfo("b", null), ReferencedColumns = { "id" }, DeleteRule = rule, UpdateRule = rule };

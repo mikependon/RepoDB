@@ -279,7 +279,7 @@ namespace RepoDb.Data.Vertica.IntegrationTests
             {
                 // Setup
                 Helper.MapSchemaReader(source);
-                source.CopyDataTo("Country", target, tableExistenceBehavior: CopySchemaExistsBehavior.Throw);
+                source.CopyDataTo("Country", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw);
 
                 // Act
                 var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Children);
@@ -313,7 +313,7 @@ namespace RepoDb.Data.Vertica.IntegrationTests
             {
                 // Setup
                 Helper.MapSchemaReader(source);
-                source.CopyDataTo("Country", target, tableExistenceBehavior: CopySchemaExistsBehavior.Throw);
+                source.CopyDataTo("Country", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw);
 
                 // Act
                 source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Children);

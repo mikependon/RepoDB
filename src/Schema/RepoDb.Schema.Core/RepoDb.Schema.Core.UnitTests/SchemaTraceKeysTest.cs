@@ -128,22 +128,22 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestSchemaTraceKeysCopySchemaTo()
+        public void TestSchemaTraceKeysCopyTableSchemaTo()
         {
             // Act
-            var actual = SchemaTraceKeys.CopySchemaTo;
-            var expected = "CopySchemaTo";
+            var actual = SchemaTraceKeys.CopyTableSchemaTo;
+            var expected = "CopyTableSchemaTo";
 
             // Assert
             Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
         [TestMethod]
-        public void TestSchemaTraceKeysCopySchemasTo()
+        public void TestSchemaTraceKeysCopyTableSchemasTo()
         {
             // Act
-            var actual = SchemaTraceKeys.CopySchemasTo;
-            var expected = "CopySchemasTo";
+            var actual = SchemaTraceKeys.CopyTableSchemasTo;
+            var expected = "CopyTableSchemasTo";
 
             // Assert
             Assert.AreEqual(expected, actual, StringComparer.Ordinal);

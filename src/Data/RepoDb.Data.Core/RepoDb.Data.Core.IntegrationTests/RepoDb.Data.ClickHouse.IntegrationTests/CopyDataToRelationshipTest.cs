@@ -187,7 +187,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
             {
                 // Setup
                 Helper.MapSchemaReader(source);
-                source.CopyDataTo("Country", target, tableExistenceBehavior: CopySchemaExistsBehavior.Throw);
+                source.CopyDataTo("Country", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw);
 
                 // Act
                 source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Children);

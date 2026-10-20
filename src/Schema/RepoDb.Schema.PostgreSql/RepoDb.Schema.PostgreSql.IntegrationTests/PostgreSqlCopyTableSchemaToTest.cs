@@ -18,7 +18,7 @@ using RepoDb.Schema.PostgreSql.IntegrationTests.Setup;
 namespace RepoDb.Schema.PostgreSql.IntegrationTests
 {
     [TestClass]
-    public class PostgreSqlCopySchemaToTest
+    public class PostgreSqlCopyTableSchemaToTest
     {
         [TestInitialize]
         public void Initialize()
@@ -41,26 +41,26 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
 
         #endregion
 
-        #region CopySchemaTo
+        #region CopyTableSchemaTo
 
         [TestMethod]
-        public void TestPostgreSqlCopySchemaTo()
+        public void TestPostgreSqlCopyTableSchemaTo()
         {
             using (var source = new NpgsqlConnection(Database.ConnectionStringForSource))
             using (var target = new NpgsqlConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo("country", target);
+                source.CopyTableSchemaTo("country", target);
 
                 // Act
-                var result = source.CopySchemaTo("Person", target);
+                var result = source.CopyTableSchemaTo("Person", target);
 
                 // Assert
                 Helper.AssertTargetMatchesSource("country");
                 Helper.AssertTargetMatchesSource("Person");
                 Assert.AreEqual("Person", result.TableName);
-                Assert.AreEqual(CopySchemaOutcome.Created, result.Outcome);
+                Assert.AreEqual(CopyTableSchemaOutcome.Created, result.Outcome);
                 Assert.AreEqual(10, result.ColumnCount);
                 Assert.AreEqual(2, result.IndexCount);
                 Assert.AreEqual(1, result.ForeignKeyCount);
@@ -68,7 +68,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestPostgreSqlCopySchemaToSerialAndWithoutKey()
+        public void TestPostgreSqlCopyTableSchemaToSerialAndWithoutKey()
         {
             using (var source = new NpgsqlConnection(Database.ConnectionStringForSource))
             using (var target = new NpgsqlConnection(Database.ConnectionStringForTarget))
@@ -77,8 +77,8 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                source.CopySchemaTo("ticket", target);
-                source.CopySchemaTo("no_key", target);
+                source.CopyTableSchemaTo("ticket", target);
+                source.CopyTableSchemaTo("no_key", target);
 
                 // Assert
                 Helper.AssertTargetMatchesSource("ticket");
@@ -87,18 +87,18 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestPostgreSqlCopySchemaToAcceptsTheSchemaOfTheTable()
+        public void TestPostgreSqlCopyTableSchemaToAcceptsTheSchemaOfTheTable()
         {
             using (var source = new NpgsqlConnection(Database.ConnectionStringForSource))
             using (var target = new NpgsqlConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo("country", target);
-                source.CopySchemaTo("Person", target);
+                source.CopyTableSchemaTo("country", target);
+                source.CopyTableSchemaTo("Person", target);
 
                 // Act
-                var result = source.CopySchemaTo("sales.order_line", target);
+                var result = source.CopyTableSchemaTo("sales.order_line", target);
 
                 // Assert
                 Assert.AreEqual("sales", result.SourceSchema);
@@ -108,26 +108,26 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void ThrowExceptionOnPostgreSqlCopySchemaToIfTheTableAlreadyExists()
+        public void ThrowExceptionOnPostgreSqlCopyTableSchemaToIfTheTableAlreadyExists()
         {
             using (var source = new NpgsqlConnection(Database.ConnectionStringForSource))
             using (var target = new NpgsqlConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo("country", target);
+                source.CopyTableSchemaTo("country", target);
 
                 // Act/Assert
-                Assert.Throws<InvalidOperationException>(() => source.CopySchemaTo("country", target, tableExistenceBehavior: CopySchemaExistsBehavior.Throw));
+                Assert.Throws<InvalidOperationException>(() => source.CopyTableSchemaTo("country", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
             }
         }
 
         #endregion
 
-        #region CopySchemaTo (Multiple Tables)
+        #region CopyTableSchemaTo (Multiple Tables)
 
         [TestMethod]
-        public void TestPostgreSqlCopySchemaToWithTheTablesInAnyOrderAndWithCycles()
+        public void TestPostgreSqlCopyTableSchemaToWithTheTablesInAnyOrderAndWithCycles()
         {
             using (var source = new NpgsqlConnection(Database.ConnectionStringForSource))
             using (var target = new NpgsqlConnection(Database.ConnectionStringForTarget))
@@ -138,7 +138,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
                 var created = new List<string>();
 
                 // Act
-                source.CopySchemaTo(tables, target, createdCallback: r => created.Add(r.TableName));
+                source.CopyTableSchemaTo(tables, target, createdCallback: r => created.Add(r.TableName));
 
                 // Assert
                 CollectionAssert.AreEquivalent(new[] { "order_line", "node_a", "node_b", "Person", "country" }, created);
@@ -151,7 +151,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestPostgreSqlCopySchemaToWithErrorCallbackContinuesWithTheOtherTables()
+        public void TestPostgreSqlCopyTableSchemaToWithErrorCallbackContinuesWithTheOtherTables()
         {
             Helper.DisableExistenceChecks();
 
@@ -160,12 +160,12 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo("no_key", target);
-                var errors = new List<CopySchemaError>();
-                var created = new List<CopySchemaResult>();
+                source.CopyTableSchemaTo("no_key", target);
+                var errors = new List<CopyTableSchemaError>();
+                var created = new List<CopyTableSchemaResult>();
 
                 // Act
-                source.CopySchemaTo(new[] { "no_key", "country", "Person" }, target, createdCallback: created.Add, errorCallback: errors.Add);
+                source.CopyTableSchemaTo(new[] { "no_key", "country", "Person" }, target, createdCallback: created.Add, errorCallback: errors.Add);
 
                 // Assert
                 Assert.AreEqual(1, errors.Count);
@@ -173,14 +173,14 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
                 Assert.IsInstanceOfType<PostgresException>(errors[0].Exception);
                 Assert.AreEqual(3, created.Count);
                 Assert.AreSame(errors[0], created.Single(r => r.TableName == "no_key").Errors.Single());
-                Assert.AreEqual(CopySchemaOutcome.Failed, created.Single(r => r.TableName == "no_key").Outcome);
+                Assert.AreEqual(CopyTableSchemaOutcome.Failed, created.Single(r => r.TableName == "no_key").Outcome);
                 Helper.AssertTargetMatchesSource("country");
                 Helper.AssertTargetMatchesSource("Person");
             }
         }
 
         [TestMethod]
-        public async Task TestPostgreSqlCopySchemaToAsync()
+        public async Task TestPostgreSqlCopyTableSchemaToAsync()
         {
             using (var source = new NpgsqlConnection(Database.ConnectionStringForSource))
             using (var target = new NpgsqlConnection(Database.ConnectionStringForTarget))
@@ -189,8 +189,8 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var single = await source.CopySchemaToAsync("country", target);
-                await source.CopySchemaToAsync(new[] { "Person", "node_a", "node_b" }, target);
+                var single = await source.CopyTableSchemaToAsync("country", target);
+                await source.CopyTableSchemaToAsync(new[] { "Person", "node_a", "node_b" }, target);
 
                 // Assert
                 Assert.AreEqual("country", single.TableName);

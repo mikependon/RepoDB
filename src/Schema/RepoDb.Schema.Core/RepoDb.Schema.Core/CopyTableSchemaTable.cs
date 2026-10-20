@@ -16,17 +16,17 @@ namespace RepoDb.Schema
     /// A class that holds the state of a table that is being copied: its schema, its name in the destination database,
     /// and what is known about the table that already exists in the destination database.
     /// </summary>
-    internal sealed class CopySchemaTable
+    internal sealed class CopyTableSchemaTable
     {
         #region Constructors
 
         /// <summary>
-        /// Creates a new instance of <see cref="CopySchemaTable"/> class.
+        /// Creates a new instance of <see cref="CopyTableSchemaTable"/> class.
         /// </summary>
         /// <param name="source">The schema of the table, as read from the source database.</param>
         /// <param name="schema">The schema of the table that is created in the destination database (the same as the source schema if the table is not moved to another schema).</param>
         /// <param name="name">The name of the table in the dialect of the destination database.</param>
-        public CopySchemaTable(TableSchema source,
+        public CopyTableSchemaTable(TableSchema source,
             TableSchema schema,
             string name)
         {
@@ -77,7 +77,7 @@ namespace RepoDb.Schema
         /// <summary>
         /// Gets or sets what is going to be done to the table.
         /// </summary>
-        public CopySchemaOutcome Outcome { get; set; } = CopySchemaOutcome.Created;
+        public CopyTableSchemaOutcome Outcome { get; set; } = CopyTableSchemaOutcome.Created;
 
         /// <summary>
         /// Gets or sets the statement that drops the existing table (when the table is dropped before it is created).

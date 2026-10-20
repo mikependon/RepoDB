@@ -14,14 +14,14 @@ namespace RepoDb.Schema
     public static class SchemaTraceKeys
     {
         /// <summary>
-        /// The trace key for the 'CopySchemaTo' operation.
+        /// The trace key for the 'CopyTableSchemaTo' operation.
         /// </summary>
-        public const string CopySchemaTo = "CopySchemaTo";
+        public const string CopyTableSchemaTo = "CopyTableSchemaTo";
 
         /// <summary>
-        /// The trace key for the 'CopySchemasTo' operation.
+        /// The trace key for the 'CopyTableSchemasTo' operation.
         /// </summary>
-        public const string CopySchemasTo = "CopySchemasTo";
+        public const string CopyTableSchemasTo = "CopyTableSchemasTo";
 
         /// <summary>
         /// The trace key used when the check constraints of a table are being read.

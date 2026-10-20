@@ -205,7 +205,7 @@ namespace RepoDb.Data.Oracle.IntegrationTests
                 source.CopyDataTo("Currency", "REPODB_DATA_TGT_SALES.Currency", target);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "REPODB_DATA_TGT_SALES.Currency", target, tableExistenceBehavior: CopySchemaExistsBehavior.Drop);
+                var actual = source.CopyDataTo("Currency", "REPODB_DATA_TGT_SALES.Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
 
                 // Assert
                 Assert.AreEqual(3, actual);

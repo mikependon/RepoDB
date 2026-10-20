@@ -19,7 +19,7 @@ using RepoDb.Schema.DuckDb.IntegrationTests.Setup;
 namespace RepoDb.Schema.DuckDb.IntegrationTests
 {
     [TestClass]
-    public class CopySchemasToTest
+    public class CopyTableSchemasToTest
     {
         [TestInitialize]
         public void Initialize()
@@ -73,12 +73,12 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
 
         #endregion
 
-        #region CopySchemasTo
+        #region CopyTableSchemasTo
 
         #region Sync
 
         [TestMethod]
-        public void TestCopySchemasTo()
+        public void TestCopyTableSchemasTo()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -87,7 +87,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                source.CopySchemaTo(new[] { "Country", "Person" }, target);
+                source.CopyTableSchemaTo(new[] { "Country", "Person" }, target);
 
                 // Assert
                 AssertTargetMatchesSource("Country", "Person");
@@ -95,7 +95,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToWithTheReferencingTableBeforeTheReferencedTable()
+        public void TestCopyTableSchemasToWithTheReferencingTableBeforeTheReferencedTable()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -104,7 +104,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                source.CopySchemaTo(new[] { "Person", "Country" }, target);
+                source.CopyTableSchemaTo(new[] { "Person", "Country" }, target);
 
                 // Assert
                 AssertTargetMatchesSource("Country", "Person");
@@ -112,7 +112,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToCallbackResult()
+        public void TestCopyTableSchemasToCallbackResult()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -121,8 +121,8 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopySchemaResult>();
-                source.CopySchemaTo(new[] { "Person", "Country" }, target, createdCallback: results.Add);
+                var results = new List<CopyTableSchemaResult>();
+                source.CopyTableSchemaTo(new[] { "Person", "Country" }, target, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(2, results.Count);
@@ -131,8 +131,8 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 Assert.AreEqual(target.Database, person.DestinationDatabase, StringComparer.Ordinal);
                 Assert.AreEqual(nameof(DuckDBConnection), person.SourceDatabaseType, StringComparer.Ordinal);
                 Assert.AreEqual(nameof(DuckDBConnection), person.DestinationDatabaseType, StringComparer.Ordinal);
-                Assert.AreEqual(CopySchemaExistsBehavior.Skip, person.Action);
-                Assert.AreEqual(CopySchemaOutcome.Created, person.Outcome);
+                Assert.AreEqual(CopyTableSchemaExistsBehavior.Skip, person.Action);
+                Assert.AreEqual(CopyTableSchemaOutcome.Created, person.Outcome);
                 StringAssert.Contains(person.Script, "CREATE TABLE \"main\".\"Person\"", StringComparison.Ordinal);
                 StringAssert.Contains(person.Script, "FOREIGN KEY (\"CountryId\") REFERENCES \"main\".\"Country\"", StringComparison.Ordinal);
                 Assert.IsTrue(person.EndTime >= person.StartTime);
@@ -141,7 +141,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToCallsTheCallbackOnceTheSchemaOfTheTableIsCreated()
+        public void TestCopyTableSchemasToCallsTheCallbackOnceTheSchemaOfTheTableIsCreated()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -151,7 +151,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 var reported = new List<(string Table, List<string> TargetTables)>();
 
                 // Act
-                source.CopySchemaTo(
+                source.CopyTableSchemaTo(
                     new[] { "Person", "Country", "NoKey" },
                     target,
                     createdCallback: r => reported.Add((r.TableName, GetTargetTables())));
@@ -165,7 +165,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToCallsTheCallbackForEveryTableOfTheWholeDatabase()
+        public void TestCopyTableSchemasToCallsTheCallbackForEveryTableOfTheWholeDatabase()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -175,8 +175,8 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 var tables = GetSourceTables();
 
                 // Act
-                var results = new List<CopySchemaResult>();
-                source.CopySchemaTo(tables, target, createdCallback: results.Add);
+                var results = new List<CopyTableSchemaResult>();
+                source.CopyTableSchemaTo(tables, target, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(tables.Count, results.Count);
@@ -185,7 +185,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToCallbackResultOfEachTable()
+        public void TestCopyTableSchemasToCallbackResultOfEachTable()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -194,14 +194,14 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopySchemaResult>();
-                source.CopySchemaTo(new[] { "Person", "Country" }, target, createdCallback: results.Add);
+                var results = new List<CopyTableSchemaResult>();
+                source.CopyTableSchemaTo(new[] { "Person", "Country" }, target, createdCallback: results.Add);
 
                 // Assert
                 CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.TableName).ToArray());
                 var person = results[1];
                 Assert.IsNull(person.SourceSchema);
-                Assert.AreEqual(CopySchemaOutcome.Created, person.Outcome);
+                Assert.AreEqual(CopyTableSchemaOutcome.Created, person.Outcome);
                 Assert.AreEqual(7, person.ColumnCount);
                 Assert.AreEqual(1, person.IndexCount);
                 Assert.AreEqual(1, person.ForeignKeyCount);
@@ -213,7 +213,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToOfDependencyChainInAnyOrder()
+        public void TestCopyTableSchemasToOfDependencyChainInAnyOrder()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -222,8 +222,8 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopySchemaResult>();
-                source.CopySchemaTo(new[] { "GrandChild", "Parent", "Child" }, target, createdCallback: results.Add);
+                var results = new List<CopyTableSchemaResult>();
+                source.CopyTableSchemaTo(new[] { "GrandChild", "Parent", "Child" }, target, createdCallback: results.Add);
 
                 // Assert
                 CollectionAssert.AreEqual(new[] { "Parent", "Child", "GrandChild" }, results.Select(t => t.TableName).ToArray());
@@ -232,7 +232,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToOfDiamond()
+        public void TestCopyTableSchemasToOfDiamond()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -241,8 +241,8 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopySchemaResult>();
-                source.CopySchemaTo(new[] { "DiamondD", "DiamondC", "DiamondB", "DiamondA" }, target, createdCallback: results.Add);
+                var results = new List<CopyTableSchemaResult>();
+                source.CopyTableSchemaTo(new[] { "DiamondD", "DiamondC", "DiamondB", "DiamondA" }, target, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual("DiamondA", results[0].TableName, StringComparer.Ordinal);
@@ -252,7 +252,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToOfTablesWithMultipleIndexesAndKeys()
+        public void TestCopyTableSchemasToOfTablesWithMultipleIndexesAndKeys()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -261,7 +261,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                source.CopySchemaTo(new[] { "Product", "Shipment", "OrderLine", "Country" }, target);
+                source.CopyTableSchemaTo(new[] { "Product", "Shipment", "OrderLine", "Country" }, target);
 
                 // Assert
                 AssertTargetMatchesSource("Product", "Shipment", "OrderLine", "Country");
@@ -269,7 +269,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToOfTablesInDifferentSchemas()
+        public void TestCopyTableSchemasToOfTablesInDifferentSchemas()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -278,8 +278,8 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopySchemaResult>();
-                source.CopySchemaTo(new[] { "Ledger", $"{Database.SourceSalesName}.InvoiceLine", $"{Database.SourceSalesName}.Invoice" }, target, Database.TargetSalesName, createdCallback: results.Add);
+                var results = new List<CopyTableSchemaResult>();
+                source.CopyTableSchemaTo(new[] { "Ledger", $"{Database.SourceSalesName}.InvoiceLine", $"{Database.SourceSalesName}.Invoice" }, target, Database.TargetSalesName, createdCallback: results.Add);
 
                 // Assert
                 Assert.IsTrue(results.Select(r => r.TableName).ToList().IndexOf("Invoice") < results.Select(r => r.TableName).ToList().IndexOf("InvoiceLine"));
@@ -290,7 +290,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemasToOfTablesWithTheSameNameInDifferentSchemas()
+        public void ThrowExceptionOnCopyTableSchemasToOfTablesWithTheSameNameInDifferentSchemas()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -300,13 +300,13 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
 
                 // Act/Assert
                 Assert.Throws<InvalidOperationException>(() =>
-                    source.CopySchemaTo(new[] { "ItemRef", "Item", $"{Database.SourceSalesName}.Item" }, target, Database.TargetSalesName));
+                    source.CopyTableSchemaTo(new[] { "ItemRef", "Item", $"{Database.SourceSalesName}.Item" }, target, Database.TargetSalesName));
                 Assert.AreEqual(0, GetTargetTables().Count);
             }
         }
 
         [TestMethod]
-        public void TestCopySchemasToOfTablesWithNamesThatNeedQuoting()
+        public void TestCopyTableSchemasToOfTablesWithNamesThatNeedQuoting()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -315,7 +315,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                source.CopySchemaTo(new[] { "\"Odd.Child\"", "\"Odd.Name\"", "\"Order Details\"", "\"Weird]Name\"" }, target);
+                source.CopyTableSchemaTo(new[] { "\"Odd.Child\"", "\"Odd.Name\"", "\"Order Details\"", "\"Weird]Name\"" }, target);
 
                 // Assert
                 AssertTargetMatchesSource("\"Odd.Name\"", "\"Odd.Child\"", "\"Order Details\"", "\"Weird]Name\"");
@@ -323,7 +323,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToOfTheWholeDatabase()
+        public void TestCopyTableSchemasToOfTheWholeDatabase()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -333,8 +333,8 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 var tables = GetSourceTables();
 
                 // Act
-                var results = new List<CopySchemaResult>();
-                source.CopySchemaTo(tables, target, createdCallback: results.Add);
+                var results = new List<CopyTableSchemaResult>();
+                source.CopyTableSchemaTo(tables, target, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(tables.Count, results.Count);
@@ -347,7 +347,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToOfTheWholeDatabaseInTheReverseOrder()
+        public void TestCopyTableSchemasToOfTheWholeDatabaseInTheReverseOrder()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -357,7 +357,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 var tables = GetSourceTables();
 
                 // Act
-                source.CopySchemaTo(tables.AsEnumerable().Reverse().ToList(), target);
+                source.CopyTableSchemaTo(tables.AsEnumerable().Reverse().ToList(), target);
 
                 // Assert
                 CollectionAssert.AreEquivalent(tables, GetTargetTables());
@@ -369,7 +369,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToOfTheWholeDatabaseCountsTheObjects()
+        public void TestCopyTableSchemasToOfTheWholeDatabaseCountsTheObjects()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -380,8 +380,8 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 var schemas = Helper.GetSourceSchemas(tables);
 
                 // Act
-                var results = new List<CopySchemaResult>();
-                source.CopySchemaTo(tables, target, createdCallback: results.Add);
+                var results = new List<CopyTableSchemaResult>();
+                source.CopyTableSchemaTo(tables, target, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(schemas.Sum(s => s.Columns.Count), results.Sum(t => t.ColumnCount));
@@ -393,7 +393,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToOfTheTableThatIsGivenMoreThanOnce()
+        public void TestCopyTableSchemasToOfTheTableThatIsGivenMoreThanOnce()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -402,8 +402,8 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopySchemaResult>();
-                source.CopySchemaTo(new[] { "Country", "Country", "\"Country\"" }, target, createdCallback: results.Add);
+                var results = new List<CopyTableSchemaResult>();
+                source.CopyTableSchemaTo(new[] { "Country", "Country", "\"Country\"" }, target, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(1, results.Count);
@@ -412,7 +412,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToWithRequestedExistsBehavior()
+        public void TestCopyTableSchemasToWithRequestedExistsBehavior()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -421,16 +421,16 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopySchemaResult>();
-                source.CopySchemaTo(new[] { "NoKey" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Drop, createdCallback: results.Add);
+                var results = new List<CopyTableSchemaResult>();
+                source.CopyTableSchemaTo(new[] { "NoKey" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop, createdCallback: results.Add);
 
                 // Assert
-                Assert.AreEqual(CopySchemaExistsBehavior.Drop, results.Single().Action);
+                Assert.AreEqual(CopyTableSchemaExistsBehavior.Drop, results.Single().Action);
             }
         }
 
         [TestMethod]
-        public void TestCopySchemasToWithoutTables()
+        public void TestCopyTableSchemasToWithoutTables()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -439,8 +439,8 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopySchemaResult>();
-                source.CopySchemaTo(Enumerable.Empty<string>(), target, createdCallback: results.Add);
+                var results = new List<CopyTableSchemaResult>();
+                source.CopyTableSchemaTo(Enumerable.Empty<string>(), target, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(0, results.Count);
@@ -449,7 +449,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToWithTransactionThatIsRolledBackRollsBackTheTables()
+        public void TestCopyTableSchemasToWithTransactionThatIsRolledBackRollsBackTheTables()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget).EnsureOpen())
@@ -460,7 +460,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 // Act
                 using (var transaction = target.BeginTransaction())
                 {
-                    source.CopySchemaTo(new[] { "Country", "Person", "Parent", "Child" }, target, transaction: transaction);
+                    source.CopyTableSchemaTo(new[] { "Country", "Person", "Parent", "Child" }, target, transaction: transaction);
                     transaction.Rollback();
                 }
 
@@ -470,7 +470,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToWithTransactionThatIsCommitted()
+        public void TestCopyTableSchemasToWithTransactionThatIsCommitted()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget).EnsureOpen())
@@ -481,7 +481,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 // Act
                 using (var transaction = target.BeginTransaction())
                 {
-                    source.CopySchemaTo(new[] { "Country", "Person" }, target, transaction: transaction);
+                    source.CopyTableSchemaTo(new[] { "Country", "Person" }, target, transaction: transaction);
                     transaction.Commit();
                 }
 
@@ -491,7 +491,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemasToIfTheReferencedTableIsNotPartOfThemAndDoesNotExist()
+        public void ThrowExceptionOnCopyTableSchemasToIfTheReferencedTableIsNotPartOfThemAndDoesNotExist()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -500,22 +500,22 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act/Assert
-                Assert.Throws<DuckDBException>(() => source.CopySchemaTo(new[] { "Shipment" }, target));
+                Assert.Throws<DuckDBException>(() => source.CopyTableSchemaTo(new[] { "Shipment" }, target));
             }
         }
 
         [TestMethod]
-        public void TestCopySchemasToOfTableThatReferencesATableThatAlreadyExistsInTheTarget()
+        public void TestCopyTableSchemasToOfTableThatReferencesATableThatAlreadyExistsInTheTarget()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo(new[] { "Country" }, target);
+                source.CopyTableSchemaTo(new[] { "Country" }, target);
 
                 // Act
-                source.CopySchemaTo(new[] { "Person" }, target);
+                source.CopyTableSchemaTo(new[] { "Person" }, target);
 
                 // Assert
                 AssertTargetMatchesSource("Country", "Person");
@@ -523,47 +523,22 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemasToIfATableAlreadyExists()
+        public void ThrowExceptionOnCopyTableSchemasToIfATableAlreadyExists()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo(new[] { "NoKey" }, target);
+                source.CopyTableSchemaTo(new[] { "NoKey" }, target);
 
                 // Act/Assert
-                Assert.Throws<InvalidOperationException>(() => source.CopySchemaTo(new[] { "NoKey" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Throw));
+                Assert.Throws<InvalidOperationException>(() => source.CopyTableSchemaTo(new[] { "NoKey" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
             }
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemasToIfATableDoesNotExistInTheSource()
-        {
-            using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
-            using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
-            {
-                // Setup
-                MapSchemaReaderConnection(source);
-
-                // Act/Assert
-                Assert.Throws<DuckDBException>(() => source.CopySchemaTo(new[] { "MissingTable" }, target));
-            }
-        }
-
-        [TestMethod]
-        public void ThrowExceptionOnCopySchemasToIfThereIsNoMappedSchemaReader()
-        {
-            using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
-            using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
-            {
-                // Act/Assert
-                Assert.Throws<MissingMappingException>(() => source.CopySchemaTo(new[] { "Country" }, target));
-            }
-        }
-
-        [TestMethod]
-        public void ThrowExceptionOnCopySchemasToIfATableNameIsBlank()
+        public void ThrowExceptionOnCopyTableSchemasToIfATableDoesNotExistInTheSource()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -572,18 +547,43 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act/Assert
-                Assert.Throws<ArgumentException>(() => source.CopySchemaTo(new[] { "Country", " " }, target));
+                Assert.Throws<DuckDBException>(() => source.CopyTableSchemaTo(new[] { "MissingTable" }, target));
             }
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemasToIfTheTableNamesAreNull()
+        public void ThrowExceptionOnCopyTableSchemasToIfThereIsNoMappedSchemaReader()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
                 // Act/Assert
-                Assert.Throws<ArgumentNullException>(() => source.CopySchemaTo((string)null, target));
+                Assert.Throws<MissingMappingException>(() => source.CopyTableSchemaTo(new[] { "Country" }, target));
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnCopyTableSchemasToIfATableNameIsBlank()
+        {
+            using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
+            using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                MapSchemaReaderConnection(source);
+
+                // Act/Assert
+                Assert.Throws<ArgumentException>(() => source.CopyTableSchemaTo(new[] { "Country", " " }, target));
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnCopyTableSchemasToIfTheTableNamesAreNull()
+        {
+            using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
+            using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
+            {
+                // Act/Assert
+                Assert.Throws<ArgumentNullException>(() => source.CopyTableSchemaTo((string)null, target));
             }
         }
 
@@ -592,7 +592,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         #region Async
 
         [TestMethod]
-        public async Task TestCopySchemasToAsync()
+        public async Task TestCopyTableSchemasToAsync()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -601,8 +601,8 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopySchemaResult>();
-                await source.CopySchemaToAsync(new[] { "Person", "Country" }, target, createdCallback: results.Add);
+                var results = new List<CopyTableSchemaResult>();
+                await source.CopyTableSchemaToAsync(new[] { "Person", "Country" }, target, createdCallback: results.Add);
 
                 // Assert
                 CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.TableName).ToArray());
@@ -611,7 +611,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestCopySchemasToAsyncOfTheWholeDatabase()
+        public async Task TestCopyTableSchemasToAsyncOfTheWholeDatabase()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -621,8 +621,8 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 var tables = GetSourceTables();
 
                 // Act
-                var results = new List<CopySchemaResult>();
-                await source.CopySchemaToAsync(tables, target, createdCallback: results.Add);
+                var results = new List<CopyTableSchemaResult>();
+                await source.CopyTableSchemaToAsync(tables, target, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(tables.Count, results.Count);
@@ -635,7 +635,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestCopySchemasToAsyncCallbackResult()
+        public async Task TestCopyTableSchemasToAsyncCallbackResult()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -644,12 +644,12 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopySchemaResult>();
-                await source.CopySchemaToAsync(new[] { "Person", "Country" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Align, createdCallback: results.Add);
+                var results = new List<CopyTableSchemaResult>();
+                await source.CopyTableSchemaToAsync(new[] { "Person", "Country" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(2, results.Count);
-                Assert.AreEqual(CopySchemaExistsBehavior.Align, results[1].Action);
+                Assert.AreEqual(CopyTableSchemaExistsBehavior.Align, results[1].Action);
                 Assert.AreEqual(source.Database, results[1].SourceDatabase, StringComparer.Ordinal);
                 Assert.AreEqual(target.Database, results[1].DestinationDatabase, StringComparer.Ordinal);
                 Assert.AreEqual(7, results[1].ColumnCount);
@@ -658,7 +658,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestCopySchemasToAsyncWithoutTables()
+        public async Task TestCopyTableSchemasToAsyncWithoutTables()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -667,8 +667,8 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopySchemaResult>();
-                await source.CopySchemaToAsync(Enumerable.Empty<string>(), target, createdCallback: results.Add);
+                var results = new List<CopyTableSchemaResult>();
+                await source.CopyTableSchemaToAsync(Enumerable.Empty<string>(), target, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(0, results.Count);
@@ -676,28 +676,28 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnCopySchemasToAsyncIfATableAlreadyExists()
+        public async Task ThrowExceptionOnCopyTableSchemasToAsyncIfATableAlreadyExists()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                await source.CopySchemaToAsync(new[] { "NoKey" }, target);
+                await source.CopyTableSchemaToAsync(new[] { "NoKey" }, target);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopySchemaToAsync(new[] { "NoKey" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Throw));
+                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopyTableSchemaToAsync(new[] { "NoKey" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
             }
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnCopySchemasToAsyncIfThereIsNoMappedSchemaReader()
+        public async Task ThrowExceptionOnCopyTableSchemasToAsyncIfThereIsNoMappedSchemaReader()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
                 // Act/Assert
-                await Assert.ThrowsAsync<MissingMappingException>(() => source.CopySchemaToAsync(new[] { "Country" }, target));
+                await Assert.ThrowsAsync<MissingMappingException>(() => source.CopyTableSchemaToAsync(new[] { "Country" }, target));
             }
         }
 
@@ -708,17 +708,17 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         #region Sync
 
         [TestMethod]
-        public void TestCopySchemasToDoesNotCallTheErrorCallbackIfNothingFails()
+        public void TestCopyTableSchemasToDoesNotCallTheErrorCallbackIfNothingFails()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var errors = new List<CopySchemaError>();
+                var errors = new List<CopyTableSchemaError>();
 
                 // Act
-                source.CopySchemaTo(new[] { "Country", "Person" }, target, errorCallback: errors.Add);
+                source.CopyTableSchemaTo(new[] { "Country", "Person" }, target, errorCallback: errors.Add);
 
                 // Assert
                 Assert.AreEqual(0, errors.Count);
@@ -727,17 +727,17 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToCallsTheErrorCallbackWithTheDetailsOfTheError()
+        public void TestCopyTableSchemasToCallsTheErrorCallbackWithTheDetailsOfTheError()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var errors = new List<CopySchemaError>();
+                var errors = new List<CopyTableSchemaError>();
 
                 // Act
-                source.CopySchemaTo(new[] { "Person" }, target, errorCallback: errors.Add);
+                source.CopyTableSchemaTo(new[] { "Person" }, target, errorCallback: errors.Add);
 
                 // Assert
                 Assert.AreEqual(2, errors.Count);
@@ -750,7 +750,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToWithErrorCallbackContinuesWithTheOtherTables()
+        public void TestCopyTableSchemasToWithErrorCallbackContinuesWithTheOtherTables()
         {
             Helper.DisableExistenceChecks();
 
@@ -759,12 +759,12 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo(new[] { "NoKey" }, target);
-                var created = new List<CopySchemaResult>();
-                var errors = new List<CopySchemaError>();
+                source.CopyTableSchemaTo(new[] { "NoKey" }, target);
+                var created = new List<CopyTableSchemaResult>();
+                var errors = new List<CopyTableSchemaError>();
 
                 // Act
-                source.CopySchemaTo(
+                source.CopyTableSchemaTo(
                     new[] { "NoKey", "Parent", "Child" },
                     target,
                     createdCallback: created.Add,
@@ -776,14 +776,14 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 StringAssert.StartsWith(errors[0].Statement, "CREATE TABLE \"main\".\"NoKey\"", StringComparison.Ordinal);
                 CollectionAssert.AreEquivalent(new[] { "NoKey", "Parent", "Child" }, created.Select(r => r.TableName).ToArray());
                 Assert.AreSame(errors[0], created.Single(r => r.TableName == "NoKey").Errors.Single());
-                Assert.AreEqual(CopySchemaOutcome.Failed, created.Single(r => r.TableName == "NoKey").Outcome);
+                Assert.AreEqual(CopyTableSchemaOutcome.Failed, created.Single(r => r.TableName == "NoKey").Outcome);
                 Assert.AreEqual(0, created.Where(r => r.TableName != "NoKey").Sum(r => r.Errors.Count));
                 AssertTargetMatchesSource("NoKey", "Parent", "Child");
             }
         }
 
         [TestMethod]
-        public void TestCopySchemasToWithErrorCallbackCanCopyTheWholeDatabaseTwice()
+        public void TestCopyTableSchemasToWithErrorCallbackCanCopyTheWholeDatabaseTwice()
         {
             Helper.DisableExistenceChecks();
 
@@ -793,12 +793,12 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var tables = GetSourceTables();
-                source.CopySchemaTo(tables, target);
-                var errors = new List<CopySchemaError>();
-                var created = new List<CopySchemaResult>();
+                source.CopyTableSchemaTo(tables, target);
+                var errors = new List<CopyTableSchemaError>();
+                var created = new List<CopyTableSchemaResult>();
 
                 // Act
-                source.CopySchemaTo(
+                source.CopyTableSchemaTo(
                     tables,
                     target,
                     createdCallback: created.Add,
@@ -808,7 +808,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 Assert.IsTrue(errors.Count >= tables.Count);
                 Assert.IsTrue(errors.All(e => e.Exception is DuckDBException));
                 Assert.AreEqual(tables.Count, created.Count);
-                Assert.IsTrue(created.All(r => r.Errors.Count > 0 && r.Outcome == CopySchemaOutcome.Failed));
+                Assert.IsTrue(created.All(r => r.Errors.Count > 0 && r.Outcome == CopyTableSchemaOutcome.Failed));
                 Assert.AreEqual(errors.Count, created.Sum(r => r.Errors.Count));
                 CollectionAssert.AreEquivalent(tables, GetTargetTables());
                 foreach (var table in tables)
@@ -819,7 +819,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToStopsIfTheErrorCallbackThrows()
+        public void TestCopyTableSchemasToStopsIfTheErrorCallbackThrows()
         {
             Helper.DisableExistenceChecks();
 
@@ -828,12 +828,12 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo(new[] { "NoKey" }, target);
+                source.CopyTableSchemaTo(new[] { "NoKey" }, target);
                 var created = new List<string>();
 
                 // Act/Assert
                 Assert.Throws<NotSupportedException>(() =>
-                    source.CopySchemaTo(
+                    source.CopyTableSchemaTo(
                         new[] { "NoKey", "Parent", "Child" },
                         target,
                         createdCallback: r => created.Add(r.TableName),
@@ -846,7 +846,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemasToIfTheErrorCallbackThrowsTheCapturedException()
+        public void ThrowExceptionOnCopyTableSchemasToIfTheErrorCallbackThrowsTheCapturedException()
         {
             Helper.DisableExistenceChecks();
 
@@ -855,12 +855,12 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo(new[] { "NoKey" }, target);
-                CopySchemaError raised = null;
+                source.CopyTableSchemaTo(new[] { "NoKey" }, target);
+                CopyTableSchemaError raised = null;
 
                 // Act
                 var exception = Assert.Throws<DuckDBException>(() =>
-                    source.CopySchemaTo(new[] { "NoKey" }, target, errorCallback: e =>
+                    source.CopyTableSchemaTo(new[] { "NoKey" }, target, errorCallback: e =>
                     {
                         raised = e;
                         throw e.Exception;
@@ -872,7 +872,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemasToIfTheErrorCallbackThrows()
+        public void ThrowExceptionOnCopyTableSchemasToIfTheErrorCallbackThrows()
         {
             Helper.DisableExistenceChecks();
 
@@ -881,16 +881,16 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo(new[] { "NoKey" }, target);
+                source.CopyTableSchemaTo(new[] { "NoKey" }, target);
 
                 // Act/Assert
                 Assert.Throws<NotSupportedException>(() =>
-                    source.CopySchemaTo(new[] { "NoKey" }, target, errorCallback: e => throw new NotSupportedException()));
+                    source.CopyTableSchemaTo(new[] { "NoKey" }, target, errorCallback: e => throw new NotSupportedException()));
             }
         }
 
         [TestMethod]
-        public void TestCopySchemasToWithErrorCallbackInTransactionThatTheServerCommits()
+        public void TestCopyTableSchemasToWithErrorCallbackInTransactionThatTheServerCommits()
         {
             Helper.DisableExistenceChecks();
 
@@ -899,12 +899,12 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo(new[] { "NoKey" }, target);
+                source.CopyTableSchemaTo(new[] { "NoKey" }, target);
 
                 // Act
                 using (var transaction = target.BeginTransaction())
                 {
-                    source.CopySchemaTo(
+                    source.CopyTableSchemaTo(
                         new[] { "NoKey", "Parent" },
                         target,
                         errorCallback: _ => { },
@@ -918,7 +918,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemasToWithErrorCallbackIfThereIsNoMappedSchemaReader()
+        public void ThrowExceptionOnCopyTableSchemasToWithErrorCallbackIfThereIsNoMappedSchemaReader()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -928,7 +928,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
 
                 // Act/Assert
                 Assert.Throws<MissingMappingException>(() =>
-                    source.CopySchemaTo(new[] { "Country" }, target, errorCallback: e => errors++));
+                    source.CopyTableSchemaTo(new[] { "Country" }, target, errorCallback: e => errors++));
                 Assert.AreEqual(0, errors);
             }
         }
@@ -938,17 +938,17 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         #region Async
 
         [TestMethod]
-        public async Task TestCopySchemasToAsyncCallsTheErrorCallbackWithTheDetailsOfTheError()
+        public async Task TestCopyTableSchemasToAsyncCallsTheErrorCallbackWithTheDetailsOfTheError()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var errors = new List<CopySchemaError>();
+                var errors = new List<CopyTableSchemaError>();
 
                 // Act
-                await source.CopySchemaToAsync(new[] { "Person" }, target, errorCallback: errors.Add);
+                await source.CopyTableSchemaToAsync(new[] { "Person" }, target, errorCallback: errors.Add);
 
                 // Assert
                 Assert.AreEqual(2, errors.Count);
@@ -959,7 +959,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestCopySchemasToAsyncWithErrorCallbackContinuesWithTheOtherTables()
+        public async Task TestCopyTableSchemasToAsyncWithErrorCallbackContinuesWithTheOtherTables()
         {
             Helper.DisableExistenceChecks();
 
@@ -968,11 +968,11 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                await source.CopySchemaToAsync(new[] { "NoKey" }, target);
-                var created = new List<CopySchemaResult>();
+                await source.CopyTableSchemaToAsync(new[] { "NoKey" }, target);
+                var created = new List<CopyTableSchemaResult>();
 
                 // Act
-                await source.CopySchemaToAsync(
+                await source.CopyTableSchemaToAsync(
                     new[] { "NoKey", "Parent", "Child" },
                     target,
                     createdCallback: created.Add,
@@ -987,7 +987,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestCopySchemasToAsyncStopsIfTheErrorCallbackThrows()
+        public async Task TestCopyTableSchemasToAsyncStopsIfTheErrorCallbackThrows()
         {
             Helper.DisableExistenceChecks();
 
@@ -996,11 +996,11 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                await source.CopySchemaToAsync(new[] { "NoKey" }, target);
+                await source.CopyTableSchemaToAsync(new[] { "NoKey" }, target);
 
                 // Act/Assert
                 await Assert.ThrowsAsync<NotSupportedException>(() =>
-                    source.CopySchemaToAsync(
+                    source.CopyTableSchemaToAsync(
                         new[] { "NoKey", "Parent", "Child" },
                         target,
                         errorCallback: _ => throw new NotSupportedException()));
@@ -1011,7 +1011,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnCopySchemasToAsyncIfTheErrorCallbackThrowsTheCapturedException()
+        public async Task ThrowExceptionOnCopyTableSchemasToAsyncIfTheErrorCallbackThrowsTheCapturedException()
         {
             Helper.DisableExistenceChecks();
 
@@ -1020,12 +1020,12 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                await source.CopySchemaToAsync(new[] { "NoKey" }, target);
-                CopySchemaError raised = null;
+                await source.CopyTableSchemaToAsync(new[] { "NoKey" }, target);
+                CopyTableSchemaError raised = null;
 
                 // Act
                 var exception = await Assert.ThrowsAsync<DuckDBException>(() =>
-                    source.CopySchemaToAsync(new[] { "NoKey" }, target, errorCallback: e =>
+                    source.CopyTableSchemaToAsync(new[] { "NoKey" }, target, errorCallback: e =>
                     {
                         raised = e;
                         throw e.Exception;
@@ -1037,7 +1037,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestCopySchemasToAsyncWithErrorCallbackCanCopyTheWholeDatabaseTwice()
+        public async Task TestCopyTableSchemasToAsyncWithErrorCallbackCanCopyTheWholeDatabaseTwice()
         {
             using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
@@ -1045,10 +1045,10 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var tables = GetSourceTables();
-                await source.CopySchemaToAsync(tables, target);
+                await source.CopyTableSchemaToAsync(tables, target);
 
                 // Act
-                await source.CopySchemaToAsync(tables, target, errorCallback: _ => { });
+                await source.CopyTableSchemaToAsync(tables, target, errorCallback: _ => { });
 
                 // Assert
                 CollectionAssert.AreEquivalent(tables, GetTargetTables());

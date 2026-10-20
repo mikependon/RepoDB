@@ -21,7 +21,7 @@ namespace RepoDb.Schema
     /// The columns of the requested tables can also be renamed: the primary key, the indexes, the unique constraints, the check constraints and the foreign keys (including the ones of
     /// the other tables that reference the renamed columns) follow the new names.
     /// </summary>
-    internal static class CopySchemaColumns
+    internal static class CopyTableSchemaColumns
     {
         #region Public Methods
 

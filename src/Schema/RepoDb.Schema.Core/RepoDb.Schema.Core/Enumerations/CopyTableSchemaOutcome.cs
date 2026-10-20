@@ -11,7 +11,7 @@ namespace RepoDb.Schema.Enumerations
     /// <summary>
     /// An enumeration that is used to define what a schema copy has actually done to the table in the destination database.
     /// </summary>
-    public enum CopySchemaOutcome
+    public enum CopyTableSchemaOutcome
     {
         /// <summary>
         /// The table was created.
@@ -34,7 +34,7 @@ namespace RepoDb.Schema.Enumerations
         Dropped,
 
         /// <summary>
-        /// The schema was not created, as some of its statements have failed (see <see cref="CopySchemaResult.Errors"/>).
+        /// The schema was not created, as some of its statements have failed (see <see cref="CopyTableSchemaResult.Errors"/>).
         /// </summary>
         Failed
     }

@@ -18,12 +18,12 @@ namespace RepoDb.Schema
     /// A class that expands a set of tables with the tables that are related to them, as defined by the foreign keys.
     /// It is shared by the schema readers, as only the way that a table is identified is different between the databases.
     /// </summary>
-    internal static class CopySchemaRelationshipExpander
+    internal static class CopyTableSchemaRelationshipExpander
     {
         #region Public Methods
 
         /// <summary>
-        /// Expands the tables with their parents, their children or both (see <see cref="CopySchemaRelationshipBehavior"/>).
+        /// Expands the tables with their parents, their children or both (see <see cref="CopyTableSchemaRelationshipBehavior"/>).
         /// </summary>
         /// <param name="tables">The tables to be expanded.</param>
         /// <param name="foreignKeys">The foreign key relationships of the database. A relationship is a table (the child) that references another table (the parent).</param>
@@ -35,16 +35,16 @@ namespace RepoDb.Schema
         /// </returns>
         internal static IList<TableInfo> Expand(IEnumerable<TableInfo> tables,
             IEnumerable<(TableInfo Child, TableInfo Parent)> foreignKeys,
-            CopySchemaRelationshipBehavior relationshipBehavior,
+            CopyTableSchemaRelationshipBehavior relationshipBehavior,
             Func<TableInfo, string> tableKey)
         {
-            if (!Enum.IsDefined(typeof(CopySchemaRelationshipBehavior), relationshipBehavior))
+            if (!Enum.IsDefined(typeof(CopyTableSchemaRelationshipBehavior), relationshipBehavior))
             {
                 throw new ArgumentOutOfRangeException(nameof(relationshipBehavior));
             }
 
             var result = tables.GroupBy(tableKey).Select(g => g.First()).ToList();
-            return relationshipBehavior == CopySchemaRelationshipBehavior.TableOnly
+            return relationshipBehavior == CopyTableSchemaRelationshipBehavior.TableOnly
                 ? result
                 : Walk(result, GetNeighbors(foreignKeys, relationshipBehavior, tableKey), tableKey);
         }
@@ -62,7 +62,7 @@ namespace RepoDb.Schema
         /// <param name="tableKey"></param>
         /// <returns></returns>
         private static Dictionary<string, List<TableInfo>> GetNeighbors(IEnumerable<(TableInfo Child, TableInfo Parent)> foreignKeys,
-            CopySchemaRelationshipBehavior relationshipBehavior,
+            CopyTableSchemaRelationshipBehavior relationshipBehavior,
             Func<TableInfo, string> tableKey)
         {
             var neighbors = new Dictionary<string, List<TableInfo>>();
@@ -106,18 +106,18 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="relationshipBehavior"></param>
         /// <returns></returns>
-        private static bool FollowsParents(CopySchemaRelationshipBehavior relationshipBehavior) =>
-            relationshipBehavior == CopySchemaRelationshipBehavior.Parents ||
-            relationshipBehavior == CopySchemaRelationshipBehavior.ParentsAndChildren;
+        private static bool FollowsParents(CopyTableSchemaRelationshipBehavior relationshipBehavior) =>
+            relationshipBehavior == CopyTableSchemaRelationshipBehavior.Parents ||
+            relationshipBehavior == CopyTableSchemaRelationshipBehavior.ParentsAndChildren;
 
         /// <summary>
         /// Checks whether the behavior follows the children of a table.
         /// </summary>
         /// <param name="relationshipBehavior"></param>
         /// <returns></returns>
-        private static bool FollowsChildren(CopySchemaRelationshipBehavior relationshipBehavior) =>
-            relationshipBehavior == CopySchemaRelationshipBehavior.Children ||
-            relationshipBehavior == CopySchemaRelationshipBehavior.ParentsAndChildren;
+        private static bool FollowsChildren(CopyTableSchemaRelationshipBehavior relationshipBehavior) =>
+            relationshipBehavior == CopyTableSchemaRelationshipBehavior.Children ||
+            relationshipBehavior == CopyTableSchemaRelationshipBehavior.ParentsAndChildren;
 
         /// <summary>
         ///

@@ -11,12 +11,12 @@ namespace RepoDb.Schema
     /// <summary>
     /// A class that holds a statement of a schema copy and the table that it belongs to.
     /// </summary>
-    internal sealed class CopySchemaStep
+    internal sealed class CopyTableSchemaStep
     {
         #region Constructors
 
-        public CopySchemaStep(string statement,
-            CopySchemaTable owner)
+        public CopyTableSchemaStep(string statement,
+            CopyTableSchemaTable owner)
         {
             Statement = statement;
             Owner = owner;
@@ -34,7 +34,7 @@ namespace RepoDb.Schema
         /// <summary>
         /// Gets the table that the statement belongs to (<c>null</c> if it is not known).
         /// </summary>
-        public CopySchemaTable Owner { get; }
+        public CopyTableSchemaTable Owner { get; }
 
         #endregion
     }

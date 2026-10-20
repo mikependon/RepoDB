@@ -61,17 +61,17 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         #region Target Schema
 
         [TestMethod]
-        public void TestCopySchemasToWithTargetSchemaCreatesTheTablesInThatSchema()
+        public void TestCopyTableSchemasToWithTargetSchemaCreatesTheTablesInThatSchema()
         {
             using (var source = new SqlConnection(Database.ConnectionStringForSource))
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopySchemaResult>();
+                var results = new List<CopyTableSchemaResult>();
 
                 // Act
-                source.CopySchemaTo(new[] { "Country", "Person" }, target, "Sales", createdCallback: results.Add);
+                source.CopyTableSchemaTo(new[] { "Country", "Person" }, target, "Sales", createdCallback: results.Add);
 
                 // Assert
                 CollectionAssert.AreEquivalent(new[] { "Sales.Country", "Sales.Person" }, GetTargetTables());
@@ -83,17 +83,17 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToWithoutTargetSchemaCreatesTheTablesInTheDefaultSchema()
+        public void TestCopyTableSchemasToWithoutTargetSchemaCreatesTheTablesInTheDefaultSchema()
         {
             using (var source = new SqlConnection(Database.ConnectionStringForSource))
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopySchemaResult>();
+                var results = new List<CopyTableSchemaResult>();
 
                 // Act
-                source.CopySchemaTo(new[] { "Sales.InvoiceLine", "Sales.Invoice", "dbo.Ledger" }, target, createdCallback: results.Add);
+                source.CopyTableSchemaTo(new[] { "Sales.InvoiceLine", "Sales.Invoice", "dbo.Ledger" }, target, createdCallback: results.Add);
 
                 // Assert
                 CollectionAssert.AreEquivalent(new[] { "dbo.Invoice", "dbo.InvoiceLine", "dbo.Ledger" }, GetTargetTables());
@@ -104,7 +104,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemaToOfASingleTableWithTargetSchema()
+        public void TestCopyTableSchemaToOfASingleTableWithTargetSchema()
         {
             using (var source = new SqlConnection(Database.ConnectionStringForSource))
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
@@ -113,7 +113,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var result = source.CopySchemaTo("Country", target, "Sales");
+                var result = source.CopyTableSchemaTo("Country", target, "Sales");
 
                 // Assert
                 Assert.AreEqual("dbo", result.SourceSchema);
@@ -123,29 +123,29 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToWithTargetSchemaChecksTheTablesOfThatSchema()
+        public void TestCopyTableSchemasToWithTargetSchemaChecksTheTablesOfThatSchema()
         {
             using (var source = new SqlConnection(Database.ConnectionStringForSource))
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo(new[] { "Country" }, target, "Sales");
-                var results = new List<CopySchemaResult>();
+                source.CopyTableSchemaTo(new[] { "Country" }, target, "Sales");
+                var results = new List<CopyTableSchemaResult>();
 
                 // Act
-                source.CopySchemaTo(new[] { "Country" }, target, "Sales", createdCallback: results.Add);
-                source.CopySchemaTo(new[] { "Country" }, target, createdCallback: results.Add);
+                source.CopyTableSchemaTo(new[] { "Country" }, target, "Sales", createdCallback: results.Add);
+                source.CopyTableSchemaTo(new[] { "Country" }, target, createdCallback: results.Add);
 
                 // Assert
-                Assert.AreEqual(CopySchemaOutcome.Skipped, results[0].Outcome);
-                Assert.AreEqual(CopySchemaOutcome.Created, results[1].Outcome);
+                Assert.AreEqual(CopyTableSchemaOutcome.Skipped, results[0].Outcome);
+                Assert.AreEqual(CopyTableSchemaOutcome.Created, results[1].Outcome);
                 CollectionAssert.AreEquivalent(new[] { "Sales.Country", "dbo.Country" }, GetTargetTables());
             }
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemasToIfTheTargetSchemaDoesNotExist()
+        public void ThrowExceptionOnCopyTableSchemasToIfTheTargetSchemaDoesNotExist()
         {
             using (var source = new SqlConnection(Database.ConnectionStringForSource))
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
@@ -154,22 +154,22 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act/Assert
-                Assert.Throws<SqlException>(() => source.CopySchemaTo(new[] { "Country" }, target, "Missing"));
+                Assert.Throws<SqlException>(() => source.CopyTableSchemaTo(new[] { "Country" }, target, "Missing"));
             }
         }
 
         [TestMethod]
-        public async Task TestCopySchemasToAsyncWithTargetSchemaCreatesTheTablesInThatSchema()
+        public async Task TestCopyTableSchemasToAsyncWithTargetSchemaCreatesTheTablesInThatSchema()
         {
             using (var source = new SqlConnection(Database.ConnectionStringForSource))
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopySchemaResult>();
+                var results = new List<CopyTableSchemaResult>();
 
                 // Act
-                await source.CopySchemaToAsync(new[] { "Country", "Person" }, target, "Sales", createdCallback: results.Add);
+                await source.CopyTableSchemaToAsync(new[] { "Country", "Person" }, target, "Sales", createdCallback: results.Add);
 
                 // Assert
                 CollectionAssert.AreEquivalent(new[] { "Sales.Country", "Sales.Person" }, GetTargetTables());
@@ -178,7 +178,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestCopySchemasToAsyncWithoutTargetSchemaCreatesTheTablesInTheDefaultSchema()
+        public async Task TestCopyTableSchemasToAsyncWithoutTargetSchemaCreatesTheTablesInTheDefaultSchema()
         {
             using (var source = new SqlConnection(Database.ConnectionStringForSource))
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
@@ -187,7 +187,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var result = await source.CopySchemaToAsync("Sales.Invoice", target);
+                var result = await source.CopyTableSchemaToAsync("Sales.Invoice", target);
 
                 // Assert
                 Assert.AreEqual("Sales", result.SourceSchema);

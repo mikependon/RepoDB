@@ -324,14 +324,14 @@ namespace RepoDb.Schema
         /// <param name="action"></param>
         /// <param name="rule"></param>
         /// <returns></returns>
-        private static string Rule(string action, CopySchemaForeignKeyRule rule)
+        private static string Rule(string action, CopyTableSchemaForeignKeyRule rule)
         {
             switch (rule)
             {
-                case CopySchemaForeignKeyRule.Cascade: return $" ON {action} CASCADE";
-                case CopySchemaForeignKeyRule.SetNull: return $" ON {action} SET NULL";
-                case CopySchemaForeignKeyRule.SetDefault: return $" ON {action} SET DEFAULT";
-                case CopySchemaForeignKeyRule.Restrict: return $" ON {action} RESTRICT";
+                case CopyTableSchemaForeignKeyRule.Cascade: return $" ON {action} CASCADE";
+                case CopyTableSchemaForeignKeyRule.SetNull: return $" ON {action} SET NULL";
+                case CopyTableSchemaForeignKeyRule.SetDefault: return $" ON {action} SET DEFAULT";
+                case CopyTableSchemaForeignKeyRule.Restrict: return $" ON {action} RESTRICT";
                 default: return string.Empty;
             }
         }

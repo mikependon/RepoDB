@@ -357,13 +357,13 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="rule"></param>
         /// <returns></returns>
-        private static string Rule(CopySchemaForeignKeyRule rule)
+        private static string Rule(CopyTableSchemaForeignKeyRule rule)
         {
             switch (rule)
             {
-                case CopySchemaForeignKeyRule.Cascade: return "CASCADE";
-                case CopySchemaForeignKeyRule.SetNull: return "SET NULL";
-                case CopySchemaForeignKeyRule.SetDefault: return "SET DEFAULT";
+                case CopyTableSchemaForeignKeyRule.Cascade: return "CASCADE";
+                case CopyTableSchemaForeignKeyRule.SetNull: return "SET NULL";
+                case CopyTableSchemaForeignKeyRule.SetDefault: return "SET DEFAULT";
                 default: return null;
             }
         }

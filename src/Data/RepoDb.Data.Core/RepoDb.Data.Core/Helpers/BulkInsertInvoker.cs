@@ -67,7 +67,7 @@ namespace RepoDb.Data.Helpers
             string tableName,
             IDataReader reader,
             int batchSize,
-            CopySchemaColumnMappingsBehavior columnMappingsBehavior,
+            CopyTableSchemaColumnMappingsBehavior columnMappingsBehavior,
             int? commandTimeout,
             string traceKey,
             ITrace trace,
@@ -106,7 +106,7 @@ namespace RepoDb.Data.Helpers
             string tableName,
             IDataReader reader,
             int batchSize,
-            CopySchemaColumnMappingsBehavior columnMappingsBehavior,
+            CopyTableSchemaColumnMappingsBehavior columnMappingsBehavior,
             int? commandTimeout,
             string traceKey,
             ITrace trace,
@@ -137,7 +137,7 @@ namespace RepoDb.Data.Helpers
         /// <summary>
         /// Applies the column mappings behavior to the bulk insert for as long as the scope lives. The bulk operations package of a provider reads the behavior
         /// from the setting of the connection (the <c>BulkColumnMappingsBehavior</c> property of its <c>&lt;Provider&gt;BulkOperationsDbSetting</c>, of the enumeration
-        /// <c>&lt;Provider&gt;BulkColumnMappingsBehavior</c> that has the same names and values as <see cref="CopySchemaColumnMappingsBehavior"/>), so the behavior is set on the
+        /// <c>&lt;Provider&gt;BulkColumnMappingsBehavior</c> that has the same names and values as <see cref="CopyTableSchemaColumnMappingsBehavior"/>), so the behavior is set on the
         /// setting and then set back. The setting is shared by every connection of the same type, so the bulk inserts of the setting take turns while the behavior is applied.
         /// </summary>
         private sealed class ColumnMappingsScope : IDisposable
@@ -161,7 +161,7 @@ namespace RepoDb.Data.Helpers
             }
 
             internal static ColumnMappingsScope Enter(IDbConnection connection,
-                CopySchemaColumnMappingsBehavior behavior)
+                CopyTableSchemaColumnMappingsBehavior behavior)
             {
                 var scope = Create(connection, behavior);
                 if (scope?._gate == null)
@@ -173,7 +173,7 @@ namespace RepoDb.Data.Helpers
             }
 
             internal static async Task<ColumnMappingsScope> EnterAsync(IDbConnection connection,
-                CopySchemaColumnMappingsBehavior behavior,
+                CopyTableSchemaColumnMappingsBehavior behavior,
                 CancellationToken cancellationToken)
             {
                 var scope = Create(connection, behavior);
@@ -189,13 +189,13 @@ namespace RepoDb.Data.Helpers
             /// Finds the property of the setting of the connection that defines the behavior (<c>null</c> scope if the setting has none and the behavior is the default one).
             /// </summary>
             private static ColumnMappingsScope Create(IDbConnection connection,
-                CopySchemaColumnMappingsBehavior behavior)
+                CopyTableSchemaColumnMappingsBehavior behavior)
             {
                 var setting = DbSettingMapper.Get(connection);
                 var property = setting?.GetType().GetProperty(ColumnMappingsBehaviorProperty, BindingFlags.Public | BindingFlags.Instance);
                 if (property == null || !property.CanRead || !property.CanWrite || !property.PropertyType.IsEnum)
                 {
-                    if (behavior == CopySchemaColumnMappingsBehavior.Automatic)
+                    if (behavior == CopyTableSchemaColumnMappingsBehavior.Automatic)
                     {
                         return new ColumnMappingsScope(null, null, null);
                     }
@@ -209,7 +209,7 @@ namespace RepoDb.Data.Helpers
                 return new ColumnMappingsScope(setting, property, _gates.GetValue(setting, _ => new SemaphoreSlim(1, 1)));
             }
 
-            private ColumnMappingsScope Apply(CopySchemaColumnMappingsBehavior behavior)
+            private ColumnMappingsScope Apply(CopyTableSchemaColumnMappingsBehavior behavior)
             {
                 try
                 {

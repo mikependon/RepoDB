@@ -17,7 +17,7 @@ namespace RepoDb.Schema
     /// A class that orders the tables by the foreign keys that they have, and builds the relationships between them.
     /// It is shared by the schema readers, as only the way that a table is identified is different between the databases.
     /// </summary>
-    internal static class CopySchemaOrder
+    internal static class CopyTableSchemaOrder
     {
         #region Public Methods
 
@@ -176,7 +176,7 @@ namespace RepoDb.Schema
         /// <returns></returns>
         private static Dictionary<string, int> FindGroups(IEnumerable<string> keys,
             IDictionary<string, List<string>> parentKeys) =>
-            new CopySchemaGroupFinder(parentKeys).Find(keys);
+            new CopyTableSchemaGroupFinder(parentKeys).Find(keys);
 
         #endregion
     }

@@ -61,17 +61,17 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
         #region Target Schema
 
         [TestMethod]
-        public void TestCopySchemasToWithoutTargetSchemaCreatesTheTablesInTheDefaultSchema()
+        public void TestCopyTableSchemasToWithoutTargetSchemaCreatesTheTablesInTheDefaultSchema()
         {
             using (var source = new FbConnection(Database.ConnectionStringForSource))
             using (var target = new FbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopySchemaResult>();
+                var results = new List<CopyTableSchemaResult>();
 
                 // Act
-                source.CopySchemaTo(new[] { "Person", "Country", "OrderLine" }, target, createdCallback: results.Add);
+                source.CopyTableSchemaTo(new[] { "Person", "Country", "OrderLine" }, target, createdCallback: results.Add);
 
                 // Assert
                 CollectionAssert.AreEquivalent(new[] { "Country", "OrderLine", "Person" }, GetTargetTables());
@@ -82,7 +82,7 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestCopySchemasToAsyncWithoutTargetSchemaCreatesTheTablesInTheDefaultSchema()
+        public async Task TestCopyTableSchemasToAsyncWithoutTargetSchemaCreatesTheTablesInTheDefaultSchema()
         {
             using (var source = new FbConnection(Database.ConnectionStringForSource))
             using (var target = new FbConnection(Database.ConnectionStringForTarget))
@@ -91,7 +91,7 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var result = await source.CopySchemaToAsync("Country", target);
+                var result = await source.CopyTableSchemaToAsync("Country", target);
 
                 // Assert
                 Assert.IsNull(result.SourceSchema);
@@ -101,7 +101,7 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemasToIfTheTargetSchemaIsGiven()
+        public void ThrowExceptionOnCopyTableSchemasToIfTheTargetSchemaIsGiven()
         {
             using (var source = new FbConnection(Database.ConnectionStringForSource))
             using (var target = new FbConnection(Database.ConnectionStringForTarget))
@@ -110,13 +110,13 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act/Assert
-                Assert.Throws<NotSupportedException>(() => source.CopySchemaTo(new[] { "Country" }, target, "Sales"));
+                Assert.Throws<NotSupportedException>(() => source.CopyTableSchemaTo(new[] { "Country" }, target, "Sales"));
                 Assert.AreEqual(0, GetTargetTables().Count);
             }
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnCopySchemasToAsyncIfTheTargetSchemaIsGiven()
+        public async Task ThrowExceptionOnCopyTableSchemasToAsyncIfTheTargetSchemaIsGiven()
         {
             using (var source = new FbConnection(Database.ConnectionStringForSource))
             using (var target = new FbConnection(Database.ConnectionStringForTarget))
@@ -125,7 +125,7 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<NotSupportedException>(() => source.CopySchemaToAsync(new[] { "Country" }, target, "Sales"));
+                await Assert.ThrowsAsync<NotSupportedException>(() => source.CopyTableSchemaToAsync(new[] { "Country" }, target, "Sales"));
                 Assert.AreEqual(0, GetTargetTables().Count);
             }
         }

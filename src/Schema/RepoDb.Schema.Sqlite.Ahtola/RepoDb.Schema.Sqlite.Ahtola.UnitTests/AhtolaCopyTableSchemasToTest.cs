@@ -24,7 +24,7 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
     /// like the SQLite reader does) and the destination connection records the statements that are executed on it.
     /// </summary>
     [TestClass]
-    public class AhtolaCopySchemasToTest
+    public class AhtolaCopyTableSchemasToTest
     {
         [TestInitialize]
         public void Initialize()
@@ -96,10 +96,10 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
 
         #endregion
 
-        #region CopySchemasTo
+        #region CopyTableSchemasTo
 
         [TestMethod]
-        public void TestAhtolaCopySchemasToExecutesTheStatementsThatTheComposerComposed()
+        public void TestAhtolaCopyTableSchemasToExecutesTheStatementsThatTheComposerComposed()
         {
             // Setup
             var schemas = new[] { Table("Person", "Country"), Table("Country") };
@@ -108,7 +108,7 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
             var destination = new CustomDbConnection();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Person", "Country" }, destination);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination);
 
             // Assert
             var expected = new AhtolaSchemaComposer().ComposeSchemas(AhtolaSchemaReader.Order(schemas).Select(r => r.Schema)).Where(statement => statement.Length > 0).ToList();
@@ -116,7 +116,7 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
         }
 
         [TestMethod]
-        public void TestAhtolaCopySchemasToCreatesTheReferencedTableFirst()
+        public void TestAhtolaCopyTableSchemasToCreatesTheReferencedTableFirst()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
@@ -124,7 +124,7 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
             var destination = new CustomDbConnection();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Person", "Country" }, destination);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination);
 
             // Assert
             var tables = Tables(destination);
@@ -134,7 +134,7 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
         }
 
         [TestMethod]
-        public void TestAhtolaCopySchemasToCreatesTheForeignKeysWithTheTables()
+        public void TestAhtolaCopyTableSchemasToCreatesTheForeignKeysWithTheTables()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"), Table("Shipment", "Country", "Person"));
@@ -142,7 +142,7 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
             var destination = new CustomDbConnection();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Person", "Country", "Shipment" }, destination);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country", "Shipment" }, destination);
 
             // Assert
             Assert.AreEqual(3, Tables(destination).Length);
@@ -151,7 +151,7 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
         }
 
         [TestMethod]
-        public void TestAhtolaCopySchemasToOfTablesThatReferenceEachOther()
+        public void TestAhtolaCopyTableSchemasToOfTablesThatReferenceEachOther()
         {
             // Setup
             MapReader(Table("A", "B"), Table("B", "C"), Table("C", "A"));
@@ -159,8 +159,8 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
             var destination = new CustomDbConnection();
 
             // Act
-            var results = new List<CopySchemaResult>();
-            new CustomDbConnection().CopySchemaTo(new[] { "A", "B", "C" }, destination, createdCallback: results.Add);
+            var results = new List<CopyTableSchemaResult>();
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "A", "B", "C" }, destination, createdCallback: results.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "A", "B", "C" }, results.Select(t => t.TableName).ToArray());
@@ -170,7 +170,7 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
         }
 
         [TestMethod]
-        public void TestAhtolaCopySchemasToOfDiamond()
+        public void TestAhtolaCopyTableSchemasToOfDiamond()
         {
             // Setup
             MapReader(Table("D", "B", "C"), Table("C", "A"), Table("B", "A"), Table("A"));
@@ -178,8 +178,8 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
             var destination = new CustomDbConnection();
 
             // Act
-            var results = new List<CopySchemaResult>();
-            new CustomDbConnection().CopySchemaTo(new[] { "D", "C", "B", "A" }, destination, createdCallback: results.Add);
+            var results = new List<CopyTableSchemaResult>();
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "D", "C", "B", "A" }, destination, createdCallback: results.Add);
 
             // Assert
             var names = results.Select(t => t.TableName).ToList();
@@ -189,7 +189,7 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
         }
 
         [TestMethod]
-        public void TestAhtolaCopySchemasToWithTheIndexesOfTheTables()
+        public void TestAhtolaCopyTableSchemasToWithTheIndexesOfTheTables()
         {
             // Setup
             var product = Table("Product");
@@ -200,7 +200,7 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
             var destination = new CustomDbConnection();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Product" }, destination);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Product" }, destination);
 
             // Assert
             Assert.AreEqual(3, destination.ExecutedCommands.Count);
@@ -209,7 +209,7 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
         }
 
         [TestMethod]
-        public void TestAhtolaCopySchemasToOfTablesInDifferentSchemas()
+        public void TestAhtolaCopyTableSchemasToOfTablesInDifferentSchemas()
         {
             // Setup
             MapReader(SchemaTable(null, "Ledger", "sales.Invoice"), SchemaTable("sales", "Invoice"));
@@ -217,7 +217,7 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
             var destination = new CustomDbConnection();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Ledger", "sales.Invoice" }, destination);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Ledger", "sales.Invoice" }, destination);
 
             // Assert
             var tables = Tables(destination);
@@ -227,7 +227,7 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
         }
 
         [TestMethod]
-        public void TestAhtolaCopySchemasToOfTablesWithNamesThatNeedQuoting()
+        public void TestAhtolaCopyTableSchemasToOfTablesWithNamesThatNeedQuoting()
         {
             // Setup
             MapReader(SchemaTable(null, "Odd.Child", AhtolaSchemaHelper.FormatTableName(null, "Odd.Name")), SchemaTable(null, "Odd.Name"));
@@ -235,7 +235,7 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
             var destination = new CustomDbConnection();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "[Odd.Child]", "[Odd.Name]" }, destination);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "[Odd.Child]", "[Odd.Name]" }, destination);
 
             // Assert
             var tables = Tables(destination);
@@ -245,15 +245,15 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
         }
 
         [TestMethod]
-        public void TestAhtolaCopySchemasToCallbackResult()
+        public void TestAhtolaCopyTableSchemasToCallbackResult()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
             MapComposer();
-            var results = new List<CopySchemaResult>();
+            var results = new List<CopyTableSchemaResult>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Person", "Country" }, new CustomDbConnection(), createdCallback: results.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, new CustomDbConnection(), createdCallback: results.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.TableName).ToArray());
@@ -261,11 +261,11 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
             StringAssert.StartsWith(results[1].Script, "CREATE TABLE [Person]", StringComparison.Ordinal);
             StringAssert.Contains(results[1].Script, "CONSTRAINT [FK_Person_Country] FOREIGN KEY ([CountryId]) REFERENCES [Country] ([Id])", StringComparison.Ordinal);
             Assert.AreEqual(1, results[1].ForeignKeyCount);
-            Assert.AreEqual(CopySchemaOutcome.Created, results[0].Outcome);
+            Assert.AreEqual(CopyTableSchemaOutcome.Created, results[0].Outcome);
         }
 
         [TestMethod]
-        public void TestAhtolaCopySchemasToCallsTheCallbackOnceTheSchemaOfTheTableIsCreated()
+        public void TestAhtolaCopyTableSchemasToCallsTheCallbackOnceTheSchemaOfTheTableIsCreated()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"), Table("Solo"));
@@ -274,7 +274,7 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
             var reported = new List<(string Table, int Executed)>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(
+            new CustomDbConnection().CopyTableSchemaTo(
                 new[] { "Person", "Country", "Solo" },
                 destination,
                 createdCallback: r => reported.Add((r.TableName, destination.ExecutedCommands.Count)));
@@ -287,7 +287,7 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
         }
 
         [TestMethod]
-        public void TestAhtolaCopySchemasToCallsTheCallbackAfterTheIndexesAndTheForeignKeys()
+        public void TestAhtolaCopyTableSchemasToCallsTheCallbackAfterTheIndexesAndTheForeignKeys()
         {
             // Setup
             var product = Table("Product", "Category");
@@ -298,7 +298,7 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
             var reported = new List<(string Table, int Executed)>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(
+            new CustomDbConnection().CopyTableSchemaTo(
                 new[] { "Product", "Category" },
                 destination,
                 createdCallback: r => reported.Add((r.TableName, destination.ExecutedCommands.Count)));
@@ -313,16 +313,16 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
         #region ErrorCallback
 
         [TestMethod]
-        public void TestAhtolaCopySchemasToErrorCallbackOfTheTableThatFails()
+        public void TestAhtolaCopyTableSchemasToErrorCallbackOfTheTableThatFails()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
             MapComposer();
             var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("CREATE TABLE [Person]", StringComparison.Ordinal) };
-            var errors = new List<CopySchemaError>();
+            var errors = new List<CopyTableSchemaError>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Person", "Country" }, destination, errorCallback: errors.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination, errorCallback: errors.Add);
 
             // Assert
             Assert.AreEqual(1, errors.Count);
@@ -333,7 +333,7 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
         }
 
         [TestMethod]
-        public void TestAhtolaCopySchemasToErrorCallbackOfTheIndexThatFails()
+        public void TestAhtolaCopyTableSchemasToErrorCallbackOfTheIndexThatFails()
         {
             // Setup
             var product = Table("Product");
@@ -341,10 +341,10 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
             MapReader(product, Table("Category"));
             MapComposer();
             var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("CREATE INDEX", StringComparison.Ordinal) };
-            var errors = new List<CopySchemaError>();
+            var errors = new List<CopyTableSchemaError>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Product", "Category" }, destination, errorCallback: errors.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Product", "Category" }, destination, errorCallback: errors.Add);
 
             // Assert
             Assert.AreEqual(1, errors.Count);
@@ -353,16 +353,16 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
         }
 
         [TestMethod]
-        public void TestAhtolaCopySchemasToErrorCallbackAddsTheErrorToTheResultOfTheTable()
+        public void TestAhtolaCopyTableSchemasToErrorCallbackAddsTheErrorToTheResultOfTheTable()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
             MapComposer();
             var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("CREATE TABLE [Person]", StringComparison.Ordinal) };
-            var created = new List<CopySchemaResult>();
+            var created = new List<CopyTableSchemaResult>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(
+            new CustomDbConnection().CopyTableSchemaTo(
                 new[] { "Person", "Country" },
                 destination,
                 createdCallback: created.Add,
@@ -371,14 +371,14 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
             // Assert
             CollectionAssert.AreEqual(new[] { "Country", "Person" }, created.Select(r => r.TableName).ToArray());
             Assert.AreEqual(0, created[0].Errors.Count);
-            Assert.AreEqual(CopySchemaOutcome.Created, created[0].Outcome);
+            Assert.AreEqual(CopyTableSchemaOutcome.Created, created[0].Outcome);
             Assert.AreEqual(1, created[1].Errors.Count);
-            Assert.AreEqual(CopySchemaOutcome.Failed, created[1].Outcome);
+            Assert.AreEqual(CopyTableSchemaOutcome.Failed, created[1].Outcome);
             StringAssert.StartsWith(created[1].Errors[0].Statement, "CREATE TABLE [Person]", StringComparison.Ordinal);
         }
 
         [TestMethod]
-        public void TestAhtolaCopySchemasToStopsIfTheErrorCallbackThrows()
+        public void TestAhtolaCopyTableSchemasToStopsIfTheErrorCallbackThrows()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
@@ -387,7 +387,7 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
 
             // Act/Assert
             Assert.Throws<NotSupportedException>(() =>
-                new CustomDbConnection().CopySchemaTo(
+                new CustomDbConnection().CopyTableSchemaTo(
                     new[] { "Person", "Country" },
                     destination,
                     errorCallback: _ => throw new NotSupportedException()));
@@ -397,17 +397,17 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
         }
 
         [TestMethod]
-        public void ThrowExceptionOnAhtolaCopySchemasToIfTheErrorCallbackThrowsTheCapturedException()
+        public void ThrowExceptionOnAhtolaCopyTableSchemasToIfTheErrorCallbackThrowsTheCapturedException()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
             MapComposer();
             var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("CREATE TABLE [Person]", StringComparison.Ordinal) };
-            CopySchemaError raised = null;
+            CopyTableSchemaError raised = null;
 
             // Act
             var exception = Assert.Throws<InvalidOperationException>(() =>
-                new CustomDbConnection().CopySchemaTo(new[] { "Person", "Country" }, destination, errorCallback: e =>
+                new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination, errorCallback: e =>
                 {
                     raised = e;
                     throw e.Exception;
@@ -419,10 +419,10 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
 
         #endregion
 
-        #region CopySchemasToAsync
+        #region CopyTableSchemasToAsync
 
         [TestMethod]
-        public async Task TestAhtolaCopySchemasToAsyncExecutesTheStatementsThatTheComposerComposed()
+        public async Task TestAhtolaCopyTableSchemasToAsyncExecutesTheStatementsThatTheComposerComposed()
         {
             // Setup
             var schemas = new[] { Table("Person", "Country"), Table("Country") };
@@ -431,7 +431,7 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
             var destination = new CustomDbConnection();
 
             // Act
-            await new CustomDbConnection().CopySchemaToAsync(new[] { "Person", "Country" }, destination);
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" }, destination);
 
             // Assert
             var expected = new AhtolaSchemaComposer().ComposeSchemas(AhtolaSchemaReader.Order(schemas).Select(r => r.Schema)).Where(statement => statement.Length > 0).ToList();
@@ -439,7 +439,7 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
         }
 
         [TestMethod]
-        public async Task TestAhtolaCopySchemasToAsyncOfTablesThatReferenceEachOther()
+        public async Task TestAhtolaCopyTableSchemasToAsyncOfTablesThatReferenceEachOther()
         {
             // Setup
             MapReader(Table("A", "B"), Table("B", "A"));
@@ -447,8 +447,8 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
             var destination = new CustomDbConnection();
 
             // Act
-            var results = new List<CopySchemaResult>();
-            await new CustomDbConnection().CopySchemaToAsync(new[] { "A", "B" }, destination, createdCallback: results.Add);
+            var results = new List<CopyTableSchemaResult>();
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "A", "B" }, destination, createdCallback: results.Add);
 
             // Assert
             Assert.AreEqual(2, results.Count);
@@ -457,19 +457,19 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
         }
 
         [TestMethod]
-        public async Task TestAhtolaCopySchemasToAsyncCallbackResult()
+        public async Task TestAhtolaCopyTableSchemasToAsyncCallbackResult()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
             MapComposer();
-            var results = new List<CopySchemaResult>();
+            var results = new List<CopyTableSchemaResult>();
 
             // Act
-            await new CustomDbConnection().CopySchemaToAsync(new[] { "Person", "Country" }, new CustomDbConnection(), tableExistenceBehavior: CopySchemaExistsBehavior.Throw, createdCallback: results.Add);
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" }, new CustomDbConnection(), tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw, createdCallback: results.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.TableName).ToArray());
-            Assert.AreEqual(CopySchemaExistsBehavior.Throw, results[1].Action);
+            Assert.AreEqual(CopyTableSchemaExistsBehavior.Throw, results[1].Action);
             StringAssert.Contains(results[1].Script, "CREATE TABLE [Person]", StringComparison.Ordinal);
         }
 

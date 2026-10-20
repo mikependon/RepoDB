@@ -23,9 +23,9 @@ using RepoDb.Schema.Core.UnitTests.CustomObjects;
 namespace RepoDb.Schema.Core.UnitTests.Extensions
 {
     [TestClass]
-    public class CopySchemaToTest
+    public class CopyTableSchemaToTest
     {
-        public class CopySchemaToTestEntity
+        public class CopyTableSchemaToTestEntity
         {
         }
 
@@ -75,67 +75,67 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
         #endregion
 
-        #region CopySchemaTo
+        #region CopyTableSchemaTo
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemaToIfTheConnectionIsNull()
+        public void ThrowExceptionOnCopyTableSchemaToIfTheConnectionIsNull()
         {
             // Setup
             IDbConnection connection = null;
 
             // Act/Assert
             Assert.Throws<ArgumentNullException>(() =>
-                connection.CopySchemaTo("Person", new CustomDbConnection()));
+                connection.CopyTableSchemaTo("Person", new CustomDbConnection()));
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemaToIfTheTableNameIsNull()
+        public void ThrowExceptionOnCopyTableSchemaToIfTheTableNameIsNull()
         {
             // Act/Assert
             Assert.Throws<ArgumentNullException>(() =>
-                new CustomDbConnection().CopySchemaTo((string)null, new CustomDbConnection()));
+                new CustomDbConnection().CopyTableSchemaTo((string)null, new CustomDbConnection()));
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemaToIfTheTableNameIsWhiteSpace()
+        public void ThrowExceptionOnCopyTableSchemaToIfTheTableNameIsWhiteSpace()
         {
             // Act/Assert
             Assert.Throws<ArgumentNullException>(() =>
-                new CustomDbConnection().CopySchemaTo("  ", new CustomDbConnection()));
+                new CustomDbConnection().CopyTableSchemaTo("  ", new CustomDbConnection()));
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemaToIfTheDestinationConnectionIsNull()
+        public void ThrowExceptionOnCopyTableSchemaToIfTheDestinationConnectionIsNull()
         {
             // Act/Assert
             Assert.Throws<ArgumentNullException>(() =>
-                new CustomDbConnection().CopySchemaTo("Person", (IDbConnection)null));
+                new CustomDbConnection().CopyTableSchemaTo("Person", (IDbConnection)null));
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemaToIfThereIsNoMappedSchemaReader()
+        public void ThrowExceptionOnCopyTableSchemaToIfThereIsNoMappedSchemaReader()
         {
             // Setup
             MapComposer("CREATE TABLE [Person] ([Id] int);");
 
             // Act/Assert
             Assert.Throws<MissingMappingException>(() =>
-                new CustomDbConnection().CopySchemaTo("Person", new CustomDbConnection()));
+                new CustomDbConnection().CopyTableSchemaTo("Person", new CustomDbConnection()));
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemaToIfThereIsNoMappedSchemaComposer()
+        public void ThrowExceptionOnCopyTableSchemaToIfThereIsNoMappedSchemaComposer()
         {
             // Setup
             MapReader(GetSchema());
 
             // Act/Assert
             Assert.Throws<MissingMappingException>(() =>
-                new CustomDbConnection().CopySchemaTo("Person", new CustomDbConnection()));
+                new CustomDbConnection().CopyTableSchemaTo("Person", new CustomDbConnection()));
         }
 
         [TestMethod]
-        public void TestCopySchemaToExecutesTheComposedStatementsInOrder()
+        public void TestCopyTableSchemaToExecutesTheComposedStatementsInOrder()
         {
             // Setup
             MapReader(GetSchema());
@@ -143,7 +143,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = new CustomDbConnection();
 
             // Act
-            new CustomDbConnection().CopySchemaTo("Person", destination);
+            new CustomDbConnection().CopyTableSchemaTo("Person", destination);
 
             // Assert
             CollectionAssert.AreEqual(
@@ -152,21 +152,21 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopySchemaToReadsTheSchemaOfTheGivenTable()
+        public void TestCopyTableSchemaToReadsTheSchemaOfTheGivenTable()
         {
             // Setup
             var reader = MapReader(GetSchema());
             MapComposer("CREATE TABLE [Person] ([Id] int);");
 
             // Act
-            new CustomDbConnection().CopySchemaTo("dbo.Person", new CustomDbConnection());
+            new CustomDbConnection().CopyTableSchemaTo("dbo.Person", new CustomDbConnection());
 
             // Assert
             reader.Verify(r => r.GetDependencyOrder(It.Is<IEnumerable<string>>(n => n.SequenceEqual(new[] { "dbo.Person" }))), Times.Once);
         }
 
         [TestMethod]
-        public void TestCopySchemaToComposesTheSchemaThatWasRead()
+        public void TestCopyTableSchemaToComposesTheSchemaThatWasRead()
         {
             // Setup
             var schema = GetSchema();
@@ -174,28 +174,28 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var composer = MapComposer("CREATE TABLE [Person] ([Id] int);");
 
             // Act
-            new CustomDbConnection().CopySchemaTo("Person", new CustomDbConnection());
+            new CustomDbConnection().CopyTableSchemaTo("Person", new CustomDbConnection());
 
             // Assert
             composer.Verify(c => c.ComposeSchemas(It.Is<IEnumerable<TableSchema>>(t => t.SequenceEqual(new[] { schema }))), Times.Once);
         }
 
         [TestMethod]
-        public void TestCopySchemaToResult()
+        public void TestCopyTableSchemaToResult()
         {
             // Setup
             MapReader(GetSchema());
             MapComposer("CREATE TABLE [Person] ([Id] int);", "CREATE INDEX [IX_Person] ON [Person] ([Id]);");
 
             // Act
-            var result = new CustomDbConnection().CopySchemaTo("Person", new CustomDbConnection());
+            var result = new CustomDbConnection().CopyTableSchemaTo("Person", new CustomDbConnection());
 
             // Assert
             Assert.AreEqual("Person", result.TableName, StringComparer.Ordinal);
             Assert.AreEqual("dbo", result.SourceSchema, StringComparer.Ordinal);
             Assert.AreEqual(nameof(CustomDbConnection), result.SourceDatabaseType, StringComparer.Ordinal);
             Assert.AreEqual(nameof(CustomDbConnection), result.DestinationDatabaseType, StringComparer.Ordinal);
-            Assert.AreEqual(CopySchemaOutcome.Created, result.Outcome);
+            Assert.AreEqual(CopyTableSchemaOutcome.Created, result.Outcome);
             Assert.AreEqual(3, result.ColumnCount);
             Assert.AreEqual(1, result.IndexCount);
             Assert.AreEqual(2, result.ForeignKeyCount);
@@ -209,102 +209,102 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopySchemaToResultActionIsTheRequestedExistsBehavior()
+        public void TestCopyTableSchemaToResultActionIsTheRequestedExistsBehavior()
         {
             // Setup
             MapReader(GetSchema());
             MapComposer("CREATE TABLE [Person] ([Id] int);");
 
             // Act
-            var result = new CustomDbConnection().CopySchemaTo("Person", new CustomDbConnection(), tableExistenceBehavior: CopySchemaExistsBehavior.Drop);
+            var result = new CustomDbConnection().CopyTableSchemaTo("Person", new CustomDbConnection(), tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
 
             // Assert
-            Assert.AreEqual(CopySchemaExistsBehavior.Drop, result.Action);
+            Assert.AreEqual(CopyTableSchemaExistsBehavior.Drop, result.Action);
         }
 
         [TestMethod]
-        public void TestCopySchemaToResultActionIsSkipByDefault()
+        public void TestCopyTableSchemaToResultActionIsSkipByDefault()
         {
             // Setup
             MapReader(GetSchema());
             MapComposer("CREATE TABLE [Person] ([Id] int);");
 
             // Act
-            var result = new CustomDbConnection().CopySchemaTo("Person", new CustomDbConnection());
+            var result = new CustomDbConnection().CopyTableSchemaTo("Person", new CustomDbConnection());
 
             // Assert
-            Assert.AreEqual(CopySchemaExistsBehavior.Skip, result.Action);
+            Assert.AreEqual(CopyTableSchemaExistsBehavior.Skip, result.Action);
         }
 
         [TestMethod]
-        public void TestCopySchemaToViaEntityUsesTheMappedTableName()
+        public void TestCopyTableSchemaToViaEntityUsesTheMappedTableName()
         {
             // Setup
             var reader = MapReader(GetSchema());
             MapComposer("CREATE TABLE [Person] ([Id] int);");
 
             // Act
-            new CustomDbConnection().CopySchemaTo<CopySchemaToTestEntity>(new CustomDbConnection());
+            new CustomDbConnection().CopyTableSchemaTo<CopyTableSchemaToTestEntity>(new CustomDbConnection());
 
             // Assert
-            reader.Verify(r => r.GetDependencyOrder(It.Is<IEnumerable<string>>(n => n.SequenceEqual(new[] { nameof(CopySchemaToTestEntity) }))), Times.Once);
+            reader.Verify(r => r.GetDependencyOrder(It.Is<IEnumerable<string>>(n => n.SequenceEqual(new[] { nameof(CopyTableSchemaToTestEntity) }))), Times.Once);
         }
 
         #endregion
 
-        #region CopySchemaToAsync
+        #region CopyTableSchemaToAsync
 
         [TestMethod]
-        public async Task ThrowExceptionOnCopySchemaToAsyncIfTheConnectionIsNull()
+        public async Task ThrowExceptionOnCopyTableSchemaToAsyncIfTheConnectionIsNull()
         {
             // Setup
             IDbConnection connection = null;
 
             // Act/Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                connection.CopySchemaToAsync("Person", new CustomDbConnection()));
+                connection.CopyTableSchemaToAsync("Person", new CustomDbConnection()));
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnCopySchemaToAsyncIfTheTableNameIsNull()
+        public async Task ThrowExceptionOnCopyTableSchemaToAsyncIfTheTableNameIsNull()
         {
             // Act/Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                new CustomDbConnection().CopySchemaToAsync((string)null, new CustomDbConnection()));
+                new CustomDbConnection().CopyTableSchemaToAsync((string)null, new CustomDbConnection()));
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnCopySchemaToAsyncIfTheDestinationConnectionIsNull()
+        public async Task ThrowExceptionOnCopyTableSchemaToAsyncIfTheDestinationConnectionIsNull()
         {
             // Act/Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                new CustomDbConnection().CopySchemaToAsync("Person", (IDbConnection)null));
+                new CustomDbConnection().CopyTableSchemaToAsync("Person", (IDbConnection)null));
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnCopySchemaToAsyncIfThereIsNoMappedSchemaReader()
+        public async Task ThrowExceptionOnCopyTableSchemaToAsyncIfThereIsNoMappedSchemaReader()
         {
             // Setup
             MapComposer("CREATE TABLE [Person] ([Id] int);");
 
             // Act/Assert
             await Assert.ThrowsAsync<MissingMappingException>(() =>
-                new CustomDbConnection().CopySchemaToAsync("Person", new CustomDbConnection()));
+                new CustomDbConnection().CopyTableSchemaToAsync("Person", new CustomDbConnection()));
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnCopySchemaToAsyncIfThereIsNoMappedSchemaComposer()
+        public async Task ThrowExceptionOnCopyTableSchemaToAsyncIfThereIsNoMappedSchemaComposer()
         {
             // Setup
             MapReader(GetSchema());
 
             // Act/Assert
             await Assert.ThrowsAsync<MissingMappingException>(() =>
-                new CustomDbConnection().CopySchemaToAsync("Person", new CustomDbConnection()));
+                new CustomDbConnection().CopyTableSchemaToAsync("Person", new CustomDbConnection()));
         }
 
         [TestMethod]
-        public async Task TestCopySchemaToAsyncExecutesTheComposedStatementsInOrder()
+        public async Task TestCopyTableSchemaToAsyncExecutesTheComposedStatementsInOrder()
         {
             // Setup
             MapReader(GetSchema());
@@ -312,7 +312,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = new CustomDbConnection();
 
             // Act
-            await new CustomDbConnection().CopySchemaToAsync("Person", destination);
+            await new CustomDbConnection().CopyTableSchemaToAsync("Person", destination);
 
             // Assert
             CollectionAssert.AreEqual(
@@ -321,33 +321,33 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public async Task TestCopySchemaToAsyncReadsTheSchemaOfTheGivenTable()
+        public async Task TestCopyTableSchemaToAsyncReadsTheSchemaOfTheGivenTable()
         {
             // Setup
             var reader = MapReader(GetSchema());
             MapComposer("CREATE TABLE [Person] ([Id] int);");
 
             // Act
-            await new CustomDbConnection().CopySchemaToAsync("dbo.Person", new CustomDbConnection());
+            await new CustomDbConnection().CopyTableSchemaToAsync("dbo.Person", new CustomDbConnection());
 
             // Assert
             reader.Verify(r => r.GetDependencyOrderAsync(It.Is<IEnumerable<string>>(n => n.SequenceEqual(new[] { "dbo.Person" })), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [TestMethod]
-        public async Task TestCopySchemaToAsyncResult()
+        public async Task TestCopyTableSchemaToAsyncResult()
         {
             // Setup
             MapReader(GetSchema());
             MapComposer("CREATE TABLE [Person] ([Id] int);");
 
             // Act
-            var result = await new CustomDbConnection().CopySchemaToAsync("Person", new CustomDbConnection());
+            var result = await new CustomDbConnection().CopyTableSchemaToAsync("Person", new CustomDbConnection());
 
             // Assert
             Assert.AreEqual("Person", result.TableName, StringComparer.Ordinal);
             Assert.AreEqual("dbo", result.SourceSchema, StringComparer.Ordinal);
-            Assert.AreEqual(CopySchemaOutcome.Created, result.Outcome);
+            Assert.AreEqual(CopyTableSchemaOutcome.Created, result.Outcome);
             Assert.AreEqual(3, result.ColumnCount);
             Assert.AreEqual(1, result.IndexCount);
             Assert.AreEqual(2, result.ForeignKeyCount);
@@ -358,31 +358,31 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public async Task TestCopySchemaToAsyncResultActionIsTheRequestedExistsBehavior()
+        public async Task TestCopyTableSchemaToAsyncResultActionIsTheRequestedExistsBehavior()
         {
             // Setup
             MapReader(GetSchema());
             MapComposer("CREATE TABLE [Person] ([Id] int);");
 
             // Act
-            var result = await new CustomDbConnection().CopySchemaToAsync("Person", new CustomDbConnection(), tableExistenceBehavior: CopySchemaExistsBehavior.Align);
+            var result = await new CustomDbConnection().CopyTableSchemaToAsync("Person", new CustomDbConnection(), tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
 
             // Assert
-            Assert.AreEqual(CopySchemaExistsBehavior.Align, result.Action);
+            Assert.AreEqual(CopyTableSchemaExistsBehavior.Align, result.Action);
         }
 
         [TestMethod]
-        public async Task TestCopySchemaToAsyncViaEntityUsesTheMappedTableName()
+        public async Task TestCopyTableSchemaToAsyncViaEntityUsesTheMappedTableName()
         {
             // Setup
             var reader = MapReader(GetSchema());
             MapComposer("CREATE TABLE [Person] ([Id] int);");
 
             // Act
-            await new CustomDbConnection().CopySchemaToAsync<CopySchemaToTestEntity>(new CustomDbConnection());
+            await new CustomDbConnection().CopyTableSchemaToAsync<CopyTableSchemaToTestEntity>(new CustomDbConnection());
 
             // Assert
-            reader.Verify(r => r.GetDependencyOrderAsync(It.Is<IEnumerable<string>>(n => n.SequenceEqual(new[] { nameof(CopySchemaToTestEntity) })), It.IsAny<CancellationToken>()), Times.Once);
+            reader.Verify(r => r.GetDependencyOrderAsync(It.Is<IEnumerable<string>>(n => n.SequenceEqual(new[] { nameof(CopyTableSchemaToTestEntity) })), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         #endregion

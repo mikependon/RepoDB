@@ -73,8 +73,8 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
             CollectionAssert.AreEqual(new[] { "OrderId", "LineNumber" }, actual.Columns.ToArray());
             Assert.AreEqual(new TableInfo("OrderLine", null), actual.ReferencedTable);
             CollectionAssert.AreEqual(new[] { "OrderId", "LineNumber" }, actual.ReferencedColumns.ToArray());
-            Assert.AreEqual(CopySchemaForeignKeyRule.NoAction, actual.UpdateRule);
-            Assert.AreEqual(CopySchemaForeignKeyRule.NoAction, actual.DeleteRule);
+            Assert.AreEqual(CopyTableSchemaForeignKeyRule.NoAction, actual.UpdateRule);
+            Assert.AreEqual(CopyTableSchemaForeignKeyRule.NoAction, actual.DeleteRule);
         }
 
         [TestMethod]
@@ -84,8 +84,8 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
             var actual = GetForeignKey("Preference", "FK_Preference_Country");
 
             // Assert
-            Assert.AreEqual(CopySchemaForeignKeyRule.NoAction, actual.DeleteRule);
-            Assert.AreEqual(CopySchemaForeignKeyRule.NoAction, actual.UpdateRule);
+            Assert.AreEqual(CopyTableSchemaForeignKeyRule.NoAction, actual.DeleteRule);
+            Assert.AreEqual(CopyTableSchemaForeignKeyRule.NoAction, actual.UpdateRule);
         }
 
         [TestMethod]

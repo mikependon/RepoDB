@@ -14,15 +14,15 @@ using RepoDb.Schema.Enumerations;
 namespace RepoDb.Schema.Core.UnitTests
 {
     [TestClass]
-    public class CopySchemaResultTest
+    public class CopyTableSchemaResultTest
     {
         #region Methods
 
         [TestMethod]
-        public void TestCopySchemaResultAddedColumnsPropertyDefaultValue()
+        public void TestCopyTableSchemaResultAddedColumnsPropertyDefaultValue()
         {
             // Act
-            var result = new CopySchemaResult();
+            var result = new CopyTableSchemaResult();
             var actual = result.AddedColumns;
 
             // Assert
@@ -31,10 +31,10 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopySchemaResultAddedIndexesPropertyDefaultValue()
+        public void TestCopyTableSchemaResultAddedIndexesPropertyDefaultValue()
         {
             // Act
-            var result = new CopySchemaResult();
+            var result = new CopyTableSchemaResult();
             var actual = result.AddedIndexes;
 
             // Assert
@@ -43,10 +43,10 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopySchemaResultWarningsPropertyDefaultValue()
+        public void TestCopyTableSchemaResultWarningsPropertyDefaultValue()
         {
             // Act
-            var result = new CopySchemaResult();
+            var result = new CopyTableSchemaResult();
             var actual = result.Warnings;
 
             // Assert
@@ -55,62 +55,62 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopySchemaResultActionPropertyDefaultValue()
+        public void TestCopyTableSchemaResultActionPropertyDefaultValue()
         {
             // Act
-            var result = new CopySchemaResult();
+            var result = new CopyTableSchemaResult();
             var actual = result.Action;
 
             // Assert
-            Assert.AreEqual(CopySchemaExistsBehavior.Skip, actual);
+            Assert.AreEqual(CopyTableSchemaExistsBehavior.Skip, actual);
         }
 
         [TestMethod]
-        public void TestCopySchemaResultActionProperty()
+        public void TestCopyTableSchemaResultActionProperty()
         {
             // Act
-            var result = new CopySchemaResult
+            var result = new CopyTableSchemaResult
             {
-                Action = CopySchemaExistsBehavior.Drop
+                Action = CopyTableSchemaExistsBehavior.Drop
             };
             var actual = result.Action;
-            var expected = CopySchemaExistsBehavior.Drop;
+            var expected = CopyTableSchemaExistsBehavior.Drop;
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void TestCopySchemaResultOutcomePropertyDefaultValue()
+        public void TestCopyTableSchemaResultOutcomePropertyDefaultValue()
         {
             // Act
-            var result = new CopySchemaResult();
+            var result = new CopyTableSchemaResult();
             var actual = result.Outcome;
 
             // Assert
-            Assert.AreEqual(CopySchemaOutcome.Created, actual);
+            Assert.AreEqual(CopyTableSchemaOutcome.Created, actual);
         }
 
         [TestMethod]
-        public void TestCopySchemaResultOutcomeProperty()
+        public void TestCopyTableSchemaResultOutcomeProperty()
         {
             // Act
-            var result = new CopySchemaResult
+            var result = new CopyTableSchemaResult
             {
-                Outcome = CopySchemaOutcome.Aligned
+                Outcome = CopyTableSchemaOutcome.Aligned
             };
             var actual = result.Outcome;
-            var expected = CopySchemaOutcome.Aligned;
+            var expected = CopyTableSchemaOutcome.Aligned;
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void TestCopySchemaResultTableNameProperty()
+        public void TestCopyTableSchemaResultTableNameProperty()
         {
             // Act
-            var result = new CopySchemaResult
+            var result = new CopyTableSchemaResult
             {
                 TableName = "Person"
             };
@@ -122,10 +122,10 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopySchemaResultScriptProperty()
+        public void TestCopyTableSchemaResultScriptProperty()
         {
             // Act
-            var result = new CopySchemaResult
+            var result = new CopyTableSchemaResult
             {
                 Script = "CREATE TABLE [Person] ([Id] int);"
             };
@@ -137,10 +137,10 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopySchemaResultSourceDatabaseProperty()
+        public void TestCopyTableSchemaResultSourceDatabaseProperty()
         {
             // Act
-            var result = new CopySchemaResult
+            var result = new CopyTableSchemaResult
             {
                 SourceDatabase = "Source"
             };
@@ -152,10 +152,10 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopySchemaResultSourceDatabaseTypeProperty()
+        public void TestCopyTableSchemaResultSourceDatabaseTypeProperty()
         {
             // Act
-            var result = new CopySchemaResult
+            var result = new CopyTableSchemaResult
             {
                 SourceDatabaseType = "SqlConnection"
             };
@@ -167,10 +167,10 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopySchemaResultSourceSchemaProperty()
+        public void TestCopyTableSchemaResultSourceSchemaProperty()
         {
             // Act
-            var result = new CopySchemaResult
+            var result = new CopyTableSchemaResult
             {
                 SourceSchema = "dbo"
             };
@@ -182,10 +182,10 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopySchemaResultSourceServerProperty()
+        public void TestCopyTableSchemaResultSourceServerProperty()
         {
             // Act
-            var result = new CopySchemaResult
+            var result = new CopyTableSchemaResult
             {
                 SourceServer = "SourceServer"
             };
@@ -197,10 +197,10 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopySchemaResultDestinationDatabaseProperty()
+        public void TestCopyTableSchemaResultDestinationDatabaseProperty()
         {
             // Act
-            var result = new CopySchemaResult
+            var result = new CopyTableSchemaResult
             {
                 DestinationDatabase = "Destination"
             };
@@ -212,10 +212,10 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopySchemaResultDestinationDatabaseTypeProperty()
+        public void TestCopyTableSchemaResultDestinationDatabaseTypeProperty()
         {
             // Act
-            var result = new CopySchemaResult
+            var result = new CopyTableSchemaResult
             {
                 DestinationDatabaseType = "NpgsqlConnection"
             };
@@ -227,10 +227,10 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopySchemaResultDestinationSchemaProperty()
+        public void TestCopyTableSchemaResultDestinationSchemaProperty()
         {
             // Act
-            var result = new CopySchemaResult
+            var result = new CopyTableSchemaResult
             {
                 DestinationSchema = "public"
             };
@@ -242,10 +242,10 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopySchemaResultDestinationServerProperty()
+        public void TestCopyTableSchemaResultDestinationServerProperty()
         {
             // Act
-            var result = new CopySchemaResult
+            var result = new CopyTableSchemaResult
             {
                 DestinationServer = "DestinationServer"
             };
@@ -257,10 +257,10 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopySchemaResultColumnCountProperty()
+        public void TestCopyTableSchemaResultColumnCountProperty()
         {
             // Act
-            var result = new CopySchemaResult
+            var result = new CopyTableSchemaResult
             {
                 ColumnCount = 4
             };
@@ -272,10 +272,10 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopySchemaResultIndexCountProperty()
+        public void TestCopyTableSchemaResultIndexCountProperty()
         {
             // Act
-            var result = new CopySchemaResult
+            var result = new CopyTableSchemaResult
             {
                 IndexCount = 2
             };
@@ -287,10 +287,10 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopySchemaResultForeignKeyCountProperty()
+        public void TestCopyTableSchemaResultForeignKeyCountProperty()
         {
             // Act
-            var result = new CopySchemaResult
+            var result = new CopyTableSchemaResult
             {
                 ForeignKeyCount = 1
             };
@@ -302,10 +302,10 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopySchemaResultUniqueConstraintCountProperty()
+        public void TestCopyTableSchemaResultUniqueConstraintCountProperty()
         {
             // Act
-            var result = new CopySchemaResult
+            var result = new CopyTableSchemaResult
             {
                 UniqueConstraintCount = 3
             };
@@ -317,10 +317,10 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopySchemaResultCheckConstraintCountProperty()
+        public void TestCopyTableSchemaResultCheckConstraintCountProperty()
         {
             // Act
-            var result = new CopySchemaResult
+            var result = new CopyTableSchemaResult
             {
                 CheckConstraintCount = 5
             };
@@ -332,10 +332,10 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopySchemaResultTableExistedPropertyDefaultValue()
+        public void TestCopyTableSchemaResultTableExistedPropertyDefaultValue()
         {
             // Act
-            var result = new CopySchemaResult();
+            var result = new CopyTableSchemaResult();
             var actual = result.TableExisted;
 
             // Assert
@@ -343,10 +343,10 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopySchemaResultTableExistedProperty()
+        public void TestCopyTableSchemaResultTableExistedProperty()
         {
             // Act
-            var result = new CopySchemaResult
+            var result = new CopyTableSchemaResult
             {
                 TableExisted = true
             };
@@ -358,10 +358,10 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopySchemaResultDurationProperty()
+        public void TestCopyTableSchemaResultDurationProperty()
         {
             // Act
-            var result = new CopySchemaResult
+            var result = new CopyTableSchemaResult
             {
                 StartTime = new DateTime(2026, 1, 1, 10, 0, 0, DateTimeKind.Utc),
                 EndTime = new DateTime(2026, 1, 1, 10, 0, 5, DateTimeKind.Utc)
@@ -374,10 +374,10 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopySchemaResultDurationPropertyDefaultValue()
+        public void TestCopyTableSchemaResultDurationPropertyDefaultValue()
         {
             // Act
-            var result = new CopySchemaResult();
+            var result = new CopyTableSchemaResult();
             var actual = result.Duration;
 
             // Assert
@@ -385,10 +385,10 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopySchemaResultStartTimeProperty()
+        public void TestCopyTableSchemaResultStartTimeProperty()
         {
             // Act
-            var result = new CopySchemaResult
+            var result = new CopyTableSchemaResult
             {
                 StartTime = new DateTime(2026, 1, 1, 10, 0, 0, DateTimeKind.Utc)
             };
@@ -400,10 +400,10 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopySchemaResultEndTimeProperty()
+        public void TestCopyTableSchemaResultEndTimeProperty()
         {
             // Act
-            var result = new CopySchemaResult
+            var result = new CopyTableSchemaResult
             {
                 EndTime = new DateTime(2026, 1, 1, 10, 0, 5, DateTimeKind.Utc)
             };
@@ -415,10 +415,10 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopySchemaResultErrorsPropertyDefaultValue()
+        public void TestCopyTableSchemaResultErrorsPropertyDefaultValue()
         {
             // Act
-            var result = new CopySchemaResult();
+            var result = new CopyTableSchemaResult();
             var actual = result.Errors;
 
             // Assert
@@ -427,13 +427,13 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopySchemaResultErrorsProperty()
+        public void TestCopyTableSchemaResultErrorsProperty()
         {
             // Setup
-            var error = new CopySchemaError { Statement = "CREATE TABLE [Person] ([Id] int);" };
+            var error = new CopyTableSchemaError { Statement = "CREATE TABLE [Person] ([Id] int);" };
 
             // Act
-            var result = new CopySchemaResult();
+            var result = new CopyTableSchemaResult();
             result.Errors.Add(error);
             var actual = result.Errors;
 
@@ -443,12 +443,12 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopySchemaResultErrorsAreNotShared()
+        public void TestCopyTableSchemaResultErrorsAreNotShared()
         {
             // Act
-            var first = new CopySchemaResult();
-            var second = new CopySchemaResult();
-            first.Errors.Add(new CopySchemaError());
+            var first = new CopyTableSchemaResult();
+            var second = new CopyTableSchemaResult();
+            first.Errors.Add(new CopyTableSchemaError());
 
             // Assert
             Assert.AreEqual(0, second.Errors.Count);

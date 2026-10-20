@@ -21,7 +21,7 @@ using RepoDb.Schema.Models;
 namespace RepoDb.Schema.Core.UnitTests.Extensions
 {
     [TestClass]
-    public class CopySchemasToColumnsTest
+    public class CopyTableSchemasToColumnsTest
     {
         [TestInitialize]
         public void Initialize()
@@ -94,8 +94,8 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var reader = new Mock<ISchemaReader>();
             reader.Setup(r => r.GetTableSchema(It.IsAny<string>())).Returns<string>(name => schemas.Single(s => s.Table.Name == name));
             reader.Setup(r => r.GetTableSchemaAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).Returns<string, CancellationToken>((name, _) => Task.FromResult(schemas.Single(s => s.Table.Name == name)));
-            reader.Setup(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), It.IsAny<CopySchemaRelationshipBehavior>())).Returns<IEnumerable<string>, CopySchemaRelationshipBehavior>((names, _) => schemas.Select(s => s.Table.Name).ToList());
-            reader.Setup(r => r.GetRelatedTablesAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<CopySchemaRelationshipBehavior>(), It.IsAny<CancellationToken>())).Returns<IEnumerable<string>, CopySchemaRelationshipBehavior, CancellationToken>((names, _, __) => Task.FromResult<IEnumerable<string>>(schemas.Select(s => s.Table.Name).ToList()));
+            reader.Setup(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), It.IsAny<CopyTableSchemaRelationshipBehavior>())).Returns<IEnumerable<string>, CopyTableSchemaRelationshipBehavior>((names, _) => schemas.Select(s => s.Table.Name).ToList());
+            reader.Setup(r => r.GetRelatedTablesAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<CopyTableSchemaRelationshipBehavior>(), It.IsAny<CancellationToken>())).Returns<IEnumerable<string>, CopyTableSchemaRelationshipBehavior, CancellationToken>((names, _, __) => Task.FromResult<IEnumerable<string>>(schemas.Select(s => s.Table.Name).ToList()));
             reader.Setup(r => r.GetDependencyOrder(It.IsAny<IEnumerable<string>>())).Returns<IEnumerable<string>>(names => schemas.Where(s => names.Contains(s.Table.Name)).Select(s => new RelationshipInfo { Schema = s }).ToList());
             reader.Setup(r => r.GetDependencyOrderAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<CancellationToken>())).Returns<IEnumerable<string>, CancellationToken>((names, _) => Task.FromResult<IEnumerable<RelationshipInfo>>(schemas.Where(s => names.Contains(s.Table.Name)).Select(s => new RelationshipInfo { Schema = s }).ToList()));
             SchemaReaderMapper.Add<CustomDbConnection>(reader.Object, true);
@@ -135,7 +135,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         #region Filter
 
         [TestMethod]
-        public void TestCopySchemaToWithColumnsCreatesOnlyTheGivenColumns()
+        public void TestCopyTableSchemaToWithColumnsCreatesOnlyTheGivenColumns()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -143,14 +143,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            new CustomDbConnection().CopySchemaTo("Person", destination, columns: new[] { "Id", "Name" });
+            new CustomDbConnection().CopyTableSchemaTo("Person", destination, columns: new[] { "Id", "Name" });
 
             // Assert
             Assert.AreEqual("CREATE TABLE Person (Id,Name PK(Id) UQ UQ_Person_Name CK CK_Person_Name);", destination.ExecutedCommands.First());
         }
 
         [TestMethod]
-        public void TestCopySchemaToWithoutColumnsCreatesAllTheColumns()
+        public void TestCopyTableSchemaToWithoutColumnsCreatesAllTheColumns()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -158,14 +158,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            new CustomDbConnection().CopySchemaTo("Person", destination, columns: null);
+            new CustomDbConnection().CopyTableSchemaTo("Person", destination, columns: null);
 
             // Assert
             Assert.AreEqual("CREATE TABLE Person (Id,Name,Age,CountryId PK(Id) UQ UQ_Person_Name UQ UQ_Person_Age CK CK_Person_Age CK CK_Person_Name);", destination.ExecutedCommands.First());
         }
 
         [TestMethod]
-        public void TestCopySchemaToWithColumnsCreatesOnlyTheIndexesThatUseTheGivenColumns()
+        public void TestCopyTableSchemaToWithColumnsCreatesOnlyTheIndexesThatUseTheGivenColumns()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -173,14 +173,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            new CustomDbConnection().CopySchemaTo("Person", destination, columns: new[] { "Id", "Name" });
+            new CustomDbConnection().CopyTableSchemaTo("Person", destination, columns: new[] { "Id", "Name" });
 
             // Assert
             CollectionAssert.AreEqual(new[] { "CREATE INDEX IX_Person_Name ON Person;" }, destination.ExecutedCommands.Where(c => c.StartsWith("CREATE INDEX")).ToList());
         }
 
         [TestMethod]
-        public void TestCopySchemaToWithColumnsCreatesTheIndexThatIncludesTheGivenColumns()
+        public void TestCopyTableSchemaToWithColumnsCreatesTheIndexThatIncludesTheGivenColumns()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -188,14 +188,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            new CustomDbConnection().CopySchemaTo("Person", destination, columns: new[] { "Id", "Age" });
+            new CustomDbConnection().CopyTableSchemaTo("Person", destination, columns: new[] { "Id", "Age" });
 
             // Assert
             CollectionAssert.AreEqual(new[] { "CREATE INDEX IX_Person_Id ON Person;" }, destination.ExecutedCommands.Where(c => c.StartsWith("CREATE INDEX")).ToList());
         }
 
         [TestMethod]
-        public void TestCopySchemaToWithColumnsDoesNotCreateThePrimaryKeyIfItsColumnIsNotGiven()
+        public void TestCopyTableSchemaToWithColumnsDoesNotCreateThePrimaryKeyIfItsColumnIsNotGiven()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -203,14 +203,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            new CustomDbConnection().CopySchemaTo("Person", destination, columns: new[] { "Name", "Age" });
+            new CustomDbConnection().CopyTableSchemaTo("Person", destination, columns: new[] { "Name", "Age" });
 
             // Assert
             Assert.AreEqual("CREATE TABLE Person (Name,Age UQ UQ_Person_Name UQ UQ_Person_Age CK CK_Person_Age CK CK_Person_Name);", destination.ExecutedCommands.First());
         }
 
         [TestMethod]
-        public void TestCopySchemaToWithColumnsDoesNotCreateTheCheckConstraintThatMentionsAColumnThatIsNotGiven()
+        public void TestCopyTableSchemaToWithColumnsDoesNotCreateTheCheckConstraintThatMentionsAColumnThatIsNotGiven()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -218,14 +218,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            new CustomDbConnection().CopySchemaTo("Person", destination, columns: new[] { "Id", "Age" });
+            new CustomDbConnection().CopyTableSchemaTo("Person", destination, columns: new[] { "Id", "Age" });
 
             // Assert
             Assert.AreEqual("CREATE TABLE Person (Id,Age PK(Id) UQ UQ_Person_Age CK CK_Person_Age);", destination.ExecutedCommands.First());
         }
 
         [TestMethod]
-        public void TestCopySchemaToWithColumnsDoesNotCreateTheForeignKeyThatUsesAColumnThatIsNotGiven()
+        public void TestCopyTableSchemaToWithColumnsDoesNotCreateTheForeignKeyThatUsesAColumnThatIsNotGiven()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -233,14 +233,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            new CustomDbConnection().CopySchemaTo("Person", destination, columns: new[] { "Id", "Name" });
+            new CustomDbConnection().CopyTableSchemaTo("Person", destination, columns: new[] { "Id", "Name" });
 
             // Assert
             Assert.IsFalse(destination.ExecutedCommands.Any(c => c.StartsWith("ADD FK_Person_Country")));
         }
 
         [TestMethod]
-        public void TestCopySchemaToWithColumnsCreatesTheForeignKeyThatUsesOnlyTheGivenColumns()
+        public void TestCopyTableSchemaToWithColumnsCreatesTheForeignKeyThatUsesOnlyTheGivenColumns()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -248,14 +248,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Country", "COLUMN_EXISTS Country.Id", "COLUMN_EXISTS Country.Name", "COLUMN_EXISTS Country.Code");
 
             // Act
-            new CustomDbConnection().CopySchemaTo("Person", destination, columns: new[] { "Id", "CountryId" });
+            new CustomDbConnection().CopyTableSchemaTo("Person", destination, columns: new[] { "Id", "CountryId" });
 
             // Assert
             CollectionAssert.Contains(destination.ExecutedCommands.ToList(), "ADD FK_Person_Country TO Person;");
         }
 
         [TestMethod]
-        public void TestCopySchemaToWithColumnsMatchesTheNamesOfTheColumnsWithoutCaseAndWithoutDuplicates()
+        public void TestCopyTableSchemaToWithColumnsMatchesTheNamesOfTheColumnsWithoutCaseAndWithoutDuplicates()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -263,14 +263,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            new CustomDbConnection().CopySchemaTo("Person", destination, columns: new[] { "ID", " name ", "Id", "NAME" });
+            new CustomDbConnection().CopyTableSchemaTo("Person", destination, columns: new[] { "ID", " name ", "Id", "NAME" });
 
             // Assert
             Assert.AreEqual("CREATE TABLE Person (Id,Name PK(Id) UQ UQ_Person_Name CK CK_Person_Name);", destination.ExecutedCommands.First());
         }
 
         [TestMethod]
-        public void TestCopySchemaToWithColumnsDoesNotChangeTheSchemaOfTheSource()
+        public void TestCopyTableSchemaToWithColumnsDoesNotChangeTheSchemaOfTheSource()
         {
             // Setup
             var person = GetPerson();
@@ -278,7 +278,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapComposer();
 
             // Act
-            new CustomDbConnection().CopySchemaTo("Person", GetDestination(), columns: new[] { "Id" });
+            new CustomDbConnection().CopyTableSchemaTo("Person", GetDestination(), columns: new[] { "Id" });
 
             // Assert
             Assert.AreEqual(4, person.Columns.Count);
@@ -288,7 +288,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopySchemaToWithColumnsReportsTheColumnsAndTheObjectsThatAreCreated()
+        public void TestCopyTableSchemaToWithColumnsReportsTheColumnsAndTheObjectsThatAreCreated()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -296,7 +296,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            var result = new CustomDbConnection().CopySchemaTo("Person", destination, columns: new[] { "Id", "Name" });
+            var result = new CustomDbConnection().CopyTableSchemaTo("Person", destination, columns: new[] { "Id", "Name" });
 
             // Assert
             Assert.AreEqual(2, result.ColumnCount);
@@ -311,7 +311,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         #region Errors
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemaToIfAColumnIsNotAColumnOfTheSourceTable()
+        public void ThrowExceptionOnCopyTableSchemaToIfAColumnIsNotAColumnOfTheSourceTable()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -319,7 +319,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act/Assert
-            var exception = Assert.Throws<ArgumentException>(() => new CustomDbConnection().CopySchemaTo("Person", destination, columns: new[] { "Id", "Missing" }));
+            var exception = Assert.Throws<ArgumentException>(() => new CustomDbConnection().CopyTableSchemaTo("Person", destination, columns: new[] { "Id", "Missing" }));
             StringAssert.Contains(exception.Message, "'Missing'", StringComparison.Ordinal);
             StringAssert.Contains(exception.Message, "dbo.Person", StringComparison.Ordinal);
             Assert.AreEqual("columns", exception.ParamName);
@@ -328,7 +328,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemaToIfTheColumnsAreEmpty()
+        public void ThrowExceptionOnCopyTableSchemaToIfTheColumnsAreEmpty()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -336,12 +336,12 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act/Assert
-            Assert.Throws<ArgumentException>(() => new CustomDbConnection().CopySchemaTo("Person", destination, columns: new string[0]));
+            Assert.Throws<ArgumentException>(() => new CustomDbConnection().CopyTableSchemaTo("Person", destination, columns: new string[0]));
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemaToIfAColumnIsNullOrWhiteSpace()
+        public void ThrowExceptionOnCopyTableSchemaToIfAColumnIsNullOrWhiteSpace()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -349,13 +349,13 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act/Assert
-            Assert.Throws<ArgumentException>(() => new CustomDbConnection().CopySchemaTo("Person", destination, columns: new[] { "Id", null }));
-            Assert.Throws<ArgumentException>(() => new CustomDbConnection().CopySchemaTo("Person", destination, columns: new[] { "Id", " " }));
+            Assert.Throws<ArgumentException>(() => new CustomDbConnection().CopyTableSchemaTo("Person", destination, columns: new[] { "Id", null }));
+            Assert.Throws<ArgumentException>(() => new CustomDbConnection().CopyTableSchemaTo("Person", destination, columns: new[] { "Id", " " }));
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemaToOfSeveralTablesIfAColumnIsNotAColumnOfOneOfTheTables()
+        public void ThrowExceptionOnCopyTableSchemaToOfSeveralTablesIfAColumnIsNotAColumnOfOneOfTheTables()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -363,14 +363,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act/Assert
-            var exception = Assert.Throws<ArgumentException>(() => new CustomDbConnection().CopySchemaTo(new[] { "Person", "Country" }, destination, columns: new[] { "Id", "Age" }));
+            var exception = Assert.Throws<ArgumentException>(() => new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination, columns: new[] { "Id", "Age" }));
             StringAssert.Contains(exception.Message, "'Age'", StringComparison.Ordinal);
             StringAssert.Contains(exception.Message, "dbo.Country", StringComparison.Ordinal);
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnCopySchemaToAsyncIfAColumnIsNotAColumnOfTheSourceTable()
+        public async Task ThrowExceptionOnCopyTableSchemaToAsyncIfAColumnIsNotAColumnOfTheSourceTable()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -378,13 +378,13 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act/Assert
-            var exception = await Assert.ThrowsAsync<ArgumentException>(() => new CustomDbConnection().CopySchemaToAsync("Person", destination, columns: new[] { "Id", "Missing" }));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => new CustomDbConnection().CopyTableSchemaToAsync("Person", destination, columns: new[] { "Id", "Missing" }));
             StringAssert.Contains(exception.Message, "'Missing'", StringComparison.Ordinal);
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnCopySchemaToAsyncOfSeveralTablesIfAColumnIsNotAColumnOfOneOfTheTables()
+        public async Task ThrowExceptionOnCopyTableSchemaToAsyncOfSeveralTablesIfAColumnIsNotAColumnOfOneOfTheTables()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -392,7 +392,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act/Assert
-            await Assert.ThrowsAsync<ArgumentException>(() => new CustomDbConnection().CopySchemaToAsync(new[] { "Person", "Country" }, destination, columns: new[] { "Id", "Age" }));
+            await Assert.ThrowsAsync<ArgumentException>(() => new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" }, destination, columns: new[] { "Id", "Age" }));
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
         }
 
@@ -401,7 +401,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         #region Related Tables
 
         [TestMethod]
-        public void TestCopySchemaToWithColumnsKeepsAllTheColumnsOfTheRelatedTables()
+        public void TestCopyTableSchemaToWithColumnsKeepsAllTheColumnsOfTheRelatedTables()
         {
             // Setup
             MapReader(GetCountry(), GetPerson());
@@ -409,7 +409,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            new CustomDbConnection().CopySchemaTo("Person", destination, columns: new[] { "Id", "CountryId" }, relationshipBehavior: CopySchemaRelationshipBehavior.Parents);
+            new CustomDbConnection().CopyTableSchemaTo("Person", destination, columns: new[] { "Id", "CountryId" }, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Parents);
 
             // Assert
             Assert.IsTrue(destination.ExecutedCommands.Any(c => c.StartsWith("CREATE TABLE Country (Id,Name,Code")));
@@ -417,7 +417,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopySchemaToWithColumnsDoesNotCreateTheForeignKeyOfARelatedTableThatReferencesAColumnThatIsNotGiven()
+        public void TestCopyTableSchemaToWithColumnsDoesNotCreateTheForeignKeyOfARelatedTableThatReferencesAColumnThatIsNotGiven()
         {
             // Setup
             MapReader(GetPerson(), GetPet());
@@ -425,7 +425,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            new CustomDbConnection().CopySchemaTo("Person", destination, columns: new[] { "Id", "Age" }, relationshipBehavior: CopySchemaRelationshipBehavior.Children);
+            new CustomDbConnection().CopyTableSchemaTo("Person", destination, columns: new[] { "Id", "Age" }, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Children);
 
             // Assert
             Assert.IsTrue(destination.ExecutedCommands.Any(c => c.StartsWith("CREATE TABLE Pet (Id,PersonName")));
@@ -433,7 +433,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopySchemaToWithColumnsCreatesTheForeignKeyOfARelatedTableThatReferencesAColumnThatIsGiven()
+        public void TestCopyTableSchemaToWithColumnsCreatesTheForeignKeyOfARelatedTableThatReferencesAColumnThatIsGiven()
         {
             // Setup
             MapReader(GetPerson(), GetPet());
@@ -441,7 +441,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            new CustomDbConnection().CopySchemaTo("Person", destination, columns: new[] { "Id", "Name" }, relationshipBehavior: CopySchemaRelationshipBehavior.Children);
+            new CustomDbConnection().CopyTableSchemaTo("Person", destination, columns: new[] { "Id", "Name" }, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Children);
 
             // Assert
             Assert.IsTrue(destination.ExecutedCommands.Any(c => c.StartsWith("ADD FK_Pet_Person")));
@@ -452,7 +452,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         #region Align And Several Tables
 
         [TestMethod]
-        public void TestCopySchemaToWithColumnsAndAlignAddsOnlyTheGivenColumnsThatTheTableThatExistsIsMissing()
+        public void TestCopyTableSchemaToWithColumnsAndAlignAddsOnlyTheGivenColumnsThatTheTableThatExistsIsMissing()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -460,7 +460,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Person", "COLUMN_EXISTS Person.Id");
 
             // Act
-            new CustomDbConnection().CopySchemaTo("Person", destination, columns: new[] { "Id", "Name" }, tableExistenceBehavior: CopySchemaExistsBehavior.Align);
+            new CustomDbConnection().CopyTableSchemaTo("Person", destination, columns: new[] { "Id", "Name" }, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
 
             // Assert
             Assert.IsTrue(destination.ExecutedCommands.Contains("ADD COLUMN Name TO Person;"));
@@ -468,7 +468,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopySchemaToOfSeveralTablesWithColumnsCreatesOnlyTheGivenColumnsOfEachTable()
+        public void TestCopyTableSchemaToOfSeveralTablesWithColumnsCreatesOnlyTheGivenColumnsOfEachTable()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -476,7 +476,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Person", "Country" }, destination, columns: new[] { "Id", "Name" });
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination, columns: new[] { "Id", "Name" });
 
             // Assert
             Assert.IsTrue(destination.ExecutedCommands.Any(c => c.StartsWith("CREATE TABLE Person (Id,Name ")));
@@ -484,7 +484,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public async Task TestCopySchemaToAsyncWithColumnsCreatesOnlyTheGivenColumns()
+        public async Task TestCopyTableSchemaToAsyncWithColumnsCreatesOnlyTheGivenColumns()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -492,7 +492,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            await new CustomDbConnection().CopySchemaToAsync("Person", destination, columns: new[] { "Id", "Name" });
+            await new CustomDbConnection().CopyTableSchemaToAsync("Person", destination, columns: new[] { "Id", "Name" });
 
             // Assert
             Assert.AreEqual("CREATE TABLE Person (Id,Name PK(Id) UQ UQ_Person_Name CK CK_Person_Name);", destination.ExecutedCommands.First());
@@ -500,7 +500,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public async Task TestCopySchemaToAsyncOfSeveralTablesWithColumnsCreatesOnlyTheGivenColumnsOfEachTable()
+        public async Task TestCopyTableSchemaToAsyncOfSeveralTablesWithColumnsCreatesOnlyTheGivenColumnsOfEachTable()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -508,7 +508,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            await new CustomDbConnection().CopySchemaToAsync(new[] { "Person", "Country" }, destination, columns: new[] { "Id", "Name" });
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" }, destination, columns: new[] { "Id", "Name" });
 
             // Assert
             Assert.IsTrue(destination.ExecutedCommands.Any(c => c.StartsWith("CREATE TABLE Person (Id,Name ")));

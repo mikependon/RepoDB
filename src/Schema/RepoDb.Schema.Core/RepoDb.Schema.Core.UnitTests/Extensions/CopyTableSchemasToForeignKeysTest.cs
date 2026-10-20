@@ -20,7 +20,7 @@ using RepoDb.Schema.Models;
 namespace RepoDb.Schema.Core.UnitTests.Extensions
 {
     [TestClass]
-    public class CopySchemasToForeignKeysTest
+    public class CopyTableSchemasToForeignKeysTest
     {
         [TestInitialize]
         public void Initialize()
@@ -107,37 +107,37 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         #region Align
 
         [TestMethod]
-        public void TestCopySchemasToWithAlignAddsTheForeignKeyThatTheTableThatExistsIsMissing()
+        public void TestCopyTableSchemasToWithAlignAddsTheForeignKeyThatTheTableThatExistsIsMissing()
         {
             // Setup
             MapReader(GetCustomers(), GetOrders());
             MapComposer();
             var destination = GetDestination("TABLE_EXISTS Customers", "COLUMN_EXISTS Customers.Id", "TABLE_EXISTS Orders", "COLUMN_EXISTS Orders.Id", "COLUMN_EXISTS Orders.CustomerId", "INDEX_EXISTS Orders.IX_Orders_CustomerId");
-            var results = new List<CopySchemaResult>();
+            var results = new List<CopyTableSchemaResult>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopySchemaExistsBehavior.Align, createdCallback: results.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "ADD FK_Orders_Customers TO Orders;" }, destination.ExecutedCommands);
             var orders = results.Single(r => r.TableName == "Orders");
-            Assert.AreEqual(CopySchemaOutcome.Aligned, orders.Outcome);
+            Assert.AreEqual(CopyTableSchemaOutcome.Aligned, orders.Outcome);
             CollectionAssert.AreEqual(new[] { "FK_Orders_Customers" }, orders.AddedForeignKeys.ToList());
             StringAssert.Contains(orders.Script, "ADD FK_Orders_Customers TO Orders;");
             Assert.AreEqual(0, results.Single(r => r.TableName == "Customers").AddedForeignKeys.Count);
         }
 
         [TestMethod]
-        public void TestCopySchemasToWithAlignDoesNotAddTheForeignKeyThatTheTableAlreadyHas()
+        public void TestCopyTableSchemasToWithAlignDoesNotAddTheForeignKeyThatTheTableAlreadyHas()
         {
             // Setup
             MapReader(GetCustomers(), GetOrders());
             MapComposer();
             var destination = GetDestination("TABLE_EXISTS Customers", "COLUMN_EXISTS Customers.Id", "TABLE_EXISTS Orders", "COLUMN_EXISTS Orders.Id", "COLUMN_EXISTS Orders.CustomerId", "INDEX_EXISTS Orders.IX_Orders_CustomerId", "FK_EXISTS Orders.FK_Orders_Customers");
-            var results = new List<CopySchemaResult>();
+            var results = new List<CopyTableSchemaResult>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopySchemaExistsBehavior.Align, createdCallback: results.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
 
             // Assert
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
@@ -145,7 +145,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopySchemasToWithAlignDoesNotAddTheForeignKeyIfTheComposerDoesNotComposeTheExistenceStatement()
+        public void TestCopyTableSchemasToWithAlignDoesNotAddTheForeignKeyIfTheComposerDoesNotComposeTheExistenceStatement()
         {
             // Setup
             MapReader(GetCustomers(), GetOrders());
@@ -153,14 +153,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Customers", "COLUMN_EXISTS Customers.Id", "TABLE_EXISTS Orders", "COLUMN_EXISTS Orders.Id", "COLUMN_EXISTS Orders.CustomerId", "INDEX_EXISTS Orders.IX_Orders_CustomerId");
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopySchemaExistsBehavior.Align);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
 
             // Assert
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
         }
 
         [TestMethod]
-        public void TestCopySchemasToWithAlignAddsTheForeignKeyAfterTheTablesThatAreCreated()
+        public void TestCopyTableSchemasToWithAlignAddsTheForeignKeyAfterTheTablesThatAreCreated()
         {
             // Setup
             MapReader(GetCustomers(), GetOrders());
@@ -168,14 +168,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Orders", "COLUMN_EXISTS Orders.Id", "COLUMN_EXISTS Orders.CustomerId", "INDEX_EXISTS Orders.IX_Orders_CustomerId");
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopySchemaExistsBehavior.Align);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "CREATE TABLE Customers;", "ADD FK_Orders_Customers TO Orders;" }, destination.ExecutedCommands);
         }
 
         [TestMethod]
-        public void TestCopySchemasToWithAlignDoesNotAddTheForeignKeyIfTheReferencedTableIsNotCopiedAndDoesNotExist()
+        public void TestCopyTableSchemasToWithAlignDoesNotAddTheForeignKeyIfTheReferencedTableIsNotCopiedAndDoesNotExist()
         {
             // Setup
             MapReader(GetOrders());
@@ -183,14 +183,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Orders", "COLUMN_EXISTS Orders.Id", "COLUMN_EXISTS Orders.CustomerId", "INDEX_EXISTS Orders.IX_Orders_CustomerId");
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Orders" }, destination, tableExistenceBehavior: CopySchemaExistsBehavior.Align);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
 
             // Assert
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
         }
 
         [TestMethod]
-        public void TestCopySchemasToWithAlignAddsTheForeignKeyIfTheReferencedTableIsNotCopiedButExists()
+        public void TestCopyTableSchemasToWithAlignAddsTheForeignKeyIfTheReferencedTableIsNotCopiedButExists()
         {
             // Setup
             MapReader(GetOrders());
@@ -198,14 +198,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Orders", "TABLE_EXISTS Customers", "COLUMN_EXISTS Orders.Id", "COLUMN_EXISTS Orders.CustomerId", "INDEX_EXISTS Orders.IX_Orders_CustomerId");
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Orders" }, destination, tableExistenceBehavior: CopySchemaExistsBehavior.Align);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "ADD FK_Orders_Customers TO Orders;" }, destination.ExecutedCommands);
         }
 
         [TestMethod]
-        public async Task TestCopySchemasToAsyncWithAlignDoesNotAddTheForeignKeyIfTheReferencedTableIsNotCopiedAndDoesNotExist()
+        public async Task TestCopyTableSchemasToAsyncWithAlignDoesNotAddTheForeignKeyIfTheReferencedTableIsNotCopiedAndDoesNotExist()
         {
             // Setup
             MapReader(GetOrders());
@@ -213,14 +213,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Orders", "COLUMN_EXISTS Orders.Id", "COLUMN_EXISTS Orders.CustomerId", "INDEX_EXISTS Orders.IX_Orders_CustomerId");
 
             // Act
-            await new CustomDbConnection().CopySchemaToAsync(new[] { "Orders" }, destination, tableExistenceBehavior: CopySchemaExistsBehavior.Align);
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
 
             // Assert
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
         }
 
         [TestMethod]
-        public async Task TestCopySchemasToAsyncWithAlignAddsTheForeignKeyIfTheReferencedTableIsNotCopiedButExists()
+        public async Task TestCopyTableSchemasToAsyncWithAlignAddsTheForeignKeyIfTheReferencedTableIsNotCopiedButExists()
         {
             // Setup
             MapReader(GetOrders());
@@ -228,14 +228,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Orders", "TABLE_EXISTS Customers", "COLUMN_EXISTS Orders.Id", "COLUMN_EXISTS Orders.CustomerId", "INDEX_EXISTS Orders.IX_Orders_CustomerId");
 
             // Act
-            await new CustomDbConnection().CopySchemaToAsync(new[] { "Orders" }, destination, tableExistenceBehavior: CopySchemaExistsBehavior.Align);
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "ADD FK_Orders_Customers TO Orders;" }, destination.ExecutedCommands);
         }
 
         [TestMethod]
-        public void TestCopySchemasToWithAlignAddsTheColumnsAndTheIndexesBeforeTheForeignKeys()
+        public void TestCopyTableSchemasToWithAlignAddsTheColumnsAndTheIndexesBeforeTheForeignKeys()
         {
             // Setup
             MapReader(GetCustomers(), GetOrders());
@@ -243,14 +243,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Customers", "COLUMN_EXISTS Customers.Id", "TABLE_EXISTS Orders", "COLUMN_EXISTS Orders.Id");
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopySchemaExistsBehavior.Align);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "ADD COLUMN CustomerId TO Orders;", "CREATE INDEX IX_Orders_CustomerId ON Orders;", "ADD FK_Orders_Customers TO Orders;" }, destination.ExecutedCommands);
         }
 
         [TestMethod]
-        public void TestCopySchemasToWithAlignReportsTheTableAfterItsForeignKeysAreAdded()
+        public void TestCopyTableSchemasToWithAlignReportsTheTableAfterItsForeignKeysAreAdded()
         {
             // Setup
             MapReader(GetCustomers(), GetOrders());
@@ -259,7 +259,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var executedWhenReported = new List<(string Table, int Executed)>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopySchemaExistsBehavior.Align,
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align,
                 createdCallback: r => executedWhenReported.Add((r.TableName, destination.ExecutedCommands.Count)));
 
             // Assert
@@ -268,16 +268,16 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public async Task TestCopySchemasToAsyncWithAlignAddsTheForeignKeyThatTheTableThatExistsIsMissing()
+        public async Task TestCopyTableSchemasToAsyncWithAlignAddsTheForeignKeyThatTheTableThatExistsIsMissing()
         {
             // Setup
             MapReader(GetCustomers(), GetOrders());
             MapComposer();
             var destination = GetDestination("TABLE_EXISTS Customers", "COLUMN_EXISTS Customers.Id", "TABLE_EXISTS Orders", "COLUMN_EXISTS Orders.Id", "COLUMN_EXISTS Orders.CustomerId", "INDEX_EXISTS Orders.IX_Orders_CustomerId");
-            var results = new List<CopySchemaResult>();
+            var results = new List<CopyTableSchemaResult>();
 
             // Act
-            await new CustomDbConnection().CopySchemaToAsync(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopySchemaExistsBehavior.Align, createdCallback: results.Add);
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "ADD FK_Orders_Customers TO Orders;" }, destination.ExecutedCommands);
@@ -285,7 +285,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public async Task TestCopySchemasToAsyncWithAlignAddsTheForeignKeyAfterTheTablesThatAreCreated()
+        public async Task TestCopyTableSchemasToAsyncWithAlignAddsTheForeignKeyAfterTheTablesThatAreCreated()
         {
             // Setup
             MapReader(GetCustomers(), GetOrders());
@@ -293,7 +293,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Orders", "COLUMN_EXISTS Orders.Id", "COLUMN_EXISTS Orders.CustomerId", "INDEX_EXISTS Orders.IX_Orders_CustomerId");
 
             // Act
-            await new CustomDbConnection().CopySchemaToAsync(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopySchemaExistsBehavior.Align);
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "CREATE TABLE Customers;", "ADD FK_Orders_Customers TO Orders;" }, destination.ExecutedCommands);
@@ -304,7 +304,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         #region Other Behaviors
 
         [TestMethod]
-        public void TestCopySchemasToWithSkipDoesNotCheckTheForeignKeysOfTheTablesThatExist()
+        public void TestCopyTableSchemasToWithSkipDoesNotCheckTheForeignKeysOfTheTablesThatExist()
         {
             // Setup
             MapReader(GetCustomers(), GetOrders());
@@ -312,7 +312,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Customers", "COLUMN_EXISTS Customers.Id", "TABLE_EXISTS Orders");
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Customers", "Orders" }, destination);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Orders" }, destination);
 
             // Assert
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
@@ -320,7 +320,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopySchemasToWithDropCreatesTheForeignKeysOnlyOnce()
+        public void TestCopyTableSchemasToWithDropCreatesTheForeignKeysOnlyOnce()
         {
             // Setup
             MapReader(GetCustomers(), GetOrders());
@@ -328,7 +328,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Customers", "COLUMN_EXISTS Customers.Id", "TABLE_EXISTS Orders");
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopySchemaExistsBehavior.Drop);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
 
             // Assert
             Assert.AreEqual(1, destination.ExecutedCommands.Count(c => c == "ADD FK_Orders_Customers TO Orders;"));
@@ -336,7 +336,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopySchemasToCreatesTheForeignKeysOfTheTablesThatDoNotExist()
+        public void TestCopyTableSchemasToCreatesTheForeignKeysOfTheTablesThatDoNotExist()
         {
             // Setup
             MapReader(GetCustomers(), GetOrders());
@@ -344,7 +344,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Customers", "Orders" }, destination);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Orders" }, destination);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "CREATE TABLE Customers;", "CREATE TABLE Orders;", "CREATE INDEX IX_Orders_CustomerId ON Orders;", "ADD FK_Orders_Customers TO Orders;" }, destination.ExecutedCommands);

@@ -42,11 +42,11 @@ namespace RepoDb.Data.Core.UnitTests.Enumerations
         }
 
         [TestMethod]
-        public void TestCopyDataRelationshipBehaviorHasTheSameValuesAsTheCopySchemaRelationshipBehavior()
+        public void TestCopyDataRelationshipBehaviorHasTheSameValuesAsTheCopyTableSchemaRelationshipBehavior()
         {
             // Act
             var data = Enum.GetNames(typeof(CopyDataRelationshipBehavior)).Select(name => (name, (int)Enum.Parse(typeof(CopyDataRelationshipBehavior), name)));
-            var schema = Enum.GetNames(typeof(CopySchemaRelationshipBehavior)).Select(name => (name, (int)Enum.Parse(typeof(CopySchemaRelationshipBehavior), name)));
+            var schema = Enum.GetNames(typeof(CopyTableSchemaRelationshipBehavior)).Select(name => (name, (int)Enum.Parse(typeof(CopyTableSchemaRelationshipBehavior), name)));
 
             // Assert
             CollectionAssert.AreEqual(schema.ToArray(), data.ToArray());

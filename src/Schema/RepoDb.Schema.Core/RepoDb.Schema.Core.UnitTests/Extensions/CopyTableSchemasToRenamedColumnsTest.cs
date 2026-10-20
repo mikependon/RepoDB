@@ -21,7 +21,7 @@ using RepoDb.Schema.Models;
 namespace RepoDb.Schema.Core.UnitTests.Extensions
 {
     [TestClass]
-    public class CopySchemasToRenamedColumnsTest
+    public class CopyTableSchemasToRenamedColumnsTest
     {
         [TestInitialize]
         public void Initialize()
@@ -90,8 +90,8 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var reader = new Mock<ISchemaReader>();
             reader.Setup(r => r.GetTableSchema(It.IsAny<string>())).Returns<string>(name => schemas.Single(s => s.Table.Name == name));
             reader.Setup(r => r.GetTableSchemaAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).Returns<string, CancellationToken>((name, _) => Task.FromResult(schemas.Single(s => s.Table.Name == name)));
-            reader.Setup(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), It.IsAny<CopySchemaRelationshipBehavior>())).Returns<IEnumerable<string>, CopySchemaRelationshipBehavior>((names, _) => schemas.Select(s => s.Table.Name).ToList());
-            reader.Setup(r => r.GetRelatedTablesAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<CopySchemaRelationshipBehavior>(), It.IsAny<CancellationToken>())).Returns<IEnumerable<string>, CopySchemaRelationshipBehavior, CancellationToken>((names, _, __) => Task.FromResult<IEnumerable<string>>(schemas.Select(s => s.Table.Name).ToList()));
+            reader.Setup(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), It.IsAny<CopyTableSchemaRelationshipBehavior>())).Returns<IEnumerable<string>, CopyTableSchemaRelationshipBehavior>((names, _) => schemas.Select(s => s.Table.Name).ToList());
+            reader.Setup(r => r.GetRelatedTablesAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<CopyTableSchemaRelationshipBehavior>(), It.IsAny<CancellationToken>())).Returns<IEnumerable<string>, CopyTableSchemaRelationshipBehavior, CancellationToken>((names, _, __) => Task.FromResult<IEnumerable<string>>(schemas.Select(s => s.Table.Name).ToList()));
             reader.Setup(r => r.GetDependencyOrder(It.IsAny<IEnumerable<string>>())).Returns<IEnumerable<string>>(names => schemas.Where(s => names.Contains(s.Table.Name)).Select(s => new RelationshipInfo { Schema = s }).ToList());
             reader.Setup(r => r.GetDependencyOrderAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<CancellationToken>())).Returns<IEnumerable<string>, CancellationToken>((names, _) => Task.FromResult<IEnumerable<RelationshipInfo>>(schemas.Where(s => names.Contains(s.Table.Name)).Select(s => new RelationshipInfo { Schema = s }).ToList()));
             SchemaReaderMapper.Add<CustomDbConnection>(reader.Object, true);
@@ -135,7 +135,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         #region Rename
 
         [TestMethod]
-        public void TestCopySchemaToWithRenamedColumnsCreatesTheColumnsByTheirNewNames()
+        public void TestCopyTableSchemaToWithRenamedColumnsCreatesTheColumnsByTheirNewNames()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -143,14 +143,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            new CustomDbConnection().CopySchemaTo("Person", destination, renamedColumns: new Dictionary<string, string> { ["Name"] = "FullName" });
+            new CustomDbConnection().CopyTableSchemaTo("Person", destination, renamedColumns: new Dictionary<string, string> { ["Name"] = "FullName" });
 
             // Assert
             StringAssert.StartsWith(Created(destination, "Person"), "CREATE Person(Id,FullName,Age,CountryId)");
         }
 
         [TestMethod]
-        public void TestCopySchemaToWithRenamedColumnsMakesTheObjectsFollowTheNewNames()
+        public void TestCopyTableSchemaToWithRenamedColumnsMakesTheObjectsFollowTheNewNames()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -158,14 +158,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            new CustomDbConnection().CopySchemaTo("Person", destination, renamedColumns: new Dictionary<string, string> { ["Id"] = "PersonId", ["Name"] = "FullName", ["Age"] = "Years", ["CountryId"] = "Country_Id" });
+            new CustomDbConnection().CopyTableSchemaTo("Person", destination, renamedColumns: new Dictionary<string, string> { ["Id"] = "PersonId", ["Name"] = "FullName", ["Age"] = "Years", ["CountryId"] = "Country_Id" });
 
             // Assert
             Assert.AreEqual("CREATE Person(PersonId,FullName,Years,Country_Id) PK(PersonId) IX[FullName|Years|FullName] UQ[FullName] CK[([Years] >= 0)] FK[Country_Id->Country(Id)];", Created(destination, "Person"));
         }
 
         [TestMethod]
-        public void TestCopySchemaToWithRenamedColumnsMatchesTheNamesWithoutCase()
+        public void TestCopyTableSchemaToWithRenamedColumnsMatchesTheNamesWithoutCase()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -173,14 +173,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            new CustomDbConnection().CopySchemaTo("Person", destination, renamedColumns: new Dictionary<string, string> { ["name"] = "FullName", ["AGE"] = "Years" });
+            new CustomDbConnection().CopyTableSchemaTo("Person", destination, renamedColumns: new Dictionary<string, string> { ["name"] = "FullName", ["AGE"] = "Years" });
 
             // Assert
             StringAssert.StartsWith(Created(destination, "Person"), "CREATE Person(Id,FullName,Years,CountryId)");
         }
 
         [TestMethod]
-        public void TestCopySchemaToWithRenamedColumnsCanSwapTheNamesOfTwoColumns()
+        public void TestCopyTableSchemaToWithRenamedColumnsCanSwapTheNamesOfTwoColumns()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -188,14 +188,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            new CustomDbConnection().CopySchemaTo("Person", destination, renamedColumns: new Dictionary<string, string> { ["Name"] = "Age", ["Age"] = "Name" });
+            new CustomDbConnection().CopyTableSchemaTo("Person", destination, renamedColumns: new Dictionary<string, string> { ["Name"] = "Age", ["Age"] = "Name" });
 
             // Assert
             Assert.AreEqual("CREATE Person(Id,Age,Name,CountryId) PK(Id) IX[Age|Name|Age] UQ[Age] CK[([Name] >= 0)] FK[CountryId->Country(Id)];", Created(destination, "Person"));
         }
 
         [TestMethod]
-        public void TestCopySchemaToWithColumnsAndRenamedColumnsCreatesOnlyTheGivenColumnsByTheirNewNames()
+        public void TestCopyTableSchemaToWithColumnsAndRenamedColumnsCreatesOnlyTheGivenColumnsByTheirNewNames()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -203,14 +203,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            new CustomDbConnection().CopySchemaTo("Person", destination, columns: new[] { "Id", "Name" }, renamedColumns: new Dictionary<string, string> { ["Name"] = "FullName" });
+            new CustomDbConnection().CopyTableSchemaTo("Person", destination, columns: new[] { "Id", "Name" }, renamedColumns: new Dictionary<string, string> { ["Name"] = "FullName" });
 
             // Assert
             Assert.AreEqual("CREATE Person(Id,FullName) PK(Id) UQ[FullName];", Created(destination, "Person"));
         }
 
         [TestMethod]
-        public void TestCopySchemaToWithoutRenamedColumnsKeepsTheNames()
+        public void TestCopyTableSchemaToWithoutRenamedColumnsKeepsTheNames()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -218,15 +218,15 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            new CustomDbConnection().CopySchemaTo("Person", destination, renamedColumns: null);
-            new CustomDbConnection().CopySchemaTo("Person", GetDestination(), renamedColumns: new Dictionary<string, string>());
+            new CustomDbConnection().CopyTableSchemaTo("Person", destination, renamedColumns: null);
+            new CustomDbConnection().CopyTableSchemaTo("Person", GetDestination(), renamedColumns: new Dictionary<string, string>());
 
             // Assert
             StringAssert.StartsWith(Created(destination, "Person"), "CREATE Person(Id,Name,Age,CountryId)");
         }
 
         [TestMethod]
-        public void TestCopySchemaToWithRenamedColumnsMakesTheForeignKeyOfARelatedTableFollowTheNewNames()
+        public void TestCopyTableSchemaToWithRenamedColumnsMakesTheForeignKeyOfARelatedTableFollowTheNewNames()
         {
             // Setup
             MapReader(GetPerson(), GetPet());
@@ -234,14 +234,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            new CustomDbConnection().CopySchemaTo("Person", destination, relationshipBehavior: CopySchemaRelationshipBehavior.Children, renamedColumns: new Dictionary<string, string> { ["Name"] = "FullName" });
+            new CustomDbConnection().CopyTableSchemaTo("Person", destination, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Children, renamedColumns: new Dictionary<string, string> { ["Name"] = "FullName" });
 
             // Assert
             Assert.AreEqual("CREATE Pet(Id,PersonName) PK() FK[PersonName->Person(FullName)];", Created(destination, "Pet"));
         }
 
         [TestMethod]
-        public void TestCopySchemaToWithRenamedColumnsDoesNotRenameTheColumnsOfTheRelatedTables()
+        public void TestCopyTableSchemaToWithRenamedColumnsDoesNotRenameTheColumnsOfTheRelatedTables()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -249,7 +249,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            new CustomDbConnection().CopySchemaTo("Person", destination, relationshipBehavior: CopySchemaRelationshipBehavior.Parents, renamedColumns: new Dictionary<string, string> { ["Name"] = "FullName", ["Id"] = "PersonId" });
+            new CustomDbConnection().CopyTableSchemaTo("Person", destination, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Parents, renamedColumns: new Dictionary<string, string> { ["Name"] = "FullName", ["Id"] = "PersonId" });
 
             // Assert
             Assert.AreEqual("CREATE Country(Id,Name) PK(Id);", Created(destination, "Country"));
@@ -257,7 +257,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopySchemaToWithRenamedColumnsDoesNotChangeTheSchemaOfTheSource()
+        public void TestCopyTableSchemaToWithRenamedColumnsDoesNotChangeTheSchemaOfTheSource()
         {
             // Setup
             var person = GetPerson();
@@ -265,7 +265,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapComposer();
 
             // Act
-            new CustomDbConnection().CopySchemaTo("Person", GetDestination(), renamedColumns: new Dictionary<string, string> { ["Name"] = "FullName" });
+            new CustomDbConnection().CopyTableSchemaTo("Person", GetDestination(), renamedColumns: new Dictionary<string, string> { ["Name"] = "FullName" });
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Id", "Name", "Age", "CountryId" }, person.Columns.Select(c => c.Field.Name).ToList());
@@ -273,7 +273,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopySchemaToWithRenamedColumnsKeepsTheOtherPropertiesOfTheColumns()
+        public void TestCopyTableSchemaToWithRenamedColumnsKeepsTheOtherPropertiesOfTheColumns()
         {
             // Setup
             var person = GetPerson();
@@ -294,7 +294,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             SchemaComposerMapper.Add<CustomDbConnection>(composer.Object, true);
 
             // Act
-            new CustomDbConnection().CopySchemaTo("Person", GetDestination(), renamedColumns: new Dictionary<string, string> { ["Name"] = "FullName" });
+            new CustomDbConnection().CopyTableSchemaTo("Person", GetDestination(), renamedColumns: new Dictionary<string, string> { ["Name"] = "FullName" });
 
             // Assert
             var column = composed.First().Columns.Single(c => c.Field.Name == "FullName");
@@ -309,7 +309,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopySchemaToOfSeveralTablesWithRenamedColumnsRenamesTheColumnsOfEachTable()
+        public void TestCopyTableSchemaToOfSeveralTablesWithRenamedColumnsRenamesTheColumnsOfEachTable()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -317,7 +317,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Person", "Country" }, destination, renamedColumns: new Dictionary<string, string> { ["Name"] = "FullName" });
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination, renamedColumns: new Dictionary<string, string> { ["Name"] = "FullName" });
 
             // Assert
             StringAssert.StartsWith(Created(destination, "Person"), "CREATE Person(Id,FullName,Age,CountryId)");
@@ -325,7 +325,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public async Task TestCopySchemaToAsyncWithRenamedColumnsCreatesTheColumnsByTheirNewNames()
+        public async Task TestCopyTableSchemaToAsyncWithRenamedColumnsCreatesTheColumnsByTheirNewNames()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -333,14 +333,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            await new CustomDbConnection().CopySchemaToAsync("Person", destination, renamedColumns: new Dictionary<string, string> { ["Name"] = "FullName" });
+            await new CustomDbConnection().CopyTableSchemaToAsync("Person", destination, renamedColumns: new Dictionary<string, string> { ["Name"] = "FullName" });
 
             // Assert
             StringAssert.StartsWith(Created(destination, "Person"), "CREATE Person(Id,FullName,Age,CountryId)");
         }
 
         [TestMethod]
-        public async Task TestCopySchemaToAsyncWithColumnsAndRenamedColumnsCreatesOnlyTheGivenColumnsByTheirNewNames()
+        public async Task TestCopyTableSchemaToAsyncWithColumnsAndRenamedColumnsCreatesOnlyTheGivenColumnsByTheirNewNames()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -348,7 +348,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            await new CustomDbConnection().CopySchemaToAsync("Person", destination, columns: new[] { "Id", "Name" }, renamedColumns: new Dictionary<string, string> { ["Name"] = "FullName" });
+            await new CustomDbConnection().CopyTableSchemaToAsync("Person", destination, columns: new[] { "Id", "Name" }, renamedColumns: new Dictionary<string, string> { ["Name"] = "FullName" });
 
             // Assert
             Assert.AreEqual("CREATE Person(Id,FullName) PK(Id) UQ[FullName];", Created(destination, "Person"));
@@ -359,7 +359,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         #region Errors
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemaToIfARenamedColumnIsNotAColumnOfTheSourceTable()
+        public void ThrowExceptionOnCopyTableSchemaToIfARenamedColumnIsNotAColumnOfTheSourceTable()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -367,12 +367,12 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Act/Assert
             var ex = Assert.Throws<ArgumentException>(() =>
-                new CustomDbConnection().CopySchemaTo("Person", GetDestination(), renamedColumns: new Dictionary<string, string> { ["Missing"] = "Other" }));
+                new CustomDbConnection().CopyTableSchemaTo("Person", GetDestination(), renamedColumns: new Dictionary<string, string> { ["Missing"] = "Other" }));
             StringAssert.Contains(ex.Message, "Missing");
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemaToIfTheNewNameOfAColumnIsNullOrWhiteSpace()
+        public void ThrowExceptionOnCopyTableSchemaToIfTheNewNameOfAColumnIsNullOrWhiteSpace()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -380,13 +380,13 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Act/Assert
             Assert.Throws<ArgumentException>(() =>
-                new CustomDbConnection().CopySchemaTo("Person", GetDestination(), renamedColumns: new Dictionary<string, string> { ["Name"] = " " }));
+                new CustomDbConnection().CopyTableSchemaTo("Person", GetDestination(), renamedColumns: new Dictionary<string, string> { ["Name"] = " " }));
             Assert.Throws<ArgumentException>(() =>
-                new CustomDbConnection().CopySchemaTo("Person", GetDestination(), renamedColumns: new Dictionary<string, string> { ["Name"] = null }));
+                new CustomDbConnection().CopyTableSchemaTo("Person", GetDestination(), renamedColumns: new Dictionary<string, string> { ["Name"] = null }));
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemaToIfAColumnIsRenamedMoreThanOnce()
+        public void ThrowExceptionOnCopyTableSchemaToIfAColumnIsRenamedMoreThanOnce()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -394,11 +394,11 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Act/Assert
             Assert.Throws<ArgumentException>(() =>
-                new CustomDbConnection().CopySchemaTo("Person", GetDestination(), renamedColumns: new Dictionary<string, string> { ["Name"] = "A", ["name"] = "B" }));
+                new CustomDbConnection().CopyTableSchemaTo("Person", GetDestination(), renamedColumns: new Dictionary<string, string> { ["Name"] = "A", ["name"] = "B" }));
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemaToIfTheNewNamesMakeTheTableHaveTheSameColumnTwice()
+        public void ThrowExceptionOnCopyTableSchemaToIfTheNewNamesMakeTheTableHaveTheSameColumnTwice()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -406,12 +406,12 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Act/Assert
             var ex = Assert.Throws<ArgumentException>(() =>
-                new CustomDbConnection().CopySchemaTo("Person", GetDestination(), renamedColumns: new Dictionary<string, string> { ["Name"] = "Age" }));
+                new CustomDbConnection().CopyTableSchemaTo("Person", GetDestination(), renamedColumns: new Dictionary<string, string> { ["Name"] = "Age" }));
             StringAssert.Contains(ex.Message, "Age");
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnCopySchemaToAsyncIfARenamedColumnIsNotAColumnOfTheSourceTable()
+        public async Task ThrowExceptionOnCopyTableSchemaToAsyncIfARenamedColumnIsNotAColumnOfTheSourceTable()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -419,7 +419,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Act/Assert
             await Assert.ThrowsAsync<ArgumentException>(() =>
-                new CustomDbConnection().CopySchemaToAsync("Person", GetDestination(), renamedColumns: new Dictionary<string, string> { ["Missing"] = "Other" }));
+                new CustomDbConnection().CopyTableSchemaToAsync("Person", GetDestination(), renamedColumns: new Dictionary<string, string> { ["Missing"] = "Other" }));
         }
 
         #endregion

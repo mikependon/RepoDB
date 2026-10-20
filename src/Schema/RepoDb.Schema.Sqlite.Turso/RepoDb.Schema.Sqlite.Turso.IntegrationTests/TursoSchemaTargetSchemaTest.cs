@@ -61,17 +61,17 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
         #region Target Schema
 
         [TestMethod]
-        public void TestCopySchemasToWithoutTargetSchemaCreatesTheTablesInTheDefaultSchema()
+        public void TestCopyTableSchemasToWithoutTargetSchemaCreatesTheTablesInTheDefaultSchema()
         {
             using (var source = Database.CreateSource())
             using (var target = Database.CreateTarget())
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopySchemaResult>();
+                var results = new List<CopyTableSchemaResult>();
 
                 // Act
-                source.CopySchemaTo(new[] { "Person", "Country", "OrderLine" }, target, createdCallback: results.Add);
+                source.CopyTableSchemaTo(new[] { "Person", "Country", "OrderLine" }, target, createdCallback: results.Add);
 
                 // Assert
                 CollectionAssert.AreEquivalent(new[] { "Country", "OrderLine", "Person" }, GetTargetTables());
@@ -82,7 +82,7 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemasToIfTheTargetSchemaDoesNotExist()
+        public void ThrowExceptionOnCopyTableSchemasToIfTheTargetSchemaDoesNotExist()
         {
             using (var source = Database.CreateSource())
             using (var target = Database.CreateTarget())
@@ -91,12 +91,12 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act/Assert
-                Assert.Throws<SqliteException>(() => source.CopySchemaTo(new[] { "Country" }, target, "Missing"));
+                Assert.Throws<SqliteException>(() => source.CopyTableSchemaTo(new[] { "Country" }, target, "Missing"));
             }
         }
 
         [TestMethod]
-        public async Task TestCopySchemasToAsyncWithoutTargetSchemaCreatesTheTablesInTheDefaultSchema()
+        public async Task TestCopyTableSchemasToAsyncWithoutTargetSchemaCreatesTheTablesInTheDefaultSchema()
         {
             using (var source = Database.CreateSource())
             using (var target = Database.CreateTarget())
@@ -105,7 +105,7 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var result = await source.CopySchemaToAsync("Country", target);
+                var result = await source.CopyTableSchemaToAsync("Country", target);
 
                 // Assert
                 Assert.IsNull(result.SourceSchema);

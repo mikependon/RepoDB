@@ -62,17 +62,17 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         #region Target Schema
 
         [TestMethod]
-        public void TestAuroraDbPostgreSqlCopySchemasToWithTargetSchemaCreatesTheTablesInThatSchema()
+        public void TestAuroraDbPostgreSqlCopyTableSchemasToWithTargetSchemaCreatesTheTablesInThatSchema()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopySchemaResult>();
+                var results = new List<CopyTableSchemaResult>();
 
                 // Act
-                source.CopySchemaTo(new[] { "country", "Person" }, target, "sales", createdCallback: results.Add);
+                source.CopyTableSchemaTo(new[] { "country", "Person" }, target, "sales", createdCallback: results.Add);
 
                 // Assert
                 CollectionAssert.AreEquivalent(new[] { "sales.country", "sales.\"Person\"" }, GetTargetTables());
@@ -84,17 +84,17 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestAuroraDbPostgreSqlCopySchemasToWithoutTargetSchemaCreatesTheTablesInTheDefaultSchema()
+        public void TestAuroraDbPostgreSqlCopyTableSchemasToWithoutTargetSchemaCreatesTheTablesInTheDefaultSchema()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopySchemaResult>();
+                var results = new List<CopyTableSchemaResult>();
 
                 // Act
-                source.CopySchemaTo(new[] { "sales.order_line", "Person", "country" }, target, createdCallback: results.Add);
+                source.CopyTableSchemaTo(new[] { "sales.order_line", "Person", "country" }, target, createdCallback: results.Add);
 
                 // Assert
                 CollectionAssert.AreEquivalent(new[] { "public.order_line", "public.\"Person\"", "public.country" }, GetTargetTables());
@@ -105,7 +105,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestAuroraDbPostgreSqlCopySchemaToOfASingleTableWithTargetSchema()
+        public void TestAuroraDbPostgreSqlCopyTableSchemaToOfASingleTableWithTargetSchema()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
@@ -114,7 +114,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var result = source.CopySchemaTo("country", target, "sales");
+                var result = source.CopyTableSchemaTo("country", target, "sales");
 
                 // Assert
                 Assert.AreEqual("public", result.SourceSchema);
@@ -124,29 +124,29 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestAuroraDbPostgreSqlCopySchemasToWithTargetSchemaChecksTheTablesOfThatSchema()
+        public void TestAuroraDbPostgreSqlCopyTableSchemasToWithTargetSchemaChecksTheTablesOfThatSchema()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo(new[] { "country" }, target, "sales");
-                var results = new List<CopySchemaResult>();
+                source.CopyTableSchemaTo(new[] { "country" }, target, "sales");
+                var results = new List<CopyTableSchemaResult>();
 
                 // Act
-                source.CopySchemaTo(new[] { "country" }, target, "sales", createdCallback: results.Add);
-                source.CopySchemaTo(new[] { "country" }, target, createdCallback: results.Add);
+                source.CopyTableSchemaTo(new[] { "country" }, target, "sales", createdCallback: results.Add);
+                source.CopyTableSchemaTo(new[] { "country" }, target, createdCallback: results.Add);
 
                 // Assert
-                Assert.AreEqual(CopySchemaOutcome.Skipped, results[0].Outcome);
-                Assert.AreEqual(CopySchemaOutcome.Created, results[1].Outcome);
+                Assert.AreEqual(CopyTableSchemaOutcome.Skipped, results[0].Outcome);
+                Assert.AreEqual(CopyTableSchemaOutcome.Created, results[1].Outcome);
                 CollectionAssert.AreEquivalent(new[] { "sales.country", "public.country" }, GetTargetTables());
             }
         }
 
         [TestMethod]
-        public void ThrowExceptionOnAuroraDbPostgreSqlCopySchemasToIfTheTargetSchemaDoesNotExist()
+        public void ThrowExceptionOnAuroraDbPostgreSqlCopyTableSchemasToIfTheTargetSchemaDoesNotExist()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
@@ -155,22 +155,22 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act/Assert
-                Assert.Throws<AuroraDbException>(() => source.CopySchemaTo(new[] { "country" }, target, "missing"));
+                Assert.Throws<AuroraDbException>(() => source.CopyTableSchemaTo(new[] { "country" }, target, "missing"));
             }
         }
 
         [TestMethod]
-        public async Task TestAuroraDbPostgreSqlCopySchemasToAsyncWithTargetSchemaCreatesTheTablesInThatSchema()
+        public async Task TestAuroraDbPostgreSqlCopyTableSchemasToAsyncWithTargetSchemaCreatesTheTablesInThatSchema()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopySchemaResult>();
+                var results = new List<CopyTableSchemaResult>();
 
                 // Act
-                await source.CopySchemaToAsync(new[] { "country", "Person" }, target, "sales", createdCallback: results.Add);
+                await source.CopyTableSchemaToAsync(new[] { "country", "Person" }, target, "sales", createdCallback: results.Add);
 
                 // Assert
                 CollectionAssert.AreEquivalent(new[] { "sales.country", "sales.\"Person\"" }, GetTargetTables());
@@ -179,17 +179,17 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestAuroraDbPostgreSqlCopySchemasToAsyncWithoutTargetSchemaCreatesTheTablesInTheDefaultSchema()
+        public async Task TestAuroraDbPostgreSqlCopyTableSchemasToAsyncWithoutTargetSchemaCreatesTheTablesInTheDefaultSchema()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo(new[] { "country", "Person" }, target);
+                source.CopyTableSchemaTo(new[] { "country", "Person" }, target);
 
                 // Act
-                var result = await source.CopySchemaToAsync("sales.order_line", target);
+                var result = await source.CopyTableSchemaToAsync("sales.order_line", target);
 
                 // Assert
                 Assert.AreEqual("sales", result.SourceSchema);

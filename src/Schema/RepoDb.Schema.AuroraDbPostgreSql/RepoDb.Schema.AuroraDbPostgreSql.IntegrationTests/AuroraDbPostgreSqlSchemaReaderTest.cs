@@ -129,8 +129,8 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
             Assert.AreEqual(new TableInfo("country", "public"), foreignKey.ReferencedTable);
             CollectionAssert.AreEqual(new[] { "CountryId" }, foreignKey.Columns.ToArray());
             CollectionAssert.AreEqual(new[] { "id" }, foreignKey.ReferencedColumns.ToArray());
-            Assert.AreEqual(CopySchemaForeignKeyRule.Cascade, foreignKey.DeleteRule);
-            Assert.AreEqual(CopySchemaForeignKeyRule.SetNull, foreignKey.UpdateRule);
+            Assert.AreEqual(CopyTableSchemaForeignKeyRule.Cascade, foreignKey.DeleteRule);
+            Assert.AreEqual(CopyTableSchemaForeignKeyRule.SetNull, foreignKey.UpdateRule);
         }
 
         [TestMethod]

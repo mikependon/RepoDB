@@ -13,28 +13,28 @@ using RepoDb.Schema;
 namespace RepoDb.Schema.Core.UnitTests
 {
     [TestClass]
-    public class CopySchemaErrorTest
+    public class CopyTableSchemaErrorTest
     {
         #region Methods
 
         [TestMethod]
-        public void TestCopySchemaErrorExceptionPropertyDefaultValue()
+        public void TestCopyTableSchemaErrorExceptionPropertyDefaultValue()
         {
             // Act
-            var error = new CopySchemaError();
+            var error = new CopyTableSchemaError();
 
             // Assert
             Assert.IsNull(error.Exception);
         }
 
         [TestMethod]
-        public void TestCopySchemaErrorExceptionProperty()
+        public void TestCopyTableSchemaErrorExceptionProperty()
         {
             // Setup
             var exception = new InvalidOperationException();
 
             // Act
-            var error = new CopySchemaError
+            var error = new CopyTableSchemaError
             {
                 Exception = exception
             };
@@ -44,10 +44,10 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopySchemaErrorStringPropertiesDefaultValues()
+        public void TestCopyTableSchemaErrorStringPropertiesDefaultValues()
         {
             // Act
-            var error = new CopySchemaError();
+            var error = new CopyTableSchemaError();
 
             // Assert
             Assert.IsNull(error.Statement);
@@ -56,10 +56,10 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopySchemaErrorStringProperties()
+        public void TestCopyTableSchemaErrorStringProperties()
         {
             // Act
-            var error = new CopySchemaError
+            var error = new CopyTableSchemaError
             {
                 Statement = "CREATE TABLE [Person] ([Id] int);",
                 TableName = "Person",
@@ -73,20 +73,20 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopySchemaErrorStatementIndexPropertyDefaultValue()
+        public void TestCopyTableSchemaErrorStatementIndexPropertyDefaultValue()
         {
             // Act
-            var error = new CopySchemaError();
+            var error = new CopyTableSchemaError();
 
             // Assert
             Assert.AreEqual(0, error.StatementIndex);
         }
 
         [TestMethod]
-        public void TestCopySchemaErrorStatementIndexProperty()
+        public void TestCopyTableSchemaErrorStatementIndexProperty()
         {
             // Act
-            var error = new CopySchemaError
+            var error = new CopyTableSchemaError
             {
                 StatementIndex = 7
             };

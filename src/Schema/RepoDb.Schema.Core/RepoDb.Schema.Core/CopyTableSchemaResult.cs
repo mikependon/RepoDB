@@ -15,27 +15,27 @@ namespace RepoDb.Schema
     /// <summary>
     /// A class that holds the details of a schema copy operation.
     /// </summary>
-    public class CopySchemaResult
+    public class CopyTableSchemaResult
     {
         #region Properties
 
         /// <summary>
         /// Gets or sets the behavior that was requested for when the table already exists in the destination database. See <see cref="Outcome"/> for what was actually done.
         /// </summary>
-        public CopySchemaExistsBehavior Action { get; set; }
+        public CopyTableSchemaExistsBehavior Action { get; set; }
 
         /// <summary>
-        /// Gets or sets the names of the columns that were added to an already existing table (see <see cref="CopySchemaOutcome.Aligned"/>).
+        /// Gets or sets the names of the columns that were added to an already existing table (see <see cref="CopyTableSchemaOutcome.Aligned"/>).
         /// </summary>
         public IList<string> AddedColumns { get; set; } = new List<string>();
 
         /// <summary>
-        /// Gets or sets the names of the indexes that were added to an already existing table (see <see cref="CopySchemaOutcome.Aligned"/>).
+        /// Gets or sets the names of the indexes that were added to an already existing table (see <see cref="CopyTableSchemaOutcome.Aligned"/>).
         /// </summary>
         public IList<string> AddedIndexes { get; set; } = new List<string>();
 
         /// <summary>
-        /// Gets or sets the names of the foreign keys that were added to an already existing table (see <see cref="CopySchemaOutcome.Aligned"/>).
+        /// Gets or sets the names of the foreign keys that were added to an already existing table (see <see cref="CopyTableSchemaOutcome.Aligned"/>).
         /// </summary>
         public IList<string> AddedForeignKeys { get; set; } = new List<string>();
 
@@ -80,9 +80,9 @@ namespace RepoDb.Schema
         public DateTime EndTime { get; set; }
 
         /// <summary>
-        /// Gets or sets the errors that were raised while the schema was being created (see <see cref="CopySchemaError"/>).
+        /// Gets or sets the errors that were raised while the schema was being created (see <see cref="CopyTableSchemaError"/>).
         /// </summary>
-        public IList<CopySchemaError> Errors { get; set; } = new List<CopySchemaError>();
+        public IList<CopyTableSchemaError> Errors { get; set; } = new List<CopyTableSchemaError>();
 
         /// <summary>
         /// Gets or sets the number of foreign keys that were created.
@@ -97,7 +97,7 @@ namespace RepoDb.Schema
         /// <summary>
         /// Gets or sets what the operation has actually done to the table in the destination database.
         /// </summary>
-        public CopySchemaOutcome Outcome { get; set; }
+        public CopyTableSchemaOutcome Outcome { get; set; }
 
         /// <summary>
         /// Gets or sets the SQL script that was executed on the destination database.

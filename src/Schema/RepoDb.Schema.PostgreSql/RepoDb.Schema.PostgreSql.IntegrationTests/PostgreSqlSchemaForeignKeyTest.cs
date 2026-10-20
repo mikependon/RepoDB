@@ -96,8 +96,8 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             var foreignKey = CreateReader().GetForeignKeys("chain_b").Single();
 
             // Assert
-            Assert.AreEqual(CopySchemaForeignKeyRule.NoAction, foreignKey.DeleteRule);
-            Assert.AreEqual(CopySchemaForeignKeyRule.NoAction, foreignKey.UpdateRule);
+            Assert.AreEqual(CopyTableSchemaForeignKeyRule.NoAction, foreignKey.DeleteRule);
+            Assert.AreEqual(CopyTableSchemaForeignKeyRule.NoAction, foreignKey.UpdateRule);
         }
 
         [TestMethod]
@@ -107,8 +107,8 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             var foreignKey = CreateReader().GetForeignKeys("preference").Single(x => x.Name == "fk_preference_color");
 
             // Assert
-            Assert.AreEqual(CopySchemaForeignKeyRule.SetDefault, foreignKey.DeleteRule);
-            Assert.AreEqual(CopySchemaForeignKeyRule.Restrict, foreignKey.UpdateRule);
+            Assert.AreEqual(CopyTableSchemaForeignKeyRule.SetDefault, foreignKey.DeleteRule);
+            Assert.AreEqual(CopyTableSchemaForeignKeyRule.Restrict, foreignKey.UpdateRule);
         }
 
         [TestMethod]
@@ -118,8 +118,8 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             var foreignKey = CreateReader().GetForeignKeys("preference").Single(x => x.Name == "fk_preference_other");
 
             // Assert
-            Assert.AreEqual(CopySchemaForeignKeyRule.SetNull, foreignKey.DeleteRule);
-            Assert.AreEqual(CopySchemaForeignKeyRule.Cascade, foreignKey.UpdateRule);
+            Assert.AreEqual(CopyTableSchemaForeignKeyRule.SetNull, foreignKey.DeleteRule);
+            Assert.AreEqual(CopyTableSchemaForeignKeyRule.Cascade, foreignKey.UpdateRule);
         }
 
         [TestMethod]

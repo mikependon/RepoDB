@@ -13,7 +13,7 @@ namespace RepoDb.Schema
     /// <summary>
     /// A class that holds the details of a statement that has failed while copying the schemas.
     /// </summary>
-    public class CopySchemaError
+    public class CopyTableSchemaError
     {
         #region Properties
 

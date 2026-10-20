@@ -20,7 +20,7 @@ using RepoDb.Schema.Models;
 namespace RepoDb.Schema.Core.UnitTests.Extensions
 {
     [TestClass]
-    public class CopySchemasToIndexNamesTest
+    public class CopyTableSchemasToIndexNamesTest
     {
         [TestInitialize]
         public void Initialize()
@@ -88,7 +88,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         #region New Tables
 
         [TestMethod]
-        public void TestCopySchemasToRenamesTheIndexWhoseNameIsUsedByAnotherTableOfTheCopy()
+        public void TestCopyTableSchemasToRenamesTheIndexWhoseNameIsUsedByAnotherTableOfTheCopy()
         {
             // Setup
             MapReader(GetSchema("Customers", "PostalCode"), GetSchema("Employees", "PostalCode"));
@@ -96,7 +96,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Customers", "Employees" }, destination);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Employees" }, destination);
 
             // Assert
             CollectionAssert.AreEqual(new[]
@@ -109,7 +109,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopySchemasToRenamesTheIndexWhoseNameIsUsedByAnotherTableOfTheCopyWithSomeCases()
+        public void TestCopyTableSchemasToRenamesTheIndexWhoseNameIsUsedByAnotherTableOfTheCopyWithSomeCases()
         {
             // Setup
             MapReader(GetSchema("Customers", "PostalCode"), GetSchema("Employees", "POSTALCODE"));
@@ -117,14 +117,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Customers", "Employees" }, destination);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Employees" }, destination);
 
             // Assert
             CollectionAssert.Contains(destination.ExecutedCommands.ToList(), "CREATE INDEX Employees_POSTALCODE ON Employees;");
         }
 
         [TestMethod]
-        public void TestCopySchemasToKeepsTheNamesOfTheIndexesIfTheyAreUniqueInTheirTable()
+        public void TestCopyTableSchemasToKeepsTheNamesOfTheIndexesIfTheyAreUniqueInTheirTable()
         {
             // Setup
             MapReader(GetSchema("Customers", "PostalCode"), GetSchema("Employees", "PostalCode"));
@@ -132,7 +132,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Customers", "Employees" }, destination);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Employees" }, destination);
 
             // Assert
             CollectionAssert.AreEqual(new[]
@@ -146,7 +146,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopySchemasToRenamesTheIndexWhoseNameAlreadyExistsInTheDestination()
+        public void TestCopyTableSchemasToRenamesTheIndexWhoseNameAlreadyExistsInTheDestination()
         {
             // Setup
             MapReader(GetSchema("Employees", "PostalCode"));
@@ -154,14 +154,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("INDEX_NAME_EXISTS PostalCode");
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Employees" }, destination);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Employees" }, destination);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "CREATE TABLE Employees;", "CREATE INDEX Employees_PostalCode ON Employees;" }, destination.ExecutedCommands);
         }
 
         [TestMethod]
-        public void TestCopySchemasToNumbersTheIndexWhoseTableNamePrefixedNameAlreadyExistsInTheDestination()
+        public void TestCopyTableSchemasToNumbersTheIndexWhoseTableNamePrefixedNameAlreadyExistsInTheDestination()
         {
             // Setup
             MapReader(GetSchema("Employees", "PostalCode"));
@@ -169,14 +169,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("INDEX_NAME_EXISTS PostalCode", "INDEX_NAME_EXISTS Employees_PostalCode");
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Employees" }, destination);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Employees" }, destination);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "CREATE TABLE Employees;", "CREATE INDEX Employees_PostalCode_2 ON Employees;" }, destination.ExecutedCommands);
         }
 
         [TestMethod]
-        public void TestCopySchemasToDoesNotChangeTheIndexesOfTheSourceSchema()
+        public void TestCopyTableSchemasToDoesNotChangeTheIndexesOfTheSourceSchema()
         {
             // Setup
             var customers = GetSchema("Customers", "PostalCode");
@@ -185,7 +185,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapComposer(true);
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Customers", "Employees" }, GetDestination());
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Employees" }, GetDestination());
 
             // Assert
             Assert.AreEqual("PostalCode", customers.Indexes.Single().Name);
@@ -193,17 +193,17 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopySchemasToKeepsTheDefinitionOfTheRenamedIndex()
+        public void TestCopyTableSchemasToKeepsTheDefinitionOfTheRenamedIndex()
         {
             // Setup
             var employees = GetSchema("Employees", "PostalCode");
             employees.Indexes[0].IsUnique = true;
             MapReader(GetSchema("Customers", "PostalCode"), employees);
             MapComposer(true);
-            var results = new List<CopySchemaResult>();
+            var results = new List<CopyTableSchemaResult>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Customers", "Employees" }, GetDestination(), createdCallback: results.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Employees" }, GetDestination(), createdCallback: results.Add);
 
             // Assert
             var result = results.Single(r => r.TableName == "Employees");
@@ -212,7 +212,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public async Task TestCopySchemasToAsyncRenamesTheIndexWhoseNameIsUsedByAnotherTableOfTheCopy()
+        public async Task TestCopyTableSchemasToAsyncRenamesTheIndexWhoseNameIsUsedByAnotherTableOfTheCopy()
         {
             // Setup
             MapReader(GetSchema("Customers", "PostalCode"), GetSchema("Employees", "PostalCode"));
@@ -220,7 +220,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            await new CustomDbConnection().CopySchemaToAsync(new[] { "Customers", "Employees" }, destination);
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Customers", "Employees" }, destination);
 
             // Assert
             CollectionAssert.AreEqual(new[]
@@ -233,7 +233,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public async Task TestCopySchemasToAsyncRenamesTheIndexWhoseNameAlreadyExistsInTheDestination()
+        public async Task TestCopyTableSchemasToAsyncRenamesTheIndexWhoseNameAlreadyExistsInTheDestination()
         {
             // Setup
             MapReader(GetSchema("Employees", "PostalCode"));
@@ -241,7 +241,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("INDEX_NAME_EXISTS PostalCode");
 
             // Act
-            await new CustomDbConnection().CopySchemaToAsync(new[] { "Employees" }, destination);
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Employees" }, destination);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "CREATE TABLE Employees;", "CREATE INDEX Employees_PostalCode ON Employees;" }, destination.ExecutedCommands);
@@ -252,16 +252,16 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         #region Existing Tables
 
         [TestMethod]
-        public void TestCopySchemasToWithAlignRenamesTheMissingIndexWhoseNameIsUsedByAnotherTable()
+        public void TestCopyTableSchemasToWithAlignRenamesTheMissingIndexWhoseNameIsUsedByAnotherTable()
         {
             // Setup
             MapReader(GetSchema("Employees", "PostalCode"));
             MapComposer(true);
             var destination = GetDestination("TABLE_EXISTS Employees", "INDEX_NAME_EXISTS PostalCode");
-            var results = new List<CopySchemaResult>();
+            var results = new List<CopyTableSchemaResult>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Employees" }, destination, tableExistenceBehavior: CopySchemaExistsBehavior.Align, createdCallback: results.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Employees" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "CREATE INDEX Employees_PostalCode ON Employees;" }, destination.ExecutedCommands);
@@ -269,7 +269,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopySchemasToWithAlignDoesNotCreateTheIndexThatTheTableAlreadyHas()
+        public void TestCopyTableSchemasToWithAlignDoesNotCreateTheIndexThatTheTableAlreadyHas()
         {
             // Setup
             MapReader(GetSchema("Employees", "Employees_PostalCode"));
@@ -277,23 +277,23 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Employees", "INDEX_EXISTS Employees.Employees_PostalCode", "INDEX_NAME_EXISTS Employees_PostalCode");
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Employees" }, destination, tableExistenceBehavior: CopySchemaExistsBehavior.Align);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Employees" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
 
             // Assert
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
         }
 
         [TestMethod]
-        public void TestCopySchemasToWithAlignDoesNotCreateTheIndexThatTheTableHasUnderTheNameThatAnEarlierCopyGaveIt()
+        public void TestCopyTableSchemasToWithAlignDoesNotCreateTheIndexThatTheTableHasUnderTheNameThatAnEarlierCopyGaveIt()
         {
             // Setup
             MapReader(GetSchema("Employees", "PostalCode"));
             MapComposer(true);
             var destination = GetDestination("TABLE_EXISTS Employees", "INDEX_NAME_EXISTS PostalCode", "INDEX_NAME_EXISTS Employees_PostalCode", "INDEX_EXISTS Employees.Employees_PostalCode");
-            var results = new List<CopySchemaResult>();
+            var results = new List<CopyTableSchemaResult>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Employees" }, destination, tableExistenceBehavior: CopySchemaExistsBehavior.Align, createdCallback: results.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Employees" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
 
             // Assert
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
@@ -301,7 +301,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopySchemasToWithAlignDoesNotCreateTheIndexThatTheTableHasUnderTheNumberedNameThatAnEarlierCopyGaveIt()
+        public void TestCopyTableSchemasToWithAlignDoesNotCreateTheIndexThatTheTableHasUnderTheNumberedNameThatAnEarlierCopyGaveIt()
         {
             // Setup
             MapReader(GetSchema("Employees", "PostalCode"));
@@ -309,14 +309,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Employees", "INDEX_NAME_EXISTS PostalCode", "INDEX_NAME_EXISTS Employees_PostalCode", "INDEX_NAME_EXISTS Employees_PostalCode_2", "INDEX_EXISTS Employees.Employees_PostalCode_2");
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Employees" }, destination, tableExistenceBehavior: CopySchemaExistsBehavior.Align);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Employees" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
 
             // Assert
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
         }
 
         [TestMethod]
-        public async Task TestCopySchemasToAsyncWithAlignDoesNotCreateTheIndexThatTheTableHasUnderTheNameThatAnEarlierCopyGaveIt()
+        public async Task TestCopyTableSchemasToAsyncWithAlignDoesNotCreateTheIndexThatTheTableHasUnderTheNameThatAnEarlierCopyGaveIt()
         {
             // Setup
             MapReader(GetSchema("Employees", "PostalCode"));
@@ -324,14 +324,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Employees", "INDEX_NAME_EXISTS PostalCode", "INDEX_NAME_EXISTS Employees_PostalCode", "INDEX_EXISTS Employees.Employees_PostalCode");
 
             // Act
-            await new CustomDbConnection().CopySchemaToAsync(new[] { "Employees" }, destination, tableExistenceBehavior: CopySchemaExistsBehavior.Align);
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Employees" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
 
             // Assert
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
         }
 
         [TestMethod]
-        public void TestCopySchemasToWithSkipDoesNotCheckTheNamesOfTheIndexesOfTheTablesThatExist()
+        public void TestCopyTableSchemasToWithSkipDoesNotCheckTheNamesOfTheIndexesOfTheTablesThatExist()
         {
             // Setup
             MapReader(GetSchema("Employees", "PostalCode"));
@@ -339,7 +339,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Employees");
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Employees" }, destination);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Employees" }, destination);
 
             // Assert
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
@@ -347,7 +347,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopySchemasToWithDropKeepsTheNameOfTheIndexOfTheTableThatIsDropped()
+        public void TestCopyTableSchemasToWithDropKeepsTheNameOfTheIndexOfTheTableThatIsDropped()
         {
             // Setup
             MapReader(GetSchema("Employees", "PostalCode"));
@@ -355,14 +355,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Employees", "INDEX_EXISTS Employees.PostalCode", "INDEX_NAME_EXISTS PostalCode");
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Employees" }, destination, tableExistenceBehavior: CopySchemaExistsBehavior.Drop);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Employees" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "DROP TABLE Employees;", "CREATE TABLE Employees;", "CREATE INDEX PostalCode ON Employees;" }, destination.ExecutedCommands);
         }
 
         [TestMethod]
-        public void TestCopySchemasToWithDropRenamesTheIndexWhoseNameIsUsedByAnotherTable()
+        public void TestCopyTableSchemasToWithDropRenamesTheIndexWhoseNameIsUsedByAnotherTable()
         {
             // Setup
             MapReader(GetSchema("Employees", "PostalCode"));
@@ -370,7 +370,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Employees", "INDEX_NAME_EXISTS PostalCode");
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Employees" }, destination, tableExistenceBehavior: CopySchemaExistsBehavior.Drop);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Employees" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "DROP TABLE Employees;", "CREATE TABLE Employees;", "CREATE INDEX Employees_PostalCode ON Employees;" }, destination.ExecutedCommands);

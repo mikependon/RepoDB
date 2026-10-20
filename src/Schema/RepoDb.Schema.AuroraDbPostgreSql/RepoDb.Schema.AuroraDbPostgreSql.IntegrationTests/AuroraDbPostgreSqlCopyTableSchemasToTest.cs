@@ -20,7 +20,7 @@ using RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests.Setup;
 namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
 {
     [TestClass]
-    public class AuroraDbPostgreSqlCopySchemasToTest
+    public class AuroraDbPostgreSqlCopyTableSchemasToTest
     {
         [TestInitialize]
         public void Initialize()
@@ -54,7 +54,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         #region Sync
 
         [TestMethod]
-        public void TestAuroraDbPostgreSqlCopySchemasTo()
+        public void TestAuroraDbPostgreSqlCopyTableSchemasTo()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
@@ -63,7 +63,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                source.CopySchemaTo(new[] { "country", "Person" }, target);
+                source.CopyTableSchemaTo(new[] { "country", "Person" }, target);
 
                 // Assert
                 AssertTargetMatchesSource("country", "Person");
@@ -71,7 +71,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestAuroraDbPostgreSqlCopySchemasToWithTheReferencingTableBeforeTheReferencedTable()
+        public void TestAuroraDbPostgreSqlCopyTableSchemasToWithTheReferencingTableBeforeTheReferencedTable()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
@@ -80,7 +80,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                source.CopySchemaTo(new[] { "Person", "country" }, target);
+                source.CopyTableSchemaTo(new[] { "Person", "country" }, target);
 
                 // Assert
                 AssertTargetMatchesSource("country", "Person");
@@ -88,24 +88,24 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestAuroraDbPostgreSqlCopySchemasToCallbackResult()
+        public void TestAuroraDbPostgreSqlCopyTableSchemasToCallbackResult()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopySchemaResult>();
+                var results = new List<CopyTableSchemaResult>();
 
                 // Act
-                source.CopySchemaTo(new[] { "Person", "country" }, target, createdCallback: results.Add);
+                source.CopyTableSchemaTo(new[] { "Person", "country" }, target, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(2, results.Count);
                 var person = results.Single(r => r.TableName == "Person");
                 Assert.AreEqual("public", person.SourceSchema);
-                Assert.AreEqual(CopySchemaOutcome.Created, person.Outcome);
-                Assert.AreEqual(CopySchemaExistsBehavior.Skip, person.Action);
+                Assert.AreEqual(CopyTableSchemaOutcome.Created, person.Outcome);
+                Assert.AreEqual(CopyTableSchemaExistsBehavior.Skip, person.Action);
                 Assert.AreEqual(10, person.ColumnCount);
                 Assert.AreEqual(2, person.IndexCount);
                 Assert.AreEqual(1, person.ForeignKeyCount);
@@ -120,7 +120,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestAuroraDbPostgreSqlCopySchemasToCallsTheCallbackOnceTheSchemaOfTheTableIsCreated()
+        public void TestAuroraDbPostgreSqlCopyTableSchemasToCallsTheCallbackOnceTheSchemaOfTheTableIsCreated()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
@@ -130,7 +130,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 var existing = new List<bool>();
 
                 // Act
-                source.CopySchemaTo(new[] { "country", "Person" }, target, createdCallback: result =>
+                source.CopyTableSchemaTo(new[] { "country", "Person" }, target, createdCallback: result =>
                     existing.Add(Helper.TargetTableExists(result.TableName) && Helper.GetTargetSchema(result.TableName).Indexes.Count == result.IndexCount));
 
                 // Assert
@@ -140,7 +140,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestAuroraDbPostgreSqlCopySchemasToCallsTheCallbackForEveryTableOfTheWholeDatabase()
+        public void TestAuroraDbPostgreSqlCopyTableSchemasToCallsTheCallbackForEveryTableOfTheWholeDatabase()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
@@ -148,19 +148,19 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var tables = Helper.GetSourceTables();
-                var results = new List<CopySchemaResult>();
+                var results = new List<CopyTableSchemaResult>();
 
                 // Act
-                source.CopySchemaTo(tables, target, createdCallback: results.Add);
+                source.CopyTableSchemaTo(tables, target, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(tables.Count, results.Count);
-                Assert.IsTrue(results.All(r => r.Outcome == CopySchemaOutcome.Created && r.Errors.Count == 0));
+                Assert.IsTrue(results.All(r => r.Outcome == CopyTableSchemaOutcome.Created && r.Errors.Count == 0));
             }
         }
 
         [TestMethod]
-        public void TestAuroraDbPostgreSqlCopySchemasToOfDependencyChainAndDiamond()
+        public void TestAuroraDbPostgreSqlCopyTableSchemasToOfDependencyChainAndDiamond()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
@@ -170,7 +170,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 var tables = new[] { "chain_c", "d_leaf", "chain_a", "d_right", "chain_b", "d_left", "d_root" };
 
                 // Act
-                source.CopySchemaTo(tables, target);
+                source.CopyTableSchemaTo(tables, target);
 
                 // Assert
                 AssertTargetMatchesSource(tables);
@@ -178,7 +178,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestAuroraDbPostgreSqlCopySchemasToOfCyclesAndSelfReferences()
+        public void TestAuroraDbPostgreSqlCopyTableSchemasToOfCyclesAndSelfReferences()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
@@ -188,7 +188,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 var tables = new[] { "ring_2", "node_b", "loop_tail", "ring_1", "employee", "loop_a", "node_a", "ring_3", "loop_b", "loop_base" };
 
                 // Act
-                source.CopySchemaTo(tables, target);
+                source.CopyTableSchemaTo(tables, target);
 
                 // Assert
                 AssertTargetMatchesSource(tables);
@@ -196,7 +196,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void ThrowExceptionOnAuroraDbPostgreSqlCopySchemasToOfTablesInDifferentSchemasAndWithTheSameName()
+        public void ThrowExceptionOnAuroraDbPostgreSqlCopyTableSchemasToOfTablesInDifferentSchemasAndWithTheSameName()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
@@ -206,13 +206,13 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
 
                 // Act/Assert
                 Assert.Throws<InvalidOperationException>(() =>
-                    source.CopySchemaTo(new[] { "item_ref", "sales.item", "public.item", "country", "Person", "sales.order_line" }, target));
+                    source.CopyTableSchemaTo(new[] { "item_ref", "sales.item", "public.item", "country", "Person", "sales.order_line" }, target));
                 Assert.AreEqual(0, Helper.GetTargetTables().Count);
             }
         }
 
         [TestMethod]
-        public void TestAuroraDbPostgreSqlCopySchemasToOfTablesWithNamesThatNeedQuoting()
+        public void TestAuroraDbPostgreSqlCopyTableSchemasToOfTablesWithNamesThatNeedQuoting()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
@@ -222,7 +222,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 var tables = new[] { "public.\"odd name\"", "public.\"odd.name\"", "public.\"odd\"\"name\"" };
 
                 // Act
-                source.CopySchemaTo(tables, target);
+                source.CopyTableSchemaTo(tables, target);
 
                 // Assert
                 AssertTargetMatchesSource(tables);
@@ -230,7 +230,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestAuroraDbPostgreSqlCopySchemasToOfTheWholeDatabase()
+        public void TestAuroraDbPostgreSqlCopyTableSchemasToOfTheWholeDatabase()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
@@ -240,7 +240,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 var tables = Helper.GetSourceTables();
 
                 // Act
-                source.CopySchemaTo(tables, target);
+                source.CopyTableSchemaTo(tables, target);
 
                 // Assert
                 CollectionAssert.AreEquivalent(tables, Helper.GetTargetTables());
@@ -249,7 +249,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestAuroraDbPostgreSqlCopySchemasToOfTheWholeDatabaseInTheReverseOrder()
+        public void TestAuroraDbPostgreSqlCopyTableSchemasToOfTheWholeDatabaseInTheReverseOrder()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
@@ -259,7 +259,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 var tables = Helper.GetSourceTables();
 
                 // Act
-                source.CopySchemaTo(Enumerable.Reverse(tables), target);
+                source.CopyTableSchemaTo(Enumerable.Reverse(tables), target);
 
                 // Assert
                 AssertTargetMatchesSource(tables.ToArray());
@@ -267,17 +267,17 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestAuroraDbPostgreSqlCopySchemasToOfTheTableThatIsGivenMoreThanOnce()
+        public void TestAuroraDbPostgreSqlCopyTableSchemasToOfTheTableThatIsGivenMoreThanOnce()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopySchemaResult>();
+                var results = new List<CopyTableSchemaResult>();
 
                 // Act
-                source.CopySchemaTo(new[] { "country", "public.country" }, target, createdCallback: results.Add);
+                source.CopyTableSchemaTo(new[] { "country", "public.country" }, target, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(1, results.Count);
@@ -286,35 +286,35 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestAuroraDbPostgreSqlCopySchemasToWithRequestedExistsBehavior()
+        public void TestAuroraDbPostgreSqlCopyTableSchemasToWithRequestedExistsBehavior()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopySchemaResult>();
+                var results = new List<CopyTableSchemaResult>();
 
                 // Act
-                source.CopySchemaTo(new[] { "country" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Drop, createdCallback: results.Add);
+                source.CopyTableSchemaTo(new[] { "country" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop, createdCallback: results.Add);
 
                 // Assert
-                Assert.AreEqual(CopySchemaExistsBehavior.Drop, results.Single().Action);
+                Assert.AreEqual(CopyTableSchemaExistsBehavior.Drop, results.Single().Action);
             }
         }
 
         [TestMethod]
-        public void TestAuroraDbPostgreSqlCopySchemasToWithoutTables()
+        public void TestAuroraDbPostgreSqlCopyTableSchemasToWithoutTables()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopySchemaResult>();
+                var results = new List<CopyTableSchemaResult>();
 
                 // Act
-                source.CopySchemaTo(Enumerable.Empty<string>(), target, createdCallback: results.Add);
+                source.CopyTableSchemaTo(Enumerable.Empty<string>(), target, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(0, results.Count);
@@ -323,17 +323,17 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestAuroraDbPostgreSqlCopySchemasToOfTableThatReferencesATableThatAlreadyExistsInTheTarget()
+        public void TestAuroraDbPostgreSqlCopyTableSchemasToOfTableThatReferencesATableThatAlreadyExistsInTheTarget()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo(new[] { "country" }, target);
+                source.CopyTableSchemaTo(new[] { "country" }, target);
 
                 // Act
-                source.CopySchemaTo(new[] { "Person" }, target);
+                source.CopyTableSchemaTo(new[] { "Person" }, target);
 
                 // Assert
                 AssertTargetMatchesSource("country", "Person");
@@ -345,7 +345,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         #region Transactions
 
         [TestMethod]
-        public void TestAuroraDbPostgreSqlCopySchemasToWithTransactionThatIsRolledBack()
+        public void TestAuroraDbPostgreSqlCopyTableSchemasToWithTransactionThatIsRolledBack()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget).EnsureOpen())
@@ -356,7 +356,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 // Act
                 using (var transaction = target.BeginTransaction())
                 {
-                    source.CopySchemaTo(new[] { "country", "Person" }, target, transaction: transaction);
+                    source.CopyTableSchemaTo(new[] { "country", "Person" }, target, transaction: transaction);
                     transaction.Rollback();
                 }
 
@@ -366,7 +366,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestAuroraDbPostgreSqlCopySchemasToWithTransactionThatIsCommitted()
+        public void TestAuroraDbPostgreSqlCopyTableSchemasToWithTransactionThatIsCommitted()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget).EnsureOpen())
@@ -377,7 +377,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 // Act
                 using (var transaction = target.BeginTransaction())
                 {
-                    source.CopySchemaTo(new[] { "country", "Person" }, target, transaction: transaction);
+                    source.CopyTableSchemaTo(new[] { "country", "Person" }, target, transaction: transaction);
                     transaction.Commit();
                 }
 
@@ -387,7 +387,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestAuroraDbPostgreSqlCopySchemasToWithErrorCallbackInTransactionThatTheServerAborts()
+        public void TestAuroraDbPostgreSqlCopyTableSchemasToWithErrorCallbackInTransactionThatTheServerAborts()
         {
             Helper.DisableExistenceChecks();
 
@@ -396,13 +396,13 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo(new[] { "country" }, target);
-                var errors = new List<CopySchemaError>();
+                source.CopyTableSchemaTo(new[] { "country" }, target);
+                var errors = new List<CopyTableSchemaError>();
 
                 // Act
                 using (var transaction = target.BeginTransaction())
                 {
-                    source.CopySchemaTo(new[] { "country", "Person" }, target, errorCallback: errors.Add, transaction: transaction);
+                    source.CopyTableSchemaTo(new[] { "country", "Person" }, target, errorCallback: errors.Add, transaction: transaction);
 
                     // Assert
                     Assert.IsTrue(errors.Count > 1);
@@ -419,7 +419,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         #region Exceptions
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemasToIfTheReferencedTableIsNotPartOfThemAndDoesNotExist()
+        public void ThrowExceptionOnCopyTableSchemasToIfTheReferencedTableIsNotPartOfThemAndDoesNotExist()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
@@ -428,27 +428,27 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act/Assert
-                Assert.Throws<AuroraDbException>(() => source.CopySchemaTo(new[] { "Person" }, target));
+                Assert.Throws<AuroraDbException>(() => source.CopyTableSchemaTo(new[] { "Person" }, target));
             }
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemasToIfATableAlreadyExists()
+        public void ThrowExceptionOnCopyTableSchemasToIfATableAlreadyExists()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo(new[] { "country" }, target);
+                source.CopyTableSchemaTo(new[] { "country" }, target);
 
                 // Act/Assert
-                Assert.Throws<InvalidOperationException>(() => source.CopySchemaTo(new[] { "country", "Person" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Throw));
+                Assert.Throws<InvalidOperationException>(() => source.CopyTableSchemaTo(new[] { "country", "Person" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
             }
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemasToIfATableDoesNotExistInTheSource()
+        public void ThrowExceptionOnCopyTableSchemasToIfATableDoesNotExistInTheSource()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
@@ -457,24 +457,24 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act/Assert
-                Assert.Throws<ArgumentException>(() => source.CopySchemaTo(new[] { "country", "Missing" }, target));
+                Assert.Throws<ArgumentException>(() => source.CopyTableSchemaTo(new[] { "country", "Missing" }, target));
                 Assert.AreEqual(0, Helper.GetTargetTables().Count);
             }
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemasToIfThereIsNoMappedSchemaReader()
+        public void ThrowExceptionOnCopyTableSchemasToIfThereIsNoMappedSchemaReader()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
             {
                 // Act/Assert
-                Assert.Throws<MissingMappingException>(() => source.CopySchemaTo(new[] { "country" }, target));
+                Assert.Throws<MissingMappingException>(() => source.CopyTableSchemaTo(new[] { "country" }, target));
             }
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemasToIfATableNameIsBlankOrTheTableNamesAreNull()
+        public void ThrowExceptionOnCopyTableSchemasToIfATableNameIsBlankOrTheTableNamesAreNull()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
@@ -483,8 +483,8 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act/Assert
-                Assert.Throws<ArgumentException>(() => source.CopySchemaTo(new[] { "country", " " }, target));
-                Assert.Throws<ArgumentNullException>(() => source.CopySchemaTo((IEnumerable<string>)null, target));
+                Assert.Throws<ArgumentException>(() => source.CopyTableSchemaTo(new[] { "country", " " }, target));
+                Assert.Throws<ArgumentNullException>(() => source.CopyTableSchemaTo((IEnumerable<string>)null, target));
             }
         }
 
@@ -493,17 +493,17 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         #region Error callback
 
         [TestMethod]
-        public void TestAuroraDbPostgreSqlCopySchemasToDoesNotCallTheErrorCallbackIfNothingFails()
+        public void TestAuroraDbPostgreSqlCopyTableSchemasToDoesNotCallTheErrorCallbackIfNothingFails()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var errors = new List<CopySchemaError>();
+                var errors = new List<CopyTableSchemaError>();
 
                 // Act
-                source.CopySchemaTo(new[] { "country", "Person" }, target, errorCallback: errors.Add);
+                source.CopyTableSchemaTo(new[] { "country", "Person" }, target, errorCallback: errors.Add);
 
                 // Assert
                 Assert.AreEqual(0, errors.Count);
@@ -511,7 +511,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestAuroraDbPostgreSqlCopySchemasToCallsTheErrorCallbackWithTheDetailsOfTheError()
+        public void TestAuroraDbPostgreSqlCopyTableSchemasToCallsTheErrorCallbackWithTheDetailsOfTheError()
         {
             Helper.DisableExistenceChecks();
 
@@ -520,11 +520,11 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo(new[] { "country" }, target);
-                var errors = new List<CopySchemaError>();
+                source.CopyTableSchemaTo(new[] { "country" }, target);
+                var errors = new List<CopyTableSchemaError>();
 
                 // Act
-                source.CopySchemaTo(new[] { "country" }, target, errorCallback: errors.Add);
+                source.CopyTableSchemaTo(new[] { "country" }, target, errorCallback: errors.Add);
 
                 // Assert
                 var error = errors.Single();
@@ -537,17 +537,17 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestAuroraDbPostgreSqlCopySchemasToWithErrorCallbackKeepsTheObjectsThatWereCreated()
+        public void TestAuroraDbPostgreSqlCopyTableSchemasToWithErrorCallbackKeepsTheObjectsThatWereCreated()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var created = new List<CopySchemaResult>();
+                var created = new List<CopyTableSchemaResult>();
 
                 // Act
-                source.CopySchemaTo(new[] { "Person" }, target, createdCallback: created.Add, errorCallback: _ => { });
+                source.CopyTableSchemaTo(new[] { "Person" }, target, createdCallback: created.Add, errorCallback: _ => { });
 
                 // Assert
                 var person = Helper.GetTargetSchema("Person");
@@ -555,12 +555,12 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 Assert.AreEqual(2, person.Indexes.Count);
                 Assert.AreEqual(0, person.ForeignKeys.Count);
                 Assert.AreEqual(1, created.Single().Errors.Count);
-                Assert.AreEqual(CopySchemaOutcome.Failed, created.Single().Outcome);
+                Assert.AreEqual(CopyTableSchemaOutcome.Failed, created.Single().Outcome);
             }
         }
 
         [TestMethod]
-        public void TestAuroraDbPostgreSqlCopySchemasToWithErrorCallbackContinuesWithTheOtherTables()
+        public void TestAuroraDbPostgreSqlCopyTableSchemasToWithErrorCallbackContinuesWithTheOtherTables()
         {
             Helper.DisableExistenceChecks();
 
@@ -569,11 +569,11 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo(new[] { "no_key" }, target);
-                var created = new List<CopySchemaResult>();
+                source.CopyTableSchemaTo(new[] { "no_key" }, target);
+                var created = new List<CopyTableSchemaResult>();
 
                 // Act
-                source.CopySchemaTo(new[] { "no_key", "chain_a", "chain_b" }, target, createdCallback: created.Add, errorCallback: _ => { });
+                source.CopyTableSchemaTo(new[] { "no_key", "chain_a", "chain_b" }, target, createdCallback: created.Add, errorCallback: _ => { });
 
                 // Assert
                 Assert.AreEqual(3, created.Count);
@@ -584,7 +584,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestAuroraDbPostgreSqlCopySchemasToWithErrorCallbackCanCopyTheWholeDatabaseTwice()
+        public void TestAuroraDbPostgreSqlCopyTableSchemasToWithErrorCallbackCanCopyTheWholeDatabaseTwice()
         {
             Helper.DisableExistenceChecks();
 
@@ -594,25 +594,25 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var tables = Helper.GetSourceTables();
-                source.CopySchemaTo(tables, target);
-                var errors = new List<CopySchemaError>();
-                var created = new List<CopySchemaResult>();
+                source.CopyTableSchemaTo(tables, target);
+                var errors = new List<CopyTableSchemaError>();
+                var created = new List<CopyTableSchemaResult>();
 
                 // Act
-                source.CopySchemaTo(tables, target, createdCallback: created.Add, errorCallback: errors.Add);
+                source.CopyTableSchemaTo(tables, target, createdCallback: created.Add, errorCallback: errors.Add);
 
                 // Assert
                 Assert.IsTrue(errors.Count >= tables.Count);
                 Assert.IsTrue(errors.All(e => e.Exception is AuroraDbException));
                 Assert.AreEqual(tables.Count, created.Count);
-                Assert.IsTrue(created.All(r => r.Errors.Count > 0 && r.Outcome == CopySchemaOutcome.Failed));
+                Assert.IsTrue(created.All(r => r.Errors.Count > 0 && r.Outcome == CopyTableSchemaOutcome.Failed));
                 Assert.AreEqual(errors.Count, created.Sum(r => r.Errors.Count));
                 AssertTargetMatchesSource(tables.ToArray());
             }
         }
 
         [TestMethod]
-        public void TestAuroraDbPostgreSqlCopySchemasToStopsIfTheErrorCallbackThrows()
+        public void TestAuroraDbPostgreSqlCopyTableSchemasToStopsIfTheErrorCallbackThrows()
         {
             Helper.DisableExistenceChecks();
 
@@ -621,12 +621,12 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo(new[] { "no_key" }, target);
+                source.CopyTableSchemaTo(new[] { "no_key" }, target);
                 var created = new List<string>();
 
                 // Act/Assert
                 Assert.Throws<NotSupportedException>(() =>
-                    source.CopySchemaTo(new[] { "no_key", "chain_a" }, target, createdCallback: r => created.Add(r.TableName), errorCallback: _ => throw new NotSupportedException()));
+                    source.CopyTableSchemaTo(new[] { "no_key", "chain_a" }, target, createdCallback: r => created.Add(r.TableName), errorCallback: _ => throw new NotSupportedException()));
 
                 // Assert
                 Assert.AreEqual(0, created.Count);
@@ -635,7 +635,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemasToIfTheErrorCallbackThrowsTheCapturedException()
+        public void ThrowExceptionOnCopyTableSchemasToIfTheErrorCallbackThrowsTheCapturedException()
         {
             Helper.DisableExistenceChecks();
 
@@ -644,12 +644,12 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo(new[] { "no_key" }, target);
-                CopySchemaError raised = null;
+                source.CopyTableSchemaTo(new[] { "no_key" }, target);
+                CopyTableSchemaError raised = null;
 
                 // Act
                 var exception = Assert.Throws<AuroraDbException>(() =>
-                    source.CopySchemaTo(new[] { "no_key" }, target, errorCallback: e =>
+                    source.CopyTableSchemaTo(new[] { "no_key" }, target, errorCallback: e =>
                     {
                         raised = e;
                         throw e.Exception;
@@ -661,14 +661,14 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemasToWithErrorCallbackIfThereIsNoMappedSchemaReader()
+        public void ThrowExceptionOnCopyTableSchemasToWithErrorCallbackIfThereIsNoMappedSchemaReader()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
             {
                 // Act/Assert
-                var errors = new List<CopySchemaError>();
-                Assert.Throws<MissingMappingException>(() => source.CopySchemaTo(new[] { "country" }, target, errorCallback: errors.Add));
+                var errors = new List<CopyTableSchemaError>();
+                Assert.Throws<MissingMappingException>(() => source.CopyTableSchemaTo(new[] { "country" }, target, errorCallback: errors.Add));
                 Assert.AreEqual(0, errors.Count);
             }
         }
@@ -678,7 +678,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         #region Async
 
         [TestMethod]
-        public async Task TestAuroraDbPostgreSqlCopySchemasToAsync()
+        public async Task TestAuroraDbPostgreSqlCopyTableSchemasToAsync()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
@@ -687,7 +687,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                await source.CopySchemaToAsync(new[] { "Person", "country" }, target);
+                await source.CopyTableSchemaToAsync(new[] { "Person", "country" }, target);
 
                 // Assert
                 AssertTargetMatchesSource("country", "Person");
@@ -695,7 +695,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestAuroraDbPostgreSqlCopySchemasToAsyncOfTablesThatReferenceEachOther()
+        public async Task TestAuroraDbPostgreSqlCopyTableSchemasToAsyncOfTablesThatReferenceEachOther()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
@@ -704,7 +704,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                await source.CopySchemaToAsync(new[] { "node_b", "node_a", "ring_3", "ring_1", "ring_2" }, target);
+                await source.CopyTableSchemaToAsync(new[] { "node_b", "node_a", "ring_3", "ring_1", "ring_2" }, target);
 
                 // Assert
                 AssertTargetMatchesSource("node_a", "node_b", "ring_1", "ring_2", "ring_3");
@@ -712,7 +712,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestAuroraDbPostgreSqlCopySchemasToAsyncOfTheWholeDatabase()
+        public async Task TestAuroraDbPostgreSqlCopyTableSchemasToAsyncOfTheWholeDatabase()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
@@ -722,7 +722,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 var tables = Helper.GetSourceTables();
 
                 // Act
-                await source.CopySchemaToAsync(tables, target);
+                await source.CopyTableSchemaToAsync(tables, target);
 
                 // Assert
                 CollectionAssert.AreEquivalent(tables, Helper.GetTargetTables());
@@ -731,17 +731,17 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestAuroraDbPostgreSqlCopySchemasToAsyncCallbackResult()
+        public async Task TestAuroraDbPostgreSqlCopyTableSchemasToAsyncCallbackResult()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopySchemaResult>();
+                var results = new List<CopyTableSchemaResult>();
 
                 // Act
-                await source.CopySchemaToAsync(new[] { "Person", "country" }, target, createdCallback: results.Add);
+                await source.CopyTableSchemaToAsync(new[] { "Person", "country" }, target, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(2, results.Count);
@@ -750,7 +750,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestAuroraDbPostgreSqlCopySchemasToAsyncWithoutTables()
+        public async Task TestAuroraDbPostgreSqlCopyTableSchemasToAsyncWithoutTables()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
@@ -759,7 +759,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                await source.CopySchemaToAsync(Enumerable.Empty<string>(), target);
+                await source.CopyTableSchemaToAsync(Enumerable.Empty<string>(), target);
 
                 // Assert
                 Assert.AreEqual(0, Helper.GetTargetTables().Count);
@@ -767,33 +767,33 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnCopySchemasToAsyncIfATableAlreadyExists()
+        public async Task ThrowExceptionOnCopyTableSchemasToAsyncIfATableAlreadyExists()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                await source.CopySchemaToAsync(new[] { "country" }, target);
+                await source.CopyTableSchemaToAsync(new[] { "country" }, target);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopySchemaToAsync(new[] { "country" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Throw));
+                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopyTableSchemaToAsync(new[] { "country" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
             }
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnCopySchemasToAsyncIfThereIsNoMappedSchemaReader()
+        public async Task ThrowExceptionOnCopyTableSchemasToAsyncIfThereIsNoMappedSchemaReader()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
             {
                 // Act/Assert
-                await Assert.ThrowsAsync<MissingMappingException>(() => source.CopySchemaToAsync(new[] { "country" }, target));
+                await Assert.ThrowsAsync<MissingMappingException>(() => source.CopyTableSchemaToAsync(new[] { "country" }, target));
             }
         }
 
         [TestMethod]
-        public async Task TestAuroraDbPostgreSqlCopySchemasToAsyncCallsTheErrorCallbackWithTheDetailsOfTheError()
+        public async Task TestAuroraDbPostgreSqlCopyTableSchemasToAsyncCallsTheErrorCallbackWithTheDetailsOfTheError()
         {
             Helper.DisableExistenceChecks();
 
@@ -802,11 +802,11 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                await source.CopySchemaToAsync(new[] { "country" }, target);
-                var errors = new List<CopySchemaError>();
+                await source.CopyTableSchemaToAsync(new[] { "country" }, target);
+                var errors = new List<CopyTableSchemaError>();
 
                 // Act
-                await source.CopySchemaToAsync(new[] { "country" }, target, errorCallback: errors.Add);
+                await source.CopyTableSchemaToAsync(new[] { "country" }, target, errorCallback: errors.Add);
 
                 // Assert
                 Assert.AreEqual("country", errors.Single().TableName);
@@ -815,7 +815,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestAuroraDbPostgreSqlCopySchemasToAsyncWithErrorCallbackContinuesWithTheOtherTables()
+        public async Task TestAuroraDbPostgreSqlCopyTableSchemasToAsyncWithErrorCallbackContinuesWithTheOtherTables()
         {
             Helper.DisableExistenceChecks();
 
@@ -824,11 +824,11 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                await source.CopySchemaToAsync(new[] { "no_key" }, target);
-                var created = new List<CopySchemaResult>();
+                await source.CopyTableSchemaToAsync(new[] { "no_key" }, target);
+                var created = new List<CopyTableSchemaResult>();
 
                 // Act
-                await source.CopySchemaToAsync(new[] { "no_key", "chain_a", "chain_b" }, target, createdCallback: created.Add, errorCallback: _ => { });
+                await source.CopyTableSchemaToAsync(new[] { "no_key", "chain_a", "chain_b" }, target, createdCallback: created.Add, errorCallback: _ => { });
 
                 // Assert
                 Assert.AreEqual(1, created.Single(r => r.TableName == "no_key").Errors.Count);
@@ -837,7 +837,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestAuroraDbPostgreSqlCopySchemasToAsyncStopsIfTheErrorCallbackThrows()
+        public async Task TestAuroraDbPostgreSqlCopyTableSchemasToAsyncStopsIfTheErrorCallbackThrows()
         {
             Helper.DisableExistenceChecks();
 
@@ -846,11 +846,11 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                await source.CopySchemaToAsync(new[] { "no_key" }, target);
+                await source.CopyTableSchemaToAsync(new[] { "no_key" }, target);
 
                 // Act/Assert
                 await Assert.ThrowsAsync<NotSupportedException>(() =>
-                    source.CopySchemaToAsync(new[] { "no_key", "chain_a" }, target, errorCallback: _ => throw new NotSupportedException()));
+                    source.CopyTableSchemaToAsync(new[] { "no_key", "chain_a" }, target, errorCallback: _ => throw new NotSupportedException()));
                 CollectionAssert.AreEqual(new[] { "public.no_key" }, Helper.GetTargetTables());
             }
         }

@@ -25,11 +25,11 @@ namespace RepoDb.Schema
     /// <summary>
     /// Contains the extension methods of <see cref="IDbConnection"/> object for copying the schema of a table or multiple tables between databases.
     /// </summary>
-    public static class CopySchemaToExtension
+    public static class CopyTableSchemaToExtension
     {
         #region Public Methods
 
-        #region CopySchemaTo (IDbConnection, Sync)
+        #region CopyTableSchemaTo (IDbConnection, Sync)
 
         /// <summary>
         /// Copies the schema of the table mapped to the <typeparamref name="TEntity"/> type of the current connection
@@ -41,27 +41,27 @@ namespace RepoDb.Schema
         /// <param name="destinationConnection">The connection of the destination database.</param>
         /// <param name="targetSchema">The name of the schema of the destination database that the tables are created in (it must already exist). The default is <c>null</c>, which creates the tables in the default schema of the destination database (see <see cref="IDbSetting.DefaultSchema"/> of the setting of the destination connection), or in the schema of the source table if the setting has no default schema. The tables of all the schemas are created in the same schema, so two tables with the same name (i.e.: <c>dbo.Item</c> and <c>Sales.Item</c>) cannot be copied together.</param>
         /// <param name="columns">The names of the columns of the table that are created in the destination database (the names are not case sensitive). The default is <c>null</c>, which creates all the columns. The indexes, the primary key, the unique constraints, the check constraints and the foreign keys that use a column that is not given are not created. The tables that are copied only because they are related to the table keep all their columns, without the foreign keys that reference a column that is not given. An <see cref="ArgumentException"/> is thrown, before anything is created, if a column is not a column of the source table.</param>
-        /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database: <see cref="CopySchemaExistsBehavior.Skip"/> leaves it as is, <see cref="CopySchemaExistsBehavior.Align"/> adds its missing columns and indexes, <see cref="CopySchemaExistsBehavior.Throw"/> throws before anything is created and <see cref="CopySchemaExistsBehavior.Drop"/> drops it and creates it again. The default is <see cref="CopySchemaExistsBehavior.Skip"/>. Whether the table exists is checked with the statements of the composer, so a composer that does not compose them (empty statement) is treated as if the table does not exist. <b>WARNING:</b> <see cref="CopySchemaExistsBehavior.Drop"/> permanently deletes the existing table and its data.</param>
-        /// <param name="relationshipBehavior">Defines which of the tables that are related to the table (through the foreign keys) are copied together with it. The default is <see cref="CopySchemaRelationshipBehavior.TableOnly"/>. The result is still the one of the given table, use the multiple tables overload to receive the result of each related table.</param>
+        /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database: <see cref="CopyTableSchemaExistsBehavior.Skip"/> leaves it as is, <see cref="CopyTableSchemaExistsBehavior.Align"/> adds its missing columns and indexes, <see cref="CopyTableSchemaExistsBehavior.Throw"/> throws before anything is created and <see cref="CopyTableSchemaExistsBehavior.Drop"/> drops it and creates it again. The default is <see cref="CopyTableSchemaExistsBehavior.Skip"/>. Whether the table exists is checked with the statements of the composer, so a composer that does not compose them (empty statement) is treated as if the table does not exist. <b>WARNING:</b> <see cref="CopyTableSchemaExistsBehavior.Drop"/> permanently deletes the existing table and its data.</param>
+        /// <param name="relationshipBehavior">Defines which of the tables that are related to the table (through the foreign keys) are copied together with it. The default is <see cref="CopyTableSchemaRelationshipBehavior.TableOnly"/>. The result is still the one of the given table, use the multiple tables overload to receive the result of each related table.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
-        /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopySchemaTo"/>.</param>
+        /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopyTableSchemaTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="renamedColumns">The new names of the columns (the source column name and the name that the column has in the destination database; the names are not case sensitive), i.e.: when a table is copied to receive the data of other column names. The columns that are not listed keep their name. The primary key, the indexes, the unique constraints, the check constraints and the foreign keys follow the renamed columns. The default is <c>null</c>, which keeps all the names.</param>
-        /// <returns>The <see cref="CopySchemaResult"/> that describes the schema copy operation.</returns>
-        public static CopySchemaResult CopySchemaTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
+        /// <returns>The <see cref="CopyTableSchemaResult"/> that describes the schema copy operation.</returns>
+        public static CopyTableSchemaResult CopyTableSchemaTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IDbConnection destinationConnection,
             string targetSchema = null,
             string[] columns = null,
-            CopySchemaExistsBehavior tableExistenceBehavior = CopySchemaExistsBehavior.Skip,
-            CopySchemaRelationshipBehavior relationshipBehavior = CopySchemaRelationshipBehavior.TableOnly,
+            CopyTableSchemaExistsBehavior tableExistenceBehavior = CopyTableSchemaExistsBehavior.Skip,
+            CopyTableSchemaRelationshipBehavior relationshipBehavior = CopyTableSchemaRelationshipBehavior.TableOnly,
             int? commandTimeout = null,
-            string traceKey = SchemaTraceKeys.CopySchemaTo,
+            string traceKey = SchemaTraceKeys.CopyTableSchemaTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             IDictionary<string, string> renamedColumns = null)
             where TEntity : class =>
-            connection.CopySchemaTo(ClassMappedNameCache.Get<TEntity>(), destinationConnection, targetSchema, columns, tableExistenceBehavior, relationshipBehavior, commandTimeout, traceKey, trace, transaction, renamedColumns);
+            connection.CopyTableSchemaTo(ClassMappedNameCache.Get<TEntity>(), destinationConnection, targetSchema, columns, tableExistenceBehavior, relationshipBehavior, commandTimeout, traceKey, trace, transaction, renamedColumns);
 
         /// <summary>
         /// Copies the schema of the source table of the current connection into the same-named table of the destination connection.
@@ -72,23 +72,23 @@ namespace RepoDb.Schema
         /// <param name="destinationConnection">The connection of the destination database.</param>
         /// <param name="targetSchema">The name of the schema of the destination database that the tables are created in (it must already exist). The default is <c>null</c>, which creates the tables in the default schema of the destination database (see <see cref="IDbSetting.DefaultSchema"/> of the setting of the destination connection), or in the schema of the source table if the setting has no default schema. The tables of all the schemas are created in the same schema, so two tables with the same name (i.e.: <c>dbo.Item</c> and <c>Sales.Item</c>) cannot be copied together.</param>
         /// <param name="columns">The names of the columns of the table that are created in the destination database (the names are not case sensitive). The default is <c>null</c>, which creates all the columns. The indexes, the primary key, the unique constraints, the check constraints and the foreign keys that use a column that is not given are not created. The tables that are copied only because they are related to the table keep all their columns, without the foreign keys that reference a column that is not given. An <see cref="ArgumentException"/> is thrown, before anything is created, if a column is not a column of the source table.</param>
-        /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database: <see cref="CopySchemaExistsBehavior.Skip"/> leaves it as is, <see cref="CopySchemaExistsBehavior.Align"/> adds its missing columns and indexes, <see cref="CopySchemaExistsBehavior.Throw"/> throws before anything is created and <see cref="CopySchemaExistsBehavior.Drop"/> drops it and creates it again. The default is <see cref="CopySchemaExistsBehavior.Skip"/>. Whether the table exists is checked with the statements of the composer, so a composer that does not compose them (empty statement) is treated as if the table does not exist. <b>WARNING:</b> <see cref="CopySchemaExistsBehavior.Drop"/> permanently deletes the existing table and its data.</param>
-        /// <param name="relationshipBehavior">Defines which of the tables that are related to the table (through the foreign keys) are copied together with it. The default is <see cref="CopySchemaRelationshipBehavior.TableOnly"/>. The result is still the one of the given table, use the multiple tables overload to receive the result of each related table.</param>
+        /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database: <see cref="CopyTableSchemaExistsBehavior.Skip"/> leaves it as is, <see cref="CopyTableSchemaExistsBehavior.Align"/> adds its missing columns and indexes, <see cref="CopyTableSchemaExistsBehavior.Throw"/> throws before anything is created and <see cref="CopyTableSchemaExistsBehavior.Drop"/> drops it and creates it again. The default is <see cref="CopyTableSchemaExistsBehavior.Skip"/>. Whether the table exists is checked with the statements of the composer, so a composer that does not compose them (empty statement) is treated as if the table does not exist. <b>WARNING:</b> <see cref="CopyTableSchemaExistsBehavior.Drop"/> permanently deletes the existing table and its data.</param>
+        /// <param name="relationshipBehavior">Defines which of the tables that are related to the table (through the foreign keys) are copied together with it. The default is <see cref="CopyTableSchemaRelationshipBehavior.TableOnly"/>. The result is still the one of the given table, use the multiple tables overload to receive the result of each related table.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
-        /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopySchemaTo"/>.</param>
+        /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopyTableSchemaTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="renamedColumns">The new names of the columns (the source column name and the name that the column has in the destination database; the names are not case sensitive), i.e.: when a table is copied to receive the data of other column names. The columns that are not listed keep their name. The primary key, the indexes, the unique constraints, the check constraints and the foreign keys follow the renamed columns. The default is <c>null</c>, which keeps all the names.</param>
-        /// <returns>The <see cref="CopySchemaResult"/> that describes the schema copy operation.</returns>
-        public static CopySchemaResult CopySchemaTo(this IDbConnection connection,
+        /// <returns>The <see cref="CopyTableSchemaResult"/> that describes the schema copy operation.</returns>
+        public static CopyTableSchemaResult CopyTableSchemaTo(this IDbConnection connection,
             string tableName,
             IDbConnection destinationConnection,
             string targetSchema = null,
             string[] columns = null,
-            CopySchemaExistsBehavior tableExistenceBehavior = CopySchemaExistsBehavior.Skip,
-            CopySchemaRelationshipBehavior relationshipBehavior = CopySchemaRelationshipBehavior.TableOnly,
+            CopyTableSchemaExistsBehavior tableExistenceBehavior = CopyTableSchemaExistsBehavior.Skip,
+            CopyTableSchemaRelationshipBehavior relationshipBehavior = CopyTableSchemaRelationshipBehavior.TableOnly,
             int? commandTimeout = null,
-            string traceKey = SchemaTraceKeys.CopySchemaTo,
+            string traceKey = SchemaTraceKeys.CopyTableSchemaTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             IDictionary<string, string> renamedColumns = null)
@@ -96,8 +96,8 @@ namespace RepoDb.Schema
             Validate(connection, tableName, destinationConnection);
 
             // Copy the table as a set of one table, the callback receives the result of each table that is copied
-            var results = new List<CopySchemaResult>();
-            connection.CopySchemaTo(new[] { tableName },
+            var results = new List<CopyTableSchemaResult>();
+            connection.CopyTableSchemaTo(new[] { tableName },
                 destinationConnection,
                 targetSchema,
                 columns,
@@ -116,7 +116,7 @@ namespace RepoDb.Schema
 
         #endregion
 
-        #region CopySchemaTo (IDbConnection, Sync, Multiple Tables)
+        #region CopyTableSchemaTo (IDbConnection, Sync, Multiple Tables)
 
         /// <summary>
         /// Copies the schema of the tables of the current connection into the same-named tables of the destination connection.
@@ -129,27 +129,27 @@ namespace RepoDb.Schema
         /// <param name="destinationConnection">The connection of the destination database.</param>
         /// <param name="targetSchema">The name of the schema of the destination database that the tables are created in (it must already exist). The default is <c>null</c>, which creates the tables in the default schema of the destination database (see <see cref="IDbSetting.DefaultSchema"/> of the setting of the destination connection), or in the schema of the source table if the setting has no default schema. The tables of all the schemas are created in the same schema, so two tables with the same name (i.e.: <c>dbo.Item</c> and <c>Sales.Item</c>) cannot be copied together.</param>
         /// <param name="columns">The names of the columns of the given tables that are created in the destination database (the names are not case sensitive). The default is <c>null</c>, which creates all the columns. The indexes, the primary key, the unique constraints, the check constraints and the foreign keys that use a column that is not given are not created. The tables that are copied only because they are related to the given tables keep all their columns, without the foreign keys that reference a column that is not given. An <see cref="ArgumentException"/> is thrown, before anything is created, if a column is not a column of one of the given tables.</param>
-        /// <param name="tableExistenceBehavior">Defines what happens when a table already exists in the destination database: <see cref="CopySchemaExistsBehavior.Skip"/> leaves it as is, <see cref="CopySchemaExistsBehavior.Align"/> adds its missing columns and indexes, <see cref="CopySchemaExistsBehavior.Throw"/> throws before anything is created and <see cref="CopySchemaExistsBehavior.Drop"/> drops it and creates it again. The default is <see cref="CopySchemaExistsBehavior.Skip"/>. Whether the table exists is checked with the statements of the composer, so a composer that does not compose them (empty statement) is treated as if the table does not exist. <b>WARNING:</b> <see cref="CopySchemaExistsBehavior.Drop"/> permanently deletes the existing table and its data.</param>
-        /// <param name="relationshipBehavior">Defines which of the tables that are related to the given tables (through the foreign keys) are copied together with them. The default is <see cref="CopySchemaRelationshipBehavior.TableOnly"/>. Only the foreign keys of the source database are read to find them.</param>
-        /// <param name="createdCallback">The callback that receives the <see cref="CopySchemaResult"/> of a table every time its schema is created in the destination database (the table, its indexes and its foreign keys), in the order that the schemas are completed. The errors that were raised for the table are in the <see cref="CopySchemaResult.Errors"/> of its result. The default is <c>null</c>.</param>
-        /// <param name="errorCallback">The callback that receives a <see cref="CopySchemaError"/> every time a statement fails while the schemas are being created. The error is also added to the <see cref="CopySchemaResult.Errors"/> of the table that it belongs to, and the copy continues with the next statement; throw from the callback to stop the copy. Without a callback, the exception is thrown. The errors of reading the schemas are not reported to it. The default is <c>null</c>.</param>
+        /// <param name="tableExistenceBehavior">Defines what happens when a table already exists in the destination database: <see cref="CopyTableSchemaExistsBehavior.Skip"/> leaves it as is, <see cref="CopyTableSchemaExistsBehavior.Align"/> adds its missing columns and indexes, <see cref="CopyTableSchemaExistsBehavior.Throw"/> throws before anything is created and <see cref="CopyTableSchemaExistsBehavior.Drop"/> drops it and creates it again. The default is <see cref="CopyTableSchemaExistsBehavior.Skip"/>. Whether the table exists is checked with the statements of the composer, so a composer that does not compose them (empty statement) is treated as if the table does not exist. <b>WARNING:</b> <see cref="CopyTableSchemaExistsBehavior.Drop"/> permanently deletes the existing table and its data.</param>
+        /// <param name="relationshipBehavior">Defines which of the tables that are related to the given tables (through the foreign keys) are copied together with them. The default is <see cref="CopyTableSchemaRelationshipBehavior.TableOnly"/>. Only the foreign keys of the source database are read to find them.</param>
+        /// <param name="createdCallback">The callback that receives the <see cref="CopyTableSchemaResult"/> of a table every time its schema is created in the destination database (the table, its indexes and its foreign keys), in the order that the schemas are completed. The errors that were raised for the table are in the <see cref="CopyTableSchemaResult.Errors"/> of its result. The default is <c>null</c>.</param>
+        /// <param name="errorCallback">The callback that receives a <see cref="CopyTableSchemaError"/> every time a statement fails while the schemas are being created. The error is also added to the <see cref="CopyTableSchemaResult.Errors"/> of the table that it belongs to, and the copy continues with the next statement; throw from the callback to stop the copy. Without a callback, the exception is thrown. The errors of reading the schemas are not reported to it. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
-        /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopySchemasTo"/>.</param>
+        /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopyTableSchemasTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="renamedColumns">The new names of the columns (the source column name and the name that the column has in the destination database; the names are not case sensitive), i.e.: when a table is copied to receive the data of other column names. The columns that are not listed keep their name. The primary key, the indexes, the unique constraints, the check constraints and the foreign keys follow the renamed columns. The default is <c>null</c>, which keeps all the names.</param>
         [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
-        public static void CopySchemaTo(this IDbConnection connection,
+        public static void CopyTableSchemaTo(this IDbConnection connection,
             IEnumerable<string> tableNames,
             IDbConnection destinationConnection,
             string targetSchema = null,
             string[] columns = null,
-            CopySchemaExistsBehavior tableExistenceBehavior = CopySchemaExistsBehavior.Skip,
-            CopySchemaRelationshipBehavior relationshipBehavior = CopySchemaRelationshipBehavior.TableOnly,
-            Action<CopySchemaResult> createdCallback = null,
-            Action<CopySchemaError> errorCallback = null,
+            CopyTableSchemaExistsBehavior tableExistenceBehavior = CopyTableSchemaExistsBehavior.Skip,
+            CopyTableSchemaRelationshipBehavior relationshipBehavior = CopyTableSchemaRelationshipBehavior.TableOnly,
+            Action<CopyTableSchemaResult> createdCallback = null,
+            Action<CopyTableSchemaError> errorCallback = null,
             int? commandTimeout = null,
-            string traceKey = SchemaTraceKeys.CopySchemasTo,
+            string traceKey = SchemaTraceKeys.CopyTableSchemasTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             IDictionary<string, string> renamedColumns = null)
@@ -157,8 +157,8 @@ namespace RepoDb.Schema
             // Validate
             var names = Validate(connection, tableNames, destinationConnection);
             var requestedNames = names;
-            var selectedColumns = CopySchemaColumns.Normalize(columns);
-            var renamed = CopySchemaColumns.NormalizeRenamed(renamedColumns);
+            var selectedColumns = CopyTableSchemaColumns.Normalize(columns);
+            var renamed = CopyTableSchemaColumns.NormalizeRenamed(renamedColumns);
             if (names.Count == 0)
             {
                 return;
@@ -170,7 +170,7 @@ namespace RepoDb.Schema
                 throw new MissingMappingException($"There is no schema reader mapping found for '{connection.GetType().FullName}'. Make sure to register one via the '{nameof(SchemaReaderMapper)}'.");
             var schemaComposer = SchemaComposerMapper.Get(destinationConnection) ??
                 throw new MissingMappingException($"There is no schema composer mapping found for '{destinationConnection.GetType().FullName}'. Make sure to register one via the '{nameof(SchemaComposerMapper)}'.");
-            if (relationshipBehavior != CopySchemaRelationshipBehavior.TableOnly)
+            if (relationshipBehavior != CopyTableSchemaRelationshipBehavior.TableOnly)
             {
                 names = schemaReader.GetRelatedTables(names, relationshipBehavior).ToList();
             }
@@ -178,12 +178,12 @@ namespace RepoDb.Schema
             if (selectedColumns != null || renamed != null)
             {
                 var requestedSchemas = requestedNames.Select(schemaReader.GetTableSchema).ToList();
-                schemas = CopySchemaColumns.Apply(schemas, requestedSchemas, selectedColumns, renamed).ToList();
+                schemas = CopyTableSchemaColumns.Apply(schemas, requestedSchemas, selectedColumns, renamed).ToList();
             }
-            var tables = CopySchemaPlan.CreateTables(schemas, GetTargetSchema(targetSchema, destinationConnection), schemaComposer);
+            var tables = CopyTableSchemaPlan.CreateTables(schemas, GetTargetSchema(targetSchema, destinationConnection), schemaComposer);
             ProbeTables(tables, tableExistenceBehavior, schemaComposer, destinationConnection, commandTimeout, trace, transaction);
-            var plan = CopySchemaPlan.Create(tables, tableExistenceBehavior, schemaComposer);
-            var errors = new List<CopySchemaError>();
+            var plan = CopyTableSchemaPlan.Create(tables, tableExistenceBehavior, schemaComposer);
+            var errors = new List<CopyTableSchemaError>();
 
             // Report the tables that have nothing to execute
             Report(createdCallback, plan.Immediate, errors, connection, destinationConnection, tableExistenceBehavior, schemaComposer, startTime);
@@ -219,7 +219,7 @@ namespace RepoDb.Schema
 
         #endregion
 
-        #region CopySchemaTo (IDbConnection, Async)
+        #region CopyTableSchemaTo (IDbConnection, Async)
 
         /// <summary>
         /// Copies the schema of the table mapped to the <typeparamref name="TEntity"/> type of the current connection
@@ -231,29 +231,29 @@ namespace RepoDb.Schema
         /// <param name="destinationConnection">The connection of the destination database.</param>
         /// <param name="targetSchema">The name of the schema of the destination database that the tables are created in (it must already exist). The default is <c>null</c>, which creates the tables in the default schema of the destination database (see <see cref="IDbSetting.DefaultSchema"/> of the setting of the destination connection), or in the schema of the source table if the setting has no default schema. The tables of all the schemas are created in the same schema, so two tables with the same name (i.e.: <c>dbo.Item</c> and <c>Sales.Item</c>) cannot be copied together.</param>
         /// <param name="columns">The names of the columns of the table that are created in the destination database (the names are not case sensitive). The default is <c>null</c>, which creates all the columns. The indexes, the primary key, the unique constraints, the check constraints and the foreign keys that use a column that is not given are not created. The tables that are copied only because they are related to the table keep all their columns, without the foreign keys that reference a column that is not given. An <see cref="ArgumentException"/> is thrown, before anything is created, if a column is not a column of the source table.</param>
-        /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database: <see cref="CopySchemaExistsBehavior.Skip"/> leaves it as is, <see cref="CopySchemaExistsBehavior.Align"/> adds its missing columns and indexes, <see cref="CopySchemaExistsBehavior.Throw"/> throws before anything is created and <see cref="CopySchemaExistsBehavior.Drop"/> drops it and creates it again. The default is <see cref="CopySchemaExistsBehavior.Skip"/>. Whether the table exists is checked with the statements of the composer, so a composer that does not compose them (empty statement) is treated as if the table does not exist. <b>WARNING:</b> <see cref="CopySchemaExistsBehavior.Drop"/> permanently deletes the existing table and its data.</param>
-        /// <param name="relationshipBehavior">Defines which of the tables that are related to the table (through the foreign keys) are copied together with it. The default is <see cref="CopySchemaRelationshipBehavior.TableOnly"/>. The result is still the one of the given table, use the multiple tables overload to receive the result of each related table.</param>
+        /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database: <see cref="CopyTableSchemaExistsBehavior.Skip"/> leaves it as is, <see cref="CopyTableSchemaExistsBehavior.Align"/> adds its missing columns and indexes, <see cref="CopyTableSchemaExistsBehavior.Throw"/> throws before anything is created and <see cref="CopyTableSchemaExistsBehavior.Drop"/> drops it and creates it again. The default is <see cref="CopyTableSchemaExistsBehavior.Skip"/>. Whether the table exists is checked with the statements of the composer, so a composer that does not compose them (empty statement) is treated as if the table does not exist. <b>WARNING:</b> <see cref="CopyTableSchemaExistsBehavior.Drop"/> permanently deletes the existing table and its data.</param>
+        /// <param name="relationshipBehavior">Defines which of the tables that are related to the table (through the foreign keys) are copied together with it. The default is <see cref="CopyTableSchemaRelationshipBehavior.TableOnly"/>. The result is still the one of the given table, use the multiple tables overload to receive the result of each related table.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
-        /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopySchemaTo"/>.</param>
+        /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopyTableSchemaTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <param name="renamedColumns">The new names of the columns (the source column name and the name that the column has in the destination database; the names are not case sensitive), i.e.: when a table is copied to receive the data of other column names. The columns that are not listed keep their name. The primary key, the indexes, the unique constraints, the check constraints and the foreign keys follow the renamed columns. The default is <c>null</c>, which keeps all the names.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopySchemaResult"/> that describes the schema copy operation.</returns>
-        public static Task<CopySchemaResult> CopySchemaToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
+        /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopyTableSchemaResult"/> that describes the schema copy operation.</returns>
+        public static Task<CopyTableSchemaResult> CopyTableSchemaToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IDbConnection destinationConnection,
             string targetSchema = null,
             string[] columns = null,
-            CopySchemaExistsBehavior tableExistenceBehavior = CopySchemaExistsBehavior.Skip,
-            CopySchemaRelationshipBehavior relationshipBehavior = CopySchemaRelationshipBehavior.TableOnly,
+            CopyTableSchemaExistsBehavior tableExistenceBehavior = CopyTableSchemaExistsBehavior.Skip,
+            CopyTableSchemaRelationshipBehavior relationshipBehavior = CopyTableSchemaRelationshipBehavior.TableOnly,
             int? commandTimeout = null,
-            string traceKey = SchemaTraceKeys.CopySchemaTo,
+            string traceKey = SchemaTraceKeys.CopyTableSchemaTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default,
             IDictionary<string, string> renamedColumns = null)
             where TEntity : class =>
-            connection.CopySchemaToAsync(ClassMappedNameCache.Get<TEntity>(), destinationConnection, targetSchema, columns, tableExistenceBehavior, relationshipBehavior, commandTimeout, traceKey, trace, transaction, cancellationToken, renamedColumns);
+            connection.CopyTableSchemaToAsync(ClassMappedNameCache.Get<TEntity>(), destinationConnection, targetSchema, columns, tableExistenceBehavior, relationshipBehavior, commandTimeout, traceKey, trace, transaction, cancellationToken, renamedColumns);
 
         /// <summary>
         /// Copies the schema of the source table of the current connection into the same-named table of the destination connection.
@@ -264,32 +264,32 @@ namespace RepoDb.Schema
         /// <param name="destinationConnection">The connection of the destination database.</param>
         /// <param name="targetSchema">The name of the schema of the destination database that the tables are created in (it must already exist). The default is <c>null</c>, which creates the tables in the default schema of the destination database (see <see cref="IDbSetting.DefaultSchema"/> of the setting of the destination connection), or in the schema of the source table if the setting has no default schema. The tables of all the schemas are created in the same schema, so two tables with the same name (i.e.: <c>dbo.Item</c> and <c>Sales.Item</c>) cannot be copied together.</param>
         /// <param name="columns">The names of the columns of the table that are created in the destination database (the names are not case sensitive). The default is <c>null</c>, which creates all the columns. The indexes, the primary key, the unique constraints, the check constraints and the foreign keys that use a column that is not given are not created. The tables that are copied only because they are related to the table keep all their columns, without the foreign keys that reference a column that is not given. An <see cref="ArgumentException"/> is thrown, before anything is created, if a column is not a column of the source table.</param>
-        /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database: <see cref="CopySchemaExistsBehavior.Skip"/> leaves it as is, <see cref="CopySchemaExistsBehavior.Align"/> adds its missing columns and indexes, <see cref="CopySchemaExistsBehavior.Throw"/> throws before anything is created and <see cref="CopySchemaExistsBehavior.Drop"/> drops it and creates it again. The default is <see cref="CopySchemaExistsBehavior.Skip"/>. Whether the table exists is checked with the statements of the composer, so a composer that does not compose them (empty statement) is treated as if the table does not exist. <b>WARNING:</b> <see cref="CopySchemaExistsBehavior.Drop"/> permanently deletes the existing table and its data.</param>
-        /// <param name="relationshipBehavior">Defines which of the tables that are related to the table (through the foreign keys) are copied together with it. The default is <see cref="CopySchemaRelationshipBehavior.TableOnly"/>. The result is still the one of the given table, use the multiple tables overload to receive the result of each related table.</param>
+        /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database: <see cref="CopyTableSchemaExistsBehavior.Skip"/> leaves it as is, <see cref="CopyTableSchemaExistsBehavior.Align"/> adds its missing columns and indexes, <see cref="CopyTableSchemaExistsBehavior.Throw"/> throws before anything is created and <see cref="CopyTableSchemaExistsBehavior.Drop"/> drops it and creates it again. The default is <see cref="CopyTableSchemaExistsBehavior.Skip"/>. Whether the table exists is checked with the statements of the composer, so a composer that does not compose them (empty statement) is treated as if the table does not exist. <b>WARNING:</b> <see cref="CopyTableSchemaExistsBehavior.Drop"/> permanently deletes the existing table and its data.</param>
+        /// <param name="relationshipBehavior">Defines which of the tables that are related to the table (through the foreign keys) are copied together with it. The default is <see cref="CopyTableSchemaRelationshipBehavior.TableOnly"/>. The result is still the one of the given table, use the multiple tables overload to receive the result of each related table.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
-        /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopySchemaTo"/>.</param>
+        /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopyTableSchemaTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <param name="renamedColumns">The new names of the columns (the source column name and the name that the column has in the destination database; the names are not case sensitive), i.e.: when a table is copied to receive the data of other column names. The columns that are not listed keep their name. The primary key, the indexes, the unique constraints, the check constraints and the foreign keys follow the renamed columns. The default is <c>null</c>, which keeps all the names.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopySchemaResult"/> that describes the schema copy operation.</returns>
-        public static async Task<CopySchemaResult> CopySchemaToAsync(this IDbConnection connection,
+        /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopyTableSchemaResult"/> that describes the schema copy operation.</returns>
+        public static async Task<CopyTableSchemaResult> CopyTableSchemaToAsync(this IDbConnection connection,
             string tableName,
             IDbConnection destinationConnection,
             string targetSchema = null,
             string[] columns = null,
-            CopySchemaExistsBehavior tableExistenceBehavior = CopySchemaExistsBehavior.Skip,
-            CopySchemaRelationshipBehavior relationshipBehavior = CopySchemaRelationshipBehavior.TableOnly,
+            CopyTableSchemaExistsBehavior tableExistenceBehavior = CopyTableSchemaExistsBehavior.Skip,
+            CopyTableSchemaRelationshipBehavior relationshipBehavior = CopyTableSchemaRelationshipBehavior.TableOnly,
             int? commandTimeout = null,
-            string traceKey = SchemaTraceKeys.CopySchemaTo,
+            string traceKey = SchemaTraceKeys.CopyTableSchemaTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default,
             IDictionary<string, string> renamedColumns = null)
         {
             Validate(connection, tableName, destinationConnection);
-            var results = new List<CopySchemaResult>();
-            await connection.CopySchemaToAsync(new[] { tableName },
+            var results = new List<CopyTableSchemaResult>();
+            await connection.CopyTableSchemaToAsync(new[] { tableName },
                 destinationConnection,
                 targetSchema,
                 columns,
@@ -309,7 +309,7 @@ namespace RepoDb.Schema
 
         #endregion
 
-        #region CopySchemaTo (IDbConnection, Async, Multiple Tables)
+        #region CopyTableSchemaTo (IDbConnection, Async, Multiple Tables)
 
         /// <summary>
         /// Copies the schema of the tables of the current connection into the same-named tables of the destination connection.
@@ -322,29 +322,29 @@ namespace RepoDb.Schema
         /// <param name="destinationConnection">The connection of the destination database.</param>
         /// <param name="targetSchema">The name of the schema of the destination database that the tables are created in (it must already exist). The default is <c>null</c>, which creates the tables in the default schema of the destination database (see <see cref="IDbSetting.DefaultSchema"/> of the setting of the destination connection), or in the schema of the source table if the setting has no default schema. The tables of all the schemas are created in the same schema, so two tables with the same name (i.e.: <c>dbo.Item</c> and <c>Sales.Item</c>) cannot be copied together.</param>
         /// <param name="columns">The names of the columns of the given tables that are created in the destination database (the names are not case sensitive). The default is <c>null</c>, which creates all the columns. The indexes, the primary key, the unique constraints, the check constraints and the foreign keys that use a column that is not given are not created. The tables that are copied only because they are related to the given tables keep all their columns, without the foreign keys that reference a column that is not given. An <see cref="ArgumentException"/> is thrown, before anything is created, if a column is not a column of one of the given tables.</param>
-        /// <param name="tableExistenceBehavior">Defines what happens when a table already exists in the destination database: <see cref="CopySchemaExistsBehavior.Skip"/> leaves it as is, <see cref="CopySchemaExistsBehavior.Align"/> adds its missing columns and indexes, <see cref="CopySchemaExistsBehavior.Throw"/> throws before anything is created and <see cref="CopySchemaExistsBehavior.Drop"/> drops it and creates it again. The default is <see cref="CopySchemaExistsBehavior.Skip"/>. Whether the table exists is checked with the statements of the composer, so a composer that does not compose them (empty statement) is treated as if the table does not exist. <b>WARNING:</b> <see cref="CopySchemaExistsBehavior.Drop"/> permanently deletes the existing table and its data.</param>
-        /// <param name="relationshipBehavior">Defines which of the tables that are related to the given tables (through the foreign keys) are copied together with them. The default is <see cref="CopySchemaRelationshipBehavior.TableOnly"/>. Only the foreign keys of the source database are read to find them.</param>
-        /// <param name="createdCallback">The callback that receives the <see cref="CopySchemaResult"/> of a table every time its schema is created in the destination database (the table, its indexes and its foreign keys), in the order that the schemas are completed. The errors that were raised for the table are in the <see cref="CopySchemaResult.Errors"/> of its result. The default is <c>null</c>.</param>
-        /// <param name="errorCallback">The callback that receives a <see cref="CopySchemaError"/> every time a statement fails while the schemas are being created. The error is also added to the <see cref="CopySchemaResult.Errors"/> of the table that it belongs to, and the copy continues with the next statement; throw from the callback to stop the copy. Without a callback, the exception is thrown. The errors of reading the schemas are not reported to it. The default is <c>null</c>.</param>
+        /// <param name="tableExistenceBehavior">Defines what happens when a table already exists in the destination database: <see cref="CopyTableSchemaExistsBehavior.Skip"/> leaves it as is, <see cref="CopyTableSchemaExistsBehavior.Align"/> adds its missing columns and indexes, <see cref="CopyTableSchemaExistsBehavior.Throw"/> throws before anything is created and <see cref="CopyTableSchemaExistsBehavior.Drop"/> drops it and creates it again. The default is <see cref="CopyTableSchemaExistsBehavior.Skip"/>. Whether the table exists is checked with the statements of the composer, so a composer that does not compose them (empty statement) is treated as if the table does not exist. <b>WARNING:</b> <see cref="CopyTableSchemaExistsBehavior.Drop"/> permanently deletes the existing table and its data.</param>
+        /// <param name="relationshipBehavior">Defines which of the tables that are related to the given tables (through the foreign keys) are copied together with them. The default is <see cref="CopyTableSchemaRelationshipBehavior.TableOnly"/>. Only the foreign keys of the source database are read to find them.</param>
+        /// <param name="createdCallback">The callback that receives the <see cref="CopyTableSchemaResult"/> of a table every time its schema is created in the destination database (the table, its indexes and its foreign keys), in the order that the schemas are completed. The errors that were raised for the table are in the <see cref="CopyTableSchemaResult.Errors"/> of its result. The default is <c>null</c>.</param>
+        /// <param name="errorCallback">The callback that receives a <see cref="CopyTableSchemaError"/> every time a statement fails while the schemas are being created. The error is also added to the <see cref="CopyTableSchemaResult.Errors"/> of the table that it belongs to, and the copy continues with the next statement; throw from the callback to stop the copy. Without a callback, the exception is thrown. The errors of reading the schemas are not reported to it. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
-        /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopySchemasTo"/>.</param>
+        /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopyTableSchemasTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <param name="renamedColumns">The new names of the columns (the source column name and the name that the column has in the destination database; the names are not case sensitive), i.e.: when a table is copied to receive the data of other column names. The columns that are not listed keep their name. The primary key, the indexes, the unique constraints, the check constraints and the foreign keys follow the renamed columns. The default is <c>null</c>, which keeps all the names.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
         [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
-        public static async Task CopySchemaToAsync(this IDbConnection connection,
+        public static async Task CopyTableSchemaToAsync(this IDbConnection connection,
             IEnumerable<string> tableNames,
             IDbConnection destinationConnection,
             string targetSchema = null,
             string[] columns = null,
-            CopySchemaExistsBehavior tableExistenceBehavior = CopySchemaExistsBehavior.Skip,
-            CopySchemaRelationshipBehavior relationshipBehavior = CopySchemaRelationshipBehavior.TableOnly,
-            Action<CopySchemaResult> createdCallback = null,
-            Action<CopySchemaError> errorCallback = null,
+            CopyTableSchemaExistsBehavior tableExistenceBehavior = CopyTableSchemaExistsBehavior.Skip,
+            CopyTableSchemaRelationshipBehavior relationshipBehavior = CopyTableSchemaRelationshipBehavior.TableOnly,
+            Action<CopyTableSchemaResult> createdCallback = null,
+            Action<CopyTableSchemaError> errorCallback = null,
             int? commandTimeout = null,
-            string traceKey = SchemaTraceKeys.CopySchemasTo,
+            string traceKey = SchemaTraceKeys.CopyTableSchemasTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default,
@@ -353,8 +353,8 @@ namespace RepoDb.Schema
             // Validate
             var names = Validate(connection, tableNames, destinationConnection);
             var requestedNames = names;
-            var selectedColumns = CopySchemaColumns.Normalize(columns);
-            var renamed = CopySchemaColumns.NormalizeRenamed(renamedColumns);
+            var selectedColumns = CopyTableSchemaColumns.Normalize(columns);
+            var renamed = CopyTableSchemaColumns.NormalizeRenamed(renamedColumns);
             if (names.Count == 0)
             {
                 return;
@@ -366,7 +366,7 @@ namespace RepoDb.Schema
                 throw new MissingMappingException($"There is no schema reader mapping found for '{connection.GetType().FullName}'. Make sure to register one via the '{nameof(SchemaReaderMapper)}'.");
             var schemaComposer = SchemaComposerMapper.Get(destinationConnection) ??
                 throw new MissingMappingException($"There is no schema composer mapping found for '{destinationConnection.GetType().FullName}'. Make sure to register one via the '{nameof(SchemaComposerMapper)}'.");
-            if (relationshipBehavior != CopySchemaRelationshipBehavior.TableOnly)
+            if (relationshipBehavior != CopyTableSchemaRelationshipBehavior.TableOnly)
             {
                 names = (await schemaReader.GetRelatedTablesAsync(names, relationshipBehavior, cancellationToken).ConfigureAwait(false)).ToList();
             }
@@ -379,12 +379,12 @@ namespace RepoDb.Schema
                 {
                     requestedSchemas.Add(await schemaReader.GetTableSchemaAsync(name, cancellationToken).ConfigureAwait(false));
                 }
-                schemas = CopySchemaColumns.Apply(schemas, requestedSchemas, selectedColumns, renamed).ToList();
+                schemas = CopyTableSchemaColumns.Apply(schemas, requestedSchemas, selectedColumns, renamed).ToList();
             }
-            var tables = CopySchemaPlan.CreateTables(schemas, GetTargetSchema(targetSchema, destinationConnection), schemaComposer);
+            var tables = CopyTableSchemaPlan.CreateTables(schemas, GetTargetSchema(targetSchema, destinationConnection), schemaComposer);
             await ProbeTablesAsync(tables, tableExistenceBehavior, schemaComposer, destinationConnection, commandTimeout, trace, transaction, cancellationToken).ConfigureAwait(false);
-            var plan = CopySchemaPlan.Create(tables, tableExistenceBehavior, schemaComposer);
-            var errors = new List<CopySchemaError>();
+            var plan = CopyTableSchemaPlan.Create(tables, tableExistenceBehavior, schemaComposer);
+            var errors = new List<CopyTableSchemaError>();
 
             // Report the tables that have nothing to execute
             Report(createdCallback, plan.Immediate, errors, connection, destinationConnection, tableExistenceBehavior, schemaComposer, startTime);

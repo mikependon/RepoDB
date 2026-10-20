@@ -24,7 +24,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
     /// like the SQL Server reader does) and the destination connection records the statements that are executed on it.
     /// </summary>
     [TestClass]
-    public class SqlServerCopySchemasToTest
+    public class SqlServerCopyTableSchemasToTest
     {
         [TestInitialize]
         public void Initialize()
@@ -92,10 +92,10 @@ namespace RepoDb.Schema.SqlServer.UnitTests
 
         #endregion
 
-        #region CopySchemasTo
+        #region CopyTableSchemasTo
 
         [TestMethod]
-        public void TestSqlServerCopySchemasToExecutesTheStatementsThatTheComposerComposed()
+        public void TestSqlServerCopyTableSchemasToExecutesTheStatementsThatTheComposerComposed()
         {
             // Setup
             var schemas = new[] { Table("Person", "Country"), Table("Country") };
@@ -104,7 +104,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             var destination = new CustomDbConnection();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Person", "Country" }, destination);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination);
 
             // Assert
             var expected = new SqlServerSchemaComposer().ComposeSchemas(SqlServerSchemaReader.Order(schemas).Select(r => r.Schema)).ToList();
@@ -112,7 +112,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         }
 
         [TestMethod]
-        public void TestSqlServerCopySchemasToCreatesTheReferencedTableFirst()
+        public void TestSqlServerCopyTableSchemasToCreatesTheReferencedTableFirst()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
@@ -120,7 +120,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             var destination = new CustomDbConnection();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Person", "Country" }, destination);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination);
 
             // Assert
             var tables = Tables(destination);
@@ -130,7 +130,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         }
 
         [TestMethod]
-        public void TestSqlServerCopySchemasToCreatesTheForeignKeysAfterAllTheTables()
+        public void TestSqlServerCopyTableSchemasToCreatesTheForeignKeysAfterAllTheTables()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"), Table("Shipment", "Country", "Person"));
@@ -138,7 +138,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             var destination = new CustomDbConnection();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Person", "Country", "Shipment" }, destination);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country", "Shipment" }, destination);
 
             // Assert
             var lastTable = destination.ExecutedCommands.FindLastIndex(c => c.StartsWith("CREATE TABLE", StringComparison.Ordinal));
@@ -149,7 +149,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         }
 
         [TestMethod]
-        public void TestSqlServerCopySchemasToOfTablesThatReferenceEachOther()
+        public void TestSqlServerCopyTableSchemasToOfTablesThatReferenceEachOther()
         {
             // Setup
             MapReader(Table("A", "B"), Table("B", "C"), Table("C", "A"));
@@ -157,8 +157,8 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             var destination = new CustomDbConnection();
 
             // Act
-            var results = new List<CopySchemaResult>();
-            new CustomDbConnection().CopySchemaTo(new[] { "A", "B", "C" }, destination, createdCallback: results.Add);
+            var results = new List<CopyTableSchemaResult>();
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "A", "B", "C" }, destination, createdCallback: results.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "A", "B", "C" }, results.Select(t => t.TableName).ToArray());
@@ -169,7 +169,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         }
 
         [TestMethod]
-        public void TestSqlServerCopySchemasToOfDiamond()
+        public void TestSqlServerCopyTableSchemasToOfDiamond()
         {
             // Setup
             MapReader(Table("D", "B", "C"), Table("C", "A"), Table("B", "A"), Table("A"));
@@ -177,8 +177,8 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             var destination = new CustomDbConnection();
 
             // Act
-            var results = new List<CopySchemaResult>();
-            new CustomDbConnection().CopySchemaTo(new[] { "D", "C", "B", "A" }, destination, createdCallback: results.Add);
+            var results = new List<CopyTableSchemaResult>();
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "D", "C", "B", "A" }, destination, createdCallback: results.Add);
 
             // Assert
             var names = results.Select(t => t.TableName).ToList();
@@ -188,7 +188,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         }
 
         [TestMethod]
-        public void TestSqlServerCopySchemasToWithTheIndexesOfTheTables()
+        public void TestSqlServerCopyTableSchemasToWithTheIndexesOfTheTables()
         {
             // Setup
             var product = Table("Product");
@@ -199,7 +199,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             var destination = new CustomDbConnection();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Product" }, destination);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Product" }, destination);
 
             // Assert
             Assert.AreEqual(3, destination.ExecutedCommands.Count);
@@ -208,7 +208,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         }
 
         [TestMethod]
-        public void TestSqlServerCopySchemasToOfTablesInDifferentSchemas()
+        public void TestSqlServerCopyTableSchemasToOfTablesInDifferentSchemas()
         {
             // Setup
             MapReader(SchemaTable("dbo", "Ledger", "Sales.Invoice"), SchemaTable("Sales", "Invoice"));
@@ -216,7 +216,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             var destination = new CustomDbConnection();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "dbo.Ledger", "Sales.Invoice" }, destination);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "dbo.Ledger", "Sales.Invoice" }, destination);
 
             // Assert
             var tables = Tables(destination);
@@ -226,7 +226,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         }
 
         [TestMethod]
-        public void TestSqlServerCopySchemasToOfTablesWithNamesThatNeedQuoting()
+        public void TestSqlServerCopyTableSchemasToOfTablesWithNamesThatNeedQuoting()
         {
             // Setup
             MapReader(SchemaTable("dbo", "Odd.Child", SqlServerSchemaHelper.FormatTableName("dbo", "Odd.Name")), SchemaTable("dbo", "Odd.Name"));
@@ -234,7 +234,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             var destination = new CustomDbConnection();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "[dbo].[Odd.Child]", "[dbo].[Odd.Name]" }, destination);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "[dbo].[Odd.Child]", "[dbo].[Odd.Name]" }, destination);
 
             // Assert
             var tables = Tables(destination);
@@ -244,15 +244,15 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         }
 
         [TestMethod]
-        public void TestSqlServerCopySchemasToCallbackResult()
+        public void TestSqlServerCopyTableSchemasToCallbackResult()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
             MapComposer();
-            var results = new List<CopySchemaResult>();
+            var results = new List<CopyTableSchemaResult>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Person", "Country" }, new CustomDbConnection(), createdCallback: results.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, new CustomDbConnection(), createdCallback: results.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.TableName).ToArray());
@@ -260,11 +260,11 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             StringAssert.StartsWith(results[1].Script, "CREATE TABLE [dbo].[Person]", StringComparison.Ordinal);
             StringAssert.Contains(results[1].Script, "ALTER TABLE [dbo].[Person] ADD CONSTRAINT [FK_Person_Country]", StringComparison.Ordinal);
             Assert.AreEqual(1, results[1].ForeignKeyCount);
-            Assert.AreEqual(CopySchemaOutcome.Created, results[0].Outcome);
+            Assert.AreEqual(CopyTableSchemaOutcome.Created, results[0].Outcome);
         }
 
         [TestMethod]
-        public void TestSqlServerCopySchemasToCallsTheCallbackOnceTheSchemaOfTheTableIsCreated()
+        public void TestSqlServerCopyTableSchemasToCallsTheCallbackOnceTheSchemaOfTheTableIsCreated()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"), Table("Solo"));
@@ -273,7 +273,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             var reported = new List<(string Table, int Executed)>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(
+            new CustomDbConnection().CopyTableSchemaTo(
                 new[] { "Person", "Country", "Solo" },
                 destination,
                 createdCallback: r => reported.Add((r.TableName, destination.ExecutedCommands.Count)));
@@ -286,7 +286,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         }
 
         [TestMethod]
-        public void TestSqlServerCopySchemasToCallsTheCallbackAfterTheIndexesAndTheForeignKeys()
+        public void TestSqlServerCopyTableSchemasToCallsTheCallbackAfterTheIndexesAndTheForeignKeys()
         {
             // Setup
             var product = Table("Product", "Category");
@@ -297,7 +297,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             var reported = new List<(string Table, int Executed)>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(
+            new CustomDbConnection().CopyTableSchemaTo(
                 new[] { "Product", "Category" },
                 destination,
                 createdCallback: r => reported.Add((r.TableName, destination.ExecutedCommands.Count)));
@@ -312,16 +312,16 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         #region ErrorCallback
 
         [TestMethod]
-        public void TestSqlServerCopySchemasToErrorCallbackOfTheForeignKeyThatFails()
+        public void TestSqlServerCopyTableSchemasToErrorCallbackOfTheForeignKeyThatFails()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
             MapComposer();
             var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("ALTER TABLE", StringComparison.Ordinal) };
-            var errors = new List<CopySchemaError>();
+            var errors = new List<CopyTableSchemaError>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Person", "Country" }, destination, errorCallback: errors.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination, errorCallback: errors.Add);
 
             // Assert
             Assert.AreEqual(1, errors.Count);
@@ -332,7 +332,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         }
 
         [TestMethod]
-        public void TestSqlServerCopySchemasToErrorCallbackOfTheIndexThatFails()
+        public void TestSqlServerCopyTableSchemasToErrorCallbackOfTheIndexThatFails()
         {
             // Setup
             var product = Table("Product");
@@ -340,10 +340,10 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             MapReader(product, Table("Category"));
             MapComposer();
             var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("CREATE INDEX", StringComparison.Ordinal) };
-            var errors = new List<CopySchemaError>();
+            var errors = new List<CopyTableSchemaError>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Product", "Category" }, destination, errorCallback: errors.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Product", "Category" }, destination, errorCallback: errors.Add);
 
             // Assert
             Assert.AreEqual(1, errors.Count);
@@ -352,16 +352,16 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         }
 
         [TestMethod]
-        public void TestSqlServerCopySchemasToErrorCallbackAddsTheErrorToTheResultOfTheTable()
+        public void TestSqlServerCopyTableSchemasToErrorCallbackAddsTheErrorToTheResultOfTheTable()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
             MapComposer();
             var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("ALTER TABLE", StringComparison.Ordinal) };
-            var created = new List<CopySchemaResult>();
+            var created = new List<CopyTableSchemaResult>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(
+            new CustomDbConnection().CopyTableSchemaTo(
                 new[] { "Person", "Country" },
                 destination,
                 createdCallback: created.Add,
@@ -370,14 +370,14 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             // Assert
             CollectionAssert.AreEqual(new[] { "Country", "Person" }, created.Select(r => r.TableName).ToArray());
             Assert.AreEqual(0, created[0].Errors.Count);
-            Assert.AreEqual(CopySchemaOutcome.Created, created[0].Outcome);
+            Assert.AreEqual(CopyTableSchemaOutcome.Created, created[0].Outcome);
             Assert.AreEqual(1, created[1].Errors.Count);
-            Assert.AreEqual(CopySchemaOutcome.Failed, created[1].Outcome);
+            Assert.AreEqual(CopyTableSchemaOutcome.Failed, created[1].Outcome);
             StringAssert.StartsWith(created[1].Errors[0].Statement, "ALTER TABLE [dbo].[Person]", StringComparison.Ordinal);
         }
 
         [TestMethod]
-        public void TestSqlServerCopySchemasToStopsIfTheErrorCallbackThrows()
+        public void TestSqlServerCopyTableSchemasToStopsIfTheErrorCallbackThrows()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
@@ -386,7 +386,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
 
             // Act/Assert
             Assert.Throws<NotSupportedException>(() =>
-                new CustomDbConnection().CopySchemaTo(
+                new CustomDbConnection().CopyTableSchemaTo(
                     new[] { "Person", "Country" },
                     destination,
                     errorCallback: _ => throw new NotSupportedException()));
@@ -396,17 +396,17 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         }
 
         [TestMethod]
-        public void ThrowExceptionOnSqlServerCopySchemasToIfTheErrorCallbackThrowsTheCapturedException()
+        public void ThrowExceptionOnSqlServerCopyTableSchemasToIfTheErrorCallbackThrowsTheCapturedException()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
             MapComposer();
             var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("ALTER TABLE", StringComparison.Ordinal) };
-            CopySchemaError raised = null;
+            CopyTableSchemaError raised = null;
 
             // Act
             var exception = Assert.Throws<InvalidOperationException>(() =>
-                new CustomDbConnection().CopySchemaTo(new[] { "Person", "Country" }, destination, errorCallback: e =>
+                new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination, errorCallback: e =>
                 {
                     raised = e;
                     throw e.Exception;
@@ -418,10 +418,10 @@ namespace RepoDb.Schema.SqlServer.UnitTests
 
         #endregion
 
-        #region CopySchemasToAsync
+        #region CopyTableSchemasToAsync
 
         [TestMethod]
-        public async Task TestSqlServerCopySchemasToAsyncExecutesTheStatementsThatTheComposerComposed()
+        public async Task TestSqlServerCopyTableSchemasToAsyncExecutesTheStatementsThatTheComposerComposed()
         {
             // Setup
             var schemas = new[] { Table("Person", "Country"), Table("Country") };
@@ -430,7 +430,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             var destination = new CustomDbConnection();
 
             // Act
-            await new CustomDbConnection().CopySchemaToAsync(new[] { "Person", "Country" }, destination);
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" }, destination);
 
             // Assert
             var expected = new SqlServerSchemaComposer().ComposeSchemas(SqlServerSchemaReader.Order(schemas).Select(r => r.Schema)).ToList();
@@ -438,7 +438,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         }
 
         [TestMethod]
-        public async Task TestSqlServerCopySchemasToAsyncOfTablesThatReferenceEachOther()
+        public async Task TestSqlServerCopyTableSchemasToAsyncOfTablesThatReferenceEachOther()
         {
             // Setup
             MapReader(Table("A", "B"), Table("B", "A"));
@@ -446,8 +446,8 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             var destination = new CustomDbConnection();
 
             // Act
-            var results = new List<CopySchemaResult>();
-            await new CustomDbConnection().CopySchemaToAsync(new[] { "A", "B" }, destination, createdCallback: results.Add);
+            var results = new List<CopyTableSchemaResult>();
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "A", "B" }, destination, createdCallback: results.Add);
 
             // Assert
             Assert.AreEqual(2, results.Count);
@@ -456,19 +456,19 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         }
 
         [TestMethod]
-        public async Task TestSqlServerCopySchemasToAsyncCallbackResult()
+        public async Task TestSqlServerCopyTableSchemasToAsyncCallbackResult()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
             MapComposer();
-            var results = new List<CopySchemaResult>();
+            var results = new List<CopyTableSchemaResult>();
 
             // Act
-            await new CustomDbConnection().CopySchemaToAsync(new[] { "Person", "Country" }, new CustomDbConnection(), tableExistenceBehavior: CopySchemaExistsBehavior.Throw, createdCallback: results.Add);
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" }, new CustomDbConnection(), tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw, createdCallback: results.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.TableName).ToArray());
-            Assert.AreEqual(CopySchemaExistsBehavior.Throw, results[1].Action);
+            Assert.AreEqual(CopyTableSchemaExistsBehavior.Throw, results[1].Action);
             StringAssert.Contains(results[1].Script, "CREATE TABLE [dbo].[Person]", StringComparison.Ordinal);
         }
 

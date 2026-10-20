@@ -61,17 +61,17 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
         #region Target Schema
 
         [TestMethod]
-        public void TestPostgreSqlCopySchemasToWithTargetSchemaCreatesTheTablesInThatSchema()
+        public void TestPostgreSqlCopyTableSchemasToWithTargetSchemaCreatesTheTablesInThatSchema()
         {
             using (var source = new NpgsqlConnection(Database.ConnectionStringForSource))
             using (var target = new NpgsqlConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopySchemaResult>();
+                var results = new List<CopyTableSchemaResult>();
 
                 // Act
-                source.CopySchemaTo(new[] { "country", "Person" }, target, "sales", createdCallback: results.Add);
+                source.CopyTableSchemaTo(new[] { "country", "Person" }, target, "sales", createdCallback: results.Add);
 
                 // Assert
                 CollectionAssert.AreEquivalent(new[] { "sales.country", "sales.\"Person\"" }, GetTargetTables());
@@ -83,17 +83,17 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestPostgreSqlCopySchemasToWithoutTargetSchemaCreatesTheTablesInTheDefaultSchema()
+        public void TestPostgreSqlCopyTableSchemasToWithoutTargetSchemaCreatesTheTablesInTheDefaultSchema()
         {
             using (var source = new NpgsqlConnection(Database.ConnectionStringForSource))
             using (var target = new NpgsqlConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopySchemaResult>();
+                var results = new List<CopyTableSchemaResult>();
 
                 // Act
-                source.CopySchemaTo(new[] { "sales.order_line", "Person", "country" }, target, createdCallback: results.Add);
+                source.CopyTableSchemaTo(new[] { "sales.order_line", "Person", "country" }, target, createdCallback: results.Add);
 
                 // Assert
                 CollectionAssert.AreEquivalent(new[] { "public.order_line", "public.\"Person\"", "public.country" }, GetTargetTables());
@@ -104,7 +104,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestPostgreSqlCopySchemaToOfASingleTableWithTargetSchema()
+        public void TestPostgreSqlCopyTableSchemaToOfASingleTableWithTargetSchema()
         {
             using (var source = new NpgsqlConnection(Database.ConnectionStringForSource))
             using (var target = new NpgsqlConnection(Database.ConnectionStringForTarget))
@@ -113,7 +113,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var result = source.CopySchemaTo("country", target, "sales");
+                var result = source.CopyTableSchemaTo("country", target, "sales");
 
                 // Assert
                 Assert.AreEqual("public", result.SourceSchema);
@@ -123,29 +123,29 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestPostgreSqlCopySchemasToWithTargetSchemaChecksTheTablesOfThatSchema()
+        public void TestPostgreSqlCopyTableSchemasToWithTargetSchemaChecksTheTablesOfThatSchema()
         {
             using (var source = new NpgsqlConnection(Database.ConnectionStringForSource))
             using (var target = new NpgsqlConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo(new[] { "country" }, target, "sales");
-                var results = new List<CopySchemaResult>();
+                source.CopyTableSchemaTo(new[] { "country" }, target, "sales");
+                var results = new List<CopyTableSchemaResult>();
 
                 // Act
-                source.CopySchemaTo(new[] { "country" }, target, "sales", createdCallback: results.Add);
-                source.CopySchemaTo(new[] { "country" }, target, createdCallback: results.Add);
+                source.CopyTableSchemaTo(new[] { "country" }, target, "sales", createdCallback: results.Add);
+                source.CopyTableSchemaTo(new[] { "country" }, target, createdCallback: results.Add);
 
                 // Assert
-                Assert.AreEqual(CopySchemaOutcome.Skipped, results[0].Outcome);
-                Assert.AreEqual(CopySchemaOutcome.Created, results[1].Outcome);
+                Assert.AreEqual(CopyTableSchemaOutcome.Skipped, results[0].Outcome);
+                Assert.AreEqual(CopyTableSchemaOutcome.Created, results[1].Outcome);
                 CollectionAssert.AreEquivalent(new[] { "sales.country", "public.country" }, GetTargetTables());
             }
         }
 
         [TestMethod]
-        public void ThrowExceptionOnPostgreSqlCopySchemasToIfTheTargetSchemaDoesNotExist()
+        public void ThrowExceptionOnPostgreSqlCopyTableSchemasToIfTheTargetSchemaDoesNotExist()
         {
             using (var source = new NpgsqlConnection(Database.ConnectionStringForSource))
             using (var target = new NpgsqlConnection(Database.ConnectionStringForTarget))
@@ -154,22 +154,22 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act/Assert
-                Assert.Throws<PostgresException>(() => source.CopySchemaTo(new[] { "country" }, target, "missing"));
+                Assert.Throws<PostgresException>(() => source.CopyTableSchemaTo(new[] { "country" }, target, "missing"));
             }
         }
 
         [TestMethod]
-        public async Task TestPostgreSqlCopySchemasToAsyncWithTargetSchemaCreatesTheTablesInThatSchema()
+        public async Task TestPostgreSqlCopyTableSchemasToAsyncWithTargetSchemaCreatesTheTablesInThatSchema()
         {
             using (var source = new NpgsqlConnection(Database.ConnectionStringForSource))
             using (var target = new NpgsqlConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopySchemaResult>();
+                var results = new List<CopyTableSchemaResult>();
 
                 // Act
-                await source.CopySchemaToAsync(new[] { "country", "Person" }, target, "sales", createdCallback: results.Add);
+                await source.CopyTableSchemaToAsync(new[] { "country", "Person" }, target, "sales", createdCallback: results.Add);
 
                 // Assert
                 CollectionAssert.AreEquivalent(new[] { "sales.country", "sales.\"Person\"" }, GetTargetTables());
@@ -178,17 +178,17 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestPostgreSqlCopySchemasToAsyncWithoutTargetSchemaCreatesTheTablesInTheDefaultSchema()
+        public async Task TestPostgreSqlCopyTableSchemasToAsyncWithoutTargetSchemaCreatesTheTablesInTheDefaultSchema()
         {
             using (var source = new NpgsqlConnection(Database.ConnectionStringForSource))
             using (var target = new NpgsqlConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo(new[] { "country", "Person" }, target);
+                source.CopyTableSchemaTo(new[] { "country", "Person" }, target);
 
                 // Act
-                var result = await source.CopySchemaToAsync("sales.order_line", target);
+                var result = await source.CopyTableSchemaToAsync("sales.order_line", target);
 
                 // Assert
                 Assert.AreEqual("sales", result.SourceSchema);

@@ -22,7 +22,7 @@ using RepoDb.Schema.Models;
 namespace RepoDb.Schema
 {
     /// <summary>
-    /// Contains the helper methods of the <see cref="CopySchemaToExtension"/> class: the checks of the destination tables, the reports of the results and the validation of the arguments.
+    /// Contains the helper methods of the <see cref="CopyTableSchemaToExtension"/> class: the checks of the destination tables, the reports of the results and the validation of the arguments.
     /// </summary>
     internal static class DbConnection
     {
@@ -34,7 +34,7 @@ namespace RepoDb.Schema
         /// <param name="results">The results of the copied tables.</param>
         /// <param name="table">The identity of the table that was requested.</param>
         /// <returns>The result of the requested table.</returns>
-        internal static CopySchemaResult FindResult(IList<CopySchemaResult> results,
+        internal static CopyTableSchemaResult FindResult(IList<CopyTableSchemaResult> results,
             TableInfo table) =>
             results.FirstOrDefault(r => string.Equals(r.TableName, table.Name, StringComparison.Ordinal) &&
                 string.Equals(r.SourceSchema, table.Schema, StringComparison.Ordinal));
@@ -66,8 +66,8 @@ namespace RepoDb.Schema
         /// <param name="trace"></param>
         /// <param name="transaction"></param>
         [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
-        internal static void ProbeTables(IEnumerable<CopySchemaTable> tables,
-            CopySchemaExistsBehavior behavior,
+        internal static void ProbeTables(IEnumerable<CopyTableSchemaTable> tables,
+            CopyTableSchemaExistsBehavior behavior,
             ISchemaComposer composer,
             IDbConnection destinationConnection,
             int? commandTimeout,
@@ -89,14 +89,14 @@ namespace RepoDb.Schema
             foreach (var table in tables)
             {
                 table.Exists = Probe(composer.ComposeTableExists(table.Name));
-                if (table.Exists == true && behavior == CopySchemaExistsBehavior.Align)
+                if (table.Exists == true && behavior == CopyTableSchemaExistsBehavior.Align)
                 {
                     table.MissingColumns = table.Schema.Columns.Where(column => Probe(composer.ComposeColumnExists(table.Name, column.Field.Name)) == false).ToList();
                     table.MissingIndexes = table.Schema.Indexes.Where(index => index.Name != null && Probe(composer.ComposeIndexExists(table.Name, index.Name)) == false).ToList();
                     table.MissingForeignKeys = table.Schema.ForeignKeys.Where(foreignKey => foreignKey.Name != null && Probe(composer.ComposeForeignKeyExists(table.Name, foreignKey.Name)) == false && CanBeReferenced(foreignKey)).ToList();
                 }
             }
-            CopySchemaIndexNames.Resolve(tables, behavior, composer, destinationConnection.GetDbSetting()?.AreIndexNamesUniquePerSchema == true, Probe);
+            CopyTableSchemaIndexNames.Resolve(tables, behavior, composer, destinationConnection.GetDbSetting()?.AreIndexNamesUniquePerSchema == true, Probe);
         }
 
         /// <summary>
@@ -111,8 +111,8 @@ namespace RepoDb.Schema
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
-        internal static async Task ProbeTablesAsync(IEnumerable<CopySchemaTable> tables,
-            CopySchemaExistsBehavior behavior,
+        internal static async Task ProbeTablesAsync(IEnumerable<CopyTableSchemaTable> tables,
+            CopyTableSchemaExistsBehavior behavior,
             ISchemaComposer composer,
             IDbConnection destinationConnection,
             int? commandTimeout,
@@ -135,7 +135,7 @@ namespace RepoDb.Schema
             foreach (var table in tables)
             {
                 table.Exists = await Probe(composer.ComposeTableExists(table.Name)).ConfigureAwait(false);
-                if (table.Exists == true && behavior == CopySchemaExistsBehavior.Align)
+                if (table.Exists == true && behavior == CopyTableSchemaExistsBehavior.Align)
                 {
                     table.MissingColumns = new List<ColumnInfo>();
                     foreach (var column in table.Schema.Columns)
@@ -163,7 +163,7 @@ namespace RepoDb.Schema
                     }
                 }
             }
-            await CopySchemaIndexNames.ResolveAsync(tables, behavior, composer, destinationConnection.GetDbSetting()?.AreIndexNamesUniquePerSchema == true, Probe).ConfigureAwait(false);
+            await CopyTableSchemaIndexNames.ResolveAsync(tables, behavior, composer, destinationConnection.GetDbSetting()?.AreIndexNamesUniquePerSchema == true, Probe).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -181,10 +181,10 @@ namespace RepoDb.Schema
         /// <param name="step"></param>
         /// <param name="statementIndex"></param>
         /// <returns></returns>
-        internal static CopySchemaError CreateError(Exception exception,
-            CopySchemaStep step,
+        internal static CopyTableSchemaError CreateError(Exception exception,
+            CopyTableSchemaStep step,
             int statementIndex) =>
-            new CopySchemaError
+            new CopyTableSchemaError
             {
                 Exception = exception,
                 Statement = step.Statement,
@@ -199,14 +199,14 @@ namespace RepoDb.Schema
         /// <param name="table"></param>
         /// <param name="schemaComposer"></param>
         /// <returns></returns>
-        internal static IEnumerable<string> GetScript(CopySchemaTable table,
+        internal static IEnumerable<string> GetScript(CopyTableSchemaTable table,
             ISchemaComposer schemaComposer)
         {
             switch (table.Outcome)
             {
-                case CopySchemaOutcome.Skipped:
+                case CopyTableSchemaOutcome.Skipped:
                     return Enumerable.Empty<string>();
-                case CopySchemaOutcome.Aligned:
+                case CopyTableSchemaOutcome.Aligned:
                     return table.AlignStatements;
                 default:
                     var create = schemaComposer.ComposeSchema(table.Schema) ?? Enumerable.Empty<string>();
@@ -225,12 +225,12 @@ namespace RepoDb.Schema
         /// <param name="tableExistenceBehavior"></param>
         /// <param name="schemaComposer"></param>
         /// <param name="startTime"></param>
-        internal static void Report(Action<CopySchemaResult> createdCallback,
-            IEnumerable<CopySchemaTable> tables,
-            IList<CopySchemaError> errors,
+        internal static void Report(Action<CopyTableSchemaResult> createdCallback,
+            IEnumerable<CopyTableSchemaTable> tables,
+            IList<CopyTableSchemaError> errors,
             IDbConnection connection,
             IDbConnection destinationConnection,
-            CopySchemaExistsBehavior tableExistenceBehavior,
+            CopyTableSchemaExistsBehavior tableExistenceBehavior,
             ISchemaComposer schemaComposer,
             DateTime startTime)
         {
@@ -242,17 +242,17 @@ namespace RepoDb.Schema
             foreach (var table in tables)
             {
                 var schema = table.Schema;
-                var aligned = table.Outcome == CopySchemaOutcome.Aligned;
+                var aligned = table.Outcome == CopyTableSchemaOutcome.Aligned;
                 var schemaErrors = errors
                     .Where(error => error.TableName == null ||
                         (string.Equals(error.TableName, schema.Table.Name, StringComparison.Ordinal) &&
                         string.Equals(error.SchemaName, schema.Table.Schema, StringComparison.Ordinal)))
                     .ToList();
 
-                createdCallback(new CopySchemaResult
+                createdCallback(new CopyTableSchemaResult
                 {
                     Action = tableExistenceBehavior,
-                    Outcome = schemaErrors.Count > 0 ? CopySchemaOutcome.Failed : table.Outcome,
+                    Outcome = schemaErrors.Count > 0 ? CopyTableSchemaOutcome.Failed : table.Outcome,
                     TableExisted = table.Exists,
                     AddedColumns = aligned ? table.MissingColumns.Select(column => column.Field.Name).ToList() : new List<string>(),
                     AddedIndexes = aligned ? table.MissingIndexes.Select(index => index.Name).ToList() : new List<string>(),

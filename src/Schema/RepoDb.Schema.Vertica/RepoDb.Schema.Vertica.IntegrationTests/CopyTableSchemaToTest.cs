@@ -16,7 +16,7 @@ using RepoDb.Schema.Vertica.IntegrationTests.Setup;
 namespace RepoDb.Schema.Vertica.IntegrationTests
 {
     [TestClass]
-    public class CopySchemaToTest
+    public class CopyTableSchemaToTest
     {
         [TestInitialize]
         public void Initialize()
@@ -39,12 +39,12 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
 
         #endregion
 
-        #region CopySchemaTo
+        #region CopyTableSchemaTo
 
         #region Sync
 
         [TestMethod]
-        public void TestCopySchemaTo()
+        public void TestCopyTableSchemaTo()
         {
             using (var source = new VerticaConnection(Database.ConnectionStringForSource))
             using (var target = new VerticaConnection(Database.ConnectionStringForTarget))
@@ -53,7 +53,7 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var result = source.CopySchemaTo("Country", target);
+                var result = source.CopyTableSchemaTo("Country", target);
 
                 // Assert
                 Assert.IsTrue(Helper.TargetTableExists("Country"));
@@ -63,17 +63,17 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemaToResult()
+        public void TestCopyTableSchemaToResult()
         {
             using (var source = new VerticaConnection(Database.ConnectionStringForSource))
             using (var target = new VerticaConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo("Country", target);
+                source.CopyTableSchemaTo("Country", target);
 
                 // Act
-                var result = source.CopySchemaTo("Person", target);
+                var result = source.CopyTableSchemaTo("Person", target);
 
                 // Assert
                 Assert.AreEqual("Person", result.TableName, StringComparer.Ordinal);
@@ -82,8 +82,8 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
                 Assert.AreEqual(target.Database, result.DestinationDatabase, StringComparer.Ordinal);
                 Assert.AreEqual(nameof(VerticaConnection), result.SourceDatabaseType, StringComparer.Ordinal);
                 Assert.AreEqual(nameof(VerticaConnection), result.DestinationDatabaseType, StringComparer.Ordinal);
-                Assert.AreEqual(CopySchemaOutcome.Created, result.Outcome);
-                Assert.AreEqual(CopySchemaExistsBehavior.Skip, result.Action);
+                Assert.AreEqual(CopyTableSchemaOutcome.Created, result.Outcome);
+                Assert.AreEqual(CopyTableSchemaExistsBehavior.Skip, result.Action);
                 Assert.AreEqual(6, result.ColumnCount);
                 Assert.AreEqual(0, result.IndexCount);
                 Assert.AreEqual(1, result.ForeignKeyCount);
@@ -96,17 +96,17 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemaToWithAllTheObjects()
+        public void TestCopyTableSchemaToWithAllTheObjects()
         {
             using (var source = new VerticaConnection(Database.ConnectionStringForSource))
             using (var target = new VerticaConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo("Country", target);
+                source.CopyTableSchemaTo("Country", target);
 
                 // Act
-                source.CopySchemaTo("Person", target);
+                source.CopyTableSchemaTo("Person", target);
 
                 // Assert
                 Helper.AssertSchemaEquality(Helper.GetSourceSchema("Person"), Helper.GetTargetSchema("Person"));
@@ -114,7 +114,7 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemaToOfTableInAnotherSchema()
+        public void TestCopyTableSchemaToOfTableInAnotherSchema()
         {
             using (var source = new VerticaConnection(Database.ConnectionStringForSource))
             using (var target = new VerticaConnection(Database.ConnectionStringForTarget))
@@ -123,7 +123,7 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var result = source.CopySchemaTo($"{Database.SourceSalesName}.Invoice", target, Database.TargetSalesName);
+                var result = source.CopyTableSchemaTo($"{Database.SourceSalesName}.Invoice", target, Database.TargetSalesName);
 
                 // Assert
                 Assert.AreEqual(Database.SourceSalesName, result.SourceSchema, StringComparer.Ordinal);
@@ -133,7 +133,7 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemaToWithTheRequestedExistsBehavior()
+        public void TestCopyTableSchemaToWithTheRequestedExistsBehavior()
         {
             using (var source = new VerticaConnection(Database.ConnectionStringForSource))
             using (var target = new VerticaConnection(Database.ConnectionStringForTarget))
@@ -142,15 +142,15 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var result = source.CopySchemaTo("NoKey", target, tableExistenceBehavior: CopySchemaExistsBehavior.Drop);
+                var result = source.CopyTableSchemaTo("NoKey", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
 
                 // Assert
-                Assert.AreEqual(CopySchemaExistsBehavior.Drop, result.Action);
+                Assert.AreEqual(CopyTableSchemaExistsBehavior.Drop, result.Action);
             }
         }
 
         [TestMethod]
-        public void TestCopySchemaToViaTheSameConnectionMapping()
+        public void TestCopyTableSchemaToViaTheSameConnectionMapping()
         {
             using (var source = new VerticaConnection(Database.ConnectionStringForSource))
             using (var target = new VerticaConnection(Database.ConnectionStringForTarget))
@@ -159,8 +159,8 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                source.CopySchemaTo("OrderLine", target);
-                source.CopySchemaTo("NoKey", target);
+                source.CopyTableSchemaTo("OrderLine", target);
+                source.CopyTableSchemaTo("NoKey", target);
 
                 // Assert
                 Assert.IsTrue(Helper.TargetTableExists("OrderLine"));
@@ -169,17 +169,17 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemaToIfTheTargetTableAlreadyExists()
+        public void ThrowExceptionOnCopyTableSchemaToIfTheTargetTableAlreadyExists()
         {
             using (var source = new VerticaConnection(Database.ConnectionStringForSource))
             using (var target = new VerticaConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo("NoKey", target);
+                source.CopyTableSchemaTo("NoKey", target);
 
                 // Act/Assert
-                Assert.Throws<InvalidOperationException>(() => source.CopySchemaTo("NoKey", target, tableExistenceBehavior: CopySchemaExistsBehavior.Throw));
+                Assert.Throws<InvalidOperationException>(() => source.CopyTableSchemaTo("NoKey", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
             }
         }
 
@@ -188,7 +188,7 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
         #region Async
 
         [TestMethod]
-        public async Task TestCopySchemaToAsync()
+        public async Task TestCopyTableSchemaToAsync()
         {
             using (var source = new VerticaConnection(Database.ConnectionStringForSource))
             using (var target = new VerticaConnection(Database.ConnectionStringForTarget))
@@ -197,7 +197,7 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var result = await source.CopySchemaToAsync("Country", target);
+                var result = await source.CopyTableSchemaToAsync("Country", target);
 
                 // Assert
                 Assert.IsTrue(Helper.TargetTableExists("Country"));
@@ -207,27 +207,27 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestCopySchemaToAsyncWithAllTheObjects()
+        public async Task TestCopyTableSchemaToAsyncWithAllTheObjects()
         {
             using (var source = new VerticaConnection(Database.ConnectionStringForSource))
             using (var target = new VerticaConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                await source.CopySchemaToAsync("Country", target);
+                await source.CopyTableSchemaToAsync("Country", target);
 
                 // Act
-                var result = await source.CopySchemaToAsync("Person", target);
+                var result = await source.CopyTableSchemaToAsync("Person", target);
 
                 // Assert
                 Helper.AssertSchemaEquality(Helper.GetSourceSchema("Person"), Helper.GetTargetSchema("Person"));
                 Assert.AreEqual(6, result.ColumnCount);
-                Assert.AreEqual(CopySchemaOutcome.Created, result.Outcome);
+                Assert.AreEqual(CopyTableSchemaOutcome.Created, result.Outcome);
             }
         }
 
         [TestMethod]
-        public async Task TestCopySchemaToAsyncOfTableInAnotherSchema()
+        public async Task TestCopyTableSchemaToAsyncOfTableInAnotherSchema()
         {
             using (var source = new VerticaConnection(Database.ConnectionStringForSource))
             using (var target = new VerticaConnection(Database.ConnectionStringForTarget))
@@ -236,7 +236,7 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                await source.CopySchemaToAsync($"{Database.SourceSalesName}.Invoice", target, Database.TargetSalesName);
+                await source.CopyTableSchemaToAsync($"{Database.SourceSalesName}.Invoice", target, Database.TargetSalesName);
 
                 // Assert
                 Helper.AssertSchemaEquality(Helper.GetSourceSchema($"{Database.SourceSalesName}.Invoice"), Helper.GetTargetSchema($"{Database.SourceSalesName}.Invoice"));
@@ -244,17 +244,17 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnCopySchemaToAsyncIfTheTargetTableAlreadyExists()
+        public async Task ThrowExceptionOnCopyTableSchemaToAsyncIfTheTargetTableAlreadyExists()
         {
             using (var source = new VerticaConnection(Database.ConnectionStringForSource))
             using (var target = new VerticaConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                await source.CopySchemaToAsync("NoKey", target);
+                await source.CopyTableSchemaToAsync("NoKey", target);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopySchemaToAsync("NoKey", target, tableExistenceBehavior: CopySchemaExistsBehavior.Throw));
+                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopyTableSchemaToAsync("NoKey", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
             }
         }
 

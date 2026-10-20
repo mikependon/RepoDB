@@ -36,7 +36,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
 
         #region Helpers
 
-        private static string[] GetRelatedTables(CopySchemaRelationshipBehavior behavior, params string[] tableNames)
+        private static string[] GetRelatedTables(CopyTableSchemaRelationshipBehavior behavior, params string[] tableNames)
         {
             using (var connection = new MariaDbConnection(Database.ConnectionStringForSource))
             {
@@ -44,7 +44,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
             }
         }
 
-        private static async Task<string[]> GetRelatedTablesAsync(CopySchemaRelationshipBehavior behavior, params string[] tableNames)
+        private static async Task<string[]> GetRelatedTablesAsync(CopyTableSchemaRelationshipBehavior behavior, params string[] tableNames)
         {
             using (var connection = new MariaDbConnection(Database.ConnectionStringForSource))
             {
@@ -71,7 +71,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         public void TestMariaDbSchemaRelatedTablesWithTableOnly()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.TableOnly, "Child");
+            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.TableOnly, "Child");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Child" }, actual);
@@ -81,7 +81,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         public void TestMariaDbSchemaRelatedTablesWithTableOnlyKeepsTheGivenTablesInOrder()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.TableOnly, "GrandChild", "Parent", "GrandChild");
+            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.TableOnly, "GrandChild", "Parent", "GrandChild");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "GrandChild", "Parent" }, actual);
@@ -95,7 +95,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         public void TestMariaDbSchemaRelatedTablesWithParents()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Parents, "GrandChild");
+            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "GrandChild");
 
             // Assert
             AssertSame(new[] { "GrandChild", "Child", "Parent" }, actual);
@@ -106,7 +106,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         public void TestMariaDbSchemaRelatedTablesWithParentsDoesNotIncludeTheChildren()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Parents, "Child");
+            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "Child");
 
             // Assert
             AssertSame(new[] { "Child", "Parent" }, actual);
@@ -116,7 +116,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         public void TestMariaDbSchemaRelatedTablesWithParentsOfATableWithoutParents()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Parents, "Parent");
+            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "Parent");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Parent" }, actual);
@@ -126,7 +126,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         public void TestMariaDbSchemaRelatedTablesWithParentsOfADiamond()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Parents, "DiamondD");
+            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "DiamondD");
 
             // Assert
             AssertSame(new[] { "DiamondD", "DiamondB", "DiamondC", "DiamondA" }, actual);
@@ -136,7 +136,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         public void TestMariaDbSchemaRelatedTablesWithParentsAcrossSchemas()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Parents, "Ledger");
+            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "Ledger");
 
             // Assert
             AssertSame(new[] { "Ledger", $"{Database.SourceSalesName}.Invoice" }, actual);
@@ -146,7 +146,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         public void TestMariaDbSchemaRelatedTablesWithParentsOfTablesWithTheSameNameInDifferentSchemas()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Parents, "ItemRef");
+            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "ItemRef");
 
             // Assert
             AssertSame(new[] { "ItemRef", $"{Database.SourceSalesName}.Item" }, actual);
@@ -156,7 +156,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         public void TestMariaDbSchemaRelatedTablesWithParentsOfMultipleForeignKeys()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Parents, "Shipment");
+            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "Shipment");
 
             // Assert
             AssertSame(new[] { "Shipment", "OrderLine", "Country" }, actual);
@@ -166,7 +166,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         public void TestMariaDbSchemaRelatedTablesWithParentsOfTablesWithSpecialNames()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Parents, "`Odd.Child`");
+            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "`Odd.Child`");
 
             // Assert
             AssertSame(new[] { "`Odd.Child`", "`Odd.Name`" }, actual);
@@ -180,7 +180,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         public void TestMariaDbSchemaRelatedTablesWithChildren()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Children, "Parent");
+            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "Parent");
 
             // Assert
             AssertSame(new[] { "Parent", "Child", "GrandChild" }, actual);
@@ -191,7 +191,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         public void TestMariaDbSchemaRelatedTablesWithChildrenDoesNotIncludeTheParents()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Children, "Child");
+            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "Child");
 
             // Assert
             AssertSame(new[] { "Child", "GrandChild" }, actual);
@@ -201,7 +201,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         public void TestMariaDbSchemaRelatedTablesWithChildrenOfATableWithoutChildren()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Children, "GrandChild");
+            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "GrandChild");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "GrandChild" }, actual);
@@ -211,7 +211,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         public void TestMariaDbSchemaRelatedTablesWithChildrenOfADiamond()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Children, "DiamondA");
+            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "DiamondA");
 
             // Assert
             AssertSame(new[] { "DiamondA", "DiamondB", "DiamondC", "DiamondD" }, actual);
@@ -221,7 +221,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         public void TestMariaDbSchemaRelatedTablesWithChildrenAcrossSchemas()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Children, $"{Database.SourceSalesName}.Invoice");
+            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, $"{Database.SourceSalesName}.Invoice");
 
             // Assert
             AssertSame(new[] { $"{Database.SourceSalesName}.Invoice", $"{Database.SourceSalesName}.InvoiceLine", "Ledger" }, actual);
@@ -231,7 +231,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         public void TestMariaDbSchemaRelatedTablesWithChildrenOfATableWithManyChildren()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Children, "Country");
+            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "Country");
 
             // Assert
             AssertSame(new[] { "Country", "Person", "Shipment", "Preference" }, actual);
@@ -245,7 +245,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         public void TestMariaDbSchemaRelatedTablesWithParentsAndChildren()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.ParentsAndChildren, "Child");
+            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "Child");
 
             // Assert
             AssertSame(new[] { "Child", "Parent", "GrandChild" }, actual);
@@ -256,8 +256,8 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         public void TestMariaDbSchemaRelatedTablesWithParentsAndChildrenGivesTheSameTablesFromAnyTableOfTheTree()
         {
             // Act
-            var fromTheRoot = GetRelatedTables(CopySchemaRelationshipBehavior.ParentsAndChildren, "Parent");
-            var fromTheLeaf = GetRelatedTables(CopySchemaRelationshipBehavior.ParentsAndChildren, "GrandChild");
+            var fromTheRoot = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "Parent");
+            var fromTheLeaf = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "GrandChild");
 
             // Assert
             AssertSame(fromTheRoot, fromTheLeaf);
@@ -267,7 +267,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         public void TestMariaDbSchemaRelatedTablesWithParentsAndChildrenOfADiamond()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.ParentsAndChildren, "DiamondB");
+            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "DiamondB");
 
             // Assert
             AssertSame(new[] { "DiamondB", "DiamondA", "DiamondC", "DiamondD" }, actual);
@@ -277,7 +277,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         public void TestMariaDbSchemaRelatedTablesWithParentsAndChildrenReachesTheOtherBranches()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.ParentsAndChildren, "Country");
+            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "Country");
 
             // Assert
             AssertSame(new[] { "Country", "Person", "Shipment", "Preference", "OrderLine" }, actual);
@@ -287,7 +287,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         public void TestMariaDbSchemaRelatedTablesWithParentsAndChildrenDoesNotIncludeTheUnrelatedTables()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.ParentsAndChildren, "Parent");
+            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "Parent");
 
             // Assert
             Assert.IsFalse(actual.Contains("Person"));
@@ -299,7 +299,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         public void TestMariaDbSchemaRelatedTablesWithParentsAndChildrenOfATableWithoutRelationships()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.ParentsAndChildren, "NoKey");
+            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "NoKey");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "NoKey" }, actual);
@@ -312,7 +312,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         [TestMethod]
         public void TestMariaDbSchemaRelatedTablesOfACycle()
         {
-            foreach (var behavior in new[] { CopySchemaRelationshipBehavior.Parents, CopySchemaRelationshipBehavior.Children, CopySchemaRelationshipBehavior.ParentsAndChildren })
+            foreach (var behavior in new[] { CopyTableSchemaRelationshipBehavior.Parents, CopyTableSchemaRelationshipBehavior.Children, CopyTableSchemaRelationshipBehavior.ParentsAndChildren })
             {
                 // Act
                 var actual = GetRelatedTables(behavior, "CycleA");
@@ -325,7 +325,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         [TestMethod]
         public void TestMariaDbSchemaRelatedTablesOfACycleOfThreeTables()
         {
-            foreach (var behavior in new[] { CopySchemaRelationshipBehavior.Parents, CopySchemaRelationshipBehavior.Children, CopySchemaRelationshipBehavior.ParentsAndChildren })
+            foreach (var behavior in new[] { CopyTableSchemaRelationshipBehavior.Parents, CopyTableSchemaRelationshipBehavior.Children, CopyTableSchemaRelationshipBehavior.ParentsAndChildren })
             {
                 // Act
                 var actual = GetRelatedTables(behavior, "RingX");
@@ -339,9 +339,9 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         public void TestMariaDbSchemaRelatedTablesOfACycleWithTablesAroundIt()
         {
             // Act
-            var parents = GetRelatedTables(CopySchemaRelationshipBehavior.Parents, "LoopB");
-            var children = GetRelatedTables(CopySchemaRelationshipBehavior.Children, "LoopA");
-            var endToEnd = GetRelatedTables(CopySchemaRelationshipBehavior.ParentsAndChildren, "LoopA");
+            var parents = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "LoopB");
+            var children = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "LoopA");
+            var endToEnd = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "LoopA");
 
             // Assert
             AssertSame(new[] { "LoopB", "LoopA", "LoopRoot" }, parents);
@@ -352,7 +352,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         [TestMethod]
         public void TestMariaDbSchemaRelatedTablesOfASelfReference()
         {
-            foreach (var behavior in new[] { CopySchemaRelationshipBehavior.Parents, CopySchemaRelationshipBehavior.Children, CopySchemaRelationshipBehavior.ParentsAndChildren })
+            foreach (var behavior in new[] { CopyTableSchemaRelationshipBehavior.Parents, CopyTableSchemaRelationshipBehavior.Children, CopyTableSchemaRelationshipBehavior.ParentsAndChildren })
             {
                 // Act
                 var actual = GetRelatedTables(behavior, "Employee");
@@ -370,7 +370,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         public void TestMariaDbSchemaRelatedTablesOfMultipleTables()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Parents, "GrandChild", "DiamondB");
+            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "GrandChild", "DiamondB");
 
             // Assert
             AssertSame(new[] { "GrandChild", "DiamondB", "Child", "Parent", "DiamondA" }, actual);
@@ -381,7 +381,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         public void TestMariaDbSchemaRelatedTablesDoesNotRepeatATable()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.ParentsAndChildren, "Parent", "Child", "GrandChild");
+            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "Parent", "Child", "GrandChild");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Parent", "Child", "GrandChild" }, actual);
@@ -391,7 +391,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         public void TestMariaDbSchemaRelatedTablesWithoutTables()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.ParentsAndChildren);
+            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren);
 
             // Assert
             Assert.AreEqual(0, actual.Length);
@@ -401,7 +401,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         public void TestMariaDbSchemaRelatedTablesAreComparedWithTheCase()
         {
             // Act
-            var actual = GetRelatedTables(CopySchemaRelationshipBehavior.Children, "Parent", "`Parent`");
+            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "Parent", "`Parent`");
 
             // Assert
             Assert.AreEqual(3, actual.Length);
@@ -415,7 +415,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
             using (var connection = new MariaDbConnection(Database.ConnectionStringForSource))
             {
                 var reader = new MariaDbSchemaReader(connection);
-                var related = reader.GetRelatedTables(new[] { "GrandChild" }, CopySchemaRelationshipBehavior.Parents);
+                var related = reader.GetRelatedTables(new[] { "GrandChild" }, CopyTableSchemaRelationshipBehavior.Parents);
                 var actual = reader.GetDependencyOrder(related).Select(r => r.Schema.Table.Name).ToArray();
 
                 // Assert
@@ -431,17 +431,17 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         public async Task TestMariaDbSchemaRelatedTablesAsyncWithEachBehavior()
         {
             // Act/Assert
-            CollectionAssert.AreEqual(new[] { "Child" }, await GetRelatedTablesAsync(CopySchemaRelationshipBehavior.TableOnly, "Child"));
-            AssertSame(new[] { "Child", "Parent" }, await GetRelatedTablesAsync(CopySchemaRelationshipBehavior.Parents, "Child"));
-            AssertSame(new[] { "Child", "GrandChild" }, await GetRelatedTablesAsync(CopySchemaRelationshipBehavior.Children, "Child"));
-            AssertSame(new[] { "Child", "Parent", "GrandChild" }, await GetRelatedTablesAsync(CopySchemaRelationshipBehavior.ParentsAndChildren, "Child"));
+            CollectionAssert.AreEqual(new[] { "Child" }, await GetRelatedTablesAsync(CopyTableSchemaRelationshipBehavior.TableOnly, "Child"));
+            AssertSame(new[] { "Child", "Parent" }, await GetRelatedTablesAsync(CopyTableSchemaRelationshipBehavior.Parents, "Child"));
+            AssertSame(new[] { "Child", "GrandChild" }, await GetRelatedTablesAsync(CopyTableSchemaRelationshipBehavior.Children, "Child"));
+            AssertSame(new[] { "Child", "Parent", "GrandChild" }, await GetRelatedTablesAsync(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "Child"));
         }
 
         [TestMethod]
         public async Task TestMariaDbSchemaRelatedTablesAsyncOfACycle()
         {
             // Act
-            var actual = await GetRelatedTablesAsync(CopySchemaRelationshipBehavior.ParentsAndChildren, "CycleA");
+            var actual = await GetRelatedTablesAsync(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "CycleA");
 
             // Assert
             AssertSame(new[] { "CycleA", "CycleB" }, actual);
@@ -458,7 +458,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
             {
                 // Act/Assert
                 Assert.Throws<ArgumentNullException>(() =>
-                    new MariaDbSchemaReader(connection).GetRelatedTables(null, CopySchemaRelationshipBehavior.ParentsAndChildren));
+                    new MariaDbSchemaReader(connection).GetRelatedTables(null, CopyTableSchemaRelationshipBehavior.ParentsAndChildren));
             }
         }
 
@@ -467,15 +467,15 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         {
             // Act/Assert
             Assert.Throws<ArgumentOutOfRangeException>(() =>
-                GetRelatedTables((CopySchemaRelationshipBehavior)99, "Child"));
+                GetRelatedTables((CopyTableSchemaRelationshipBehavior)99, "Child"));
         }
 
         #endregion
 
-        #region CopySchemaTo
+        #region CopyTableSchemaTo
 
         [TestMethod]
-        public void TestCopySchemaToWithParents()
+        public void TestCopyTableSchemaToWithParents()
         {
             using (var source = new MariaDbConnection(Database.ConnectionStringForSource))
             using (var target = new MariaDbConnection(Database.ConnectionStringForTarget))
@@ -484,7 +484,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
                 SchemaReaderMapper.Add<MariaDbConnection>(new MariaDbSchemaReader(source), true);
 
                 // Act
-                source.CopySchemaTo(new[] { "GrandChild" }, target, relationshipBehavior: CopySchemaRelationshipBehavior.Parents);
+                source.CopyTableSchemaTo(new[] { "GrandChild" }, target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Parents);
 
                 // Assert
                 AssertSame(new[] { "Parent", "Child", "GrandChild" }, GetTargetTables().ToArray());
@@ -495,7 +495,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemaToWithChildren()
+        public void TestCopyTableSchemaToWithChildren()
         {
             using (var source = new MariaDbConnection(Database.ConnectionStringForSource))
             using (var target = new MariaDbConnection(Database.ConnectionStringForTarget))
@@ -504,7 +504,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
                 SchemaReaderMapper.Add<MariaDbConnection>(new MariaDbSchemaReader(source), true);
 
                 // Act
-                source.CopySchemaTo(new[] { "Parent" }, target, relationshipBehavior: CopySchemaRelationshipBehavior.Children);
+                source.CopyTableSchemaTo(new[] { "Parent" }, target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Children);
 
                 // Assert
                 AssertSame(new[] { "Parent", "Child", "GrandChild" }, GetTargetTables().ToArray());
@@ -512,7 +512,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemaToWithParentsAndChildren()
+        public void TestCopyTableSchemaToWithParentsAndChildren()
         {
             using (var source = new MariaDbConnection(Database.ConnectionStringForSource))
             using (var target = new MariaDbConnection(Database.ConnectionStringForTarget))
@@ -522,8 +522,8 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
                 var created = new List<string>();
 
                 // Act
-                source.CopySchemaTo(new[] { "Child" }, target,
-                    relationshipBehavior: CopySchemaRelationshipBehavior.ParentsAndChildren,
+                source.CopyTableSchemaTo(new[] { "Child" }, target,
+                    relationshipBehavior: CopyTableSchemaRelationshipBehavior.ParentsAndChildren,
                     createdCallback: r => created.Add(r.TableName));
 
                 // Assert
@@ -533,7 +533,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemaToWithTableOnlyDoesNotCopyTheRelatedTables()
+        public void TestCopyTableSchemaToWithTableOnlyDoesNotCopyTheRelatedTables()
         {
             using (var source = new MariaDbConnection(Database.ConnectionStringForSource))
             using (var target = new MariaDbConnection(Database.ConnectionStringForTarget))
@@ -543,12 +543,12 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
 
                 // Act
                 Assert.ThrowsExactly<MariaDbException>(() =>
-                    source.CopySchemaTo(new[] { "Child" }, target, relationshipBehavior: CopySchemaRelationshipBehavior.TableOnly));
+                    source.CopyTableSchemaTo(new[] { "Child" }, target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.TableOnly));
             }
         }
 
         [TestMethod]
-        public void TestCopySchemaToWithParentsAndChildrenOfACycle()
+        public void TestCopyTableSchemaToWithParentsAndChildrenOfACycle()
         {
             using (var source = new MariaDbConnection(Database.ConnectionStringForSource))
             using (var target = new MariaDbConnection(Database.ConnectionStringForTarget))
@@ -557,7 +557,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
                 SchemaReaderMapper.Add<MariaDbConnection>(new MariaDbSchemaReader(source), true);
 
                 // Act
-                source.CopySchemaTo(new[] { "LoopA" }, target, relationshipBehavior: CopySchemaRelationshipBehavior.ParentsAndChildren);
+                source.CopyTableSchemaTo(new[] { "LoopA" }, target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.ParentsAndChildren);
 
                 // Assert
                 AssertSame(new[] { "LoopRoot", "LoopA", "LoopB", "LoopLeaf" }, GetTargetTables().ToArray());
@@ -565,7 +565,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestCopySchemaToAsyncWithParentsAndChildren()
+        public async Task TestCopyTableSchemaToAsyncWithParentsAndChildren()
         {
             using (var source = new MariaDbConnection(Database.ConnectionStringForSource))
             using (var target = new MariaDbConnection(Database.ConnectionStringForTarget))
@@ -574,7 +574,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
                 SchemaReaderMapper.Add<MariaDbConnection>(new MariaDbSchemaReader(source), true);
 
                 // Act
-                await source.CopySchemaToAsync(new[] { "Child" }, target, relationshipBehavior: CopySchemaRelationshipBehavior.ParentsAndChildren);
+                await source.CopyTableSchemaToAsync(new[] { "Child" }, target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.ParentsAndChildren);
 
                 // Assert
                 AssertSame(new[] { "Parent", "Child", "GrandChild" }, GetTargetTables().ToArray());
@@ -583,7 +583,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
 
 
         [TestMethod]
-        public void TestCopySchemaToOfASingleTableWithParents()
+        public void TestCopyTableSchemaToOfASingleTableWithParents()
         {
             using (var source = new MariaDbConnection(Database.ConnectionStringForSource))
             using (var target = new MariaDbConnection(Database.ConnectionStringForTarget))
@@ -592,17 +592,17 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
                 SchemaReaderMapper.Add<MariaDbConnection>(new MariaDbSchemaReader(source), true);
 
                 // Act
-                var result = source.CopySchemaTo("GrandChild", target, relationshipBehavior: CopySchemaRelationshipBehavior.Parents);
+                var result = source.CopyTableSchemaTo("GrandChild", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Parents);
 
                 // Assert
                 Assert.AreEqual("GrandChild", result.TableName);
-                Assert.AreEqual(CopySchemaOutcome.Created, result.Outcome);
+                Assert.AreEqual(CopyTableSchemaOutcome.Created, result.Outcome);
                 AssertSame(new[] { "Parent", "Child", "GrandChild" }, GetTargetTables().ToArray());
             }
         }
 
         [TestMethod]
-        public async Task TestCopySchemaToAsyncOfASingleTableWithParentsAndChildren()
+        public async Task TestCopyTableSchemaToAsyncOfASingleTableWithParentsAndChildren()
         {
             using (var source = new MariaDbConnection(Database.ConnectionStringForSource))
             using (var target = new MariaDbConnection(Database.ConnectionStringForTarget))
@@ -611,7 +611,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
                 SchemaReaderMapper.Add<MariaDbConnection>(new MariaDbSchemaReader(source), true);
 
                 // Act
-                var result = await source.CopySchemaToAsync("Child", target, relationshipBehavior: CopySchemaRelationshipBehavior.ParentsAndChildren);
+                var result = await source.CopyTableSchemaToAsync("Child", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.ParentsAndChildren);
 
                 // Assert
                 Assert.AreEqual("Child", result.TableName);
@@ -620,7 +620,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemaToOfASingleTableWithSpecialNamesAndChildren()
+        public void TestCopyTableSchemaToOfASingleTableWithSpecialNamesAndChildren()
         {
             using (var source = new MariaDbConnection(Database.ConnectionStringForSource))
             using (var target = new MariaDbConnection(Database.ConnectionStringForTarget))
@@ -629,7 +629,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
                 SchemaReaderMapper.Add<MariaDbConnection>(new MariaDbSchemaReader(source), true);
 
                 // Act
-                var result = source.CopySchemaTo("`Odd.Name`", target, relationshipBehavior: CopySchemaRelationshipBehavior.Children);
+                var result = source.CopyTableSchemaTo("`Odd.Name`", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Children);
 
                 // Assert
                 Assert.AreEqual("Odd.Name", result.TableName);
@@ -638,7 +638,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemaToOfASingleTableWithTableOnlyReturnsTheResult()
+        public void TestCopyTableSchemaToOfASingleTableWithTableOnlyReturnsTheResult()
         {
             using (var source = new MariaDbConnection(Database.ConnectionStringForSource))
             using (var target = new MariaDbConnection(Database.ConnectionStringForTarget))
@@ -647,7 +647,7 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
                 SchemaReaderMapper.Add<MariaDbConnection>(new MariaDbSchemaReader(source), true);
 
                 // Act
-                var result = source.CopySchemaTo("Parent", target, relationshipBehavior: CopySchemaRelationshipBehavior.TableOnly);
+                var result = source.CopyTableSchemaTo("Parent", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.TableOnly);
 
                 // Assert
                 Assert.AreEqual("Parent", result.TableName);

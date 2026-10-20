@@ -24,7 +24,7 @@ namespace RepoDb.Schema.ClickHouse.UnitTests
     /// like the ClickHouse reader does) and the destination connection records the statements that are executed on it.
     /// </summary>
     [TestClass]
-    public class ClickHouseCopySchemasToTest
+    public class ClickHouseCopyTableSchemasToTest
     {
         [TestInitialize]
         public void Initialize()
@@ -92,10 +92,10 @@ namespace RepoDb.Schema.ClickHouse.UnitTests
 
         #endregion
 
-        #region CopySchemasTo
+        #region CopyTableSchemasTo
 
         [TestMethod]
-        public void TestClickHouseCopySchemasToExecutesTheStatementsThatTheComposerComposed()
+        public void TestClickHouseCopyTableSchemasToExecutesTheStatementsThatTheComposerComposed()
         {
             // Setup
             var schemas = new[] { Table("Person", "Country"), Table("Country") };
@@ -104,7 +104,7 @@ namespace RepoDb.Schema.ClickHouse.UnitTests
             var destination = new CustomDbConnection();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Person", "Country" }, destination);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination);
 
             // Assert
             var expected = new ClickHouseSchemaComposer().ComposeSchemas(ClickHouseSchemaReader.Order(schemas).Select(r => r.Schema)).Where(c => c.Length > 0).ToList();
@@ -112,7 +112,7 @@ namespace RepoDb.Schema.ClickHouse.UnitTests
         }
 
         [TestMethod]
-        public void TestClickHouseCopySchemasToCreatesTheReferencedTableFirst()
+        public void TestClickHouseCopyTableSchemasToCreatesTheReferencedTableFirst()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
@@ -120,7 +120,7 @@ namespace RepoDb.Schema.ClickHouse.UnitTests
             var destination = new CustomDbConnection();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Person", "Country" }, destination);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination);
 
             // Assert
             var tables = Tables(destination);
@@ -130,7 +130,7 @@ namespace RepoDb.Schema.ClickHouse.UnitTests
         }
 
         [TestMethod]
-        public void TestClickHouseCopySchemasToWithTheIndexesOfTheTables()
+        public void TestClickHouseCopyTableSchemasToWithTheIndexesOfTheTables()
         {
             // Setup
             var product = Table("Product");
@@ -141,7 +141,7 @@ namespace RepoDb.Schema.ClickHouse.UnitTests
             var destination = new CustomDbConnection();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Product" }, destination);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Product" }, destination);
 
             // Assert
             Assert.AreEqual(3, destination.ExecutedCommands.Count);
@@ -150,26 +150,26 @@ namespace RepoDb.Schema.ClickHouse.UnitTests
         }
 
         [TestMethod]
-        public void TestClickHouseCopySchemasToCallbackResult()
+        public void TestClickHouseCopyTableSchemasToCallbackResult()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
             MapComposer();
-            var results = new List<CopySchemaResult>();
+            var results = new List<CopyTableSchemaResult>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Person", "Country" }, new CustomDbConnection(), createdCallback: results.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, new CustomDbConnection(), createdCallback: results.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.TableName).ToArray());
             StringAssert.StartsWith(results[0].Script, "CREATE TABLE `dbo`.`Country`", StringComparison.Ordinal);
             StringAssert.StartsWith(results[1].Script, "CREATE TABLE `dbo`.`Person`", StringComparison.Ordinal);
             Assert.AreEqual(1, results[1].ForeignKeyCount);
-            Assert.AreEqual(CopySchemaOutcome.Created, results[0].Outcome);
+            Assert.AreEqual(CopyTableSchemaOutcome.Created, results[0].Outcome);
         }
 
         [TestMethod]
-        public void TestClickHouseCopySchemasToCallsTheCallbackOnceTheSchemaOfTheTableIsCreated()
+        public void TestClickHouseCopyTableSchemasToCallsTheCallbackOnceTheSchemaOfTheTableIsCreated()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"), Table("Solo"));
@@ -178,7 +178,7 @@ namespace RepoDb.Schema.ClickHouse.UnitTests
             var reported = new List<(string Table, int Executed)>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(
+            new CustomDbConnection().CopyTableSchemaTo(
                 new[] { "Person", "Country", "Solo" },
                 destination,
                 createdCallback: r => reported.Add((r.TableName, destination.ExecutedCommands.Count)));
@@ -191,7 +191,7 @@ namespace RepoDb.Schema.ClickHouse.UnitTests
         }
 
         [TestMethod]
-        public void TestClickHouseCopySchemasToCallsTheCallbackAfterTheIndexesAndTheForeignKeys()
+        public void TestClickHouseCopyTableSchemasToCallsTheCallbackAfterTheIndexesAndTheForeignKeys()
         {
             // Setup
             var product = Table("Product", "Category");
@@ -202,7 +202,7 @@ namespace RepoDb.Schema.ClickHouse.UnitTests
             var reported = new List<(string Table, int Executed)>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(
+            new CustomDbConnection().CopyTableSchemaTo(
                 new[] { "Product", "Category" },
                 destination,
                 createdCallback: r => reported.Add((r.TableName, destination.ExecutedCommands.Count)));
@@ -217,7 +217,7 @@ namespace RepoDb.Schema.ClickHouse.UnitTests
         #region ErrorCallback
 
         [TestMethod]
-        public void TestClickHouseCopySchemasToErrorCallbackOfTheIndexThatFails()
+        public void TestClickHouseCopyTableSchemasToErrorCallbackOfTheIndexThatFails()
         {
             // Setup
             var product = Table("Product");
@@ -225,10 +225,10 @@ namespace RepoDb.Schema.ClickHouse.UnitTests
             MapReader(product, Table("Category"));
             MapComposer();
             var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("ALTER TABLE", StringComparison.Ordinal) };
-            var errors = new List<CopySchemaError>();
+            var errors = new List<CopyTableSchemaError>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Product", "Category" }, destination, errorCallback: errors.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Product", "Category" }, destination, errorCallback: errors.Add);
 
             // Assert
             Assert.AreEqual(1, errors.Count);
@@ -237,7 +237,7 @@ namespace RepoDb.Schema.ClickHouse.UnitTests
         }
 
         [TestMethod]
-        public void TestClickHouseCopySchemasToStopsIfTheErrorCallbackThrows()
+        public void TestClickHouseCopyTableSchemasToStopsIfTheErrorCallbackThrows()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
@@ -246,7 +246,7 @@ namespace RepoDb.Schema.ClickHouse.UnitTests
 
             // Act/Assert
             Assert.Throws<NotSupportedException>(() =>
-                new CustomDbConnection().CopySchemaTo(
+                new CustomDbConnection().CopyTableSchemaTo(
                     new[] { "Person", "Country" },
                     destination,
                     errorCallback: _ => throw new NotSupportedException()));
@@ -257,10 +257,10 @@ namespace RepoDb.Schema.ClickHouse.UnitTests
 
         #endregion
 
-        #region CopySchemasToAsync
+        #region CopyTableSchemasToAsync
 
         [TestMethod]
-        public async Task TestClickHouseCopySchemasToAsyncExecutesTheStatementsThatTheComposerComposed()
+        public async Task TestClickHouseCopyTableSchemasToAsyncExecutesTheStatementsThatTheComposerComposed()
         {
             // Setup
             var schemas = new[] { Table("Person", "Country"), Table("Country") };
@@ -269,7 +269,7 @@ namespace RepoDb.Schema.ClickHouse.UnitTests
             var destination = new CustomDbConnection();
 
             // Act
-            await new CustomDbConnection().CopySchemaToAsync(new[] { "Person", "Country" }, destination);
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" }, destination);
 
             // Assert
             var expected = new ClickHouseSchemaComposer().ComposeSchemas(ClickHouseSchemaReader.Order(schemas).Select(r => r.Schema)).Where(c => c.Length > 0).ToList();
@@ -277,19 +277,19 @@ namespace RepoDb.Schema.ClickHouse.UnitTests
         }
 
         [TestMethod]
-        public async Task TestClickHouseCopySchemasToAsyncCallbackResult()
+        public async Task TestClickHouseCopyTableSchemasToAsyncCallbackResult()
         {
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
             MapComposer();
-            var results = new List<CopySchemaResult>();
+            var results = new List<CopyTableSchemaResult>();
 
             // Act
-            await new CustomDbConnection().CopySchemaToAsync(new[] { "Person", "Country" }, new CustomDbConnection(), tableExistenceBehavior: CopySchemaExistsBehavior.Throw, createdCallback: results.Add);
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" }, new CustomDbConnection(), tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw, createdCallback: results.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.TableName).ToArray());
-            Assert.AreEqual(CopySchemaExistsBehavior.Throw, results[1].Action);
+            Assert.AreEqual(CopyTableSchemaExistsBehavior.Throw, results[1].Action);
             StringAssert.Contains(results[1].Script, "CREATE TABLE `dbo`.`Person`", StringComparison.Ordinal);
         }
 

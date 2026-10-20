@@ -21,7 +21,7 @@ using RepoDb.Schema.Models;
 namespace RepoDb.Schema.Core.UnitTests.Extensions
 {
     [TestClass]
-    public class CopySchemasToErrorCallbackTest
+    public class CopyTableSchemasToErrorCallbackTest
     {
         [TestInitialize]
         public void Initialize()
@@ -80,21 +80,21 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         #region Sync
 
         [TestMethod]
-        public void TestCopySchemasToDoesNotCallTheErrorCallbackIfNothingFails()
+        public void TestCopyTableSchemasToDoesNotCallTheErrorCallbackIfNothingFails()
         {
             // Setup
             MapThreeTables();
-            var errors = new List<CopySchemaError>();
+            var errors = new List<CopyTableSchemaError>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Country", "Person", "Solo" }, new CustomDbConnection(), errorCallback: errors.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country", "Person", "Solo" }, new CustomDbConnection(), errorCallback: errors.Add);
 
             // Assert
             Assert.AreEqual(0, errors.Count);
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemasToIfAStatementFailsWithoutErrorCallback()
+        public void ThrowExceptionOnCopyTableSchemasToIfAStatementFailsWithoutErrorCallback()
         {
             // Setup
             MapThreeTables();
@@ -102,19 +102,19 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Act/Assert
             Assert.Throws<InvalidOperationException>(() =>
-                new CustomDbConnection().CopySchemaTo(new[] { "Country", "Person", "Solo" }, destination));
+                new CustomDbConnection().CopyTableSchemaTo(new[] { "Country", "Person", "Solo" }, destination));
         }
 
         [TestMethod]
-        public void TestCopySchemasToCallsTheErrorCallbackWithTheDetailsOfTheError()
+        public void TestCopyTableSchemasToCallsTheErrorCallbackWithTheDetailsOfTheError()
         {
             // Setup
             MapThreeTables();
             var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("ALTER TABLE", StringComparison.Ordinal) };
-            var errors = new List<CopySchemaError>();
+            var errors = new List<CopyTableSchemaError>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Country", "Person", "Solo" }, destination, errorCallback: errors.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country", "Person", "Solo" }, destination, errorCallback: errors.Add);
 
             // Assert
             Assert.AreEqual(1, errors.Count);
@@ -126,7 +126,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopySchemasToErrorCallbackKnowsTheTableOfEachKindOfStatement()
+        public void TestCopyTableSchemasToErrorCallbackKnowsTheTableOfEachKindOfStatement()
         {
             // Setup
             MapThreeTables();
@@ -134,10 +134,10 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             {
                 FailWhen = c => c.Contains("Person", StringComparison.Ordinal)
             };
-            var errors = new List<CopySchemaError>();
+            var errors = new List<CopyTableSchemaError>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Country", "Person", "Solo" }, destination, errorCallback: errors.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country", "Person", "Solo" }, destination, errorCallback: errors.Add);
 
             // Assert
             Assert.AreEqual(3, errors.Count);
@@ -146,15 +146,15 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopySchemasToErrorCallbackContinuesWithTheNextStatements()
+        public void TestCopyTableSchemasToErrorCallbackContinuesWithTheNextStatements()
         {
             // Setup
             MapThreeTables();
             var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("CREATE INDEX", StringComparison.Ordinal) };
-            var created = new List<CopySchemaResult>();
+            var created = new List<CopyTableSchemaResult>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(
+            new CustomDbConnection().CopyTableSchemaTo(
                 new[] { "Country", "Person", "Solo" },
                 destination,
                 createdCallback: created.Add,
@@ -170,15 +170,15 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopySchemasToReportsTheTableThatFailedWithItsErrors()
+        public void TestCopyTableSchemasToReportsTheTableThatFailedWithItsErrors()
         {
             // Setup
             MapThreeTables();
             var destination = new CustomDbConnection { FailWhen = c => c == "CREATE TABLE Country;" };
-            var created = new List<CopySchemaResult>();
+            var created = new List<CopyTableSchemaResult>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(
+            new CustomDbConnection().CopyTableSchemaTo(
                 new[] { "Country", "Person", "Solo" },
                 destination,
                 createdCallback: created.Add,
@@ -189,36 +189,36 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var country = created.Single(r => r.TableName == "Country");
             Assert.AreEqual(1, country.Errors.Count);
             Assert.AreEqual("CREATE TABLE Country;", country.Errors[0].Statement, StringComparer.Ordinal);
-            Assert.AreEqual(CopySchemaOutcome.Failed, country.Outcome);
-            Assert.IsTrue(created.Where(r => r.TableName != "Country").All(r => r.Errors.Count == 0 && r.Outcome == CopySchemaOutcome.Created));
+            Assert.AreEqual(CopyTableSchemaOutcome.Failed, country.Outcome);
+            Assert.IsTrue(created.Where(r => r.TableName != "Country").All(r => r.Errors.Count == 0 && r.Outcome == CopyTableSchemaOutcome.Created));
         }
 
         [TestMethod]
-        public void TestCopySchemasToErrorCallbackIsCalledForEveryError()
+        public void TestCopyTableSchemasToErrorCallbackIsCalledForEveryError()
         {
             // Setup
             MapThreeTables();
             var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("CREATE TABLE", StringComparison.Ordinal) };
-            var errors = new List<CopySchemaError>();
+            var errors = new List<CopyTableSchemaError>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(new[] { "Country", "Person", "Solo" }, destination, errorCallback: errors.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country", "Person", "Solo" }, destination, errorCallback: errors.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Country", "Person", "Solo" }, errors.Where(e => e.StatementIndex < 3).Select(e => e.TableName).ToArray());
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemasToIfTheErrorCallbackThrowsTheCapturedException()
+        public void ThrowExceptionOnCopyTableSchemasToIfTheErrorCallbackThrowsTheCapturedException()
         {
             // Setup
             MapThreeTables();
             var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("ALTER TABLE", StringComparison.Ordinal) };
-            CopySchemaError raised = null;
+            CopyTableSchemaError raised = null;
 
             // Act
             var exception = Assert.Throws<InvalidOperationException>(() =>
-                new CustomDbConnection().CopySchemaTo(new[] { "Country", "Person", "Solo" }, destination, errorCallback: e =>
+                new CustomDbConnection().CopyTableSchemaTo(new[] { "Country", "Person", "Solo" }, destination, errorCallback: e =>
                 {
                     raised = e;
                     throw e.Exception;
@@ -229,7 +229,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopySchemasToStopsIfTheErrorCallbackThrows()
+        public void TestCopyTableSchemasToStopsIfTheErrorCallbackThrows()
         {
             // Setup
             MapThreeTables();
@@ -238,7 +238,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Act/Assert
             Assert.Throws<NotSupportedException>(() =>
-                new CustomDbConnection().CopySchemaTo(
+                new CustomDbConnection().CopyTableSchemaTo(
                     new[] { "Country", "Person", "Solo" },
                     destination,
                     createdCallback: r => created.Add(r.TableName),
@@ -250,7 +250,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopySchemasToStopsOnTheLastStatementIfTheErrorCallbackThrows()
+        public void TestCopyTableSchemasToStopsOnTheLastStatementIfTheErrorCallbackThrows()
         {
             // Setup
             MapThreeTables();
@@ -259,7 +259,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Act/Assert
             Assert.Throws<NotSupportedException>(() =>
-                new CustomDbConnection().CopySchemaTo(
+                new CustomDbConnection().CopyTableSchemaTo(
                     new[] { "Country", "Person", "Solo" },
                     destination,
                     createdCallback: r => created.Add(r.TableName),
@@ -271,17 +271,17 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopySchemasToErrorCallbackWhenTheStatementsOfTheTablesAreNotKnown()
+        public void TestCopyTableSchemasToErrorCallbackWhenTheStatementsOfTheTablesAreNotKnown()
         {
             // Setup
             MapReader(GetSchema("Country"), GetSchema("Person", 1, 0, 1));
             MapComposer("CREATE TABLE Country;", "CREATE TABLE Person;");
             var destination = new CustomDbConnection { FailWhen = c => c == "CREATE TABLE Person;" };
-            var errors = new List<CopySchemaError>();
-            var created = new List<CopySchemaResult>();
+            var errors = new List<CopyTableSchemaError>();
+            var created = new List<CopyTableSchemaResult>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(
+            new CustomDbConnection().CopyTableSchemaTo(
                 new[] { "Country", "Person" },
                 destination,
                 createdCallback: created.Add,
@@ -296,16 +296,16 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopySchemasToErrorsOfTheResultAreTheOnesThatWereRaised()
+        public void TestCopyTableSchemasToErrorsOfTheResultAreTheOnesThatWereRaised()
         {
             // Setup
             MapThreeTables();
             var destination = new CustomDbConnection { FailWhen = c => c.Contains("Person", StringComparison.Ordinal) };
-            var errors = new List<CopySchemaError>();
-            var created = new List<CopySchemaResult>();
+            var errors = new List<CopyTableSchemaError>();
+            var created = new List<CopyTableSchemaResult>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(
+            new CustomDbConnection().CopyTableSchemaTo(
                 new[] { "Country", "Person", "Solo" },
                 destination,
                 createdCallback: created.Add,
@@ -315,18 +315,18 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var person = created.Single(r => r.TableName == "Person");
             Assert.AreEqual(3, person.Errors.Count);
             Assert.IsTrue(person.Errors.SequenceEqual(errors));
-            Assert.AreEqual(CopySchemaOutcome.Failed, person.Outcome);
+            Assert.AreEqual(CopyTableSchemaOutcome.Failed, person.Outcome);
         }
 
         [TestMethod]
-        public void TestCopySchemasToResultHasNoErrorsIfNothingFails()
+        public void TestCopyTableSchemasToResultHasNoErrorsIfNothingFails()
         {
             // Setup
             MapThreeTables();
-            var created = new List<CopySchemaResult>();
+            var created = new List<CopyTableSchemaResult>();
 
             // Act
-            new CustomDbConnection().CopySchemaTo(
+            new CustomDbConnection().CopyTableSchemaTo(
                 new[] { "Country", "Person", "Solo" },
                 new CustomDbConnection(),
                 createdCallback: created.Add,
@@ -334,11 +334,11 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Assert
             Assert.AreEqual(3, created.Count);
-            Assert.IsTrue(created.All(r => r.Errors.Count == 0 && r.Outcome == CopySchemaOutcome.Created));
+            Assert.IsTrue(created.All(r => r.Errors.Count == 0 && r.Outcome == CopyTableSchemaOutcome.Created));
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemasToWithErrorCallbackIfThereIsNoMappedSchemaReader()
+        public void ThrowExceptionOnCopyTableSchemasToWithErrorCallbackIfThereIsNoMappedSchemaReader()
         {
             // Setup
             MapComposer("CREATE TABLE Person;");
@@ -346,19 +346,19 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Act/Assert
             Assert.Throws<RepoDb.Exceptions.MissingMappingException>(() =>
-                new CustomDbConnection().CopySchemaTo(new[] { "Person" }, new CustomDbConnection(), errorCallback: e => errors++));
+                new CustomDbConnection().CopyTableSchemaTo(new[] { "Person" }, new CustomDbConnection(), errorCallback: e => errors++));
             Assert.AreEqual(0, errors);
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemasToWithErrorCallbackIfTheArgumentsAreNotValid()
+        public void ThrowExceptionOnCopyTableSchemasToWithErrorCallbackIfTheArgumentsAreNotValid()
         {
             // Setup
             var errors = 0;
 
             // Act/Assert
             Assert.Throws<ArgumentNullException>(() =>
-                new CustomDbConnection().CopySchemaTo(null, new CustomDbConnection(), errorCallback: e => errors++));
+                new CustomDbConnection().CopyTableSchemaTo(null, new CustomDbConnection(), errorCallback: e => errors++));
             Assert.AreEqual(0, errors);
         }
 
@@ -367,21 +367,21 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         #region Async
 
         [TestMethod]
-        public async Task TestCopySchemasToAsyncDoesNotCallTheErrorCallbackIfNothingFails()
+        public async Task TestCopyTableSchemasToAsyncDoesNotCallTheErrorCallbackIfNothingFails()
         {
             // Setup
             MapThreeTables();
-            var errors = new List<CopySchemaError>();
+            var errors = new List<CopyTableSchemaError>();
 
             // Act
-            await new CustomDbConnection().CopySchemaToAsync(new[] { "Country", "Person", "Solo" }, new CustomDbConnection(), errorCallback: errors.Add);
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Country", "Person", "Solo" }, new CustomDbConnection(), errorCallback: errors.Add);
 
             // Assert
             Assert.AreEqual(0, errors.Count);
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnCopySchemasToAsyncIfAStatementFailsWithoutErrorCallback()
+        public async Task ThrowExceptionOnCopyTableSchemasToAsyncIfAStatementFailsWithoutErrorCallback()
         {
             // Setup
             MapThreeTables();
@@ -389,19 +389,19 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Act/Assert
             await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                new CustomDbConnection().CopySchemaToAsync(new[] { "Country", "Person", "Solo" }, destination));
+                new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Country", "Person", "Solo" }, destination));
         }
 
         [TestMethod]
-        public async Task TestCopySchemasToAsyncCallsTheErrorCallbackWithTheDetailsOfTheError()
+        public async Task TestCopyTableSchemasToAsyncCallsTheErrorCallbackWithTheDetailsOfTheError()
         {
             // Setup
             MapThreeTables();
             var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("ALTER TABLE", StringComparison.Ordinal) };
-            var errors = new List<CopySchemaError>();
+            var errors = new List<CopyTableSchemaError>();
 
             // Act
-            await new CustomDbConnection().CopySchemaToAsync(new[] { "Country", "Person", "Solo" }, destination, errorCallback: errors.Add);
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Country", "Person", "Solo" }, destination, errorCallback: errors.Add);
 
             // Assert
             Assert.AreEqual(1, errors.Count);
@@ -412,15 +412,15 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public async Task TestCopySchemasToAsyncErrorCallbackContinuesWithTheNextStatements()
+        public async Task TestCopyTableSchemasToAsyncErrorCallbackContinuesWithTheNextStatements()
         {
             // Setup
             MapThreeTables();
             var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("CREATE INDEX", StringComparison.Ordinal) };
-            var created = new List<CopySchemaResult>();
+            var created = new List<CopyTableSchemaResult>();
 
             // Act
-            await new CustomDbConnection().CopySchemaToAsync(
+            await new CustomDbConnection().CopyTableSchemaToAsync(
                 new[] { "Country", "Person", "Solo" },
                 destination,
                 createdCallback: created.Add,
@@ -430,20 +430,20 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             Assert.AreEqual(5, destination.ExecutedCommands.Count);
             CollectionAssert.AreEqual(new[] { "Country", "Solo", "Person" }, created.Select(r => r.TableName).ToArray());
             Assert.AreEqual(1, created[2].Errors.Count);
-            Assert.AreEqual(CopySchemaOutcome.Failed, created[2].Outcome);
+            Assert.AreEqual(CopyTableSchemaOutcome.Failed, created[2].Outcome);
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnCopySchemasToAsyncIfTheErrorCallbackThrowsTheCapturedException()
+        public async Task ThrowExceptionOnCopyTableSchemasToAsyncIfTheErrorCallbackThrowsTheCapturedException()
         {
             // Setup
             MapThreeTables();
             var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("ALTER TABLE", StringComparison.Ordinal) };
-            CopySchemaError raised = null;
+            CopyTableSchemaError raised = null;
 
             // Act
             var exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                new CustomDbConnection().CopySchemaToAsync(new[] { "Country", "Person", "Solo" }, destination, errorCallback: e =>
+                new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Country", "Person", "Solo" }, destination, errorCallback: e =>
                 {
                     raised = e;
                     throw e.Exception;
@@ -454,7 +454,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public async Task TestCopySchemasToAsyncStopsIfTheErrorCallbackThrows()
+        public async Task TestCopyTableSchemasToAsyncStopsIfTheErrorCallbackThrows()
         {
             // Setup
             MapThreeTables();
@@ -463,7 +463,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Act/Assert
             await Assert.ThrowsAsync<NotSupportedException>(() =>
-                new CustomDbConnection().CopySchemaToAsync(
+                new CustomDbConnection().CopyTableSchemaToAsync(
                     new[] { "Country", "Person", "Solo" },
                     destination,
                     createdCallback: r => created.Add(r.TableName),
@@ -475,7 +475,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public async Task TestCopySchemasToAsyncDoesNotReportTheCancellationToTheErrorCallback()
+        public async Task TestCopyTableSchemasToAsyncDoesNotReportTheCancellationToTheErrorCallback()
         {
             // Setup
             MapThreeTables();
@@ -486,7 +486,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
                 // Act/Assert
                 await Assert.ThrowsAsync<OperationCanceledException>(() =>
-                    new CustomDbConnection().CopySchemaToAsync(
+                    new CustomDbConnection().CopyTableSchemaToAsync(
                         new[] { "Country", "Person", "Solo" },
                         new CustomDbConnection(),
                         errorCallback: e => errors++,

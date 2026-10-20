@@ -20,7 +20,7 @@ using RepoDb.Schema.ClickHouse.IntegrationTests.Setup;
 namespace RepoDb.Schema.ClickHouse.IntegrationTests
 {
     [TestClass]
-    public class CopySchemasToTest
+    public class CopyTableSchemasToTest
     {
         [TestInitialize]
         public void Initialize()
@@ -74,12 +74,12 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
 
         #endregion
 
-        #region CopySchemasTo
+        #region CopyTableSchemasTo
 
         #region Sync
 
         [TestMethod]
-        public void TestCopySchemasTo()
+        public void TestCopyTableSchemasTo()
         {
             using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
             using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
@@ -88,7 +88,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                source.CopySchemaTo(new[] { "Country", "Person" }, target);
+                source.CopyTableSchemaTo(new[] { "Country", "Person" }, target);
 
                 // Assert
                 AssertTargetMatchesSource("Country", "Person");
@@ -96,7 +96,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToWithTheReferencingTableBeforeTheReferencedTable()
+        public void TestCopyTableSchemasToWithTheReferencingTableBeforeTheReferencedTable()
         {
             using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
             using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
@@ -105,7 +105,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                source.CopySchemaTo(new[] { "Person", "Country" }, target);
+                source.CopyTableSchemaTo(new[] { "Person", "Country" }, target);
 
                 // Assert
                 AssertTargetMatchesSource("Country", "Person");
@@ -113,7 +113,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToCallbackResult()
+        public void TestCopyTableSchemasToCallbackResult()
         {
             using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
             using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
@@ -122,8 +122,8 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopySchemaResult>();
-                source.CopySchemaTo(new[] { "Person", "Country" }, target, createdCallback: results.Add);
+                var results = new List<CopyTableSchemaResult>();
+                source.CopyTableSchemaTo(new[] { "Person", "Country" }, target, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(2, results.Count);
@@ -132,8 +132,8 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 Assert.AreEqual(Database.TargetName, person.DestinationDatabase, StringComparer.Ordinal);
                 Assert.AreEqual(nameof(ClickHouseConnection), person.SourceDatabaseType, StringComparer.Ordinal);
                 Assert.AreEqual(nameof(ClickHouseConnection), person.DestinationDatabaseType, StringComparer.Ordinal);
-                Assert.AreEqual(CopySchemaExistsBehavior.Skip, person.Action);
-                Assert.AreEqual(CopySchemaOutcome.Created, person.Outcome);
+                Assert.AreEqual(CopyTableSchemaExistsBehavior.Skip, person.Action);
+                Assert.AreEqual(CopyTableSchemaOutcome.Created, person.Outcome);
                 StringAssert.Contains(person.Script, "CREATE TABLE `Person`", StringComparison.Ordinal);
                 Assert.IsTrue(person.EndTime >= person.StartTime);
                 StringAssert.Contains(results.Single(r => r.TableName == "Country").Script, "CREATE TABLE `Country`", StringComparison.Ordinal);
@@ -141,7 +141,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToCallsTheCallbackForEveryTableOfTheWholeDatabase()
+        public void TestCopyTableSchemasToCallsTheCallbackForEveryTableOfTheWholeDatabase()
         {
             using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
             using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
@@ -151,8 +151,8 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 var tables = GetSourceTables();
 
                 // Act
-                var results = new List<CopySchemaResult>();
-                source.CopySchemaTo(tables, target, createdCallback: results.Add);
+                var results = new List<CopyTableSchemaResult>();
+                source.CopyTableSchemaTo(tables, target, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(tables.Count, results.Count);
@@ -161,7 +161,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToCallbackResultOfEachTable()
+        public void TestCopyTableSchemasToCallbackResultOfEachTable()
         {
             using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
             using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
@@ -170,14 +170,14 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopySchemaResult>();
-                source.CopySchemaTo(new[] { "Person", "Country" }, target, createdCallback: results.Add);
+                var results = new List<CopyTableSchemaResult>();
+                source.CopyTableSchemaTo(new[] { "Person", "Country" }, target, createdCallback: results.Add);
 
                 // Assert
                 CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.TableName).ToArray());
                 var person = results[1];
                 Assert.IsNull(person.SourceSchema);
-                Assert.AreEqual(CopySchemaOutcome.Created, person.Outcome);
+                Assert.AreEqual(CopyTableSchemaOutcome.Created, person.Outcome);
                 Assert.AreEqual(7, person.ColumnCount);
                 Assert.AreEqual(1, person.IndexCount);
                 Assert.AreEqual(0, person.ForeignKeyCount);
@@ -189,7 +189,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToOfTablesWithMultipleIndexesAndKeys()
+        public void TestCopyTableSchemasToOfTablesWithMultipleIndexesAndKeys()
         {
             using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
             using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
@@ -198,7 +198,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                source.CopySchemaTo(new[] { "Product", "OrderLine", "Country" }, target);
+                source.CopyTableSchemaTo(new[] { "Product", "OrderLine", "Country" }, target);
 
                 // Assert
                 AssertTargetMatchesSource("Product", "OrderLine", "Country");
@@ -206,7 +206,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemasToOfTablesWithTheSameNameInDifferentSchemas()
+        public void ThrowExceptionOnCopyTableSchemasToOfTablesWithTheSameNameInDifferentSchemas()
         {
             using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
             using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
@@ -216,13 +216,13 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
 
                 // Act/Assert
                 Assert.Throws<InvalidOperationException>(() =>
-                    source.CopySchemaTo(new[] { "ItemRef", "Item", $"{Database.SourceSalesName}.Item" }, target, Database.TargetSalesName));
+                    source.CopyTableSchemaTo(new[] { "ItemRef", "Item", $"{Database.SourceSalesName}.Item" }, target, Database.TargetSalesName));
                 Assert.AreEqual(0, GetTargetTables().Count);
             }
         }
 
         [TestMethod]
-        public void TestCopySchemasToOfTablesWithNamesThatNeedQuoting()
+        public void TestCopyTableSchemasToOfTablesWithNamesThatNeedQuoting()
         {
             using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
             using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
@@ -231,7 +231,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                source.CopySchemaTo(new[] { "`Odd.Child`", "`Odd.Name`", "`Order Details`", "`Weird]Name`" }, target);
+                source.CopyTableSchemaTo(new[] { "`Odd.Child`", "`Odd.Name`", "`Order Details`", "`Weird]Name`" }, target);
 
                 // Assert
                 AssertTargetMatchesSource("`Odd.Name`", "`Odd.Child`", "`Order Details`", "`Weird]Name`");
@@ -239,7 +239,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToOfTheWholeDatabase()
+        public void TestCopyTableSchemasToOfTheWholeDatabase()
         {
             using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
             using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
@@ -249,8 +249,8 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 var tables = GetSourceTables();
 
                 // Act
-                var results = new List<CopySchemaResult>();
-                source.CopySchemaTo(tables, target, createdCallback: results.Add);
+                var results = new List<CopyTableSchemaResult>();
+                source.CopyTableSchemaTo(tables, target, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(tables.Count, results.Count);
@@ -263,7 +263,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToOfTheWholeDatabaseInTheReverseOrder()
+        public void TestCopyTableSchemasToOfTheWholeDatabaseInTheReverseOrder()
         {
             using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
             using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
@@ -273,7 +273,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 var tables = GetSourceTables();
 
                 // Act
-                source.CopySchemaTo(tables.AsEnumerable().Reverse().ToList(), target);
+                source.CopyTableSchemaTo(tables.AsEnumerable().Reverse().ToList(), target);
 
                 // Assert
                 CollectionAssert.AreEquivalent(tables, GetTargetTables());
@@ -285,7 +285,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToOfTheWholeDatabaseCountsTheObjects()
+        public void TestCopyTableSchemasToOfTheWholeDatabaseCountsTheObjects()
         {
             using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
             using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
@@ -296,8 +296,8 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 var schemas = Helper.GetSourceSchemas(tables);
 
                 // Act
-                var results = new List<CopySchemaResult>();
-                source.CopySchemaTo(tables, target, createdCallback: results.Add);
+                var results = new List<CopyTableSchemaResult>();
+                source.CopyTableSchemaTo(tables, target, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(schemas.Sum(s => s.Columns.Count), results.Sum(t => t.ColumnCount));
@@ -309,7 +309,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToOfTheTableThatIsGivenMoreThanOnce()
+        public void TestCopyTableSchemasToOfTheTableThatIsGivenMoreThanOnce()
         {
             using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
             using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
@@ -318,8 +318,8 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopySchemaResult>();
-                source.CopySchemaTo(new[] { "Country", "Country", "`Country`" }, target, createdCallback: results.Add);
+                var results = new List<CopyTableSchemaResult>();
+                source.CopyTableSchemaTo(new[] { "Country", "Country", "`Country`" }, target, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(1, results.Count);
@@ -328,7 +328,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToWithRequestedExistsBehavior()
+        public void TestCopyTableSchemasToWithRequestedExistsBehavior()
         {
             using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
             using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
@@ -337,16 +337,16 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopySchemaResult>();
-                source.CopySchemaTo(new[] { "NoKey" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Drop, createdCallback: results.Add);
+                var results = new List<CopyTableSchemaResult>();
+                source.CopyTableSchemaTo(new[] { "NoKey" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop, createdCallback: results.Add);
 
                 // Assert
-                Assert.AreEqual(CopySchemaExistsBehavior.Drop, results.Single().Action);
+                Assert.AreEqual(CopyTableSchemaExistsBehavior.Drop, results.Single().Action);
             }
         }
 
         [TestMethod]
-        public void TestCopySchemasToWithoutTables()
+        public void TestCopyTableSchemasToWithoutTables()
         {
             using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
             using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
@@ -355,8 +355,8 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopySchemaResult>();
-                source.CopySchemaTo(Enumerable.Empty<string>(), target, createdCallback: results.Add);
+                var results = new List<CopyTableSchemaResult>();
+                source.CopyTableSchemaTo(Enumerable.Empty<string>(), target, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(0, results.Count);
@@ -365,7 +365,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemasToIfTheReferencedTableIsNotPartOfThemAndDoesNotExist()
+        public void ThrowExceptionOnCopyTableSchemasToIfTheReferencedTableIsNotPartOfThemAndDoesNotExist()
         {
             using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
             using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
@@ -374,22 +374,22 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act/Assert
-                Assert.Throws<ClickHouseServerException>(() => source.CopySchemaTo(new[] { "Shipment" }, target));
+                Assert.Throws<ClickHouseServerException>(() => source.CopyTableSchemaTo(new[] { "Shipment" }, target));
             }
         }
 
         [TestMethod]
-        public void TestCopySchemasToOfTableThatReferencesATableThatAlreadyExistsInTheTarget()
+        public void TestCopyTableSchemasToOfTableThatReferencesATableThatAlreadyExistsInTheTarget()
         {
             using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
             using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo(new[] { "Country" }, target);
+                source.CopyTableSchemaTo(new[] { "Country" }, target);
 
                 // Act
-                source.CopySchemaTo(new[] { "Person" }, target);
+                source.CopyTableSchemaTo(new[] { "Person" }, target);
 
                 // Assert
                 AssertTargetMatchesSource("Country", "Person");
@@ -397,47 +397,22 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemasToIfATableAlreadyExists()
+        public void ThrowExceptionOnCopyTableSchemasToIfATableAlreadyExists()
         {
             using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
             using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo(new[] { "NoKey" }, target);
+                source.CopyTableSchemaTo(new[] { "NoKey" }, target);
 
                 // Act/Assert
-                Assert.Throws<InvalidOperationException>(() => source.CopySchemaTo(new[] { "NoKey" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Throw));
+                Assert.Throws<InvalidOperationException>(() => source.CopyTableSchemaTo(new[] { "NoKey" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
             }
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemasToIfATableDoesNotExistInTheSource()
-        {
-            using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
-            using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
-            {
-                // Setup
-                MapSchemaReaderConnection(source);
-
-                // Act/Assert
-                Assert.Throws<ClickHouseServerException>(() => source.CopySchemaTo(new[] { "MissingTable" }, target));
-            }
-        }
-
-        [TestMethod]
-        public void ThrowExceptionOnCopySchemasToIfThereIsNoMappedSchemaReader()
-        {
-            using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
-            using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
-            {
-                // Act/Assert
-                Assert.Throws<MissingMappingException>(() => source.CopySchemaTo(new[] { "Country" }, target));
-            }
-        }
-
-        [TestMethod]
-        public void ThrowExceptionOnCopySchemasToIfATableNameIsBlank()
+        public void ThrowExceptionOnCopyTableSchemasToIfATableDoesNotExistInTheSource()
         {
             using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
             using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
@@ -446,18 +421,43 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act/Assert
-                Assert.Throws<ArgumentException>(() => source.CopySchemaTo(new[] { "Country", " " }, target));
+                Assert.Throws<ClickHouseServerException>(() => source.CopyTableSchemaTo(new[] { "MissingTable" }, target));
             }
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemasToIfTheTableNamesAreNull()
+        public void ThrowExceptionOnCopyTableSchemasToIfThereIsNoMappedSchemaReader()
         {
             using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
             using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
             {
                 // Act/Assert
-                Assert.Throws<ArgumentNullException>(() => source.CopySchemaTo((string)null, target));
+                Assert.Throws<MissingMappingException>(() => source.CopyTableSchemaTo(new[] { "Country" }, target));
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnCopyTableSchemasToIfATableNameIsBlank()
+        {
+            using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
+            using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                MapSchemaReaderConnection(source);
+
+                // Act/Assert
+                Assert.Throws<ArgumentException>(() => source.CopyTableSchemaTo(new[] { "Country", " " }, target));
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnCopyTableSchemasToIfTheTableNamesAreNull()
+        {
+            using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
+            using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
+            {
+                // Act/Assert
+                Assert.Throws<ArgumentNullException>(() => source.CopyTableSchemaTo((string)null, target));
             }
         }
 
@@ -466,7 +466,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
         #region Async
 
         [TestMethod]
-        public async Task TestCopySchemasToAsync()
+        public async Task TestCopyTableSchemasToAsync()
         {
             using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
             using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
@@ -475,8 +475,8 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopySchemaResult>();
-                await source.CopySchemaToAsync(new[] { "Person", "Country" }, target, createdCallback: results.Add);
+                var results = new List<CopyTableSchemaResult>();
+                await source.CopyTableSchemaToAsync(new[] { "Person", "Country" }, target, createdCallback: results.Add);
 
                 // Assert
                 CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.TableName).ToArray());
@@ -485,7 +485,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestCopySchemasToAsyncOfTheWholeDatabase()
+        public async Task TestCopyTableSchemasToAsyncOfTheWholeDatabase()
         {
             using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
             using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
@@ -495,8 +495,8 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 var tables = GetSourceTables();
 
                 // Act
-                var results = new List<CopySchemaResult>();
-                await source.CopySchemaToAsync(tables, target, createdCallback: results.Add);
+                var results = new List<CopyTableSchemaResult>();
+                await source.CopyTableSchemaToAsync(tables, target, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(tables.Count, results.Count);
@@ -509,7 +509,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestCopySchemasToAsyncCallbackResult()
+        public async Task TestCopyTableSchemasToAsyncCallbackResult()
         {
             using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
             using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
@@ -518,12 +518,12 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopySchemaResult>();
-                await source.CopySchemaToAsync(new[] { "Person", "Country" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Align, createdCallback: results.Add);
+                var results = new List<CopyTableSchemaResult>();
+                await source.CopyTableSchemaToAsync(new[] { "Person", "Country" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(2, results.Count);
-                Assert.AreEqual(CopySchemaExistsBehavior.Align, results[1].Action);
+                Assert.AreEqual(CopyTableSchemaExistsBehavior.Align, results[1].Action);
                 Assert.AreEqual(Database.SourceName, results[1].SourceDatabase, StringComparer.Ordinal);
                 Assert.AreEqual(Database.TargetName, results[1].DestinationDatabase, StringComparer.Ordinal);
                 Assert.AreEqual(7, results[1].ColumnCount);
@@ -532,7 +532,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestCopySchemasToAsyncWithoutTables()
+        public async Task TestCopyTableSchemasToAsyncWithoutTables()
         {
             using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
             using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
@@ -541,8 +541,8 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopySchemaResult>();
-                await source.CopySchemaToAsync(Enumerable.Empty<string>(), target, createdCallback: results.Add);
+                var results = new List<CopyTableSchemaResult>();
+                await source.CopyTableSchemaToAsync(Enumerable.Empty<string>(), target, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(0, results.Count);
@@ -550,28 +550,28 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnCopySchemasToAsyncIfATableAlreadyExists()
+        public async Task ThrowExceptionOnCopyTableSchemasToAsyncIfATableAlreadyExists()
         {
             using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
             using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                await source.CopySchemaToAsync(new[] { "NoKey" }, target);
+                await source.CopyTableSchemaToAsync(new[] { "NoKey" }, target);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopySchemaToAsync(new[] { "NoKey" }, target, tableExistenceBehavior: CopySchemaExistsBehavior.Throw));
+                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopyTableSchemaToAsync(new[] { "NoKey" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
             }
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnCopySchemasToAsyncIfThereIsNoMappedSchemaReader()
+        public async Task ThrowExceptionOnCopyTableSchemasToAsyncIfThereIsNoMappedSchemaReader()
         {
             using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
             using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
             {
                 // Act/Assert
-                await Assert.ThrowsAsync<MissingMappingException>(() => source.CopySchemaToAsync(new[] { "Country" }, target));
+                await Assert.ThrowsAsync<MissingMappingException>(() => source.CopyTableSchemaToAsync(new[] { "Country" }, target));
             }
         }
 
@@ -582,17 +582,17 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
         #region Sync
 
         [TestMethod]
-        public void TestCopySchemasToDoesNotCallTheErrorCallbackIfNothingFails()
+        public void TestCopyTableSchemasToDoesNotCallTheErrorCallbackIfNothingFails()
         {
             using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
             using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var errors = new List<CopySchemaError>();
+                var errors = new List<CopyTableSchemaError>();
 
                 // Act
-                source.CopySchemaTo(new[] { "Country", "Person" }, target, errorCallback: errors.Add);
+                source.CopyTableSchemaTo(new[] { "Country", "Person" }, target, errorCallback: errors.Add);
 
                 // Assert
                 Assert.AreEqual(0, errors.Count);
@@ -601,7 +601,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToWithErrorCallbackCanCopyTheWholeDatabaseTwice()
+        public void TestCopyTableSchemasToWithErrorCallbackCanCopyTheWholeDatabaseTwice()
         {
             Helper.DisableExistenceChecks();
 
@@ -611,12 +611,12 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var tables = GetSourceTables();
-                source.CopySchemaTo(tables, target);
-                var errors = new List<CopySchemaError>();
-                var created = new List<CopySchemaResult>();
+                source.CopyTableSchemaTo(tables, target);
+                var errors = new List<CopyTableSchemaError>();
+                var created = new List<CopyTableSchemaResult>();
 
                 // Act
-                source.CopySchemaTo(
+                source.CopyTableSchemaTo(
                     tables,
                     target,
                     createdCallback: created.Add,
@@ -626,7 +626,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 Assert.IsTrue(errors.Count >= tables.Count);
                 Assert.IsTrue(errors.All(e => e.Exception is ClickHouseServerException));
                 Assert.AreEqual(tables.Count, created.Count);
-                Assert.IsTrue(created.All(r => r.Errors.Count > 0 && r.Outcome == CopySchemaOutcome.Failed));
+                Assert.IsTrue(created.All(r => r.Errors.Count > 0 && r.Outcome == CopyTableSchemaOutcome.Failed));
                 Assert.AreEqual(errors.Count, created.Sum(r => r.Errors.Count));
                 CollectionAssert.AreEquivalent(tables, GetTargetTables());
                 foreach (var table in tables)
@@ -637,7 +637,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopySchemasToStopsIfTheErrorCallbackThrows()
+        public void TestCopyTableSchemasToStopsIfTheErrorCallbackThrows()
         {
             Helper.DisableExistenceChecks();
 
@@ -646,12 +646,12 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo(new[] { "NoKey" }, target);
+                source.CopyTableSchemaTo(new[] { "NoKey" }, target);
                 var created = new List<string>();
 
                 // Act/Assert
                 Assert.Throws<NotSupportedException>(() =>
-                    source.CopySchemaTo(
+                    source.CopyTableSchemaTo(
                         new[] { "NoKey", "Parent", "Child" },
                         target,
                         createdCallback: r => created.Add(r.TableName),
@@ -664,7 +664,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemasToIfTheErrorCallbackThrowsTheCapturedException()
+        public void ThrowExceptionOnCopyTableSchemasToIfTheErrorCallbackThrowsTheCapturedException()
         {
             Helper.DisableExistenceChecks();
 
@@ -673,12 +673,12 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo(new[] { "NoKey" }, target);
-                CopySchemaError raised = null;
+                source.CopyTableSchemaTo(new[] { "NoKey" }, target);
+                CopyTableSchemaError raised = null;
 
                 // Act
                 var exception = Assert.Throws<ClickHouseServerException>(() =>
-                    source.CopySchemaTo(new[] { "NoKey" }, target, errorCallback: e =>
+                    source.CopyTableSchemaTo(new[] { "NoKey" }, target, errorCallback: e =>
                     {
                         raised = e;
                         throw e.Exception;
@@ -690,7 +690,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemasToIfTheErrorCallbackThrows()
+        public void ThrowExceptionOnCopyTableSchemasToIfTheErrorCallbackThrows()
         {
             Helper.DisableExistenceChecks();
 
@@ -699,16 +699,16 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopySchemaTo(new[] { "NoKey" }, target);
+                source.CopyTableSchemaTo(new[] { "NoKey" }, target);
 
                 // Act/Assert
                 Assert.Throws<NotSupportedException>(() =>
-                    source.CopySchemaTo(new[] { "NoKey" }, target, errorCallback: e => throw new NotSupportedException()));
+                    source.CopyTableSchemaTo(new[] { "NoKey" }, target, errorCallback: e => throw new NotSupportedException()));
             }
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopySchemasToWithErrorCallbackIfThereIsNoMappedSchemaReader()
+        public void ThrowExceptionOnCopyTableSchemasToWithErrorCallbackIfThereIsNoMappedSchemaReader()
         {
             using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
             using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
@@ -718,7 +718,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
 
                 // Act/Assert
                 Assert.Throws<MissingMappingException>(() =>
-                    source.CopySchemaTo(new[] { "Country" }, target, errorCallback: e => errors++));
+                    source.CopyTableSchemaTo(new[] { "Country" }, target, errorCallback: e => errors++));
                 Assert.AreEqual(0, errors);
             }
         }
@@ -728,7 +728,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
         #region Async
 
         [TestMethod]
-        public async Task TestCopySchemasToAsyncStopsIfTheErrorCallbackThrows()
+        public async Task TestCopyTableSchemasToAsyncStopsIfTheErrorCallbackThrows()
         {
             Helper.DisableExistenceChecks();
 
@@ -737,11 +737,11 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                await source.CopySchemaToAsync(new[] { "NoKey" }, target);
+                await source.CopyTableSchemaToAsync(new[] { "NoKey" }, target);
 
                 // Act/Assert
                 await Assert.ThrowsAsync<NotSupportedException>(() =>
-                    source.CopySchemaToAsync(
+                    source.CopyTableSchemaToAsync(
                         new[] { "NoKey", "Parent", "Child" },
                         target,
                         errorCallback: _ => throw new NotSupportedException()));
@@ -752,7 +752,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnCopySchemasToAsyncIfTheErrorCallbackThrowsTheCapturedException()
+        public async Task ThrowExceptionOnCopyTableSchemasToAsyncIfTheErrorCallbackThrowsTheCapturedException()
         {
             Helper.DisableExistenceChecks();
 
@@ -761,12 +761,12 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                await source.CopySchemaToAsync(new[] { "NoKey" }, target);
-                CopySchemaError raised = null;
+                await source.CopyTableSchemaToAsync(new[] { "NoKey" }, target);
+                CopyTableSchemaError raised = null;
 
                 // Act
                 var exception = await Assert.ThrowsAsync<ClickHouseServerException>(() =>
-                    source.CopySchemaToAsync(new[] { "NoKey" }, target, errorCallback: e =>
+                    source.CopyTableSchemaToAsync(new[] { "NoKey" }, target, errorCallback: e =>
                     {
                         raised = e;
                         throw e.Exception;
@@ -778,7 +778,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestCopySchemasToAsyncWithErrorCallbackCanCopyTheWholeDatabaseTwice()
+        public async Task TestCopyTableSchemasToAsyncWithErrorCallbackCanCopyTheWholeDatabaseTwice()
         {
             using (var source = new ClickHouseConnection(Database.ConnectionStringForSource))
             using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
@@ -786,10 +786,10 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var tables = GetSourceTables();
-                await source.CopySchemaToAsync(tables, target);
+                await source.CopyTableSchemaToAsync(tables, target);
 
                 // Act
-                await source.CopySchemaToAsync(tables, target, errorCallback: _ => { });
+                await source.CopyTableSchemaToAsync(tables, target, errorCallback: _ => { });
 
                 // Assert
                 CollectionAssert.AreEquivalent(tables, GetTargetTables());

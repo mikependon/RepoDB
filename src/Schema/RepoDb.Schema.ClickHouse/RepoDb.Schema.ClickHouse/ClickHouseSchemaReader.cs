@@ -170,10 +170,10 @@ namespace RepoDb.Schema
         /// Only the foreign keys are read (not the schema of the tables), so it is cheap to expand a table with its relationships.
         /// </summary>
         /// <param name="tableNames">The names of the tables.</param>
-        /// <param name="relationshipBehavior">Defines which of the related tables are included. <see cref="CopySchemaRelationshipBehavior.TableOnly"/> returns only the given tables.</param>
+        /// <param name="relationshipBehavior">Defines which of the related tables are included. <see cref="CopyTableSchemaRelationshipBehavior.TableOnly"/> returns only the given tables.</param>
         /// <returns>The names of the given tables (in the order that they were given), followed by the names of their related tables.</returns>
         public IEnumerable<string> GetRelatedTables(IEnumerable<string> tableNames,
-            CopySchemaRelationshipBehavior relationshipBehavior)
+            CopyTableSchemaRelationshipBehavior relationshipBehavior)
         {
             var tables = (tableNames ?? throw new ArgumentNullException(nameof(tableNames)))
                 .Select(name =>
@@ -182,10 +182,10 @@ namespace RepoDb.Schema
                     return new TableInfo(table, schema);
                 })
                 .ToList();
-            var foreignKeys = relationshipBehavior == CopySchemaRelationshipBehavior.TableOnly
+            var foreignKeys = relationshipBehavior == CopyTableSchemaRelationshipBehavior.TableOnly
                 ? new List<(TableInfo Child, TableInfo Parent)>()
                 : Query(ClickHouseSchemaText.ForeignKeyRelationshipsSql, SchemaTraceKeys.GetRelationships, MapRelationship);
-            return CopySchemaRelationshipExpander.Expand(tables, foreignKeys, relationshipBehavior, Key)
+            return CopyTableSchemaRelationshipExpander.Expand(tables, foreignKeys, relationshipBehavior, Key)
                 .Select(table => ClickHouseSchemaHelper.FormatTableName(table.Schema, table.Name))
                 .ToList();
         }
@@ -338,11 +338,11 @@ namespace RepoDb.Schema
         /// Only the foreign keys are read (not the schema of the tables), so it is cheap to expand a table with its relationships.
         /// </summary>
         /// <param name="tableNames">The names of the tables.</param>
-        /// <param name="relationshipBehavior">Defines which of the related tables are included. <see cref="CopySchemaRelationshipBehavior.TableOnly"/> returns only the given tables.</param>
+        /// <param name="relationshipBehavior">Defines which of the related tables are included. <see cref="CopyTableSchemaRelationshipBehavior.TableOnly"/> returns only the given tables.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains: the names of the given tables (in the order that they were given), followed by the names of their related tables.</returns>
         public async Task<IEnumerable<string>> GetRelatedTablesAsync(IEnumerable<string> tableNames,
-            CopySchemaRelationshipBehavior relationshipBehavior,
+            CopyTableSchemaRelationshipBehavior relationshipBehavior,
             CancellationToken cancellationToken = default)
         {
             var names = (tableNames ?? throw new ArgumentNullException(nameof(tableNames))).ToList();
@@ -353,11 +353,11 @@ namespace RepoDb.Schema
                 tables.Add(new TableInfo(table, schema));
             }
             IEnumerable<(TableInfo Child, TableInfo Parent)> foreignKeys = new List<(TableInfo Child, TableInfo Parent)>();
-            if (relationshipBehavior != CopySchemaRelationshipBehavior.TableOnly)
+            if (relationshipBehavior != CopyTableSchemaRelationshipBehavior.TableOnly)
             {
                 foreignKeys = await QueryAsync(ClickHouseSchemaText.ForeignKeyRelationshipsSql, SchemaTraceKeys.GetRelationships, MapRelationship, cancellationToken).ConfigureAwait(false);
             }
-            return CopySchemaRelationshipExpander.Expand(tables, foreignKeys, relationshipBehavior, Key)
+            return CopyTableSchemaRelationshipExpander.Expand(tables, foreignKeys, relationshipBehavior, Key)
                 .Select(table => ClickHouseSchemaHelper.FormatTableName(table.Schema, table.Name))
                 .ToList();
         }
@@ -824,15 +824,15 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="action"></param>
         /// <returns></returns>
-        private static CopySchemaForeignKeyRule ToRule(string action)
+        private static CopyTableSchemaForeignKeyRule ToRule(string action)
         {
             switch (action)
             {
-                case "CASCADE": return CopySchemaForeignKeyRule.Cascade;
-                case "SET NULL": return CopySchemaForeignKeyRule.SetNull;
-                case "SET DEFAULT": return CopySchemaForeignKeyRule.SetDefault;
-                case "RESTRICT": return CopySchemaForeignKeyRule.Restrict;
-                default: return CopySchemaForeignKeyRule.NoAction;
+                case "CASCADE": return CopyTableSchemaForeignKeyRule.Cascade;
+                case "SET NULL": return CopyTableSchemaForeignKeyRule.SetNull;
+                case "SET DEFAULT": return CopyTableSchemaForeignKeyRule.SetDefault;
+                case "RESTRICT": return CopyTableSchemaForeignKeyRule.Restrict;
+                default: return CopyTableSchemaForeignKeyRule.NoAction;
             }
         }
 
@@ -855,12 +855,12 @@ namespace RepoDb.Schema
         // Ordering
 
         /// <summary>
-        /// Orders the tables so that a table always comes after the tables that it references (see <see cref="CopySchemaOrder"/>).
+        /// Orders the tables so that a table always comes after the tables that it references (see <see cref="CopyTableSchemaOrder"/>).
         /// </summary>
         /// <param name="schemas">The schemas of the tables.</param>
         /// <returns>The ordered relationships, one per table.</returns>
         internal static IList<RelationshipInfo> Order(IList<TableSchema> schemas) =>
-            CopySchemaOrder.Order(schemas, schema => Key(schema.Table), Key);
+            CopyTableSchemaOrder.Order(schemas, schema => Key(schema.Table), Key);
 
         #endregion
     }

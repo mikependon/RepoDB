@@ -25,7 +25,7 @@ using RepoDb.Schema.Enumerations;
 namespace RepoDb.Data.PostgreSql.IntegrationTests
 {
     /// <summary>
-    /// Copies the rows with the three <see cref="CopySchemaColumnMappingsBehavior"/>, which are passed on to the <see cref="PostgreSqlBulkColumnMappingsBehavior"/>
+    /// Copies the rows with the three <see cref="CopyTableSchemaColumnMappingsBehavior"/>, which are passed on to the <see cref="PostgreSqlBulkColumnMappingsBehavior"/>
     /// of the bulk insert: how the columns of the source table are aligned with the columns of the target table.
     /// </summary>
     [TestClass]
@@ -68,10 +68,10 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
         #region Enumeration
 
         [TestMethod]
-        public void TestCopySchemaColumnMappingsBehaviorHasTheSameNamesAndValuesAsThePostgreSqlBulkColumnMappingsBehavior()
+        public void TestCopyTableSchemaColumnMappingsBehaviorHasTheSameNamesAndValuesAsThePostgreSqlBulkColumnMappingsBehavior()
         {
             // Act
-            var actual = Enum.GetValues(typeof(CopySchemaColumnMappingsBehavior)).Cast<CopySchemaColumnMappingsBehavior>().Select(v => (v.ToString(), (short)v)).ToArray();
+            var actual = Enum.GetValues(typeof(CopyTableSchemaColumnMappingsBehavior)).Cast<CopyTableSchemaColumnMappingsBehavior>().Select(v => (v.ToString(), (short)v)).ToArray();
             var expected = Enum.GetValues(typeof(PostgreSqlBulkColumnMappingsBehavior)).Cast<PostgreSqlBulkColumnMappingsBehavior>().Select(v => (v.ToString(), (short)v)).ToArray();
 
             // Assert
@@ -94,7 +94,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.Automatic);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Automatic);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -130,7 +130,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.Automatic);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Automatic);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -148,7 +148,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(ExtraColumn);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.Automatic);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Automatic);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -166,7 +166,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(ReorderedColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.Automatic);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Automatic);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -188,7 +188,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.Automatic);
+                var actual = await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Automatic);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -214,7 +214,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -232,7 +232,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                var exception = Assert.Throws<PostgreSqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.Strict));
+                var exception = Assert.Throws<PostgreSqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict));
 
                 // Assert
                 Assert.AreEqual(PostgreSqlBulkColumnMappingsBehavior.Strict, exception.Behavior);
@@ -251,7 +251,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(ExtraColumn);
 
                 // Act
-                var exception = Assert.Throws<PostgreSqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.Strict));
+                var exception = Assert.Throws<PostgreSqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict));
 
                 // Assert
                 CollectionAssert.AreEqual(new[] { "Extra" }, exception.DestinationColumnsNotInSource.ToArray());
@@ -269,7 +269,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(ReorderedColumns);
 
                 // Act
-                var exception = Assert.Throws<PostgreSqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.Strict));
+                var exception = Assert.Throws<PostgreSqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict));
 
                 // Assert
                 Assert.IsTrue(exception.IsOrderMismatch);
@@ -287,7 +287,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                source.CopyDataTo("Currency", target, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.Strict);
+                source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict);
 
                 // Assert
                 Assert.AreEqual(PostgreSqlBulkColumnMappingsBehavior.Automatic, CurrentBehavior(target));
@@ -304,7 +304,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                Assert.Throws<PostgreSqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.Strict));
+                Assert.Throws<PostgreSqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict));
 
                 // Assert
                 Assert.AreEqual(PostgreSqlBulkColumnMappingsBehavior.Automatic, CurrentBehavior(target));
@@ -319,11 +319,11 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
             {
                 // Setup
                 Helper.ExecuteOnTarget(MissingColumn);
-                Assert.Throws<PostgreSqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.Strict));
+                Assert.Throws<PostgreSqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict));
                 Helper.CreateTargetTables("Country");
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo("Country", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -340,7 +340,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.CreateTargetTables("Country");
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, where: new QueryGroup(new QueryField("Id", Operation.GreaterThan, 1)), columnMappingsBehavior: CopySchemaColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo("Country", target, where: new QueryGroup(new QueryField("Id", Operation.GreaterThan, 1)), columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict);
 
                 // Assert
                 Assert.AreEqual(2, actual);
@@ -358,7 +358,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict);
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -377,7 +377,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Pet", target, relationshipBehavior: CopyDataRelationshipBehavior.ParentsAndChildren, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo("Pet", target, relationshipBehavior: CopyDataRelationshipBehavior.ParentsAndChildren, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict);
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -396,7 +396,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE \"public\".\"Country\" (\"Id\" INT NOT NULL, \"Name\" varchar(100) NOT NULL, \"Extra\" INT NULL, CONSTRAINT \"PK_Country\" PRIMARY KEY (\"Id\"));");
 
                 // Act/Assert
-                Assert.Throws<PostgreSqlBulkColumnMappingsException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.Strict));
+                Assert.Throws<PostgreSqlBulkColumnMappingsException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict));
                 Assert.AreEqual(0, Helper.TargetCount("\"public\".\"Country\""));
             }
         }
@@ -411,7 +411,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "Sales.Currency", target, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo("Currency", "Sales.Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -429,7 +429,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, where: new QueryGroup(new QueryField("Code", "EUR")), columnMappingsBehavior: CopySchemaColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo("Currency", target, where: new QueryGroup(new QueryField("Code", "EUR")), columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict);
 
                 // Assert
                 Assert.AreEqual(1, actual);
@@ -447,7 +447,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo<Currency>(target, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo<Currency>(target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -466,7 +466,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 ConnectionManager.Register(name, target);
 
                 // Act/Assert
-                Assert.Throws<PostgreSqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", name, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.Strict));
+                Assert.Throws<PostgreSqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", name, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict));
                 AssertNotCopied();
             }
         }
@@ -485,7 +485,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.Strict);
+                var actual = await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -503,7 +503,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<PostgreSqlBulkColumnMappingsException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.Strict));
+                await Assert.ThrowsAsync<PostgreSqlBulkColumnMappingsException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict));
                 AssertNotCopied();
                 Assert.AreEqual(PostgreSqlBulkColumnMappingsBehavior.Automatic, CurrentBehavior(target));
             }
@@ -519,7 +519,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(ReorderedColumns);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<PostgreSqlBulkColumnMappingsException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.Strict));
+                await Assert.ThrowsAsync<PostgreSqlBulkColumnMappingsException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict));
                 AssertNotCopied();
             }
         }
@@ -534,7 +534,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Country", target, relationshipBehavior: CopyDataRelationshipBehavior.ParentsAndChildren, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.Strict);
+                var actual = await source.CopyDataToAsync("Country", target, relationshipBehavior: CopyDataRelationshipBehavior.ParentsAndChildren, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict);
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -559,7 +559,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.StrictBypass);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.StrictBypass);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -577,7 +577,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(ReorderedColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.StrictBypass);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.StrictBypass);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -595,7 +595,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(ExtraColumn);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.StrictBypass);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.StrictBypass);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -613,7 +613,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(ExtraColumnWithDefault);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.StrictBypass);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.StrictBypass);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -631,7 +631,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                var exception = Assert.Throws<PostgreSqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.StrictBypass));
+                var exception = Assert.Throws<PostgreSqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.StrictBypass));
 
                 // Assert
                 Assert.AreEqual(PostgreSqlBulkColumnMappingsBehavior.StrictBypass, exception.Behavior);
@@ -650,7 +650,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                Assert.Throws<PostgreSqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.StrictBypass));
+                Assert.Throws<PostgreSqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.StrictBypass));
 
                 // Assert
                 Assert.AreEqual(PostgreSqlBulkColumnMappingsBehavior.Automatic, CurrentBehavior(target));
@@ -667,7 +667,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, relationshipBehavior: CopyDataRelationshipBehavior.Children, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.StrictBypass);
+                var actual = source.CopyDataTo("Country", target, relationshipBehavior: CopyDataRelationshipBehavior.Children, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.StrictBypass);
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -685,7 +685,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE \"public\".\"Country\" (\"Id\" INT NOT NULL, \"Name\" varchar(100) NOT NULL, \"Extra\" INT NULL, CONSTRAINT \"PK_Country\" PRIMARY KEY (\"Id\"));");
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.StrictBypass);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.StrictBypass);
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -707,7 +707,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(ExtraColumnWithDefault);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.StrictBypass);
+                var actual = await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.StrictBypass);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -725,7 +725,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<PostgreSqlBulkColumnMappingsException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.StrictBypass));
+                await Assert.ThrowsAsync<PostgreSqlBulkColumnMappingsException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.StrictBypass));
                 AssertNotCopied();
             }
         }
@@ -740,7 +740,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(ReorderedColumns);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.StrictBypass);
+                var actual = await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.StrictBypass);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -764,7 +764,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act/Assert
-                Assert.Throws<ArgumentOutOfRangeException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: (CopySchemaColumnMappingsBehavior)99));
+                Assert.Throws<ArgumentOutOfRangeException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: (CopyTableSchemaColumnMappingsBehavior)99));
                 AssertNotCopied();
             }
         }
@@ -776,7 +776,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
             using (var target = new NpgsqlConnection(Database.ConnectionStringForTarget))
             {
                 // Act/Assert
-                await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: (CopySchemaColumnMappingsBehavior)99));
+                await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: (CopyTableSchemaColumnMappingsBehavior)99));
             }
         }
 
@@ -791,7 +791,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var exception = Assert.Throws<InvalidOperationException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.Strict));
+                var exception = Assert.Throws<InvalidOperationException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict));
 
                 // Assert
                 StringAssert.Contains(exception.Message, "BulkColumnMappingsBehavior");
@@ -810,7 +810,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.Automatic);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Automatic);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -828,7 +828,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopySchemaColumnMappingsBehavior.Automatic);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Automatic);
 
                 // Assert
                 Assert.AreEqual(3, actual);

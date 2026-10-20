@@ -591,8 +591,8 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
                 CollectionAssert.AreEqual(new[] { "CountryId" }, actual[0].Columns.ToArray());
                 Assert.AreEqual(new TableInfo("Country", null), actual[0].ReferencedTable);
                 CollectionAssert.AreEqual(new[] { "Id" }, actual[0].ReferencedColumns.ToArray());
-                Assert.AreEqual(CopySchemaForeignKeyRule.NoAction, actual[0].UpdateRule);
-                Assert.AreEqual(CopySchemaForeignKeyRule.SetNull, actual[0].DeleteRule);
+                Assert.AreEqual(CopyTableSchemaForeignKeyRule.NoAction, actual[0].UpdateRule);
+                Assert.AreEqual(CopyTableSchemaForeignKeyRule.SetNull, actual[0].DeleteRule);
             }
         }
 
@@ -609,8 +609,8 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
 
                 // Assert
                 Assert.AreEqual("FK_Child_Parent", actual.Name, StringComparer.Ordinal);
-                Assert.AreEqual(CopySchemaForeignKeyRule.NoAction, actual.UpdateRule);
-                Assert.AreEqual(CopySchemaForeignKeyRule.NoAction, actual.DeleteRule);
+                Assert.AreEqual(CopyTableSchemaForeignKeyRule.NoAction, actual.UpdateRule);
+                Assert.AreEqual(CopyTableSchemaForeignKeyRule.NoAction, actual.DeleteRule);
             }
         }
 

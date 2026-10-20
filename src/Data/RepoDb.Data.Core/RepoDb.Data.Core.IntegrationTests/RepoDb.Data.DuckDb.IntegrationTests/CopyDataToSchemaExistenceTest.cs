@@ -20,7 +20,7 @@ using RepoDb.Schema.Enumerations;
 namespace RepoDb.Data.DuckDb.IntegrationTests
 {
     /// <summary>
-    /// Copies the rows of a table with the different <see cref="CopySchemaExistsBehavior"/>: what happens to the tables of the destination
+    /// Copies the rows of a table with the different <see cref="CopyTableSchemaExistsBehavior"/>: what happens to the tables of the destination
     /// database (that may or may not exist) before the rows are copied.
     /// </summary>
     [TestClass]
@@ -79,7 +79,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, tableExistenceBehavior: CopySchemaExistsBehavior.Skip);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip);
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -98,7 +98,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE \"Currency\" (\"Code\" CHAR(3) NOT NULL, \"Name\" varchar(50) NOT NULL, \"Extra\" INT NULL, CONSTRAINT \"PK_Currency\" PRIMARY KEY (\"Code\"));");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, tableExistenceBehavior: CopySchemaExistsBehavior.Skip);
+                var actual = source.CopyDataTo("Currency", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -118,7 +118,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE \"Currency\" (\"Code\" CHAR(3) NOT NULL, CONSTRAINT \"PK_Currency\" PRIMARY KEY (\"Code\"));");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, tableExistenceBehavior: CopySchemaExistsBehavior.Skip);
+                var actual = source.CopyDataTo("Currency", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -133,7 +133,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
                 // Act/Assert
-                Assert.Throws<MissingFieldsException>(() => source.CopyDataTo("Currency", target, tableExistenceBehavior: CopySchemaExistsBehavior.Skip));
+                Assert.Throws<MissingFieldsException>(() => source.CopyDataTo("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip));
                 Assert.AreEqual(0, Helper.TargetTables().Count);
             }
         }
@@ -152,7 +152,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, tableExistenceBehavior: CopySchemaExistsBehavior.Skip);
+                var actual = await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip);
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -167,7 +167,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
                 // Act/Assert
-                await Assert.ThrowsAsync<MissingFieldsException>(() => source.CopyDataToAsync("Currency", target, tableExistenceBehavior: CopySchemaExistsBehavior.Skip));
+                await Assert.ThrowsAsync<MissingFieldsException>(() => source.CopyDataToAsync("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip));
             }
         }
 
@@ -189,7 +189,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: CopySchemaExistsBehavior.Throw);
+                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -208,7 +208,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.CreateTargetTables("Currency");
 
                 // Act
-                var exception = Assert.Throws<InvalidOperationException>(() => source.CopyDataTo("Currency", target, tableExistenceBehavior: CopySchemaExistsBehavior.Throw));
+                var exception = Assert.Throws<InvalidOperationException>(() => source.CopyDataTo("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
 
                 // Assert
                 StringAssert.Contains(exception.Message, "Currency");
@@ -228,7 +228,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.CreateTargetTables("Country");
 
                 // Act/Assert
-                Assert.Throws<InvalidOperationException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, tableExistenceBehavior: CopySchemaExistsBehavior.Throw));
+                Assert.Throws<InvalidOperationException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
                 Assert.IsFalse(Helper.TargetTableExists("Person"));
                 Assert.AreEqual(0, Helper.TargetCount("\"Country\""));
             }
@@ -242,10 +242,10 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
             {
                 // Setup
                 Helper.MapSchemaReader(source);
-                source.CopyDataTo("Currency", target, tableExistenceBehavior: CopySchemaExistsBehavior.Throw);
+                source.CopyDataTo("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw);
 
                 // Act/Assert
-                Assert.Throws<InvalidOperationException>(() => source.CopyDataTo("Currency", target, tableExistenceBehavior: CopySchemaExistsBehavior.Throw));
+                Assert.Throws<InvalidOperationException>(() => source.CopyDataTo("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
                 Assert.AreEqual(3, Helper.TargetCount("\"Currency\""));
             }
         }
@@ -260,7 +260,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Pet", target, relationshipBehavior: CopyDataRelationshipBehavior.ParentsAndChildren, tableExistenceBehavior: CopySchemaExistsBehavior.Throw);
+                var actual = source.CopyDataTo("Pet", target, relationshipBehavior: CopyDataRelationshipBehavior.ParentsAndChildren, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw);
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -282,7 +282,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", target, tableExistenceBehavior: CopySchemaExistsBehavior.Throw);
+                var actual = await source.CopyDataToAsync("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -301,7 +301,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.CreateTargetTables("Currency");
 
                 // Act/Assert
-                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopyDataToAsync("Currency", target, tableExistenceBehavior: CopySchemaExistsBehavior.Throw));
+                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopyDataToAsync("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
                 Assert.AreEqual(0, Helper.TargetCount("\"Currency\""));
             }
         }
@@ -324,7 +324,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: CopySchemaExistsBehavior.Drop);
+                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -344,7 +344,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.ExecuteOnTarget("INSERT INTO \"Currency\" (\"Code\", \"Name\") VALUES ('USD', 'US Dollar');");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: CopySchemaExistsBehavior.Drop);
+                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -364,7 +364,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE \"Currency\" (\"Code\" INT NOT NULL, \"Foo\" varchar(10) NULL);");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: CopySchemaExistsBehavior.Drop);
+                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -385,7 +385,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.ExecuteOnTarget("INSERT INTO \"Country\" (\"Id\", \"Name\") VALUES (100, 'Atlantis');");
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, tableExistenceBehavior: CopySchemaExistsBehavior.Drop);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -404,10 +404,10 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
             {
                 // Setup
                 Helper.MapSchemaReader(source);
-                source.CopyDataTo("Currency", target, tableExistenceBehavior: CopySchemaExistsBehavior.Drop);
+                source.CopyDataTo("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: CopySchemaExistsBehavior.Drop);
+                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -431,7 +431,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.ExecuteOnTarget("INSERT INTO \"Currency\" (\"Code\", \"Name\") VALUES ('USD', 'US Dollar');");
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", target, tableExistenceBehavior: CopySchemaExistsBehavior.Drop);
+                var actual = await source.CopyDataToAsync("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -450,7 +450,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, tableExistenceBehavior: CopySchemaExistsBehavior.Drop);
+                var actual = await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -476,7 +476,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: CopySchemaExistsBehavior.Align);
+                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -495,7 +495,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE \"Currency\" (\"Code\" CHAR(3) NOT NULL, CONSTRAINT \"PK_Currency\" PRIMARY KEY (\"Code\"));");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: CopySchemaExistsBehavior.Align);
+                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -517,7 +517,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Assert.IsFalse(TargetIndexExists("\"Person\"", "IX_Person_Name"));
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, tableExistenceBehavior: CopySchemaExistsBehavior.Align);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -536,7 +536,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE \"Currency\" (\"Code\" CHAR(3) NOT NULL, \"Name\" varchar(50) NOT NULL, \"Extra\" INT NULL, CONSTRAINT \"PK_Currency\" PRIMARY KEY (\"Code\"));");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: CopySchemaExistsBehavior.Align);
+                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -555,7 +555,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.CreateTargetTables("Currency");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: CopySchemaExistsBehavior.Align);
+                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -574,7 +574,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.CreateTargetTables("Country", "Person");
 
                 // Act
-                var actual = source.CopyDataTo("Pet", target, relationshipBehavior: CopyDataRelationshipBehavior.ParentsAndChildren, tableExistenceBehavior: CopySchemaExistsBehavior.Align);
+                var actual = source.CopyDataTo("Pet", target, relationshipBehavior: CopyDataRelationshipBehavior.ParentsAndChildren, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -598,7 +598,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE \"Currency\" (\"Code\" CHAR(3) NOT NULL, CONSTRAINT \"PK_Currency\" PRIMARY KEY (\"Code\"));");
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", target, tableExistenceBehavior: CopySchemaExistsBehavior.Align);
+                var actual = await source.CopyDataToAsync("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -616,7 +616,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, tableExistenceBehavior: CopySchemaExistsBehavior.Align);
+                var actual = await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
