@@ -35,7 +35,7 @@ namespace RepoDb.Data
 
         /// <summary>
         /// Gets the tables whose rows are to be copied, in the order that they must be copied (a table comes after the tables that it references).
-        /// If the schema is requested (see <see cref="IsSchemaRequested"/>), it is copied first, with <see cref="CopyTableSchemaToExtension.CopyTableSchemaTo(IDbConnection, IEnumerable{string}, IDbConnection, CopyTableSchemaExistsBehavior, CopyTableSchemaRelationshipBehavior, Action{CopyTableSchemaResult}, Action{CopyTableSchemaError}, int?, string, ITrace, IDbTransaction)"/>.
+        /// If the schema is requested (see <see cref="IsSchemaRequested"/>), it is copied first, with <see cref="CopyTableSchemaToExtension.CopyTableSchemaTo(IDbConnection, IEnumerable{string}, IDbConnection, string, CopyTableSchemaExistsBehavior, CopyTableSchemaRelationshipBehavior, Action{CopyTableSchemaResult}, Action{CopyTableSchemaError}, int?, string, ITrace, IDbTransaction)"/>.
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="destinationConnection"></param>
@@ -70,17 +70,32 @@ namespace RepoDb.Data
             }
             var results = new List<CopyTableSchemaResult>();
             var schemaBehavior = ToSchemaBehavior(relationshipBehavior);
-            connection.CopyTableSchemaTo(new[] { sourceTable },
-                destinationConnection,
-                columns: ToColumns(mappings),
-                renamedColumns: ToRenamedColumns(mappings),
-                targetSchema: targetSchema,
-                tableExistenceBehavior: tableExistenceBehavior,
-                relationshipBehavior: schemaBehavior,
-                createdCallback: results.Add,
-                commandTimeout: commandTimeout,
-                trace: trace,
-                transaction: transaction);
+            var schemaMappings = ToSchemaMappings(mappings);
+            if (schemaMappings == null)
+            {
+                connection.CopyTableSchemaTo(new[] { sourceTable },
+                    destinationConnection,
+                    targetSchema: targetSchema,
+                    tableExistenceBehavior: tableExistenceBehavior,
+                    relationshipBehavior: schemaBehavior,
+                    createdCallback: results.Add,
+                    commandTimeout: commandTimeout,
+                    trace: trace,
+                    transaction: transaction);
+            }
+            else
+            {
+                connection.CopyTableSchemaTo(new[] { sourceTable },
+                    destinationConnection,
+                    new[] { new CopyTableSchemaTable(sourceTable, schemaMappings) },
+                    targetSchema: targetSchema,
+                    tableExistenceBehavior: tableExistenceBehavior,
+                    relationshipBehavior: schemaBehavior,
+                    createdCallback: results.Add,
+                    commandTimeout: commandTimeout,
+                    trace: trace,
+                    transaction: transaction);
+            }
             if (relationshipBehavior == CopyDataRelationshipBehavior.TableOnly)
             {
                 return new List<(string, string, QueryGroup)> { (sourceTable, GetName(destinationConnection, results.Single()), where) };
@@ -128,18 +143,34 @@ namespace RepoDb.Data
             }
             var results = new List<CopyTableSchemaResult>();
             var schemaBehavior = ToSchemaBehavior(relationshipBehavior);
-            await connection.CopyTableSchemaToAsync(new[] { sourceTable },
-                destinationConnection,
-                columns: ToColumns(mappings),
-                renamedColumns: ToRenamedColumns(mappings),
-                targetSchema: targetSchema,
-                tableExistenceBehavior: tableExistenceBehavior,
-                relationshipBehavior: schemaBehavior,
-                createdCallback: results.Add,
-                commandTimeout: commandTimeout,
-                trace: trace,
-                transaction: transaction,
-                cancellationToken: cancellationToken).ConfigureAwait(false);
+            var schemaMappings = ToSchemaMappings(mappings);
+            if (schemaMappings == null)
+            {
+                await connection.CopyTableSchemaToAsync(new[] { sourceTable },
+                    destinationConnection,
+                    targetSchema: targetSchema,
+                    tableExistenceBehavior: tableExistenceBehavior,
+                    relationshipBehavior: schemaBehavior,
+                    createdCallback: results.Add,
+                    commandTimeout: commandTimeout,
+                    trace: trace,
+                    transaction: transaction,
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
+            }
+            else
+            {
+                await connection.CopyTableSchemaToAsync(new[] { sourceTable },
+                    destinationConnection,
+                    new[] { new CopyTableSchemaTable(sourceTable, schemaMappings) },
+                    targetSchema: targetSchema,
+                    tableExistenceBehavior: tableExistenceBehavior,
+                    relationshipBehavior: schemaBehavior,
+                    createdCallback: results.Add,
+                    commandTimeout: commandTimeout,
+                    trace: trace,
+                    transaction: transaction,
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
+            }
             if (relationshipBehavior == CopyDataRelationshipBehavior.TableOnly)
             {
                 return new List<(string, string, QueryGroup)> { (sourceTable, GetName(destinationConnection, results.Single()), where) };
@@ -405,36 +436,21 @@ namespace RepoDb.Data
         }
 
         /// <summary>
-        /// Gets the names of the source columns of the mappings, so the schema of the target table is created with only the mapped columns.
+        /// Gets the mappings of the columns for the schema copy, so the schema of the target table is created with only the mapped columns, by their destination names.
         /// </summary>
         /// <param name="mappings"></param>
-        /// <returns>The distinct names of the source columns (<c>null</c> if there are no mappings, which creates all the columns).</returns>
-        private static string[] ToColumns(IList<CopyDataColumnMapping> mappings) =>
-            mappings == null || mappings.Count == 0
-                ? null
-                : mappings.Select(mapping => mapping.SourceColumn).Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
-
-        /// <summary>
-        /// Gets the new names of the columns of the target table by the source column, so the schema of the target table is created with the destination names of the mappings.
-        /// </summary>
-        /// <param name="mappings"></param>
-        /// <returns>The destination column by the source column, for the columns that have another name (<c>null</c> if there are none). A source column that is mapped more than once is created with its first destination column.</returns>
-        private static IDictionary<string, string> ToRenamedColumns(IList<CopyDataColumnMapping> mappings)
+        /// <returns>The mappings of the schema copy (<c>null</c> if there are no mappings, which creates all the columns). A source column that is mapped more than once is created with its first destination column.</returns>
+        private static IList<CopyTableSchemaColumnMapping> ToSchemaMappings(IList<CopyDataColumnMapping> mappings)
         {
             if (mappings == null || mappings.Count == 0)
             {
                 return null;
             }
-            var renamed = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            foreach (var mapping in mappings)
-            {
-                if (seen.Add(mapping.SourceColumn) && !string.Equals(mapping.SourceColumn, mapping.DestinationColumn, StringComparison.Ordinal))
-                {
-                    renamed[mapping.SourceColumn] = mapping.DestinationColumn;
-                }
-            }
-            return renamed.Count == 0 ? null : renamed;
+            return mappings
+                .Where(mapping => seen.Add(mapping.SourceColumn))
+                .Select(mapping => new CopyTableSchemaColumnMapping(mapping.SourceColumn, mapping.DestinationColumn))
+                .ToList();
         }
 
         /// <summary>

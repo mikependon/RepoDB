@@ -66,7 +66,7 @@ namespace RepoDb.Schema
         /// <param name="trace"></param>
         /// <param name="transaction"></param>
         [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
-        internal static void ProbeTables(IEnumerable<CopyTableSchemaTable> tables,
+        internal static void ProbeTables(IEnumerable<CopyTableSchemaPlanTable> tables,
             CopyTableSchemaExistsBehavior behavior,
             ISchemaComposer composer,
             IDbConnection destinationConnection,
@@ -111,7 +111,7 @@ namespace RepoDb.Schema
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
-        internal static async Task ProbeTablesAsync(IEnumerable<CopyTableSchemaTable> tables,
+        internal static async Task ProbeTablesAsync(IEnumerable<CopyTableSchemaPlanTable> tables,
             CopyTableSchemaExistsBehavior behavior,
             ISchemaComposer composer,
             IDbConnection destinationConnection,
@@ -199,7 +199,7 @@ namespace RepoDb.Schema
         /// <param name="table"></param>
         /// <param name="schemaComposer"></param>
         /// <returns></returns>
-        internal static IEnumerable<string> GetScript(CopyTableSchemaTable table,
+        internal static IEnumerable<string> GetScript(CopyTableSchemaPlanTable table,
             ISchemaComposer schemaComposer)
         {
             switch (table.Outcome)
@@ -226,7 +226,7 @@ namespace RepoDb.Schema
         /// <param name="schemaComposer"></param>
         /// <param name="startTime"></param>
         internal static void Report(Action<CopyTableSchemaResult> createdCallback,
-            IEnumerable<CopyTableSchemaTable> tables,
+            IEnumerable<CopyTableSchemaPlanTable> tables,
             IList<CopyTableSchemaError> errors,
             IDbConnection connection,
             IDbConnection destinationConnection,

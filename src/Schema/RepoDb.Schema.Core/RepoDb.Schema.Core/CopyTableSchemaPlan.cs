@@ -17,15 +17,15 @@ namespace RepoDb.Schema
     /// <summary>
     /// A class that holds what a schema copy is going to do to the tables of the destination database: the statements to be executed,
     /// the table that each statement belongs to, and the statement that completes each table. It is created from the state of the
-    /// destination tables (see <see cref="CopyTableSchemaTable"/>) and the <see cref="CopyTableSchemaExistsBehavior"/>.
+    /// destination tables (see <see cref="CopyTableSchemaPlanTable"/>) and the <see cref="CopyTableSchemaExistsBehavior"/>.
     /// </summary>
     internal sealed class CopyTableSchemaPlan
     {
         #region Constructors
 
         private CopyTableSchemaPlan(IList<CopyTableSchemaStep> steps,
-            ILookup<int, CopyTableSchemaTable> completions,
-            IList<CopyTableSchemaTable> immediate)
+            ILookup<int, CopyTableSchemaPlanTable> completions,
+            IList<CopyTableSchemaPlanTable> immediate)
         {
             Steps = steps;
             Completions = completions;
@@ -45,12 +45,12 @@ namespace RepoDb.Schema
         /// Gets the tables that are completed by each step (by the index of the step). The key <c>-1</c> has the tables whose steps are not known,
         /// as the script that was composed does not have the expected number of statements.
         /// </summary>
-        public ILookup<int, CopyTableSchemaTable> Completions { get; }
+        public ILookup<int, CopyTableSchemaPlanTable> Completions { get; }
 
         /// <summary>
         /// Gets the tables that have nothing to be executed, so they are complete from the start.
         /// </summary>
-        public IList<CopyTableSchemaTable> Immediate { get; }
+        public IList<CopyTableSchemaPlanTable> Immediate { get; }
 
         #endregion
 
@@ -64,7 +64,7 @@ namespace RepoDb.Schema
         /// <param name="composer">The composer of the destination database.</param>
         /// <returns>The state of each table.</returns>
         /// <exception cref="InvalidOperationException">Two tables would have the same name in the destination database.</exception>
-        public static IList<CopyTableSchemaTable> CreateTables(IEnumerable<TableSchema> schemas,
+        public static IList<CopyTableSchemaPlanTable> CreateTables(IEnumerable<TableSchema> schemas,
             string targetSchema,
             ISchemaComposer composer)
         {
@@ -78,12 +78,12 @@ namespace RepoDb.Schema
         /// <summary>
         /// Creates the plan for the tables, from their state in the destination database.
         /// </summary>
-        /// <param name="tables">The state of the tables (see <see cref="CopyTableSchemaTable.Exists"/>, <see cref="CopyTableSchemaTable.MissingColumns"/>, <see cref="CopyTableSchemaTable.MissingIndexes"/> and <see cref="CopyTableSchemaTable.MissingForeignKeys"/>).</param>
+        /// <param name="tables">The state of the tables (see <see cref="CopyTableSchemaPlanTable.Exists"/>, <see cref="CopyTableSchemaPlanTable.MissingColumns"/>, <see cref="CopyTableSchemaPlanTable.MissingIndexes"/> and <see cref="CopyTableSchemaPlanTable.MissingForeignKeys"/>).</param>
         /// <param name="behavior">Defines what happens to the tables that already exist in the destination database.</param>
         /// <param name="composer">The composer of the destination database.</param>
         /// <returns>The plan.</returns>
         /// <exception cref="InvalidOperationException">The behavior is <see cref="CopyTableSchemaExistsBehavior.Throw"/> and a table already exists.</exception>
-        public static CopyTableSchemaPlan Create(IList<CopyTableSchemaTable> tables,
+        public static CopyTableSchemaPlan Create(IList<CopyTableSchemaPlanTable> tables,
             CopyTableSchemaExistsBehavior behavior,
             ISchemaComposer composer)
         {
@@ -114,10 +114,10 @@ namespace RepoDb.Schema
         /// <param name="schema"></param>
         /// <param name="composer"></param>
         /// <returns></returns>
-        private static CopyTableSchemaTable CreateTable(TableSchema source,
+        private static CopyTableSchemaPlanTable CreateTable(TableSchema source,
             TableSchema schema,
             ISchemaComposer composer) =>
-            new CopyTableSchemaTable(source, schema, composer.ComposeName(schema.Table));
+            new CopyTableSchemaPlanTable(source, schema, composer.ComposeName(schema.Table));
 
         /// <summary>
         /// Gets the schema of the table as it is created in the target schema: its name, and the foreign keys that reference the other tables, are in that schema.
@@ -176,7 +176,7 @@ namespace RepoDb.Schema
         /// Throws if two of the tables would have the same name in the destination database (i.e.: the tables of different schemas that are copied into one schema).
         /// </summary>
         /// <param name="tables"></param>
-        private static void EnsureUniqueNames(IEnumerable<CopyTableSchemaTable> tables)
+        private static void EnsureUniqueNames(IEnumerable<CopyTableSchemaPlanTable> tables)
         {
             var duplicate = tables
                 .Where(table => table.Name != null)
@@ -193,7 +193,7 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="tables"></param>
         /// <param name="behavior"></param>
-        private static void SetOutcomes(IEnumerable<CopyTableSchemaTable> tables,
+        private static void SetOutcomes(IEnumerable<CopyTableSchemaPlanTable> tables,
             CopyTableSchemaExistsBehavior behavior)
         {
             foreach (var table in tables.Where(table => table.Exists == true))
@@ -221,7 +221,7 @@ namespace RepoDb.Schema
         /// <param name="tables"></param>
         /// <param name="composer"></param>
         /// <returns></returns>
-        private static IEnumerable<CopyTableSchemaStep> GetDropSteps(IEnumerable<CopyTableSchemaTable> tables,
+        private static IEnumerable<CopyTableSchemaStep> GetDropSteps(IEnumerable<CopyTableSchemaPlanTable> tables,
             ISchemaComposer composer) =>
             tables
                 .Where(table => table.Outcome == CopyTableSchemaOutcome.Dropped)
@@ -234,7 +234,7 @@ namespace RepoDb.Schema
         /// <param name="tables"></param>
         /// <param name="composer"></param>
         /// <returns></returns>
-        private static IEnumerable<CopyTableSchemaStep> GetAlignSteps(IEnumerable<CopyTableSchemaTable> tables,
+        private static IEnumerable<CopyTableSchemaStep> GetAlignSteps(IEnumerable<CopyTableSchemaPlanTable> tables,
             ISchemaComposer composer)
         {
             foreach (var table in tables.Where(table => table.Outcome == CopyTableSchemaOutcome.Aligned))
@@ -257,7 +257,7 @@ namespace RepoDb.Schema
         /// <param name="tables"></param>
         /// <param name="composer"></param>
         /// <returns></returns>
-        private static IEnumerable<CopyTableSchemaStep> GetAlignForeignKeySteps(IEnumerable<CopyTableSchemaTable> tables,
+        private static IEnumerable<CopyTableSchemaStep> GetAlignForeignKeySteps(IEnumerable<CopyTableSchemaPlanTable> tables,
             ISchemaComposer composer)
         {
             foreach (var table in tables.Where(table => table.Outcome == CopyTableSchemaOutcome.Aligned))
@@ -277,7 +277,7 @@ namespace RepoDb.Schema
         /// <param name="created"></param>
         /// <param name="composer"></param>
         /// <returns></returns>
-        private static IList<string> GetCreateSteps(IList<CopyTableSchemaTable> created,
+        private static IList<string> GetCreateSteps(IList<CopyTableSchemaPlanTable> created,
             ISchemaComposer composer) =>
             created.Count == 0
                 ? new List<string>()
@@ -290,7 +290,7 @@ namespace RepoDb.Schema
         /// <param name="tables"></param>
         /// <param name="foreignKeyOffset">The index of the first step that adds a foreign key.</param>
         /// <returns></returns>
-        private static IEnumerable<(int Key, CopyTableSchemaTable Table)> GetAlignCompletions(IList<CopyTableSchemaTable> tables,
+        private static IEnumerable<(int Key, CopyTableSchemaPlanTable Table)> GetAlignCompletions(IList<CopyTableSchemaPlanTable> tables,
             int foreignKeyOffset)
         {
             var cursor = tables.Count(table => table.Outcome == CopyTableSchemaOutcome.Dropped);
@@ -321,7 +321,7 @@ namespace RepoDb.Schema
         /// <param name="statementCount"></param>
         /// <param name="offset"></param>
         /// <returns></returns>
-        private static IEnumerable<(int Key, CopyTableSchemaTable Table)> GetCreateCompletions(IList<CopyTableSchemaTable> created,
+        private static IEnumerable<(int Key, CopyTableSchemaPlanTable Table)> GetCreateCompletions(IList<CopyTableSchemaPlanTable> created,
             int statementCount,
             int offset)
         {
@@ -345,15 +345,15 @@ namespace RepoDb.Schema
         /// <param name="created"></param>
         /// <param name="statementCount"></param>
         /// <returns></returns>
-        private static CopyTableSchemaTable[] GetCreateOwners(IList<CopyTableSchemaTable> created,
+        private static CopyTableSchemaPlanTable[] GetCreateOwners(IList<CopyTableSchemaPlanTable> created,
             int statementCount)
         {
-            var owners = new List<CopyTableSchemaTable>(created);
+            var owners = new List<CopyTableSchemaPlanTable>(created);
             owners.AddRange(created.SelectMany(table => table.Schema.Indexes.Select(_ => table)));
             owners.AddRange(created.SelectMany(table => table.Schema.ForeignKeys.Select(_ => table)));
             return owners.Count == statementCount
                 ? owners.ToArray()
-                : new CopyTableSchemaTable[statementCount];
+                : new CopyTableSchemaPlanTable[statementCount];
         }
 
         #endregion

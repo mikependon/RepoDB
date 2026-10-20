@@ -16,7 +16,7 @@ namespace RepoDb.Schema
         #region Constructors
 
         public CopyTableSchemaStep(string statement,
-            CopyTableSchemaTable owner)
+            CopyTableSchemaPlanTable owner)
         {
             Statement = statement;
             Owner = owner;
@@ -34,7 +34,7 @@ namespace RepoDb.Schema
         /// <summary>
         /// Gets the table that the statement belongs to (<c>null</c> if it is not known).
         /// </summary>
-        public CopyTableSchemaTable Owner { get; }
+        public CopyTableSchemaPlanTable Owner { get; }
 
         #endregion
     }

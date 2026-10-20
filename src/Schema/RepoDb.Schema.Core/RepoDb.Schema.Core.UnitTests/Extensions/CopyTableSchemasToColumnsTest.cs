@@ -127,6 +127,9 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             SchemaComposerMapper.Add<CustomDbConnection>(composer.Object, true);
         }
 
+        private static IList<CopyTableSchemaTable> Tables(params (string Name, string[] Columns)[] tables) =>
+            tables.Select(table => new CopyTableSchemaTable(table.Name, table.Columns.Select(column => new CopyTableSchemaColumnMapping(column)).ToList())).ToList();
+
         private static CustomDbConnection GetDestination(params string[] existing) =>
             new CustomDbConnection { ScalarResult = statement => existing.Contains(statement) ? 1 : 0 };
 
@@ -363,7 +366,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act/Assert
-            var exception = Assert.Throws<ArgumentException>(() => new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination, columns: new[] { "Id", "Age" }));
+            var exception = Assert.Throws<ArgumentException>(() => new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination, Tables(("Person", new[] { "Id" }), ("Country", new[] { "Id", "Age" }))));
             StringAssert.Contains(exception.Message, "'Age'", StringComparison.Ordinal);
             StringAssert.Contains(exception.Message, "dbo.Country", StringComparison.Ordinal);
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
@@ -392,7 +395,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act/Assert
-            await Assert.ThrowsAsync<ArgumentException>(() => new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" }, destination, columns: new[] { "Id", "Age" }));
+            await Assert.ThrowsAsync<ArgumentException>(() => new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" }, destination, Tables(("Person", new[] { "Id" }), ("Country", new[] { "Id", "Age" }))));
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
         }
 
@@ -468,7 +471,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopyTableSchemaToOfSeveralTablesWithColumnsCreatesOnlyTheGivenColumnsOfEachTable()
+        public void TestCopyTableSchemaToOfSeveralTablesWithTableMappingsCreatesOnlyTheGivenColumnsOfEachTable()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -476,7 +479,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination, columns: new[] { "Id", "Name" });
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination, Tables(("Person", new[] { "Id", "Name" }), ("Country", new[] { "Id", "Name" })));
 
             // Assert
             Assert.IsTrue(destination.ExecutedCommands.Any(c => c.StartsWith("CREATE TABLE Person (Id,Name ")));
@@ -500,7 +503,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public async Task TestCopyTableSchemaToAsyncOfSeveralTablesWithColumnsCreatesOnlyTheGivenColumnsOfEachTable()
+        public async Task TestCopyTableSchemaToAsyncOfSeveralTablesWithTableMappingsCreatesOnlyTheGivenColumnsOfEachTable()
         {
             // Setup
             MapReader(GetPerson(), GetCountry());
@@ -508,7 +511,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" }, destination, columns: new[] { "Id", "Name" });
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" }, destination, Tables(("Person", new[] { "Id", "Name" }), ("Country", new[] { "Id", "Name" })));
 
             // Assert
             Assert.IsTrue(destination.ExecutedCommands.Any(c => c.StartsWith("CREATE TABLE Person (Id,Name ")));

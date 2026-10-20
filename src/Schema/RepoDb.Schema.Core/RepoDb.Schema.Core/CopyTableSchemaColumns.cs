@@ -19,7 +19,7 @@ namespace RepoDb.Schema
     /// together with the objects that only use them. The index, the primary key, the unique constraint and the foreign key that use a column that is left out are left out too,
     /// and so is the check constraint that mentions it. The foreign key of another table that references a column that is left out is left out as well.
     /// The columns of the requested tables can also be renamed: the primary key, the indexes, the unique constraints, the check constraints and the foreign keys (including the ones of
-    /// the other tables that reference the renamed columns) follow the new names.
+    /// the other tables that reference the renamed columns) follow the new names. The columns can be selected for every requested table the same way, or table by table.
     /// </summary>
     internal static class CopyTableSchemaColumns
     {
@@ -52,31 +52,124 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
-        /// Validates the new names of the columns.
+        /// Validates the mappings of the columns, and gets the columns to be created and their target names.
         /// </summary>
-        /// <param name="renamedColumns">The source column names and the names that the columns have in the destination database (<c>null</c> if no column is renamed).</param>
-        /// <returns>The new names by the source column name (not case sensitive), or <c>null</c> if no column is renamed.</returns>
-        /// <exception cref="ArgumentException">A name is <c>null</c> or white space, or a column is given more than once.</exception>
-        public static IDictionary<string, string> NormalizeRenamed(IDictionary<string, string> renamedColumns)
+        /// <param name="mappings">The mappings of the columns of the source table to the columns of the destination table.</param>
+        /// <param name="columns">The distinct names of the source columns to be created.</param>
+        /// <param name="renamed">The target names by the source column name (not case sensitive), for the columns whose target name is not the source name (<c>null</c> if no column is renamed).</param>
+        /// <exception cref="ArgumentNullException">The mappings are <c>null</c>.</exception>
+        /// <exception cref="ArgumentException">The list is empty, an item is <c>null</c>, a source column is <c>null</c> or white space, or a source column is mapped more than once.</exception>
+        public static void Normalize(IList<CopyTableSchemaColumnMapping> mappings,
+            out IList<string> columns,
+            out IDictionary<string, string> renamed)
         {
-            if (renamedColumns == null || renamedColumns.Count == 0)
+            if (mappings == null)
             {
-                return null;
+                throw new ArgumentNullException(nameof(mappings));
             }
-            var renamed = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            foreach (var pair in renamedColumns)
+            if (mappings.Count == 0)
             {
-                if (string.IsNullOrWhiteSpace(pair.Key) || string.IsNullOrWhiteSpace(pair.Value))
-                {
-                    throw new ArgumentException("The names of the renamed columns can not be null or white space.", nameof(renamedColumns));
-                }
-                if (renamed.ContainsKey(pair.Key.Trim()))
-                {
-                    throw new ArgumentException($"The column '{pair.Key.Trim()}' is renamed more than once.", nameof(renamedColumns));
-                }
-                renamed[pair.Key.Trim()] = pair.Value.Trim();
+                throw new ArgumentException("At least one column mapping must be given: a table can not be created without columns.", nameof(mappings));
             }
-            return renamed;
+            var sources = new List<string>();
+            var targets = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var mapping in mappings)
+            {
+                if (mapping == null)
+                {
+                    throw new ArgumentException("The column mappings can not contain a null item.", nameof(mappings));
+                }
+                if (string.IsNullOrWhiteSpace(mapping.Source))
+                {
+                    throw new ArgumentException("The source column of a column mapping can not be null or white space.", nameof(mappings));
+                }
+                var source = mapping.Source.Trim();
+                if (sources.Contains(source, StringComparer.OrdinalIgnoreCase))
+                {
+                    throw new ArgumentException($"The source column '{source}' is mapped more than once.", nameof(mappings));
+                }
+                sources.Add(source);
+                if (!string.IsNullOrWhiteSpace(mapping.Target) && !string.Equals(mapping.Target.Trim(), source, StringComparison.Ordinal))
+                {
+                    targets[source] = mapping.Target.Trim();
+                }
+            }
+            columns = sources;
+            renamed = targets.Count == 0 ? null : targets;
+        }
+
+        /// <summary>
+        /// Validates the mappings of the tables.
+        /// </summary>
+        /// <param name="tables">The tables and the mappings of their columns.</param>
+        /// <returns>The tables.</returns>
+        /// <exception cref="ArgumentNullException">The list is <c>null</c>.</exception>
+        /// <exception cref="ArgumentException">The list is empty, an item is <c>null</c>, a table name is <c>null</c> or white space, a table is given more than once, or the mappings of a table are not valid (see <see cref="Normalize(IList{CopyTableSchemaColumnMapping}, out IList{string}, out IDictionary{string, string})"/>).</exception>
+        public static IList<CopyTableSchemaTable> Normalize(IList<CopyTableSchemaTable> tables)
+        {
+            if (tables == null)
+            {
+                throw new ArgumentNullException("mappings");
+            }
+            if (tables.Count == 0)
+            {
+                throw new ArgumentException("At least one table must be given.", "mappings");
+            }
+            var names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var table in tables)
+            {
+                if (table == null)
+                {
+                    throw new ArgumentException("The tables can not contain a null item.", "mappings");
+                }
+                if (string.IsNullOrWhiteSpace(table.TableName))
+                {
+                    throw new ArgumentException("The name of a table can not be null or white space.", "mappings");
+                }
+                if (!names.Add(Unquote(table.TableName)))
+                {
+                    throw new ArgumentException($"The table '{table.TableName}' is given more than once.", "mappings");
+                }
+                if (table.Columns == null || table.Columns.Count == 0)
+                {
+                    throw new ArgumentException($"At least one column mapping must be given for the table '{table.TableName}': a table can not be created without columns.", "mappings");
+                }
+                Normalize(table.Columns, out _, out _);
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// Finds the table that each mapped table is and gets the columns of each one.
+        /// </summary>
+        /// <param name="tables">The tables and the mappings of their columns (see <see cref="Normalize(IList{CopyTableSchemaTable})"/>).</param>
+        /// <param name="schemas">The schemas of all the tables that are copied (the requested tables and their related tables).</param>
+        /// <returns>The columns to be created, by the table that they are created in.</returns>
+        /// <exception cref="ArgumentException">A mapped table is not one of the tables that are copied, or it can be more than one of them.</exception>
+        public static IDictionary<TableInfo, Selection> Resolve(IList<CopyTableSchemaTable> tables,
+            IList<TableSchema> schemas)
+        {
+            var selections = new Dictionary<TableInfo, Selection>();
+            foreach (var table in tables)
+            {
+                var name = Unquote(table.TableName);
+                var matches = schemas.Select(schema => schema.Table).Where(info => Matches(name, info)).Distinct().ToList();
+                if (matches.Count == 0)
+                {
+                    throw new ArgumentException($"The table '{table.TableName}' is not one of the tables that are copied.", "mappings");
+                }
+                if (matches.Count > 1)
+                {
+                    throw new ArgumentException($"The table '{table.TableName}' is more than one of the tables that are copied: give the name of its schema, i.e.: 'dbo.{name}'.", "mappings");
+                }
+                if (selections.ContainsKey(matches[0]))
+                {
+                    throw new ArgumentException($"The table '{GetName(matches[0])}' is given more than once.", "mappings");
+                }
+                Normalize(table.Columns, out var columns, out var renamed);
+                selections[matches[0]] = new Selection(columns, renamed);
+            }
+            return selections;
         }
 
         /// <summary>
@@ -84,31 +177,53 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="schemas">The schemas of all the tables that are copied (the requested tables and their related tables).</param>
         /// <param name="requested">The schemas of the tables that are requested to be copied: the columns are only filtered and renamed in these tables.</param>
-        /// <param name="columns">The distinct names of the columns to be copied (see <see cref="Normalize"/>), or <c>null</c> if all the columns are copied.</param>
-        /// <param name="renamed">The new names of the columns by the source column name (see <see cref="NormalizeRenamed"/>), or <c>null</c> if no column is renamed.</param>
-        /// <returns>The schemas of the tables, where the requested ones have only the given columns, by their new names. The schemas that are read from the source database are not changed.</returns>
-        /// <exception cref="ArgumentException">A column is not a column of a requested table, or the new names make a table have the same column twice.</exception>
+        /// <param name="columns">The distinct names of the columns to be copied (see <see cref="Normalize(string[])"/>), or <c>null</c> if all the columns are copied.</param>
+        /// <returns>The schemas of the tables, where the requested ones have only the given columns. The schemas that are read from the source database are not changed.</returns>
+        /// <exception cref="ArgumentException">A column is not a column of a requested table.</exception>
         public static IList<TableSchema> Apply(IList<TableSchema> schemas,
             IEnumerable<TableSchema> requested,
-            IList<string> columns,
-            IDictionary<string, string> renamed = null)
+            IList<string> columns)
         {
-            // The columns that are kept in each requested table (the names are the ones of the source table)
-            var kept = new Dictionary<TableInfo, ISet<string>>();
+            var selections = new Dictionary<TableInfo, Selection>();
             foreach (var schema in requested)
             {
+                selections[schema.Table] = new Selection(columns, null);
+            }
+            return Apply(schemas, selections);
+        }
+
+        /// <summary>
+        /// Leaves out of the tables the columns that are not selected, and the objects that use them, and renames the columns that are asked to be renamed, table by table.
+        /// </summary>
+        /// <param name="schemas">The schemas of all the tables that are copied (the requested tables and their related tables).</param>
+        /// <param name="selections">The columns to be created, by the table that they are created in. The tables that are not in the dictionary are copied as they are.</param>
+        /// <returns>The schemas of the tables. The schemas that are read from the source database are not changed.</returns>
+        /// <exception cref="ArgumentException">A column is not a column of its table, or the new names make a table have the same column twice.</exception>
+        public static IList<TableSchema> Apply(IList<TableSchema> schemas,
+            IDictionary<TableInfo, Selection> selections)
+        {
+            // The columns that are kept in each table (the names are the ones of the source table)
+            var kept = new Dictionary<TableInfo, ISet<string>>();
+            var renamedByTable = new Dictionary<TableInfo, IDictionary<string, string>>();
+            foreach (var pair in selections)
+            {
+                var schema = schemas.First(item => item.Table.Equals(pair.Key));
                 var names = new HashSet<string>(schema.Columns.Select(column => column.Field.Name), StringComparer.OrdinalIgnoreCase);
-                var missing = columns?.FirstOrDefault(column => !names.Contains(column));
+                var missing = pair.Value.Columns?.FirstOrDefault(column => !names.Contains(column));
                 if (missing != null)
                 {
-                    throw new ArgumentException($"The column '{missing}' is not a column of the table '{GetName(schema.Table)}'.", nameof(columns));
+                    throw new ArgumentException($"The column '{missing}' is not a column of the table '{GetName(schema.Table)}'.", "columns");
                 }
-                missing = renamed?.Keys.FirstOrDefault(column => !names.Contains(column));
+                missing = pair.Value.Renamed?.Keys.FirstOrDefault(column => !names.Contains(column));
                 if (missing != null)
                 {
-                    throw new ArgumentException($"The column '{missing}' is not a column of the table '{GetName(schema.Table)}'.", "renamedColumns");
+                    throw new ArgumentException($"The column '{missing}' is not a column of the table '{GetName(schema.Table)}'.", "mappings");
                 }
-                kept[schema.Table] = columns == null ? names : new HashSet<string>(columns, StringComparer.OrdinalIgnoreCase);
+                kept[pair.Key] = pair.Value.Columns == null ? names : new HashSet<string>(pair.Value.Columns, StringComparer.OrdinalIgnoreCase);
+                if (pair.Value.Renamed != null)
+                {
+                    renamedByTable[pair.Key] = pair.Value.Renamed;
+                }
             }
 
             // The tables are filtered, then the foreign keys that reference the columns that are left out are left out
@@ -122,7 +237,7 @@ namespace RepoDb.Schema
             var result = filtered.Select(schema => RemoveForeignKeys(schema, removed)).ToList();
 
             // The columns are renamed, and what uses them follows the new names
-            return renamed == null ? result : result.Select(schema => Rename(schema, kept.ContainsKey(schema.Table), kept.Keys.ToList(), renamed)).ToList();
+            return renamedByTable.Count == 0 ? result : result.Select(schema => Rename(schema, renamedByTable)).ToList();
         }
 
         #endregion
@@ -198,59 +313,55 @@ namespace RepoDb.Schema
         /// Gets a copy of the schema of the table where the columns have their new names, and the objects that use them follow the new names.
         /// </summary>
         /// <param name="source">The schema of the table.</param>
-        /// <param name="isRequested"><c>true</c> if the table is a requested table, whose columns are renamed.</param>
-        /// <param name="requested">The identities of the requested tables: the foreign keys that reference their columns follow the new names.</param>
-        /// <param name="renamed">The new names of the columns by the source column name.</param>
+        /// <param name="renamedByTable">The new names of the columns by the source column name, by the table.</param>
         /// <returns>The schema of the table (the same schema if nothing is renamed).</returns>
         /// <exception cref="ArgumentException">The new names make the table have the same column twice.</exception>
         private static TableSchema Rename(TableSchema source,
-            bool isRequested,
-            IList<TableInfo> requested,
-            IDictionary<string, string> renamed)
+            IDictionary<TableInfo, IDictionary<string, string>> renamedByTable)
         {
-            IList<string> Names(IList<string> names) =>
-                names.Select(name => Name(name, renamed)).ToList();
-
-            if (!isRequested)
+            renamedByTable.TryGetValue(source.Table, out var own);
+            var hasOwn = own != null && own.Count > 0;
+            var referencesRenamed = source.ForeignKeys.Any(foreignKey =>
+                renamedByTable.TryGetValue(foreignKey.ReferencedTable, out var referenced) && foreignKey.ReferencedColumns.Any(referenced.ContainsKey));
+            if (!hasOwn && !referencesRenamed)
             {
-                if (!source.ForeignKeys.Any(foreignKey => requested.Contains(foreignKey.ReferencedTable) && foreignKey.ReferencedColumns.Any(renamed.ContainsKey)))
-                {
-                    return source;
-                }
-                return new TableSchema(source.Table.Name, source.Table.Schema)
-                {
-                    CheckConstraints = source.CheckConstraints,
-                    Columns = source.Columns,
-                    Indexes = source.Indexes,
-                    PrimaryKey = source.PrimaryKey,
-                    UniqueConstraints = source.UniqueConstraints,
-                    ForeignKeys = source.ForeignKeys.Select(foreignKey => RenameForeignKey(foreignKey, requested, renamed, false)).ToList()
-                };
+                return source;
             }
 
-            var columns = source.Columns.Select(column => RenameColumn(column, Name(column.Field.Name, renamed))).ToList();
-            var duplicate = columns.GroupBy(column => column.Field.Name, StringComparer.OrdinalIgnoreCase).FirstOrDefault(group => group.Count() > 1);
-            if (duplicate != null)
+            IList<string> Names(IList<string> names) =>
+                hasOwn ? names.Select(name => Name(name, own)).ToList() : names;
+
+            var columns = source.Columns;
+            if (hasOwn)
             {
-                throw new ArgumentException($"The column '{duplicate.Key}' exists more than once in the table '{GetName(source.Table)}' after the columns are renamed.", "renamedColumns");
+                columns = source.Columns.Select(column => RenameColumn(column, Name(column.Field.Name, own))).ToList();
+                var duplicate = columns.GroupBy(column => column.Field.Name, StringComparer.OrdinalIgnoreCase).FirstOrDefault(group => group.Count() > 1);
+                if (duplicate != null)
+                {
+                    throw new ArgumentException($"The column '{duplicate.Key}' exists more than once in the table '{GetName(source.Table)}' after the columns are renamed.", "mappings");
+                }
             }
 
             return new TableSchema(source.Table.Name, source.Table.Schema)
             {
                 Columns = columns,
-                PrimaryKey = source.PrimaryKey == null ? null : new PrimaryKeyInfo(source.PrimaryKey.Name) { Columns = Names(source.PrimaryKey.Columns), IsClustered = source.PrimaryKey.IsClustered },
-                Indexes = source.Indexes.Select(index => new IndexInfo(index.Name)
+                PrimaryKey = source.PrimaryKey == null || !hasOwn ? source.PrimaryKey : new PrimaryKeyInfo(source.PrimaryKey.Name) { Columns = Names(source.PrimaryKey.Columns), IsClustered = source.PrimaryKey.IsClustered },
+                Indexes = !hasOwn ? source.Indexes : source.Indexes.Select(index => new IndexInfo(index.Name)
                 {
                     IsUnique = index.IsUnique,
                     Columns = Names(index.Columns),
                     IncludedColumns = Names(index.IncludedColumns),
                     DescendingColumns = Names(index.DescendingColumns),
                     IsClustered = index.IsClustered,
-                    Filter = RenameInExpression(index.Filter, renamed)
+                    Filter = RenameInExpression(index.Filter, own)
                 }).ToList(),
-                UniqueConstraints = source.UniqueConstraints.Select(constraint => new UniqueConstraintInfo(constraint.Name) { Columns = Names(constraint.Columns) }).ToList(),
-                CheckConstraints = source.CheckConstraints.Select(constraint => new CheckConstraintInfo(constraint.Name) { Expression = RenameInExpression(constraint.Expression, renamed) }).ToList(),
-                ForeignKeys = source.ForeignKeys.Select(foreignKey => RenameForeignKey(foreignKey, requested, renamed, true)).ToList()
+                UniqueConstraints = !hasOwn ? source.UniqueConstraints : source.UniqueConstraints.Select(constraint => new UniqueConstraintInfo(constraint.Name) { Columns = Names(constraint.Columns) }).ToList(),
+                CheckConstraints = !hasOwn ? source.CheckConstraints : source.CheckConstraints.Select(constraint => new CheckConstraintInfo(constraint.Name) { Expression = RenameInExpression(constraint.Expression, own) }).ToList(),
+                ForeignKeys = source.ForeignKeys.Select(foreignKey =>
+                {
+                    renamedByTable.TryGetValue(foreignKey.ReferencedTable, out var referenced);
+                    return RenameForeignKey(foreignKey, hasOwn ? own : null, referenced);
+                }).ToList()
             };
         }
 
@@ -291,19 +402,17 @@ namespace RepoDb.Schema
         /// Gets a copy of the foreign key whose columns follow the new names.
         /// </summary>
         /// <param name="foreignKey">The foreign key.</param>
-        /// <param name="requested">The identities of the requested tables.</param>
-        /// <param name="renamed">The new names of the columns by the source column name.</param>
-        /// <param name="ownColumns"><c>true</c> if the columns of the foreign key are columns of a requested table (and are renamed).</param>
+        /// <param name="own">The new names of the columns of the table of the foreign key by the source column name (<c>null</c> if no column of the table is renamed).</param>
+        /// <param name="referenced">The new names of the columns of the referenced table by the source column name (<c>null</c> if no column of the table is renamed).</param>
         /// <returns>The copy of the foreign key.</returns>
         private static ForeignKeyInfo RenameForeignKey(ForeignKeyInfo foreignKey,
-            IList<TableInfo> requested,
-            IDictionary<string, string> renamed,
-            bool ownColumns) =>
+            IDictionary<string, string> own,
+            IDictionary<string, string> referenced) =>
             new ForeignKeyInfo(foreignKey.Name)
             {
-                Columns = ownColumns ? foreignKey.Columns.Select(name => Name(name, renamed)).ToList() : foreignKey.Columns,
+                Columns = own == null ? foreignKey.Columns : foreignKey.Columns.Select(name => Name(name, own)).ToList(),
                 ReferencedTable = foreignKey.ReferencedTable,
-                ReferencedColumns = requested.Contains(foreignKey.ReferencedTable) ? foreignKey.ReferencedColumns.Select(name => Name(name, renamed)).ToList() : foreignKey.ReferencedColumns,
+                ReferencedColumns = referenced == null ? foreignKey.ReferencedColumns : foreignKey.ReferencedColumns.Select(name => Name(name, referenced)).ToList(),
                 UpdateRule = foreignKey.UpdateRule,
                 DeleteRule = foreignKey.DeleteRule
             };
@@ -326,6 +435,26 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
+        /// Checks whether the name that is given in the mappings is the name of the table, with or without its schema.
+        /// </summary>
+        /// <param name="name">The name given in the mappings, without quotes (i.e.: <c>Person</c> or <c>dbo.Person</c>).</param>
+        /// <param name="table">The identity of the table.</param>
+        /// <returns><c>true</c> if the name is the one of the table.</returns>
+        private static bool Matches(string name,
+            TableInfo table) =>
+            name.IndexOf('.') >= 0
+                ? string.Equals(name, GetName(table), StringComparison.OrdinalIgnoreCase)
+                : string.Equals(name, table.Name, StringComparison.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// Removes the quotes of the name of a table (i.e.: <c>[dbo].[Person]</c> is <c>dbo.Person</c>).
+        /// </summary>
+        /// <param name="name">The name of the table.</param>
+        /// <returns>The name without the quotes.</returns>
+        private static string Unquote(string name) =>
+            name.Trim().Replace("[", string.Empty).Replace("]", string.Empty).Replace("\"", string.Empty).Replace("`", string.Empty);
+
+        /// <summary>
         /// Checks whether the expression of a check constraint mentions one of the columns (as a whole word).
         /// </summary>
         /// <param name="expression">The expression of the check constraint.</param>
@@ -335,6 +464,38 @@ namespace RepoDb.Schema
             IEnumerable<string> columns) =>
             !string.IsNullOrWhiteSpace(expression) &&
             columns.Any(column => Regex.IsMatch(expression, $@"(?<![\w]){Regex.Escape(column)}(?![\w])", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1)));
+
+        #endregion
+
+        #region Nested Types
+
+        /// <summary>
+        /// The columns that are created in a table: the source columns, and the new names of the ones that are renamed.
+        /// </summary>
+        internal sealed class Selection
+        {
+            /// <summary>
+            /// Creates a new instance of <see cref="Selection"/> class.
+            /// </summary>
+            /// <param name="columns">The distinct names of the source columns to be created (<c>null</c> if all the columns are created).</param>
+            /// <param name="renamed">The new names of the columns by the source column name (<c>null</c> if no column is renamed).</param>
+            public Selection(IList<string> columns,
+                IDictionary<string, string> renamed)
+            {
+                Columns = columns;
+                Renamed = renamed;
+            }
+
+            /// <summary>
+            /// Gets the distinct names of the source columns to be created (<c>null</c> if all the columns are created).
+            /// </summary>
+            public IList<string> Columns { get; }
+
+            /// <summary>
+            /// Gets the new names of the columns by the source column name (<c>null</c> if no column is renamed).
+            /// </summary>
+            public IDictionary<string, string> Renamed { get; }
+        }
 
         #endregion
     }
