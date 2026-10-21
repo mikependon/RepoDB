@@ -6,6 +6,7 @@
 
 #endregion
 
+using RepoDb.Schema;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -545,7 +546,7 @@ namespace RepoDb.Schema.AuroraDbMySqlConnector.IntegrationTests
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopyTableSchemasToIfTheReferencedTableIsNotPartOfThemAndDoesNotExist()
+        public void TestCopyTableSchemasToIfTheReferencedTableIsNotPartOfThemAndDoesNotExistLeavesOutTheForeignKey()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
@@ -553,8 +554,14 @@ namespace RepoDb.Schema.AuroraDbMySqlConnector.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
 
-                // Act/Assert
-                Assert.Throws<AuroraDbException>(() => source.CopyTableSchemaTo(new[] { "Shipment" }, target));
+                // Act
+                var results = new List<CopyTableSchemaResult>();
+                source.CopyTableSchemaTo(new[] { "Shipment" }, target, createdCallback: results.Add);
+
+                // Assert
+                Assert.AreEqual(1, results.Count);
+                Assert.IsTrue(results[0].Warnings.Count > 0);
+                Assert.AreEqual(0, results[0].Errors.Count);
             }
         }
 

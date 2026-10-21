@@ -82,6 +82,10 @@ namespace RepoDb.Schema
             // A foreign key is added to a table that exists only if the table that it references is copied, or already exists (a table is not created to be referenced)
             bool CanBeReferenced(ForeignKeyInfo foreignKey)
             {
+                if (foreignKey.ReferencedTable == null)
+                {
+                    return true;
+                }
                 var name = composer.ComposeName(foreignKey.ReferencedTable);
                 return tables.Any(item => string.Equals(item.Name, name, StringComparison.Ordinal)) || Probe(composer.ComposeTableExists(name)) == true;
             }
@@ -95,6 +99,13 @@ namespace RepoDb.Schema
                     table.MissingIndexes = table.Schema.Indexes.Where(index => index.Name != null && Probe(composer.ComposeIndexExists(table.Name, index.Name)) == false).ToList();
                     table.MissingForeignKeys = table.Schema.ForeignKeys.Where(foreignKey => foreignKey.Name != null && Probe(composer.ComposeForeignKeyExists(table.Name, foreignKey.Name)) == false && CanBeReferenced(foreignKey)).ToList();
                 }
+            }
+
+            // The tables that are created are created without what the destination refuses: the foreign keys that reference a table that is not copied and does not exist,
+            // and the check constraints that the composer does not accept
+            foreach (var table in tables.Where(table => table.Exists != true || behavior == CopyTableSchemaExistsBehavior.Drop).ToList())
+            {
+                SkipUnsupported(table, table.Schema.ForeignKeys.Where(foreignKey => !CanBeReferenced(foreignKey)).ToList(), composer);
             }
             CopyTableSchemaIndexNames.Resolve(tables, behavior, composer, destinationConnection.GetDbSetting()?.AreIndexNamesUniquePerSchema == true, Probe);
         }
@@ -128,6 +139,10 @@ namespace RepoDb.Schema
             // A foreign key is added to a table that exists only if the table that it references is copied, or already exists (a table is not created to be referenced)
             async Task<bool> CanBeReferenced(ForeignKeyInfo foreignKey)
             {
+                if (foreignKey.ReferencedTable == null)
+                {
+                    return true;
+                }
                 var name = composer.ComposeName(foreignKey.ReferencedTable);
                 return tables.Any(item => string.Equals(item.Name, name, StringComparison.Ordinal)) || await Probe(composer.ComposeTableExists(name)).ConfigureAwait(false) == true;
             }
@@ -163,7 +178,64 @@ namespace RepoDb.Schema
                     }
                 }
             }
+
+            foreach (var table in tables.Where(table => table.Exists != true || behavior == CopyTableSchemaExistsBehavior.Drop).ToList())
+            {
+                var unreferenced = new List<ForeignKeyInfo>();
+                foreach (var foreignKey in table.Schema.ForeignKeys)
+                {
+                    if (!await CanBeReferenced(foreignKey).ConfigureAwait(false))
+                    {
+                        unreferenced.Add(foreignKey);
+                    }
+                }
+                SkipUnsupported(table, unreferenced, composer);
+            }
             await CopyTableSchemaIndexNames.ResolveAsync(tables, behavior, composer, destinationConnection.GetDbSetting()?.AreIndexNamesUniquePerSchema == true, Probe).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Leaves out of the schema of a table that is created the objects that the destination database refuses, and reports each one as a warning of the table:
+        /// the foreign keys that reference a table that is not copied and does not exist in the destination, and the check constraints that the composer does not accept
+        /// (see <see cref="ICheckConstraintSupport"/>).
+        /// </summary>
+        /// <param name="table">The state of the table.</param>
+        /// <param name="foreignKeys">The foreign keys of the table that reference a table that is not copied and does not exist in the destination.</param>
+        /// <param name="composer">The composer of the destination database.</param>
+        internal static void SkipUnsupported(CopyTableSchemaPlanTable table,
+            IList<ForeignKeyInfo> foreignKeys,
+            ISchemaComposer composer)
+        {
+            var support = composer as ICheckConstraintSupport;
+            var checkConstraints = support == null
+                ? new List<KeyValuePair<CheckConstraintInfo, string>>()
+                : table.Schema.CheckConstraints
+                    .Select(checkConstraint => new KeyValuePair<CheckConstraintInfo, string>(checkConstraint, support.GetUnsupportedReason(checkConstraint)))
+                    .Where(pair => pair.Value != null)
+                    .ToList();
+            if (foreignKeys.Count == 0 && checkConstraints.Count == 0)
+            {
+                return;
+            }
+
+            var schema = table.Schema;
+            table.Schema = new TableSchema(schema.Table.Name, schema.Table.Schema)
+            {
+                Columns = schema.Columns,
+                PrimaryKey = schema.PrimaryKey,
+                Indexes = schema.Indexes,
+                UniqueConstraints = schema.UniqueConstraints,
+                CheckConstraints = schema.CheckConstraints.Where(checkConstraint => checkConstraints.All(pair => !ReferenceEquals(pair.Key, checkConstraint))).ToList(),
+                ForeignKeys = schema.ForeignKeys.Where(foreignKey => !foreignKeys.Contains(foreignKey)).ToList()
+            };
+            foreach (var foreignKey in foreignKeys)
+            {
+                table.Warnings.Add($"Skipped the foreign key '{foreignKey.Name}': the table '{foreignKey.ReferencedTable.Name}' is not part of the copy and does not exist in the destination.");
+            }
+            foreach (var pair in checkConstraints)
+            {
+                table.Warnings.Add($"Skipped the check constraint '{pair.Key.Name}': {pair.Value}.");
+            }
         }
 
         /// <summary>
@@ -258,6 +330,7 @@ namespace RepoDb.Schema
                     AddedIndexes = aligned ? table.MissingIndexes.Select(index => index.Name).ToList() : new List<string>(),
                     AddedForeignKeys = aligned ? table.MissingForeignKeys.Select(foreignKey => foreignKey.Name).ToList() : new List<string>(),
                     Errors = schemaErrors,
+                    Warnings = table.Warnings.ToList(),
                     TableName = schema.Table.Name,
                     SourceSchema = table.Source.Table.Schema,
                     DestinationSchema = schema.Table.Schema,

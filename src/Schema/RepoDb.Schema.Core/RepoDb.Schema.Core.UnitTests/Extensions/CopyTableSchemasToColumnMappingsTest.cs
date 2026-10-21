@@ -186,7 +186,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup
             MapReader(GetPerson(), GetCountry());
             MapComposer();
-            var destination = GetDestination();
+            var destination = GetDestination("TABLE_EXISTS Country");
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo("Person", destination, AllColumns());
@@ -246,7 +246,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup
             MapReader(GetPerson(), GetCountry());
             MapComposer();
-            var destination = GetDestination();
+            var destination = GetDestination("TABLE_EXISTS Country");
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo("Person", destination, All(Map("Id"), Map("Name", "Age"), Map("Age", "Name"), Map("CountryId")));

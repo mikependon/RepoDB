@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -79,7 +80,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
                 .Concat(list.SelectMany(s => s.ForeignKeys.Select(f => $"ADD {f.Name} TO {s.Table.Name};")));
         }
 
-        private static void MapComposer(bool composeForeignKeyExists = true)
+        private static void MapComposer(bool composeForeignKeyExists = true, Func<CheckConstraintInfo, string> unsupportedReason = null)
         {
             var composer = new Mock<ISchemaComposer>();
             composer.Setup(c => c.ComposeName(It.IsAny<TableInfo>())).Returns<TableInfo>(t => t.Name);
@@ -96,7 +97,19 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             {
                 composer.Setup(c => c.ComposeForeignKeyExists(It.IsAny<string>(), It.IsAny<string>())).Returns<string, string>((n, f) => $"FK_EXISTS {n}.{f}");
             }
+            if (unsupportedReason != null)
+            {
+                composer.As<ICheckConstraintSupport>().Setup(c => c.GetUnsupportedReason(It.IsAny<CheckConstraintInfo>())).Returns(unsupportedReason);
+            }
             SchemaComposerMapper.Add<CustomDbConnection>(composer.Object, true);
+        }
+
+        private static TableSchema GetPeople()
+        {
+            var schema = GetSchema("People", new[] { "Id", "BirthDate", "HireDate" }, new string[0], new (string, string)[0]);
+            schema.CheckConstraints.Add(new CheckConstraintInfo("CK_Birthdate") { Expression = "BirthDate < now()" });
+            schema.CheckConstraints.Add(new CheckConstraintInfo("CK_HireDate") { Expression = "HireDate >= '1990-01-01'" });
+            return schema;
         }
 
         private static CustomDbConnection GetDestination(params string[] existing) =>
@@ -348,6 +361,200 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Assert
             CollectionAssert.AreEqual(new[] { "CREATE TABLE Customers;", "CREATE TABLE Orders;", "CREATE INDEX IX_Orders_CustomerId ON Orders;", "ADD FK_Orders_Customers TO Orders;" }, destination.ExecutedCommands);
+        }
+
+        #endregion
+
+        #region Unsupported Objects
+
+        [TestMethod]
+        public void TestCopyTableSchemasToLeavesOutTheForeignKeyIfTheReferencedTableIsNotCopiedAndDoesNotExist()
+        {
+            // Setup
+            MapReader(GetOrders());
+            MapComposer();
+            var destination = GetDestination();
+            var results = new List<CopyTableSchemaResult>();
+
+            // Act
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, destination, createdCallback: results.Add);
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { "CREATE TABLE Orders;", "CREATE INDEX IX_Orders_CustomerId ON Orders;" }, destination.ExecutedCommands);
+            Assert.AreEqual(1, results.Count);
+            Assert.AreEqual(0, results[0].ForeignKeyCount);
+            Assert.AreEqual(0, results[0].Errors.Count);
+            Assert.AreEqual(1, results[0].Warnings.Count);
+            StringAssert.Contains(results[0].Warnings[0], "FK_Orders_Customers", StringComparison.Ordinal);
+            StringAssert.Contains(results[0].Warnings[0], "Customers", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public async Task TestCopyTableSchemasToAsyncLeavesOutTheForeignKeyIfTheReferencedTableIsNotCopiedAndDoesNotExist()
+        {
+            // Setup
+            MapReader(GetOrders());
+            MapComposer();
+            var destination = GetDestination();
+            var results = new List<CopyTableSchemaResult>();
+
+            // Act
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Orders" }, destination, createdCallback: results.Add);
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { "CREATE TABLE Orders;", "CREATE INDEX IX_Orders_CustomerId ON Orders;" }, destination.ExecutedCommands);
+            Assert.AreEqual(1, results[0].Warnings.Count);
+            Assert.AreEqual(0, results[0].ForeignKeyCount);
+        }
+
+        [TestMethod]
+        public void TestCopyTableSchemasToCreatesTheForeignKeyIfTheReferencedTableIsCopied()
+        {
+            // Setup
+            MapReader(GetCustomers(), GetOrders());
+            MapComposer();
+            var destination = GetDestination();
+            var results = new List<CopyTableSchemaResult>();
+
+            // Act
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Orders" }, destination, createdCallback: results.Add);
+
+            // Assert
+            CollectionAssert.Contains(destination.ExecutedCommands, "ADD FK_Orders_Customers TO Orders;");
+            Assert.IsTrue(results.All(result => result.Warnings.Count == 0));
+        }
+
+        [TestMethod]
+        public void TestCopyTableSchemasToCreatesTheForeignKeyIfTheReferencedTableIsNotCopiedButExists()
+        {
+            // Setup
+            MapReader(GetOrders());
+            MapComposer();
+            var destination = GetDestination("TABLE_EXISTS Customers");
+            var results = new List<CopyTableSchemaResult>();
+
+            // Act
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, destination, createdCallback: results.Add);
+
+            // Assert
+            CollectionAssert.Contains(destination.ExecutedCommands, "ADD FK_Orders_Customers TO Orders;");
+            Assert.AreEqual(0, results[0].Warnings.Count);
+            Assert.AreEqual(1, results[0].ForeignKeyCount);
+        }
+
+        [TestMethod]
+        public void TestCopyTableSchemasToWithDropLeavesOutTheForeignKeyIfTheReferencedTableIsNotCopiedAndDoesNotExist()
+        {
+            // Setup
+            MapReader(GetOrders());
+            MapComposer();
+            var destination = GetDestination("TABLE_EXISTS Orders");
+            var results = new List<CopyTableSchemaResult>();
+
+            // Act
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop, createdCallback: results.Add);
+
+            // Assert
+            CollectionAssert.DoesNotContain(destination.ExecutedCommands, "ADD FK_Orders_Customers TO Orders;");
+            Assert.AreEqual(1, results[0].Warnings.Count);
+        }
+
+        [TestMethod]
+        public void TestCopyTableSchemasToDoesNotWarnAboutATableThatExistsAndIsSkipped()
+        {
+            // Setup
+            MapReader(GetOrders());
+            MapComposer();
+            var destination = GetDestination("TABLE_EXISTS Orders");
+            var results = new List<CopyTableSchemaResult>();
+
+            // Act
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, destination, createdCallback: results.Add);
+
+            // Assert
+            Assert.AreEqual(0, destination.ExecutedCommands.Count);
+            Assert.AreEqual(0, results[0].Warnings.Count);
+        }
+
+        [TestMethod]
+        public void TestCopyTableSchemasToDoesNotChangeTheSchemaOfTheSourceWhenAForeignKeyIsLeftOut()
+        {
+            // Setup
+            var orders = GetOrders();
+            MapReader(orders);
+            MapComposer();
+
+            // Act
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, GetDestination());
+
+            // Assert
+            Assert.AreEqual(1, orders.ForeignKeys.Count);
+        }
+
+        [TestMethod]
+        public void TestCopyTableSchemasToLeavesOutTheCheckConstraintThatTheComposerRefuses()
+        {
+            // Setup
+            MapReader(GetPeople());
+            MapComposer(unsupportedReason: check => check.Expression.Contains("now()", StringComparison.Ordinal) ? "its expression uses now(), which the destination does not allow in a CHECK constraint" : null);
+            var results = new List<CopyTableSchemaResult>();
+
+            // Act
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "People" }, GetDestination(), createdCallback: results.Add);
+
+            // Assert
+            Assert.AreEqual(1, results[0].CheckConstraintCount);
+            Assert.AreEqual(1, results[0].Warnings.Count);
+            StringAssert.Contains(results[0].Warnings[0], "CK_Birthdate", StringComparison.Ordinal);
+            StringAssert.Contains(results[0].Warnings[0], "now()", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public async Task TestCopyTableSchemasToAsyncLeavesOutTheCheckConstraintThatTheComposerRefuses()
+        {
+            // Setup
+            MapReader(GetPeople());
+            MapComposer(unsupportedReason: check => check.Expression.Contains("now()", StringComparison.Ordinal) ? "its expression uses now(), which the destination does not allow in a CHECK constraint" : null);
+            var results = new List<CopyTableSchemaResult>();
+
+            // Act
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "People" }, GetDestination(), createdCallback: results.Add);
+
+            // Assert
+            Assert.AreEqual(1, results[0].CheckConstraintCount);
+            Assert.AreEqual(1, results[0].Warnings.Count);
+        }
+
+        [TestMethod]
+        public void TestCopyTableSchemasToKeepsAllTheCheckConstraintsIfTheComposerAcceptsThem()
+        {
+            // Setup
+            MapReader(GetPeople());
+            MapComposer(unsupportedReason: check => null);
+            var results = new List<CopyTableSchemaResult>();
+
+            // Act
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "People" }, GetDestination(), createdCallback: results.Add);
+
+            // Assert
+            Assert.AreEqual(2, results[0].CheckConstraintCount);
+            Assert.AreEqual(0, results[0].Warnings.Count);
+        }
+
+        [TestMethod]
+        public void TestCopyTableSchemasToKeepsAllTheCheckConstraintsIfTheComposerDoesNotSayWhichOnesItRefuses()
+        {
+            // Setup
+            MapReader(GetPeople());
+            MapComposer();
+            var results = new List<CopyTableSchemaResult>();
+
+            // Act
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "People" }, GetDestination(), createdCallback: results.Add);
+
+            // Assert
+            Assert.AreEqual(2, results[0].CheckConstraintCount);
+            Assert.AreEqual(0, results[0].Warnings.Count);
         }
 
         #endregion

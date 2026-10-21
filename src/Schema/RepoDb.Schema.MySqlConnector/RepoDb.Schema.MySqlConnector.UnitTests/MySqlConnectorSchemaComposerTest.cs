@@ -1166,5 +1166,58 @@ namespace RepoDb.Schema.MySqlConnector.UnitTests
         }
 
         #endregion
+
+        #region Check Constraints
+
+        private static string GetUnsupportedReason(string expression) =>
+            new MySqlConnectorSchemaComposer().GetUnsupportedReason(new CheckConstraintInfo("CK_Test") { Expression = expression });
+
+        [TestMethod]
+        public void TestMySqlConnectorSchemaComposerGetUnsupportedReasonRefusesAFunctionThatIsNotDeterministic()
+        {
+            // Act
+            var actual = GetUnsupportedReason("BirthDate < now()");
+
+            // Assert
+            Assert.IsNotNull(actual);
+            StringAssert.Contains(actual, "now()", StringComparison.Ordinal);
+            StringAssert.Contains(actual, "MySQL", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestMySqlConnectorSchemaComposerGetUnsupportedReasonRefusesTheFunctionsOfOtherDatabases()
+        {
+            // Act/Assert
+            StringAssert.Contains(GetUnsupportedReason("([BirthDate]<getdate())"), "getdate()", StringComparison.Ordinal);
+            StringAssert.Contains(GetUnsupportedReason("Id <> newid()"), "newid()", StringComparison.Ordinal);
+            StringAssert.Contains(GetUnsupportedReason("Score < RAND()"), "RAND".ToLowerInvariant() + "()", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestMySqlConnectorSchemaComposerGetUnsupportedReasonRefusesTheKeywordsThatAreNotDeterministic()
+        {
+            // Act/Assert
+            StringAssert.Contains(GetUnsupportedReason("BirthDate < CURRENT_TIMESTAMP"), "current_timestamp", StringComparison.Ordinal);
+            StringAssert.Contains(GetUnsupportedReason("Day = CURRENT_DATE"), "current_date", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestMySqlConnectorSchemaComposerGetUnsupportedReasonAcceptsTheCheckConstraintsThatAreDeterministic()
+        {
+            // Act/Assert
+            Assert.IsNull(GetUnsupportedReason("HireDate >= '1990-01-01'"));
+            Assert.IsNull(GetUnsupportedReason("`now` > 0 AND length(`Name`) > 0"));
+            Assert.IsNull(GetUnsupportedReason("current_date_value > 0"));
+        }
+
+        [TestMethod]
+        public void TestMySqlConnectorSchemaComposerGetUnsupportedReasonAcceptsACheckConstraintWithoutExpression()
+        {
+            // Act/Assert
+            Assert.IsNull(GetUnsupportedReason(null));
+            Assert.IsNull(new MySqlConnectorSchemaComposer().GetUnsupportedReason(null));
+        }
+
+        #endregion
     }
 }

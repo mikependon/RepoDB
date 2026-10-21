@@ -6,6 +6,7 @@
 
 #endregion
 
+using RepoDb.Schema;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -418,7 +419,7 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
         #region Exceptions
 
         [TestMethod]
-        public void ThrowExceptionOnCopyTableSchemasToIfTheReferencedTableIsNotPartOfThemAndDoesNotExist()
+        public void TestCopyTableSchemasToIfTheReferencedTableIsNotPartOfThemAndDoesNotExistLeavesOutTheForeignKey()
         {
             using (var source = new NpgsqlConnection(Database.ConnectionStringForSource))
             using (var target = new NpgsqlConnection(Database.ConnectionStringForTarget))
@@ -426,8 +427,14 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
 
-                // Act/Assert
-                Assert.Throws<PostgresException>(() => source.CopyTableSchemaTo(new[] { "Person" }, target));
+                // Act
+                var results = new List<CopyTableSchemaResult>();
+                source.CopyTableSchemaTo(new[] { "Person" }, target, createdCallback: results.Add);
+
+                // Assert
+                Assert.AreEqual(1, results.Count);
+                Assert.IsTrue(results[0].Warnings.Count > 0);
+                Assert.AreEqual(0, results[0].Errors.Count);
             }
         }
 

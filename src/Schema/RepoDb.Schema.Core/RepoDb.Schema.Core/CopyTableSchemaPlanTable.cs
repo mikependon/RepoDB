@@ -80,6 +80,11 @@ namespace RepoDb.Schema
         public CopyTableSchemaOutcome Outcome { get; set; } = CopyTableSchemaOutcome.Created;
 
         /// <summary>
+        /// Gets or sets the warnings of the table: what is left out when the table is created (i.e.: a foreign key whose referenced table is not in the destination).
+        /// </summary>
+        public IList<string> Warnings { get; set; } = new List<string>();
+
+        /// <summary>
         /// Gets or sets the statement that drops the existing table (when the table is dropped before it is created).
         /// </summary>
         public string DropStatement { get; set; }

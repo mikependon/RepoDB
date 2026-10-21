@@ -177,10 +177,12 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup (the table is in the schema, but it references a table of another schema)
             MapReader(GetLedger());
             var composed = new List<TableSchema>();
-            MapComposer(composed);
+            var composer = MapComposer(composed);
+            composer.Setup(c => c.ComposeTableExists("dbo.Invoice")).Returns("INVOICE_EXISTS");
+            var destination = new CustomDbConnection { ScalarResult = statement => statement == "INVOICE_EXISTS" ? 1 : 0 };
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Ledger" }, GetDestination(), "dbo");
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Ledger" }, destination, "dbo");
 
             // Assert
             Assert.AreEqual(new TableInfo("Invoice", "dbo"), composed.Single().ForeignKeys.Single().ReferencedTable);
