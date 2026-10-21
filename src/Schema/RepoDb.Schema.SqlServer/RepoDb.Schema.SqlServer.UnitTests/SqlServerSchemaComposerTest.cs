@@ -1132,5 +1132,42 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         }
 
         #endregion
+
+        #region Collation
+
+        private static string ComposeCollatedSchema(string provider)
+        {
+            var schema = new TableSchema("Person", "dbo");
+            schema.Columns.Add(new ColumnInfo
+            {
+                Ordinal = 1,
+                Collation = "SQL_Latin1_General_CP1_CI_AS",
+                Field = new DbField("Name", false, false, false, typeof(string), 128, 0, 0, "varchar", false, provider)
+            });
+            return string.Join("\n", new SqlServerSchemaComposer().ComposeSchema(schema));
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeCreateTableKeepsTheCollationOfAColumnOfTheSameProvider()
+        {
+            // Act
+            var actual = ComposeCollatedSchema("SqlServer");
+
+            // Assert
+            StringAssert.Contains(actual, "COLLATE SQL_Latin1_General_CP1_CI_AS", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSqlServerSchemaComposerComposeCreateTableDoesNotComposeTheCollationOfAColumnOfAnotherProvider()
+        {
+            // Act
+            var actual = ComposeCollatedSchema("MySql");
+
+            // Assert
+            Assert.IsFalse(actual.Contains("COLLATE", StringComparison.Ordinal));
+            Assert.IsFalse(actual.Contains("SQL_Latin1_General_CP1_CI_AS", StringComparison.Ordinal));
+        }
+
+        #endregion
     }
 }

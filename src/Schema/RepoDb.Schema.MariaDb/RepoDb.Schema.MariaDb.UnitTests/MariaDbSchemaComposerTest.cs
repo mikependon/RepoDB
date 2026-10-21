@@ -1129,5 +1129,42 @@ namespace RepoDb.Schema.MariaDb.UnitTests
         }
 
         #endregion
+
+        #region Collation
+
+        private static string ComposeCollatedSchema(string provider)
+        {
+            var schema = new TableSchema("Person", "dbo");
+            schema.Columns.Add(new ColumnInfo
+            {
+                Ordinal = 1,
+                Collation = "utf8mb4_general_ci",
+                Field = new DbField("Name", false, false, false, typeof(string), 128, 0, 0, "varchar", false, provider)
+            });
+            return string.Join("\n", new MariaDbSchemaComposer().ComposeSchema(schema));
+        }
+
+        [TestMethod]
+        public void TestMariaDbSchemaComposerComposeCreateTableKeepsTheCollationOfAColumnOfTheSameProvider()
+        {
+            // Act
+            var actual = ComposeCollatedSchema("MariaDb");
+
+            // Assert
+            StringAssert.Contains(actual, "COLLATE utf8mb4_general_ci", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestMariaDbSchemaComposerComposeCreateTableDoesNotComposeTheCollationOfAColumnOfAnotherProvider()
+        {
+            // Act
+            var actual = ComposeCollatedSchema("SqlServer");
+
+            // Assert
+            Assert.IsFalse(actual.Contains("COLLATE", StringComparison.Ordinal));
+            Assert.IsFalse(actual.Contains("utf8mb4_general_ci", StringComparison.Ordinal));
+        }
+
+        #endregion
     }
 }

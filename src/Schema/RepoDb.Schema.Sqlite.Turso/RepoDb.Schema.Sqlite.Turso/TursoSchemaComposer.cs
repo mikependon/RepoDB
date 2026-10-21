@@ -460,9 +460,10 @@ namespace RepoDb.Schema
             {
                 definition.Append(" DEFAULT ").Append(column.DefaultExpression);
             }
-            if (!string.IsNullOrWhiteSpace(column.Collation))
+            var collation = SchemaCollation.Resolve(column, "SQLite");
+            if (collation != null)
             {
-                definition.Append(" COLLATE ").Append(column.Collation);
+                definition.Append(" COLLATE ").Append(collation);
             }
             return definition.ToString();
         }

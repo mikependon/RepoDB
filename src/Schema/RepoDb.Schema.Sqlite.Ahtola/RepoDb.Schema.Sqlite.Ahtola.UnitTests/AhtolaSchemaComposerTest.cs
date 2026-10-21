@@ -1144,5 +1144,42 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
         }
 
         #endregion
+
+        #region Collation
+
+        private static string ComposeCollatedSchema(string provider)
+        {
+            var schema = new TableSchema("Person", "dbo");
+            schema.Columns.Add(new ColumnInfo
+            {
+                Ordinal = 1,
+                Collation = "NOCASE",
+                Field = new DbField("Name", false, false, false, typeof(string), 128, 0, 0, "varchar", false, provider)
+            });
+            return string.Join("\n", new AhtolaSchemaComposer().ComposeSchema(schema));
+        }
+
+        [TestMethod]
+        public void TestAhtolaSchemaComposerComposeCreateTableKeepsTheCollationOfAColumnOfTheSameProvider()
+        {
+            // Act
+            var actual = ComposeCollatedSchema("SQLite");
+
+            // Assert
+            StringAssert.Contains(actual, "COLLATE NOCASE", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestAhtolaSchemaComposerComposeCreateTableDoesNotComposeTheCollationOfAColumnOfAnotherProvider()
+        {
+            // Act
+            var actual = ComposeCollatedSchema("SqlServer");
+
+            // Assert
+            Assert.IsFalse(actual.Contains("COLLATE", StringComparison.Ordinal));
+            Assert.IsFalse(actual.Contains("NOCASE", StringComparison.Ordinal));
+        }
+
+        #endregion
     }
 }

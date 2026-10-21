@@ -388,9 +388,10 @@ namespace RepoDb.Schema
 
             var type = ComposeTypeName(column);
             definition.Append(type);
-            if (!string.IsNullOrWhiteSpace(column.Collation) && IsCharacterType(type))
+            var collation = SchemaCollation.Resolve(column, "SqlServer");
+            if (collation != null && IsCharacterType(type))
             {
-                definition.Append(" COLLATE ").Append(column.Collation);
+                definition.Append(" COLLATE ").Append(collation);
             }
             if (field.IsIdentity)
             {

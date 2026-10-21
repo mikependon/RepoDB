@@ -398,9 +398,10 @@ namespace RepoDb.Schema
 
             var type = ComposeTypeName(column);
             definition.Append(type);
-            if (!string.IsNullOrWhiteSpace(column.Collation) && IsCharacterType(type))
+            var collation = SchemaCollation.Resolve(column, "MariaDb", "MariaDbConnector");
+            if (collation != null && IsCharacterType(type))
             {
-                definition.Append(" COLLATE ").Append(column.Collation);
+                definition.Append(" COLLATE ").Append(collation);
             }
 
             // A generated column is always stored

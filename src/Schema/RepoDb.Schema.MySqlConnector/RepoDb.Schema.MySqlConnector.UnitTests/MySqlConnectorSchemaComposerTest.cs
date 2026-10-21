@@ -1129,5 +1129,42 @@ namespace RepoDb.Schema.MySqlConnector.UnitTests
         }
 
         #endregion
+
+        #region Collation
+
+        private static string ComposeCollatedSchema(string provider)
+        {
+            var schema = new TableSchema("Person", "dbo");
+            schema.Columns.Add(new ColumnInfo
+            {
+                Ordinal = 1,
+                Collation = "utf8mb4_general_ci",
+                Field = new DbField("Name", false, false, false, typeof(string), 128, 0, 0, "varchar", false, provider)
+            });
+            return string.Join("\n", new MySqlConnectorSchemaComposer().ComposeSchema(schema));
+        }
+
+        [TestMethod]
+        public void TestMySqlConnectorSchemaComposerComposeCreateTableKeepsTheCollationOfAColumnOfTheSameProvider()
+        {
+            // Act
+            var actual = ComposeCollatedSchema("MySqlConnector");
+
+            // Assert
+            StringAssert.Contains(actual, "COLLATE utf8mb4_general_ci", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestMySqlConnectorSchemaComposerComposeCreateTableDoesNotComposeTheCollationOfAColumnOfAnotherProvider()
+        {
+            // Act
+            var actual = ComposeCollatedSchema("SqlServer");
+
+            // Assert
+            Assert.IsFalse(actual.Contains("COLLATE", StringComparison.Ordinal));
+            Assert.IsFalse(actual.Contains("utf8mb4_general_ci", StringComparison.Ordinal));
+        }
+
+        #endregion
     }
 }
