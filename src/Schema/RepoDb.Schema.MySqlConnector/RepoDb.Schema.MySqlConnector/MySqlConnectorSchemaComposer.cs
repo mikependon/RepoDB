@@ -24,25 +24,6 @@ namespace RepoDb.Schema
     {
         #region Private Variables
 
-        /// <summary>
-        /// The functions that are not deterministic (the date and the time, the random values, the session and the server), in MySQL and in the languages of the other databases.
-        /// They can not be used in a <c>CHECK</c> constraint, as it must give the same answer for the same row every time.
-        /// </summary>
-        private static readonly string[] NonDeterministicFunctions =
-        {
-            "now", "curdate", "curtime", "sysdate", "utc_date", "utc_time", "utc_timestamp", "unix_timestamp", "rand", "uuid", "uuid_short",
-            "connection_id", "user", "session_user", "system_user", "database", "schema", "version", "last_insert_id", "row_count", "found_rows",
-            "getdate", "getutcdate", "sysdatetime", "sysutcdatetime", "sysdatetimeoffset", "newid", "newsequentialid"
-        };
-
-        /// <summary>
-        /// The keywords that are not deterministic, which are used without parentheses.
-        /// </summary>
-        private static readonly string[] NonDeterministicKeywords =
-        {
-            "current_timestamp", "current_date", "current_time", "current_user", "localtime", "localtimestamp"
-        };
-
         private readonly DbTypeNameToMySqlConnectorTypeNameResolver _typeNameResolver = new DbTypeNameToMySqlConnectorTypeNameResolver();
         private readonly ClientTypeToMySqlConnectorTypeNameResolver _clientTypeResolver = new ClientTypeToMySqlConnectorTypeNameResolver();
 
@@ -55,16 +36,8 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="checkConstraint">The check constraint of the source table.</param>
         /// <returns>The reason, or <c>null</c> if the check constraint can be created.</returns>
-        public string GetUnsupportedReason(CheckConstraintInfo checkConstraint)
-        {
-            var function = SchemaExpression.FindUsage(checkConstraint?.Expression, NonDeterministicFunctions, null);
-            if (function != null)
-            {
-                return $"its expression uses {function}(), which MySQL does not allow in a CHECK constraint";
-            }
-            var keyword = SchemaExpression.FindUsage(checkConstraint?.Expression, null, NonDeterministicKeywords);
-            return keyword == null ? null : $"its expression uses {keyword}, which MySQL does not allow in a CHECK constraint";
-        }
+        public string GetUnsupportedReason(CheckConstraintInfo checkConstraint) =>
+            SchemaExpression.GetNonDeterministicReason(checkConstraint, "MySQL");
 
         /// <summary>
         /// Composes the whole script that creates the table, its indexes and its foreign keys, as an ordered list of statements.

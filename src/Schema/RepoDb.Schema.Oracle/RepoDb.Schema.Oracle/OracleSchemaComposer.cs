@@ -21,7 +21,7 @@ namespace RepoDb.Schema
     /// The column types are mapped on a best-effort basis, so the schema can come from an Oracle database or from another database engine.
     /// A statement has no terminator (Oracle does not accept the <c>;</c> from the client), and a DDL statement is committed by the server.
     /// </summary>
-    public class OracleSchemaComposer : ISchemaComposer
+    public class OracleSchemaComposer : ISchemaComposer, ICheckConstraintSupport
     {
         #region Private Variables
 
@@ -32,6 +32,14 @@ namespace RepoDb.Schema
         #endregion
 
         #region Public Methods
+
+        /// <summary>
+        /// Gets the reason why Oracle refuses the check constraint: a function that is not deterministic (like the current date and time) can not be used in a <c>CHECK</c>.
+        /// </summary>
+        /// <param name="checkConstraint">The check constraint of the source table.</param>
+        /// <returns>The reason, or <c>null</c> if the check constraint can be created.</returns>
+        public string GetUnsupportedReason(CheckConstraintInfo checkConstraint) =>
+            SchemaExpression.GetNonDeterministicReason(checkConstraint, "Oracle");
 
         /// <summary>
         /// Composes the whole script that creates the table, its indexes and its foreign keys, as an ordered list of statements.
