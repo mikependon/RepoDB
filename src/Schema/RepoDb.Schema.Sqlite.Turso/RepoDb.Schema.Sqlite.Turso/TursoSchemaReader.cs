@@ -801,6 +801,7 @@ namespace RepoDb.Schema
                     Field = field,
                     Ordinal = columns.Count + 1,
                     DefaultExpression = column.Default,
+                    DefaultValue = SchemaDefaultValue.Classify(column.Default),
                     ComputedExpression = column.Hidden >= 2 ? parsed?.GeneratedExpression : null,
                     Collation = parsed?.Collation
                 });

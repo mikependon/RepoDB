@@ -639,6 +639,7 @@ namespace RepoDb.Schema
                 IdentitySeed = NullableLong(r, "IdentitySeed"),
                 IdentityIncrement = NullableLong(r, "IdentityIncrement"),
                 DefaultExpression = defaultDefinition,
+                DefaultValue = SchemaDefaultValue.Classify(defaultDefinition),
                 ComputedExpression = ToComputedExpression(Text(r, "ComputedDefinition"))
             };
         }

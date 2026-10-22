@@ -20,9 +20,14 @@ namespace RepoDb.Schema
     /// An <see cref="ISchemaComposer"/> that composes the SQL statements, in the dialect of MySQL, that create the objects of a table.
     /// The column types are mapped on a best-effort basis, so the schema can come from a MySQL database or from another database engine.
     /// </summary>
-    public class MySqlSchemaComposer : ISchemaComposer, ICheckConstraintSupport
+    public class MySqlSchemaComposer : ISchemaComposer, ICheckConstraintSupport, IColumnDefaultSupport
     {
         #region Private Variables
+
+        /// <summary>
+        /// The providers whose default expressions are written in the language of MySQL.
+        /// </summary>
+        private static readonly string[] DefaultProviders = { "MySql", "MySqlConnector", "AuroraDbMySqlConnector" };
 
         private readonly DbTypeNameToMySqlTypeNameResolver _typeNameResolver = new DbTypeNameToMySqlTypeNameResolver();
         private readonly ClientTypeToMySqlTypeNameResolver _clientTypeResolver = new ClientTypeToMySqlTypeNameResolver();
@@ -30,6 +35,17 @@ namespace RepoDb.Schema
         #endregion
 
         #region Public Methods
+
+        /// <summary>
+        /// Gets the reason why MySQL does not create the default value of the column (i.e.: the next value of a sequence, or a function of another database).
+        /// </summary>
+        /// <param name="column">The column of the source table.</param>
+        /// <returns>The reason, or <c>null</c> if the column has no default value or it is created.</returns>
+        public string GetUnsupportedDefaultReason(ColumnInfo column)
+        {
+            MySqlDefaultValueComposer.Compose(column, ComposeTypeName(column), "MySQL", DefaultProviders, out var reason);
+            return reason;
+        }
 
         /// <summary>
         /// Gets the reason why MySQL refuses the check constraint: a function that is not deterministic (like <c>NOW()</c>) can not be used in a <c>CHECK</c>.
@@ -422,9 +438,13 @@ namespace RepoDb.Schema
             {
                 definition.Append(" AUTO_INCREMENT");
             }
-            else if (string.IsNullOrWhiteSpace(column.ComputedExpression) && !string.IsNullOrWhiteSpace(column.DefaultExpression))
+            else if (string.IsNullOrWhiteSpace(column.ComputedExpression))
             {
-                definition.Append(" DEFAULT ").Append(column.DefaultExpression);
+                var defaultValue = MySqlDefaultValueComposer.Compose(column, type, "MySQL", DefaultProviders, out _);
+                if (defaultValue != null)
+                {
+                    definition.Append(" DEFAULT ").Append(defaultValue);
+                }
             }
             if (!string.IsNullOrWhiteSpace(column.Comment))
             {

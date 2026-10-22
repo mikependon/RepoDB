@@ -632,6 +632,7 @@ namespace RepoDb.Schema
                 Field = field,
                 Ordinal = Int(r, "Ordinal"),
                 DefaultExpression = isDefault ? expression : null,
+                DefaultValue = SchemaDefaultValue.Classify(isDefault ? expression : null),
                 ComputedExpression = isComputed ? expression : null
             };
         }

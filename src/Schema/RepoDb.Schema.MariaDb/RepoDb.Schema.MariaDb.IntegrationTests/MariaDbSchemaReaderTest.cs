@@ -383,9 +383,12 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual("0", age.DefaultExpression, StringComparer.Ordinal);
+                Assert.AreEqual(ColumnDefaultValue.Literal, age.DefaultValue);
                 Assert.IsTrue(age.Field.HasDefaultValue);
                 StringAssert.Contains(createdDate.DefaultExpression, "current_timestamp", StringComparison.OrdinalIgnoreCase);
+                Assert.AreEqual(ColumnDefaultValue.CurrentTimestamp, createdDate.DefaultValue);
                 Assert.IsNull(columns.Single(c => c.Field.Name == "Name").DefaultExpression);
+                Assert.AreEqual(ColumnDefaultValue.None, columns.Single(c => c.Field.Name == "Name").DefaultValue);
             }
         }
 

@@ -342,6 +342,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
                 Field = new DbField("Name", false, false, false, typeof(string), 50, null, null, "varchar", true, "Test"),
                 Ordinal = 2,
                 DefaultExpression = "'N/A'",
+                DefaultValue = ColumnDefaultValue.Literal,
                 Collation = "Latin1",
                 Comment = "The name"
             };
@@ -361,6 +362,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             Assert.AreEqual("FullName", column.Field.Name);
             Assert.AreEqual(2, column.Ordinal);
             Assert.AreEqual("'N/A'", column.DefaultExpression);
+            Assert.AreEqual(ColumnDefaultValue.Literal, column.DefaultValue);
             Assert.AreEqual("Latin1", column.Collation);
             Assert.AreEqual("The name", column.Comment);
             Assert.AreEqual(50, column.Field.Size);

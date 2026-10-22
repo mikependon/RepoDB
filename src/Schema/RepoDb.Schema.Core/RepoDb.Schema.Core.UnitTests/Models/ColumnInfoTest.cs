@@ -8,6 +8,7 @@
 
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Schema.Enumerations;
 using RepoDb.Schema.Models;
 
 namespace RepoDb.Schema.Core.UnitTests.Models
@@ -416,6 +417,75 @@ namespace RepoDb.Schema.Core.UnitTests.Models
 
         private static ColumnInfo Create() =>
             new ColumnInfo { Field = new DbField("Id", true, true, false, typeof(int), null, null, null, "int"), Ordinal = 1, DefaultExpression = "0", IdentitySeed = 1, IdentityIncrement = 1, ComputedExpression = "[A] + 1", Collation = "Latin1_General_CI_AS", Comment = "The id" };
+
+        #endregion
+
+        #region DefaultValue
+
+        [TestMethod]
+        public void TestColumnInfoDefaultValuePropertyDefaultValue()
+        {
+            // Act
+            var column = new ColumnInfo();
+            var actual = column.DefaultValue;
+
+            // Assert
+            Assert.AreEqual(ColumnDefaultValue.Unclassified, actual);
+        }
+
+        [TestMethod]
+        public void TestColumnInfoDefaultValueProperty()
+        {
+            // Act
+            var column = new ColumnInfo
+            {
+                DefaultValue = ColumnDefaultValue.CurrentTimestampUtc
+            };
+            var actual = column.DefaultValue;
+
+            // Assert
+            Assert.AreEqual(ColumnDefaultValue.CurrentTimestampUtc, actual);
+        }
+
+        [TestMethod]
+        public void TestColumnInfoNotEqualsWithDifferentDefaultValue()
+        {
+            // Act
+            var a = Create();
+            var b = Create();
+            b.DefaultValue = ColumnDefaultValue.NewGuid;
+
+            // Assert
+            Assert.IsFalse(a.Equals(b));
+            Assert.IsFalse(a == b);
+            Assert.IsTrue(a != b);
+        }
+
+        [TestMethod]
+        public void TestColumnInfoEqualsWithTheSameDefaultValue()
+        {
+            // Act
+            var a = Create();
+            var b = Create();
+            a.DefaultValue = ColumnDefaultValue.CurrentDate;
+            b.DefaultValue = ColumnDefaultValue.CurrentDate;
+
+            // Assert
+            Assert.IsTrue(a.Equals(b));
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [TestMethod]
+        public void TestColumnInfoHashCodeWithDifferentDefaultValue()
+        {
+            // Act
+            var a = Create();
+            var b = Create();
+            b.DefaultValue = ColumnDefaultValue.Literal;
+
+            // Assert
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
 
         #endregion
     }

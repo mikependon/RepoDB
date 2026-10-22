@@ -382,9 +382,12 @@ namespace RepoDb.Schema.Oracle.IntegrationTests
 
                 // Assert
                 Assert.AreEqual("0", age.DefaultExpression, StringComparer.Ordinal);
+                Assert.AreEqual(ColumnDefaultValue.Literal, age.DefaultValue);
                 Assert.IsTrue(age.Field.HasDefaultValue);
                 StringAssert.Contains(createdDate.DefaultExpression, "SYSTIMESTAMP", StringComparison.OrdinalIgnoreCase);
+                Assert.AreEqual(ColumnDefaultValue.CurrentTimestampWithOffset, createdDate.DefaultValue);
                 Assert.IsNull(columns.Single(c => c.Field.Name == "Name").DefaultExpression);
+                Assert.AreEqual(ColumnDefaultValue.None, columns.Single(c => c.Field.Name == "Name").DefaultValue);
             }
         }
 

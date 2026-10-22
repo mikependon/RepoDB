@@ -7,6 +7,7 @@
 #endregion
 
 using System;
+using RepoDb.Schema.Enumerations;
 
 namespace RepoDb.Schema.Models
 {
@@ -31,6 +32,12 @@ namespace RepoDb.Schema.Models
         /// Gets or sets the default expression of the column, or <c>null</c> if there is none.
         /// </summary>
         public string DefaultExpression { get; internal set; }
+
+        /// <summary>
+        /// Gets or sets the kind of the default value of the column (see <see cref="ColumnDefaultValue"/>), which the composer of another database uses to create the equivalent
+        /// default value. It is <see cref="ColumnDefaultValue.Unclassified"/> if the schema reader does not set it.
+        /// </summary>
+        public ColumnDefaultValue DefaultValue { get; internal set; }
 
         /// <summary>
         /// Gets or sets the seed of the identity column, or <c>null</c> if the column is not an identity.
@@ -82,6 +89,7 @@ namespace RepoDb.Schema.Models
             hashCode.Add(Field);
             hashCode.Add(Ordinal);
             hashCode.Add(DefaultExpression);
+            hashCode.Add(DefaultValue);
             hashCode.Add(IdentitySeed);
             hashCode.Add(IdentityIncrement);
             hashCode.Add(ComputedExpression);
@@ -111,6 +119,7 @@ namespace RepoDb.Schema.Models
             return Equals(Field, other.Field)
                 && Equals(Ordinal, other.Ordinal)
                 && Equals(DefaultExpression, other.DefaultExpression)
+                && Equals(DefaultValue, other.DefaultValue)
                 && Equals(IdentitySeed, other.IdentitySeed)
                 && Equals(IdentityIncrement, other.IdentityIncrement)
                 && Equals(ComputedExpression, other.ComputedExpression)

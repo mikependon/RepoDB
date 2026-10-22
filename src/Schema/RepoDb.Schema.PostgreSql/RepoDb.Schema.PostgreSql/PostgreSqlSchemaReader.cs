@@ -642,6 +642,7 @@ namespace RepoDb.Schema
                 Field = field,
                 Ordinal = Int(r, "Ordinal"),
                 DefaultExpression = defaultDefinition,
+                DefaultValue = SchemaDefaultValue.Classify(defaultDefinition),
                 IdentitySeed = NullableLong(r, "IdentitySeed"),
                 IdentityIncrement = NullableLong(r, "IdentityIncrement"),
                 ComputedExpression = Text(r, "ComputedDefinition"),

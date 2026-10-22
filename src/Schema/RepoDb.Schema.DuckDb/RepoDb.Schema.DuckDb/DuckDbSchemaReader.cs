@@ -655,7 +655,8 @@ namespace RepoDb.Schema
                 Ordinal = Int(r, "Ordinal"),
                 IdentitySeed = NullableLong(r, "IdentitySeed"),
                 IdentityIncrement = NullableLong(r, "IdentityIncrement"),
-                DefaultExpression = string.IsNullOrWhiteSpace(defaultDefinition) ? null : defaultDefinition
+                DefaultExpression = string.IsNullOrWhiteSpace(defaultDefinition) ? null : defaultDefinition,
+                DefaultValue = SchemaDefaultValue.Classify(string.IsNullOrWhiteSpace(defaultDefinition) ? null : defaultDefinition)
             };
         }
 
@@ -715,6 +716,7 @@ namespace RepoDb.Schema
                         System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Singleline);
                     column.ComputedExpression = cast.Success ? cast.Groups[1].Value : column.DefaultExpression;
                     column.DefaultExpression = null;
+                    column.DefaultValue = Enumerations.ColumnDefaultValue.None;
                     column.Field = new DbField(column.Field.Name, column.Field.IsPrimary, column.Field.IsIdentity, column.Field.IsNullable, column.Field.Type,
                         column.Field.Size, column.Field.Precision, column.Field.Scale, column.Field.DatabaseType, false, column.Field.Provider);
                 }

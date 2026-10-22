@@ -390,6 +390,7 @@ namespace RepoDb.Schema
                 Field = new DbField(name, field.IsPrimary, field.IsIdentity, field.IsNullable, field.Type, field.Size, field.Precision, field.Scale, field.DatabaseType, field.HasDefaultValue, field.Provider),
                 Ordinal = column.Ordinal,
                 DefaultExpression = column.DefaultExpression,
+                DefaultValue = column.DefaultValue,
                 IdentitySeed = column.IdentitySeed,
                 IdentityIncrement = column.IdentityIncrement,
                 ComputedExpression = column.ComputedExpression,

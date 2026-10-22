@@ -63,15 +63,18 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
             Assert.AreEqual(12, (int)salary.Field.Precision);
             Assert.AreEqual(2, (int)salary.Field.Scale);
             Assert.AreEqual("0", salary.DefaultExpression);
+            Assert.AreEqual(ColumnDefaultValue.Literal, salary.DefaultValue);
             Assert.IsTrue(salary.Field.IsNullable);
 
             var createdAt = columns[4];
             Assert.AreEqual("timestamp without time zone", createdAt.Field.DatabaseType);
             Assert.AreEqual(3, (int)createdAt.Field.Scale);
             Assert.AreEqual("now()", createdAt.DefaultExpression);
+            Assert.AreEqual(ColumnDefaultValue.CurrentTimestamp, createdAt.DefaultValue);
 
             Assert.AreEqual("(\"Age\" * 2)", columns[6].ComputedExpression);
             Assert.AreEqual("true", columns[9].DefaultExpression);
+            Assert.AreEqual(ColumnDefaultValue.BooleanTrue, columns[9].DefaultValue);
         }
 
         [TestMethod]
@@ -83,6 +86,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
             // Assert
             Assert.IsTrue(id.Field.IsIdentity);
             Assert.IsNull(id.DefaultExpression);
+            Assert.AreEqual(ColumnDefaultValue.None, id.DefaultValue);
             Assert.AreEqual(1, id.IdentitySeed);
             Assert.AreEqual(1, id.IdentityIncrement);
         }

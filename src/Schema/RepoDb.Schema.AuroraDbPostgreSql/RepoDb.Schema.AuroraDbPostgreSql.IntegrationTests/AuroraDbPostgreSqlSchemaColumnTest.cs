@@ -6,6 +6,7 @@
 
 #endregion
 
+using RepoDb.Schema.Enumerations;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -124,6 +125,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
             Assert.IsNull(column.IdentitySeed);
             Assert.IsNull(column.IdentityIncrement);
             Assert.IsNull(column.DefaultExpression);
+            Assert.AreEqual(ColumnDefaultValue.None, column.DefaultValue);
             Assert.IsNull(column.ComputedExpression);
         }
 
@@ -163,6 +165,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
 
             // Assert
             Assert.AreEqual("true", column.DefaultExpression);
+            Assert.AreEqual(ColumnDefaultValue.BooleanTrue, column.DefaultValue);
             Assert.IsTrue(column.Field.HasDefaultValue);
         }
 

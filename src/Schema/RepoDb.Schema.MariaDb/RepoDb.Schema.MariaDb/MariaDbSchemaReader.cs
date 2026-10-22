@@ -628,6 +628,7 @@ namespace RepoDb.Schema
                 Field = field,
                 Ordinal = Int(r, "Ordinal"),
                 DefaultExpression = defaultDefinition,
+                DefaultValue = SchemaDefaultValue.Classify(defaultDefinition),
                 ComputedExpression = Text(r, "ComputedDefinition"),
                 Collation = Text(r, "Collation"),
                 Comment = Text(r, "Comment")

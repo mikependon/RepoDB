@@ -1251,5 +1251,131 @@ namespace RepoDb.Schema.MariaDbConnector.UnitTests
         }
 
         #endregion
+
+        #region Default Values
+
+        private static ColumnInfo GetDefaultColumn(ColumnDefaultValue kind,
+            string expression,
+            string databaseType,
+            Type type,
+            byte? scale = null,
+            string provider = "SqlServer") =>
+            new ColumnInfo
+            {
+                Ordinal = 1,
+                DefaultValue = kind,
+                DefaultExpression = expression,
+                Field = new DbField("Value", false, false, true, type, null, null, scale, databaseType, true, provider)
+            };
+
+        private static string ComposeDefaultColumn(ColumnInfo column)
+        {
+            var schema = new TableSchema("Orders", "dbo");
+            schema.Columns.Add(column);
+            return string.Join(" ", new MariaDbConnectorSchemaComposer().ComposeSchema(schema));
+        }
+
+        [TestMethod]
+        public void TestMariaDbConnectorSchemaComposerComposeCreateTableComposesTheCurrentTimestampOfADefaultValueOfSqlServer()
+        {
+            // Act
+            var actual = ComposeDefaultColumn(GetDefaultColumn(ColumnDefaultValue.CurrentTimestamp, "(getdate())", "datetime2", typeof(DateTime), 6));
+
+            // Assert
+            StringAssert.Contains(actual, "datetime(6) NULL DEFAULT CURRENT_TIMESTAMP(6)", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestMariaDbConnectorSchemaComposerComposeCreateTableComposesTheCurrentTimestampInUtcOfADefaultValueOfSqlServer()
+        {
+            // Act
+            var actual = ComposeDefaultColumn(GetDefaultColumn(ColumnDefaultValue.CurrentTimestampUtc, "(getutcdate())", "datetime2", typeof(DateTime), 6));
+
+            // Assert
+            StringAssert.Contains(actual, "DEFAULT (UTC_TIMESTAMP(6))", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestMariaDbConnectorSchemaComposerComposeCreateTableComposesTheNewGuidOfADefaultValueOfSqlServer()
+        {
+            // Act
+            var actual = ComposeDefaultColumn(GetDefaultColumn(ColumnDefaultValue.NewGuid, "(newid())", "uniqueidentifier", typeof(Guid)));
+
+            // Assert
+            StringAssert.Contains(actual, "char(36) NULL DEFAULT (UUID())", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestMariaDbConnectorSchemaComposerComposeCreateTableComposesTheLiteralOfADefaultValueOfSqlServerWithoutItsParentheses()
+        {
+            // Act
+            var actual = ComposeDefaultColumn(GetDefaultColumn(ColumnDefaultValue.Literal, "((0))", "int", typeof(int)));
+
+            // Assert
+            StringAssert.Contains(actual, "DEFAULT 0", StringComparison.Ordinal);
+            Assert.IsFalse(actual.Contains("((0))", StringComparison.Ordinal));
+        }
+
+        [TestMethod]
+        public void TestMariaDbConnectorSchemaComposerComposeCreateTableDoesNotComposeTheNextValueOfASequenceAndSaysWhy()
+        {
+            // Setup
+            var column = GetDefaultColumn(ColumnDefaultValue.SequenceNextValue, "(NEXT VALUE FOR [dbo].[OrderSeq])", "bigint", typeof(long));
+
+            // Act
+            var actual = ComposeDefaultColumn(column);
+            var reason = new MariaDbConnectorSchemaComposer().GetUnsupportedDefaultReason(column);
+
+            // Assert
+            Assert.IsFalse(actual.Contains("DEFAULT", StringComparison.Ordinal));
+            StringAssert.Contains(reason, "sequence", StringComparison.Ordinal);
+            StringAssert.Contains(reason, "MariaDB", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestMariaDbConnectorSchemaComposerComposeCreateTableDoesNotComposeTheDefaultValueThatIsNotKnownOfAnotherProvider()
+        {
+            // Setup
+            var column = GetDefaultColumn(ColumnDefaultValue.Unsupported, "LAST_INSERT_ID()", "bigint", typeof(long));
+
+            // Act
+            var actual = ComposeDefaultColumn(column);
+            var reason = new MariaDbConnectorSchemaComposer().GetUnsupportedDefaultReason(column);
+
+            // Assert
+            Assert.IsFalse(actual.Contains("DEFAULT", StringComparison.Ordinal));
+            StringAssert.Contains(reason, "LAST_INSERT_ID()", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestMariaDbConnectorSchemaComposerComposeCreateTableComposesTheDefaultValueOfTheSameProviderAsItIs()
+        {
+            // Act
+            var actual = ComposeDefaultColumn(GetDefaultColumn(ColumnDefaultValue.CurrentTimestamp, "current_timestamp()", "datetime", typeof(DateTime), provider: "MariaDbConnector"));
+
+            // Assert
+            StringAssert.Contains(actual, "DEFAULT current_timestamp()", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestMariaDbConnectorSchemaComposerComposeCreateTableComposesTheDefaultValueThatIsNotClassifiedAsItIs()
+        {
+            // Act
+            var actual = ComposeDefaultColumn(GetDefaultColumn(ColumnDefaultValue.Unclassified, "'N/A'", "varchar", typeof(string)));
+
+            // Assert
+            StringAssert.Contains(actual, "DEFAULT 'N/A'", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestMariaDbConnectorSchemaComposerGetUnsupportedDefaultReasonReturnsNullIfTheDefaultValueIsComposedOrThereIsNone()
+        {
+            // Act/Assert
+            Assert.IsNull(new MariaDbConnectorSchemaComposer().GetUnsupportedDefaultReason(GetDefaultColumn(ColumnDefaultValue.CurrentTimestamp, "(getdate())", "datetime2", typeof(DateTime), 6)));
+            Assert.IsNull(new MariaDbConnectorSchemaComposer().GetUnsupportedDefaultReason(GetDefaultColumn(ColumnDefaultValue.None, null, "int", typeof(int))));
+            Assert.IsNull(new MariaDbConnectorSchemaComposer().GetUnsupportedDefaultReason(GetDefaultColumn(ColumnDefaultValue.Unclassified, null, "int", typeof(int))));
+        }
+
+        #endregion
     }
 }

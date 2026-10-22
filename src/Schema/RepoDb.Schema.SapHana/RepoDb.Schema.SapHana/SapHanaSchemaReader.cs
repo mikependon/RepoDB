@@ -656,6 +656,7 @@ namespace RepoDb.Schema
                 IdentitySeed = Flag(r, "IsIdentity") ? identitySeed ?? 1 : identitySeed,
                 IdentityIncrement = Flag(r, "IsIdentity") ? identityIncrement ?? 1 : identityIncrement,
                 DefaultExpression = string.IsNullOrWhiteSpace(defaultDefinition) ? null : defaultDefinition,
+                DefaultValue = SchemaDefaultValue.Classify(string.IsNullOrWhiteSpace(defaultDefinition) ? null : defaultDefinition),
                 ComputedExpression = Text(r, "ComputedDefinition")?.Trim()
             };
         }

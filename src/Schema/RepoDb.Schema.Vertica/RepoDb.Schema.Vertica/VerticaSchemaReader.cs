@@ -664,7 +664,8 @@ namespace RepoDb.Schema
                 Ordinal = Int(r, "Ordinal"),
                 IdentitySeed = NullableLong(r, "IdentitySeed"),
                 IdentityIncrement = NullableLong(r, "IdentityIncrement"),
-                DefaultExpression = string.IsNullOrWhiteSpace(defaultDefinition) ? null : defaultDefinition
+                DefaultExpression = string.IsNullOrWhiteSpace(defaultDefinition) ? null : defaultDefinition,
+                DefaultValue = SchemaDefaultValue.Classify(string.IsNullOrWhiteSpace(defaultDefinition) ? null : defaultDefinition)
             };
         }
 

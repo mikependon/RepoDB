@@ -1251,5 +1251,131 @@ namespace RepoDb.Schema.AuroraDbMySqlConnector.UnitTests
         }
 
         #endregion
+
+        #region Default Values
+
+        private static ColumnInfo GetDefaultColumn(ColumnDefaultValue kind,
+            string expression,
+            string databaseType,
+            Type type,
+            byte? scale = null,
+            string provider = "SqlServer") =>
+            new ColumnInfo
+            {
+                Ordinal = 1,
+                DefaultValue = kind,
+                DefaultExpression = expression,
+                Field = new DbField("Value", false, false, true, type, null, null, scale, databaseType, true, provider)
+            };
+
+        private static string ComposeDefaultColumn(ColumnInfo column)
+        {
+            var schema = new TableSchema("Orders", "dbo");
+            schema.Columns.Add(column);
+            return string.Join(" ", new AuroraDbMySqlConnectorSchemaComposer().ComposeSchema(schema));
+        }
+
+        [TestMethod]
+        public void TestAuroraDbMySqlConnectorSchemaComposerComposeCreateTableComposesTheCurrentTimestampOfADefaultValueOfSqlServer()
+        {
+            // Act
+            var actual = ComposeDefaultColumn(GetDefaultColumn(ColumnDefaultValue.CurrentTimestamp, "(getdate())", "datetime2", typeof(DateTime), 6));
+
+            // Assert
+            StringAssert.Contains(actual, "datetime(6) NULL DEFAULT CURRENT_TIMESTAMP(6)", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestAuroraDbMySqlConnectorSchemaComposerComposeCreateTableComposesTheCurrentTimestampInUtcOfADefaultValueOfSqlServer()
+        {
+            // Act
+            var actual = ComposeDefaultColumn(GetDefaultColumn(ColumnDefaultValue.CurrentTimestampUtc, "(getutcdate())", "datetime2", typeof(DateTime), 6));
+
+            // Assert
+            StringAssert.Contains(actual, "DEFAULT (UTC_TIMESTAMP(6))", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestAuroraDbMySqlConnectorSchemaComposerComposeCreateTableComposesTheNewGuidOfADefaultValueOfSqlServer()
+        {
+            // Act
+            var actual = ComposeDefaultColumn(GetDefaultColumn(ColumnDefaultValue.NewGuid, "(newid())", "uniqueidentifier", typeof(Guid)));
+
+            // Assert
+            StringAssert.Contains(actual, "char(36) NULL DEFAULT (UUID())", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestAuroraDbMySqlConnectorSchemaComposerComposeCreateTableComposesTheLiteralOfADefaultValueOfSqlServerWithoutItsParentheses()
+        {
+            // Act
+            var actual = ComposeDefaultColumn(GetDefaultColumn(ColumnDefaultValue.Literal, "((0))", "int", typeof(int)));
+
+            // Assert
+            StringAssert.Contains(actual, "DEFAULT 0", StringComparison.Ordinal);
+            Assert.IsFalse(actual.Contains("((0))", StringComparison.Ordinal));
+        }
+
+        [TestMethod]
+        public void TestAuroraDbMySqlConnectorSchemaComposerComposeCreateTableDoesNotComposeTheNextValueOfASequenceAndSaysWhy()
+        {
+            // Setup
+            var column = GetDefaultColumn(ColumnDefaultValue.SequenceNextValue, "(NEXT VALUE FOR [dbo].[OrderSeq])", "bigint", typeof(long));
+
+            // Act
+            var actual = ComposeDefaultColumn(column);
+            var reason = new AuroraDbMySqlConnectorSchemaComposer().GetUnsupportedDefaultReason(column);
+
+            // Assert
+            Assert.IsFalse(actual.Contains("DEFAULT", StringComparison.Ordinal));
+            StringAssert.Contains(reason, "sequence", StringComparison.Ordinal);
+            StringAssert.Contains(reason, "MySQL", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestAuroraDbMySqlConnectorSchemaComposerComposeCreateTableDoesNotComposeTheDefaultValueThatIsNotKnownOfAnotherProvider()
+        {
+            // Setup
+            var column = GetDefaultColumn(ColumnDefaultValue.Unsupported, "LAST_INSERT_ID()", "bigint", typeof(long));
+
+            // Act
+            var actual = ComposeDefaultColumn(column);
+            var reason = new AuroraDbMySqlConnectorSchemaComposer().GetUnsupportedDefaultReason(column);
+
+            // Assert
+            Assert.IsFalse(actual.Contains("DEFAULT", StringComparison.Ordinal));
+            StringAssert.Contains(reason, "LAST_INSERT_ID()", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestAuroraDbMySqlConnectorSchemaComposerComposeCreateTableComposesTheDefaultValueOfTheSameProviderAsItIs()
+        {
+            // Act
+            var actual = ComposeDefaultColumn(GetDefaultColumn(ColumnDefaultValue.CurrentTimestamp, "current_timestamp()", "datetime", typeof(DateTime), provider: "AuroraDbMySqlConnector"));
+
+            // Assert
+            StringAssert.Contains(actual, "DEFAULT current_timestamp()", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestAuroraDbMySqlConnectorSchemaComposerComposeCreateTableComposesTheDefaultValueThatIsNotClassifiedAsItIs()
+        {
+            // Act
+            var actual = ComposeDefaultColumn(GetDefaultColumn(ColumnDefaultValue.Unclassified, "'N/A'", "varchar", typeof(string)));
+
+            // Assert
+            StringAssert.Contains(actual, "DEFAULT 'N/A'", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestAuroraDbMySqlConnectorSchemaComposerGetUnsupportedDefaultReasonReturnsNullIfTheDefaultValueIsComposedOrThereIsNone()
+        {
+            // Act/Assert
+            Assert.IsNull(new AuroraDbMySqlConnectorSchemaComposer().GetUnsupportedDefaultReason(GetDefaultColumn(ColumnDefaultValue.CurrentTimestamp, "(getdate())", "datetime2", typeof(DateTime), 6)));
+            Assert.IsNull(new AuroraDbMySqlConnectorSchemaComposer().GetUnsupportedDefaultReason(GetDefaultColumn(ColumnDefaultValue.None, null, "int", typeof(int))));
+            Assert.IsNull(new AuroraDbMySqlConnectorSchemaComposer().GetUnsupportedDefaultReason(GetDefaultColumn(ColumnDefaultValue.Unclassified, null, "int", typeof(int))));
+        }
+
+        #endregion
     }
 }

@@ -197,7 +197,7 @@ namespace RepoDb.Schema
         /// <summary>
         /// Leaves out of the schema of a table that is created the objects that the destination database refuses, and reports each one as a warning of the table:
         /// the foreign keys that reference a table that is not copied and does not exist in the destination, and the check constraints that the composer does not accept
-        /// (see <see cref="ICheckConstraintSupport"/>).
+        /// (see <see cref="ICheckConstraintSupport"/>). The default values that the composer does not create (see <see cref="IColumnDefaultSupport"/>) are reported too.
         /// </summary>
         /// <param name="table">The state of the table.</param>
         /// <param name="foreignKeys">The foreign keys of the table that reference a table that is not copied and does not exist in the destination.</param>
@@ -206,6 +206,19 @@ namespace RepoDb.Schema
             IList<ForeignKeyInfo> foreignKeys,
             ISchemaComposer composer)
         {
+            // The default values that the destination can not create are not left out here (the composer does not write them): they are reported
+            if (composer is IColumnDefaultSupport defaultSupport)
+            {
+                foreach (var column in table.Schema.Columns)
+                {
+                    var defaultReason = defaultSupport.GetUnsupportedDefaultReason(column);
+                    if (defaultReason != null)
+                    {
+                        table.Warnings.Add($"Skipped the default value of the column '{column.Field?.Name}': {defaultReason}.");
+                    }
+                }
+            }
+
             var support = composer as ICheckConstraintSupport;
             var checkConstraints = support == null
                 ? new List<KeyValuePair<CheckConstraintInfo, string>>()
