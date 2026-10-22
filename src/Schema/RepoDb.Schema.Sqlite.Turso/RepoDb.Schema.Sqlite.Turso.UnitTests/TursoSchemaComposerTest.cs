@@ -1234,5 +1234,37 @@ namespace RepoDb.Schema.Sqlite.Turso.UnitTests
         }
 
         #endregion
+
+        #region Collation (Add Column)
+
+        private static string ComposeCollatedAddColumn(string provider) =>
+            new TursoSchemaComposer().ComposeAddColumn("Person", new ColumnInfo
+            {
+                Ordinal = 1,
+                Collation = "NOCASE",
+                Field = new DbField("Name", false, false, false, typeof(string), 128, 0, 0, "varchar", false, provider)
+            });
+
+        [TestMethod]
+        public void TestTursoSchemaComposerComposeAddColumnKeepsTheCollationOfAColumnOfTheSameProvider()
+        {
+            // Act
+            var actual = ComposeCollatedAddColumn("SQLite");
+
+            // Assert
+            StringAssert.Contains(actual, "COLLATE NOCASE", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestTursoSchemaComposerComposeAddColumnDoesNotComposeTheCollationOfAColumnOfAnotherProvider()
+        {
+            // Act
+            var actual = ComposeCollatedAddColumn("SqlServer");
+
+            // Assert
+            Assert.IsFalse(actual.Contains("COLLATE", StringComparison.Ordinal));
+        }
+
+        #endregion
     }
 }

@@ -1219,5 +1219,37 @@ namespace RepoDb.Schema.MariaDbConnector.UnitTests
         }
 
         #endregion
+
+        #region Collation (Add Column)
+
+        private static string ComposeCollatedAddColumn(string provider) =>
+            new MariaDbConnectorSchemaComposer().ComposeAddColumn("Person", new ColumnInfo
+            {
+                Ordinal = 1,
+                Collation = "utf8mb4_general_ci",
+                Field = new DbField("Name", false, false, false, typeof(string), 128, 0, 0, "varchar", false, provider)
+            });
+
+        [TestMethod]
+        public void TestMariaDbConnectorSchemaComposerComposeAddColumnKeepsTheCollationOfAColumnOfTheSameProvider()
+        {
+            // Act
+            var actual = ComposeCollatedAddColumn("MariaDbConnector");
+
+            // Assert
+            StringAssert.Contains(actual, "COLLATE utf8mb4_general_ci", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestMariaDbConnectorSchemaComposerComposeAddColumnDoesNotComposeTheCollationOfAColumnOfAnotherProvider()
+        {
+            // Act
+            var actual = ComposeCollatedAddColumn("SqlServer");
+
+            // Assert
+            Assert.IsFalse(actual.Contains("COLLATE", StringComparison.Ordinal));
+        }
+
+        #endregion
     }
 }

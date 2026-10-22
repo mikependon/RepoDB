@@ -1219,5 +1219,37 @@ namespace RepoDb.Schema.AuroraDbMySqlConnector.UnitTests
         }
 
         #endregion
+
+        #region Collation (Add Column)
+
+        private static string ComposeCollatedAddColumn(string provider) =>
+            new AuroraDbMySqlConnectorSchemaComposer().ComposeAddColumn("Person", new ColumnInfo
+            {
+                Ordinal = 1,
+                Collation = "utf8mb4_general_ci",
+                Field = new DbField("Name", false, false, false, typeof(string), 128, 0, 0, "varchar", false, provider)
+            });
+
+        [TestMethod]
+        public void TestAuroraDbMySqlConnectorSchemaComposerComposeAddColumnKeepsTheCollationOfAColumnOfTheSameProvider()
+        {
+            // Act
+            var actual = ComposeCollatedAddColumn("AuroraDbMySqlConnector");
+
+            // Assert
+            StringAssert.Contains(actual, "COLLATE utf8mb4_general_ci", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestAuroraDbMySqlConnectorSchemaComposerComposeAddColumnDoesNotComposeTheCollationOfAColumnOfAnotherProvider()
+        {
+            // Act
+            var actual = ComposeCollatedAddColumn("SqlServer");
+
+            // Assert
+            Assert.IsFalse(actual.Contains("COLLATE", StringComparison.Ordinal));
+        }
+
+        #endregion
     }
 }

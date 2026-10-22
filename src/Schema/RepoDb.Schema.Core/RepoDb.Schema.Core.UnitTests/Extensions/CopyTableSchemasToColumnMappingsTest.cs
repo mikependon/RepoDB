@@ -367,6 +367,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             Assert.AreEqual("varchar", column.Field.DatabaseType);
             Assert.IsFalse(column.Field.IsNullable);
             Assert.IsTrue(column.Field.HasDefaultValue);
+            Assert.AreEqual("Test", column.Field.Provider);
         }
 
         [TestMethod]

@@ -1226,5 +1226,37 @@ namespace RepoDb.Schema.Oracle.UnitTests
         }
 
         #endregion
+
+        #region Collation (Add Column)
+
+        private static string ComposeCollatedAddColumn(string provider) =>
+            new OracleSchemaComposer().ComposeAddColumn("Person", new ColumnInfo
+            {
+                Ordinal = 1,
+                Collation = "BINARY_CI",
+                Field = new DbField("Name", false, false, false, typeof(string), 128, 0, 0, "VARCHAR2", false, provider)
+            });
+
+        [TestMethod]
+        public void TestOracleSchemaComposerComposeAddColumnKeepsTheCollationOfAColumnOfTheSameProvider()
+        {
+            // Act
+            var actual = ComposeCollatedAddColumn("Oracle");
+
+            // Assert
+            StringAssert.Contains(actual, "COLLATE BINARY_CI", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestOracleSchemaComposerComposeAddColumnDoesNotComposeTheCollationOfAColumnOfAnotherProvider()
+        {
+            // Act
+            var actual = ComposeCollatedAddColumn("SqlServer");
+
+            // Assert
+            Assert.IsFalse(actual.Contains("COLLATE", StringComparison.Ordinal));
+        }
+
+        #endregion
     }
 }
