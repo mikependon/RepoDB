@@ -42,7 +42,7 @@ namespace RepoDb.Data
         /// <param name="connection">The source connection.</param>
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
@@ -57,7 +57,7 @@ namespace RepoDb.Data
         public static CopyProgress CopyDataTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
@@ -69,7 +69,7 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.CopyDataTo(ConnectionManager.Get(destinationConnection), where, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(ConnectionManager.Get(destinationConnection), where, bufferSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
 
         /// <summary>
         /// Copies the rows of the table mapped to <typeparamref name="TEntity"/> to the target table of the destination connection that is registered in the <see cref="ConnectionManager"/>. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -79,7 +79,7 @@ namespace RepoDb.Data
         /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
@@ -95,7 +95,7 @@ namespace RepoDb.Data
             string targetTable,
             string destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
@@ -107,7 +107,7 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.CopyDataTo(targetTable, ConnectionManager.Get(destinationConnection), where, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(targetTable, ConnectionManager.Get(destinationConnection), where, bufferSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
 
         /// <summary>
         /// Copies the rows of the source table to the same-named table of the destination connection that is registered in the <see cref="ConnectionManager"/>. The destination table must already exist, unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -116,7 +116,7 @@ namespace RepoDb.Data
         /// <param name="tableName">The name of the source table.</param>
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
@@ -132,7 +132,7 @@ namespace RepoDb.Data
             string tableName,
             string destinationConnection,
             QueryGroup where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
@@ -143,7 +143,7 @@ namespace RepoDb.Data
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null) =>
-            connection.CopyDataTo(tableName, ConnectionManager.Get(destinationConnection), where, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(tableName, ConnectionManager.Get(destinationConnection), where, bufferSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
 
         /// <summary>
         /// Copies the rows of the source table to the target table of the destination connection that is registered in the <see cref="ConnectionManager"/>. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -153,7 +153,7 @@ namespace RepoDb.Data
         /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
@@ -170,7 +170,7 @@ namespace RepoDb.Data
             string targetTable,
             string destinationConnection,
             QueryGroup where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
@@ -181,7 +181,7 @@ namespace RepoDb.Data
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null) =>
-            connection.CopyDataTo(sourceTable, targetTable, ConnectionManager.Get(destinationConnection), where, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(sourceTable, targetTable, ConnectionManager.Get(destinationConnection), where, bufferSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
 
         #endregion
 
@@ -194,7 +194,7 @@ namespace RepoDb.Data
         /// <param name="connection">The source connection.</param>
         /// <param name="destinationConnection">The destination connection.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
@@ -209,7 +209,7 @@ namespace RepoDb.Data
         public static CopyProgress CopyDataTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IDbConnection destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
@@ -221,7 +221,7 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.CopyDataTo(ClassMappedNameCache.Get<TEntity>(), destinationConnection, where == null ? null : QueryGroup.Parse(where), batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(ClassMappedNameCache.Get<TEntity>(), destinationConnection, where == null ? null : QueryGroup.Parse(where), bufferSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
 
         /// <summary>
         /// Copies the rows of the table mapped to <typeparamref name="TEntity"/> to the target table of the destination connection. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -231,7 +231,7 @@ namespace RepoDb.Data
         /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
         /// <param name="destinationConnection">The destination connection.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
@@ -247,7 +247,7 @@ namespace RepoDb.Data
             string targetTable,
             IDbConnection destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
@@ -259,7 +259,7 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.CopyDataTo(ClassMappedNameCache.Get<TEntity>(), targetTable, destinationConnection, where == null ? null : QueryGroup.Parse(where), batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(ClassMappedNameCache.Get<TEntity>(), targetTable, destinationConnection, where == null ? null : QueryGroup.Parse(where), bufferSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
 
         /// <summary>
         /// Copies the rows of the source table to the same-named table of the destination connection. The destination table must already exist, unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -268,7 +268,7 @@ namespace RepoDb.Data
         /// <param name="tableName">The name of the source table.</param>
         /// <param name="destinationConnection">The destination connection.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
@@ -284,7 +284,7 @@ namespace RepoDb.Data
             string tableName,
             IDbConnection destinationConnection,
             QueryGroup where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
@@ -295,7 +295,7 @@ namespace RepoDb.Data
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null) =>
-            connection.CopyDataTo(tableName, tableName, destinationConnection, where, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(tableName, tableName, destinationConnection, where, bufferSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
 
         /// <summary>
         /// Copies the rows of the source table to the target table of the destination connection. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -305,7 +305,7 @@ namespace RepoDb.Data
         /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
         /// <param name="destinationConnection">The destination connection.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
@@ -322,7 +322,7 @@ namespace RepoDb.Data
             string targetTable,
             IDbConnection destinationConnection,
             QueryGroup where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
@@ -335,13 +335,13 @@ namespace RepoDb.Data
             IDbTransaction transaction = null)
         {
             var targetSchema = GetTargetSchema(destinationConnection, targetTable);
-            Validate(connection, sourceTable, targetTable, destinationConnection, targetSchema, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, null);
+            Validate(connection, sourceTable, targetTable, destinationConnection, targetSchema, bufferSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, null);
             var options = new CopyProgress { StartTime = DateTime.UtcNow };
             var tables = GetTables(connection, destinationConnection, sourceTable, targetTable, targetSchema, where, relationshipBehavior, tableExistenceBehavior, commandTimeout, trace, transaction);
             options.TableCount = tables.Count;
             foreach (var (source, target, filter) in tables)
             {
-                CopyRows(connection, destinationConnection, source, target, filter, batchSize, columnMappingsBehavior, identityBehavior, null, options, progressCallback, commandTimeout, traceKey, trace, transaction);
+                CopyRows(connection, destinationConnection, source, target, filter, bufferSize, columnMappingsBehavior, identityBehavior, null, options, progressCallback, commandTimeout, traceKey, trace, transaction);
             }
             options.EndTime = DateTime.UtcNow;
             return options;
@@ -358,7 +358,7 @@ namespace RepoDb.Data
         /// <param name="connection">The source connection.</param>
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
@@ -374,7 +374,7 @@ namespace RepoDb.Data
         public static Task<CopyProgress> CopyDataToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
@@ -387,7 +387,7 @@ namespace RepoDb.Data
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.CopyDataToAsync(ConnectionManager.Get(destinationConnection), where, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(ConnectionManager.Get(destinationConnection), where, bufferSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Copies the rows of the table mapped to <typeparamref name="TEntity"/> to the target table of the destination connection that is registered in the <see cref="ConnectionManager"/>. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -397,7 +397,7 @@ namespace RepoDb.Data
         /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
@@ -414,7 +414,7 @@ namespace RepoDb.Data
             string targetTable,
             string destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
@@ -427,7 +427,7 @@ namespace RepoDb.Data
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.CopyDataToAsync(targetTable, ConnectionManager.Get(destinationConnection), where, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(targetTable, ConnectionManager.Get(destinationConnection), where, bufferSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Copies the rows of the source table to the same-named table of the destination connection that is registered in the <see cref="ConnectionManager"/>. The destination table must already exist, unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -436,7 +436,7 @@ namespace RepoDb.Data
         /// <param name="tableName">The name of the source table.</param>
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
@@ -453,7 +453,7 @@ namespace RepoDb.Data
             string tableName,
             string destinationConnection,
             QueryGroup where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
@@ -465,7 +465,7 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            connection.CopyDataToAsync(tableName, ConnectionManager.Get(destinationConnection), where, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(tableName, ConnectionManager.Get(destinationConnection), where, bufferSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Copies the rows of the source table to the target table of the destination connection that is registered in the <see cref="ConnectionManager"/>. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -475,7 +475,7 @@ namespace RepoDb.Data
         /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
@@ -493,7 +493,7 @@ namespace RepoDb.Data
             string targetTable,
             string destinationConnection,
             QueryGroup where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
@@ -505,7 +505,7 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            connection.CopyDataToAsync(sourceTable, targetTable, ConnectionManager.Get(destinationConnection), where, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(sourceTable, targetTable, ConnectionManager.Get(destinationConnection), where, bufferSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         #endregion
 
@@ -518,7 +518,7 @@ namespace RepoDb.Data
         /// <param name="connection">The source connection.</param>
         /// <param name="destinationConnection">The destination connection.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
@@ -534,7 +534,7 @@ namespace RepoDb.Data
         public static Task<CopyProgress> CopyDataToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IDbConnection destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
@@ -547,7 +547,7 @@ namespace RepoDb.Data
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.CopyDataToAsync(ClassMappedNameCache.Get<TEntity>(), destinationConnection, where == null ? null : QueryGroup.Parse(where), batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(ClassMappedNameCache.Get<TEntity>(), destinationConnection, where == null ? null : QueryGroup.Parse(where), bufferSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Copies the rows of the table mapped to <typeparamref name="TEntity"/> to the target table of the destination connection. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -557,7 +557,7 @@ namespace RepoDb.Data
         /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
         /// <param name="destinationConnection">The destination connection.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
@@ -574,7 +574,7 @@ namespace RepoDb.Data
             string targetTable,
             IDbConnection destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
@@ -587,7 +587,7 @@ namespace RepoDb.Data
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.CopyDataToAsync(ClassMappedNameCache.Get<TEntity>(), targetTable, destinationConnection, where == null ? null : QueryGroup.Parse(where), batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(ClassMappedNameCache.Get<TEntity>(), targetTable, destinationConnection, where == null ? null : QueryGroup.Parse(where), bufferSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Copies the rows of the source table to the same-named table of the destination connection. The destination table must already exist, unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -596,7 +596,7 @@ namespace RepoDb.Data
         /// <param name="tableName">The name of the source table.</param>
         /// <param name="destinationConnection">The destination connection.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
@@ -613,7 +613,7 @@ namespace RepoDb.Data
             string tableName,
             IDbConnection destinationConnection,
             QueryGroup where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
@@ -625,7 +625,7 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            connection.CopyDataToAsync(tableName, tableName, destinationConnection, where, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(tableName, tableName, destinationConnection, where, bufferSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Copies the rows of the source table to the target table of the destination connection. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -635,7 +635,7 @@ namespace RepoDb.Data
         /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
         /// <param name="destinationConnection">The destination connection.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
@@ -653,7 +653,7 @@ namespace RepoDb.Data
             string targetTable,
             IDbConnection destinationConnection,
             QueryGroup where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
@@ -667,13 +667,13 @@ namespace RepoDb.Data
             CancellationToken cancellationToken = default)
         {
             var targetSchema = GetTargetSchema(destinationConnection, targetTable);
-            Validate(connection, sourceTable, targetTable, destinationConnection, targetSchema, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, null);
+            Validate(connection, sourceTable, targetTable, destinationConnection, targetSchema, bufferSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, null);
             var options = new CopyProgress { StartTime = DateTime.UtcNow };
             var tables = await GetTablesAsync(connection, destinationConnection, sourceTable, targetTable, targetSchema, where, relationshipBehavior, tableExistenceBehavior, commandTimeout, trace, transaction, cancellationToken).ConfigureAwait(false);
             options.TableCount = tables.Count;
             foreach (var (source, target, filter) in tables)
             {
-                await CopyRowsAsync(connection, destinationConnection, source, target, filter, batchSize, columnMappingsBehavior, identityBehavior, null, options, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
+                await CopyRowsAsync(connection, destinationConnection, source, target, filter, bufferSize, columnMappingsBehavior, identityBehavior, null, options, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
             }
             options.EndTime = DateTime.UtcNow;
             return options;
@@ -691,7 +691,7 @@ namespace RepoDb.Data
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
         /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="CopyIdentityBehavior.KeepIdentity"/>.</param>
@@ -706,7 +706,7 @@ namespace RepoDb.Data
             string destinationConnection,
             IList<CopyColumnMapping> mappings,
             Expression<Func<TEntity, bool>> where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyIdentityBehavior identityBehavior = CopyIdentityBehavior.KeepIdentity,
@@ -717,7 +717,7 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.CopyDataTo(ConnectionManager.Get(destinationConnection), mappings, where, batchSize, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(ConnectionManager.Get(destinationConnection), mappings, where, bufferSize, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
 
         /// <summary>
         /// Copies the rows of the table mapped to <typeparamref name="TEntity"/> to the target table of the destination connection that is registered in the <see cref="ConnectionManager"/>. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -728,7 +728,7 @@ namespace RepoDb.Data
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
         /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="CopyIdentityBehavior.KeepIdentity"/>.</param>
@@ -744,7 +744,7 @@ namespace RepoDb.Data
             string destinationConnection,
             IList<CopyColumnMapping> mappings,
             Expression<Func<TEntity, bool>> where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyIdentityBehavior identityBehavior = CopyIdentityBehavior.KeepIdentity,
@@ -755,7 +755,7 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.CopyDataTo(targetTable, ConnectionManager.Get(destinationConnection), mappings, where, batchSize, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(targetTable, ConnectionManager.Get(destinationConnection), mappings, where, bufferSize, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
 
         /// <summary>
         /// Copies the rows of the source table to the same-named table of the destination connection that is registered in the <see cref="ConnectionManager"/>. The destination table must already exist, unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -765,7 +765,7 @@ namespace RepoDb.Data
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
         /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="CopyIdentityBehavior.KeepIdentity"/>.</param>
@@ -781,7 +781,7 @@ namespace RepoDb.Data
             string destinationConnection,
             IList<CopyColumnMapping> mappings,
             QueryGroup where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyIdentityBehavior identityBehavior = CopyIdentityBehavior.KeepIdentity,
@@ -791,7 +791,7 @@ namespace RepoDb.Data
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null) =>
-            connection.CopyDataTo(tableName, ConnectionManager.Get(destinationConnection), mappings, where, batchSize, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(tableName, ConnectionManager.Get(destinationConnection), mappings, where, bufferSize, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
 
         /// <summary>
         /// Copies the rows of the source table to the target table of the destination connection that is registered in the <see cref="ConnectionManager"/>. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -802,7 +802,7 @@ namespace RepoDb.Data
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
         /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="CopyIdentityBehavior.KeepIdentity"/>.</param>
@@ -819,7 +819,7 @@ namespace RepoDb.Data
             string destinationConnection,
             IList<CopyColumnMapping> mappings,
             QueryGroup where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyIdentityBehavior identityBehavior = CopyIdentityBehavior.KeepIdentity,
@@ -829,7 +829,7 @@ namespace RepoDb.Data
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null) =>
-            connection.CopyDataTo(sourceTable, targetTable, ConnectionManager.Get(destinationConnection), mappings, where, batchSize, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(sourceTable, targetTable, ConnectionManager.Get(destinationConnection), mappings, where, bufferSize, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
 
         #endregion
 
@@ -843,7 +843,7 @@ namespace RepoDb.Data
         /// <param name="destinationConnection">The destination connection.</param>
         /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="CopyIdentityBehavior.KeepIdentity"/>.</param>
@@ -858,7 +858,7 @@ namespace RepoDb.Data
             IDbConnection destinationConnection,
             IList<CopyColumnMapping> mappings,
             Expression<Func<TEntity, bool>> where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyIdentityBehavior identityBehavior = CopyIdentityBehavior.KeepIdentity,
@@ -869,7 +869,7 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.CopyDataTo(ClassMappedNameCache.Get<TEntity>(), destinationConnection, mappings, where == null ? null : QueryGroup.Parse(where), batchSize, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(ClassMappedNameCache.Get<TEntity>(), destinationConnection, mappings, where == null ? null : QueryGroup.Parse(where), bufferSize, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
 
         /// <summary>
         /// Copies the rows of the table mapped to <typeparamref name="TEntity"/> to the target table of the destination connection. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -880,7 +880,7 @@ namespace RepoDb.Data
         /// <param name="destinationConnection">The destination connection.</param>
         /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="CopyIdentityBehavior.KeepIdentity"/>.</param>
@@ -896,7 +896,7 @@ namespace RepoDb.Data
             IDbConnection destinationConnection,
             IList<CopyColumnMapping> mappings,
             Expression<Func<TEntity, bool>> where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyIdentityBehavior identityBehavior = CopyIdentityBehavior.KeepIdentity,
@@ -907,7 +907,7 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.CopyDataTo(ClassMappedNameCache.Get<TEntity>(), targetTable, destinationConnection, mappings, where == null ? null : QueryGroup.Parse(where), batchSize, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(ClassMappedNameCache.Get<TEntity>(), targetTable, destinationConnection, mappings, where == null ? null : QueryGroup.Parse(where), bufferSize, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
 
         /// <summary>
         /// Copies the rows of the source table to the same-named table of the destination connection. The destination table must already exist, unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -917,7 +917,7 @@ namespace RepoDb.Data
         /// <param name="destinationConnection">The destination connection.</param>
         /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="CopyIdentityBehavior.KeepIdentity"/>.</param>
@@ -933,7 +933,7 @@ namespace RepoDb.Data
             IDbConnection destinationConnection,
             IList<CopyColumnMapping> mappings,
             QueryGroup where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyIdentityBehavior identityBehavior = CopyIdentityBehavior.KeepIdentity,
@@ -943,7 +943,7 @@ namespace RepoDb.Data
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null) =>
-            connection.CopyDataTo(tableName, tableName, destinationConnection, mappings, where, batchSize, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(tableName, tableName, destinationConnection, mappings, where, bufferSize, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
 
         /// <summary>
         /// Copies the rows of the source table to the target table of the destination connection. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -954,7 +954,7 @@ namespace RepoDb.Data
         /// <param name="destinationConnection">The destination connection.</param>
         /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="CopyIdentityBehavior.KeepIdentity"/>.</param>
@@ -971,7 +971,7 @@ namespace RepoDb.Data
             IDbConnection destinationConnection,
             IList<CopyColumnMapping> mappings,
             QueryGroup where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyIdentityBehavior identityBehavior = CopyIdentityBehavior.KeepIdentity,
@@ -983,13 +983,13 @@ namespace RepoDb.Data
             IDbTransaction transaction = null)
         {
             var targetSchema = GetTargetSchema(destinationConnection, targetTable);
-            Validate(connection, sourceTable, targetTable, destinationConnection, targetSchema, batchSize, relationshipBehavior, tableExistenceBehavior, CopyColumnMappingsBehavior.Automatic, identityBehavior, mappings);
+            Validate(connection, sourceTable, targetTable, destinationConnection, targetSchema, bufferSize, relationshipBehavior, tableExistenceBehavior, CopyColumnMappingsBehavior.Automatic, identityBehavior, mappings);
             var options = new CopyProgress { StartTime = DateTime.UtcNow };
             var tables = GetTables(connection, destinationConnection, sourceTable, targetTable, targetSchema, where, relationshipBehavior, tableExistenceBehavior, commandTimeout, trace, transaction, mappings);
             options.TableCount = tables.Count;
             foreach (var (source, target, filter) in tables)
             {
-                CopyRows(connection, destinationConnection, source, target, filter, batchSize, CopyColumnMappingsBehavior.Automatic, identityBehavior, string.Equals(source, sourceTable, StringComparison.Ordinal) ? mappings : null, options, progressCallback, commandTimeout, traceKey, trace, transaction);
+                CopyRows(connection, destinationConnection, source, target, filter, bufferSize, CopyColumnMappingsBehavior.Automatic, identityBehavior, string.Equals(source, sourceTable, StringComparison.Ordinal) ? mappings : null, options, progressCallback, commandTimeout, traceKey, trace, transaction);
             }
             options.EndTime = DateTime.UtcNow;
             return options;
@@ -1007,7 +1007,7 @@ namespace RepoDb.Data
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
         /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="CopyIdentityBehavior.KeepIdentity"/>.</param>
@@ -1023,7 +1023,7 @@ namespace RepoDb.Data
             string destinationConnection,
             IList<CopyColumnMapping> mappings,
             Expression<Func<TEntity, bool>> where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyIdentityBehavior identityBehavior = CopyIdentityBehavior.KeepIdentity,
@@ -1035,7 +1035,7 @@ namespace RepoDb.Data
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.CopyDataToAsync(ConnectionManager.Get(destinationConnection), mappings, where, batchSize, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(ConnectionManager.Get(destinationConnection), mappings, where, bufferSize, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Copies the rows of the table mapped to <typeparamref name="TEntity"/> to the target table of the destination connection that is registered in the <see cref="ConnectionManager"/>. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -1046,7 +1046,7 @@ namespace RepoDb.Data
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
         /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="CopyIdentityBehavior.KeepIdentity"/>.</param>
@@ -1063,7 +1063,7 @@ namespace RepoDb.Data
             string destinationConnection,
             IList<CopyColumnMapping> mappings,
             Expression<Func<TEntity, bool>> where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyIdentityBehavior identityBehavior = CopyIdentityBehavior.KeepIdentity,
@@ -1075,7 +1075,7 @@ namespace RepoDb.Data
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.CopyDataToAsync(targetTable, ConnectionManager.Get(destinationConnection), mappings, where, batchSize, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(targetTable, ConnectionManager.Get(destinationConnection), mappings, where, bufferSize, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Copies the rows of the source table to the same-named table of the destination connection that is registered in the <see cref="ConnectionManager"/>. The destination table must already exist, unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -1085,7 +1085,7 @@ namespace RepoDb.Data
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
         /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="CopyIdentityBehavior.KeepIdentity"/>.</param>
@@ -1102,7 +1102,7 @@ namespace RepoDb.Data
             string destinationConnection,
             IList<CopyColumnMapping> mappings,
             QueryGroup where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyIdentityBehavior identityBehavior = CopyIdentityBehavior.KeepIdentity,
@@ -1113,7 +1113,7 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            connection.CopyDataToAsync(tableName, ConnectionManager.Get(destinationConnection), mappings, where, batchSize, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(tableName, ConnectionManager.Get(destinationConnection), mappings, where, bufferSize, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Copies the rows of the source table to the target table of the destination connection that is registered in the <see cref="ConnectionManager"/>. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -1124,7 +1124,7 @@ namespace RepoDb.Data
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
         /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="CopyIdentityBehavior.KeepIdentity"/>.</param>
@@ -1142,7 +1142,7 @@ namespace RepoDb.Data
             string destinationConnection,
             IList<CopyColumnMapping> mappings,
             QueryGroup where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyIdentityBehavior identityBehavior = CopyIdentityBehavior.KeepIdentity,
@@ -1153,7 +1153,7 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            connection.CopyDataToAsync(sourceTable, targetTable, ConnectionManager.Get(destinationConnection), mappings, where, batchSize, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(sourceTable, targetTable, ConnectionManager.Get(destinationConnection), mappings, where, bufferSize, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         #endregion
 
@@ -1167,7 +1167,7 @@ namespace RepoDb.Data
         /// <param name="destinationConnection">The destination connection.</param>
         /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="CopyIdentityBehavior.KeepIdentity"/>.</param>
@@ -1183,7 +1183,7 @@ namespace RepoDb.Data
             IDbConnection destinationConnection,
             IList<CopyColumnMapping> mappings,
             Expression<Func<TEntity, bool>> where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyIdentityBehavior identityBehavior = CopyIdentityBehavior.KeepIdentity,
@@ -1195,7 +1195,7 @@ namespace RepoDb.Data
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.CopyDataToAsync(ClassMappedNameCache.Get<TEntity>(), destinationConnection, mappings, where == null ? null : QueryGroup.Parse(where), batchSize, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(ClassMappedNameCache.Get<TEntity>(), destinationConnection, mappings, where == null ? null : QueryGroup.Parse(where), bufferSize, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Copies the rows of the table mapped to <typeparamref name="TEntity"/> to the target table of the destination connection. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -1206,7 +1206,7 @@ namespace RepoDb.Data
         /// <param name="destinationConnection">The destination connection.</param>
         /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="CopyIdentityBehavior.KeepIdentity"/>.</param>
@@ -1223,7 +1223,7 @@ namespace RepoDb.Data
             IDbConnection destinationConnection,
             IList<CopyColumnMapping> mappings,
             Expression<Func<TEntity, bool>> where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyIdentityBehavior identityBehavior = CopyIdentityBehavior.KeepIdentity,
@@ -1235,7 +1235,7 @@ namespace RepoDb.Data
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.CopyDataToAsync(ClassMappedNameCache.Get<TEntity>(), targetTable, destinationConnection, mappings, where == null ? null : QueryGroup.Parse(where), batchSize, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(ClassMappedNameCache.Get<TEntity>(), targetTable, destinationConnection, mappings, where == null ? null : QueryGroup.Parse(where), bufferSize, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Copies the rows of the source table to the same-named table of the destination connection. The destination table must already exist, unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -1245,7 +1245,7 @@ namespace RepoDb.Data
         /// <param name="destinationConnection">The destination connection.</param>
         /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="CopyIdentityBehavior.KeepIdentity"/>.</param>
@@ -1262,7 +1262,7 @@ namespace RepoDb.Data
             IDbConnection destinationConnection,
             IList<CopyColumnMapping> mappings,
             QueryGroup where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyIdentityBehavior identityBehavior = CopyIdentityBehavior.KeepIdentity,
@@ -1273,7 +1273,7 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            connection.CopyDataToAsync(tableName, tableName, destinationConnection, mappings, where, batchSize, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(tableName, tableName, destinationConnection, mappings, where, bufferSize, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Copies the rows of the source table to the target table of the destination connection. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -1284,7 +1284,7 @@ namespace RepoDb.Data
         /// <param name="destinationConnection">The destination connection.</param>
         /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="CopyIdentityBehavior.KeepIdentity"/>.</param>
@@ -1302,7 +1302,7 @@ namespace RepoDb.Data
             IDbConnection destinationConnection,
             IList<CopyColumnMapping> mappings,
             QueryGroup where = null,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             CopyIdentityBehavior identityBehavior = CopyIdentityBehavior.KeepIdentity,
@@ -1315,13 +1315,13 @@ namespace RepoDb.Data
             CancellationToken cancellationToken = default)
         {
             var targetSchema = GetTargetSchema(destinationConnection, targetTable);
-            Validate(connection, sourceTable, targetTable, destinationConnection, targetSchema, batchSize, relationshipBehavior, tableExistenceBehavior, CopyColumnMappingsBehavior.Automatic, identityBehavior, mappings);
+            Validate(connection, sourceTable, targetTable, destinationConnection, targetSchema, bufferSize, relationshipBehavior, tableExistenceBehavior, CopyColumnMappingsBehavior.Automatic, identityBehavior, mappings);
             var options = new CopyProgress { StartTime = DateTime.UtcNow };
             var tables = await GetTablesAsync(connection, destinationConnection, sourceTable, targetTable, targetSchema, where, relationshipBehavior, tableExistenceBehavior, commandTimeout, trace, transaction, cancellationToken, mappings).ConfigureAwait(false);
             options.TableCount = tables.Count;
             foreach (var (source, target, filter) in tables)
             {
-                await CopyRowsAsync(connection, destinationConnection, source, target, filter, batchSize, CopyColumnMappingsBehavior.Automatic, identityBehavior, string.Equals(source, sourceTable, StringComparison.Ordinal) ? mappings : null, options, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
+                await CopyRowsAsync(connection, destinationConnection, source, target, filter, bufferSize, CopyColumnMappingsBehavior.Automatic, identityBehavior, string.Equals(source, sourceTable, StringComparison.Ordinal) ? mappings : null, options, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
             }
             options.EndTime = DateTime.UtcNow;
             return options;

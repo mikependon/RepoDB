@@ -116,13 +116,13 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         [DataTestMethod]
         [DataRow(0)]
         [DataRow(-5)]
-        public void ThrowExceptionOnLoadDataFromJsonIfTheBatchSizeIsLessThanOne(int size)
+        public void ThrowExceptionOnLoadDataFromJsonIfTheBufferSizeIsLessThanOne(int size)
         {
             // Setup
             var path = Write("[]");
 
             // Act/Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => new FakeDbConnection().LoadDataFromJson("Customer", path, batchSize: size));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new FakeDbConnection().LoadDataFromJson("Customer", path, bufferSize: size));
         }
 
         [TestMethod]
@@ -143,13 +143,13 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnLoadDataFromJsonAsyncIfTheBatchSizeIsInvalid()
+        public async Task ThrowExceptionOnLoadDataFromJsonAsyncIfTheBufferSizeIsInvalid()
         {
             // Setup
             var path = Write("[]");
 
             // Act/Assert
-            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => new FakeDbConnection().LoadDataFromJsonAsync("Customer", path, batchSize: 0));
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => new FakeDbConnection().LoadDataFromJsonAsync("Customer", path, bufferSize: 0));
         }
 
         #endregion
@@ -165,7 +165,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var seen = new List<(int Batch, long Loaded, long Total)>();
 
             // Act
-            var actual = destination.LoadDataFromJson("Customer", path, batchSize: 2, progressCallback: Snapshot(seen));
+            var actual = destination.LoadDataFromJson("Customer", path, bufferSize: 2, progressCallback: Snapshot(seen));
 
             // Assert
             Assert.AreEqual(0, FakeBulkOperations.Calls.Length);
@@ -200,7 +200,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var seen = new List<LoadProgress>();
 
             // Act
-            var actual = new FakeDbConnection().LoadDataFromJson("Customer", path, batchSize: 1, progressCallback: seen.Add);
+            var actual = new FakeDbConnection().LoadDataFromJson("Customer", path, bufferSize: 1, progressCallback: seen.Add);
 
             // Assert
             Assert.IsTrue(seen.Count >= 2);
@@ -215,7 +215,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var seen = new List<(int Batch, long Loaded, long Total)>();
 
             // Act
-            new FakeDbConnection().LoadDataFromJson("Customer", path, batchSize: 50, progressCallback: p => seen.Add((p.BatchNumber, p.LoadedRowCount, p.TotalRowCount)));
+            new FakeDbConnection().LoadDataFromJson("Customer", path, bufferSize: 50, progressCallback: p => seen.Add((p.BatchNumber, p.LoadedRowCount, p.TotalRowCount)));
 
             // Assert
             CollectionAssert.AreEqual(new[] { (0, 0L, 2L), (1, 2L, 2L), (1, 2L, 2L) }, seen);
@@ -263,7 +263,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var destination = new FakeDbConnection();
 
             // Act
-            var actual = destination.LoadDataFromJson("Customer", path, batchSize: 3, progressCallback: null);
+            var actual = destination.LoadDataFromJson("Customer", path, bufferSize: 3, progressCallback: null);
 
             // Assert
             Assert.AreEqual(4L, actual.LoadedRowCount);
@@ -320,7 +320,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         #region Bulk Operations
 
         [TestMethod]
-        public void TestLoadDataFromJsonUsesTheBulkInsertInBlocksOfTheBatchSize()
+        public void TestLoadDataFromJsonUsesTheBulkInsertInBlocksOfTheBufferSize()
         {
             // Setup
             var path = Write(Rows(10));
@@ -328,7 +328,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var seen = new List<(int Batch, long Loaded, long Total)>();
 
             // Act
-            var actual = destination.LoadDataFromJson("Customer", path, batchSize: 4, progressCallback: Snapshot(seen));
+            var actual = destination.LoadDataFromJson("Customer", path, bufferSize: 4, progressCallback: Snapshot(seen));
 
             // Assert
             var calls = FakeBulkOperations.Calls;
@@ -361,7 +361,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var destination = new FakeDbConnection();
 
             // Act
-            var actual = destination.LoadDataFromJson("Customer", path, batchSize: 4);
+            var actual = destination.LoadDataFromJson("Customer", path, bufferSize: 4);
 
             // Assert
             Assert.AreEqual(0, FakeBulkOperations.Calls.Length);
@@ -377,7 +377,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var transaction = new Mock<IDbTransaction>().Object;
 
             // Act
-            new FakeBulkDbConnection().LoadDataFromJson("Customer", path, batchSize: 6, commandTimeout: 12, transaction: transaction);
+            new FakeBulkDbConnection().LoadDataFromJson("Customer", path, bufferSize: 6, commandTimeout: 12, transaction: transaction);
 
             // Assert
             var call = FakeBulkOperations.Calls.Single();
@@ -426,7 +426,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = Write(string.Join("\n", Enumerable.Range(1, 4).Select(i => "{\"Id\":" + i + ",\"Name\":\"Name " + i + "\"}")));
 
             // Act
-            var actual = new FakeDbConnection().LoadDataFromJson("Customer", path, batchSize: 3);
+            var actual = new FakeDbConnection().LoadDataFromJson("Customer", path, bufferSize: 3);
 
             // Assert
             Assert.AreEqual(4L, actual.TotalRowCount);
@@ -497,7 +497,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
 
             // Act/Assert
             Assert.Throws<InvalidOperationException>(() =>
-                destination.LoadDataFromJson("Customer", path, batchSize: 2, progressCallback: p =>
+                destination.LoadDataFromJson("Customer", path, bufferSize: 2, progressCallback: p =>
                 {
                     seen.Add(p);
                     if (++calls == 3)
@@ -523,7 +523,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var seen = new List<(int Batch, long Loaded, long Total)>();
 
             // Act
-            var actual = await destination.LoadDataFromJsonAsync("Customer", path, batchSize: 2, progressCallback: Snapshot(seen));
+            var actual = await destination.LoadDataFromJsonAsync("Customer", path, bufferSize: 2, progressCallback: Snapshot(seen));
 
             // Assert
             Assert.AreEqual(0, FakeBulkOperations.Calls.Length);
@@ -533,14 +533,14 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public async Task TestLoadDataFromJsonAsyncUsesTheBulkInsertInBlocksOfTheBatchSize()
+        public async Task TestLoadDataFromJsonAsyncUsesTheBulkInsertInBlocksOfTheBufferSize()
         {
             // Setup
             var path = Write(Rows(10));
             var destination = new FakeBulkDbConnection();
 
             // Act
-            var actual = await destination.LoadDataFromJsonAsync("Customer", path, batchSize: 4);
+            var actual = await destination.LoadDataFromJsonAsync("Customer", path, bufferSize: 4);
 
             // Assert
             var calls = FakeBulkOperations.Calls;
@@ -557,7 +557,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = Write(string.Join("\n", Enumerable.Range(1, 4).Select(i => "{\"Id\":" + i + ",\"Name\":\"Name " + i + "\"}")));
 
             // Act
-            var actual = await new FakeDbConnection().LoadDataFromJsonAsync("Customer", path, batchSize: 3);
+            var actual = await new FakeDbConnection().LoadDataFromJsonAsync("Customer", path, bufferSize: 3);
 
             // Assert
             Assert.AreEqual(4L, actual.LoadedRowCount);

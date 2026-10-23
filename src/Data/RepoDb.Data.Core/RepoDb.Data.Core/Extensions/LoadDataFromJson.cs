@@ -52,12 +52,12 @@ namespace RepoDb.Data
         #region LoadDataFromJson (Sync)
 
         /// <summary>
-        /// Loads the rows of a JSON file into a table without loading the file in memory. The rows are buffered, and every <paramref name="batchSize"/> rows they are inserted with the bulk insert of the provider (in batches of plain inserts if it has none). The file is an array of objects, an object whose first array property holds the rows, or a sequence of objects. The columns that the table does not have are ignored, and the values are converted into the types of the columns of the table.
+        /// Loads the rows of a JSON file into a table without loading the file in memory. The rows are buffered, and every <paramref name="bufferSize"/> rows they are inserted with the bulk insert of the provider (in batches of plain inserts if it has none). The file is an array of objects, an object whose first array property holds the rows, or a sequence of objects. The columns that the table does not have are ignored, and the values are converted into the types of the columns of the table.
         /// </summary>
         /// <param name="connection">The connection of the database that has the table.</param>
         /// <param name="tableName">The name of the table that the rows are loaded into.</param>
         /// <param name="filename">The path of the JSON file.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted at once with the bulk insert. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted at once with the bulk insert. The default is 10000.</param>
         /// <param name="columnMappingBehavior">Defines how the columns of the file are aligned with the columns of the table by the bulk insert of the provider (ignored if it has none). The default is <see cref="LoadColumnMappingBehavior.Automatic"/>.</param>
         /// <param name="identityBehavior">Defines whether the identity values of the file are kept, or ignored so the database generates them. The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="LoadProgress"/> after the rows are counted, after every batch is inserted, and when the load has ended. The default is <c>null</c>.</param>
@@ -67,14 +67,14 @@ namespace RepoDb.Data
         /// <param name="transaction">The transaction to be used. The default is <c>null</c>.</param>
         /// <returns>The <see cref="LoadProgress"/> of the load, which is the same instance that the callback receives.</returns>
         /// <exception cref="ArgumentNullException">The connection, the table name or the file name is <c>null</c> (or white space).</exception>
-        /// <exception cref="ArgumentOutOfRangeException">The batch size is less than 1, or a behavior is not defined.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The buffer size is less than 1, or a behavior is not defined.</exception>
         /// <exception cref="FileNotFoundException">The file does not exist.</exception>
         /// <exception cref="FormatException">The file is not valid JSON, a row is not an object, or a value cannot be converted into the type of its column.</exception>
         /// <exception cref="InvalidOperationException">No column of the file matches a column of the table.</exception>
         public static LoadProgress LoadDataFromJson(this IDbConnection connection,
             string tableName,
             string filename,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             LoadColumnMappingBehavior columnMappingBehavior = LoadColumnMappingBehavior.Automatic,
             LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
             Action<LoadProgress> progressCallback = null,
@@ -83,7 +83,7 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null)
         {
-            Validate(connection, tableName, filename, batchSize, columnMappingBehavior, identityBehavior);
+            Validate(connection, tableName, filename, bufferSize, columnMappingBehavior, identityBehavior);
             var map = CreateMap(connection, tableName, transaction, identityBehavior, JsonHelper.ReadColumns(filename));
             var progress = new LoadProgress
             {
@@ -93,7 +93,7 @@ namespace RepoDb.Data
             progressCallback?.Invoke(progress);
 
             var bulk = IsBulk(connection, map, false);
-            var buffer = new List<object[]>(Math.Min(batchSize, 1024));
+            var buffer = new List<object[]>(Math.Min(bufferSize, 1024));
             using (var reader = JsonHelper.Open(filename))
             {
                 while (true)
@@ -106,15 +106,15 @@ namespace RepoDb.Data
                         }
                         buffer.Add(ToValues(row, reader.RowNumber, map));
                     }
-                    if (buffer.Count == batchSize)
+                    if (buffer.Count == bufferSize)
                     {
-                        Flush(connection, tableName, map, buffer, bulk, batchSize, columnMappingBehavior, identityBehavior, commandTimeout, traceKey, trace, transaction, progress, progressCallback);
+                        Flush(connection, tableName, map, buffer, bulk, bufferSize, columnMappingBehavior, identityBehavior, commandTimeout, traceKey, trace, transaction, progress, progressCallback);
                     }
                 }
             }
             if (buffer.Count > 0)
             {
-                Flush(connection, tableName, map, buffer, bulk, batchSize, columnMappingBehavior, identityBehavior, commandTimeout, traceKey, trace, transaction, progress, progressCallback);
+                Flush(connection, tableName, map, buffer, bulk, bufferSize, columnMappingBehavior, identityBehavior, commandTimeout, traceKey, trace, transaction, progress, progressCallback);
             }
             progressCallback?.Invoke(progress);
             return progress;
@@ -130,7 +130,7 @@ namespace RepoDb.Data
         /// <param name="connection">The connection of the database that has the table.</param>
         /// <param name="tableName">The name of the table that the rows are loaded into.</param>
         /// <param name="filename">The path of the JSON file.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted at once with the bulk insert. The default is 10000.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted at once with the bulk insert. The default is 10000.</param>
         /// <param name="columnMappingBehavior">Defines how the columns of the file are aligned with the columns of the table by the bulk insert of the provider (ignored if it has none). The default is <see cref="LoadColumnMappingBehavior.Automatic"/>.</param>
         /// <param name="identityBehavior">Defines whether the identity values of the file are kept, or ignored so the database generates them. The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="LoadProgress"/> after the rows are counted, after every batch is inserted, and when the load has ended. The default is <c>null</c>.</param>
@@ -141,14 +141,14 @@ namespace RepoDb.Data
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="LoadProgress"/> of the load, which is the same instance that the callback receives.</returns>
         /// <exception cref="ArgumentNullException">The connection, the table name or the file name is <c>null</c> (or white space).</exception>
-        /// <exception cref="ArgumentOutOfRangeException">The batch size is less than 1, or a behavior is not defined.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The buffer size is less than 1, or a behavior is not defined.</exception>
         /// <exception cref="FileNotFoundException">The file does not exist.</exception>
         /// <exception cref="FormatException">The file is not valid JSON, a row is not an object, or a value cannot be converted into the type of its column.</exception>
         /// <exception cref="InvalidOperationException">No column of the file matches a column of the table.</exception>
         public static async Task<LoadProgress> LoadDataFromJsonAsync(this IDbConnection connection,
             string tableName,
             string filename,
-            int batchSize = 10000,
+            int bufferSize = 10000,
             LoadColumnMappingBehavior columnMappingBehavior = LoadColumnMappingBehavior.Automatic,
             LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
             Action<LoadProgress> progressCallback = null,
@@ -158,7 +158,7 @@ namespace RepoDb.Data
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            Validate(connection, tableName, filename, batchSize, columnMappingBehavior, identityBehavior);
+            Validate(connection, tableName, filename, bufferSize, columnMappingBehavior, identityBehavior);
             var map = CreateMap(connection, tableName, transaction, identityBehavior, await JsonHelper.ReadColumnsAsync(filename, cancellationToken).ConfigureAwait(false));
             var progress = new LoadProgress
             {
@@ -168,7 +168,7 @@ namespace RepoDb.Data
             progressCallback?.Invoke(progress);
 
             var bulk = IsBulk(connection, map, true);
-            var buffer = new List<object[]>(Math.Min(batchSize, 1024));
+            var buffer = new List<object[]>(Math.Min(bufferSize, 1024));
             using (var reader = JsonHelper.Open(filename))
             {
                 while (true)
@@ -181,15 +181,15 @@ namespace RepoDb.Data
                         }
                         buffer.Add(ToValues(row, reader.RowNumber, map));
                     }
-                    if (buffer.Count == batchSize)
+                    if (buffer.Count == bufferSize)
                     {
-                        await FlushAsync(connection, tableName, map, buffer, bulk, batchSize, columnMappingBehavior, identityBehavior, commandTimeout, traceKey, trace, transaction, progress, progressCallback, cancellationToken).ConfigureAwait(false);
+                        await FlushAsync(connection, tableName, map, buffer, bulk, bufferSize, columnMappingBehavior, identityBehavior, commandTimeout, traceKey, trace, transaction, progress, progressCallback, cancellationToken).ConfigureAwait(false);
                     }
                 }
             }
             if (buffer.Count > 0)
             {
-                await FlushAsync(connection, tableName, map, buffer, bulk, batchSize, columnMappingBehavior, identityBehavior, commandTimeout, traceKey, trace, transaction, progress, progressCallback, cancellationToken).ConfigureAwait(false);
+                await FlushAsync(connection, tableName, map, buffer, bulk, bufferSize, columnMappingBehavior, identityBehavior, commandTimeout, traceKey, trace, transaction, progress, progressCallback, cancellationToken).ConfigureAwait(false);
             }
             progressCallback?.Invoke(progress);
             return progress;
@@ -207,17 +207,17 @@ namespace RepoDb.Data
         /// <param name="connection">The connection of the database that has the table.</param>
         /// <param name="tableName">The name of the table that the rows are loaded into.</param>
         /// <param name="filename">The path of the JSON file.</param>
-        /// <param name="batchSize">The number of rows that are buffered and inserted at once.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted at once.</param>
         /// <param name="columnMappingBehavior">Defines how the columns of the file are aligned with the columns of the table.</param>
         /// <param name="identityBehavior">Defines whether the values of the identity columns of the file are kept.</param>
         /// <exception cref="ArgumentNullException">The connection, the table name or the file name is <c>null</c> (or white space).</exception>
-        /// <exception cref="ArgumentOutOfRangeException">The batch size is less than 1, or a behavior is not defined.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The buffer size is less than 1, or a behavior is not defined.</exception>
         /// <exception cref="ArgumentOutOfRangeException">The column mapping behavior or the identity behavior is not defined.</exception>
         /// <exception cref="FileNotFoundException">The file does not exist.</exception>
         private static void Validate(IDbConnection connection,
             string tableName,
             string filename,
-            int batchSize,
+            int bufferSize,
             LoadColumnMappingBehavior columnMappingBehavior,
             LoadIdentityBehavior identityBehavior)
         {
@@ -233,9 +233,9 @@ namespace RepoDb.Data
             {
                 throw new ArgumentNullException(nameof(filename));
             }
-            if (batchSize < 1)
+            if (bufferSize < 1)
             {
-                throw new ArgumentOutOfRangeException(nameof(batchSize), "The batch size must be at least 1.");
+                throw new ArgumentOutOfRangeException(nameof(bufferSize), "The buffer size must be at least 1.");
             }
             if (!Enum.IsDefined(typeof(LoadColumnMappingBehavior), columnMappingBehavior))
             {

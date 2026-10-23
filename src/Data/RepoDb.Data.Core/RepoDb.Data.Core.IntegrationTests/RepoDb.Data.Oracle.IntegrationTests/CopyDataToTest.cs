@@ -216,7 +216,7 @@ namespace RepoDb.Data.Oracle.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopyDataToWithABatchSizeAndACommandTimeoutCopiesAllTheRows()
+        public void TestCopyDataToWithABufferSizeAndACommandTimeoutCopiesAllTheRows()
         {
             using (var source = new OracleConnection(Database.ConnectionStringForSource))
             using (var target = new OracleConnection(Database.ConnectionStringForTarget))
@@ -225,7 +225,7 @@ namespace RepoDb.Data.Oracle.IntegrationTests
                 Helper.CreateTargetTables("Number");
 
                 // Act
-                var actual = source.CopyDataTo("Number", target, batchSize: 100, commandTimeout: 60).RowCount;
+                var actual = source.CopyDataTo("Number", target, bufferSize: 100, commandTimeout: 60).RowCount;
 
                 // Assert
                 Assert.AreEqual(2500, actual);
@@ -244,7 +244,7 @@ namespace RepoDb.Data.Oracle.IntegrationTests
                 var progress = new List<(int Batch, int Rows, int Total, DateTime Start, DateTime End)>();
 
                 // Act
-                var actual = source.CopyDataTo("Number", target, batchSize: 500, progressCallback: p => progress.Add((p.BatchCount, p.CurrentBatch.RowCount, p.RowCount, p.StartTime, p.EndTime))).RowCount;
+                var actual = source.CopyDataTo("Number", target, bufferSize: 500, progressCallback: p => progress.Add((p.BatchCount, p.CurrentBatch.RowCount, p.RowCount, p.StartTime, p.EndTime))).RowCount;
 
                 // Assert
                 Assert.AreEqual(2500, actual);
@@ -557,7 +557,7 @@ namespace RepoDb.Data.Oracle.IntegrationTests
                 var progress = new List<(int Rows, int Total)>();
 
                 // Act
-                var actual = (await source.CopyDataToAsync("Number", target, batchSize: 500, progressCallback: p => progress.Add((p.CurrentBatch.RowCount, p.RowCount)))).RowCount;
+                var actual = (await source.CopyDataToAsync("Number", target, bufferSize: 500, progressCallback: p => progress.Add((p.CurrentBatch.RowCount, p.RowCount)))).RowCount;
 
                 // Assert
                 Assert.AreEqual(2500, actual);

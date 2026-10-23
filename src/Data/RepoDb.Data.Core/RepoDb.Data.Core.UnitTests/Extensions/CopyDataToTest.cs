@@ -82,10 +82,10 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopyDataToIfTheBatchSizeIsNotGreaterThanZero()
+        public void ThrowExceptionOnCopyDataToIfTheBufferSizeIsNotGreaterThanZero()
         {
             // Act/Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => GetConnection().CopyDataTo("Person", "Person", GetConnection(), batchSize: 0));
+            Assert.Throws<ArgumentOutOfRangeException>(() => GetConnection().CopyDataTo("Person", "Person", GetConnection(), bufferSize: 0));
         }
 
         #endregion
@@ -175,10 +175,10 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnCopyDataToAsyncIfTheBatchSizeIsNotGreaterThanZero()
+        public async Task ThrowExceptionOnCopyDataToAsyncIfTheBufferSizeIsNotGreaterThanZero()
         {
             // Act/Assert
-            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => GetConnection().CopyDataToAsync("Person", "Person", GetConnection(), batchSize: 0));
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => GetConnection().CopyDataToAsync("Person", "Person", GetConnection(), bufferSize: 0));
         }
 
         #endregion
@@ -394,14 +394,14 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopyDataToWithTheBatchSizeTheTimeoutAndTheTransactionGivesThemToTheBulkInsert()
+        public void TestCopyDataToWithTheBufferSizeTheTimeoutAndTheTransactionGivesThemToTheBulkInsert()
         {
             // Setup
             var transaction = new Mock<IDbTransaction>().Object;
             var source = new FakeDbConnection();
 
             // Act
-            source.CopyDataTo("Person", "Customer", new FakeBulkDbConnection(), batchSize: 250, commandTimeout: 12, transaction: transaction);
+            source.CopyDataTo("Person", "Customer", new FakeBulkDbConnection(), bufferSize: 250, commandTimeout: 12, transaction: transaction);
 
             // Assert
             var call = Call();
@@ -459,7 +459,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var times = new List<(DateTime Start, DateTime End, DateTime OperationStart, DateTime OperationEnd)>();
 
             // Act
-            source.CopyDataTo("Person", "Customer", destination, batchSize: 2, progressCallback: p => times.Add((p.CurrentBatch.StartTime, p.CurrentBatch.EndTime, p.StartTime, p.EndTime)));
+            source.CopyDataTo("Person", "Customer", destination, bufferSize: 2, progressCallback: p => times.Add((p.CurrentBatch.StartTime, p.CurrentBatch.EndTime, p.StartTime, p.EndTime)));
 
             // Assert
             Assert.AreEqual(2, times.Count);
@@ -477,7 +477,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var batches = new List<int>();
 
             // Act
-            var actual = source.CopyDataTo("Person", "Customer", destination, batchSize: 2, progressCallback: p => batches.Add(p.CurrentBatch.RowCount)).RowCount;
+            var actual = source.CopyDataTo("Person", "Customer", destination, bufferSize: 2, progressCallback: p => batches.Add(p.CurrentBatch.RowCount)).RowCount;
 
             // Assert
             Assert.AreEqual(5, actual);
@@ -782,14 +782,14 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public async Task TestCopyDataToAsyncWithTheBatchSizeTheTimeoutTheTransactionAndTheCancellationTokenGivesThemToTheBulkInsert()
+        public async Task TestCopyDataToAsyncWithTheBufferSizeTheTimeoutTheTransactionAndTheCancellationTokenGivesThemToTheBulkInsert()
         {
             // Setup
             var transaction = new Mock<IDbTransaction>().Object;
             using (var tokenSource = new CancellationTokenSource())
             {
                 // Act
-                await new FakeDbConnection().CopyDataToAsync("Person", "Customer", new FakeBulkDbConnection(), batchSize: 250, commandTimeout: 12, transaction: transaction, cancellationToken: tokenSource.Token);
+                await new FakeDbConnection().CopyDataToAsync("Person", "Customer", new FakeBulkDbConnection(), bufferSize: 250, commandTimeout: 12, transaction: transaction, cancellationToken: tokenSource.Token);
 
                 // Assert
                 var call = Call();
@@ -824,7 +824,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var batches = new List<int>();
 
             // Act
-            var actual = (await source.CopyDataToAsync("Person", "Customer", new FakeDbConnection(), batchSize: 2, progressCallback: p => batches.Add(p.CurrentBatch.RowCount))).RowCount;
+            var actual = (await source.CopyDataToAsync("Person", "Customer", new FakeDbConnection(), bufferSize: 2, progressCallback: p => batches.Add(p.CurrentBatch.RowCount))).RowCount;
 
             // Assert
             Assert.AreEqual(5, actual);

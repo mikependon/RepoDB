@@ -262,7 +262,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
         #region Batch And Bulk Operations
 
         [TestMethod]
-        public void TestLoadDataFromJsonInsertsTheRowsInBatchesOfTheBatchSize()
+        public void TestLoadDataFromJsonInsertsTheRowsInBatchesOfTheBufferSize()
         {
             using (var target = new SqliteConnection(Database.ConnectionStringForTarget))
             {
@@ -270,7 +270,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 var path = Array(3000);
 
                 // Act
-                var actual = target.LoadDataFromJson("LoadItem", path, batchSize: 500);
+                var actual = target.LoadDataFromJson("LoadItem", path, bufferSize: 500);
 
                 // Assert
                 Assert.AreEqual(3000L, actual.TotalRowCount);
@@ -281,7 +281,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonLoadsAllTheRowsInBatchesOfTheBatchSize()
+        public void TestLoadDataFromJsonLoadsAllTheRowsInBatchesOfTheBufferSize()
         {
             using (var target = new SqliteConnection(Database.ConnectionStringForTarget))
             {
@@ -289,7 +289,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 var path = Array(3000);
 
                 // Act
-                var actual = target.LoadDataFromJson("LoadItem", path, batchSize: 1000);
+                var actual = target.LoadDataFromJson("LoadItem", path, bufferSize: 1000);
 
                 // Assert
                 Assert.AreEqual(3000L, actual.LoadedRowCount);
@@ -312,7 +312,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 var seen = new List<(int Batch, long Loaded, long Total)>();
 
                 // Act
-                var actual = target.LoadDataFromJson("LoadItem", path, batchSize: 500, progressCallback: p => seen.Add((p.BatchNumber, p.LoadedRowCount, p.TotalRowCount)));
+                var actual = target.LoadDataFromJson("LoadItem", path, bufferSize: 500, progressCallback: p => seen.Add((p.BatchNumber, p.LoadedRowCount, p.TotalRowCount)));
 
                 // Assert
                 CollectionAssert.AreEqual(new[] { (0, 0L, 1200L), (1, 500L, 1200L), (2, 1000L, 1200L), (3, 1200L, 1200L), (3, 1200L, 1200L) }, seen);
@@ -330,7 +330,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 LoadProgress progress = null;
 
                 // Act/Assert
-                Assert.Throws<SqliteException>(() => target.LoadDataFromJson("LoadItem", path, batchSize: 2, progressCallback: p => progress = p));
+                Assert.Throws<SqliteException>(() => target.LoadDataFromJson("LoadItem", path, bufferSize: 2, progressCallback: p => progress = p));
                 Assert.AreEqual(4, Helper.TargetCount("\"LoadItem\""));
                 Assert.AreEqual(2, progress.BatchNumber);
                 Assert.AreEqual(4L, progress.LoadedRowCount);
@@ -349,7 +349,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 // Act
                 using (var transaction = target.BeginTransaction())
                 {
-                    var actual = target.LoadDataFromJson("LoadItem", path, batchSize: 4, transaction: transaction);
+                    var actual = target.LoadDataFromJson("LoadItem", path, bufferSize: 4, transaction: transaction);
                     transaction.Rollback();
 
                     // Assert
@@ -428,7 +428,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestLoadDataFromJsonAsyncLoadsAllTheRowsInBatchesOfTheBatchSize()
+        public async Task TestLoadDataFromJsonAsyncLoadsAllTheRowsInBatchesOfTheBufferSize()
         {
             using (var target = new SqliteConnection(Database.ConnectionStringForTarget))
             {
@@ -437,7 +437,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 var last = 0L;
 
                 // Act
-                var actual = await target.LoadDataFromJsonAsync("LoadItem", path, batchSize: 1000, progressCallback: p => last = p.LoadedRowCount);
+                var actual = await target.LoadDataFromJsonAsync("LoadItem", path, bufferSize: 1000, progressCallback: p => last = p.LoadedRowCount);
 
                 // Assert
                 Assert.AreEqual(3000L, actual.LoadedRowCount);
@@ -456,7 +456,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 var path = Write(string.Join("\n", Enumerable.Range(1, 6).Select(Row)));
 
                 // Act
-                var actual = await target.LoadDataFromJsonAsync("LoadItem", path, batchSize: 4);
+                var actual = await target.LoadDataFromJsonAsync("LoadItem", path, bufferSize: 4);
 
                 // Assert
                 Assert.AreEqual(6L, actual.LoadedRowCount);

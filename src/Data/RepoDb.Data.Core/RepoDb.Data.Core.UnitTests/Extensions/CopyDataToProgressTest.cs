@@ -100,13 +100,13 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopyDataToItemHasTheRowsAndTheBatchesOfTheBulkInsertPerBatchSize()
+        public void TestCopyDataToItemHasTheRowsAndTheBatchesOfTheBulkInsertPerBufferSize()
         {
             // Setup
             var source = new FakeDbConnection { Data = FakeDbConnection.CreatePersons(5) };
 
             // Act
-            var item = source.CopyDataTo("Person", "Customer", new FakeBulkDbConnection(), batchSize: 2).Items.Single();
+            var item = source.CopyDataTo("Person", "Customer", new FakeBulkDbConnection(), bufferSize: 2).Items.Single();
 
             // Assert
             Assert.AreEqual(5, item.RowCount);
@@ -124,7 +124,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var seen = new List<(long Rows, int Calls)>();
 
             // Act
-            source.CopyDataTo("Person", "Customer", new FakeBulkDbConnection(), batchSize: 2, progressCallback: p => seen.Add((p.RowCount, FakeBulkOperations.Calls.Length)));
+            source.CopyDataTo("Person", "Customer", new FakeBulkDbConnection(), bufferSize: 2, progressCallback: p => seen.Add((p.RowCount, FakeBulkOperations.Calls.Length)));
 
             // Assert
             CollectionAssert.AreEqual(new[] { (2L, 1), (4L, 2), (5L, 3) }, seen);
@@ -138,7 +138,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var seen = new List<(long Rows, int Calls)>();
 
             // Act
-            await source.CopyDataToAsync("Person", "Customer", new FakeBulkDbConnection(), batchSize: 2, progressCallback: p => seen.Add((p.RowCount, FakeBulkOperations.Calls.Length)));
+            await source.CopyDataToAsync("Person", "Customer", new FakeBulkDbConnection(), bufferSize: 2, progressCallback: p => seen.Add((p.RowCount, FakeBulkOperations.Calls.Length)));
 
             // Assert
             CollectionAssert.AreEqual(new[] { (2L, 1), (4L, 2), (5L, 3) }, seen);
@@ -151,7 +151,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var source = new FakeDbConnection { Data = FakeDbConnection.CreatePersons(0) };
 
             // Act
-            var item = source.CopyDataTo("Person", "Customer", new FakeBulkDbConnection(), batchSize: 2).Items.Single();
+            var item = source.CopyDataTo("Person", "Customer", new FakeBulkDbConnection(), bufferSize: 2).Items.Single();
 
             // Assert
             Assert.AreEqual(0, item.RowCount);
@@ -167,7 +167,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var source = new FakeDbConnection { Data = FakeDbConnection.CreatePersons(5) };
 
             // Act
-            var actual = source.CopyDataTo("Person", "Customer", new FakeDbConnection(), batchSize: 2);
+            var actual = source.CopyDataTo("Person", "Customer", new FakeDbConnection(), bufferSize: 2);
 
             // Assert
             var item = actual.Items.Single();
@@ -186,7 +186,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var source = new FakeDbConnection { Data = FakeDbConnection.CreatePersons(5) };
 
             // Act
-            var actual = await source.CopyDataToAsync("Person", "Customer", new FakeDbConnection(), batchSize: 2);
+            var actual = await source.CopyDataToAsync("Person", "Customer", new FakeDbConnection(), bufferSize: 2);
 
             // Assert
             var item = actual.Items.Single();
@@ -203,7 +203,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var source = new FakeDbConnection { Data = FakeDbConnection.CreatePersons(5) };
 
             // Act
-            var item = source.CopyDataTo("Person", "Customer", new FakeDbConnection(), batchSize: 2).Items.Single();
+            var item = source.CopyDataTo("Person", "Customer", new FakeDbConnection(), bufferSize: 2).Items.Single();
 
             // Assert
             Assert.IsTrue(item.Batches.All(b => b.StartTime >= item.StartTime && b.StartTime <= b.EndTime && b.EndTime <= item.EndTime));
@@ -243,7 +243,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var totals = new List<(int Rows, int Batches, int Number, int BatchRows)>();
 
             // Act
-            var actual = source.CopyDataTo("Person", "Customer", new FakeDbConnection(), batchSize: 2,
+            var actual = source.CopyDataTo("Person", "Customer", new FakeDbConnection(), bufferSize: 2,
                 progressCallback: p =>
                 {
                     seen.Add(p);
@@ -262,7 +262,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var source = new FakeDbConnection { Data = FakeDbConnection.CreatePersons(5) };
 
             // Act
-            var actual = source.CopyDataTo("Person", "Customer", new FakeDbConnection(), batchSize: 2);
+            var actual = source.CopyDataTo("Person", "Customer", new FakeDbConnection(), bufferSize: 2);
 
             // Assert
             Assert.AreEqual(1, actual.CompletedTableCount);
@@ -276,7 +276,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var source = new FakeDbConnection { Data = FakeDbConnection.CreatePersons(5) };
 
             // Act
-            var actual = await source.CopyDataToAsync("Person", "Customer", new FakeDbConnection(), batchSize: 2);
+            var actual = await source.CopyDataToAsync("Person", "Customer", new FakeDbConnection(), bufferSize: 2);
 
             // Assert
             Assert.AreEqual(1, actual.CompletedTableCount);

@@ -94,7 +94,7 @@ namespace RepoDb.Data.MariaDb.IntegrationTests
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopyDataToIfTheBatchSizeIsNotGreaterThanZero()
+        public void ThrowExceptionOnCopyDataToIfTheBufferSizeIsNotGreaterThanZero()
         {
             using (var source = new MariaDbConnection(Database.ConnectionStringForSource))
             using (var target = new MariaDbConnection(Database.ConnectionStringForTarget))
@@ -103,8 +103,8 @@ namespace RepoDb.Data.MariaDb.IntegrationTests
                 Helper.CreateTargetTables("Currency");
 
                 // Act/Assert
-                Assert.Throws<ArgumentOutOfRangeException>(() => source.CopyDataTo("Currency", target, batchSize: 0));
-                Assert.Throws<ArgumentOutOfRangeException>(() => source.CopyDataTo("Currency", target, batchSize: -1));
+                Assert.Throws<ArgumentOutOfRangeException>(() => source.CopyDataTo("Currency", target, bufferSize: 0));
+                Assert.Throws<ArgumentOutOfRangeException>(() => source.CopyDataTo("Currency", target, bufferSize: -1));
                 Assert.AreEqual(0, Helper.TargetCount("`Currency`"));
             }
         }
@@ -170,13 +170,13 @@ namespace RepoDb.Data.MariaDb.IntegrationTests
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnCopyDataToAsyncIfTheBatchSizeIsNotGreaterThanZero()
+        public async Task ThrowExceptionOnCopyDataToAsyncIfTheBufferSizeIsNotGreaterThanZero()
         {
             using (var source = new MariaDbConnection(Database.ConnectionStringForSource))
             using (var target = new MariaDbConnection(Database.ConnectionStringForTarget))
             {
                 // Act/Assert
-                await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => source.CopyDataToAsync("Currency", target, batchSize: 0));
+                await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => source.CopyDataToAsync("Currency", target, bufferSize: 0));
             }
         }
 
