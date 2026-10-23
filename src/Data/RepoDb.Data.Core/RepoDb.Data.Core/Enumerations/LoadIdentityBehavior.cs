@@ -25,6 +25,6 @@ namespace RepoDb.Data.Enumerations
         /// The values of the identity columns that the file has are ignored, and the database generates new ones. As the rows come from a file (there are no entities), the generated
         /// values are not set back to anything: they can be read from the table.
         /// </summary>
-        ReturnIdentity
+        Ignore
     }
 }

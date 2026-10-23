@@ -67,7 +67,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
 
             // Act/Assert
             Assert.Throws<ArgumentException>(() =>
-                source.CopyDataTo("Person", "Person", new FakeDbConnection(), relationshipBehavior: CopyRelationshipBehavior.Parents, identityBehavior: CopyIdentityBehavior.ReturnIdentity));
+                source.CopyDataTo("Person", "Person", new FakeDbConnection(), relationshipBehavior: CopyRelationshipBehavior.Parents, identityBehavior: CopyIdentityBehavior.Ignore));
         }
 
         [TestMethod]
@@ -107,7 +107,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var source = new FakeDbConnection { Data = FakeDbConnection.CreatePersons(3) };
 
             // Act
-            source.CopyDataTo("Person", "Customer", new FakeBulkOptionsDbConnection(), identityBehavior: CopyIdentityBehavior.ReturnIdentity);
+            source.CopyDataTo("Person", "Customer", new FakeBulkOptionsDbConnection(), identityBehavior: CopyIdentityBehavior.Ignore);
 
             // Assert
             Assert.AreEqual(FakeBulkCopyOptions.Default, FakeBulkOperations.Calls.Single().Options);
@@ -121,7 +121,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var source = new FakeDbConnection { Data = FakeDbConnection.CreatePersons(3) };
 
             // Act
-            await source.CopyDataToAsync("Person", "Customer", new FakeBulkIdentityBehaviorDbConnection(), identityBehavior: CopyIdentityBehavior.ReturnIdentity);
+            await source.CopyDataToAsync("Person", "Customer", new FakeBulkIdentityBehaviorDbConnection(), identityBehavior: CopyIdentityBehavior.Ignore);
 
             // Assert
             Assert.IsNull(FakeBulkOperations.Calls.Single().IdentityBehavior);
@@ -169,7 +169,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var destination = new FakeDbConnection();
 
             // Act
-            source.CopyDataTo("Person", "Customer", destination, identityBehavior: CopyIdentityBehavior.ReturnIdentity);
+            source.CopyDataTo("Person", "Customer", destination, identityBehavior: CopyIdentityBehavior.Ignore);
 
             // Assert
             var executions = destination.Executions.Where(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal)).ToList();

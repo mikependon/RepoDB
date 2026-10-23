@@ -52,19 +52,15 @@ namespace RepoDb.Data
         #region LoadDataFromJson (Sync)
 
         /// <summary>
-        /// Loads the rows of a JSON file into a table. The rows of the file are counted first, then they are read one by one without loading the file in memory,
-        /// and buffered. Every time the buffer reaches <paramref name="batchSize"/> rows, they are inserted with the bulk insert of the provider of the connection, and the buffer is cleared
-        /// (the rows are inserted in batches of the same size if the provider has no bulk insert). The file is an array of objects (one object per row),
-        /// an object whose first array property holds them, or a sequence of objects (one object per line). The columns of the file that the table does not have are ignored,
-        /// and the values are converted into the types of the columns of the table.
+        /// Loads the rows of a JSON file into a table without loading the file in memory. The rows are buffered, and every <paramref name="batchSize"/> rows they are inserted with the bulk insert of the provider (in batches of plain inserts if it has none). The file is an array of objects, an object whose first array property holds the rows, or a sequence of objects. The columns that the table does not have are ignored, and the values are converted into the types of the columns of the table.
         /// </summary>
         /// <param name="connection">The connection of the database that has the table.</param>
         /// <param name="tableName">The name of the table that the rows are loaded into.</param>
         /// <param name="filename">The path of the JSON file.</param>
-        /// <param name="batchSize">The number of rows that are buffered in memory, and inserted at once with the bulk insert, before the buffer is cleared and the progress is reported. The default is 10000.</param>
-        /// <param name="columnMappingBehavior">Defines how the columns of the file are aligned with the columns of the table by the bulk insert of the provider. The default is <see cref="LoadColumnMappingBehavior.Automatic"/>.</param>
-        /// <param name="identityBehavior">Defines whether the values of the identity columns of the file are kept, or generated again by the database. The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="LoadProgress"/> right after the rows of the file are counted, right after every batch has been inserted, and when the load has ended. The default is <c>null</c>.</param>
+        /// <param name="batchSize">The number of rows that are buffered and inserted at once with the bulk insert. The default is 10000.</param>
+        /// <param name="columnMappingBehavior">Defines how the columns of the file are aligned with the columns of the table by the bulk insert of the provider (ignored if it has none). The default is <see cref="LoadColumnMappingBehavior.Automatic"/>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the file are kept, or ignored so the database generates them. The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="LoadProgress"/> after the rows are counted, after every batch is inserted, and when the load has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.LoadDataFromJson"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
@@ -134,10 +130,10 @@ namespace RepoDb.Data
         /// <param name="connection">The connection of the database that has the table.</param>
         /// <param name="tableName">The name of the table that the rows are loaded into.</param>
         /// <param name="filename">The path of the JSON file.</param>
-        /// <param name="batchSize">The number of rows that are buffered in memory, and inserted at once with the bulk insert, before the buffer is cleared and the progress is reported. The default is 10000.</param>
-        /// <param name="columnMappingBehavior">Defines how the columns of the file are aligned with the columns of the table by the bulk insert of the provider. The default is <see cref="LoadColumnMappingBehavior.Automatic"/>.</param>
-        /// <param name="identityBehavior">Defines whether the values of the identity columns of the file are kept, or generated again by the database. The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="LoadProgress"/> right after the rows of the file are counted, right after every batch has been inserted, and when the load has ended. The default is <c>null</c>.</param>
+        /// <param name="batchSize">The number of rows that are buffered and inserted at once with the bulk insert. The default is 10000.</param>
+        /// <param name="columnMappingBehavior">Defines how the columns of the file are aligned with the columns of the table by the bulk insert of the provider (ignored if it has none). The default is <see cref="LoadColumnMappingBehavior.Automatic"/>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the file are kept, or ignored so the database generates them. The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="LoadProgress"/> after the rows are counted, after every batch is inserted, and when the load has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.LoadDataFromJson"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
@@ -279,7 +275,7 @@ namespace RepoDb.Data
                 var field = dbFields.GetByUnquotedName(column.AsUnquoted(true, dbSetting));
                 if (field == null ||
                     map.Index.ContainsKey(column) ||
-                    (identityBehavior == LoadIdentityBehavior.ReturnIdentity && field.IsIdentity))
+                    (identityBehavior == LoadIdentityBehavior.Ignore && field.IsIdentity))
                 {
                     continue;
                 }

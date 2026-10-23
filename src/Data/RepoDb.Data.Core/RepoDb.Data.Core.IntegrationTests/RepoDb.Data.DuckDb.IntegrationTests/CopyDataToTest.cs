@@ -104,7 +104,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.ExecuteOnTarget("INSERT INTO \"Country\" (\"Name\") VALUES ('Other')");
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, identityBehavior: CopyIdentityBehavior.ReturnIdentity);
+                var actual = source.CopyDataTo("Country", target, identityBehavior: CopyIdentityBehavior.Ignore);
 
                 // Assert
                 Assert.AreEqual(3, actual.RowCount);
@@ -143,7 +143,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
                 // Act/Assert
-                Assert.Throws<ArgumentException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, identityBehavior: CopyIdentityBehavior.ReturnIdentity));
+                Assert.Throws<ArgumentException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, identityBehavior: CopyIdentityBehavior.Ignore));
             }
         }
 

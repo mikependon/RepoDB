@@ -22,10 +22,10 @@ namespace RepoDb.Data.Enumerations
         KeepIdentity,
 
         /// <summary>
-        /// The values of the identity columns of the source table are not copied, and the database of the target table generates new ones. The generated values are not set back to anything:
+        /// The values of the identity columns of the source table are ignored (not copied), and the database of the target table generates new ones. The generated values are not set back to anything:
         /// they can be read from the target table. As the rows of the related tables would no longer reference the rows that they referenced, it can only be used with
         /// <see cref="CopyRelationshipBehavior.TableOnly"/>.
         /// </summary>
-        ReturnIdentity
+        Ignore
     }
 }

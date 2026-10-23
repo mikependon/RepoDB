@@ -677,7 +677,7 @@ namespace RepoDb.Data
             CopyIdentityBehavior identityBehavior,
             IDbTransaction transaction)
         {
-            if (identityBehavior != CopyIdentityBehavior.ReturnIdentity)
+            if (identityBehavior != CopyIdentityBehavior.Ignore)
             {
                 return null;
             }
@@ -875,7 +875,7 @@ namespace RepoDb.Data
             {
                 throw new ArgumentOutOfRangeException(nameof(identityBehavior), "The identity behavior is not defined.");
             }
-            if (identityBehavior == CopyIdentityBehavior.ReturnIdentity && relationshipBehavior != CopyRelationshipBehavior.TableOnly)
+            if (identityBehavior == CopyIdentityBehavior.Ignore && relationshipBehavior != CopyRelationshipBehavior.TableOnly)
             {
                 throw new ArgumentException("The identity values can only be generated again when only the table is copied, as the rows of the related tables would no longer reference the rows that they referenced.", nameof(identityBehavior));
             }

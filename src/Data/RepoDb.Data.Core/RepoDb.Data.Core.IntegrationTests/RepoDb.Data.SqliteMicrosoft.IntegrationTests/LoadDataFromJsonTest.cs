@@ -539,7 +539,7 @@ namespace RepoDb.Data.SqliteMicrosoft.IntegrationTests
                 var path = Write("[" + string.Join(",", new[] { 10, 20, 30 }.Select(Row)) + "]");
 
                 // Act
-                var actual = target.LoadDataFromJson("LoadItem", path, identityBehavior: LoadIdentityBehavior.ReturnIdentity);
+                var actual = target.LoadDataFromJson("LoadItem", path, identityBehavior: LoadIdentityBehavior.Ignore);
 
                 // Assert
                 Assert.AreEqual(3L, actual.LoadedRowCount);

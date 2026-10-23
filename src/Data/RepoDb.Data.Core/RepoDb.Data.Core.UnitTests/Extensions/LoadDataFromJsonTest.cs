@@ -671,7 +671,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var destination = new FakeDbConnection();
 
             // Act
-            destination.LoadDataFromJson("Customer", path, identityBehavior: LoadIdentityBehavior.ReturnIdentity);
+            destination.LoadDataFromJson("Customer", path, identityBehavior: LoadIdentityBehavior.Ignore);
 
             // Assert
             var execution = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal));
@@ -687,7 +687,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var destination = new FakeDbConnection();
 
             // Act
-            await destination.LoadDataFromJsonAsync("Customer", path, identityBehavior: LoadIdentityBehavior.ReturnIdentity);
+            await destination.LoadDataFromJsonAsync("Customer", path, identityBehavior: LoadIdentityBehavior.Ignore);
 
             // Assert
             var execution = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal));
@@ -701,7 +701,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = Write("[{\"Id\":1}]");
 
             // Act/Assert
-            Assert.Throws<InvalidOperationException>(() => new FakeDbConnection().LoadDataFromJson("Customer", path, identityBehavior: LoadIdentityBehavior.ReturnIdentity));
+            Assert.Throws<InvalidOperationException>(() => new FakeDbConnection().LoadDataFromJson("Customer", path, identityBehavior: LoadIdentityBehavior.Ignore));
         }
 
         [TestMethod]
@@ -724,7 +724,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = Write(Rows(3));
 
             // Act
-            new FakeBulkOptionsDbConnection().LoadDataFromJson("Customer", path, identityBehavior: LoadIdentityBehavior.ReturnIdentity);
+            new FakeBulkOptionsDbConnection().LoadDataFromJson("Customer", path, identityBehavior: LoadIdentityBehavior.Ignore);
 
             // Assert
             Assert.AreEqual(FakeBulkCopyOptions.Default, FakeBulkOperations.Calls.Single().Options);
@@ -750,7 +750,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = Write(Rows(3));
 
             // Act
-            new FakeBulkIdentityBehaviorDbConnection().LoadDataFromJson("Customer", path, identityBehavior: LoadIdentityBehavior.ReturnIdentity);
+            new FakeBulkIdentityBehaviorDbConnection().LoadDataFromJson("Customer", path, identityBehavior: LoadIdentityBehavior.Ignore);
 
             // Assert
             Assert.IsNull(FakeBulkOperations.Calls.Single().IdentityBehavior);
