@@ -326,12 +326,12 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget("INSERT INTO `Currency` (`Code`, `Name`) VALUES ('XXX', 'Euro');");
 
                 // Act (the bulk load of MySQL is a LOAD DATA LOCAL, that skips the rows that violate a constraint)
-                CopyDataProgress progress = null;
+                CopyProgress progress = null;
                 source.CopyDataTo("Currency", target, progressCallback: p => progress = p);
 
                 // Assert (the row of Euro is skipped, since the name is unique)
                 Assert.AreEqual(3, Helper.TargetCount("`Currency`"));
-                Assert.IsTrue(progress.Logs.Any(log => log.Level == CopyDataLogLevel.Warning && log.Text.Contains("1 of 3 row(s) were skipped", StringComparison.Ordinal)));
+                Assert.IsTrue(progress.Logs.Any(log => log.Level == CopyLogLevel.Warning && log.Text.Contains("1 of 3 row(s) were skipped", StringComparison.Ordinal)));
                 Assert.IsTrue(progress.Logs.All(log => log.DatabaseType == target.GetType()));
             }
         }

@@ -11,7 +11,7 @@ namespace RepoDb.Data.Enumerations
     /// <summary>
     /// An enumeration that is used to define the data of which related tables (as defined by the foreign keys) is copied together with the data of the requested tables.
     /// </summary>
-    public enum CopyDataRelationshipBehavior
+    public enum CopyRelationshipBehavior
     {
         /// <summary>
         /// Copies only the data of the requested tables, without the data of any of their relationships.

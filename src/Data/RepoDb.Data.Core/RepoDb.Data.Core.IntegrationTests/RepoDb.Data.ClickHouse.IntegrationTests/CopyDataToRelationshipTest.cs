@@ -23,7 +23,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
 {
     /// <summary>
     /// Copies the rows of a table together with the rows of the tables that are related to it (the Country, Person, Pet and Toy tables
-    /// form a tree: each one references the previous one), as defined by the <see cref="CopyDataRelationshipBehavior"/>.
+    /// form a tree: each one references the previous one), as defined by the <see cref="CopyRelationshipBehavior"/>.
     /// </summary>
     [TestClass]
     public class CopyDataToRelationshipTest
@@ -87,7 +87,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 source.CopyDataTo("Country", target);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.TableOnly);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.TableOnly);
 
                 // Assert
                 Assert.AreEqual(6, actual);
@@ -108,7 +108,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.CreateTargetTables("Country");
 
                 // Act
-                source.CopyDataTo("Country", target, relationshipBehavior: CopyDataRelationshipBehavior.TableOnly);
+                source.CopyDataTo("Country", target, relationshipBehavior: CopyRelationshipBehavior.TableOnly);
 
                 // Assert
                 CollectionAssert.AreEqual(new[] { "`Country`" }, Helper.TargetTables().ToArray());
@@ -129,7 +129,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Country", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -147,7 +147,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents);
+                source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
 
                 // Assert
                 CollectionAssert.DoesNotContain(Helper.TargetTables(), "`Pet`");
@@ -166,7 +166,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Employee", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Employee", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -190,7 +190,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 source.CopyDataTo("Country", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw);
 
                 // Act
-                source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Children);
+                source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Children);
 
                 // Assert
                 CollectionAssert.DoesNotContain(Helper.TargetTables(), "`Currency`");
@@ -208,7 +208,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Employee", target, relationshipBehavior: CopyDataRelationshipBehavior.Children);
+                var actual = source.CopyDataTo("Employee", target, relationshipBehavior: CopyRelationshipBehavior.Children);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -230,7 +230,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                source.CopyDataTo("Pet", target, relationshipBehavior: CopyDataRelationshipBehavior.ParentsAndChildren);
+                source.CopyDataTo("Pet", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren);
 
                 // Assert
                 CollectionAssert.DoesNotContain(Helper.TargetTables(), "`Currency`");
@@ -249,7 +249,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Employee", target, relationshipBehavior: CopyDataRelationshipBehavior.ParentsAndChildren);
+                var actual = source.CopyDataTo("Employee", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -280,7 +280,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                foreach (var behavior in new[] { CopyDataRelationshipBehavior.Parents, CopyDataRelationshipBehavior.Children, CopyDataRelationshipBehavior.ParentsAndChildren })
+                foreach (var behavior in new[] { CopyRelationshipBehavior.Parents, CopyRelationshipBehavior.Children, CopyRelationshipBehavior.ParentsAndChildren })
                 {
                     Assert.Throws<ArgumentException>(() => source.CopyDataTo("Pet", "PetCopy", target, relationshipBehavior: behavior));
                 }
@@ -295,7 +295,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
             using (var target = new ClickHouseConnection(Database.ConnectionStringForTarget))
             {
                 // Act/Assert
-                Assert.Throws<MissingMappingException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents));
+                Assert.Throws<MissingMappingException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents));
                 Assert.AreEqual(0, Helper.TargetTables().Count);
             }
         }
@@ -314,7 +314,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<ArgumentException>(() => source.CopyDataToAsync("Pet", "PetCopy", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents));
+                await Assert.ThrowsAsync<ArgumentException>(() => source.CopyDataToAsync("Pet", "PetCopy", target, relationshipBehavior: CopyRelationshipBehavior.Parents));
             }
         }
 
@@ -330,7 +330,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act (ClickHouse has no foreign key, so there are no related tables to copy)
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
 
                 // Assert
                 Assert.AreEqual(6, actual);
@@ -349,7 +349,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act (ClickHouse has no foreign key, so there are no related tables to copy)
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Children);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Children);
 
                 // Assert
                 Assert.AreEqual(6, actual);
@@ -368,7 +368,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act (ClickHouse has no foreign key, so there are no related tables to copy)
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.ParentsAndChildren);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren);
 
                 // Assert
                 Assert.AreEqual(6, actual);
@@ -387,7 +387,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act (ClickHouse has no foreign key, so there are no related tables to copy)
-                var actual = await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.ParentsAndChildren);
+                var actual = await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren);
 
                 // Assert
                 Assert.AreEqual(6, actual);

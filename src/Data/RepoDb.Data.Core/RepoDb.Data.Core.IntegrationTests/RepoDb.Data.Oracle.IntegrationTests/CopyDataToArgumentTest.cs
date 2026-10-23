@@ -324,13 +324,13 @@ namespace RepoDb.Data.Oracle.IntegrationTests
                 Helper.ExecuteOnTarget("INSERT INTO \"Currency\" (\"Code\", \"Name\") VALUES ('XXX', 'Euro');");
 
                 // Act (the bulk copy of Oracle is a direct path load, that does not enforce the unique constraints)
-                CopyDataProgress progress = null;
+                CopyProgress progress = null;
                 source.CopyDataTo("Currency", target, progressCallback: p => progress = p);
 
                 // Assert
                 Assert.AreEqual(4, Helper.TargetCount("\"Currency\""));
                 Assert.AreEqual("UNUSABLE", Helper.TargetIndexStatus("UQ_Currency_Name"));
-                Assert.IsTrue(progress.Logs.Any(log => log.Level == CopyDataLogLevel.Info && log.Text.Contains("bulk insert", StringComparison.Ordinal)));
+                Assert.IsTrue(progress.Logs.Any(log => log.Level == CopyLogLevel.Info && log.Text.Contains("bulk insert", StringComparison.Ordinal)));
                 Assert.IsTrue(progress.Logs.All(log => log.DatabaseType == target.GetType()));
             }
         }

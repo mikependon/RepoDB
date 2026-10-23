@@ -12,17 +12,17 @@ using System.Collections.Generic;
 namespace RepoDb.Data.Models
 {
     /// <summary>
-    /// A class that represents the collection of <see cref="CopyDataRow"/> objects of the data being copied.
+    /// A class that represents the collection of <see cref="CopyRow"/> objects of the data being copied.
     /// </summary>
-    public class CopyDataTable
+    public class CopyTable
     {
         #region Constructors
 
         /// <summary>
-        /// Creates a new instance of <see cref="CopyDataTable"/> class.
+        /// Creates a new instance of <see cref="CopyTable"/> class.
         /// </summary>
-        /// <param name="dataRows">The list of <see cref="CopyDataRow"/> objects.</param>
-        public CopyDataTable(IList<CopyDataRow> dataRows)
+        /// <param name="dataRows">The list of <see cref="CopyRow"/> objects.</param>
+        public CopyTable(IList<CopyRow> dataRows)
         {
             DataRows = dataRows ?? throw new ArgumentNullException(nameof(dataRows));
         }
@@ -32,9 +32,9 @@ namespace RepoDb.Data.Models
         #region Properties
 
         /// <summary>
-        /// Gets the list of <see cref="CopyDataRow"/> objects.
+        /// Gets the list of <see cref="CopyRow"/> objects.
         /// </summary>
-        public IList<CopyDataRow> DataRows { get; }
+        public IList<CopyRow> DataRows { get; }
 
         #endregion
     }

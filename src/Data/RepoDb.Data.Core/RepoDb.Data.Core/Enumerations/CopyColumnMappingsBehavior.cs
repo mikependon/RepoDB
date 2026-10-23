@@ -14,7 +14,7 @@ namespace RepoDb.Data.Enumerations
     /// (i.e.: <c>SqlServerBulkColumnMappingsBehavior</c>), which has the same values. It is ignored when the provider has no bulk insert, as the rows are inserted
     /// in batches (the <c>InsertAll</c> of the library) by the columns of the rows.
     /// </summary>
-    public enum CopyTableSchemaColumnMappingsBehavior : short
+    public enum CopyColumnMappingsBehavior : short
     {
         /// <summary>
         /// Only the columns that exist on both the source and the target table (matched by name) are copied. All the other columns are ignored on both sides,

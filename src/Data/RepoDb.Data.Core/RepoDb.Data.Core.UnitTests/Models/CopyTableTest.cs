@@ -14,16 +14,16 @@ using RepoDb.Data.Models;
 namespace RepoDb.Data.Core.UnitTests.Models
 {
     [TestClass]
-    public class CopyDataTableTest
+    public class CopyTableTest
     {
         [TestMethod]
         public void TestCopyDataTableConstructorSetsTheDataRows()
         {
             // Setup
-            var rows = new List<CopyDataRow> { new CopyDataRow(new CopyDataColumn("Id", typeof(int)), 1) };
+            var rows = new List<CopyRow> { new CopyRow(new CopyColumn("Id", typeof(int)), 1) };
 
             // Act
-            var actual = new CopyDataTable(rows);
+            var actual = new CopyTable(rows);
 
             // Assert
             Assert.AreSame(rows, actual.DataRows);
@@ -34,7 +34,7 @@ namespace RepoDb.Data.Core.UnitTests.Models
         public void TestCopyDataTableConstructorAcceptsAnEmptyList()
         {
             // Act
-            var actual = new CopyDataTable(new List<CopyDataRow>());
+            var actual = new CopyTable(new List<CopyRow>());
 
             // Assert
             Assert.AreEqual(0, actual.DataRows.Count);
@@ -44,7 +44,7 @@ namespace RepoDb.Data.Core.UnitTests.Models
         public void ThrowExceptionOnCopyDataTableConstructorIfTheDataRowsAreNull()
         {
             // Act/Assert
-            Assert.Throws<ArgumentNullException>(() => new CopyDataTable(null));
+            Assert.Throws<ArgumentNullException>(() => new CopyTable(null));
         }
     }
 }

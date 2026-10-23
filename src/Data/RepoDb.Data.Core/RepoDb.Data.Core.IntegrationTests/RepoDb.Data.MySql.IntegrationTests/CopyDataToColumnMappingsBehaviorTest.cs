@@ -24,7 +24,7 @@ using RepoDb.Schema.Enumerations;
 namespace RepoDb.Data.MySql.IntegrationTests
 {
     /// <summary>
-    /// Copies the rows with the three <see cref="CopyTableSchemaColumnMappingsBehavior"/>, which are passed on to the <see cref="MySqlBulkColumnMappingsBehavior"/>
+    /// Copies the rows with the three <see cref="CopyColumnMappingsBehavior"/>, which are passed on to the <see cref="MySqlBulkColumnMappingsBehavior"/>
     /// of the bulk insert: how the columns of the source table are aligned with the columns of the target table.
     /// </summary>
     [TestClass]
@@ -70,7 +70,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
         public void TestCopyTableSchemaColumnMappingsBehaviorHasTheSameNamesAndValuesAsTheMySqlBulkColumnMappingsBehavior()
         {
             // Act
-            var actual = Enum.GetValues(typeof(CopyTableSchemaColumnMappingsBehavior)).Cast<CopyTableSchemaColumnMappingsBehavior>().Select(v => (v.ToString(), (short)v)).ToArray();
+            var actual = Enum.GetValues(typeof(CopyColumnMappingsBehavior)).Cast<CopyColumnMappingsBehavior>().Select(v => (v.ToString(), (short)v)).ToArray();
             var expected = Enum.GetValues(typeof(MySqlBulkColumnMappingsBehavior)).Cast<MySqlBulkColumnMappingsBehavior>().Select(v => (v.ToString(), (short)v)).ToArray();
 
             // Assert
@@ -93,7 +93,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Automatic);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -129,7 +129,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Automatic);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -147,7 +147,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget(ExtraColumn);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Automatic);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -165,7 +165,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget(ReorderedColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Automatic);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -187,7 +187,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Automatic);
+                var actual = await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -213,7 +213,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -231,7 +231,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                var exception = Assert.Throws<MySqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict));
+                var exception = Assert.Throws<MySqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
 
                 // Assert
                 Assert.AreEqual(MySqlBulkColumnMappingsBehavior.Strict, exception.Behavior);
@@ -250,7 +250,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget(ExtraColumn);
 
                 // Act
-                var exception = Assert.Throws<MySqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict));
+                var exception = Assert.Throws<MySqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
 
                 // Assert
                 CollectionAssert.AreEqual(new[] { "Extra" }, exception.DestinationColumnsNotInSource.ToArray());
@@ -268,7 +268,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget(ReorderedColumns);
 
                 // Act
-                var exception = Assert.Throws<MySqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict));
+                var exception = Assert.Throws<MySqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
 
                 // Assert
                 Assert.IsTrue(exception.IsOrderMismatch);
@@ -286,7 +286,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict);
+                source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
 
                 // Assert
                 Assert.AreEqual(MySqlBulkColumnMappingsBehavior.Automatic, CurrentBehavior(target));
@@ -303,7 +303,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                Assert.Throws<MySqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict));
+                Assert.Throws<MySqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
 
                 // Assert
                 Assert.AreEqual(MySqlBulkColumnMappingsBehavior.Automatic, CurrentBehavior(target));
@@ -318,11 +318,11 @@ namespace RepoDb.Data.MySql.IntegrationTests
             {
                 // Setup
                 Helper.ExecuteOnTarget(MissingColumn);
-                Assert.Throws<MySqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict));
+                Assert.Throws<MySqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
                 Helper.CreateTargetTables("Country");
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo("Country", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -339,7 +339,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.CreateTargetTables("Country");
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, where: new QueryGroup(new QueryField("Id", Operation.GreaterThan, 1)), columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo("Country", target, where: new QueryGroup(new QueryField("Id", Operation.GreaterThan, 1)), columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
 
                 // Assert
                 Assert.AreEqual(2, actual);
@@ -357,7 +357,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -376,7 +376,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Pet", target, relationshipBehavior: CopyDataRelationshipBehavior.ParentsAndChildren, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo("Pet", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -395,7 +395,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE `Country` (`Id` INT NOT NULL, `Name` VARCHAR(100) NOT NULL, `Extra` INT NULL, CONSTRAINT `PK_Country` PRIMARY KEY (`Id`));");
 
                 // Act/Assert
-                Assert.Throws<MySqlBulkColumnMappingsException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict));
+                Assert.Throws<MySqlBulkColumnMappingsException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
                 Assert.AreEqual(0, Helper.TargetCount("`Country`"));
             }
         }
@@ -410,7 +410,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "repodb_data_target_sales.Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo("Currency", "repodb_data_target_sales.Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -428,7 +428,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, where: new QueryGroup(new QueryField("Code", "EUR")), columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo("Currency", target, where: new QueryGroup(new QueryField("Code", "EUR")), columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
 
                 // Assert
                 Assert.AreEqual(1, actual);
@@ -446,7 +446,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo<Currency>(target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo<Currency>(target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -465,7 +465,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 ConnectionManager.Register(name, target);
 
                 // Act/Assert
-                Assert.Throws<MySqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", name, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict));
+                Assert.Throws<MySqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", name, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
                 AssertNotCopied();
             }
         }
@@ -484,7 +484,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict);
+                var actual = await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -502,7 +502,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<MySqlBulkColumnMappingsException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict));
+                await Assert.ThrowsAsync<MySqlBulkColumnMappingsException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
                 AssertNotCopied();
                 Assert.AreEqual(MySqlBulkColumnMappingsBehavior.Automatic, CurrentBehavior(target));
             }
@@ -518,7 +518,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget(ReorderedColumns);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<MySqlBulkColumnMappingsException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict));
+                await Assert.ThrowsAsync<MySqlBulkColumnMappingsException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
                 AssertNotCopied();
             }
         }
@@ -533,7 +533,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Country", target, relationshipBehavior: CopyDataRelationshipBehavior.ParentsAndChildren, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict);
+                var actual = await source.CopyDataToAsync("Country", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -558,7 +558,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.StrictBypass);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -576,7 +576,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget(ReorderedColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.StrictBypass);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -594,7 +594,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget(ExtraColumn);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.StrictBypass);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -612,7 +612,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget(ExtraColumnWithDefault);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.StrictBypass);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -630,7 +630,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                var exception = Assert.Throws<MySqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.StrictBypass));
+                var exception = Assert.Throws<MySqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass));
 
                 // Assert
                 Assert.AreEqual(MySqlBulkColumnMappingsBehavior.StrictBypass, exception.Behavior);
@@ -649,7 +649,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                Assert.Throws<MySqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.StrictBypass));
+                Assert.Throws<MySqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass));
 
                 // Assert
                 Assert.AreEqual(MySqlBulkColumnMappingsBehavior.Automatic, CurrentBehavior(target));
@@ -666,7 +666,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, relationshipBehavior: CopyDataRelationshipBehavior.Children, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.StrictBypass);
+                var actual = source.CopyDataTo("Country", target, relationshipBehavior: CopyRelationshipBehavior.Children, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass);
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -684,7 +684,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE `Country` (`Id` INT NOT NULL, `Name` VARCHAR(100) NOT NULL, `Extra` INT NULL, CONSTRAINT `PK_Country` PRIMARY KEY (`Id`));");
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.StrictBypass);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass);
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -706,7 +706,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget(ExtraColumnWithDefault);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.StrictBypass);
+                var actual = await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -724,7 +724,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<MySqlBulkColumnMappingsException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.StrictBypass));
+                await Assert.ThrowsAsync<MySqlBulkColumnMappingsException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass));
                 AssertNotCopied();
             }
         }
@@ -739,7 +739,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget(ReorderedColumns);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.StrictBypass);
+                var actual = await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -763,7 +763,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act/Assert
-                Assert.Throws<ArgumentOutOfRangeException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: (CopyTableSchemaColumnMappingsBehavior)99));
+                Assert.Throws<ArgumentOutOfRangeException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: (CopyColumnMappingsBehavior)99));
                 AssertNotCopied();
             }
         }
@@ -775,7 +775,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
             using (var target = new MySqlConnection(Database.ConnectionStringForTarget))
             {
                 // Act/Assert
-                await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: (CopyTableSchemaColumnMappingsBehavior)99));
+                await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: (CopyColumnMappingsBehavior)99));
             }
         }
 
@@ -790,7 +790,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var exception = Assert.Throws<InvalidOperationException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Strict));
+                var exception = Assert.Throws<InvalidOperationException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
 
                 // Assert
                 StringAssert.Contains(exception.Message, "BulkColumnMappingsBehavior");
@@ -809,7 +809,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Automatic);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -827,7 +827,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyTableSchemaColumnMappingsBehavior.Automatic);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic);
 
                 // Assert
                 Assert.AreEqual(3, actual);

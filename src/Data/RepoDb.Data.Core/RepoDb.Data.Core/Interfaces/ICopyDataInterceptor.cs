@@ -14,8 +14,8 @@ namespace RepoDb.Data.Interfaces
     /// An interface that is used to transform the data being copied, either per row or as a whole table.
     /// </summary>
     public interface ICopyDataInterceptor :
-        IDataInterceptor<CopyDataRow>,
-        IDataInterceptor<CopyDataTable>
+        IDataInterceptor<CopyRow>,
+        IDataInterceptor<CopyTable>
     {
     }
 }

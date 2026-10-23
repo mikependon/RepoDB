@@ -11,16 +11,16 @@ namespace RepoDb.Data.Models
     /// <summary>
     /// A class that represents a single value and its column within a row of data.
     /// </summary>
-    public class CopyDataRow
+    public class CopyRow
     {
         #region Constructors
 
         /// <summary>
-        /// Creates a new instance of <see cref="CopyDataRow"/> class.
+        /// Creates a new instance of <see cref="CopyRow"/> class.
         /// </summary>
         /// <param name="column">The column of the value.</param>
         /// <param name="value">The value of the column.</param>
-        public CopyDataRow(CopyDataColumn column,
+        public CopyRow(CopyColumn column,
             object value)
         {
             Column = column;
@@ -34,7 +34,7 @@ namespace RepoDb.Data.Models
         /// <summary>
         /// Gets the column of the value.
         /// </summary>
-        public CopyDataColumn Column { get; }
+        public CopyColumn Column { get; }
 
         /// <summary>
         /// Gets the value of the column.

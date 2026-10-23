@@ -144,7 +144,7 @@ namespace RepoDb.Data.AuroraDbMySqlConnector.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", "repodb_amy_target_sales.Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Person", "repodb_amy_target_sales.Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -165,7 +165,7 @@ namespace RepoDb.Data.AuroraDbMySqlConnector.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Country", "repodb_amy_target_sales.Country", target, relationshipBehavior: CopyDataRelationshipBehavior.Children);
+                var actual = source.CopyDataTo("Country", "repodb_amy_target_sales.Country", target, relationshipBehavior: CopyRelationshipBehavior.Children);
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -184,7 +184,7 @@ namespace RepoDb.Data.AuroraDbMySqlConnector.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", "repodb_amy_target_sales.Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyDataRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Person", "repodb_amy_target_sales.Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyRelationshipBehavior.Parents);
 
                 // Assert
                 Assert.AreEqual(3 + 2, actual);
@@ -305,7 +305,7 @@ namespace RepoDb.Data.AuroraDbMySqlConnector.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Person", "repodb_amy_target_sales.Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents);
+                var actual = await source.CopyDataToAsync("Person", "repodb_amy_target_sales.Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);

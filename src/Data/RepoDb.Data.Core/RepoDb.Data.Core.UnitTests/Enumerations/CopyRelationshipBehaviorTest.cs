@@ -15,7 +15,7 @@ using RepoDb.Schema.Enumerations;
 namespace RepoDb.Data.Core.UnitTests.Enumerations
 {
     [TestClass]
-    public class CopyDataRelationshipBehaviorTest
+    public class CopyRelationshipBehaviorTest
     {
         #region Methods
 
@@ -23,8 +23,8 @@ namespace RepoDb.Data.Core.UnitTests.Enumerations
         public void TestCopyDataRelationshipBehaviorDefaultValue()
         {
             // Act
-            var actual = default(CopyDataRelationshipBehavior);
-            var expected = CopyDataRelationshipBehavior.TableOnly;
+            var actual = default(CopyRelationshipBehavior);
+            var expected = CopyRelationshipBehavior.TableOnly;
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -34,7 +34,7 @@ namespace RepoDb.Data.Core.UnitTests.Enumerations
         public void TestCopyDataRelationshipBehaviorValues()
         {
             // Act
-            var actual = Enum.GetNames(typeof(CopyDataRelationshipBehavior));
+            var actual = Enum.GetNames(typeof(CopyRelationshipBehavior));
             var expected = new[] { "TableOnly", "Parents", "Children", "ParentsAndChildren" };
 
             // Assert
@@ -45,7 +45,7 @@ namespace RepoDb.Data.Core.UnitTests.Enumerations
         public void TestCopyDataRelationshipBehaviorHasTheSameValuesAsTheCopyTableSchemaRelationshipBehavior()
         {
             // Act
-            var data = Enum.GetNames(typeof(CopyDataRelationshipBehavior)).Select(name => (name, (int)Enum.Parse(typeof(CopyDataRelationshipBehavior), name)));
+            var data = Enum.GetNames(typeof(CopyRelationshipBehavior)).Select(name => (name, (int)Enum.Parse(typeof(CopyRelationshipBehavior), name)));
             var schema = Enum.GetNames(typeof(CopyTableSchemaRelationshipBehavior)).Select(name => (name, (int)Enum.Parse(typeof(CopyTableSchemaRelationshipBehavior), name)));
 
             // Assert

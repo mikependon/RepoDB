@@ -145,7 +145,7 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", "REPODB_DATA_TGT_SALES.Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Person", "REPODB_DATA_TGT_SALES.Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -166,7 +166,7 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Country", "REPODB_DATA_TGT_SALES.Country", target, relationshipBehavior: CopyDataRelationshipBehavior.Children);
+                var actual = source.CopyDataTo("Country", "REPODB_DATA_TGT_SALES.Country", target, relationshipBehavior: CopyRelationshipBehavior.Children);
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -185,7 +185,7 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", "REPODB_DATA_TGT_SALES.Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyDataRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Person", "REPODB_DATA_TGT_SALES.Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyRelationshipBehavior.Parents);
 
                 // Assert
                 Assert.AreEqual(3 + 2, actual);
@@ -317,7 +317,7 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Person", "REPODB_DATA_TGT_SALES.Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents);
+                var actual = await source.CopyDataToAsync("Person", "REPODB_DATA_TGT_SALES.Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);

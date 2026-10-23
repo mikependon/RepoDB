@@ -132,7 +132,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                Assert.Throws<PostgresException>(() => source.CopyDataTo("Person", "Sales.Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents));
+                Assert.Throws<PostgresException>(() => source.CopyDataTo("Person", "Sales.Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents));
             }
         }
 
@@ -146,7 +146,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                Assert.Throws<PostgresException>(() => source.CopyDataTo("Country", "Sales.Country", target, relationshipBehavior: CopyDataRelationshipBehavior.Children));
+                Assert.Throws<PostgresException>(() => source.CopyDataTo("Country", "Sales.Country", target, relationshipBehavior: CopyRelationshipBehavior.Children));
             }
         }
 
@@ -160,7 +160,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                Assert.Throws<PostgresException>(() => source.CopyDataTo("Person", "Sales.Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyDataRelationshipBehavior.Parents));
+                Assert.Throws<PostgresException>(() => source.CopyDataTo("Person", "Sales.Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyRelationshipBehavior.Parents));
             }
         }
 
@@ -265,7 +265,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<PostgresException>(() => source.CopyDataToAsync("Person", "Sales.Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents));
+                await Assert.ThrowsAsync<PostgresException>(() => source.CopyDataToAsync("Person", "Sales.Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents));
             }
         }
 

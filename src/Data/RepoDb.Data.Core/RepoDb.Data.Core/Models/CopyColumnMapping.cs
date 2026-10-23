@@ -11,16 +11,16 @@ namespace RepoDb.Data.Models
     /// <summary>
     /// A class that represents the mapping of a column of the source table to a column of the target table, used by the <c>CopyDataTo</c> operations.
     /// </summary>
-    public class CopyDataColumnMapping
+    public class CopyColumnMapping
     {
         #region Constructors
 
         /// <summary>
-        /// Creates a new instance of <see cref="CopyDataColumnMapping"/> class.
+        /// Creates a new instance of <see cref="CopyColumnMapping"/> class.
         /// </summary>
         /// <param name="sourceColumn">The name of the column of the source table.</param>
         /// <param name="destinationColumn">The name of the column of the target table.</param>
-        public CopyDataColumnMapping(string sourceColumn,
+        public CopyColumnMapping(string sourceColumn,
             string destinationColumn)
         {
             SourceColumn = sourceColumn;

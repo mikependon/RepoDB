@@ -30,11 +30,11 @@ namespace RepoDb.Data.Helpers
         /// <param name="destinationConnection">The destination connection, where the activity has happened.</param>
         /// <param name="level">The level (the kind) of the log.</param>
         /// <param name="text">The text of the log.</param>
-        public static void Add(CopyDataProgress progress,
+        public static void Add(CopyProgress progress,
             IDbConnection destinationConnection,
-            CopyDataLogLevel level,
+            CopyLogLevel level,
             string text) =>
-            progress?.Logs.Add(new CopyDataLog
+            progress?.Logs.Add(new CopyLog
             {
                 DatabaseType = destinationConnection.GetType(),
                 Level = level,
@@ -95,20 +95,20 @@ namespace RepoDb.Data.Helpers
         /// <param name="inserted">The number of rows that the bulk insert has reported.</param>
         /// <param name="before">The number of rows of the target table before the bulk insert.</param>
         /// <param name="after">The number of rows of the target table after the bulk insert.</param>
-        public static void LogBulkInsert(CopyDataProgress progress,
+        public static void LogBulkInsert(CopyProgress progress,
             IDbConnection destinationConnection,
             string table,
             int inserted,
             long? before,
             long? after)
         {
-            Add(progress, destinationConnection, CopyDataLogLevel.Info, $"{inserted} row(s) were sent to the table '{table}' by the bulk insert.");
+            Add(progress, destinationConnection, CopyLogLevel.Info, $"{inserted} row(s) were sent to the table '{table}' by the bulk insert.");
             if (before.HasValue && after.HasValue)
             {
                 var loaded = after.Value - before.Value;
                 if (loaded < inserted)
                 {
-                    Add(progress, destinationConnection, CopyDataLogLevel.Warning,
+                    Add(progress, destinationConnection, CopyLogLevel.Warning,
                         $"{inserted - loaded} of {inserted} row(s) were skipped by the database provider in the table '{table}' (a key, a unique or a foreign key constraint was violated). The rows that reference the skipped rows are skipped too.");
                 }
             }

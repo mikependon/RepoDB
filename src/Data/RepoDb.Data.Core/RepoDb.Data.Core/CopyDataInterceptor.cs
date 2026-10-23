@@ -43,10 +43,10 @@ namespace RepoDb.Data.Models
         #region Public Methods
 
         /// <inheritdoc/>
-        public virtual CopyDataRow Transform(CopyDataRow row) => row;
+        public virtual CopyRow Transform(CopyRow row) => row;
 
         /// <inheritdoc/>
-        public virtual CopyDataTable Transform(CopyDataTable table) => table;
+        public virtual CopyTable Transform(CopyTable table) => table;
 
         #endregion
     }

@@ -56,12 +56,12 @@ namespace RepoDb.Data
             string targetTable,
             string targetSchema,
             QueryGroup where,
-            CopyDataRelationshipBehavior relationshipBehavior,
+            CopyRelationshipBehavior relationshipBehavior,
             CopyTableSchemaExistsBehavior tableExistenceBehavior,
             int? commandTimeout,
             ITrace trace,
             IDbTransaction transaction,
-            IList<CopyDataColumnMapping> mappings = null)
+            IList<CopyColumnMapping> mappings = null)
         {
             var requested = new List<(string, string, QueryGroup)> { (sourceTable, targetTable, where) };
             if (!IsSchemaRequested(relationshipBehavior, tableExistenceBehavior, targetSchema))
@@ -96,7 +96,7 @@ namespace RepoDb.Data
                     trace: trace,
                     transaction: transaction);
             }
-            if (relationshipBehavior == CopyDataRelationshipBehavior.TableOnly)
+            if (relationshipBehavior == CopyRelationshipBehavior.TableOnly)
             {
                 return new List<(string, string, QueryGroup)> { (sourceTable, GetName(destinationConnection, results.Single()), where) };
             }
@@ -128,13 +128,13 @@ namespace RepoDb.Data
             string targetTable,
             string targetSchema,
             QueryGroup where,
-            CopyDataRelationshipBehavior relationshipBehavior,
+            CopyRelationshipBehavior relationshipBehavior,
             CopyTableSchemaExistsBehavior tableExistenceBehavior,
             int? commandTimeout,
             ITrace trace,
             IDbTransaction transaction,
             CancellationToken cancellationToken,
-            IList<CopyDataColumnMapping> mappings = null)
+            IList<CopyColumnMapping> mappings = null)
         {
             var requested = new List<(string, string, QueryGroup)> { (sourceTable, targetTable, where) };
             if (!IsSchemaRequested(relationshipBehavior, tableExistenceBehavior, targetSchema))
@@ -171,7 +171,7 @@ namespace RepoDb.Data
                     transaction: transaction,
                     cancellationToken: cancellationToken).ConfigureAwait(false);
             }
-            if (relationshipBehavior == CopyDataRelationshipBehavior.TableOnly)
+            if (relationshipBehavior == CopyRelationshipBehavior.TableOnly)
             {
                 return new List<(string, string, QueryGroup)> { (sourceTable, GetName(destinationConnection, results.Single()), where) };
             }
@@ -268,16 +268,16 @@ namespace RepoDb.Data
 
         /// <summary>
         /// Checks whether the schema of the tables is to be copied before their rows: the default behaviors
-        /// (<see cref="CopyDataRelationshipBehavior.TableOnly"/> and <see cref="CopyTableSchemaExistsBehavior.Skip"/>) without a target schema do not copy it.
+        /// (<see cref="CopyRelationshipBehavior.TableOnly"/> and <see cref="CopyTableSchemaExistsBehavior.Skip"/>) without a target schema do not copy it.
         /// </summary>
         /// <param name="relationshipBehavior"></param>
         /// <param name="tableExistenceBehavior"></param>
         /// <param name="targetSchema"></param>
         /// <returns></returns>
-        internal static bool IsSchemaRequested(CopyDataRelationshipBehavior relationshipBehavior,
+        internal static bool IsSchemaRequested(CopyRelationshipBehavior relationshipBehavior,
             CopyTableSchemaExistsBehavior tableExistenceBehavior,
             string targetSchema) =>
-            relationshipBehavior != CopyDataRelationshipBehavior.TableOnly ||
+            relationshipBehavior != CopyRelationshipBehavior.TableOnly ||
             tableExistenceBehavior != CopyTableSchemaExistsBehavior.Skip ||
             !string.IsNullOrWhiteSpace(targetSchema);
 
@@ -286,17 +286,17 @@ namespace RepoDb.Data
         /// </summary>
         /// <param name="relationshipBehavior"></param>
         /// <returns></returns>
-        internal static CopyTableSchemaRelationshipBehavior ToSchemaBehavior(CopyDataRelationshipBehavior relationshipBehavior)
+        internal static CopyTableSchemaRelationshipBehavior ToSchemaBehavior(CopyRelationshipBehavior relationshipBehavior)
         {
             switch (relationshipBehavior)
             {
-                case CopyDataRelationshipBehavior.TableOnly:
+                case CopyRelationshipBehavior.TableOnly:
                     return CopyTableSchemaRelationshipBehavior.TableOnly;
-                case CopyDataRelationshipBehavior.Parents:
+                case CopyRelationshipBehavior.Parents:
                     return CopyTableSchemaRelationshipBehavior.Parents;
-                case CopyDataRelationshipBehavior.Children:
+                case CopyRelationshipBehavior.Children:
                     return CopyTableSchemaRelationshipBehavior.Children;
-                case CopyDataRelationshipBehavior.ParentsAndChildren:
+                case CopyRelationshipBehavior.ParentsAndChildren:
                     return CopyTableSchemaRelationshipBehavior.ParentsAndChildren;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(relationshipBehavior));
@@ -327,10 +327,10 @@ namespace RepoDb.Data
             string targetTable,
             QueryGroup where,
             int batchSize,
-            CopyTableSchemaColumnMappingsBehavior columnMappingsBehavior,
-            IList<CopyDataColumnMapping> mappings,
-            CopyDataProgress options,
-            Action<CopyDataProgress> progressCallback,
+            CopyColumnMappingsBehavior columnMappingsBehavior,
+            IList<CopyColumnMapping> mappings,
+            CopyProgress options,
+            Action<CopyProgress> progressCallback,
             int? commandTimeout,
             string traceKey,
             ITrace trace,
@@ -392,10 +392,10 @@ namespace RepoDb.Data
             string targetTable,
             QueryGroup where,
             int batchSize,
-            CopyTableSchemaColumnMappingsBehavior columnMappingsBehavior,
-            IList<CopyDataColumnMapping> mappings,
-            CopyDataProgress options,
-            Action<CopyDataProgress> progressCallback,
+            CopyColumnMappingsBehavior columnMappingsBehavior,
+            IList<CopyColumnMapping> mappings,
+            CopyProgress options,
+            Action<CopyProgress> progressCallback,
             int? commandTimeout,
             string traceKey,
             ITrace trace,
@@ -440,7 +440,7 @@ namespace RepoDb.Data
         /// </summary>
         /// <param name="mappings"></param>
         /// <returns>The mappings of the schema copy (<c>null</c> if there are no mappings, which creates all the columns). A source column that is mapped more than once is created with its first destination column.</returns>
-        private static IList<ColumnMapping> ToSchemaMappings(IList<CopyDataColumnMapping> mappings)
+        private static IList<ColumnMapping> ToSchemaMappings(IList<CopyColumnMapping> mappings)
         {
             if (mappings == null || mappings.Count == 0)
             {
@@ -465,7 +465,7 @@ namespace RepoDb.Data
         private static (string CommandText, object Param) CreateSelect(IDbConnection connection,
             string sourceTable,
             QueryGroup where,
-            IList<CopyDataColumnMapping> mappings)
+            IList<CopyColumnMapping> mappings)
         {
             var statementBuilder = StatementBuilderMapper.Get(connection) ?? throw new InvalidOperationException($"No statement builder is mapped to the connection '{connection.GetType().FullName}'.");
             var hasMappings = mappings?.Count > 0;
@@ -490,7 +490,7 @@ namespace RepoDb.Data
         /// <returns>The statement.</returns>
         private static string Alias(IDbConnection connection,
             string commandText,
-            IList<CopyDataColumnMapping> mappings)
+            IList<CopyColumnMapping> mappings)
         {
             const string select = "SELECT ";
             const string from = " FROM ";
@@ -518,7 +518,7 @@ namespace RepoDb.Data
             IDbConnection destinationConnection,
             string sourceTable,
             string targetTable,
-            IList<CopyDataColumnMapping> mappings)
+            IList<CopyColumnMapping> mappings)
         {
             if (mappings == null || mappings.Count == 0)
             {
@@ -615,7 +615,7 @@ namespace RepoDb.Data
         /// <summary>
         /// Sets the details of the tables (and the databases) that are being copied into the progress.
         /// </summary>
-        private static void SetTables(CopyDataProgress options,
+        private static void SetTables(CopyProgress options,
             IDbConnection connection,
             IDbConnection destinationConnection,
             string sourceTable,
@@ -640,9 +640,9 @@ namespace RepoDb.Data
         /// <param name="options"></param>
         /// <param name="inserted"></param>
         /// <param name="progressCallback"></param>
-        private static void Report(CopyDataProgress options,
+        private static void Report(CopyProgress options,
             int inserted,
-            Action<CopyDataProgress> progressCallback)
+            Action<CopyProgress> progressCallback)
         {
             options.BatchNumber++;
             options.RowCount = inserted;
@@ -675,10 +675,10 @@ namespace RepoDb.Data
             IDbConnection destinationConnection,
             string targetSchema,
             int batchSize,
-            CopyDataRelationshipBehavior relationshipBehavior,
+            CopyRelationshipBehavior relationshipBehavior,
             CopyTableSchemaExistsBehavior tableExistenceBehavior,
-            CopyTableSchemaColumnMappingsBehavior columnMappingsBehavior,
-            IList<CopyDataColumnMapping> mappings)
+            CopyColumnMappingsBehavior columnMappingsBehavior,
+            IList<CopyColumnMapping> mappings)
         {
             if (connection == null)
             {
@@ -700,7 +700,7 @@ namespace RepoDb.Data
             {
                 throw new ArgumentOutOfRangeException(nameof(batchSize), "The batch size must be greater than zero.");
             }
-            if (!Enum.IsDefined(typeof(CopyTableSchemaColumnMappingsBehavior), columnMappingsBehavior))
+            if (!Enum.IsDefined(typeof(CopyColumnMappingsBehavior), columnMappingsBehavior))
             {
                 throw new ArgumentOutOfRangeException(nameof(columnMappingsBehavior), "The column mappings behavior is not defined.");
             }

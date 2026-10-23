@@ -68,7 +68,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip);
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -87,7 +87,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE \"public\".\"Currency\" (\"Code\" CHAR(3) NOT NULL, \"Name\" varchar(50) NOT NULL, \"Extra\" INT NULL, CONSTRAINT \"PK_Currency\" PRIMARY KEY (\"Code\"));");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip);
+                var actual = source.CopyDataTo("Currency", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -107,7 +107,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE \"public\".\"Currency\" (\"Code\" CHAR(3) NOT NULL, CONSTRAINT \"PK_Currency\" PRIMARY KEY (\"Code\"));");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip);
+                var actual = source.CopyDataTo("Currency", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -141,7 +141,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip);
+                var actual = await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip);
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -217,7 +217,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.CreateTargetTables("Country");
 
                 // Act/Assert
-                Assert.Throws<InvalidOperationException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
+                Assert.Throws<InvalidOperationException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
                 Assert.IsFalse(Helper.TargetTableExists("Person"));
                 Assert.AreEqual(0, Helper.TargetCount("\"public\".\"Country\""));
             }
@@ -249,7 +249,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Pet", target, relationshipBehavior: CopyDataRelationshipBehavior.ParentsAndChildren, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw);
+                var actual = source.CopyDataTo("Pet", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw);
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -370,11 +370,11 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
             {
                 // Setup
                 Helper.MapSchemaReader(source);
-                source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents);
+                source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
                 Helper.ExecuteOnTarget("INSERT INTO \"public\".\"Country\" (\"Id\", \"Name\") VALUES (100, 'Atlantis');");
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -436,10 +436,10 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
             {
                 // Setup
                 Helper.MapSchemaReader(source);
-                await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents);
+                await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
+                var actual = await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -506,7 +506,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Assert.IsFalse(TargetIndexExists("\"public\".\"Person\"", "IX_Person_Name"));
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -563,7 +563,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.CreateTargetTables("Country", "Person");
 
                 // Act
-                var actual = source.CopyDataTo("Pet", target, relationshipBehavior: CopyDataRelationshipBehavior.ParentsAndChildren, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
+                var actual = source.CopyDataTo("Pet", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -605,7 +605,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
+                var actual = await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);

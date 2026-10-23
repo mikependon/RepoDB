@@ -12,16 +12,16 @@ using RepoDb.Data.Models;
 namespace RepoDb.Data.Core.UnitTests.Models
 {
     [TestClass]
-    public class CopyDataRowTest
+    public class CopyRowTest
     {
         [TestMethod]
         public void TestCopyDataRowConstructorSetsTheColumnAndTheValue()
         {
             // Setup
-            var column = new CopyDataColumn("Name", typeof(string));
+            var column = new CopyColumn("Name", typeof(string));
 
             // Act
-            var actual = new CopyDataRow(column, "Michael");
+            var actual = new CopyRow(column, "Michael");
 
             // Assert
             Assert.AreSame(column, actual.Column);
@@ -32,7 +32,7 @@ namespace RepoDb.Data.Core.UnitTests.Models
         public void TestCopyDataRowConstructorAcceptsANullValue()
         {
             // Act
-            var actual = new CopyDataRow(new CopyDataColumn("Name", typeof(string)), null);
+            var actual = new CopyRow(new CopyColumn("Name", typeof(string)), null);
 
             // Assert
             Assert.IsNull(actual.Value);
@@ -42,7 +42,7 @@ namespace RepoDb.Data.Core.UnitTests.Models
         public void TestCopyDataRowConstructorAcceptsANullColumn()
         {
             // Act
-            var actual = new CopyDataRow(null, 1);
+            var actual = new CopyRow(null, 1);
 
             // Assert
             Assert.IsNull(actual.Column);

@@ -40,11 +40,11 @@ namespace RepoDb.Data.Core.UnitTests.Models
             {
             }
 
-            public override CopyDataRow Transform(CopyDataRow row) =>
-                new CopyDataRow(row.Column, (row.Value as string)?.ToUpperInvariant() ?? row.Value);
+            public override CopyRow Transform(CopyRow row) =>
+                new CopyRow(row.Column, (row.Value as string)?.ToUpperInvariant() ?? row.Value);
 
-            public override CopyDataTable Transform(CopyDataTable table) =>
-                new CopyDataTable(table.DataRows.Select(Transform).ToList());
+            public override CopyTable Transform(CopyTable table) =>
+                new CopyTable(table.DataRows.Select(Transform).ToList());
         }
 
         #endregion
@@ -80,7 +80,7 @@ namespace RepoDb.Data.Core.UnitTests.Models
         {
             // Setup
             var interceptor = new PassThroughInterceptor(new CopyDataInterceptorOptions());
-            var row = new CopyDataRow(new CopyDataColumn("Name", typeof(string)), "Michael");
+            var row = new CopyRow(new CopyColumn("Name", typeof(string)), "Michael");
 
             // Act
             var actual = interceptor.Transform(row);
@@ -94,7 +94,7 @@ namespace RepoDb.Data.Core.UnitTests.Models
         {
             // Setup
             var interceptor = new PassThroughInterceptor(new CopyDataInterceptorOptions());
-            var table = new CopyDataTable(new List<CopyDataRow>());
+            var table = new CopyTable(new List<CopyRow>());
 
             // Act
             var actual = interceptor.Transform(table);
@@ -108,7 +108,7 @@ namespace RepoDb.Data.Core.UnitTests.Models
         {
             // Setup
             var interceptor = new UpperCaseInterceptor();
-            var row = new CopyDataRow(new CopyDataColumn("Name", typeof(string)), "michael");
+            var row = new CopyRow(new CopyColumn("Name", typeof(string)), "michael");
 
             // Act
             var actual = interceptor.Transform(row);
@@ -123,8 +123,8 @@ namespace RepoDb.Data.Core.UnitTests.Models
         {
             // Setup
             var interceptor = new UpperCaseInterceptor();
-            var column = new CopyDataColumn("Name", typeof(string));
-            var table = new CopyDataTable(new List<CopyDataRow> { new CopyDataRow(column, "a"), new CopyDataRow(column, "b") });
+            var column = new CopyColumn("Name", typeof(string));
+            var table = new CopyTable(new List<CopyRow> { new CopyRow(column, "a"), new CopyRow(column, "b") });
 
             // Act
             var actual = interceptor.Transform(table);
@@ -145,8 +145,8 @@ namespace RepoDb.Data.Core.UnitTests.Models
 
             // Assert
             Assert.IsInstanceOfType<ICopyDataInterceptor>(actual);
-            Assert.IsInstanceOfType<IDataInterceptor<CopyDataRow>>(actual);
-            Assert.IsInstanceOfType<IDataInterceptor<CopyDataTable>>(actual);
+            Assert.IsInstanceOfType<IDataInterceptor<CopyRow>>(actual);
+            Assert.IsInstanceOfType<IDataInterceptor<CopyTable>>(actual);
         }
 
         #endregion

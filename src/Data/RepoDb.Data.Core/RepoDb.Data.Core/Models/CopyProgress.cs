@@ -14,7 +14,7 @@ namespace RepoDb.Data.Models
     /// <summary>
     /// A class that holds the details of a copy operation.
     /// </summary>
-    public class CopyDataProgress
+    public class CopyProgress
     {
         #region Properties
 
@@ -46,7 +46,7 @@ namespace RepoDb.Data.Models
         /// <summary>
         /// Gets the logs (information and warnings) of the copy operation, i.e.: the rows that were skipped by the database provider.
         /// </summary>
-        public List<CopyDataLog> Logs { get; internal set; } = new List<CopyDataLog>();
+        public List<CopyLog> Logs { get; internal set; } = new List<CopyLog>();
 
         /// <summary>
         /// Gets the current number of rows that were copied.

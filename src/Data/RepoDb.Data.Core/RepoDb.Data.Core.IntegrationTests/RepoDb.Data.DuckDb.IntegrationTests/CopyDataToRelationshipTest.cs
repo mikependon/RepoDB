@@ -22,7 +22,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
 {
     /// <summary>
     /// Copies the rows of a table together with the rows of the tables that are related to it (the Country, Person, Pet and Toy tables
-    /// form a tree: each one references the previous one), as defined by the <see cref="CopyDataRelationshipBehavior"/>.
+    /// form a tree: each one references the previous one), as defined by the <see cref="CopyRelationshipBehavior"/>.
     /// </summary>
     [TestClass]
     public class CopyDataToRelationshipTest
@@ -86,7 +86,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 source.CopyDataTo("Country", target);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.TableOnly);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.TableOnly);
 
                 // Assert
                 Assert.AreEqual(6, actual);
@@ -107,7 +107,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.CreateTargetTables("Country");
 
                 // Act
-                source.CopyDataTo("Country", target, relationshipBehavior: CopyDataRelationshipBehavior.TableOnly);
+                source.CopyDataTo("Country", target, relationshipBehavior: CopyRelationshipBehavior.TableOnly);
 
                 // Assert
                 CollectionAssert.AreEqual(new[] { "\"Country\"" }, Helper.TargetTables().ToArray());
@@ -128,7 +128,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -146,7 +146,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Toy", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Toy", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -164,7 +164,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Country", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -182,7 +182,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents);
+                source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
 
                 // Assert
                 CollectionAssert.DoesNotContain(Helper.TargetTables(), "\"Pet\"");
@@ -201,7 +201,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                Assert.Throws<DuckDBException>(() => source.CopyDataTo("Employee", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents));
+                Assert.Throws<DuckDBException>(() => source.CopyDataTo("Employee", target, relationshipBehavior: CopyRelationshipBehavior.Parents));
             }
         }
 
@@ -215,7 +215,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Sales.Ledger", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Sales.Ledger", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
 
                 // Assert
                 Assert.AreEqual(2 + 2, actual);
@@ -235,7 +235,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Sales.InvoiceLine", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Sales.InvoiceLine", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
 
                 // Assert
                 Assert.AreEqual(2 + 3, actual);
@@ -259,7 +259,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, relationshipBehavior: CopyDataRelationshipBehavior.Children);
+                var actual = source.CopyDataTo("Country", target, relationshipBehavior: CopyRelationshipBehavior.Children);
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -278,7 +278,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 source.CopyDataTo("Country", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Children);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Children);
 
                 // Assert
                 Assert.AreEqual(6 + 5 + 5, actual);
@@ -296,7 +296,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                Assert.Throws<DuckDBException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Children));
+                Assert.Throws<DuckDBException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Children));
                 Assert.AreEqual(0, Helper.TargetTables().Count);
             }
         }
@@ -312,7 +312,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 source.CopyDataTo("Country", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw);
 
                 // Act
-                source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Children);
+                source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Children);
 
                 // Assert
                 CollectionAssert.DoesNotContain(Helper.TargetTables(), "\"Currency\"");
@@ -330,7 +330,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                Assert.Throws<DuckDBException>(() => source.CopyDataTo("Employee", target, relationshipBehavior: CopyDataRelationshipBehavior.Children));
+                Assert.Throws<DuckDBException>(() => source.CopyDataTo("Employee", target, relationshipBehavior: CopyRelationshipBehavior.Children));
             }
         }
 
@@ -344,7 +344,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Sales.Invoice", target, relationshipBehavior: CopyDataRelationshipBehavior.Children);
+                var actual = source.CopyDataTo("Sales.Invoice", target, relationshipBehavior: CopyRelationshipBehavior.Children);
 
                 // Assert
                 Assert.AreEqual(2 + 3 + 2, actual);
@@ -373,7 +373,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo(tableName, target, relationshipBehavior: CopyDataRelationshipBehavior.ParentsAndChildren);
+                var actual = source.CopyDataTo(tableName, target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren);
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -391,7 +391,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                source.CopyDataTo("Pet", target, relationshipBehavior: CopyDataRelationshipBehavior.ParentsAndChildren);
+                source.CopyDataTo("Pet", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren);
 
                 // Assert
                 CollectionAssert.DoesNotContain(Helper.TargetTables(), "\"Currency\"");
@@ -410,7 +410,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                Assert.Throws<DuckDBException>(() => source.CopyDataTo("Employee", target, relationshipBehavior: CopyDataRelationshipBehavior.ParentsAndChildren));
+                Assert.Throws<DuckDBException>(() => source.CopyDataTo("Employee", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren));
             }
         }
 
@@ -424,7 +424,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Sales.InvoiceLine", target, relationshipBehavior: CopyDataRelationshipBehavior.ParentsAndChildren);
+                var actual = source.CopyDataTo("Sales.InvoiceLine", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren);
 
                 // Assert
                 Assert.AreEqual(2 + 3 + 2, actual);
@@ -446,7 +446,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyDataRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyRelationshipBehavior.Parents);
 
                 // Assert
                 Assert.AreEqual(3 + 2, actual);
@@ -466,7 +466,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                Assert.Throws<DuckDBException>(() => source.CopyDataTo("Country", target, where: new QueryGroup(new QueryField("Name", "Japan")), relationshipBehavior: CopyDataRelationshipBehavior.Children));
+                Assert.Throws<DuckDBException>(() => source.CopyDataTo("Country", target, where: new QueryGroup(new QueryField("Name", "Japan")), relationshipBehavior: CopyRelationshipBehavior.Children));
             }
         }
 
@@ -480,7 +480,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                Assert.Throws<DuckDBException>(() => source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyDataRelationshipBehavior.ParentsAndChildren));
+                Assert.Throws<DuckDBException>(() => source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren));
             }
         }
 
@@ -494,7 +494,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 1000)), relationshipBehavior: CopyDataRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 1000)), relationshipBehavior: CopyRelationshipBehavior.Parents);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -513,7 +513,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo<Entities.Person>(target, p => p.CountryId == 2, relationshipBehavior: CopyDataRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo<Entities.Person>(target, p => p.CountryId == 2, relationshipBehavior: CopyRelationshipBehavior.Parents);
 
                 // Assert
                 Assert.AreEqual(3 + 2, actual);
@@ -533,10 +533,10 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
             {
                 // Setup
                 Helper.MapSchemaReader(source);
-                source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents);
+                source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
 
                 // Act/Assert
-                Assert.Throws<DuckDBException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents));
+                Assert.Throws<DuckDBException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents));
                 Assert.AreEqual(3, Helper.TargetCount("\"Country\""));
                 Assert.AreEqual(6, Helper.TargetCount("\"Person\""));
             }
@@ -554,7 +554,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.ExecuteOnTarget("INSERT INTO \"Country\" (\"Id\", \"Name\") VALUES (100, 'Atlantis');");
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -578,7 +578,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                foreach (var behavior in new[] { CopyDataRelationshipBehavior.Parents, CopyDataRelationshipBehavior.Children, CopyDataRelationshipBehavior.ParentsAndChildren })
+                foreach (var behavior in new[] { CopyRelationshipBehavior.Parents, CopyRelationshipBehavior.Children, CopyRelationshipBehavior.ParentsAndChildren })
                 {
                     Assert.Throws<ArgumentException>(() => source.CopyDataTo("Pet", "PetCopy", target, relationshipBehavior: behavior));
                 }
@@ -593,7 +593,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
                 // Act/Assert
-                Assert.Throws<MissingMappingException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents));
+                Assert.Throws<MissingMappingException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents));
                 Assert.AreEqual(0, Helper.TargetTables().Count);
             }
         }
@@ -612,7 +612,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Toy", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents);
+                var actual = await source.CopyDataToAsync("Toy", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -630,7 +630,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Country", target, relationshipBehavior: CopyDataRelationshipBehavior.Children);
+                var actual = await source.CopyDataToAsync("Country", target, relationshipBehavior: CopyRelationshipBehavior.Children);
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -648,7 +648,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Pet", target, relationshipBehavior: CopyDataRelationshipBehavior.ParentsAndChildren);
+                var actual = await source.CopyDataToAsync("Pet", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren);
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -666,7 +666,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyDataRelationshipBehavior.Parents);
+                var actual = await source.CopyDataToAsync("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyRelationshipBehavior.Parents);
 
                 // Assert
                 Assert.AreEqual(3 + 2, actual);
@@ -684,7 +684,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Sales.Invoice", target, relationshipBehavior: CopyDataRelationshipBehavior.Children);
+                var actual = await source.CopyDataToAsync("Sales.Invoice", target, relationshipBehavior: CopyRelationshipBehavior.Children);
 
                 // Assert
                 Assert.AreEqual(2 + 3 + 2, actual);
@@ -702,7 +702,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<DuckDBException>(() => source.CopyDataToAsync("Person", target, relationshipBehavior: CopyDataRelationshipBehavior.Children));
+                await Assert.ThrowsAsync<DuckDBException>(() => source.CopyDataToAsync("Person", target, relationshipBehavior: CopyRelationshipBehavior.Children));
             }
         }
 
@@ -716,7 +716,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<ArgumentException>(() => source.CopyDataToAsync("Pet", "PetCopy", target, relationshipBehavior: CopyDataRelationshipBehavior.Parents));
+                await Assert.ThrowsAsync<ArgumentException>(() => source.CopyDataToAsync("Pet", "PetCopy", target, relationshipBehavior: CopyRelationshipBehavior.Parents));
             }
         }
 

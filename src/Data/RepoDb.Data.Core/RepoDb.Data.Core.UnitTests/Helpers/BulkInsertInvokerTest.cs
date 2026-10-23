@@ -140,7 +140,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         public void TestBulkInsertReturnsTheNumberOfInsertedRows()
         {
             // Act
-            var actual = BulkInsertInvoker.BulkInsert(new FakeBulkDbConnection(), "Person", GetReader(4), 100, CopyTableSchemaColumnMappingsBehavior.Automatic, null, null, null, null);
+            var actual = BulkInsertInvoker.BulkInsert(new FakeBulkDbConnection(), "Person", GetReader(4), 100, CopyColumnMappingsBehavior.Automatic, null, null, null, null);
 
             // Assert
             Assert.AreEqual(4, actual);
@@ -154,7 +154,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
             var trace = new Mock<ITrace>().Object;
 
             // Act
-            BulkInsertInvoker.BulkInsert(new FakeBulkDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.Automatic, 45, "MyTraceKey", trace, transaction);
+            BulkInsertInvoker.BulkInsert(new FakeBulkDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.Automatic, 45, "MyTraceKey", trace, transaction);
 
             // Assert
             var call = FakeBulkOperations.Calls.Single();
@@ -172,7 +172,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         public void TestBulkInsertGivesTheDefaultValuesOfTheArgumentsThatItDoesNotKnow()
         {
             // Act
-            BulkInsertInvoker.BulkInsert(new FakeBulkDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.Automatic, null, null, null, null);
+            BulkInsertInvoker.BulkInsert(new FakeBulkDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.Automatic, null, null, null, null);
 
             // Assert
             var call = FakeBulkOperations.Calls.Single();
@@ -192,7 +192,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
             var trace = new Mock<ITrace>().Object;
 
             // Act
-            BulkInsertInvoker.BulkInsert(new FakeBulkTypedDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.Automatic, null, null, trace, transaction);
+            BulkInsertInvoker.BulkInsert(new FakeBulkTypedDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.Automatic, null, null, trace, transaction);
 
             // Assert
             var call = FakeBulkOperations.Calls.Single();
@@ -208,7 +208,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
             var transaction = new FakeDbTransaction();
 
             // Act
-            BulkInsertInvoker.BulkInsert(new FakeBulkTypedDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.Automatic, null, null, null, transaction);
+            BulkInsertInvoker.BulkInsert(new FakeBulkTypedDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.Automatic, null, null, null, transaction);
 
             // Assert
             Assert.AreSame(transaction, FakeBulkOperations.Calls.Single().Transaction);
@@ -218,7 +218,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         public void TestBulkInsertKeepsTheIdentityValuesIfTheOptionsHaveTheKeepIdentityOption()
         {
             // Act
-            BulkInsertInvoker.BulkInsert(new FakeBulkOptionsDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.Automatic, null, null, null, null);
+            BulkInsertInvoker.BulkInsert(new FakeBulkOptionsDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.Automatic, null, null, null, null);
 
             // Assert
             Assert.AreEqual(FakeBulkCopyOptions.KeepIdentity, FakeBulkOperations.Calls.Single().Options);
@@ -228,7 +228,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         public async Task TestBulkInsertAsyncKeepsTheIdentityValuesIfTheOptionsHaveTheKeepIdentityOption()
         {
             // Act
-            await BulkInsertInvoker.BulkInsertAsync(new FakeBulkOptionsDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.Automatic, null, null, null, null, CancellationToken.None);
+            await BulkInsertInvoker.BulkInsertAsync(new FakeBulkOptionsDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.Automatic, null, null, null, null, CancellationToken.None);
 
             // Assert
             Assert.AreEqual(FakeBulkCopyOptions.KeepIdentity, FakeBulkOperations.Calls.Single().Options);
@@ -238,7 +238,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         public void TestBulkInsertKeepsTheOtherDefaultOptionsWhenItKeepsTheIdentityValues()
         {
             // Act
-            BulkInsertInvoker.BulkInsert(new FakeBulkDefaultOptionsDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.Automatic, null, null, null, null);
+            BulkInsertInvoker.BulkInsert(new FakeBulkDefaultOptionsDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.Automatic, null, null, null, null);
 
             // Assert
             Assert.AreEqual(FakeBulkCopyOptions.TableLock | FakeBulkCopyOptions.KeepIdentity, FakeBulkOperations.Calls.Single().Options);
@@ -248,7 +248,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         public void TestBulkInsertKeepsTheIdentityValuesIfTheOptionsAreNullable()
         {
             // Act
-            BulkInsertInvoker.BulkInsert(new FakeBulkNullableOptionsDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.Automatic, null, null, null, null);
+            BulkInsertInvoker.BulkInsert(new FakeBulkNullableOptionsDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.Automatic, null, null, null, null);
 
             // Assert
             Assert.AreEqual(FakeBulkCopyOptions.KeepIdentity, FakeBulkOperations.Calls.Single().Options);
@@ -258,7 +258,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         public void TestBulkInsertKeepsTheIdentityValuesIfTheBulkCopyOptionsHaveTheKeepIdentityOption()
         {
             // Act
-            BulkInsertInvoker.BulkInsert(new FakeBulkCopyOptionsDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.Automatic, null, null, null, null);
+            BulkInsertInvoker.BulkInsert(new FakeBulkCopyOptionsDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.Automatic, null, null, null, null);
 
             // Assert
             Assert.AreEqual(FakeBulkCopyOptions.KeepIdentity, FakeBulkOperations.Calls.Single().Options);
@@ -268,7 +268,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         public void TestBulkInsertKeepsTheIdentityValuesIfTheIdentityBehaviorHasTheKeepIdentityValue()
         {
             // Act
-            BulkInsertInvoker.BulkInsert(new FakeBulkIdentityBehaviorDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.Automatic, null, null, null, null);
+            BulkInsertInvoker.BulkInsert(new FakeBulkIdentityBehaviorDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.Automatic, null, null, null, null);
 
             // Assert
             Assert.AreEqual(FakeBulkImportIdentityBehavior.KeepIdentity, FakeBulkOperations.Calls.Single().IdentityBehavior);
@@ -278,7 +278,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         public async Task TestBulkInsertAsyncKeepsTheIdentityValuesIfTheIdentityBehaviorHasTheKeepIdentityValue()
         {
             // Act
-            await BulkInsertInvoker.BulkInsertAsync(new FakeBulkIdentityBehaviorDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.Automatic, null, null, null, null, CancellationToken.None);
+            await BulkInsertInvoker.BulkInsertAsync(new FakeBulkIdentityBehaviorDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.Automatic, null, null, null, null, CancellationToken.None);
 
             // Assert
             Assert.AreEqual(FakeBulkImportIdentityBehavior.KeepIdentity, FakeBulkOperations.Calls.Single().IdentityBehavior);
@@ -288,7 +288,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         public void TestBulkInsertDoesNotChangeTheIdentityBehaviorThatHasNoKeepIdentityValue()
         {
             // Act
-            BulkInsertInvoker.BulkInsert(new FakeBulkOtherIdentityBehaviorDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.Automatic, null, null, null, null);
+            BulkInsertInvoker.BulkInsert(new FakeBulkOtherIdentityBehaviorDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.Automatic, null, null, null, null);
 
             // Assert
             Assert.AreEqual(FakeBulkOtherIdentityBehavior.Return, FakeBulkOperations.Calls.Single().IdentityBehavior);
@@ -298,7 +298,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         public void TestBulkInsertDoesNotChangeTheOptionsThatHaveNoKeepIdentityOption()
         {
             // Act
-            BulkInsertInvoker.BulkInsert(new FakeBulkOtherOptionsDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.Automatic, null, null, null, null);
+            BulkInsertInvoker.BulkInsert(new FakeBulkOtherOptionsDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.Automatic, null, null, null, null);
 
             // Assert
             Assert.AreEqual(FakeBulkOtherOptions.Fast, FakeBulkOperations.Calls.Single().Options);
@@ -308,7 +308,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         public void TestBulkInsertDoesNotChangeTheOptionsThatAreNotAnEnumeration()
         {
             // Act
-            BulkInsertInvoker.BulkInsert(new FakeBulkTextOptionsDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.Automatic, null, null, null, null);
+            BulkInsertInvoker.BulkInsert(new FakeBulkTextOptionsDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.Automatic, null, null, null, null);
 
             // Assert
             Assert.AreEqual("text", FakeBulkOperations.Calls.Single().Options);
@@ -318,7 +318,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         public void TestBulkInsertOfAMethodWithOnlyTheRequiredArguments()
         {
             // Act
-            var actual = BulkInsertInvoker.BulkInsert(new FakeBulkMinimalDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.Automatic, 10, "MyTraceKey", null, null);
+            var actual = BulkInsertInvoker.BulkInsert(new FakeBulkMinimalDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.Automatic, 10, "MyTraceKey", null, null);
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -329,8 +329,8 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         public void TestBulkInsertUsesTheMethodOfTheTypeOfTheConnectionBeforeTheOneOfItsBaseType()
         {
             // Act
-            BulkInsertInvoker.BulkInsert(new FakeBulkPreferredDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.Automatic, null, null, null, null);
-            BulkInsertInvoker.BulkInsert(new FakeBulkDerivedDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.Automatic, null, null, null, null);
+            BulkInsertInvoker.BulkInsert(new FakeBulkPreferredDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.Automatic, null, null, null, null);
+            BulkInsertInvoker.BulkInsert(new FakeBulkDerivedDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.Automatic, null, null, null, null);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "BulkInsert (preferred)", "BulkInsert (base)" }, FakeBulkOperations.Calls.Select(c => c.Method).ToArray());
@@ -341,7 +341,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         {
             // Act
             var exception = Assert.Throws<InvalidOperationException>(() =>
-                BulkInsertInvoker.BulkInsert(new FakeDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.Automatic, null, null, null, null));
+                BulkInsertInvoker.BulkInsert(new FakeDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.Automatic, null, null, null, null));
 
             // Assert
             StringAssert.Contains(exception.Message, typeof(FakeDbConnection).FullName);
@@ -353,7 +353,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         {
             // Act
             var exception = Assert.Throws<InvalidOperationException>(() =>
-                BulkInsertInvoker.BulkInsert(new FakeBulkThrowingDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.Automatic, null, null, null, null));
+                BulkInsertInvoker.BulkInsert(new FakeBulkThrowingDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.Automatic, null, null, null, null));
 
             // Assert
             Assert.AreEqual("The fake bulk insert failed.", exception.Message);
@@ -364,10 +364,10 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         #region Column Mappings Behavior
 
         [TestMethod]
-        [DataRow(CopyTableSchemaColumnMappingsBehavior.Automatic, "Automatic")]
-        [DataRow(CopyTableSchemaColumnMappingsBehavior.Strict, "Strict")]
-        [DataRow(CopyTableSchemaColumnMappingsBehavior.StrictBypass, "StrictBypass")]
-        public void TestBulkInsertAppliesTheColumnMappingsBehaviorToTheSettingOfTheConnection(CopyTableSchemaColumnMappingsBehavior behavior,
+        [DataRow(CopyColumnMappingsBehavior.Automatic, "Automatic")]
+        [DataRow(CopyColumnMappingsBehavior.Strict, "Strict")]
+        [DataRow(CopyColumnMappingsBehavior.StrictBypass, "StrictBypass")]
+        public void TestBulkInsertAppliesTheColumnMappingsBehaviorToTheSettingOfTheConnection(CopyColumnMappingsBehavior behavior,
             string expected)
         {
             // Act
@@ -380,10 +380,10 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         }
 
         [TestMethod]
-        [DataRow(CopyTableSchemaColumnMappingsBehavior.Automatic, "Automatic")]
-        [DataRow(CopyTableSchemaColumnMappingsBehavior.Strict, "Strict")]
-        [DataRow(CopyTableSchemaColumnMappingsBehavior.StrictBypass, "StrictBypass")]
-        public async Task TestBulkInsertAsyncAppliesTheColumnMappingsBehaviorToTheSettingOfTheConnection(CopyTableSchemaColumnMappingsBehavior behavior,
+        [DataRow(CopyColumnMappingsBehavior.Automatic, "Automatic")]
+        [DataRow(CopyColumnMappingsBehavior.Strict, "Strict")]
+        [DataRow(CopyColumnMappingsBehavior.StrictBypass, "StrictBypass")]
+        public async Task TestBulkInsertAsyncAppliesTheColumnMappingsBehaviorToTheSettingOfTheConnection(CopyColumnMappingsBehavior behavior,
             string expected)
         {
             // Act
@@ -403,7 +403,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
             setting.BulkColumnMappingsBehavior = FakeBulkColumnMappingsBehavior.Strict;
 
             // Act
-            BulkInsertInvoker.BulkInsert(new FakeBulkSettingDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.StrictBypass, null, null, null, null);
+            BulkInsertInvoker.BulkInsert(new FakeBulkSettingDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.StrictBypass, null, null, null, null);
 
             // Assert
             Assert.AreEqual("StrictBypass", FakeBulkOperations.Calls.Single().ColumnMappingsBehavior);
@@ -418,7 +418,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
             setting.BulkColumnMappingsBehavior = FakeBulkColumnMappingsBehavior.Strict;
 
             // Act
-            await BulkInsertInvoker.BulkInsertAsync(new FakeBulkSettingDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.Automatic, null, null, null, null, CancellationToken.None);
+            await BulkInsertInvoker.BulkInsertAsync(new FakeBulkSettingDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.Automatic, null, null, null, null, CancellationToken.None);
 
             // Assert
             Assert.AreEqual("Automatic", FakeBulkOperations.Calls.Single().ColumnMappingsBehavior);
@@ -434,7 +434,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
 
             // Act/Assert
             Assert.Throws<InvalidOperationException>(() =>
-                BulkInsertInvoker.BulkInsert(new FakeBulkSettingThrowingDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.Strict, null, null, null, null));
+                BulkInsertInvoker.BulkInsert(new FakeBulkSettingThrowingDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.Strict, null, null, null, null));
             Assert.AreEqual(FakeBulkColumnMappingsBehavior.Automatic, setting.BulkColumnMappingsBehavior);
         }
 
@@ -443,7 +443,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         {
             // Act
             var tasks = Enumerable.Range(0, 20).Select(i => Task.Run(() =>
-                BulkInsertInvoker.BulkInsert(new FakeBulkSettingDbConnection(), "Person" + i, GetReader(), 250, i % 2 == 0 ? CopyTableSchemaColumnMappingsBehavior.Strict : CopyTableSchemaColumnMappingsBehavior.StrictBypass, null, null, null, null))).ToArray();
+                BulkInsertInvoker.BulkInsert(new FakeBulkSettingDbConnection(), "Person" + i, GetReader(), 250, i % 2 == 0 ? CopyColumnMappingsBehavior.Strict : CopyColumnMappingsBehavior.StrictBypass, null, null, null, null))).ToArray();
             Task.WaitAll(tasks);
 
             // Assert
@@ -457,7 +457,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         {
             // Act
             var exception = Assert.Throws<InvalidOperationException>(() =>
-                BulkInsertInvoker.BulkInsert(new FakeBulkDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.Strict, null, null, null, null));
+                BulkInsertInvoker.BulkInsert(new FakeBulkDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.Strict, null, null, null, null));
 
             // Assert
             StringAssert.Contains(exception.Message, "BulkColumnMappingsBehavior");
@@ -470,14 +470,14 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         {
             // Act/Assert
             await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                BulkInsertInvoker.BulkInsertAsync(new FakeBulkDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.StrictBypass, null, null, null, null, CancellationToken.None));
+                BulkInsertInvoker.BulkInsertAsync(new FakeBulkDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.StrictBypass, null, null, null, null, CancellationToken.None));
         }
 
         [TestMethod]
         public void TestBulkInsertIgnoresTheDefaultBehaviorIfTheSettingOfTheConnectionHasNoBehavior()
         {
             // Act
-            var actual = BulkInsertInvoker.BulkInsert(new FakeBulkDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.Automatic, null, null, null, null);
+            var actual = BulkInsertInvoker.BulkInsert(new FakeBulkDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.Automatic, null, null, null, null);
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -488,7 +488,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         {
             // Act
             var exception = Assert.Throws<InvalidOperationException>(() =>
-                BulkInsertInvoker.BulkInsert(new FakeBulkLimitedSettingDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.StrictBypass, null, null, null, null));
+                BulkInsertInvoker.BulkInsert(new FakeBulkLimitedSettingDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.StrictBypass, null, null, null, null));
 
             // Assert
             StringAssert.Contains(exception.Message, "StrictBypass");
@@ -499,7 +499,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         public void TestBulkInsertAppliesTheBehaviorThatTheSettingDefines()
         {
             // Act
-            BulkInsertInvoker.BulkInsert(new FakeBulkLimitedSettingDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.Strict, null, null, null, null);
+            BulkInsertInvoker.BulkInsert(new FakeBulkLimitedSettingDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.Strict, null, null, null, null);
 
             // Assert
             Assert.AreEqual(1, FakeBulkOperations.Calls.Length);
@@ -509,7 +509,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         public void TestCopyTableSchemaColumnMappingsBehaviorHasTheSameNamesAndValuesAsTheBehaviorOfTheBulkOperations()
         {
             // Act
-            var actual = Enum.GetValues(typeof(CopyTableSchemaColumnMappingsBehavior)).Cast<CopyTableSchemaColumnMappingsBehavior>().Select(v => (v.ToString(), (short)v)).ToArray();
+            var actual = Enum.GetValues(typeof(CopyColumnMappingsBehavior)).Cast<CopyColumnMappingsBehavior>().Select(v => (v.ToString(), (short)v)).ToArray();
             var expected = Enum.GetValues(typeof(FakeBulkColumnMappingsBehavior)).Cast<FakeBulkColumnMappingsBehavior>().Select(v => (v.ToString(), (short)v)).ToArray();
 
             // Assert
@@ -524,7 +524,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         public async Task TestBulkInsertAsyncReturnsTheNumberOfInsertedRows()
         {
             // Act
-            var actual = await BulkInsertInvoker.BulkInsertAsync(new FakeBulkDbConnection(), "Person", GetReader(4), 100, CopyTableSchemaColumnMappingsBehavior.Automatic, null, null, null, null, CancellationToken.None);
+            var actual = await BulkInsertInvoker.BulkInsertAsync(new FakeBulkDbConnection(), "Person", GetReader(4), 100, CopyColumnMappingsBehavior.Automatic, null, null, null, null, CancellationToken.None);
 
             // Assert
             Assert.AreEqual(4, actual);
@@ -539,7 +539,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
             using (var tokenSource = new CancellationTokenSource())
             {
                 // Act
-                await BulkInsertInvoker.BulkInsertAsync(new FakeBulkDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.Automatic, 45, "MyTraceKey", trace, transaction, tokenSource.Token);
+                await BulkInsertInvoker.BulkInsertAsync(new FakeBulkDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.Automatic, 45, "MyTraceKey", trace, transaction, tokenSource.Token);
 
                 // Assert
                 var call = FakeBulkOperations.Calls.Single();
@@ -562,7 +562,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
             using (var tokenSource = new CancellationTokenSource())
             {
                 // Act
-                var actual = await BulkInsertInvoker.BulkInsertAsync(new FakeBulkMinimalDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.Automatic, 10, null, null, null, tokenSource.Token);
+                var actual = await BulkInsertInvoker.BulkInsertAsync(new FakeBulkMinimalDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.Automatic, 10, null, null, null, tokenSource.Token);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -577,7 +577,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         {
             // Act
             var exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                BulkInsertInvoker.BulkInsertAsync(new FakeDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.Automatic, null, null, null, null, CancellationToken.None));
+                BulkInsertInvoker.BulkInsertAsync(new FakeDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.Automatic, null, null, null, null, CancellationToken.None));
 
             // Assert
             StringAssert.Contains(exception.Message, typeof(FakeDbConnection).FullName);
@@ -588,7 +588,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         {
             // Act/Assert
             await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                BulkInsertInvoker.BulkInsertAsync(new FakeBulkTypedDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.Automatic, null, null, null, null, CancellationToken.None));
+                BulkInsertInvoker.BulkInsertAsync(new FakeBulkTypedDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.Automatic, null, null, null, null, CancellationToken.None));
         }
 
         [TestMethod]
@@ -596,7 +596,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         {
             // Act
             var exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                BulkInsertInvoker.BulkInsertAsync(new FakeBulkThrowingDbConnection(), "Person", GetReader(), 250, CopyTableSchemaColumnMappingsBehavior.Automatic, null, null, null, null, CancellationToken.None));
+                BulkInsertInvoker.BulkInsertAsync(new FakeBulkThrowingDbConnection(), "Person", GetReader(), 250, CopyColumnMappingsBehavior.Automatic, null, null, null, null, CancellationToken.None));
 
             // Assert
             Assert.AreEqual("The fake bulk insert failed.", exception.Message);

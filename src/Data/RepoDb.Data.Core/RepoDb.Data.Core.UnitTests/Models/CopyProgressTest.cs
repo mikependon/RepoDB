@@ -13,13 +13,13 @@ using RepoDb.Data.Models;
 namespace RepoDb.Data.Core.UnitTests.Models
 {
     [TestClass]
-    public class CopyDataProgressTest
+    public class CopyProgressTest
     {
         [TestMethod]
         public void TestCopyDataProgressDefaultValues()
         {
             // Act
-            var actual = new CopyDataProgress();
+            var actual = new CopyProgress();
 
             // Assert
             Assert.AreEqual(0, actual.BatchNumber);
@@ -37,7 +37,7 @@ namespace RepoDb.Data.Core.UnitTests.Models
             var end = start.AddMinutes(5);
 
             // Act
-            var actual = new CopyDataProgress
+            var actual = new CopyProgress
             {
                 BatchNumber = 3,
                 RowCount = 1000,
