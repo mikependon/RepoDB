@@ -54,7 +54,7 @@ Read more about this through this [article](https://blogs.repodb.net/posts/2026/
 
 ## Desktop Studio
 
-Improve your productivity with Desktop Studio. Plan, priorities and manage your work in your home and organization. Move your schema and data from all supported databases, and work with various files like CSV, JSON, XML, Parquet and AVRO.
+Improve your productivity with Desktop Studio. Plan, prioritize and manage your work in your home and organization. Move your schema and data from all supported databases, and work with various files like CSV, JSON, XML, Parquet and AVRO.
 
 <img width="1278" height="762" alt="image" src="https://github.com/user-attachments/assets/6473902b-8c7b-42fb-9880-5d04a2b0b587" />
 
