@@ -133,8 +133,8 @@ namespace RepoDb.Schema.SapHana.IntegrationTests
                 Assert.AreEqual(target.Database, person.Target.Database, StringComparer.Ordinal);
                 Assert.AreEqual(nameof(HanaConnection), person.Source.DatabaseType, StringComparer.Ordinal);
                 Assert.AreEqual(nameof(HanaConnection), person.Target.DatabaseType, StringComparer.Ordinal);
-                Assert.AreEqual(CopyTableSchemaExistsBehavior.Skip, person.Action);
-                Assert.AreEqual(CopyTableSchemaOutcome.Created, person.Outcome);
+                Assert.AreEqual(TableExistsBehavior.Skip, person.Action);
+                Assert.AreEqual(TableOutcome.Created, person.Outcome);
                 StringAssert.Contains(person.Script, "CREATE TABLE \"Person\"", StringComparison.Ordinal);
                 StringAssert.Contains(person.Script, "FK_Person_Country", StringComparison.Ordinal);
                 Assert.IsTrue(run.EndTime >= run.StartTime);
@@ -203,7 +203,7 @@ namespace RepoDb.Schema.SapHana.IntegrationTests
                 CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.Target.Table.Table.Name).ToArray());
                 var person = results[1];
                 Assert.IsNull(person.Source.Table.Table.Schema);
-                Assert.AreEqual(CopyTableSchemaOutcome.Created, person.Outcome);
+                Assert.AreEqual(TableOutcome.Created, person.Outcome);
                 Assert.AreEqual(7, person.ColumnCount);
                 Assert.AreEqual(1, person.IndexCount);
                 Assert.AreEqual(1, person.ForeignKeyCount);
@@ -477,10 +477,10 @@ namespace RepoDb.Schema.SapHana.IntegrationTests
 
                 // Act
                 var results = new List<CopyTableSchemaResultItem>();
-                source.CopyTableSchemaTo(new[] { "NoKey" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop, createdCallback: results.Add);
+                source.CopyTableSchemaTo(new[] { "NoKey" }, target, tableExistenceBehavior: TableExistsBehavior.Drop, createdCallback: results.Add);
 
                 // Assert
-                Assert.AreEqual(CopyTableSchemaExistsBehavior.Drop, results.Single().Action);
+                Assert.AreEqual(TableExistsBehavior.Drop, results.Single().Action);
             }
         }
 
@@ -594,7 +594,7 @@ namespace RepoDb.Schema.SapHana.IntegrationTests
                 source.CopyTableSchemaTo(new[] { "NoKey" }, target);
 
                 // Act/Assert
-                Assert.Throws<InvalidOperationException>(() => source.CopyTableSchemaTo(new[] { "NoKey" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
+                Assert.Throws<InvalidOperationException>(() => source.CopyTableSchemaTo(new[] { "NoKey" }, target, tableExistenceBehavior: TableExistsBehavior.Throw));
             }
         }
 
@@ -723,11 +723,11 @@ namespace RepoDb.Schema.SapHana.IntegrationTests
 
                 // Act
                 var results = new List<CopyTableSchemaResultItem>();
-                await source.CopyTableSchemaToAsync(new[] { "Person", "Country" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
+                await source.CopyTableSchemaToAsync(new[] { "Person", "Country" }, target, tableExistenceBehavior: TableExistsBehavior.Align, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(2, results.Count);
-                Assert.AreEqual(CopyTableSchemaExistsBehavior.Align, results[1].Action);
+                Assert.AreEqual(TableExistsBehavior.Align, results[1].Action);
                 Assert.AreEqual(source.Database, results[1].Source.Database, StringComparer.Ordinal);
                 Assert.AreEqual(target.Database, results[1].Target.Database, StringComparer.Ordinal);
                 Assert.AreEqual(7, results[1].ColumnCount);
@@ -764,7 +764,7 @@ namespace RepoDb.Schema.SapHana.IntegrationTests
                 await source.CopyTableSchemaToAsync(new[] { "NoKey" }, target);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopyTableSchemaToAsync(new[] { "NoKey" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
+                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopyTableSchemaToAsync(new[] { "NoKey" }, target, tableExistenceBehavior: TableExistsBehavior.Throw));
             }
         }
 
@@ -848,7 +848,7 @@ namespace RepoDb.Schema.SapHana.IntegrationTests
                 Assert.AreEqual(1, created.Count);
                 Assert.AreEqual(1, created[0].Errors.Count);
                 Assert.IsInstanceOfType<HanaException>(created[0].Errors[0].Exception);
-                Assert.AreEqual(CopyTableSchemaOutcome.Failed, created[0].Outcome);
+                Assert.AreEqual(TableOutcome.Failed, created[0].Outcome);
                 var person = Helper.GetTargetSchema("Person");
                 Assert.AreEqual(7, person.Columns.Count);
                 Assert.AreEqual(1, person.Indexes.Count);
@@ -883,7 +883,7 @@ namespace RepoDb.Schema.SapHana.IntegrationTests
                 StringAssert.StartsWith(errors[0].Statement, "CREATE TABLE \"NoKey\"", StringComparison.Ordinal);
                 CollectionAssert.AreEquivalent(new[] { "NoKey", "Parent", "Child" }, created.Select(r => r.Target.Table.Table.Name).ToArray());
                 Assert.AreSame(errors[0], created.Single(r => r.Target.Table.Table.Name == "NoKey").Errors.Single());
-                Assert.AreEqual(CopyTableSchemaOutcome.Failed, created.Single(r => r.Target.Table.Table.Name == "NoKey").Outcome);
+                Assert.AreEqual(TableOutcome.Failed, created.Single(r => r.Target.Table.Table.Name == "NoKey").Outcome);
                 Assert.AreEqual(0, created.Where(r => r.Target.Table.Table.Name != "NoKey").Sum(r => r.Errors.Count));
                 AssertTargetMatchesSource("NoKey", "Parent", "Child");
             }
@@ -915,7 +915,7 @@ namespace RepoDb.Schema.SapHana.IntegrationTests
                 Assert.IsTrue(errors.Count >= tables.Count);
                 Assert.IsTrue(errors.All(e => e.Exception is HanaException));
                 Assert.AreEqual(tables.Count, created.Count);
-                Assert.IsTrue(created.All(r => r.Errors.Count > 0 && r.Outcome == CopyTableSchemaOutcome.Failed));
+                Assert.IsTrue(created.All(r => r.Errors.Count > 0 && r.Outcome == TableOutcome.Failed));
                 Assert.AreEqual(errors.Count, created.Sum(r => r.Errors.Count));
                 CollectionAssert.AreEquivalent(tables, GetTargetTables());
                 foreach (var table in tables)

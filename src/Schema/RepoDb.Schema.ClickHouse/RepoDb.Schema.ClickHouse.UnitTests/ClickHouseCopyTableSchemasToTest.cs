@@ -165,7 +165,7 @@ namespace RepoDb.Schema.ClickHouse.UnitTests
             StringAssert.StartsWith(results[0].Script, "CREATE TABLE `dbo`.`Country`", StringComparison.Ordinal);
             StringAssert.StartsWith(results[1].Script, "CREATE TABLE `dbo`.`Person`", StringComparison.Ordinal);
             Assert.AreEqual(1, results[1].ForeignKeyCount);
-            Assert.AreEqual(CopyTableSchemaOutcome.Created, results[0].Outcome);
+            Assert.AreEqual(TableOutcome.Created, results[0].Outcome);
         }
 
         [TestMethod]
@@ -285,11 +285,11 @@ namespace RepoDb.Schema.ClickHouse.UnitTests
             var results = new List<CopyTableSchemaResultItem>();
 
             // Act
-            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" }, new CustomDbConnection(), tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw, createdCallback: results.Add);
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" }, new CustomDbConnection(), tableExistenceBehavior: TableExistsBehavior.Throw, createdCallback: results.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.Target.Table.Table.Name).ToArray());
-            Assert.AreEqual(CopyTableSchemaExistsBehavior.Throw, results[1].Action);
+            Assert.AreEqual(TableExistsBehavior.Throw, results[1].Action);
             StringAssert.Contains(results[1].Script, "CREATE TABLE `dbo`.`Person`", StringComparison.Ordinal);
         }
 

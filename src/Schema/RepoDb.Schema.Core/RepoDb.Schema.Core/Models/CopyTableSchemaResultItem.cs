@@ -21,20 +21,20 @@ namespace RepoDb.Schema.Models
         /// <summary>
         /// Gets the behavior that was requested for when the table already exists in the target database. See <see cref="Outcome"/> for what was actually done.
         /// </summary>
-        public CopyTableSchemaExistsBehavior Action { get; internal set; }
+        public TableExistsBehavior Action { get; internal set; }
 
         /// <summary>
-        /// Gets the names of the columns that were added to an already existing table (see <see cref="CopyTableSchemaOutcome.Aligned"/>).
+        /// Gets the names of the columns that were added to an already existing table (see <see cref="TableOutcome.Aligned"/>).
         /// </summary>
         public IList<string> AddedColumns { get; internal set; } = new List<string>();
 
         /// <summary>
-        /// Gets the names of the foreign keys that were added to an already existing table (see <see cref="CopyTableSchemaOutcome.Aligned"/>).
+        /// Gets the names of the foreign keys that were added to an already existing table (see <see cref="TableOutcome.Aligned"/>).
         /// </summary>
         public IList<string> AddedForeignKeys { get; internal set; } = new List<string>();
 
         /// <summary>
-        /// Gets the names of the indexes that were added to an already existing table (see <see cref="CopyTableSchemaOutcome.Aligned"/>).
+        /// Gets the names of the indexes that were added to an already existing table (see <see cref="TableOutcome.Aligned"/>).
         /// </summary>
         public IList<string> AddedIndexes { get; internal set; } = new List<string>();
 
@@ -66,7 +66,7 @@ namespace RepoDb.Schema.Models
         /// <summary>
         /// Gets what the operation has actually done to the table in the target database.
         /// </summary>
-        public CopyTableSchemaOutcome Outcome { get; internal set; }
+        public TableOutcome Outcome { get; internal set; }
 
         /// <summary>
         /// Gets the SQL script that was executed on the target database.

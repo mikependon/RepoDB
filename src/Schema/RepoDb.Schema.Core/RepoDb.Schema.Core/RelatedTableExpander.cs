@@ -23,7 +23,7 @@ namespace RepoDb.Schema
         #region Public Methods
 
         /// <summary>
-        /// Expands the tables with their parents, their children or both (see <see cref="CopyTableSchemaRelationshipBehavior"/>).
+        /// Expands the tables with their parents, their children or both (see <see cref="RelatedTableBehavior"/>).
         /// </summary>
         /// <param name="tables">The tables to be expanded.</param>
         /// <param name="foreignKeys">The foreign key relationships of the database. A relationship is a table (the child) that references another table (the parent).</param>
@@ -35,16 +35,16 @@ namespace RepoDb.Schema
         /// </returns>
         internal static IList<TableInfo> Expand(IEnumerable<TableInfo> tables,
             IEnumerable<(TableInfo Child, TableInfo Parent)> foreignKeys,
-            CopyTableSchemaRelationshipBehavior relationshipBehavior,
+            RelatedTableBehavior relationshipBehavior,
             Func<TableInfo, string> tableKey)
         {
-            if (!Enum.IsDefined(typeof(CopyTableSchemaRelationshipBehavior), relationshipBehavior))
+            if (!Enum.IsDefined(typeof(RelatedTableBehavior), relationshipBehavior))
             {
                 throw new ArgumentOutOfRangeException(nameof(relationshipBehavior));
             }
 
             var result = tables.GroupBy(tableKey).Select(g => g.First()).ToList();
-            return relationshipBehavior == CopyTableSchemaRelationshipBehavior.TableOnly
+            return relationshipBehavior == RelatedTableBehavior.TableOnly
                 ? result
                 : Walk(result, GetNeighbors(foreignKeys, relationshipBehavior, tableKey), tableKey);
         }
@@ -62,7 +62,7 @@ namespace RepoDb.Schema
         /// <param name="tableKey"></param>
         /// <returns></returns>
         private static Dictionary<string, List<TableInfo>> GetNeighbors(IEnumerable<(TableInfo Child, TableInfo Parent)> foreignKeys,
-            CopyTableSchemaRelationshipBehavior relationshipBehavior,
+            RelatedTableBehavior relationshipBehavior,
             Func<TableInfo, string> tableKey)
         {
             var neighbors = new Dictionary<string, List<TableInfo>>();
@@ -106,18 +106,18 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="relationshipBehavior"></param>
         /// <returns></returns>
-        private static bool FollowsParents(CopyTableSchemaRelationshipBehavior relationshipBehavior) =>
-            relationshipBehavior == CopyTableSchemaRelationshipBehavior.Parents ||
-            relationshipBehavior == CopyTableSchemaRelationshipBehavior.ParentsAndChildren;
+        private static bool FollowsParents(RelatedTableBehavior relationshipBehavior) =>
+            relationshipBehavior == RelatedTableBehavior.Parents ||
+            relationshipBehavior == RelatedTableBehavior.ParentsAndChildren;
 
         /// <summary>
         /// Checks whether the behavior follows the children of a table.
         /// </summary>
         /// <param name="relationshipBehavior"></param>
         /// <returns></returns>
-        private static bool FollowsChildren(CopyTableSchemaRelationshipBehavior relationshipBehavior) =>
-            relationshipBehavior == CopyTableSchemaRelationshipBehavior.Children ||
-            relationshipBehavior == CopyTableSchemaRelationshipBehavior.ParentsAndChildren;
+        private static bool FollowsChildren(RelatedTableBehavior relationshipBehavior) =>
+            relationshipBehavior == RelatedTableBehavior.Children ||
+            relationshipBehavior == RelatedTableBehavior.ParentsAndChildren;
 
         /// <summary>
         ///

@@ -43,7 +43,7 @@ namespace RepoDb.Schema
         /// <param name="areIndexNamesUniquePerSchema">Whether the name of an index must be unique in the whole schema (or database) of the destination database (see <see cref="RepoDb.Interfaces.IDbSetting.AreIndexNamesUniquePerSchema"/>).</param>
         /// <param name="probe">Executes an existence statement (<c>null</c> if the statement is not composed, or its result is not known).</param>
         public static void Resolve(IEnumerable<PlanTable> tables,
-            CopyTableSchemaExistsBehavior behavior,
+            TableExistsBehavior behavior,
             ISchemaComposer composer,
             bool areIndexNamesUniquePerSchema,
             Func<string, bool?> probe)
@@ -79,7 +79,7 @@ namespace RepoDb.Schema
         /// <param name="areIndexNamesUniquePerSchema">Whether the name of an index must be unique in the whole schema (or database) of the destination database (see <see cref="RepoDb.Interfaces.IDbSetting.AreIndexNamesUniquePerSchema"/>).</param>
         /// <param name="probe">Executes an existence statement (<c>null</c> if the statement is not composed, or its result is not known).</param>
         public static async Task ResolveAsync(IEnumerable<PlanTable> tables,
-            CopyTableSchemaExistsBehavior behavior,
+            TableExistsBehavior behavior,
             ISchemaComposer composer,
             bool areIndexNamesUniquePerSchema,
             Func<string, Task<bool?>> probe)
@@ -120,11 +120,11 @@ namespace RepoDb.Schema
         /// <param name="composer">The composer of the destination database.</param>
         /// <param name="probe">Executes an existence statement (<c>null</c> if the statement is not composed, or its result is not known).</param>
         private static void RemoveRenamedIndexes(PlanTable table,
-            CopyTableSchemaExistsBehavior behavior,
+            TableExistsBehavior behavior,
             ISchemaComposer composer,
             Func<string, bool?> probe)
         {
-            if (table.Exists != true || behavior != CopyTableSchemaExistsBehavior.Align)
+            if (table.Exists != true || behavior != TableExistsBehavior.Align)
             {
                 return;
             }
@@ -157,11 +157,11 @@ namespace RepoDb.Schema
         /// <param name="composer">The composer of the destination database.</param>
         /// <param name="probe">Executes an existence statement (<c>null</c> if the statement is not composed, or its result is not known).</param>
         private static async Task RemoveRenamedIndexesAsync(PlanTable table,
-            CopyTableSchemaExistsBehavior behavior,
+            TableExistsBehavior behavior,
             ISchemaComposer composer,
             Func<string, Task<bool?>> probe)
         {
-            if (table.Exists != true || behavior != CopyTableSchemaExistsBehavior.Align)
+            if (table.Exists != true || behavior != TableExistsBehavior.Align)
             {
                 return;
             }
@@ -193,14 +193,14 @@ namespace RepoDb.Schema
         /// <param name="behavior">Defines what happens to the tables that already exist in the destination database.</param>
         /// <returns>The named indexes that are going to be created.</returns>
         private static IList<IndexInfo> GetIndexesToCreate(PlanTable table,
-            CopyTableSchemaExistsBehavior behavior)
+            TableExistsBehavior behavior)
         {
             IEnumerable<IndexInfo> indexes;
-            if (table.Exists != true || behavior == CopyTableSchemaExistsBehavior.Drop)
+            if (table.Exists != true || behavior == TableExistsBehavior.Drop)
             {
                 indexes = table.Schema.Indexes;
             }
-            else if (behavior == CopyTableSchemaExistsBehavior.Align)
+            else if (behavior == TableExistsBehavior.Align)
             {
                 indexes = table.MissingIndexes;
             }
@@ -222,10 +222,10 @@ namespace RepoDb.Schema
         /// <returns><c>true</c> if the name is used by an index of the table that is dropped; otherwise, <c>false</c>.</returns>
         private static bool IsOwn(PlanTable table,
             string name,
-            CopyTableSchemaExistsBehavior behavior,
+            TableExistsBehavior behavior,
             ISchemaComposer composer,
             Func<string, bool?> probe) =>
-            behavior == CopyTableSchemaExistsBehavior.Drop && table.Exists == true && probe(composer.ComposeIndexExists(table.Name, name)) == true;
+            behavior == TableExistsBehavior.Drop && table.Exists == true && probe(composer.ComposeIndexExists(table.Name, name)) == true;
 
         /// <summary>
         /// Checks whether the name is used by an index of the table that is dropped before it is created, so the name is free again (in an asynchronous way).
@@ -238,10 +238,10 @@ namespace RepoDb.Schema
         /// <returns>A task that represents the asynchronous operation. The task result contains: <c>true</c> if the name is used by an index of the table that is dropped; otherwise, <c>false</c>.</returns>
         private static async Task<bool> IsOwnAsync(PlanTable table,
             string name,
-            CopyTableSchemaExistsBehavior behavior,
+            TableExistsBehavior behavior,
             ISchemaComposer composer,
             Func<string, Task<bool?>> probe) =>
-            behavior == CopyTableSchemaExistsBehavior.Drop && table.Exists == true && await probe(composer.ComposeIndexExists(table.Name, name)).ConfigureAwait(false) == true;
+            behavior == TableExistsBehavior.Drop && table.Exists == true && await probe(composer.ComposeIndexExists(table.Name, name)).ConfigureAwait(false) == true;
 
         /// <summary>
         /// Gets the name of the index for the attempt: the name of the table is the prefix, and the number of the attempt is the suffix when the prefixed name is used too.

@@ -94,8 +94,8 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var reader = new Mock<ISchemaReader>();
             reader.Setup(r => r.GetTableSchema(It.IsAny<string>())).Returns<string>(name => schemas.Single(s => s.Table.Name == name));
             reader.Setup(r => r.GetTableSchemaAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).Returns<string, CancellationToken>((name, _) => Task.FromResult(schemas.Single(s => s.Table.Name == name)));
-            reader.Setup(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), It.IsAny<CopyTableSchemaRelationshipBehavior>())).Returns<IEnumerable<string>, CopyTableSchemaRelationshipBehavior>((names, _) => schemas.Select(s => s.Table.Name).ToList());
-            reader.Setup(r => r.GetRelatedTablesAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<CopyTableSchemaRelationshipBehavior>(), It.IsAny<CancellationToken>())).Returns<IEnumerable<string>, CopyTableSchemaRelationshipBehavior, CancellationToken>((names, _, __) => Task.FromResult<IEnumerable<string>>(schemas.Select(s => s.Table.Name).ToList()));
+            reader.Setup(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), It.IsAny<RelatedTableBehavior>())).Returns<IEnumerable<string>, RelatedTableBehavior>((names, _) => schemas.Select(s => s.Table.Name).ToList());
+            reader.Setup(r => r.GetRelatedTablesAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<RelatedTableBehavior>(), It.IsAny<CancellationToken>())).Returns<IEnumerable<string>, RelatedTableBehavior, CancellationToken>((names, _, __) => Task.FromResult<IEnumerable<string>>(schemas.Select(s => s.Table.Name).ToList()));
             reader.Setup(r => r.GetDependencyOrder(It.IsAny<IEnumerable<string>>())).Returns<IEnumerable<string>>(names => schemas.Where(s => names.Contains(s.Table.Name)).Select(s => new RelationshipInfo { Schema = s }).ToList());
             reader.Setup(r => r.GetDependencyOrderAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<CancellationToken>())).Returns<IEnumerable<string>, CancellationToken>((names, _) => Task.FromResult<IEnumerable<RelationshipInfo>>(schemas.Where(s => names.Contains(s.Table.Name)).Select(s => new RelationshipInfo { Schema = s }).ToList()));
             SchemaReaderMapper.Add<CustomDbConnection>(reader.Object, true);
@@ -412,7 +412,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo("Person", destination, columns: new[] { "Id", "CountryId" }, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Parents);
+            new CustomDbConnection().CopyTableSchemaTo("Person", destination, columns: new[] { "Id", "CountryId" }, relationshipBehavior: RelatedTableBehavior.Parents);
 
             // Assert
             Assert.IsTrue(destination.ExecutedCommands.Any(c => c.StartsWith("CREATE TABLE Country (Id,Name,Code")));
@@ -428,7 +428,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo("Person", destination, columns: new[] { "Id", "Age" }, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Children);
+            new CustomDbConnection().CopyTableSchemaTo("Person", destination, columns: new[] { "Id", "Age" }, relationshipBehavior: RelatedTableBehavior.Children);
 
             // Assert
             Assert.IsTrue(destination.ExecutedCommands.Any(c => c.StartsWith("CREATE TABLE Pet (Id,PersonName")));
@@ -444,7 +444,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo("Person", destination, columns: new[] { "Id", "Name" }, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Children);
+            new CustomDbConnection().CopyTableSchemaTo("Person", destination, columns: new[] { "Id", "Name" }, relationshipBehavior: RelatedTableBehavior.Children);
 
             // Assert
             Assert.IsTrue(destination.ExecutedCommands.Any(c => c.StartsWith("ADD FK_Pet_Person")));
@@ -463,7 +463,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Person", "COLUMN_EXISTS Person.Id");
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo("Person", destination, columns: new[] { "Id", "Name" }, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
+            new CustomDbConnection().CopyTableSchemaTo("Person", destination, columns: new[] { "Id", "Name" }, tableExistenceBehavior: TableExistsBehavior.Align);
 
             // Assert
             Assert.IsTrue(destination.ExecutedCommands.Contains("ADD COLUMN Name TO Person;"));

@@ -82,7 +82,7 @@ namespace RepoDb.Schema.Models
         /// <summary>
         /// Gets or sets what is going to be done to the table.
         /// </summary>
-        public CopyTableSchemaOutcome Outcome { get; set; } = CopyTableSchemaOutcome.Created;
+        public TableOutcome Outcome { get; set; } = TableOutcome.Created;
 
         /// <summary>
         /// Gets or sets the warnings of the table: what is left out when the table is created (i.e.: a foreign key whose referenced table is not in the destination).

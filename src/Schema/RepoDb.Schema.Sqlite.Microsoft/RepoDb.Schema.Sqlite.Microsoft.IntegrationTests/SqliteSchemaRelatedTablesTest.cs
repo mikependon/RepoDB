@@ -36,7 +36,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
 
         #region Helpers
 
-        private static string[] GetRelatedTables(CopyTableSchemaRelationshipBehavior behavior, params string[] tableNames)
+        private static string[] GetRelatedTables(RelatedTableBehavior behavior, params string[] tableNames)
         {
             using (var connection = Database.CreateSource())
             {
@@ -44,7 +44,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
             }
         }
 
-        private static async Task<string[]> GetRelatedTablesAsync(CopyTableSchemaRelationshipBehavior behavior, params string[] tableNames)
+        private static async Task<string[]> GetRelatedTablesAsync(RelatedTableBehavior behavior, params string[] tableNames)
         {
             using (var connection = Database.CreateSource())
             {
@@ -71,7 +71,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         public void TestSqliteSchemaRelatedTablesWithTableOnly()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.TableOnly, "Child");
+            var actual = GetRelatedTables(RelatedTableBehavior.TableOnly, "Child");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Child" }, actual);
@@ -81,7 +81,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         public void TestSqliteSchemaRelatedTablesWithTableOnlyKeepsTheGivenTablesInOrder()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.TableOnly, "GrandChild", "Parent", "GrandChild");
+            var actual = GetRelatedTables(RelatedTableBehavior.TableOnly, "GrandChild", "Parent", "GrandChild");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "GrandChild", "Parent" }, actual);
@@ -95,7 +95,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         public void TestSqliteSchemaRelatedTablesWithParents()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "GrandChild");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "GrandChild");
 
             // Assert
             AssertSame(new[] { "GrandChild", "Child", "Parent" }, actual);
@@ -106,7 +106,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         public void TestSqliteSchemaRelatedTablesWithParentsDoesNotIncludeTheChildren()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "Child");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "Child");
 
             // Assert
             AssertSame(new[] { "Child", "Parent" }, actual);
@@ -116,7 +116,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         public void TestSqliteSchemaRelatedTablesWithParentsOfATableWithoutParents()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "Parent");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "Parent");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Parent" }, actual);
@@ -126,7 +126,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         public void TestSqliteSchemaRelatedTablesWithParentsOfADiamond()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "DiamondD");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "DiamondD");
 
             // Assert
             AssertSame(new[] { "DiamondD", "DiamondB", "DiamondC", "DiamondA" }, actual);
@@ -136,7 +136,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         public void TestSqliteSchemaRelatedTablesWithParentsInAnotherSchema()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, $"{Database.SalesSchema}.InvoiceLine");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, $"{Database.SalesSchema}.InvoiceLine");
 
             // Assert
             AssertSame(new[] { $"{Database.SalesSchema}.InvoiceLine", $"{Database.SalesSchema}.Invoice" }, actual);
@@ -146,7 +146,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         public void TestSqliteSchemaRelatedTablesWithParentsOfTablesWithTheSameNameInDifferentSchemas()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, $"{Database.SalesSchema}.ItemRef", "Item");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, $"{Database.SalesSchema}.ItemRef", "Item");
 
             // Assert
             AssertSame(new[] { $"{Database.SalesSchema}.ItemRef", "Item", $"{Database.SalesSchema}.Item" }, actual);
@@ -156,7 +156,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         public void TestSqliteSchemaRelatedTablesWithParentsOfMultipleForeignKeys()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "Shipment");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "Shipment");
 
             // Assert
             AssertSame(new[] { "Shipment", "OrderLine", "Country" }, actual);
@@ -166,7 +166,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         public void TestSqliteSchemaRelatedTablesWithParentsOfTablesWithSpecialNames()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "[Odd.Child]");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "[Odd.Child]");
 
             // Assert
             AssertSame(new[] { "[Odd.Child]", "[Odd.Name]" }, actual);
@@ -180,7 +180,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         public void TestSqliteSchemaRelatedTablesWithChildren()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "Parent");
+            var actual = GetRelatedTables(RelatedTableBehavior.Children, "Parent");
 
             // Assert
             AssertSame(new[] { "Parent", "Child", "GrandChild" }, actual);
@@ -191,7 +191,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         public void TestSqliteSchemaRelatedTablesWithChildrenDoesNotIncludeTheParents()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "Child");
+            var actual = GetRelatedTables(RelatedTableBehavior.Children, "Child");
 
             // Assert
             AssertSame(new[] { "Child", "GrandChild" }, actual);
@@ -201,7 +201,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         public void TestSqliteSchemaRelatedTablesWithChildrenOfATableWithoutChildren()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "GrandChild");
+            var actual = GetRelatedTables(RelatedTableBehavior.Children, "GrandChild");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "GrandChild" }, actual);
@@ -211,7 +211,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         public void TestSqliteSchemaRelatedTablesWithChildrenOfADiamond()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "DiamondA");
+            var actual = GetRelatedTables(RelatedTableBehavior.Children, "DiamondA");
 
             // Assert
             AssertSame(new[] { "DiamondA", "DiamondB", "DiamondC", "DiamondD" }, actual);
@@ -221,7 +221,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         public void TestSqliteSchemaRelatedTablesWithChildrenInAnotherSchema()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, $"{Database.SalesSchema}.Invoice");
+            var actual = GetRelatedTables(RelatedTableBehavior.Children, $"{Database.SalesSchema}.Invoice");
 
             // Assert
             AssertSame(new[] { $"{Database.SalesSchema}.Invoice", $"{Database.SalesSchema}.InvoiceLine" }, actual);
@@ -231,7 +231,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         public void TestSqliteSchemaRelatedTablesWithChildrenOfATableWithManyChildren()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "Country");
+            var actual = GetRelatedTables(RelatedTableBehavior.Children, "Country");
 
             // Assert
             AssertSame(new[] { "Country", "Person", "Shipment", "Preference" }, actual);
@@ -245,7 +245,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         public void TestSqliteSchemaRelatedTablesWithParentsAndChildren()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "Child");
+            var actual = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "Child");
 
             // Assert
             AssertSame(new[] { "Child", "Parent", "GrandChild" }, actual);
@@ -256,8 +256,8 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         public void TestSqliteSchemaRelatedTablesWithParentsAndChildrenGivesTheSameTablesFromAnyTableOfTheTree()
         {
             // Act
-            var fromTheRoot = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "Parent");
-            var fromTheLeaf = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "GrandChild");
+            var fromTheRoot = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "Parent");
+            var fromTheLeaf = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "GrandChild");
 
             // Assert
             AssertSame(fromTheRoot, fromTheLeaf);
@@ -267,7 +267,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         public void TestSqliteSchemaRelatedTablesWithParentsAndChildrenOfADiamond()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "DiamondB");
+            var actual = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "DiamondB");
 
             // Assert
             AssertSame(new[] { "DiamondB", "DiamondA", "DiamondC", "DiamondD" }, actual);
@@ -277,7 +277,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         public void TestSqliteSchemaRelatedTablesWithParentsAndChildrenReachesTheOtherBranches()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "Country");
+            var actual = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "Country");
 
             // Assert
             AssertSame(new[] { "Country", "Person", "Shipment", "Preference", "OrderLine" }, actual);
@@ -287,7 +287,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         public void TestSqliteSchemaRelatedTablesWithParentsAndChildrenDoesNotIncludeTheUnrelatedTables()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "Parent");
+            var actual = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "Parent");
 
             // Assert
             Assert.IsFalse(actual.Contains("Person"));
@@ -299,7 +299,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         public void TestSqliteSchemaRelatedTablesWithParentsAndChildrenOfATableWithoutRelationships()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "NoKey");
+            var actual = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "NoKey");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "NoKey" }, actual);
@@ -312,7 +312,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestSqliteSchemaRelatedTablesOfACycle()
         {
-            foreach (var behavior in new[] { CopyTableSchemaRelationshipBehavior.Parents, CopyTableSchemaRelationshipBehavior.Children, CopyTableSchemaRelationshipBehavior.ParentsAndChildren })
+            foreach (var behavior in new[] { RelatedTableBehavior.Parents, RelatedTableBehavior.Children, RelatedTableBehavior.ParentsAndChildren })
             {
                 // Act
                 var actual = GetRelatedTables(behavior, "CycleA");
@@ -325,7 +325,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestSqliteSchemaRelatedTablesOfACycleOfThreeTables()
         {
-            foreach (var behavior in new[] { CopyTableSchemaRelationshipBehavior.Parents, CopyTableSchemaRelationshipBehavior.Children, CopyTableSchemaRelationshipBehavior.ParentsAndChildren })
+            foreach (var behavior in new[] { RelatedTableBehavior.Parents, RelatedTableBehavior.Children, RelatedTableBehavior.ParentsAndChildren })
             {
                 // Act
                 var actual = GetRelatedTables(behavior, "RingX");
@@ -339,9 +339,9 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         public void TestSqliteSchemaRelatedTablesOfACycleWithTablesAroundIt()
         {
             // Act
-            var parents = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "LoopB");
-            var children = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "LoopA");
-            var endToEnd = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "LoopA");
+            var parents = GetRelatedTables(RelatedTableBehavior.Parents, "LoopB");
+            var children = GetRelatedTables(RelatedTableBehavior.Children, "LoopA");
+            var endToEnd = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "LoopA");
 
             // Assert
             AssertSame(new[] { "LoopB", "LoopA", "LoopRoot" }, parents);
@@ -352,7 +352,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestSqliteSchemaRelatedTablesOfASelfReference()
         {
-            foreach (var behavior in new[] { CopyTableSchemaRelationshipBehavior.Parents, CopyTableSchemaRelationshipBehavior.Children, CopyTableSchemaRelationshipBehavior.ParentsAndChildren })
+            foreach (var behavior in new[] { RelatedTableBehavior.Parents, RelatedTableBehavior.Children, RelatedTableBehavior.ParentsAndChildren })
             {
                 // Act
                 var actual = GetRelatedTables(behavior, "Employee");
@@ -370,7 +370,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         public void TestSqliteSchemaRelatedTablesOfMultipleTables()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "GrandChild", "DiamondB");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "GrandChild", "DiamondB");
 
             // Assert
             AssertSame(new[] { "GrandChild", "DiamondB", "Child", "Parent", "DiamondA" }, actual);
@@ -381,7 +381,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         public void TestSqliteSchemaRelatedTablesDoesNotRepeatATable()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "Parent", "Child", "GrandChild");
+            var actual = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "Parent", "Child", "GrandChild");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Parent", "Child", "GrandChild" }, actual);
@@ -391,7 +391,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         public void TestSqliteSchemaRelatedTablesWithoutTables()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren);
+            var actual = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren);
 
             // Assert
             Assert.AreEqual(0, actual.Length);
@@ -401,7 +401,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         public void TestSqliteSchemaRelatedTablesAreComparedWithTheCase()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "Parent", "[Parent]");
+            var actual = GetRelatedTables(RelatedTableBehavior.Children, "Parent", "[Parent]");
 
             // Assert
             Assert.AreEqual(3, actual.Length);
@@ -415,7 +415,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
             using (var connection = Database.CreateSource())
             {
                 var reader = new SqliteSchemaReader(connection);
-                var related = reader.GetRelatedTables(new[] { "GrandChild" }, CopyTableSchemaRelationshipBehavior.Parents);
+                var related = reader.GetRelatedTables(new[] { "GrandChild" }, RelatedTableBehavior.Parents);
                 var actual = reader.GetDependencyOrder(related).Select(r => r.Schema.Table.Name).ToArray();
 
                 // Assert
@@ -431,17 +431,17 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         public async Task TestSqliteSchemaRelatedTablesAsyncWithEachBehavior()
         {
             // Act/Assert
-            CollectionAssert.AreEqual(new[] { "Child" }, await GetRelatedTablesAsync(CopyTableSchemaRelationshipBehavior.TableOnly, "Child"));
-            AssertSame(new[] { "Child", "Parent" }, await GetRelatedTablesAsync(CopyTableSchemaRelationshipBehavior.Parents, "Child"));
-            AssertSame(new[] { "Child", "GrandChild" }, await GetRelatedTablesAsync(CopyTableSchemaRelationshipBehavior.Children, "Child"));
-            AssertSame(new[] { "Child", "Parent", "GrandChild" }, await GetRelatedTablesAsync(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "Child"));
+            CollectionAssert.AreEqual(new[] { "Child" }, await GetRelatedTablesAsync(RelatedTableBehavior.TableOnly, "Child"));
+            AssertSame(new[] { "Child", "Parent" }, await GetRelatedTablesAsync(RelatedTableBehavior.Parents, "Child"));
+            AssertSame(new[] { "Child", "GrandChild" }, await GetRelatedTablesAsync(RelatedTableBehavior.Children, "Child"));
+            AssertSame(new[] { "Child", "Parent", "GrandChild" }, await GetRelatedTablesAsync(RelatedTableBehavior.ParentsAndChildren, "Child"));
         }
 
         [TestMethod]
         public async Task TestSqliteSchemaRelatedTablesAsyncOfACycle()
         {
             // Act
-            var actual = await GetRelatedTablesAsync(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "CycleA");
+            var actual = await GetRelatedTablesAsync(RelatedTableBehavior.ParentsAndChildren, "CycleA");
 
             // Assert
             AssertSame(new[] { "CycleA", "CycleB" }, actual);
@@ -458,7 +458,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
             {
                 // Act/Assert
                 Assert.Throws<ArgumentNullException>(() =>
-                    new SqliteSchemaReader(connection).GetRelatedTables(null, CopyTableSchemaRelationshipBehavior.ParentsAndChildren));
+                    new SqliteSchemaReader(connection).GetRelatedTables(null, RelatedTableBehavior.ParentsAndChildren));
             }
         }
 
@@ -467,7 +467,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         {
             // Act/Assert
             Assert.Throws<ArgumentOutOfRangeException>(() =>
-                GetRelatedTables((CopyTableSchemaRelationshipBehavior)99, "Child"));
+                GetRelatedTables((RelatedTableBehavior)99, "Child"));
         }
 
         #endregion
@@ -484,7 +484,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
                 SchemaReaderMapper.Add<SqliteConnection>(new SqliteSchemaReader(source), true);
 
                 // Act
-                source.CopyTableSchemaTo(new[] { "GrandChild" }, target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Parents);
+                source.CopyTableSchemaTo(new[] { "GrandChild" }, target, relationshipBehavior: RelatedTableBehavior.Parents);
 
                 // Assert
                 AssertSame(new[] { "Parent", "Child", "GrandChild" }, GetTargetTables().ToArray());
@@ -504,7 +504,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
                 SchemaReaderMapper.Add<SqliteConnection>(new SqliteSchemaReader(source), true);
 
                 // Act
-                source.CopyTableSchemaTo(new[] { "Parent" }, target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Children);
+                source.CopyTableSchemaTo(new[] { "Parent" }, target, relationshipBehavior: RelatedTableBehavior.Children);
 
                 // Assert
                 AssertSame(new[] { "Parent", "Child", "GrandChild" }, GetTargetTables().ToArray());
@@ -523,7 +523,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "Child" }, target,
-                    relationshipBehavior: CopyTableSchemaRelationshipBehavior.ParentsAndChildren,
+                    relationshipBehavior: RelatedTableBehavior.ParentsAndChildren,
                     createdCallback: r => created.Add(r.Target.Table.Table.Name));
 
                 // Assert
@@ -542,7 +542,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
                 SchemaReaderMapper.Add<SqliteConnection>(new SqliteSchemaReader(source), true);
 
                 // Act
-                source.CopyTableSchemaTo(new[] { "Child" }, target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.TableOnly);
+                source.CopyTableSchemaTo(new[] { "Child" }, target, relationshipBehavior: RelatedTableBehavior.TableOnly);
 
                 // Assert
                 AssertSame(new[] { "Child" }, GetTargetTables().ToArray());
@@ -559,7 +559,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
                 SchemaReaderMapper.Add<SqliteConnection>(new SqliteSchemaReader(source), true);
 
                 // Act
-                source.CopyTableSchemaTo(new[] { "LoopA" }, target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.ParentsAndChildren);
+                source.CopyTableSchemaTo(new[] { "LoopA" }, target, relationshipBehavior: RelatedTableBehavior.ParentsAndChildren);
 
                 // Assert
                 AssertSame(new[] { "LoopRoot", "LoopA", "LoopB", "LoopLeaf" }, GetTargetTables().ToArray());
@@ -576,7 +576,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
                 SchemaReaderMapper.Add<SqliteConnection>(new SqliteSchemaReader(source), true);
 
                 // Act
-                await source.CopyTableSchemaToAsync(new[] { "Child" }, target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.ParentsAndChildren);
+                await source.CopyTableSchemaToAsync(new[] { "Child" }, target, relationshipBehavior: RelatedTableBehavior.ParentsAndChildren);
 
                 // Assert
                 AssertSame(new[] { "Parent", "Child", "GrandChild" }, GetTargetTables().ToArray());
@@ -594,11 +594,11 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
                 SchemaReaderMapper.Add<SqliteConnection>(new SqliteSchemaReader(source), true);
 
                 // Act
-                var result = source.CopyTableSchemaTo("GrandChild", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Parents).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "GrandChild", StringComparison.OrdinalIgnoreCase));
+                var result = source.CopyTableSchemaTo("GrandChild", target, relationshipBehavior: RelatedTableBehavior.Parents).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "GrandChild", StringComparison.OrdinalIgnoreCase));
 
                 // Assert
                 Assert.AreEqual("GrandChild", result.Target.Table.Table.Name);
-                Assert.AreEqual(CopyTableSchemaOutcome.Created, result.Outcome);
+                Assert.AreEqual(TableOutcome.Created, result.Outcome);
                 AssertSame(new[] { "Parent", "Child", "GrandChild" }, GetTargetTables().ToArray());
             }
         }
@@ -613,7 +613,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
                 SchemaReaderMapper.Add<SqliteConnection>(new SqliteSchemaReader(source), true);
 
                 // Act
-                var result = (await source.CopyTableSchemaToAsync("Child", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.ParentsAndChildren)).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "Child", StringComparison.OrdinalIgnoreCase));
+                var result = (await source.CopyTableSchemaToAsync("Child", target, relationshipBehavior: RelatedTableBehavior.ParentsAndChildren)).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "Child", StringComparison.OrdinalIgnoreCase));
 
                 // Assert
                 Assert.AreEqual("Child", result.Target.Table.Table.Name);
@@ -631,7 +631,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
                 SchemaReaderMapper.Add<SqliteConnection>(new SqliteSchemaReader(source), true);
 
                 // Act
-                var result = source.CopyTableSchemaTo("[Odd.Name]", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Children).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "Odd.Name", StringComparison.OrdinalIgnoreCase));
+                var result = source.CopyTableSchemaTo("[Odd.Name]", target, relationshipBehavior: RelatedTableBehavior.Children).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "Odd.Name", StringComparison.OrdinalIgnoreCase));
 
                 // Assert
                 Assert.AreEqual("Odd.Name", result.Target.Table.Table.Name);
@@ -649,7 +649,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
                 SchemaReaderMapper.Add<SqliteConnection>(new SqliteSchemaReader(source), true);
 
                 // Act
-                var result = source.CopyTableSchemaTo("Parent", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.TableOnly).Items.Single();
+                var result = source.CopyTableSchemaTo("Parent", target, relationshipBehavior: RelatedTableBehavior.TableOnly).Items.Single();
 
                 // Assert
                 Assert.AreEqual("Parent", result.Target.Table.Table.Name);

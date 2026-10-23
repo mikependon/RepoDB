@@ -50,8 +50,8 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         {
             var relationships = ordered.Select(name => new RelationshipInfo { Schema = GetSchema(name) }).ToList();
             var reader = new Mock<ISchemaReader>();
-            reader.Setup(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), It.IsAny<CopyTableSchemaRelationshipBehavior>())).Returns(related);
-            reader.Setup(r => r.GetRelatedTablesAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<CopyTableSchemaRelationshipBehavior>(), It.IsAny<CancellationToken>())).ReturnsAsync(related);
+            reader.Setup(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), It.IsAny<RelatedTableBehavior>())).Returns(related);
+            reader.Setup(r => r.GetRelatedTablesAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<RelatedTableBehavior>(), It.IsAny<CancellationToken>())).ReturnsAsync(related);
             reader.Setup(r => r.GetDependencyOrder(It.IsAny<IEnumerable<string>>())).Returns(relationships);
             reader.Setup(r => r.GetDependencyOrderAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(relationships);
             reader.Setup(r => r.GetTableSchema(It.IsAny<string>())).Returns<string>(GetSchema);
@@ -84,7 +84,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Person" }, new CustomDbConnection());
 
             // Assert
-            reader.Verify(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), It.IsAny<CopyTableSchemaRelationshipBehavior>()), Times.Never);
+            reader.Verify(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), It.IsAny<RelatedTableBehavior>()), Times.Never);
             reader.Verify(r => r.GetDependencyOrder(It.Is<IEnumerable<string>>(n => n.SequenceEqual(new[] { "Person" }))), Times.Once);
         }
 
@@ -96,10 +96,10 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapComposer("CREATE TABLE Person;");
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person" }, new CustomDbConnection(), relationshipBehavior: CopyTableSchemaRelationshipBehavior.TableOnly);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person" }, new CustomDbConnection(), relationshipBehavior: RelatedTableBehavior.TableOnly);
 
             // Assert
-            reader.Verify(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), It.IsAny<CopyTableSchemaRelationshipBehavior>()), Times.Never);
+            reader.Verify(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), It.IsAny<RelatedTableBehavior>()), Times.Never);
         }
 
         #endregion
@@ -109,7 +109,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         [TestMethod]
         public void TestCopyTableSchemasToWithRelationshipBehaviorReadsTheRelatedTablesOfTheGivenTables()
         {
-            foreach (var behavior in new[] { CopyTableSchemaRelationshipBehavior.Parents, CopyTableSchemaRelationshipBehavior.Children, CopyTableSchemaRelationshipBehavior.ParentsAndChildren })
+            foreach (var behavior in new[] { RelatedTableBehavior.Parents, RelatedTableBehavior.Children, RelatedTableBehavior.ParentsAndChildren })
             {
                 // Setup
                 var reader = MapReader(new[] { "Person", "Country" }, "Country", "Person");
@@ -135,7 +135,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Person" },
                 destination,
-                relationshipBehavior: CopyTableSchemaRelationshipBehavior.Parents,
+                relationshipBehavior: RelatedTableBehavior.Parents,
                 createdCallback: r => results.Add(r.Target.Table.Table.Name));
 
             // Assert
@@ -152,10 +152,10 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = new CustomDbConnection();
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(Enumerable.Empty<string>(), destination, relationshipBehavior: CopyTableSchemaRelationshipBehavior.ParentsAndChildren);
+            new CustomDbConnection().CopyTableSchemaTo(Enumerable.Empty<string>(), destination, relationshipBehavior: RelatedTableBehavior.ParentsAndChildren);
 
             // Assert
-            reader.Verify(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), It.IsAny<CopyTableSchemaRelationshipBehavior>()), Times.Never);
+            reader.Verify(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), It.IsAny<RelatedTableBehavior>()), Times.Never);
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
         }
 
@@ -170,7 +170,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             new CustomDbConnection().CopyTableSchemaTo("Person", new CustomDbConnection());
 
             // Assert
-            reader.Verify(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), It.IsAny<CopyTableSchemaRelationshipBehavior>()), Times.Never);
+            reader.Verify(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), It.IsAny<RelatedTableBehavior>()), Times.Never);
         }
 
         #endregion
@@ -188,13 +188,13 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person" }, new CustomDbConnection());
 
             // Assert
-            reader.Verify(r => r.GetRelatedTablesAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<CopyTableSchemaRelationshipBehavior>(), It.IsAny<CancellationToken>()), Times.Never);
+            reader.Verify(r => r.GetRelatedTablesAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<RelatedTableBehavior>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [TestMethod]
         public async Task TestCopyTableSchemasToAsyncWithRelationshipBehaviorReadsTheRelatedTablesOfTheGivenTables()
         {
-            foreach (var behavior in new[] { CopyTableSchemaRelationshipBehavior.Parents, CopyTableSchemaRelationshipBehavior.Children, CopyTableSchemaRelationshipBehavior.ParentsAndChildren })
+            foreach (var behavior in new[] { RelatedTableBehavior.Parents, RelatedTableBehavior.Children, RelatedTableBehavior.ParentsAndChildren })
             {
                 // Setup
                 var reader = MapReader(new[] { "Person", "Country" }, "Country", "Person");
@@ -225,7 +225,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Act
             await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person" },
                 destination,
-                relationshipBehavior: CopyTableSchemaRelationshipBehavior.Parents,
+                relationshipBehavior: RelatedTableBehavior.Parents,
                 createdCallback: r => results.Add(r.Target.Table.Table.Name));
 
             // Assert
@@ -245,7 +245,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             await new CustomDbConnection().CopyTableSchemaToAsync("Person", new CustomDbConnection());
 
             // Assert
-            reader.Verify(r => r.GetRelatedTablesAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<CopyTableSchemaRelationshipBehavior>(), It.IsAny<CancellationToken>()), Times.Never);
+            reader.Verify(r => r.GetRelatedTablesAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<RelatedTableBehavior>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         #endregion
@@ -261,10 +261,10 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = new CustomDbConnection();
 
             // Act
-            var result = new CustomDbConnection().CopyTableSchemaTo("Country", destination, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Children);
+            var result = new CustomDbConnection().CopyTableSchemaTo("Country", destination, relationshipBehavior: RelatedTableBehavior.Children);
 
             // Assert
-            reader.Verify(r => r.GetRelatedTables(It.Is<IEnumerable<string>>(n => n.SequenceEqual(new[] { "Country" })), CopyTableSchemaRelationshipBehavior.Children), Times.Once);
+            reader.Verify(r => r.GetRelatedTables(It.Is<IEnumerable<string>>(n => n.SequenceEqual(new[] { "Country" })), RelatedTableBehavior.Children), Times.Once);
             CollectionAssert.AreEqual(new[] { "CREATE TABLE Country;", "CREATE TABLE Person;" }, destination.ExecutedCommands);
             Assert.AreEqual(2, result.Items.Count);
             Assert.AreEqual(1, result.Items.Count(i => i.Target.Table.Table.Name == "Country"));
@@ -278,7 +278,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapComposer("CREATE TABLE Person;", "CREATE TABLE Country;");
 
             // Act
-            var result = new CustomDbConnection().CopyTableSchemaTo("Person", new CustomDbConnection(), relationshipBehavior: CopyTableSchemaRelationshipBehavior.Parents);
+            var result = new CustomDbConnection().CopyTableSchemaTo("Person", new CustomDbConnection(), relationshipBehavior: RelatedTableBehavior.Parents);
 
             // Assert
             Assert.AreEqual(2, result.Items.Count);
@@ -293,7 +293,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapComposer("CREATE TABLE Person;");
 
             // Act
-            var result = new CustomDbConnection().CopyTableSchemaTo("Person", new CustomDbConnection(), relationshipBehavior: CopyTableSchemaRelationshipBehavior.ParentsAndChildren).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "Person", StringComparison.OrdinalIgnoreCase));
+            var result = new CustomDbConnection().CopyTableSchemaTo("Person", new CustomDbConnection(), relationshipBehavior: RelatedTableBehavior.ParentsAndChildren).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "Person", StringComparison.OrdinalIgnoreCase));
 
             // Assert
             Assert.AreEqual("Person", result.Target.Table.Table.Name);
@@ -309,10 +309,10 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = new CustomDbConnection();
 
             // Act
-            var result = new CustomDbConnection().CopyTableSchemaTo<RelationshipTestEntity>(destination, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Parents);
+            var result = new CustomDbConnection().CopyTableSchemaTo<RelationshipTestEntity>(destination, relationshipBehavior: RelatedTableBehavior.Parents);
 
             // Assert
-            reader.Verify(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), CopyTableSchemaRelationshipBehavior.Parents), Times.Once);
+            reader.Verify(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), RelatedTableBehavior.Parents), Times.Once);
             Assert.AreEqual(2, destination.ExecutedCommands.Count);
             Assert.AreEqual(2, result.Items.Count);
             Assert.AreEqual(1, result.Items.Count(i => i.Target.Table.Table.Name == nameof(RelationshipTestEntity)));
@@ -327,10 +327,10 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = new CustomDbConnection();
 
             // Act
-            var result = (await new CustomDbConnection().CopyTableSchemaToAsync("Country", destination, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Children));
+            var result = (await new CustomDbConnection().CopyTableSchemaToAsync("Country", destination, relationshipBehavior: RelatedTableBehavior.Children));
 
             // Assert
-            reader.Verify(r => r.GetRelatedTablesAsync(It.Is<IEnumerable<string>>(n => n.SequenceEqual(new[] { "Country" })), CopyTableSchemaRelationshipBehavior.Children, It.IsAny<CancellationToken>()), Times.Once);
+            reader.Verify(r => r.GetRelatedTablesAsync(It.Is<IEnumerable<string>>(n => n.SequenceEqual(new[] { "Country" })), RelatedTableBehavior.Children, It.IsAny<CancellationToken>()), Times.Once);
             CollectionAssert.AreEqual(new[] { "CREATE TABLE Country;", "CREATE TABLE Person;" }, destination.ExecutedCommands);
             Assert.AreEqual(2, result.Items.Count);
             Assert.AreEqual(1, result.Items.Count(i => i.Target.Table.Table.Name == "Country"));
@@ -344,7 +344,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapComposer("CREATE TABLE Person;");
 
             // Act
-            var result = (await new CustomDbConnection().CopyTableSchemaToAsync("Person", new CustomDbConnection(), relationshipBehavior: CopyTableSchemaRelationshipBehavior.ParentsAndChildren)).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "Person", StringComparison.OrdinalIgnoreCase));
+            var result = (await new CustomDbConnection().CopyTableSchemaToAsync("Person", new CustomDbConnection(), relationshipBehavior: RelatedTableBehavior.ParentsAndChildren)).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "Person", StringComparison.OrdinalIgnoreCase));
 
             // Assert
             Assert.AreEqual("Person", result.Target.Table.Table.Name);
@@ -360,10 +360,10 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = new CustomDbConnection();
 
             // Act
-            var result = (await new CustomDbConnection().CopyTableSchemaToAsync<RelationshipTestEntity>(destination, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Parents));
+            var result = (await new CustomDbConnection().CopyTableSchemaToAsync<RelationshipTestEntity>(destination, relationshipBehavior: RelatedTableBehavior.Parents));
 
             // Assert
-            reader.Verify(r => r.GetRelatedTablesAsync(It.IsAny<IEnumerable<string>>(), CopyTableSchemaRelationshipBehavior.Parents, It.IsAny<CancellationToken>()), Times.Once);
+            reader.Verify(r => r.GetRelatedTablesAsync(It.IsAny<IEnumerable<string>>(), RelatedTableBehavior.Parents, It.IsAny<CancellationToken>()), Times.Once);
             Assert.AreEqual(2, destination.ExecutedCommands.Count);
             Assert.AreEqual(2, result.Items.Count);
             Assert.AreEqual(1, result.Items.Count(i => i.Target.Table.Table.Name == nameof(RelationshipTestEntity)));
@@ -379,7 +379,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var reported = new List<(string Table, int Executed)>();
 
             // Act
-            var result = new CustomDbConnection().CopyTableSchemaTo("Country", destination, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Children, createdCallback: item => reported.Add((item.Target.Table.Table.Name, destination.ExecutedCommands.Count)));
+            var result = new CustomDbConnection().CopyTableSchemaTo("Country", destination, relationshipBehavior: RelatedTableBehavior.Children, createdCallback: item => reported.Add((item.Target.Table.Table.Name, destination.ExecutedCommands.Count)));
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Country", "Person" }, reported.Select(r => r.Table).ToArray());
@@ -398,7 +398,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var reported = new List<(string Table, int Executed)>();
 
             // Act
-            var result = await new CustomDbConnection().CopyTableSchemaToAsync("Country", destination, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Children, createdCallback: item => reported.Add((item.Target.Table.Table.Name, destination.ExecutedCommands.Count)));
+            var result = await new CustomDbConnection().CopyTableSchemaToAsync("Country", destination, relationshipBehavior: RelatedTableBehavior.Children, createdCallback: item => reported.Add((item.Target.Table.Table.Name, destination.ExecutedCommands.Count)));
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Country", "Person" }, reported.Select(r => r.Table).ToArray());
@@ -416,7 +416,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var created = new List<CopyTableSchemaResultItem>();
 
             // Act
-            var result = new CustomDbConnection().CopyTableSchemaTo("Country", new CustomDbConnection(), relationshipBehavior: CopyTableSchemaRelationshipBehavior.Children, createdCallback: created.Add);
+            var result = new CustomDbConnection().CopyTableSchemaTo("Country", new CustomDbConnection(), relationshipBehavior: RelatedTableBehavior.Children, createdCallback: created.Add);
 
             // Assert
             Assert.AreEqual(2, created.Count);

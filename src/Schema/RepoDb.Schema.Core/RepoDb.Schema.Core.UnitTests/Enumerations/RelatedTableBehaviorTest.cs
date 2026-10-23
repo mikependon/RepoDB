@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -13,27 +13,27 @@ using RepoDb.Schema.Enumerations;
 namespace RepoDb.Schema.Core.UnitTests.Enumerations
 {
     [TestClass]
-    public class CopyTableSchemaForeignKeyRuleTest
+    public class RelatedTableBehaviorTest
     {
         #region Methods
 
         [TestMethod]
-        public void TestForeignKeyRuleDefaultValue()
+        public void TestCopyTableSchemaRelationshipBehaviorDefaultValue()
         {
             // Act
-            var actual = default(CopyTableSchemaForeignKeyRule);
-            var expected = CopyTableSchemaForeignKeyRule.NoAction;
+            var actual = default(RelatedTableBehavior);
+            var expected = RelatedTableBehavior.TableOnly;
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void TestForeignKeyRuleValues()
+        public void TestCopyTableSchemaRelationshipBehaviorValues()
         {
             // Act
-            var actual = Enum.GetNames(typeof(CopyTableSchemaForeignKeyRule));
-            var expected = new[] { "NoAction", "Restrict", "Cascade", "SetNull", "SetDefault" };
+            var actual = Enum.GetNames(typeof(RelatedTableBehavior));
+            var expected = new[] { "TableOnly", "Parents", "Children", "ParentsAndChildren" };
 
             // Assert
             CollectionAssert.AreEqual(expected, actual);

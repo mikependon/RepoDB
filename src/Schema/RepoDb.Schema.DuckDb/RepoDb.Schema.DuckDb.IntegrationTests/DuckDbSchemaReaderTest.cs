@@ -656,8 +656,8 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 CollectionAssert.AreEqual(new[] { "CountryId" }, actual[0].Columns.ToArray());
                 Assert.AreEqual(new TableInfo("Country", null), actual[0].ReferencedTable);
                 CollectionAssert.AreEqual(new[] { "Id" }, actual[0].ReferencedColumns.ToArray());
-                Assert.AreEqual(CopyTableSchemaForeignKeyRule.NoAction, actual[0].UpdateRule);
-                Assert.AreEqual(CopyTableSchemaForeignKeyRule.NoAction, actual[0].DeleteRule);
+                Assert.AreEqual(ForeignKeyRule.NoAction, actual[0].UpdateRule);
+                Assert.AreEqual(ForeignKeyRule.NoAction, actual[0].DeleteRule);
             }
         }
 
@@ -674,8 +674,8 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual("Child_parentid_id_fkey", actual.Name, StringComparer.Ordinal);
-                Assert.AreEqual(CopyTableSchemaForeignKeyRule.NoAction, actual.UpdateRule);
-                Assert.AreEqual(CopyTableSchemaForeignKeyRule.NoAction, actual.DeleteRule);
+                Assert.AreEqual(ForeignKeyRule.NoAction, actual.UpdateRule);
+                Assert.AreEqual(ForeignKeyRule.NoAction, actual.DeleteRule);
             }
         }
 

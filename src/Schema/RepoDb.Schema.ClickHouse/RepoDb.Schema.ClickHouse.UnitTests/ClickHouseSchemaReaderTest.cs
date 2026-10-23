@@ -76,7 +76,7 @@ namespace RepoDb.Schema.ClickHouse.UnitTests
             var reader = new ClickHouseSchemaReader(new ClickHouseConnection());
 
             // Act/Assert
-            Assert.Throws<ArgumentNullException>(() => reader.GetRelatedTables(null, CopyTableSchemaRelationshipBehavior.ParentsAndChildren));
+            Assert.Throws<ArgumentNullException>(() => reader.GetRelatedTables(null, RelatedTableBehavior.ParentsAndChildren));
         }
 
         [TestMethod]
@@ -86,7 +86,7 @@ namespace RepoDb.Schema.ClickHouse.UnitTests
             var reader = new ClickHouseSchemaReader(new ClickHouseConnection());
 
             // Act/Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(() => reader.GetRelatedTablesAsync(null, CopyTableSchemaRelationshipBehavior.ParentsAndChildren));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => reader.GetRelatedTablesAsync(null, RelatedTableBehavior.ParentsAndChildren));
         }
 
         #endregion

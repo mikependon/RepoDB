@@ -173,7 +173,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Assert
             Assert.AreEqual(3, result.Items.Count);
-            Assert.IsTrue(result.Items.All(i => i.Outcome == CopyTableSchemaOutcome.Created));
+            Assert.IsTrue(result.Items.All(i => i.Outcome == TableOutcome.Created));
             Assert.IsTrue(result.Items.All(i => !string.IsNullOrEmpty(i.Script)));
         }
 
@@ -249,18 +249,18 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = new CustomDbConnection { ScalarResult = statement => statement == "TABLE_EXISTS Country" ? 1 : 0 };
 
             // Act
-            var result = new CustomDbConnection().CopyTableSchemaTo(new[] { "Country", "Person" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip);
+            var result = new CustomDbConnection().CopyTableSchemaTo(new[] { "Country", "Person" }, destination, tableExistenceBehavior: TableExistsBehavior.Skip);
 
             // Assert
             Assert.AreEqual(2, result.Items.Count);
             var country = result.Items.Single(i => i.Target.Table.Table.Name == "Country");
             var person = result.Items.Single(i => i.Target.Table.Table.Name == "Person");
-            Assert.AreEqual(CopyTableSchemaOutcome.Skipped, country.Outcome);
+            Assert.AreEqual(TableOutcome.Skipped, country.Outcome);
             Assert.AreEqual(true, country.TableExisted);
-            Assert.AreEqual(CopyTableSchemaOutcome.Created, person.Outcome);
+            Assert.AreEqual(TableOutcome.Created, person.Outcome);
             Assert.AreEqual(false, person.TableExisted);
-            Assert.AreEqual(CopyTableSchemaExistsBehavior.Skip, country.Action);
-            Assert.AreEqual(CopyTableSchemaExistsBehavior.Skip, person.Action);
+            Assert.AreEqual(TableExistsBehavior.Skip, country.Action);
+            Assert.AreEqual(TableExistsBehavior.Skip, person.Action);
         }
 
         [TestMethod]
@@ -446,9 +446,9 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             Assert.AreEqual(1, country.Errors.Count);
             Assert.AreEqual(1, person.Errors.Count);
             Assert.AreEqual(0, solo.Errors.Count);
-            Assert.AreEqual(CopyTableSchemaOutcome.Failed, country.Outcome);
-            Assert.AreEqual(CopyTableSchemaOutcome.Failed, person.Outcome);
-            Assert.AreEqual(CopyTableSchemaOutcome.Created, solo.Outcome);
+            Assert.AreEqual(TableOutcome.Failed, country.Outcome);
+            Assert.AreEqual(TableOutcome.Failed, person.Outcome);
+            Assert.AreEqual(TableOutcome.Created, solo.Outcome);
             Assert.AreSame(country.Errors[0], result.Errors.Single(e => e.TableName == "Country"));
             Assert.AreSame(person.Errors[0], result.Errors.Single(e => e.TableName == "Person"));
         }
@@ -716,7 +716,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             Assert.AreEqual(1, result.Errors.Count);
             Assert.AreEqual(1, result.Items.Single().Errors.Count);
             Assert.AreSame(result.Errors[0], result.Items.Single().Errors[0]);
-            Assert.AreEqual(CopyTableSchemaOutcome.Failed, result.Items.Single().Outcome);
+            Assert.AreEqual(TableOutcome.Failed, result.Items.Single().Outcome);
         }
 
         #endregion

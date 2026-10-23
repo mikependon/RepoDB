@@ -659,8 +659,8 @@ namespace RepoDb.Schema.MariaDbConnector.IntegrationTests
                 CollectionAssert.AreEqual(new[] { "CountryId" }, actual[0].Columns.ToArray());
                 Assert.AreEqual(new TableInfo("Country", null), actual[0].ReferencedTable);
                 CollectionAssert.AreEqual(new[] { "Id" }, actual[0].ReferencedColumns.ToArray());
-                Assert.AreEqual(CopyTableSchemaForeignKeyRule.Cascade, actual[0].UpdateRule);
-                Assert.AreEqual(CopyTableSchemaForeignKeyRule.SetNull, actual[0].DeleteRule);
+                Assert.AreEqual(ForeignKeyRule.Cascade, actual[0].UpdateRule);
+                Assert.AreEqual(ForeignKeyRule.SetNull, actual[0].DeleteRule);
             }
         }
 
@@ -677,8 +677,8 @@ namespace RepoDb.Schema.MariaDbConnector.IntegrationTests
 
                 // Assert
                 Assert.AreEqual("FK_Child_Parent", actual.Name, StringComparer.Ordinal);
-                Assert.AreEqual(CopyTableSchemaForeignKeyRule.Restrict, actual.UpdateRule);
-                Assert.AreEqual(CopyTableSchemaForeignKeyRule.Restrict, actual.DeleteRule);
+                Assert.AreEqual(ForeignKeyRule.Restrict, actual.UpdateRule);
+                Assert.AreEqual(ForeignKeyRule.Restrict, actual.DeleteRule);
             }
         }
 

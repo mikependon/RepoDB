@@ -56,7 +56,7 @@ namespace RepoDb.Schema
         /// <param name="transaction"></param>
         [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         internal static void ProbeTables(IEnumerable<PlanTable> tables,
-            CopyTableSchemaExistsBehavior behavior,
+            TableExistsBehavior behavior,
             ISchemaComposer composer,
             IDbConnection destinationConnection,
             int? commandTimeout,
@@ -82,7 +82,7 @@ namespace RepoDb.Schema
             foreach (var table in tables)
             {
                 table.Exists = Probe(composer.ComposeTableExists(table.Name));
-                if (table.Exists == true && behavior == CopyTableSchemaExistsBehavior.Align)
+                if (table.Exists == true && behavior == TableExistsBehavior.Align)
                 {
                     table.MissingColumns = table.Schema.Columns.Where(column => Probe(composer.ComposeColumnExists(table.Name, column.Field.Name)) == false).ToList();
                     table.MissingIndexes = table.Schema.Indexes.Where(index => index.Name != null && Probe(composer.ComposeIndexExists(table.Name, index.Name)) == false).ToList();
@@ -92,7 +92,7 @@ namespace RepoDb.Schema
 
             // The tables that are created are created without what the destination refuses: the foreign keys that reference a table that is not copied and does not exist,
             // and the check constraints that the composer does not accept
-            foreach (var table in tables.Where(table => table.Exists != true || behavior == CopyTableSchemaExistsBehavior.Drop).ToList())
+            foreach (var table in tables.Where(table => table.Exists != true || behavior == TableExistsBehavior.Drop).ToList())
             {
                 SkipUnsupported(table, table.Schema.ForeignKeys.Where(foreignKey => !CanBeReferenced(foreignKey)).ToList(), composer);
             }
@@ -112,7 +112,7 @@ namespace RepoDb.Schema
         /// <param name="cancellationToken"></param>
         [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         internal static async Task ProbeTablesAsync(IEnumerable<PlanTable> tables,
-            CopyTableSchemaExistsBehavior behavior,
+            TableExistsBehavior behavior,
             ISchemaComposer composer,
             IDbConnection destinationConnection,
             int? commandTimeout,
@@ -139,7 +139,7 @@ namespace RepoDb.Schema
             foreach (var table in tables)
             {
                 table.Exists = await Probe(composer.ComposeTableExists(table.Name)).ConfigureAwait(false);
-                if (table.Exists == true && behavior == CopyTableSchemaExistsBehavior.Align)
+                if (table.Exists == true && behavior == TableExistsBehavior.Align)
                 {
                     table.MissingColumns = new List<ColumnInfo>();
                     foreach (var column in table.Schema.Columns)
@@ -168,7 +168,7 @@ namespace RepoDb.Schema
                 }
             }
 
-            foreach (var table in tables.Where(table => table.Exists != true || behavior == CopyTableSchemaExistsBehavior.Drop).ToList())
+            foreach (var table in tables.Where(table => table.Exists != true || behavior == TableExistsBehavior.Drop).ToList())
             {
                 var unreferenced = new List<ForeignKeyInfo>();
                 foreach (var foreignKey in table.Schema.ForeignKeys)
@@ -278,9 +278,9 @@ namespace RepoDb.Schema
         {
             switch (table.Outcome)
             {
-                case CopyTableSchemaOutcome.Skipped:
+                case TableOutcome.Skipped:
                     return Enumerable.Empty<string>();
-                case CopyTableSchemaOutcome.Aligned:
+                case TableOutcome.Aligned:
                     return table.AlignStatements;
                 default:
                     var create = schemaComposer.ComposeSchema(table.Schema) ?? Enumerable.Empty<string>();
@@ -305,13 +305,13 @@ namespace RepoDb.Schema
             IList<ExecutionError> errors,
             IDbConnection connection,
             IDbConnection destinationConnection,
-            CopyTableSchemaExistsBehavior tableExistenceBehavior,
+            TableExistsBehavior tableExistenceBehavior,
             ISchemaComposer schemaComposer)
         {
             foreach (var table in tables)
             {
                 var schema = table.Schema;
-                var aligned = table.Outcome == CopyTableSchemaOutcome.Aligned;
+                var aligned = table.Outcome == TableOutcome.Aligned;
                 var schemaErrors = errors
                     .Where(error => error.TableName == null ||
                         (string.Equals(error.TableName, schema.Table.Name, StringComparison.Ordinal) &&
@@ -321,7 +321,7 @@ namespace RepoDb.Schema
                 var item = new CopyTableSchemaResultItem
                 {
                     Action = tableExistenceBehavior,
-                    Outcome = schemaErrors.Count > 0 ? CopyTableSchemaOutcome.Failed : table.Outcome,
+                    Outcome = schemaErrors.Count > 0 ? TableOutcome.Failed : table.Outcome,
                     TableExisted = table.Exists,
                     AddedColumns = aligned ? table.MissingColumns.Select(column => column.Field.Name).ToList() : new List<string>(),
                     AddedIndexes = aligned ? table.MissingIndexes.Select(index => index.Name).ToList() : new List<string>(),

@@ -174,7 +174,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                Assert.Throws<PostgresException>(() => source.CopyDataTo("Currency", "Sales.Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop));
+                Assert.Throws<PostgresException>(() => source.CopyDataTo("Currency", "Sales.Currency", target, tableExistenceBehavior: TableExistsBehavior.Drop));
             }
         }
 

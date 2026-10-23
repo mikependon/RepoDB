@@ -261,7 +261,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var results = new List<CopyTableSchemaResultItem>();
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Employees" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Employees" }, destination, tableExistenceBehavior: TableExistsBehavior.Align, createdCallback: results.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "CREATE INDEX Employees_PostalCode ON Employees;" }, destination.ExecutedCommands);
@@ -277,7 +277,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Employees", "INDEX_EXISTS Employees.Employees_PostalCode", "INDEX_NAME_EXISTS Employees_PostalCode");
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Employees" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Employees" }, destination, tableExistenceBehavior: TableExistsBehavior.Align);
 
             // Assert
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
@@ -293,7 +293,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var results = new List<CopyTableSchemaResultItem>();
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Employees" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Employees" }, destination, tableExistenceBehavior: TableExistsBehavior.Align, createdCallback: results.Add);
 
             // Assert
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
@@ -309,7 +309,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Employees", "INDEX_NAME_EXISTS PostalCode", "INDEX_NAME_EXISTS Employees_PostalCode", "INDEX_NAME_EXISTS Employees_PostalCode_2", "INDEX_EXISTS Employees.Employees_PostalCode_2");
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Employees" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Employees" }, destination, tableExistenceBehavior: TableExistsBehavior.Align);
 
             // Assert
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
@@ -324,7 +324,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Employees", "INDEX_NAME_EXISTS PostalCode", "INDEX_NAME_EXISTS Employees_PostalCode", "INDEX_EXISTS Employees.Employees_PostalCode");
 
             // Act
-            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Employees" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Employees" }, destination, tableExistenceBehavior: TableExistsBehavior.Align);
 
             // Assert
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
@@ -355,7 +355,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Employees", "INDEX_EXISTS Employees.PostalCode", "INDEX_NAME_EXISTS PostalCode");
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Employees" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Employees" }, destination, tableExistenceBehavior: TableExistsBehavior.Drop);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "DROP TABLE Employees;", "CREATE TABLE Employees;", "CREATE INDEX PostalCode ON Employees;" }, destination.ExecutedCommands);
@@ -370,7 +370,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Employees", "INDEX_NAME_EXISTS PostalCode");
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Employees" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Employees" }, destination, tableExistenceBehavior: TableExistsBehavior.Drop);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "DROP TABLE Employees;", "CREATE TABLE Employees;", "CREATE INDEX Employees_PostalCode ON Employees;" }, destination.ExecutedCommands);

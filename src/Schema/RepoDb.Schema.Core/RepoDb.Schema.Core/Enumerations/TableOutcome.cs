@@ -13,7 +13,7 @@ namespace RepoDb.Schema.Enumerations
     /// <summary>
     /// An enumeration that is used to define what a schema copy has actually done to the table in the destination database.
     /// </summary>
-    public enum CopyTableSchemaOutcome
+    public enum TableOutcome
     {
         /// <summary>
         /// The table was created.

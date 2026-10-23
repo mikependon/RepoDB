@@ -20,7 +20,7 @@ using RepoDb.Schema.Enumerations;
 namespace RepoDb.Data.SqlServer.IntegrationTests
 {
     /// <summary>
-    /// Copies the rows of a table with the different <see cref="CopyTableSchemaExistsBehavior"/>: what happens to the tables of the destination
+    /// Copies the rows of a table with the different <see cref="TableExistsBehavior"/>: what happens to the tables of the destination
     /// database (that may or may not exist) before the rows are copied.
     /// </summary>
     [TestClass]
@@ -67,7 +67,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Skip);
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -86,7 +86,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE [dbo].[Currency] ([Code] CHAR(3) NOT NULL, [Name] NVARCHAR(50) NOT NULL, [Extra] INT NULL, CONSTRAINT [PK_Currency] PRIMARY KEY ([Code]));");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip);
+                var actual = source.CopyDataTo("Currency", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Skip);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -106,7 +106,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE [dbo].[Currency] ([Code] CHAR(3) NOT NULL, CONSTRAINT [PK_Currency] PRIMARY KEY ([Code]));");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip);
+                var actual = source.CopyDataTo("Currency", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Skip);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -121,7 +121,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
             {
                 // Act/Assert
-                Assert.Throws<MissingFieldsException>(() => source.CopyDataTo("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip));
+                Assert.Throws<MissingFieldsException>(() => source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Skip));
                 Assert.AreEqual(0, Helper.TargetTables().Count);
             }
         }
@@ -140,7 +140,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip);
+                var actual = await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Skip);
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -155,7 +155,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
             using (var target = new SqlConnection(Database.ConnectionStringForTarget))
             {
                 // Act/Assert
-                await Assert.ThrowsAsync<MissingFieldsException>(() => source.CopyDataToAsync("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip));
+                await Assert.ThrowsAsync<MissingFieldsException>(() => source.CopyDataToAsync("Currency", target, tableExistenceBehavior: TableExistsBehavior.Skip));
             }
         }
 
@@ -177,7 +177,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw);
+                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Throw);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -196,7 +196,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.CreateTargetTables("Currency");
 
                 // Act
-                var exception = Assert.Throws<InvalidOperationException>(() => source.CopyDataTo("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
+                var exception = Assert.Throws<InvalidOperationException>(() => source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Throw));
 
                 // Assert
                 StringAssert.Contains(exception.Message, "Currency");
@@ -216,7 +216,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.CreateTargetTables("Country");
 
                 // Act/Assert
-                Assert.Throws<InvalidOperationException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
+                Assert.Throws<InvalidOperationException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Throw));
                 Assert.IsFalse(Helper.TargetTableExists("Person"));
                 Assert.AreEqual(0, Helper.TargetCount("[dbo].[Country]"));
             }
@@ -230,10 +230,10 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
             {
                 // Setup
                 Helper.MapSchemaReader(source);
-                source.CopyDataTo("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw);
+                source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Throw);
 
                 // Act/Assert
-                Assert.Throws<InvalidOperationException>(() => source.CopyDataTo("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
+                Assert.Throws<InvalidOperationException>(() => source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Throw));
                 Assert.AreEqual(3, Helper.TargetCount("[dbo].[Currency]"));
             }
         }
@@ -248,7 +248,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Pet", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw);
+                var actual = source.CopyDataTo("Pet", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren, tableExistenceBehavior: TableExistsBehavior.Throw);
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -270,7 +270,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw);
+                var actual = await source.CopyDataToAsync("Currency", target, tableExistenceBehavior: TableExistsBehavior.Throw);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -289,7 +289,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.CreateTargetTables("Currency");
 
                 // Act/Assert
-                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopyDataToAsync("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
+                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopyDataToAsync("Currency", target, tableExistenceBehavior: TableExistsBehavior.Throw));
                 Assert.AreEqual(0, Helper.TargetCount("[dbo].[Currency]"));
             }
         }
@@ -312,7 +312,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
+                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Drop);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -332,7 +332,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.ExecuteOnTarget("INSERT INTO [dbo].[Currency] ([Code], [Name]) VALUES ('USD', N'US Dollar');");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
+                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Drop);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -352,7 +352,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE [dbo].[Currency] ([Code] INT NOT NULL, [Foo] NVARCHAR(10) NULL);");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
+                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Drop);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -373,7 +373,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.ExecuteOnTarget("SET IDENTITY_INSERT [dbo].[Country] ON; INSERT INTO [dbo].[Country] ([Id], [Name]) VALUES (100, N'Atlantis'); SET IDENTITY_INSERT [dbo].[Country] OFF;");
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Drop);
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -392,10 +392,10 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
             {
                 // Setup
                 Helper.MapSchemaReader(source);
-                source.CopyDataTo("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
+                source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Drop);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
+                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Drop);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -419,7 +419,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.ExecuteOnTarget("INSERT INTO [dbo].[Currency] ([Code], [Name]) VALUES ('USD', N'US Dollar');");
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
+                var actual = await source.CopyDataToAsync("Currency", target, tableExistenceBehavior: TableExistsBehavior.Drop);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -438,7 +438,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
+                var actual = await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Drop);
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -464,7 +464,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
+                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Align);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -483,7 +483,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE [dbo].[Currency] ([Code] CHAR(3) NOT NULL, CONSTRAINT [PK_Currency] PRIMARY KEY ([Code]));");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
+                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Align);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -505,7 +505,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Assert.IsFalse(TargetIndexExists("[dbo].[Person]", "IX_Person_Name"));
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Align);
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -524,7 +524,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE [dbo].[Currency] ([Code] CHAR(3) NOT NULL, [Name] NVARCHAR(50) NOT NULL, [Extra] INT NULL, CONSTRAINT [PK_Currency] PRIMARY KEY ([Code]));");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
+                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Align);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -543,7 +543,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.CreateTargetTables("Currency");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
+                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Align);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -562,7 +562,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.CreateTargetTables("Country", "Person");
 
                 // Act
-                var actual = source.CopyDataTo("Pet", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
+                var actual = source.CopyDataTo("Pet", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren, tableExistenceBehavior: TableExistsBehavior.Align);
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -586,7 +586,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE [dbo].[Currency] ([Code] CHAR(3) NOT NULL, CONSTRAINT [PK_Currency] PRIMARY KEY ([Code]));");
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
+                var actual = await source.CopyDataToAsync("Currency", target, tableExistenceBehavior: TableExistsBehavior.Align);
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -604,7 +604,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
+                var actual = await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Align);
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);

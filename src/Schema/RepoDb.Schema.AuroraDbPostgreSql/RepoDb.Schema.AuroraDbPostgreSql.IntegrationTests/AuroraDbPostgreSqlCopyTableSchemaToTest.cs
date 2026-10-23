@@ -62,7 +62,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 Helper.AssertTargetMatchesSource("country");
                 Helper.AssertTargetMatchesSource("Person");
                 Assert.AreEqual("Person", result.Target.Table.Table.Name);
-                Assert.AreEqual(CopyTableSchemaOutcome.Created, result.Outcome);
+                Assert.AreEqual(TableOutcome.Created, result.Outcome);
                 Assert.AreEqual(10, result.ColumnCount);
                 Assert.AreEqual(2, result.IndexCount);
                 Assert.AreEqual(1, result.ForeignKeyCount);
@@ -120,7 +120,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 source.CopyTableSchemaTo("country", target);
 
                 // Act/Assert
-                Assert.Throws<InvalidOperationException>(() => source.CopyTableSchemaTo("country", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
+                Assert.Throws<InvalidOperationException>(() => source.CopyTableSchemaTo("country", target, tableExistenceBehavior: TableExistsBehavior.Throw));
             }
         }
 
@@ -175,7 +175,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 Assert.IsInstanceOfType<AuroraDbException>(errors[0].Exception);
                 Assert.AreEqual(3, created.Count);
                 Assert.AreSame(errors[0], created.Single(r => r.Target.Table.Table.Name == "no_key").Errors.Single());
-                Assert.AreEqual(CopyTableSchemaOutcome.Failed, created.Single(r => r.Target.Table.Table.Name == "no_key").Outcome);
+                Assert.AreEqual(TableOutcome.Failed, created.Single(r => r.Target.Table.Table.Name == "no_key").Outcome);
                 Helper.AssertTargetMatchesSource("country");
                 Helper.AssertTargetMatchesSource("Person");
             }

@@ -11,7 +11,7 @@ namespace RepoDb.Schema.Enumerations
     /// <summary>
     /// An enumeration that is used to define how the copy of a schema behaves when the table already exists in the destination database.
     /// </summary>
-    public enum CopyTableSchemaExistsBehavior
+    public enum TableExistsBehavior
     {
         /// <summary>
         /// Skips the copy if the table is already existing.

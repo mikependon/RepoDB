@@ -504,8 +504,8 @@ namespace RepoDb.Schema.SapHana.UnitTests
                 Columns = { "CountryId" },
                 ReferencedTable = new TableInfo("Country", "dbo"),
                 ReferencedColumns = { "Id" },
-                DeleteRule = CopyTableSchemaForeignKeyRule.SetNull,
-                UpdateRule = CopyTableSchemaForeignKeyRule.Cascade
+                DeleteRule = ForeignKeyRule.SetNull,
+                UpdateRule = ForeignKeyRule.Cascade
             };
 
             // Act
@@ -525,7 +525,7 @@ namespace RepoDb.Schema.SapHana.UnitTests
                 Columns = { "CountryId" },
                 ReferencedTable = new TableInfo("Country", null),
                 ReferencedColumns = { "Id" },
-                DeleteRule = CopyTableSchemaForeignKeyRule.SetDefault
+                DeleteRule = ForeignKeyRule.SetDefault
             };
 
             // Act
@@ -545,8 +545,8 @@ namespace RepoDb.Schema.SapHana.UnitTests
                 Columns = { "CountryId" },
                 ReferencedTable = new TableInfo("Country", null),
                 ReferencedColumns = { "Id" },
-                DeleteRule = CopyTableSchemaForeignKeyRule.Restrict,
-                UpdateRule = CopyTableSchemaForeignKeyRule.Restrict
+                DeleteRule = ForeignKeyRule.Restrict,
+                UpdateRule = ForeignKeyRule.Restrict
             };
 
             // Act

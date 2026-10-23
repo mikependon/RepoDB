@@ -36,7 +36,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
 
         #region Helpers
 
-        private static string[] GetRelatedTables(CopyTableSchemaRelationshipBehavior behavior, params string[] tableNames)
+        private static string[] GetRelatedTables(RelatedTableBehavior behavior, params string[] tableNames)
         {
             using (var connection = new DuckDBConnection(Database.ConnectionStringForSource))
             {
@@ -44,7 +44,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
             }
         }
 
-        private static async Task<string[]> GetRelatedTablesAsync(CopyTableSchemaRelationshipBehavior behavior, params string[] tableNames)
+        private static async Task<string[]> GetRelatedTablesAsync(RelatedTableBehavior behavior, params string[] tableNames)
         {
             using (var connection = new DuckDBConnection(Database.ConnectionStringForSource))
             {
@@ -71,7 +71,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         public void TestDuckDbSchemaRelatedTablesWithTableOnly()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.TableOnly, "Child");
+            var actual = GetRelatedTables(RelatedTableBehavior.TableOnly, "Child");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Child" }, actual);
@@ -81,7 +81,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         public void TestDuckDbSchemaRelatedTablesWithTableOnlyKeepsTheGivenTablesInOrder()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.TableOnly, "GrandChild", "Parent", "GrandChild");
+            var actual = GetRelatedTables(RelatedTableBehavior.TableOnly, "GrandChild", "Parent", "GrandChild");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "GrandChild", "Parent" }, actual);
@@ -95,7 +95,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         public void TestDuckDbSchemaRelatedTablesWithParents()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "GrandChild");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "GrandChild");
 
             // Assert
             AssertSame(new[] { "GrandChild", "Child", "Parent" }, actual);
@@ -106,7 +106,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         public void TestDuckDbSchemaRelatedTablesWithParentsDoesNotIncludeTheChildren()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "Child");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "Child");
 
             // Assert
             AssertSame(new[] { "Child", "Parent" }, actual);
@@ -116,7 +116,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         public void TestDuckDbSchemaRelatedTablesWithParentsOfATableWithoutParents()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "Parent");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "Parent");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Parent" }, actual);
@@ -126,7 +126,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         public void TestDuckDbSchemaRelatedTablesWithParentsOfADiamond()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "DiamondD");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "DiamondD");
 
             // Assert
             AssertSame(new[] { "DiamondD", "DiamondB", "DiamondC", "DiamondA" }, actual);
@@ -136,7 +136,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         public void TestDuckDbSchemaRelatedTablesWithParentsInAnotherSchema()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, $"{Database.SourceSalesName}.InvoiceLine");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, $"{Database.SourceSalesName}.InvoiceLine");
 
             // Assert
             AssertSame(new[] { $"{Database.SourceSalesName}.InvoiceLine", $"{Database.SourceSalesName}.Invoice" }, actual);
@@ -146,7 +146,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         public void TestDuckDbSchemaRelatedTablesWithParentsOfTablesWithTheSameNameInDifferentSchemas()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, $"{Database.SourceSalesName}.ItemRef", "Item");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, $"{Database.SourceSalesName}.ItemRef", "Item");
 
             // Assert
             AssertSame(new[] { $"{Database.SourceSalesName}.ItemRef", "Item", $"{Database.SourceSalesName}.Item" }, actual);
@@ -156,7 +156,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         public void TestDuckDbSchemaRelatedTablesWithParentsOfMultipleForeignKeys()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "Shipment");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "Shipment");
 
             // Assert
             AssertSame(new[] { "Shipment", "OrderLine", "Country" }, actual);
@@ -166,7 +166,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         public void TestDuckDbSchemaRelatedTablesWithParentsOfTablesWithSpecialNames()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "\"Odd.Child\"");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "\"Odd.Child\"");
 
             // Assert
             AssertSame(new[] { "\"Odd.Child\"", "\"Odd.Name\"" }, actual);
@@ -180,7 +180,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         public void TestDuckDbSchemaRelatedTablesWithChildren()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "Parent");
+            var actual = GetRelatedTables(RelatedTableBehavior.Children, "Parent");
 
             // Assert
             AssertSame(new[] { "Parent", "Child", "GrandChild" }, actual);
@@ -191,7 +191,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         public void TestDuckDbSchemaRelatedTablesWithChildrenDoesNotIncludeTheParents()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "Child");
+            var actual = GetRelatedTables(RelatedTableBehavior.Children, "Child");
 
             // Assert
             AssertSame(new[] { "Child", "GrandChild" }, actual);
@@ -201,7 +201,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         public void TestDuckDbSchemaRelatedTablesWithChildrenOfATableWithoutChildren()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "GrandChild");
+            var actual = GetRelatedTables(RelatedTableBehavior.Children, "GrandChild");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "GrandChild" }, actual);
@@ -211,7 +211,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         public void TestDuckDbSchemaRelatedTablesWithChildrenOfADiamond()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "DiamondA");
+            var actual = GetRelatedTables(RelatedTableBehavior.Children, "DiamondA");
 
             // Assert
             AssertSame(new[] { "DiamondA", "DiamondB", "DiamondC", "DiamondD" }, actual);
@@ -221,7 +221,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         public void TestDuckDbSchemaRelatedTablesWithChildrenInAnotherSchema()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, $"{Database.SourceSalesName}.Invoice");
+            var actual = GetRelatedTables(RelatedTableBehavior.Children, $"{Database.SourceSalesName}.Invoice");
 
             // Assert
             AssertSame(new[] { $"{Database.SourceSalesName}.Invoice", $"{Database.SourceSalesName}.InvoiceLine" }, actual);
@@ -231,7 +231,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         public void TestDuckDbSchemaRelatedTablesWithChildrenOfATableWithManyChildren()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "Country");
+            var actual = GetRelatedTables(RelatedTableBehavior.Children, "Country");
 
             // Assert
             AssertSame(new[] { "Country", "Person", "Shipment", "Preference" }, actual);
@@ -245,7 +245,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         public void TestDuckDbSchemaRelatedTablesWithParentsAndChildren()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "Child");
+            var actual = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "Child");
 
             // Assert
             AssertSame(new[] { "Child", "Parent", "GrandChild" }, actual);
@@ -256,8 +256,8 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         public void TestDuckDbSchemaRelatedTablesWithParentsAndChildrenGivesTheSameTablesFromAnyTableOfTheTree()
         {
             // Act
-            var fromTheRoot = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "Parent");
-            var fromTheLeaf = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "GrandChild");
+            var fromTheRoot = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "Parent");
+            var fromTheLeaf = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "GrandChild");
 
             // Assert
             AssertSame(fromTheRoot, fromTheLeaf);
@@ -267,7 +267,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         public void TestDuckDbSchemaRelatedTablesWithParentsAndChildrenOfADiamond()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "DiamondB");
+            var actual = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "DiamondB");
 
             // Assert
             AssertSame(new[] { "DiamondB", "DiamondA", "DiamondC", "DiamondD" }, actual);
@@ -277,7 +277,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         public void TestDuckDbSchemaRelatedTablesWithParentsAndChildrenReachesTheOtherBranches()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "Country");
+            var actual = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "Country");
 
             // Assert
             AssertSame(new[] { "Country", "Person", "Shipment", "Preference", "OrderLine" }, actual);
@@ -287,7 +287,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         public void TestDuckDbSchemaRelatedTablesWithParentsAndChildrenDoesNotIncludeTheUnrelatedTables()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "Parent");
+            var actual = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "Parent");
 
             // Assert
             Assert.IsFalse(actual.Contains("Person"));
@@ -299,7 +299,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         public void TestDuckDbSchemaRelatedTablesWithParentsAndChildrenOfATableWithoutRelationships()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "NoKey");
+            var actual = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "NoKey");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "NoKey" }, actual);
@@ -312,7 +312,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         [TestMethod]
         public void TestDuckDbSchemaRelatedTablesOfASelfReference()
         {
-            foreach (var behavior in new[] { CopyTableSchemaRelationshipBehavior.Parents, CopyTableSchemaRelationshipBehavior.Children, CopyTableSchemaRelationshipBehavior.ParentsAndChildren })
+            foreach (var behavior in new[] { RelatedTableBehavior.Parents, RelatedTableBehavior.Children, RelatedTableBehavior.ParentsAndChildren })
             {
                 // Act
                 var actual = GetRelatedTables(behavior, "Employee");
@@ -330,7 +330,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         public void TestDuckDbSchemaRelatedTablesOfMultipleTables()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "GrandChild", "DiamondB");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "GrandChild", "DiamondB");
 
             // Assert
             AssertSame(new[] { "GrandChild", "DiamondB", "Child", "Parent", "DiamondA" }, actual);
@@ -341,7 +341,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         public void TestDuckDbSchemaRelatedTablesDoesNotRepeatATable()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "Parent", "Child", "GrandChild");
+            var actual = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "Parent", "Child", "GrandChild");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Parent", "Child", "GrandChild" }, actual);
@@ -351,7 +351,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         public void TestDuckDbSchemaRelatedTablesWithoutTables()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren);
+            var actual = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren);
 
             // Assert
             Assert.AreEqual(0, actual.Length);
@@ -361,7 +361,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         public void TestDuckDbSchemaRelatedTablesAreComparedWithTheCase()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "Parent", "\"Parent\"");
+            var actual = GetRelatedTables(RelatedTableBehavior.Children, "Parent", "\"Parent\"");
 
             // Assert
             Assert.AreEqual(3, actual.Length);
@@ -375,7 +375,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
             using (var connection = new DuckDBConnection(Database.ConnectionStringForSource))
             {
                 var reader = new DuckDbSchemaReader(connection);
-                var related = reader.GetRelatedTables(new[] { "GrandChild" }, CopyTableSchemaRelationshipBehavior.Parents);
+                var related = reader.GetRelatedTables(new[] { "GrandChild" }, RelatedTableBehavior.Parents);
                 var actual = reader.GetDependencyOrder(related).Select(r => r.Schema.Table.Name).ToArray();
 
                 // Assert
@@ -391,10 +391,10 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         public async Task TestDuckDbSchemaRelatedTablesAsyncWithEachBehavior()
         {
             // Act/Assert
-            CollectionAssert.AreEqual(new[] { "Child" }, await GetRelatedTablesAsync(CopyTableSchemaRelationshipBehavior.TableOnly, "Child"));
-            AssertSame(new[] { "Child", "Parent" }, await GetRelatedTablesAsync(CopyTableSchemaRelationshipBehavior.Parents, "Child"));
-            AssertSame(new[] { "Child", "GrandChild" }, await GetRelatedTablesAsync(CopyTableSchemaRelationshipBehavior.Children, "Child"));
-            AssertSame(new[] { "Child", "Parent", "GrandChild" }, await GetRelatedTablesAsync(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "Child"));
+            CollectionAssert.AreEqual(new[] { "Child" }, await GetRelatedTablesAsync(RelatedTableBehavior.TableOnly, "Child"));
+            AssertSame(new[] { "Child", "Parent" }, await GetRelatedTablesAsync(RelatedTableBehavior.Parents, "Child"));
+            AssertSame(new[] { "Child", "GrandChild" }, await GetRelatedTablesAsync(RelatedTableBehavior.Children, "Child"));
+            AssertSame(new[] { "Child", "Parent", "GrandChild" }, await GetRelatedTablesAsync(RelatedTableBehavior.ParentsAndChildren, "Child"));
         }
 
         #endregion
@@ -408,7 +408,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
             {
                 // Act/Assert
                 Assert.Throws<ArgumentNullException>(() =>
-                    new DuckDbSchemaReader(connection).GetRelatedTables(null, CopyTableSchemaRelationshipBehavior.ParentsAndChildren));
+                    new DuckDbSchemaReader(connection).GetRelatedTables(null, RelatedTableBehavior.ParentsAndChildren));
             }
         }
 
@@ -417,7 +417,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
         {
             // Act/Assert
             Assert.Throws<ArgumentOutOfRangeException>(() =>
-                GetRelatedTables((CopyTableSchemaRelationshipBehavior)99, "Child"));
+                GetRelatedTables((RelatedTableBehavior)99, "Child"));
         }
 
         #endregion
@@ -434,7 +434,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 SchemaReaderMapper.Add<DuckDBConnection>(new DuckDbSchemaReader(source), true);
 
                 // Act
-                source.CopyTableSchemaTo(new[] { "GrandChild" }, target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Parents);
+                source.CopyTableSchemaTo(new[] { "GrandChild" }, target, relationshipBehavior: RelatedTableBehavior.Parents);
 
                 // Assert
                 AssertSame(new[] { "Parent", "Child", "GrandChild" }, GetTargetTables().ToArray());
@@ -454,7 +454,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 SchemaReaderMapper.Add<DuckDBConnection>(new DuckDbSchemaReader(source), true);
 
                 // Act
-                source.CopyTableSchemaTo(new[] { "Parent" }, target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Children);
+                source.CopyTableSchemaTo(new[] { "Parent" }, target, relationshipBehavior: RelatedTableBehavior.Children);
 
                 // Assert
                 AssertSame(new[] { "Parent", "Child", "GrandChild" }, GetTargetTables().ToArray());
@@ -473,7 +473,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "Child" }, target,
-                    relationshipBehavior: CopyTableSchemaRelationshipBehavior.ParentsAndChildren,
+                    relationshipBehavior: RelatedTableBehavior.ParentsAndChildren,
                     createdCallback: r => created.Add(r.Target.Table.Table.Name));
 
                 // Assert
@@ -493,7 +493,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
 
                 // Act
                 Assert.ThrowsExactly<DuckDBException>(() =>
-                    source.CopyTableSchemaTo(new[] { "Child" }, target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.TableOnly));
+                    source.CopyTableSchemaTo(new[] { "Child" }, target, relationshipBehavior: RelatedTableBehavior.TableOnly));
             }
         }
 
@@ -507,7 +507,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 SchemaReaderMapper.Add<DuckDBConnection>(new DuckDbSchemaReader(source), true);
 
                 // Act
-                await source.CopyTableSchemaToAsync(new[] { "Child" }, target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.ParentsAndChildren);
+                await source.CopyTableSchemaToAsync(new[] { "Child" }, target, relationshipBehavior: RelatedTableBehavior.ParentsAndChildren);
 
                 // Assert
                 AssertSame(new[] { "Parent", "Child", "GrandChild" }, GetTargetTables().ToArray());
@@ -524,11 +524,11 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 SchemaReaderMapper.Add<DuckDBConnection>(new DuckDbSchemaReader(source), true);
 
                 // Act
-                var result = source.CopyTableSchemaTo("GrandChild", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Parents).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "GrandChild", StringComparison.OrdinalIgnoreCase));
+                var result = source.CopyTableSchemaTo("GrandChild", target, relationshipBehavior: RelatedTableBehavior.Parents).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "GrandChild", StringComparison.OrdinalIgnoreCase));
 
                 // Assert
                 Assert.AreEqual("GrandChild", result.Target.Table.Table.Name);
-                Assert.AreEqual(CopyTableSchemaOutcome.Created, result.Outcome);
+                Assert.AreEqual(TableOutcome.Created, result.Outcome);
                 AssertSame(new[] { "Parent", "Child", "GrandChild" }, GetTargetTables().ToArray());
             }
         }
@@ -543,7 +543,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 SchemaReaderMapper.Add<DuckDBConnection>(new DuckDbSchemaReader(source), true);
 
                 // Act
-                var result = (await source.CopyTableSchemaToAsync("Child", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.ParentsAndChildren)).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "Child", StringComparison.OrdinalIgnoreCase));
+                var result = (await source.CopyTableSchemaToAsync("Child", target, relationshipBehavior: RelatedTableBehavior.ParentsAndChildren)).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "Child", StringComparison.OrdinalIgnoreCase));
 
                 // Assert
                 Assert.AreEqual("Child", result.Target.Table.Table.Name);
@@ -561,7 +561,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 SchemaReaderMapper.Add<DuckDBConnection>(new DuckDbSchemaReader(source), true);
 
                 // Act
-                var result = source.CopyTableSchemaTo("\"Odd.Name\"", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Children).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "Odd.Name", StringComparison.OrdinalIgnoreCase));
+                var result = source.CopyTableSchemaTo("\"Odd.Name\"", target, relationshipBehavior: RelatedTableBehavior.Children).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "Odd.Name", StringComparison.OrdinalIgnoreCase));
 
                 // Assert
                 Assert.AreEqual("Odd.Name", result.Target.Table.Table.Name);
@@ -579,7 +579,7 @@ namespace RepoDb.Schema.DuckDb.IntegrationTests
                 SchemaReaderMapper.Add<DuckDBConnection>(new DuckDbSchemaReader(source), true);
 
                 // Act
-                var result = source.CopyTableSchemaTo("Parent", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.TableOnly).Items.Single();
+                var result = source.CopyTableSchemaTo("Parent", target, relationshipBehavior: RelatedTableBehavior.TableOnly).Items.Single();
 
                 // Assert
                 Assert.AreEqual("Parent", result.Target.Table.Table.Name);

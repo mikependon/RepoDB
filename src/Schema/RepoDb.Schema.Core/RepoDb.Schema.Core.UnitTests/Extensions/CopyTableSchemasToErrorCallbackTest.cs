@@ -189,8 +189,8 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var country = created.Single(r => r.Target.Table.Table.Name == "Country");
             Assert.AreEqual(1, country.Errors.Count);
             Assert.AreEqual("CREATE TABLE Country;", country.Errors[0].Statement, StringComparer.Ordinal);
-            Assert.AreEqual(CopyTableSchemaOutcome.Failed, country.Outcome);
-            Assert.IsTrue(created.Where(r => r.Target.Table.Table.Name != "Country").All(r => r.Errors.Count == 0 && r.Outcome == CopyTableSchemaOutcome.Created));
+            Assert.AreEqual(TableOutcome.Failed, country.Outcome);
+            Assert.IsTrue(created.Where(r => r.Target.Table.Table.Name != "Country").All(r => r.Errors.Count == 0 && r.Outcome == TableOutcome.Created));
         }
 
         [TestMethod]
@@ -315,7 +315,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var person = created.Single(r => r.Target.Table.Table.Name == "Person");
             Assert.AreEqual(3, person.Errors.Count);
             Assert.IsTrue(person.Errors.SequenceEqual(errors));
-            Assert.AreEqual(CopyTableSchemaOutcome.Failed, person.Outcome);
+            Assert.AreEqual(TableOutcome.Failed, person.Outcome);
         }
 
         [TestMethod]
@@ -334,7 +334,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Assert
             Assert.AreEqual(3, created.Count);
-            Assert.IsTrue(created.All(r => r.Errors.Count == 0 && r.Outcome == CopyTableSchemaOutcome.Created));
+            Assert.IsTrue(created.All(r => r.Errors.Count == 0 && r.Outcome == TableOutcome.Created));
         }
 
         [TestMethod]
@@ -430,7 +430,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             Assert.AreEqual(5, destination.ExecutedCommands.Count);
             CollectionAssert.AreEqual(new[] { "Country", "Solo", "Person" }, created.Select(r => r.Target.Table.Table.Name).ToArray());
             Assert.AreEqual(1, created[2].Errors.Count);
-            Assert.AreEqual(CopyTableSchemaOutcome.Failed, created[2].Outcome);
+            Assert.AreEqual(TableOutcome.Failed, created[2].Outcome);
         }
 
         [TestMethod]

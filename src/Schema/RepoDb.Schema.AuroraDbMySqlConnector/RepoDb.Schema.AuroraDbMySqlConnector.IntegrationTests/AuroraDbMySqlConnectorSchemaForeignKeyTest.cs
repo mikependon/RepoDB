@@ -74,8 +74,8 @@ namespace RepoDb.Schema.AuroraDbMySqlConnector.IntegrationTests
             CollectionAssert.AreEqual(new[] { "OrderId", "LineNumber" }, actual.Columns.ToArray());
             Assert.AreEqual(new TableInfo("OrderLine", null), actual.ReferencedTable);
             CollectionAssert.AreEqual(new[] { "OrderId", "LineNumber" }, actual.ReferencedColumns.ToArray());
-            Assert.AreEqual(CopyTableSchemaForeignKeyRule.NoAction, actual.UpdateRule);
-            Assert.AreEqual(CopyTableSchemaForeignKeyRule.NoAction, actual.DeleteRule);
+            Assert.AreEqual(ForeignKeyRule.NoAction, actual.UpdateRule);
+            Assert.AreEqual(ForeignKeyRule.NoAction, actual.DeleteRule);
         }
 
         [TestMethod]
@@ -85,8 +85,8 @@ namespace RepoDb.Schema.AuroraDbMySqlConnector.IntegrationTests
             var actual = GetForeignKey("Shipment", "FK_Shipment_Country");
 
             // Assert
-            Assert.AreEqual(CopyTableSchemaForeignKeyRule.Cascade, actual.DeleteRule);
-            Assert.AreEqual(CopyTableSchemaForeignKeyRule.NoAction, actual.UpdateRule);
+            Assert.AreEqual(ForeignKeyRule.Cascade, actual.DeleteRule);
+            Assert.AreEqual(ForeignKeyRule.NoAction, actual.UpdateRule);
         }
 
         [TestMethod]
@@ -96,8 +96,8 @@ namespace RepoDb.Schema.AuroraDbMySqlConnector.IntegrationTests
             var actual = GetForeignKey("Preference", "FK_Preference_Country");
 
             // Assert
-            Assert.AreEqual(CopyTableSchemaForeignKeyRule.Restrict, actual.DeleteRule);
-            Assert.AreEqual(CopyTableSchemaForeignKeyRule.Restrict, actual.UpdateRule);
+            Assert.AreEqual(ForeignKeyRule.Restrict, actual.DeleteRule);
+            Assert.AreEqual(ForeignKeyRule.Restrict, actual.UpdateRule);
         }
 
         [TestMethod]
@@ -120,7 +120,7 @@ namespace RepoDb.Schema.AuroraDbMySqlConnector.IntegrationTests
 
             // Assert
             Assert.AreEqual(new TableInfo("Invoice", Database.SourceSalesName), actual.ReferencedTable);
-            Assert.AreEqual(CopyTableSchemaForeignKeyRule.Cascade, actual.DeleteRule);
+            Assert.AreEqual(ForeignKeyRule.Cascade, actual.DeleteRule);
         }
 
         [TestMethod]

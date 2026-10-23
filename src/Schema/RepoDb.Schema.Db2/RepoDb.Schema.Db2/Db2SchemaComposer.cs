@@ -472,14 +472,14 @@ namespace RepoDb.Schema
         /// <param name="rule"></param>
         /// <param name="isDelete"></param>
         /// <returns></returns>
-        private static string Rule(CopyTableSchemaForeignKeyRule rule,
+        private static string Rule(ForeignKeyRule rule,
             bool isDelete)
         {
             switch (rule)
             {
-                case CopyTableSchemaForeignKeyRule.Cascade: return isDelete ? "CASCADE" : null;
-                case CopyTableSchemaForeignKeyRule.SetNull: return isDelete ? "SET NULL" : null;
-                case CopyTableSchemaForeignKeyRule.Restrict: return "RESTRICT";
+                case ForeignKeyRule.Cascade: return isDelete ? "CASCADE" : null;
+                case ForeignKeyRule.SetNull: return isDelete ? "SET NULL" : null;
+                case ForeignKeyRule.Restrict: return "RESTRICT";
                 default: return null;
             }
         }

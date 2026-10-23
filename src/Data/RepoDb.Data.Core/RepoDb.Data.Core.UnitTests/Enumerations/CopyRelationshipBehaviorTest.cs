@@ -46,7 +46,7 @@ namespace RepoDb.Data.Core.UnitTests.Enumerations
         {
             // Act
             var data = Enum.GetNames(typeof(CopyRelationshipBehavior)).Select(name => (name, (int)Enum.Parse(typeof(CopyRelationshipBehavior), name)));
-            var schema = Enum.GetNames(typeof(CopyTableSchemaRelationshipBehavior)).Select(name => (name, (int)Enum.Parse(typeof(CopyTableSchemaRelationshipBehavior), name)));
+            var schema = Enum.GetNames(typeof(RelatedTableBehavior)).Select(name => (name, (int)Enum.Parse(typeof(RelatedTableBehavior), name)));
 
             // Assert
             CollectionAssert.AreEqual(schema.ToArray(), data.ToArray());

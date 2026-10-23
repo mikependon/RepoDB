@@ -35,7 +35,7 @@ namespace RepoDb.Data
 
         /// <summary>
         /// Gets the tables whose rows are to be copied, in the order that they must be copied (a table comes after the tables that it references).
-        /// If the schema is requested (see <see cref="IsSchemaRequested"/>), it is copied first, with <see cref="CopyTableSchemaToExtension.CopyTableSchemaTo(IDbConnection, IEnumerable{string}, IDbConnection, string, CopyTableSchemaExistsBehavior, CopyTableSchemaRelationshipBehavior, Action{CopyTableSchemaResultItem}, Action{ExecutionError}, int?, string, ITrace, IDbTransaction)"/>.
+        /// If the schema is requested (see <see cref="IsSchemaRequested"/>), it is copied first, with <see cref="CopyTableSchemaToExtension.CopyTableSchemaTo(IDbConnection, IEnumerable{string}, IDbConnection, string, TableExistsBehavior, RelatedTableBehavior, Action{CopyTableSchemaResultItem}, Action{ExecutionError}, int?, string, ITrace, IDbTransaction)"/>.
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="destinationConnection"></param>
@@ -57,7 +57,7 @@ namespace RepoDb.Data
             string targetSchema,
             QueryGroup where,
             CopyRelationshipBehavior relationshipBehavior,
-            CopyTableSchemaExistsBehavior tableExistenceBehavior,
+            TableExistsBehavior tableExistenceBehavior,
             int? commandTimeout,
             ITrace trace,
             IDbTransaction transaction,
@@ -129,7 +129,7 @@ namespace RepoDb.Data
             string targetSchema,
             QueryGroup where,
             CopyRelationshipBehavior relationshipBehavior,
-            CopyTableSchemaExistsBehavior tableExistenceBehavior,
+            TableExistsBehavior tableExistenceBehavior,
             int? commandTimeout,
             ITrace trace,
             IDbTransaction transaction,
@@ -268,17 +268,17 @@ namespace RepoDb.Data
 
         /// <summary>
         /// Checks whether the schema of the tables is to be copied before their rows: the default behaviors
-        /// (<see cref="CopyRelationshipBehavior.TableOnly"/> and <see cref="CopyTableSchemaExistsBehavior.Skip"/>) without a target schema do not copy it.
+        /// (<see cref="CopyRelationshipBehavior.TableOnly"/> and <see cref="TableExistsBehavior.Skip"/>) without a target schema do not copy it.
         /// </summary>
         /// <param name="relationshipBehavior"></param>
         /// <param name="tableExistenceBehavior"></param>
         /// <param name="targetSchema"></param>
         /// <returns></returns>
         internal static bool IsSchemaRequested(CopyRelationshipBehavior relationshipBehavior,
-            CopyTableSchemaExistsBehavior tableExistenceBehavior,
+            TableExistsBehavior tableExistenceBehavior,
             string targetSchema) =>
             relationshipBehavior != CopyRelationshipBehavior.TableOnly ||
-            tableExistenceBehavior != CopyTableSchemaExistsBehavior.Skip ||
+            tableExistenceBehavior != TableExistsBehavior.Skip ||
             !string.IsNullOrWhiteSpace(targetSchema);
 
         /// <summary>
@@ -286,18 +286,18 @@ namespace RepoDb.Data
         /// </summary>
         /// <param name="relationshipBehavior"></param>
         /// <returns></returns>
-        internal static CopyTableSchemaRelationshipBehavior ToSchemaBehavior(CopyRelationshipBehavior relationshipBehavior)
+        internal static RelatedTableBehavior ToSchemaBehavior(CopyRelationshipBehavior relationshipBehavior)
         {
             switch (relationshipBehavior)
             {
                 case CopyRelationshipBehavior.TableOnly:
-                    return CopyTableSchemaRelationshipBehavior.TableOnly;
+                    return RelatedTableBehavior.TableOnly;
                 case CopyRelationshipBehavior.Parents:
-                    return CopyTableSchemaRelationshipBehavior.Parents;
+                    return RelatedTableBehavior.Parents;
                 case CopyRelationshipBehavior.Children:
-                    return CopyTableSchemaRelationshipBehavior.Children;
+                    return RelatedTableBehavior.Children;
                 case CopyRelationshipBehavior.ParentsAndChildren:
-                    return CopyTableSchemaRelationshipBehavior.ParentsAndChildren;
+                    return RelatedTableBehavior.ParentsAndChildren;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(relationshipBehavior));
             }
@@ -676,7 +676,7 @@ namespace RepoDb.Data
             string targetSchema,
             int batchSize,
             CopyRelationshipBehavior relationshipBehavior,
-            CopyTableSchemaExistsBehavior tableExistenceBehavior,
+            TableExistsBehavior tableExistenceBehavior,
             CopyColumnMappingsBehavior columnMappingsBehavior,
             IList<CopyColumnMapping> mappings)
         {

@@ -118,16 +118,16 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var results = new List<CopyTableSchemaResultItem>();
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip, createdCallback: results.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination, tableExistenceBehavior: TableExistsBehavior.Skip, createdCallback: results.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "CREATE TABLE Person;", "CREATE INDEX IX_Person_Id ON Person;", "ADD FK_Person_Country TO Person;" }, destination.ExecutedCommands);
             var country = Get(results, "Country");
-            Assert.AreEqual(CopyTableSchemaOutcome.Skipped, country.Outcome);
+            Assert.AreEqual(TableOutcome.Skipped, country.Outcome);
             Assert.AreEqual(true, country.TableExisted);
             Assert.AreEqual(string.Empty, country.Script);
             var person = Get(results, "Person");
-            Assert.AreEqual(CopyTableSchemaOutcome.Created, person.Outcome);
+            Assert.AreEqual(TableOutcome.Created, person.Outcome);
             Assert.AreEqual(false, person.TableExisted);
         }
 
@@ -145,7 +145,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Assert
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
-            Assert.IsTrue(results.All(r => r.Outcome == CopyTableSchemaOutcome.Skipped));
+            Assert.IsTrue(results.All(r => r.Outcome == TableOutcome.Skipped));
             Assert.AreEqual(2, results.Count);
         }
 
@@ -201,7 +201,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Assert
             Assert.AreEqual(0, destination.ExecutedScalars.Count);
             CollectionAssert.AreEqual(new[] { "CREATE TABLE Country;", "CREATE INDEX IX_Country_Name ON Country;" }, destination.ExecutedCommands);
-            Assert.AreEqual(CopyTableSchemaOutcome.Created, results.Single().Outcome);
+            Assert.AreEqual(TableOutcome.Created, results.Single().Outcome);
             Assert.IsNull(results.Single().TableExisted);
         }
 
@@ -219,7 +219,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Act/Assert
             var exception = Assert.Throws<InvalidOperationException>(() =>
-                new CustomDbConnection().CopyTableSchemaTo(new[] { "Country", "Person" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
+                new CustomDbConnection().CopyTableSchemaTo(new[] { "Country", "Person" }, destination, tableExistenceBehavior: TableExistsBehavior.Throw));
             StringAssert.Contains(exception.Message, "Person", StringComparison.Ordinal);
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
         }
@@ -233,7 +233,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country", "Person" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country", "Person" }, destination, tableExistenceBehavior: TableExistsBehavior.Throw);
 
             // Assert
             Assert.AreEqual(5, destination.ExecutedCommands.Count);
@@ -253,7 +253,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var results = new List<CopyTableSchemaResultItem>();
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop, createdCallback: results.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination, tableExistenceBehavior: TableExistsBehavior.Drop, createdCallback: results.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[]
@@ -263,7 +263,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
                 "CREATE INDEX IX_Country_Name ON Country;", "CREATE INDEX IX_Person_Id ON Person;",
                 "ADD FK_Person_Country TO Person;"
             }, destination.ExecutedCommands);
-            Assert.IsTrue(results.All(r => r.Outcome == CopyTableSchemaOutcome.Dropped));
+            Assert.IsTrue(results.All(r => r.Outcome == TableOutcome.Dropped));
             Assert.IsTrue(results.All(r => r.TableExisted == true));
             StringAssert.StartsWith(Get(results, "Person").Script, "DROP TABLE Person;", StringComparison.Ordinal);
         }
@@ -278,13 +278,13 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var results = new List<CopyTableSchemaResultItem>();
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop, createdCallback: results.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination, tableExistenceBehavior: TableExistsBehavior.Drop, createdCallback: results.Add);
 
             // Assert
             Assert.AreEqual(1, destination.ExecutedCommands.Count(c => c.StartsWith("DROP", StringComparison.Ordinal)));
             Assert.AreEqual("DROP TABLE Country;", destination.ExecutedCommands[0]);
-            Assert.AreEqual(CopyTableSchemaOutcome.Dropped, Get(results, "Country").Outcome);
-            Assert.AreEqual(CopyTableSchemaOutcome.Created, Get(results, "Person").Outcome);
+            Assert.AreEqual(TableOutcome.Dropped, Get(results, "Country").Outcome);
+            Assert.AreEqual(TableOutcome.Created, Get(results, "Person").Outcome);
             Assert.IsFalse(Get(results, "Person").Script.Contains("DROP"));
         }
 
@@ -302,12 +302,12 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var results = new List<CopyTableSchemaResultItem>();
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country" }, destination, tableExistenceBehavior: TableExistsBehavior.Align, createdCallback: results.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "ADD COLUMN Name TO Country;", "CREATE INDEX IX_Country_Name ON Country;" }, destination.ExecutedCommands);
             var result = results.Single();
-            Assert.AreEqual(CopyTableSchemaOutcome.Aligned, result.Outcome);
+            Assert.AreEqual(TableOutcome.Aligned, result.Outcome);
             CollectionAssert.AreEqual(new[] { "Name" }, result.AddedColumns.ToArray());
             CollectionAssert.AreEqual(new[] { "IX_Country_Name" }, result.AddedIndexes.ToArray());
             Assert.AreEqual(true, result.TableExisted);
@@ -324,11 +324,11 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var results = new List<CopyTableSchemaResultItem>();
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country" }, destination, tableExistenceBehavior: TableExistsBehavior.Align, createdCallback: results.Add);
 
             // Assert
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
-            Assert.AreEqual(CopyTableSchemaOutcome.Aligned, results.Single().Outcome);
+            Assert.AreEqual(TableOutcome.Aligned, results.Single().Outcome);
             Assert.AreEqual(0, results.Single().AddedColumns.Count);
             Assert.AreEqual(0, results.Single().AddedIndexes.Count);
         }
@@ -343,12 +343,12 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var results = new List<CopyTableSchemaResultItem>();
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country", "Person" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country", "Person" }, destination, tableExistenceBehavior: TableExistsBehavior.Align, createdCallback: results.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "CREATE TABLE Person;", "CREATE INDEX IX_Person_Id ON Person;", "ADD FK_Person_Country TO Person;" }, destination.ExecutedCommands);
-            Assert.AreEqual(CopyTableSchemaOutcome.Aligned, Get(results, "Country").Outcome);
-            Assert.AreEqual(CopyTableSchemaOutcome.Created, Get(results, "Person").Outcome);
+            Assert.AreEqual(TableOutcome.Aligned, Get(results, "Country").Outcome);
+            Assert.AreEqual(TableOutcome.Created, Get(results, "Person").Outcome);
         }
 
         [TestMethod]
@@ -362,7 +362,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Country", "COLUMN_EXISTS Country.Id", "COLUMN_EXISTS Country.Name", "INDEX_EXISTS Country.IX_Country_Name");
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country" }, destination, tableExistenceBehavior: TableExistsBehavior.Align);
 
             // Assert
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
@@ -378,7 +378,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var executedWhenReported = new List<int>();
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align,
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country" }, destination, tableExistenceBehavior: TableExistsBehavior.Align,
                 createdCallback: _ => executedWhenReported.Add(destination.ExecutedCommands.Count));
 
             // Assert
@@ -397,12 +397,12 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var errors = new List<ExecutionError>();
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add, errorCallback: errors.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country" }, destination, tableExistenceBehavior: TableExistsBehavior.Align, createdCallback: results.Add, errorCallback: errors.Add);
 
             // Assert
             Assert.AreEqual(1, errors.Count);
             Assert.AreEqual("Country", errors[0].TableName);
-            Assert.AreEqual(CopyTableSchemaOutcome.Failed, results.Single().Outcome);
+            Assert.AreEqual(TableOutcome.Failed, results.Single().Outcome);
         }
 
         #endregion
@@ -419,12 +419,12 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var results = new List<CopyTableSchemaResultItem>();
 
             // Act
-            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip, createdCallback: results.Add);
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" }, destination, tableExistenceBehavior: TableExistsBehavior.Skip, createdCallback: results.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "CREATE TABLE Person;", "CREATE INDEX IX_Person_Id ON Person;", "ADD FK_Person_Country TO Person;" }, destination.ExecutedCommands);
-            Assert.AreEqual(CopyTableSchemaOutcome.Skipped, Get(results, "Country").Outcome);
-            Assert.AreEqual(CopyTableSchemaOutcome.Created, Get(results, "Person").Outcome);
+            Assert.AreEqual(TableOutcome.Skipped, Get(results, "Country").Outcome);
+            Assert.AreEqual(TableOutcome.Created, Get(results, "Person").Outcome);
         }
 
         [TestMethod]
@@ -437,7 +437,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Act/Assert
             await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Country", "Person" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
+                new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Country", "Person" }, destination, tableExistenceBehavior: TableExistsBehavior.Throw));
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
         }
 
@@ -451,12 +451,12 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var results = new List<CopyTableSchemaResultItem>();
 
             // Act
-            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop, createdCallback: results.Add);
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" }, destination, tableExistenceBehavior: TableExistsBehavior.Drop, createdCallback: results.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "DROP TABLE Person;", "DROP TABLE Country;" }, destination.ExecutedCommands.Take(2).ToArray());
             Assert.AreEqual(7, destination.ExecutedCommands.Count);
-            Assert.IsTrue(results.All(r => r.Outcome == CopyTableSchemaOutcome.Dropped));
+            Assert.IsTrue(results.All(r => r.Outcome == TableOutcome.Dropped));
         }
 
         [TestMethod]
@@ -469,7 +469,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var results = new List<CopyTableSchemaResultItem>();
 
             // Act
-            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Country" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Country" }, destination, tableExistenceBehavior: TableExistsBehavior.Align, createdCallback: results.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "ADD COLUMN Name TO Country;", "CREATE INDEX IX_Country_Name ON Country;" }, destination.ExecutedCommands);

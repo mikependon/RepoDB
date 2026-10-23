@@ -170,10 +170,10 @@ namespace RepoDb.Schema
         /// Only the foreign keys are read (not the schema of the tables), so it is cheap to expand a table with its relationships.
         /// </summary>
         /// <param name="tableNames">The names of the tables.</param>
-        /// <param name="relationshipBehavior">Defines which of the related tables are included. <see cref="CopyTableSchemaRelationshipBehavior.TableOnly"/> returns only the given tables.</param>
+        /// <param name="relationshipBehavior">Defines which of the related tables are included. <see cref="RelatedTableBehavior.TableOnly"/> returns only the given tables.</param>
         /// <returns>The names of the given tables (in the order that they were given), followed by the names of their related tables.</returns>
         public IEnumerable<string> GetRelatedTables(IEnumerable<string> tableNames,
-            CopyTableSchemaRelationshipBehavior relationshipBehavior)
+            RelatedTableBehavior relationshipBehavior)
         {
             var tables = (tableNames ?? throw new ArgumentNullException(nameof(tableNames)))
                 .Select(name =>
@@ -183,7 +183,7 @@ namespace RepoDb.Schema
                 })
                 .ToList();
             var foreignKeys = new List<(TableInfo Child, TableInfo Parent)>();
-            if (relationshipBehavior != CopyTableSchemaRelationshipBehavior.TableOnly)
+            if (relationshipBehavior != RelatedTableBehavior.TableOnly)
             {
                 foreach (var schema in Query(TursoSchemaText.DatabasesSql, SchemaTraceKeys.GetTables, r => NormalizeSchema(Text(r, "SchemaName"))))
                 {
@@ -344,11 +344,11 @@ namespace RepoDb.Schema
         /// Only the foreign keys are read (not the schema of the tables), so it is cheap to expand a table with its relationships.
         /// </summary>
         /// <param name="tableNames">The names of the tables.</param>
-        /// <param name="relationshipBehavior">Defines which of the related tables are included. <see cref="CopyTableSchemaRelationshipBehavior.TableOnly"/> returns only the given tables.</param>
+        /// <param name="relationshipBehavior">Defines which of the related tables are included. <see cref="RelatedTableBehavior.TableOnly"/> returns only the given tables.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains: the names of the given tables (in the order that they were given), followed by the names of their related tables.</returns>
         public async Task<IEnumerable<string>> GetRelatedTablesAsync(IEnumerable<string> tableNames,
-            CopyTableSchemaRelationshipBehavior relationshipBehavior,
+            RelatedTableBehavior relationshipBehavior,
             CancellationToken cancellationToken = default)
         {
             var tables = (tableNames ?? throw new ArgumentNullException(nameof(tableNames)))
@@ -359,7 +359,7 @@ namespace RepoDb.Schema
                 })
                 .ToList();
             var foreignKeys = new List<(TableInfo Child, TableInfo Parent)>();
-            if (relationshipBehavior != CopyTableSchemaRelationshipBehavior.TableOnly)
+            if (relationshipBehavior != RelatedTableBehavior.TableOnly)
             {
                 var schemas = await QueryAsync(TursoSchemaText.DatabasesSql, SchemaTraceKeys.GetTables, r => NormalizeSchema(Text(r, "SchemaName")), cancellationToken).ConfigureAwait(false);
                 foreach (var schema in schemas)
@@ -970,15 +970,15 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="action"></param>
         /// <returns></returns>
-        private static CopyTableSchemaForeignKeyRule ToRule(string action)
+        private static ForeignKeyRule ToRule(string action)
         {
             switch (action?.ToUpperInvariant())
             {
-                case "CASCADE": return CopyTableSchemaForeignKeyRule.Cascade;
-                case "SET NULL": return CopyTableSchemaForeignKeyRule.SetNull;
-                case "SET DEFAULT": return CopyTableSchemaForeignKeyRule.SetDefault;
-                case "RESTRICT": return CopyTableSchemaForeignKeyRule.Restrict;
-                default: return CopyTableSchemaForeignKeyRule.NoAction;
+                case "CASCADE": return ForeignKeyRule.Cascade;
+                case "SET NULL": return ForeignKeyRule.SetNull;
+                case "SET DEFAULT": return ForeignKeyRule.SetDefault;
+                case "RESTRICT": return ForeignKeyRule.Restrict;
+                default: return ForeignKeyRule.NoAction;
             }
         }
 

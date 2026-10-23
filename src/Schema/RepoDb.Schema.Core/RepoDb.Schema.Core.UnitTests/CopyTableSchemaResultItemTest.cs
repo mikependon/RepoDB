@@ -224,7 +224,7 @@ namespace RepoDb.Schema.Core.UnitTests
             var actual = item.Action;
 
             // Assert
-            Assert.AreEqual(CopyTableSchemaExistsBehavior.Skip, actual);
+            Assert.AreEqual(TableExistsBehavior.Skip, actual);
         }
 
         [TestMethod]
@@ -233,10 +233,10 @@ namespace RepoDb.Schema.Core.UnitTests
             // Act
             var item = new CopyTableSchemaResultItem
             {
-                Action = CopyTableSchemaExistsBehavior.Drop
+                Action = TableExistsBehavior.Drop
             };
             var actual = item.Action;
-            var expected = CopyTableSchemaExistsBehavior.Drop;
+            var expected = TableExistsBehavior.Drop;
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -250,7 +250,7 @@ namespace RepoDb.Schema.Core.UnitTests
             var actual = item.Outcome;
 
             // Assert
-            Assert.AreEqual(CopyTableSchemaOutcome.Created, actual);
+            Assert.AreEqual(TableOutcome.Created, actual);
         }
 
         [TestMethod]
@@ -259,10 +259,10 @@ namespace RepoDb.Schema.Core.UnitTests
             // Act
             var item = new CopyTableSchemaResultItem
             {
-                Outcome = CopyTableSchemaOutcome.Aligned
+                Outcome = TableOutcome.Aligned
             };
             var actual = item.Outcome;
-            var expected = CopyTableSchemaOutcome.Aligned;
+            var expected = TableOutcome.Aligned;
 
             // Assert
             Assert.AreEqual(expected, actual);

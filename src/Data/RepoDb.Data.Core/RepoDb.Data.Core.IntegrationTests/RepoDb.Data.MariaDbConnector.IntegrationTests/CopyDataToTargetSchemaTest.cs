@@ -204,7 +204,7 @@ namespace RepoDb.Data.MariaDbConnector.IntegrationTests
                 source.CopyDataTo("Currency", "repodb_mdbc_target_sales.Currency", target);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "repodb_mdbc_target_sales.Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
+                var actual = source.CopyDataTo("Currency", "repodb_mdbc_target_sales.Currency", target, tableExistenceBehavior: TableExistsBehavior.Drop);
 
                 // Assert
                 Assert.AreEqual(3, actual);

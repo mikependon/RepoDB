@@ -36,7 +36,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
 
         #region Helpers
 
-        private static string[] GetRelatedTables(CopyTableSchemaRelationshipBehavior behavior, params string[] tableNames)
+        private static string[] GetRelatedTables(RelatedTableBehavior behavior, params string[] tableNames)
         {
             using (var connection = new MySqlConnection(Database.ConnectionStringForSource))
             {
@@ -44,7 +44,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
             }
         }
 
-        private static async Task<string[]> GetRelatedTablesAsync(CopyTableSchemaRelationshipBehavior behavior, params string[] tableNames)
+        private static async Task<string[]> GetRelatedTablesAsync(RelatedTableBehavior behavior, params string[] tableNames)
         {
             using (var connection = new MySqlConnection(Database.ConnectionStringForSource))
             {
@@ -71,7 +71,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         public void TestMySqlSchemaRelatedTablesWithTableOnly()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.TableOnly, "Child");
+            var actual = GetRelatedTables(RelatedTableBehavior.TableOnly, "Child");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Child" }, actual);
@@ -81,7 +81,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         public void TestMySqlSchemaRelatedTablesWithTableOnlyKeepsTheGivenTablesInOrder()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.TableOnly, "GrandChild", "Parent", "GrandChild");
+            var actual = GetRelatedTables(RelatedTableBehavior.TableOnly, "GrandChild", "Parent", "GrandChild");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "GrandChild", "Parent" }, actual);
@@ -95,7 +95,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         public void TestMySqlSchemaRelatedTablesWithParents()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "GrandChild");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "GrandChild");
 
             // Assert
             AssertSame(new[] { "GrandChild", "Child", "Parent" }, actual);
@@ -106,7 +106,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         public void TestMySqlSchemaRelatedTablesWithParentsDoesNotIncludeTheChildren()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "Child");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "Child");
 
             // Assert
             AssertSame(new[] { "Child", "Parent" }, actual);
@@ -116,7 +116,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         public void TestMySqlSchemaRelatedTablesWithParentsOfATableWithoutParents()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "Parent");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "Parent");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Parent" }, actual);
@@ -126,7 +126,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         public void TestMySqlSchemaRelatedTablesWithParentsOfADiamond()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "DiamondD");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "DiamondD");
 
             // Assert
             AssertSame(new[] { "DiamondD", "DiamondB", "DiamondC", "DiamondA" }, actual);
@@ -136,7 +136,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         public void TestMySqlSchemaRelatedTablesWithParentsAcrossSchemas()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "Ledger");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "Ledger");
 
             // Assert
             AssertSame(new[] { "Ledger", $"{Database.SourceSalesName}.Invoice" }, actual);
@@ -146,7 +146,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         public void TestMySqlSchemaRelatedTablesWithParentsOfTablesWithTheSameNameInDifferentSchemas()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "ItemRef");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "ItemRef");
 
             // Assert
             AssertSame(new[] { "ItemRef", $"{Database.SourceSalesName}.Item" }, actual);
@@ -156,7 +156,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         public void TestMySqlSchemaRelatedTablesWithParentsOfMultipleForeignKeys()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "Shipment");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "Shipment");
 
             // Assert
             AssertSame(new[] { "Shipment", "OrderLine", "Country" }, actual);
@@ -166,7 +166,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         public void TestMySqlSchemaRelatedTablesWithParentsOfTablesWithSpecialNames()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "`Odd.Child`");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "`Odd.Child`");
 
             // Assert
             AssertSame(new[] { "`Odd.Child`", "`Odd.Name`" }, actual);
@@ -180,7 +180,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         public void TestMySqlSchemaRelatedTablesWithChildren()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "Parent");
+            var actual = GetRelatedTables(RelatedTableBehavior.Children, "Parent");
 
             // Assert
             AssertSame(new[] { "Parent", "Child", "GrandChild" }, actual);
@@ -191,7 +191,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         public void TestMySqlSchemaRelatedTablesWithChildrenDoesNotIncludeTheParents()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "Child");
+            var actual = GetRelatedTables(RelatedTableBehavior.Children, "Child");
 
             // Assert
             AssertSame(new[] { "Child", "GrandChild" }, actual);
@@ -201,7 +201,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         public void TestMySqlSchemaRelatedTablesWithChildrenOfATableWithoutChildren()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "GrandChild");
+            var actual = GetRelatedTables(RelatedTableBehavior.Children, "GrandChild");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "GrandChild" }, actual);
@@ -211,7 +211,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         public void TestMySqlSchemaRelatedTablesWithChildrenOfADiamond()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "DiamondA");
+            var actual = GetRelatedTables(RelatedTableBehavior.Children, "DiamondA");
 
             // Assert
             AssertSame(new[] { "DiamondA", "DiamondB", "DiamondC", "DiamondD" }, actual);
@@ -221,7 +221,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         public void TestMySqlSchemaRelatedTablesWithChildrenAcrossSchemas()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, $"{Database.SourceSalesName}.Invoice");
+            var actual = GetRelatedTables(RelatedTableBehavior.Children, $"{Database.SourceSalesName}.Invoice");
 
             // Assert
             AssertSame(new[] { $"{Database.SourceSalesName}.Invoice", $"{Database.SourceSalesName}.InvoiceLine", "Ledger" }, actual);
@@ -231,7 +231,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         public void TestMySqlSchemaRelatedTablesWithChildrenOfATableWithManyChildren()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "Country");
+            var actual = GetRelatedTables(RelatedTableBehavior.Children, "Country");
 
             // Assert
             AssertSame(new[] { "Country", "Person", "Shipment", "Preference" }, actual);
@@ -245,7 +245,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         public void TestMySqlSchemaRelatedTablesWithParentsAndChildren()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "Child");
+            var actual = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "Child");
 
             // Assert
             AssertSame(new[] { "Child", "Parent", "GrandChild" }, actual);
@@ -256,8 +256,8 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         public void TestMySqlSchemaRelatedTablesWithParentsAndChildrenGivesTheSameTablesFromAnyTableOfTheTree()
         {
             // Act
-            var fromTheRoot = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "Parent");
-            var fromTheLeaf = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "GrandChild");
+            var fromTheRoot = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "Parent");
+            var fromTheLeaf = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "GrandChild");
 
             // Assert
             AssertSame(fromTheRoot, fromTheLeaf);
@@ -267,7 +267,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         public void TestMySqlSchemaRelatedTablesWithParentsAndChildrenOfADiamond()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "DiamondB");
+            var actual = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "DiamondB");
 
             // Assert
             AssertSame(new[] { "DiamondB", "DiamondA", "DiamondC", "DiamondD" }, actual);
@@ -277,7 +277,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         public void TestMySqlSchemaRelatedTablesWithParentsAndChildrenReachesTheOtherBranches()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "Country");
+            var actual = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "Country");
 
             // Assert
             AssertSame(new[] { "Country", "Person", "Shipment", "Preference", "OrderLine" }, actual);
@@ -287,7 +287,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         public void TestMySqlSchemaRelatedTablesWithParentsAndChildrenDoesNotIncludeTheUnrelatedTables()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "Parent");
+            var actual = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "Parent");
 
             // Assert
             Assert.IsFalse(actual.Contains("Person"));
@@ -299,7 +299,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         public void TestMySqlSchemaRelatedTablesWithParentsAndChildrenOfATableWithoutRelationships()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "NoKey");
+            var actual = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "NoKey");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "NoKey" }, actual);
@@ -312,7 +312,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         [TestMethod]
         public void TestMySqlSchemaRelatedTablesOfACycle()
         {
-            foreach (var behavior in new[] { CopyTableSchemaRelationshipBehavior.Parents, CopyTableSchemaRelationshipBehavior.Children, CopyTableSchemaRelationshipBehavior.ParentsAndChildren })
+            foreach (var behavior in new[] { RelatedTableBehavior.Parents, RelatedTableBehavior.Children, RelatedTableBehavior.ParentsAndChildren })
             {
                 // Act
                 var actual = GetRelatedTables(behavior, "CycleA");
@@ -325,7 +325,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         [TestMethod]
         public void TestMySqlSchemaRelatedTablesOfACycleOfThreeTables()
         {
-            foreach (var behavior in new[] { CopyTableSchemaRelationshipBehavior.Parents, CopyTableSchemaRelationshipBehavior.Children, CopyTableSchemaRelationshipBehavior.ParentsAndChildren })
+            foreach (var behavior in new[] { RelatedTableBehavior.Parents, RelatedTableBehavior.Children, RelatedTableBehavior.ParentsAndChildren })
             {
                 // Act
                 var actual = GetRelatedTables(behavior, "RingX");
@@ -339,9 +339,9 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         public void TestMySqlSchemaRelatedTablesOfACycleWithTablesAroundIt()
         {
             // Act
-            var parents = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "LoopB");
-            var children = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "LoopA");
-            var endToEnd = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "LoopA");
+            var parents = GetRelatedTables(RelatedTableBehavior.Parents, "LoopB");
+            var children = GetRelatedTables(RelatedTableBehavior.Children, "LoopA");
+            var endToEnd = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "LoopA");
 
             // Assert
             AssertSame(new[] { "LoopB", "LoopA", "LoopRoot" }, parents);
@@ -352,7 +352,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         [TestMethod]
         public void TestMySqlSchemaRelatedTablesOfASelfReference()
         {
-            foreach (var behavior in new[] { CopyTableSchemaRelationshipBehavior.Parents, CopyTableSchemaRelationshipBehavior.Children, CopyTableSchemaRelationshipBehavior.ParentsAndChildren })
+            foreach (var behavior in new[] { RelatedTableBehavior.Parents, RelatedTableBehavior.Children, RelatedTableBehavior.ParentsAndChildren })
             {
                 // Act
                 var actual = GetRelatedTables(behavior, "Employee");
@@ -370,7 +370,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         public void TestMySqlSchemaRelatedTablesOfMultipleTables()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "GrandChild", "DiamondB");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "GrandChild", "DiamondB");
 
             // Assert
             AssertSame(new[] { "GrandChild", "DiamondB", "Child", "Parent", "DiamondA" }, actual);
@@ -381,7 +381,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         public void TestMySqlSchemaRelatedTablesDoesNotRepeatATable()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "Parent", "Child", "GrandChild");
+            var actual = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "Parent", "Child", "GrandChild");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Parent", "Child", "GrandChild" }, actual);
@@ -391,7 +391,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         public void TestMySqlSchemaRelatedTablesWithoutTables()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren);
+            var actual = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren);
 
             // Assert
             Assert.AreEqual(0, actual.Length);
@@ -401,7 +401,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         public void TestMySqlSchemaRelatedTablesAreComparedWithTheCase()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "Parent", "`Parent`");
+            var actual = GetRelatedTables(RelatedTableBehavior.Children, "Parent", "`Parent`");
 
             // Assert
             Assert.AreEqual(3, actual.Length);
@@ -415,7 +415,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
             using (var connection = new MySqlConnection(Database.ConnectionStringForSource))
             {
                 var reader = new MySqlSchemaReader(connection);
-                var related = reader.GetRelatedTables(new[] { "GrandChild" }, CopyTableSchemaRelationshipBehavior.Parents);
+                var related = reader.GetRelatedTables(new[] { "GrandChild" }, RelatedTableBehavior.Parents);
                 var actual = reader.GetDependencyOrder(related).Select(r => r.Schema.Table.Name).ToArray();
 
                 // Assert
@@ -431,17 +431,17 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         public async Task TestMySqlSchemaRelatedTablesAsyncWithEachBehavior()
         {
             // Act/Assert
-            CollectionAssert.AreEqual(new[] { "Child" }, await GetRelatedTablesAsync(CopyTableSchemaRelationshipBehavior.TableOnly, "Child"));
-            AssertSame(new[] { "Child", "Parent" }, await GetRelatedTablesAsync(CopyTableSchemaRelationshipBehavior.Parents, "Child"));
-            AssertSame(new[] { "Child", "GrandChild" }, await GetRelatedTablesAsync(CopyTableSchemaRelationshipBehavior.Children, "Child"));
-            AssertSame(new[] { "Child", "Parent", "GrandChild" }, await GetRelatedTablesAsync(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "Child"));
+            CollectionAssert.AreEqual(new[] { "Child" }, await GetRelatedTablesAsync(RelatedTableBehavior.TableOnly, "Child"));
+            AssertSame(new[] { "Child", "Parent" }, await GetRelatedTablesAsync(RelatedTableBehavior.Parents, "Child"));
+            AssertSame(new[] { "Child", "GrandChild" }, await GetRelatedTablesAsync(RelatedTableBehavior.Children, "Child"));
+            AssertSame(new[] { "Child", "Parent", "GrandChild" }, await GetRelatedTablesAsync(RelatedTableBehavior.ParentsAndChildren, "Child"));
         }
 
         [TestMethod]
         public async Task TestMySqlSchemaRelatedTablesAsyncOfACycle()
         {
             // Act
-            var actual = await GetRelatedTablesAsync(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "CycleA");
+            var actual = await GetRelatedTablesAsync(RelatedTableBehavior.ParentsAndChildren, "CycleA");
 
             // Assert
             AssertSame(new[] { "CycleA", "CycleB" }, actual);
@@ -458,7 +458,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
             {
                 // Act/Assert
                 Assert.Throws<ArgumentNullException>(() =>
-                    new MySqlSchemaReader(connection).GetRelatedTables(null, CopyTableSchemaRelationshipBehavior.ParentsAndChildren));
+                    new MySqlSchemaReader(connection).GetRelatedTables(null, RelatedTableBehavior.ParentsAndChildren));
             }
         }
 
@@ -467,7 +467,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
         {
             // Act/Assert
             Assert.Throws<ArgumentOutOfRangeException>(() =>
-                GetRelatedTables((CopyTableSchemaRelationshipBehavior)99, "Child"));
+                GetRelatedTables((RelatedTableBehavior)99, "Child"));
         }
 
         #endregion
@@ -484,7 +484,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
                 SchemaReaderMapper.Add<MySqlConnection>(new MySqlSchemaReader(source), true);
 
                 // Act
-                source.CopyTableSchemaTo(new[] { "GrandChild" }, target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Parents);
+                source.CopyTableSchemaTo(new[] { "GrandChild" }, target, relationshipBehavior: RelatedTableBehavior.Parents);
 
                 // Assert
                 AssertSame(new[] { "Parent", "Child", "GrandChild" }, GetTargetTables().ToArray());
@@ -504,7 +504,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
                 SchemaReaderMapper.Add<MySqlConnection>(new MySqlSchemaReader(source), true);
 
                 // Act
-                source.CopyTableSchemaTo(new[] { "Parent" }, target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Children);
+                source.CopyTableSchemaTo(new[] { "Parent" }, target, relationshipBehavior: RelatedTableBehavior.Children);
 
                 // Assert
                 AssertSame(new[] { "Parent", "Child", "GrandChild" }, GetTargetTables().ToArray());
@@ -523,7 +523,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "Child" }, target,
-                    relationshipBehavior: CopyTableSchemaRelationshipBehavior.ParentsAndChildren,
+                    relationshipBehavior: RelatedTableBehavior.ParentsAndChildren,
                     createdCallback: r => created.Add(r.Target.Table.Table.Name));
 
                 // Assert
@@ -543,7 +543,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
 
                 // Act
                 Assert.ThrowsExactly<MySqlException>(() =>
-                    source.CopyTableSchemaTo(new[] { "Child" }, target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.TableOnly));
+                    source.CopyTableSchemaTo(new[] { "Child" }, target, relationshipBehavior: RelatedTableBehavior.TableOnly));
             }
         }
 
@@ -557,7 +557,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
                 SchemaReaderMapper.Add<MySqlConnection>(new MySqlSchemaReader(source), true);
 
                 // Act
-                source.CopyTableSchemaTo(new[] { "LoopA" }, target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.ParentsAndChildren);
+                source.CopyTableSchemaTo(new[] { "LoopA" }, target, relationshipBehavior: RelatedTableBehavior.ParentsAndChildren);
 
                 // Assert
                 AssertSame(new[] { "LoopRoot", "LoopA", "LoopB", "LoopLeaf" }, GetTargetTables().ToArray());
@@ -574,7 +574,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
                 SchemaReaderMapper.Add<MySqlConnection>(new MySqlSchemaReader(source), true);
 
                 // Act
-                await source.CopyTableSchemaToAsync(new[] { "Child" }, target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.ParentsAndChildren);
+                await source.CopyTableSchemaToAsync(new[] { "Child" }, target, relationshipBehavior: RelatedTableBehavior.ParentsAndChildren);
 
                 // Assert
                 AssertSame(new[] { "Parent", "Child", "GrandChild" }, GetTargetTables().ToArray());
@@ -592,11 +592,11 @@ namespace RepoDb.Schema.MySql.IntegrationTests
                 SchemaReaderMapper.Add<MySqlConnection>(new MySqlSchemaReader(source), true);
 
                 // Act
-                var result = source.CopyTableSchemaTo("GrandChild", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Parents).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "GrandChild", StringComparison.OrdinalIgnoreCase));
+                var result = source.CopyTableSchemaTo("GrandChild", target, relationshipBehavior: RelatedTableBehavior.Parents).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "GrandChild", StringComparison.OrdinalIgnoreCase));
 
                 // Assert
                 Assert.AreEqual("GrandChild", result.Target.Table.Table.Name);
-                Assert.AreEqual(CopyTableSchemaOutcome.Created, result.Outcome);
+                Assert.AreEqual(TableOutcome.Created, result.Outcome);
                 AssertSame(new[] { "Parent", "Child", "GrandChild" }, GetTargetTables().ToArray());
             }
         }
@@ -611,7 +611,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
                 SchemaReaderMapper.Add<MySqlConnection>(new MySqlSchemaReader(source), true);
 
                 // Act
-                var result = (await source.CopyTableSchemaToAsync("Child", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.ParentsAndChildren)).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "Child", StringComparison.OrdinalIgnoreCase));
+                var result = (await source.CopyTableSchemaToAsync("Child", target, relationshipBehavior: RelatedTableBehavior.ParentsAndChildren)).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "Child", StringComparison.OrdinalIgnoreCase));
 
                 // Assert
                 Assert.AreEqual("Child", result.Target.Table.Table.Name);
@@ -629,7 +629,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
                 SchemaReaderMapper.Add<MySqlConnection>(new MySqlSchemaReader(source), true);
 
                 // Act
-                var result = source.CopyTableSchemaTo("`Odd.Name`", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Children).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "Odd.Name", StringComparison.OrdinalIgnoreCase));
+                var result = source.CopyTableSchemaTo("`Odd.Name`", target, relationshipBehavior: RelatedTableBehavior.Children).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "Odd.Name", StringComparison.OrdinalIgnoreCase));
 
                 // Assert
                 Assert.AreEqual("Odd.Name", result.Target.Table.Table.Name);
@@ -647,7 +647,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
                 SchemaReaderMapper.Add<MySqlConnection>(new MySqlSchemaReader(source), true);
 
                 // Act
-                var result = source.CopyTableSchemaTo("Parent", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.TableOnly).Items.Single();
+                var result = source.CopyTableSchemaTo("Parent", target, relationshipBehavior: RelatedTableBehavior.TableOnly).Items.Single();
 
                 // Assert
                 Assert.AreEqual("Parent", result.Target.Table.Table.Name);

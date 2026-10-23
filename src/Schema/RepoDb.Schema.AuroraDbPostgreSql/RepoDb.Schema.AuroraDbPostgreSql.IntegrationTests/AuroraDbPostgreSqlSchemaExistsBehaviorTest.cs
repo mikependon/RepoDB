@@ -67,12 +67,12 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
-                source.CopyTableSchemaTo(new[] { "country", "Person" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip, createdCallback: results.Add);
+                source.CopyTableSchemaTo(new[] { "country", "Person" }, target, tableExistenceBehavior: TableExistsBehavior.Skip, createdCallback: results.Add);
 
                 // Assert
-                Assert.AreEqual(CopyTableSchemaOutcome.Skipped, results.Single(r => r.Target.Table.Table.Name == "country").Outcome);
+                Assert.AreEqual(TableOutcome.Skipped, results.Single(r => r.Target.Table.Table.Name == "country").Outcome);
                 Assert.AreEqual(true, results.Single(r => r.Target.Table.Table.Name == "country").TableExisted);
-                Assert.AreEqual(CopyTableSchemaOutcome.Created, results.Single(r => r.Target.Table.Table.Name == "Person").Outcome);
+                Assert.AreEqual(TableOutcome.Created, results.Single(r => r.Target.Table.Table.Name == "Person").Outcome);
                 Assert.AreEqual(false, results.Single(r => r.Target.Table.Table.Name == "Person").TableExisted);
                 Assert.AreEqual(1, CountCountries(target));
                 Helper.AssertTargetMatchesSource("Person");
@@ -94,7 +94,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 source.CopyTableSchemaTo(new[] { "country", "Person" }, target, createdCallback: results.Add);
 
                 // Assert
-                Assert.IsTrue(results.All(r => r.Outcome == CopyTableSchemaOutcome.Skipped));
+                Assert.IsTrue(results.All(r => r.Outcome == TableOutcome.Skipped));
                 Assert.AreEqual(2, results.Count);
             }
         }
@@ -113,7 +113,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 var result = source.CopyTableSchemaTo("country", target).Items.Single();
 
                 // Assert
-                Assert.AreEqual(CopyTableSchemaOutcome.Skipped, result.Outcome);
+                Assert.AreEqual(TableOutcome.Skipped, result.Outcome);
             }
         }
 
@@ -130,11 +130,11 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
-                await source.CopyTableSchemaToAsync(new[] { "country", "Person" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip, createdCallback: results.Add);
+                await source.CopyTableSchemaToAsync(new[] { "country", "Person" }, target, tableExistenceBehavior: TableExistsBehavior.Skip, createdCallback: results.Add);
 
                 // Assert
-                Assert.AreEqual(CopyTableSchemaOutcome.Skipped, results.Single(r => r.Target.Table.Table.Name == "country").Outcome);
-                Assert.AreEqual(CopyTableSchemaOutcome.Created, results.Single(r => r.Target.Table.Table.Name == "Person").Outcome);
+                Assert.AreEqual(TableOutcome.Skipped, results.Single(r => r.Target.Table.Table.Name == "country").Outcome);
+                Assert.AreEqual(TableOutcome.Created, results.Single(r => r.Target.Table.Table.Name == "Person").Outcome);
                 Assert.AreEqual(1, CountCountries(target));
             }
         }
@@ -155,7 +155,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
 
                 // Act/Assert
                 Assert.Throws<InvalidOperationException>(() =>
-                    source.CopyTableSchemaTo(new[] { "country", "Person" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
+                    source.CopyTableSchemaTo(new[] { "country", "Person" }, target, tableExistenceBehavior: TableExistsBehavior.Throw));
 
                 // Assert
                 Assert.IsFalse(Helper.TargetTableExists("Person"));
@@ -174,7 +174,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
 
                 // Act/Assert
                 await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                    source.CopyTableSchemaToAsync(new[] { "country", "Person" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
+                    source.CopyTableSchemaToAsync(new[] { "country", "Person" }, target, tableExistenceBehavior: TableExistsBehavior.Throw));
                 Assert.IsFalse(Helper.TargetTableExists("Person"));
             }
         }
@@ -189,7 +189,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                source.CopyTableSchemaTo(new[] { "country", "Person" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw);
+                source.CopyTableSchemaTo(new[] { "country", "Person" }, target, tableExistenceBehavior: TableExistsBehavior.Throw);
 
                 // Assert
                 Helper.AssertTargetMatchesSource("country");
@@ -214,10 +214,10 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
-                source.CopyTableSchemaTo(new[] { "country", "Person" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop, createdCallback: results.Add);
+                source.CopyTableSchemaTo(new[] { "country", "Person" }, target, tableExistenceBehavior: TableExistsBehavior.Drop, createdCallback: results.Add);
 
                 // Assert
-                Assert.IsTrue(results.All(r => r.Outcome == CopyTableSchemaOutcome.Dropped));
+                Assert.IsTrue(results.All(r => r.Outcome == TableOutcome.Dropped));
                 Assert.IsTrue(results.All(r => r.TableExisted == true));
                 StringAssert.StartsWith(results.Single(r => r.Target.Table.Table.Name == "Person").Script, "DROP TABLE IF EXISTS \"public\".\"Person\";", StringComparison.Ordinal);
                 Assert.AreEqual(0, CountCountries(target));
@@ -238,11 +238,11 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
-                source.CopyTableSchemaTo(new[] { "country", "Person" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop, createdCallback: results.Add);
+                source.CopyTableSchemaTo(new[] { "country", "Person" }, target, tableExistenceBehavior: TableExistsBehavior.Drop, createdCallback: results.Add);
 
                 // Assert
-                Assert.AreEqual(CopyTableSchemaOutcome.Dropped, results.Single(r => r.Target.Table.Table.Name == "country").Outcome);
-                Assert.AreEqual(CopyTableSchemaOutcome.Created, results.Single(r => r.Target.Table.Table.Name == "Person").Outcome);
+                Assert.AreEqual(TableOutcome.Dropped, results.Single(r => r.Target.Table.Table.Name == "country").Outcome);
+                Assert.AreEqual(TableOutcome.Created, results.Single(r => r.Target.Table.Table.Name == "Person").Outcome);
                 Helper.AssertTargetMatchesSource("Person");
             }
         }
@@ -259,7 +259,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 InsertCountry(target);
 
                 // Act
-                await source.CopyTableSchemaToAsync(new[] { "country", "Person" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
+                await source.CopyTableSchemaToAsync(new[] { "country", "Person" }, target, tableExistenceBehavior: TableExistsBehavior.Drop);
 
                 // Assert
                 Assert.AreEqual(0, CountCountries(target));
@@ -284,11 +284,11 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
-                source.CopyTableSchemaTo(new[] { "Person" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
+                source.CopyTableSchemaTo(new[] { "Person" }, target, tableExistenceBehavior: TableExistsBehavior.Align, createdCallback: results.Add);
 
                 // Assert
                 var result = results.Single();
-                Assert.AreEqual(CopyTableSchemaOutcome.Aligned, result.Outcome);
+                Assert.AreEqual(TableOutcome.Aligned, result.Outcome);
                 Assert.AreEqual(true, result.TableExisted);
                 CollectionAssert.AreEquivalent(new[] { "Age", "Salary", "CreatedAt", "CountryId", "Double", "Token", "Photo", "Active" }, result.AddedColumns.ToArray());
                 CollectionAssert.AreEquivalent(new[] { "ix_person_name", "ux_person_token" }, result.AddedIndexes.ToArray());
@@ -307,14 +307,14 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 CreateSmallPerson(target);
-                source.CopyTableSchemaTo(new[] { "Person" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
+                source.CopyTableSchemaTo(new[] { "Person" }, target, tableExistenceBehavior: TableExistsBehavior.Align);
                 var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
-                source.CopyTableSchemaTo(new[] { "Person" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
+                source.CopyTableSchemaTo(new[] { "Person" }, target, tableExistenceBehavior: TableExistsBehavior.Align, createdCallback: results.Add);
 
                 // Assert
-                Assert.AreEqual(CopyTableSchemaOutcome.Aligned, results.Single().Outcome);
+                Assert.AreEqual(TableOutcome.Aligned, results.Single().Outcome);
                 Assert.AreEqual(0, results.Single().AddedColumns.Count);
                 Assert.AreEqual(0, results.Single().AddedIndexes.Count);
             }
@@ -332,11 +332,11 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
-                source.CopyTableSchemaTo(new[] { "country", "Person" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
+                source.CopyTableSchemaTo(new[] { "country", "Person" }, target, tableExistenceBehavior: TableExistsBehavior.Align, createdCallback: results.Add);
 
                 // Assert
-                Assert.AreEqual(CopyTableSchemaOutcome.Aligned, results.Single(r => r.Target.Table.Table.Name == "country").Outcome);
-                Assert.AreEqual(CopyTableSchemaOutcome.Created, results.Single(r => r.Target.Table.Table.Name == "Person").Outcome);
+                Assert.AreEqual(TableOutcome.Aligned, results.Single(r => r.Target.Table.Table.Name == "country").Outcome);
+                Assert.AreEqual(TableOutcome.Created, results.Single(r => r.Target.Table.Table.Name == "Person").Outcome);
                 Helper.AssertTargetMatchesSource("Person");
             }
         }
@@ -353,7 +353,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
-                await source.CopyTableSchemaToAsync(new[] { "Person" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
+                await source.CopyTableSchemaToAsync(new[] { "Person" }, target, tableExistenceBehavior: TableExistsBehavior.Align, createdCallback: results.Add);
 
                 // Assert
                 CollectionAssert.AreEquivalent(new[] { "Age", "Salary", "CreatedAt", "CountryId", "Double", "Token", "Photo", "Active" }, results.Single().AddedColumns.ToArray());
@@ -377,10 +377,10 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 InsertCountry(target);
 
                 // Act
-                var result = source.CopyTableSchemaTo("Person", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Parents).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "Person", StringComparison.OrdinalIgnoreCase));
+                var result = source.CopyTableSchemaTo("Person", target, tableExistenceBehavior: TableExistsBehavior.Skip, relationshipBehavior: RelatedTableBehavior.Parents).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "Person", StringComparison.OrdinalIgnoreCase));
 
                 // Assert
-                Assert.AreEqual(CopyTableSchemaOutcome.Created, result.Outcome);
+                Assert.AreEqual(TableOutcome.Created, result.Outcome);
                 Assert.AreEqual(1, CountCountries(target));
                 Helper.AssertTargetMatchesSource("Person");
             }

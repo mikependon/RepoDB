@@ -132,8 +132,8 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             Assert.AreEqual(new TableInfo("country", "public"), foreignKey.ReferencedTable);
             CollectionAssert.AreEqual(new[] { "CountryId" }, foreignKey.Columns.ToArray());
             CollectionAssert.AreEqual(new[] { "id" }, foreignKey.ReferencedColumns.ToArray());
-            Assert.AreEqual(CopyTableSchemaForeignKeyRule.Cascade, foreignKey.DeleteRule);
-            Assert.AreEqual(CopyTableSchemaForeignKeyRule.SetNull, foreignKey.UpdateRule);
+            Assert.AreEqual(ForeignKeyRule.Cascade, foreignKey.DeleteRule);
+            Assert.AreEqual(ForeignKeyRule.SetNull, foreignKey.UpdateRule);
         }
 
         [TestMethod]

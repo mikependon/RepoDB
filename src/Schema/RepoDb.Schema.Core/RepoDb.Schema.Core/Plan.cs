@@ -17,7 +17,7 @@ namespace RepoDb.Schema
     /// <summary>
     /// A class that holds what a schema copy is going to do to the tables of the destination database: the statements to be executed,
     /// the table that each statement belongs to, and the statement that completes each table. It is created from the state of the
-    /// destination tables (see <see cref="PlanTable"/>) and the <see cref="CopyTableSchemaExistsBehavior"/>.
+    /// destination tables (see <see cref="PlanTable"/>) and the <see cref="TableExistsBehavior"/>.
     /// </summary>
     internal sealed class Plan
     {
@@ -82,13 +82,13 @@ namespace RepoDb.Schema
         /// <param name="behavior">Defines what happens to the tables that already exist in the destination database.</param>
         /// <param name="composer">The composer of the destination database.</param>
         /// <returns>The plan.</returns>
-        /// <exception cref="InvalidOperationException">The behavior is <see cref="CopyTableSchemaExistsBehavior.Throw"/> and a table already exists.</exception>
+        /// <exception cref="InvalidOperationException">The behavior is <see cref="TableExistsBehavior.Throw"/> and a table already exists.</exception>
         public static Plan Create(IList<PlanTable> tables,
-            CopyTableSchemaExistsBehavior behavior,
+            TableExistsBehavior behavior,
             ISchemaComposer composer)
         {
             SetOutcomes(tables, behavior);
-            var created = tables.Where(table => table.Exists != true || behavior == CopyTableSchemaExistsBehavior.Drop).ToList();
+            var created = tables.Where(table => table.Exists != true || behavior == TableExistsBehavior.Drop).ToList();
             var steps = GetDropSteps(tables, composer).Concat(GetAlignSteps(tables, composer)).ToList();
             var createSteps = GetCreateSteps(created, composer);
             var foreignKeyOffset = steps.Count + createSteps.Count;
@@ -98,8 +98,8 @@ namespace RepoDb.Schema
             var owners = GetCreateOwners(created, createSteps.Count);
             steps.AddRange(createSteps.Select((statement, i) => new PlanStep(statement, owners[i])));
             steps.AddRange(GetAlignForeignKeySteps(tables, composer).ToList());
-            var immediate = tables.Where(table => table.Outcome == CopyTableSchemaOutcome.Skipped ||
-                (table.Outcome == CopyTableSchemaOutcome.Aligned && !table.MissingColumns.Any() && !table.MissingIndexes.Any() && !table.MissingForeignKeys.Any())).ToList();
+            var immediate = tables.Where(table => table.Outcome == TableOutcome.Skipped ||
+                (table.Outcome == TableOutcome.Aligned && !table.MissingColumns.Any() && !table.MissingIndexes.Any() && !table.MissingForeignKeys.Any())).ToList();
             return new Plan(steps, completions, immediate);
         }
 
@@ -194,22 +194,22 @@ namespace RepoDb.Schema
         /// <param name="tables"></param>
         /// <param name="behavior"></param>
         private static void SetOutcomes(IEnumerable<PlanTable> tables,
-            CopyTableSchemaExistsBehavior behavior)
+            TableExistsBehavior behavior)
         {
             foreach (var table in tables.Where(table => table.Exists == true))
             {
                 switch (behavior)
                 {
-                    case CopyTableSchemaExistsBehavior.Throw:
+                    case TableExistsBehavior.Throw:
                         throw new InvalidOperationException($"The table '{table.Schema.Table.Name}' already exists in the destination database.");
-                    case CopyTableSchemaExistsBehavior.Align:
-                        table.Outcome = CopyTableSchemaOutcome.Aligned;
+                    case TableExistsBehavior.Align:
+                        table.Outcome = TableOutcome.Aligned;
                         break;
-                    case CopyTableSchemaExistsBehavior.Drop:
-                        table.Outcome = CopyTableSchemaOutcome.Dropped;
+                    case TableExistsBehavior.Drop:
+                        table.Outcome = TableOutcome.Dropped;
                         break;
                     default:
-                        table.Outcome = CopyTableSchemaOutcome.Skipped;
+                        table.Outcome = TableOutcome.Skipped;
                         break;
                 }
             }
@@ -224,7 +224,7 @@ namespace RepoDb.Schema
         private static IEnumerable<PlanStep> GetDropSteps(IEnumerable<PlanTable> tables,
             ISchemaComposer composer) =>
             tables
-                .Where(table => table.Outcome == CopyTableSchemaOutcome.Dropped)
+                .Where(table => table.Outcome == TableOutcome.Dropped)
                 .Reverse()
                 .Select(table => new PlanStep(table.DropStatement = composer.ComposeDropTable(table.Name), table));
 
@@ -237,7 +237,7 @@ namespace RepoDb.Schema
         private static IEnumerable<PlanStep> GetAlignSteps(IEnumerable<PlanTable> tables,
             ISchemaComposer composer)
         {
-            foreach (var table in tables.Where(table => table.Outcome == CopyTableSchemaOutcome.Aligned))
+            foreach (var table in tables.Where(table => table.Outcome == TableOutcome.Aligned))
             {
                 var statements = table.MissingColumns.Select(column => composer.ComposeAddColumn(table.Name, column))
                     .Concat(table.MissingIndexes.Select(index => composer.ComposeCreateIndex(table.Name, index)))
@@ -260,7 +260,7 @@ namespace RepoDb.Schema
         private static IEnumerable<PlanStep> GetAlignForeignKeySteps(IEnumerable<PlanTable> tables,
             ISchemaComposer composer)
         {
-            foreach (var table in tables.Where(table => table.Outcome == CopyTableSchemaOutcome.Aligned))
+            foreach (var table in tables.Where(table => table.Outcome == TableOutcome.Aligned))
             {
                 var statements = table.MissingForeignKeys.Select(foreignKey => composer.ComposeAddForeignKey(table.Name, foreignKey)).ToList();
                 table.AlignStatements = table.AlignStatements.Concat(statements).ToList();
@@ -293,9 +293,9 @@ namespace RepoDb.Schema
         private static IEnumerable<(int Key, PlanTable Table)> GetAlignCompletions(IList<PlanTable> tables,
             int foreignKeyOffset)
         {
-            var cursor = tables.Count(table => table.Outcome == CopyTableSchemaOutcome.Dropped);
+            var cursor = tables.Count(table => table.Outcome == TableOutcome.Dropped);
             var foreignKeyCursor = foreignKeyOffset;
-            foreach (var table in tables.Where(table => table.Outcome == CopyTableSchemaOutcome.Aligned))
+            foreach (var table in tables.Where(table => table.Outcome == TableOutcome.Aligned))
             {
                 var count = table.MissingColumns.Count + table.MissingIndexes.Count;
                 cursor += count;

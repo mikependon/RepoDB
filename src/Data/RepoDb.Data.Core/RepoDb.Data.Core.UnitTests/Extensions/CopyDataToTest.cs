@@ -42,11 +42,11 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             CopyRelationshipBehavior.ParentsAndChildren
         };
 
-        private static readonly CopyTableSchemaExistsBehavior[] ExistsBehaviors =
+        private static readonly TableExistsBehavior[] ExistsBehaviors =
         {
-            CopyTableSchemaExistsBehavior.Align,
-            CopyTableSchemaExistsBehavior.Throw,
-            CopyTableSchemaExistsBehavior.Drop
+            TableExistsBehavior.Align,
+            TableExistsBehavior.Throw,
+            TableExistsBehavior.Drop
         };
 
         #endregion
@@ -581,7 +581,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
                 return relationship;
             }).ToList();
             var reader = new Mock<ISchemaReader>();
-            reader.Setup(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), It.IsAny<CopyTableSchemaRelationshipBehavior>())).Returns(new[] { "Person", "Country" });
+            reader.Setup(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), It.IsAny<RelatedTableBehavior>())).Returns(new[] { "Person", "Country" });
             reader.Setup(r => r.GetDependencyOrder(It.IsAny<IEnumerable<string>>())).Returns(relationships);
             reader.Setup(r => r.GetTableSchema(It.IsAny<string>())).Returns<string>(name => new TableSchema(name, "dbo") { Columns = { new ColumnInfo() } });
             SchemaReaderMapper.Add<FakeDbConnection>(reader.Object, true);
@@ -845,7 +845,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
                 return relationship;
             }).ToList();
             var reader = new Mock<ISchemaReader>();
-            reader.Setup(r => r.GetRelatedTablesAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<CopyTableSchemaRelationshipBehavior>(), It.IsAny<CancellationToken>())).ReturnsAsync(new[] { "Person", "Country" });
+            reader.Setup(r => r.GetRelatedTablesAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<RelatedTableBehavior>(), It.IsAny<CancellationToken>())).ReturnsAsync(new[] { "Person", "Country" });
             reader.Setup(r => r.GetDependencyOrder(It.IsAny<IEnumerable<string>>())).Returns(relationships);
             reader.Setup(r => r.GetDependencyOrderAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(relationships);
             reader.Setup(r => r.GetTableSchemaAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).Returns<string, CancellationToken>((name, _) => Task.FromResult(new TableSchema(name, "dbo") { Columns = { new ColumnInfo() } }));

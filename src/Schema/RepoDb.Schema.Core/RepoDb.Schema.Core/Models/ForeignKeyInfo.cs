@@ -56,12 +56,12 @@ namespace RepoDb.Schema.Models
         /// <summary>
         /// Gets or sets the rule that is applied when the referenced row is updated.
         /// </summary>
-        public CopyTableSchemaForeignKeyRule UpdateRule { get; internal set; } = CopyTableSchemaForeignKeyRule.NoAction;
+        public ForeignKeyRule UpdateRule { get; internal set; } = ForeignKeyRule.NoAction;
 
         /// <summary>
         /// Gets or sets the rule that is applied when the referenced row is deleted.
         /// </summary>
-        public CopyTableSchemaForeignKeyRule DeleteRule { get; internal set; } = CopyTableSchemaForeignKeyRule.NoAction;
+        public ForeignKeyRule DeleteRule { get; internal set; } = ForeignKeyRule.NoAction;
 
         #endregion
 

@@ -37,7 +37,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
 
         #region Helpers
 
-        private static string[] GetRelatedTables(CopyTableSchemaRelationshipBehavior behavior, params string[] tableNames)
+        private static string[] GetRelatedTables(RelatedTableBehavior behavior, params string[] tableNames)
         {
             using (var connection = new AuroraDbConnection(Database.ConnectionStringForSource))
             {
@@ -45,7 +45,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
             }
         }
 
-        private static async Task<string[]> GetRelatedTablesAsync(CopyTableSchemaRelationshipBehavior behavior, params string[] tableNames)
+        private static async Task<string[]> GetRelatedTablesAsync(RelatedTableBehavior behavior, params string[] tableNames)
         {
             using (var connection = new AuroraDbConnection(Database.ConnectionStringForSource))
             {
@@ -72,7 +72,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesWithTableOnly()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.TableOnly, "chain_b");
+            var actual = GetRelatedTables(RelatedTableBehavior.TableOnly, "chain_b");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "public.chain_b" }, actual);
@@ -82,7 +82,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesWithTableOnlyKeepsTheGivenTablesInOrder()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.TableOnly, "chain_c", "public.chain_a", "chain_c");
+            var actual = GetRelatedTables(RelatedTableBehavior.TableOnly, "chain_c", "public.chain_a", "chain_c");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "public.chain_c", "public.chain_a" }, actual);
@@ -96,7 +96,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesWithParents()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "chain_c");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "chain_c");
 
             // Assert
             AssertSame(new[] { "public.chain_c", "public.chain_b", "public.chain_a" }, actual);
@@ -107,7 +107,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesWithParentsDoesNotIncludeTheChildren()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "chain_b");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "chain_b");
 
             // Assert
             AssertSame(new[] { "public.chain_b", "public.chain_a" }, actual);
@@ -117,7 +117,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesWithParentsOfATableWithoutParents()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "chain_a");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "chain_a");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "public.chain_a" }, actual);
@@ -127,7 +127,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesWithParentsOfADiamond()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "d_leaf");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "d_leaf");
 
             // Assert
             AssertSame(new[] { "public.d_leaf", "public.d_left", "public.d_right", "public.d_root" }, actual);
@@ -137,7 +137,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesWithParentsAcrossSchemas()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "sales.order_line");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "sales.order_line");
 
             // Assert
             AssertSame(new[] { "sales.order_line", "public.\"Person\"", "public.country" }, actual);
@@ -147,7 +147,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesWithParentsOfTablesWithTheSameNameInDifferentSchemas()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "item_ref");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "item_ref");
 
             // Assert
             AssertSame(new[] { "public.item_ref", "public.item", "sales.item" }, actual);
@@ -157,7 +157,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesWithParentsOfTablesWithTheSameNameInDifferentSchemasDoesNotMixThem()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "sales.item");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "sales.item");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "sales.item" }, actual);
@@ -167,7 +167,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesWithParentsOfMultipleForeignKeysToTheSameTable()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "transfer");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "transfer");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "public.transfer", "public.account" }, actual);
@@ -177,7 +177,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesWithParentsOfACompositeForeignKey()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "shipment");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "shipment");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "public.shipment", "public.region_code" }, actual);
@@ -187,7 +187,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesWithParentsOfTablesWithSpecialNames()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "public.\"odd name\"");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "public.\"odd name\"");
 
             // Assert
             AssertSame(new[] { "public.\"odd name\"", "public.\"odd.name\"" }, actual);
@@ -201,7 +201,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesWithChildren()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "chain_a");
+            var actual = GetRelatedTables(RelatedTableBehavior.Children, "chain_a");
 
             // Assert
             AssertSame(new[] { "public.chain_a", "public.chain_b", "public.chain_c" }, actual);
@@ -212,7 +212,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesWithChildrenDoesNotIncludeTheParents()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "chain_b");
+            var actual = GetRelatedTables(RelatedTableBehavior.Children, "chain_b");
 
             // Assert
             AssertSame(new[] { "public.chain_b", "public.chain_c" }, actual);
@@ -222,7 +222,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesWithChildrenOfATableWithoutChildren()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "chain_c");
+            var actual = GetRelatedTables(RelatedTableBehavior.Children, "chain_c");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "public.chain_c" }, actual);
@@ -232,7 +232,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesWithChildrenOfADiamond()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "d_root");
+            var actual = GetRelatedTables(RelatedTableBehavior.Children, "d_root");
 
             // Assert
             AssertSame(new[] { "public.d_root", "public.d_left", "public.d_right", "public.d_leaf" }, actual);
@@ -242,7 +242,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesWithChildrenAcrossSchemas()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "country");
+            var actual = GetRelatedTables(RelatedTableBehavior.Children, "country");
 
             // Assert
             AssertSame(new[] { "public.country", "public.\"Person\"", "sales.order_line" }, actual);
@@ -252,7 +252,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesWithChildrenOfATableWithManyChildren()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "fan_parent");
+            var actual = GetRelatedTables(RelatedTableBehavior.Children, "fan_parent");
 
             // Assert
             AssertSame(new[] { "public.fan_parent", "public.fan_1", "public.fan_2", "public.fan_3" }, actual);
@@ -266,7 +266,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesWithParentsAndChildren()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "chain_b");
+            var actual = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "chain_b");
 
             // Assert
             AssertSame(new[] { "public.chain_b", "public.chain_a", "public.chain_c" }, actual);
@@ -277,8 +277,8 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesWithParentsAndChildrenGivesTheSameTablesFromAnyTableOfTheTree()
         {
             // Act
-            var fromTheRoot = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "chain_a");
-            var fromTheLeaf = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "chain_c");
+            var fromTheRoot = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "chain_a");
+            var fromTheLeaf = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "chain_c");
 
             // Assert
             AssertSame(fromTheRoot, fromTheLeaf);
@@ -288,7 +288,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesWithParentsAndChildrenOfADiamond()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "d_left");
+            var actual = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "d_left");
 
             // Assert
             AssertSame(new[] { "public.d_left", "public.d_root", "public.d_right", "public.d_leaf" }, actual);
@@ -298,7 +298,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesWithParentsAndChildrenReachesTheOtherBranches()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "sales.order_line");
+            var actual = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "sales.order_line");
 
             // Assert
             AssertSame(new[] { "sales.order_line", "public.\"Person\"", "public.country" }, actual);
@@ -308,7 +308,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesWithParentsAndChildrenDoesNotIncludeTheUnrelatedTables()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "chain_a");
+            var actual = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "chain_a");
 
             // Assert
             Assert.IsFalse(actual.Contains("public.country"));
@@ -320,7 +320,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesWithParentsAndChildrenOfATableWithoutRelationships()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "no_key");
+            var actual = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "no_key");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "public.no_key" }, actual);
@@ -333,7 +333,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         [TestMethod]
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesOfACycle()
         {
-            foreach (var behavior in new[] { CopyTableSchemaRelationshipBehavior.Parents, CopyTableSchemaRelationshipBehavior.Children, CopyTableSchemaRelationshipBehavior.ParentsAndChildren })
+            foreach (var behavior in new[] { RelatedTableBehavior.Parents, RelatedTableBehavior.Children, RelatedTableBehavior.ParentsAndChildren })
             {
                 // Act
                 var actual = GetRelatedTables(behavior, "node_a");
@@ -346,7 +346,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         [TestMethod]
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesOfACycleOfThreeTables()
         {
-            foreach (var behavior in new[] { CopyTableSchemaRelationshipBehavior.Parents, CopyTableSchemaRelationshipBehavior.Children, CopyTableSchemaRelationshipBehavior.ParentsAndChildren })
+            foreach (var behavior in new[] { RelatedTableBehavior.Parents, RelatedTableBehavior.Children, RelatedTableBehavior.ParentsAndChildren })
             {
                 // Act
                 var actual = GetRelatedTables(behavior, "ring_1");
@@ -360,9 +360,9 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesOfACycleWithTablesAroundIt()
         {
             // Act
-            var parents = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "loop_b");
-            var children = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Children, "loop_a");
-            var endToEnd = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "loop_a");
+            var parents = GetRelatedTables(RelatedTableBehavior.Parents, "loop_b");
+            var children = GetRelatedTables(RelatedTableBehavior.Children, "loop_a");
+            var endToEnd = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "loop_a");
 
             // Assert
             AssertSame(new[] { "public.loop_b", "public.loop_a", "public.loop_base" }, parents);
@@ -373,7 +373,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         [TestMethod]
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesOfASelfReference()
         {
-            foreach (var behavior in new[] { CopyTableSchemaRelationshipBehavior.Parents, CopyTableSchemaRelationshipBehavior.Children, CopyTableSchemaRelationshipBehavior.ParentsAndChildren })
+            foreach (var behavior in new[] { RelatedTableBehavior.Parents, RelatedTableBehavior.Children, RelatedTableBehavior.ParentsAndChildren })
             {
                 // Act
                 var actual = GetRelatedTables(behavior, "employee");
@@ -391,7 +391,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesOfMultipleTables()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "chain_c", "d_left");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "chain_c", "d_left");
 
             // Assert
             AssertSame(new[] { "public.chain_c", "public.d_left", "public.chain_b", "public.chain_a", "public.d_root" }, actual);
@@ -402,7 +402,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesDoesNotRepeatATable()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "chain_a", "chain_b", "chain_c");
+            var actual = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren, "chain_a", "chain_b", "chain_c");
 
             // Assert
             CollectionAssert.AreEqual(new[] { "public.chain_a", "public.chain_b", "public.chain_c" }, actual);
@@ -412,7 +412,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesWithoutTables()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.ParentsAndChildren);
+            var actual = GetRelatedTables(RelatedTableBehavior.ParentsAndChildren);
 
             // Assert
             Assert.AreEqual(0, actual.Length);
@@ -422,7 +422,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         public void TestAuroraDbPostgreSqlSchemaRelatedTablesAreComparedWithTheCase()
         {
             // Act
-            var actual = GetRelatedTables(CopyTableSchemaRelationshipBehavior.Parents, "\"Person\"");
+            var actual = GetRelatedTables(RelatedTableBehavior.Parents, "\"Person\"");
 
             // Assert
             AssertSame(new[] { "public.\"Person\"", "public.country" }, actual);
@@ -435,7 +435,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
             using (var connection = new AuroraDbConnection(Database.ConnectionStringForSource))
             {
                 var reader = new AuroraDbPostgreSqlSchemaReader(connection);
-                var related = reader.GetRelatedTables(new[] { "chain_c" }, CopyTableSchemaRelationshipBehavior.Parents);
+                var related = reader.GetRelatedTables(new[] { "chain_c" }, RelatedTableBehavior.Parents);
                 var actual = reader.GetDependencyOrder(related).Select(r => r.Schema.Table.Name).ToArray();
 
                 // Assert
@@ -451,17 +451,17 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         public async Task TestAuroraDbPostgreSqlSchemaRelatedTablesAsyncWithEachBehavior()
         {
             // Act/Assert
-            CollectionAssert.AreEqual(new[] { "public.chain_b" }, await GetRelatedTablesAsync(CopyTableSchemaRelationshipBehavior.TableOnly, "chain_b"));
-            AssertSame(new[] { "public.chain_b", "public.chain_a" }, await GetRelatedTablesAsync(CopyTableSchemaRelationshipBehavior.Parents, "chain_b"));
-            AssertSame(new[] { "public.chain_b", "public.chain_c" }, await GetRelatedTablesAsync(CopyTableSchemaRelationshipBehavior.Children, "chain_b"));
-            AssertSame(new[] { "public.chain_b", "public.chain_a", "public.chain_c" }, await GetRelatedTablesAsync(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "chain_b"));
+            CollectionAssert.AreEqual(new[] { "public.chain_b" }, await GetRelatedTablesAsync(RelatedTableBehavior.TableOnly, "chain_b"));
+            AssertSame(new[] { "public.chain_b", "public.chain_a" }, await GetRelatedTablesAsync(RelatedTableBehavior.Parents, "chain_b"));
+            AssertSame(new[] { "public.chain_b", "public.chain_c" }, await GetRelatedTablesAsync(RelatedTableBehavior.Children, "chain_b"));
+            AssertSame(new[] { "public.chain_b", "public.chain_a", "public.chain_c" }, await GetRelatedTablesAsync(RelatedTableBehavior.ParentsAndChildren, "chain_b"));
         }
 
         [TestMethod]
         public async Task TestAuroraDbPostgreSqlSchemaRelatedTablesAsyncOfACycle()
         {
             // Act
-            var actual = await GetRelatedTablesAsync(CopyTableSchemaRelationshipBehavior.ParentsAndChildren, "node_a");
+            var actual = await GetRelatedTablesAsync(RelatedTableBehavior.ParentsAndChildren, "node_a");
 
             // Assert
             AssertSame(new[] { "public.node_a", "public.node_b" }, actual);
@@ -478,7 +478,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
             {
                 // Act/Assert
                 Assert.Throws<ArgumentNullException>(() =>
-                    new AuroraDbPostgreSqlSchemaReader(connection).GetRelatedTables(null, CopyTableSchemaRelationshipBehavior.ParentsAndChildren));
+                    new AuroraDbPostgreSqlSchemaReader(connection).GetRelatedTables(null, RelatedTableBehavior.ParentsAndChildren));
             }
         }
 
@@ -487,7 +487,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
         {
             // Act/Assert
             Assert.Throws<ArgumentOutOfRangeException>(() =>
-                GetRelatedTables((CopyTableSchemaRelationshipBehavior)99, "chain_b"));
+                GetRelatedTables((RelatedTableBehavior)99, "chain_b"));
         }
 
         #endregion
@@ -504,7 +504,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 SchemaReaderMapper.Add<AuroraDbConnection>(new AuroraDbPostgreSqlSchemaReader(source), true);
 
                 // Act
-                source.CopyTableSchemaTo(new[] { "chain_c" }, target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Parents);
+                source.CopyTableSchemaTo(new[] { "chain_c" }, target, relationshipBehavior: RelatedTableBehavior.Parents);
 
                 // Assert
                 AssertSame(new[] { "public.chain_a", "public.chain_b", "public.chain_c" }, GetTargetTables());
@@ -524,7 +524,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 SchemaReaderMapper.Add<AuroraDbConnection>(new AuroraDbPostgreSqlSchemaReader(source), true);
 
                 // Act
-                source.CopyTableSchemaTo(new[] { "chain_a" }, target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Children);
+                source.CopyTableSchemaTo(new[] { "chain_a" }, target, relationshipBehavior: RelatedTableBehavior.Children);
 
                 // Assert
                 AssertSame(new[] { "public.chain_a", "public.chain_b", "public.chain_c" }, GetTargetTables());
@@ -543,7 +543,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "chain_b" }, target,
-                    relationshipBehavior: CopyTableSchemaRelationshipBehavior.ParentsAndChildren,
+                    relationshipBehavior: RelatedTableBehavior.ParentsAndChildren,
                     createdCallback: r => created.Add(r.Target.Table.Table.Name));
 
                 // Assert
@@ -563,7 +563,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
 
                 // Act/Assert
                 Assert.ThrowsExactly<AuroraDbException>(() =>
-                    source.CopyTableSchemaTo(new[] { "chain_b" }, target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.TableOnly));
+                    source.CopyTableSchemaTo(new[] { "chain_b" }, target, relationshipBehavior: RelatedTableBehavior.TableOnly));
             }
         }
 
@@ -577,7 +577,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 SchemaReaderMapper.Add<AuroraDbConnection>(new AuroraDbPostgreSqlSchemaReader(source), true);
 
                 // Act
-                source.CopyTableSchemaTo(new[] { "loop_a" }, target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.ParentsAndChildren);
+                source.CopyTableSchemaTo(new[] { "loop_a" }, target, relationshipBehavior: RelatedTableBehavior.ParentsAndChildren);
 
                 // Assert
                 AssertSame(new[] { "public.loop_base", "public.loop_a", "public.loop_b", "public.loop_tail" }, GetTargetTables());
@@ -594,7 +594,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 SchemaReaderMapper.Add<AuroraDbConnection>(new AuroraDbPostgreSqlSchemaReader(source), true);
 
                 // Act
-                await source.CopyTableSchemaToAsync(new[] { "chain_b" }, target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.ParentsAndChildren);
+                await source.CopyTableSchemaToAsync(new[] { "chain_b" }, target, relationshipBehavior: RelatedTableBehavior.ParentsAndChildren);
 
                 // Assert
                 AssertSame(new[] { "public.chain_a", "public.chain_b", "public.chain_c" }, GetTargetTables());
@@ -612,11 +612,11 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 SchemaReaderMapper.Add<AuroraDbConnection>(new AuroraDbPostgreSqlSchemaReader(source), true);
 
                 // Act
-                var result = source.CopyTableSchemaTo("chain_c", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Parents).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "chain_c", StringComparison.OrdinalIgnoreCase));
+                var result = source.CopyTableSchemaTo("chain_c", target, relationshipBehavior: RelatedTableBehavior.Parents).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "chain_c", StringComparison.OrdinalIgnoreCase));
 
                 // Assert
                 Assert.AreEqual("chain_c", result.Target.Table.Table.Name);
-                Assert.AreEqual(CopyTableSchemaOutcome.Created, result.Outcome);
+                Assert.AreEqual(TableOutcome.Created, result.Outcome);
                 AssertSame(new[] { "public.chain_a", "public.chain_b", "public.chain_c" }, GetTargetTables().ToArray());
             }
         }
@@ -631,7 +631,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 SchemaReaderMapper.Add<AuroraDbConnection>(new AuroraDbPostgreSqlSchemaReader(source), true);
 
                 // Act
-                var result = (await source.CopyTableSchemaToAsync("chain_b", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.ParentsAndChildren)).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "chain_b", StringComparison.OrdinalIgnoreCase));
+                var result = (await source.CopyTableSchemaToAsync("chain_b", target, relationshipBehavior: RelatedTableBehavior.ParentsAndChildren)).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "chain_b", StringComparison.OrdinalIgnoreCase));
 
                 // Assert
                 Assert.AreEqual("chain_b", result.Target.Table.Table.Name);
@@ -649,7 +649,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 SchemaReaderMapper.Add<AuroraDbConnection>(new AuroraDbPostgreSqlSchemaReader(source), true);
 
                 // Act
-                var result = source.CopyTableSchemaTo("public.\"odd.name\"", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Children).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "Odd.Name", StringComparison.OrdinalIgnoreCase));
+                var result = source.CopyTableSchemaTo("public.\"odd.name\"", target, relationshipBehavior: RelatedTableBehavior.Children).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "Odd.Name", StringComparison.OrdinalIgnoreCase));
 
                 // Assert
                 Assert.AreEqual("odd.name", result.Target.Table.Table.Name);
@@ -667,7 +667,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 SchemaReaderMapper.Add<AuroraDbConnection>(new AuroraDbPostgreSqlSchemaReader(source), true);
 
                 // Act
-                var result = source.CopyTableSchemaTo("chain_a", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.TableOnly).Items.Single();
+                var result = source.CopyTableSchemaTo("chain_a", target, relationshipBehavior: RelatedTableBehavior.TableOnly).Items.Single();
 
                 // Assert
                 Assert.AreEqual("chain_a", result.Target.Table.Table.Name);

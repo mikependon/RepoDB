@@ -342,8 +342,8 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             Assert.AreEqual("dbo", person.Source.Table.Table.Schema, StringComparer.Ordinal);
             Assert.AreEqual(nameof(CustomDbConnection), person.Source.DatabaseType, StringComparer.Ordinal);
             Assert.AreEqual(nameof(CustomDbConnection), person.Target.DatabaseType, StringComparer.Ordinal);
-            Assert.AreEqual(CopyTableSchemaOutcome.Created, person.Outcome);
-            Assert.AreEqual(CopyTableSchemaExistsBehavior.Skip, person.Action);
+            Assert.AreEqual(TableOutcome.Created, person.Outcome);
+            Assert.AreEqual(TableExistsBehavior.Skip, person.Action);
             Assert.AreEqual(4, person.ColumnCount);
             Assert.AreEqual(1, person.IndexCount);
             Assert.AreEqual(1, person.ForeignKeyCount);
@@ -361,10 +361,10 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var results = new List<CopyTableSchemaResultItem>();
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person" }, new CustomDbConnection(), tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop, createdCallback: results.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person" }, new CustomDbConnection(), tableExistenceBehavior: TableExistsBehavior.Drop, createdCallback: results.Add);
 
             // Assert
-            Assert.AreEqual(CopyTableSchemaExistsBehavior.Drop, results.Single().Action);
+            Assert.AreEqual(TableExistsBehavior.Drop, results.Single().Action);
         }
 
         [TestMethod]
@@ -545,12 +545,12 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var results = new List<CopyTableSchemaResultItem>();
 
             // Act
-            var run = await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" }, new CustomDbConnection(), tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
+            var run = await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" }, new CustomDbConnection(), tableExistenceBehavior: TableExistsBehavior.Align, createdCallback: results.Add);
 
             // Assert
             Assert.AreEqual(2, results.Count);
             var person = results.Single(r => r.Target.Table.Table.Name == "Person");
-            Assert.AreEqual(CopyTableSchemaExistsBehavior.Align, person.Action);
+            Assert.AreEqual(TableExistsBehavior.Align, person.Action);
             Assert.AreEqual(4, person.ColumnCount);
             Assert.AreEqual(1, person.ForeignKeyCount);
             Assert.AreEqual("CREATE TABLE Person;", person.Script, StringComparer.Ordinal);

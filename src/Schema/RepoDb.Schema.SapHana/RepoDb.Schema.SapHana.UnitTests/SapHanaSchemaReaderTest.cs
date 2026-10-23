@@ -75,7 +75,7 @@ namespace RepoDb.Schema.SapHana.UnitTests
             var reader = new SapHanaSchemaReader(new HanaConnection());
 
             // Act/Assert
-            Assert.Throws<ArgumentNullException>(() => reader.GetRelatedTables(null, CopyTableSchemaRelationshipBehavior.ParentsAndChildren));
+            Assert.Throws<ArgumentNullException>(() => reader.GetRelatedTables(null, RelatedTableBehavior.ParentsAndChildren));
         }
 
         [TestMethod]
@@ -85,7 +85,7 @@ namespace RepoDb.Schema.SapHana.UnitTests
             var reader = new SapHanaSchemaReader(new HanaConnection());
 
             // Act/Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(() => reader.GetRelatedTablesAsync(null, CopyTableSchemaRelationshipBehavior.ParentsAndChildren));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => reader.GetRelatedTablesAsync(null, RelatedTableBehavior.ParentsAndChildren));
         }
 
         #endregion

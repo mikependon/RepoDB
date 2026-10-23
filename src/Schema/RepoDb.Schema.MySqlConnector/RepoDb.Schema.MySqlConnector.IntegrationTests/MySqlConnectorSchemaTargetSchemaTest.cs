@@ -139,8 +139,8 @@ namespace RepoDb.Schema.MySqlConnector.IntegrationTests
                 source.CopyTableSchemaTo(new[] { "Country" }, target, createdCallback: results.Add);
 
                 // Assert
-                Assert.AreEqual(CopyTableSchemaOutcome.Skipped, results[0].Outcome);
-                Assert.AreEqual(CopyTableSchemaOutcome.Created, results[1].Outcome);
+                Assert.AreEqual(TableOutcome.Skipped, results[0].Outcome);
+                Assert.AreEqual(TableOutcome.Created, results[1].Outcome);
                 CollectionAssert.AreEquivalent(new[] { $"{Database.TargetSalesName}.Country" }, GetTargetTables(Database.TargetSalesName));
                 CollectionAssert.AreEquivalent(new[] { "Country" }, GetTargetTables());
             }

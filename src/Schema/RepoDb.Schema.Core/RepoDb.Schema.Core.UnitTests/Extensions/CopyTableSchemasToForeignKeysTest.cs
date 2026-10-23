@@ -129,12 +129,12 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var results = new List<CopyTableSchemaResultItem>();
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: TableExistsBehavior.Align, createdCallback: results.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "ADD FK_Orders_Customers TO Orders;" }, destination.ExecutedCommands);
             var orders = results.Single(r => r.Target.Table.Table.Name == "Orders");
-            Assert.AreEqual(CopyTableSchemaOutcome.Aligned, orders.Outcome);
+            Assert.AreEqual(TableOutcome.Aligned, orders.Outcome);
             CollectionAssert.AreEqual(new[] { "FK_Orders_Customers" }, orders.AddedForeignKeys.ToList());
             StringAssert.Contains(orders.Script, "ADD FK_Orders_Customers TO Orders;");
             Assert.AreEqual(0, results.Single(r => r.Target.Table.Table.Name == "Customers").AddedForeignKeys.Count);
@@ -150,7 +150,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var results = new List<CopyTableSchemaResultItem>();
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: TableExistsBehavior.Align, createdCallback: results.Add);
 
             // Assert
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
@@ -166,7 +166,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Customers", "COLUMN_EXISTS Customers.Id", "TABLE_EXISTS Orders", "COLUMN_EXISTS Orders.Id", "COLUMN_EXISTS Orders.CustomerId", "INDEX_EXISTS Orders.IX_Orders_CustomerId");
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: TableExistsBehavior.Align);
 
             // Assert
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
@@ -181,7 +181,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Orders", "COLUMN_EXISTS Orders.Id", "COLUMN_EXISTS Orders.CustomerId", "INDEX_EXISTS Orders.IX_Orders_CustomerId");
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: TableExistsBehavior.Align);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "CREATE TABLE Customers;", "ADD FK_Orders_Customers TO Orders;" }, destination.ExecutedCommands);
@@ -196,7 +196,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Orders", "COLUMN_EXISTS Orders.Id", "COLUMN_EXISTS Orders.CustomerId", "INDEX_EXISTS Orders.IX_Orders_CustomerId");
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, destination, tableExistenceBehavior: TableExistsBehavior.Align);
 
             // Assert
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
@@ -211,7 +211,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Orders", "TABLE_EXISTS Customers", "COLUMN_EXISTS Orders.Id", "COLUMN_EXISTS Orders.CustomerId", "INDEX_EXISTS Orders.IX_Orders_CustomerId");
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, destination, tableExistenceBehavior: TableExistsBehavior.Align);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "ADD FK_Orders_Customers TO Orders;" }, destination.ExecutedCommands);
@@ -226,7 +226,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Orders", "COLUMN_EXISTS Orders.Id", "COLUMN_EXISTS Orders.CustomerId", "INDEX_EXISTS Orders.IX_Orders_CustomerId");
 
             // Act
-            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Orders" }, destination, tableExistenceBehavior: TableExistsBehavior.Align);
 
             // Assert
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
@@ -241,7 +241,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Orders", "TABLE_EXISTS Customers", "COLUMN_EXISTS Orders.Id", "COLUMN_EXISTS Orders.CustomerId", "INDEX_EXISTS Orders.IX_Orders_CustomerId");
 
             // Act
-            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Orders" }, destination, tableExistenceBehavior: TableExistsBehavior.Align);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "ADD FK_Orders_Customers TO Orders;" }, destination.ExecutedCommands);
@@ -256,7 +256,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Customers", "COLUMN_EXISTS Customers.Id", "TABLE_EXISTS Orders", "COLUMN_EXISTS Orders.Id");
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: TableExistsBehavior.Align);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "ADD COLUMN CustomerId TO Orders;", "CREATE INDEX IX_Orders_CustomerId ON Orders;", "ADD FK_Orders_Customers TO Orders;" }, destination.ExecutedCommands);
@@ -272,7 +272,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var executedWhenReported = new List<(string Table, int Executed)>();
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align,
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: TableExistsBehavior.Align,
                 createdCallback: r => executedWhenReported.Add((r.Target.Table.Table.Name, destination.ExecutedCommands.Count)));
 
             // Assert
@@ -290,7 +290,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var results = new List<CopyTableSchemaResultItem>();
 
             // Act
-            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: TableExistsBehavior.Align, createdCallback: results.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "ADD FK_Orders_Customers TO Orders;" }, destination.ExecutedCommands);
@@ -306,7 +306,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Orders", "COLUMN_EXISTS Orders.Id", "COLUMN_EXISTS Orders.CustomerId", "INDEX_EXISTS Orders.IX_Orders_CustomerId");
 
             // Act
-            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: TableExistsBehavior.Align);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "CREATE TABLE Customers;", "ADD FK_Orders_Customers TO Orders;" }, destination.ExecutedCommands);
@@ -341,7 +341,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination("TABLE_EXISTS Customers", "COLUMN_EXISTS Customers.Id", "TABLE_EXISTS Orders");
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: TableExistsBehavior.Drop);
 
             // Assert
             Assert.AreEqual(1, destination.ExecutedCommands.Count(c => c == "ADD FK_Orders_Customers TO Orders;"));
@@ -452,7 +452,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var results = new List<CopyTableSchemaResultItem>();
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop, createdCallback: results.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, destination, tableExistenceBehavior: TableExistsBehavior.Drop, createdCallback: results.Add);
 
             // Assert
             CollectionAssert.DoesNotContain(destination.ExecutedCommands, "ADD FK_Orders_Customers TO Orders;");

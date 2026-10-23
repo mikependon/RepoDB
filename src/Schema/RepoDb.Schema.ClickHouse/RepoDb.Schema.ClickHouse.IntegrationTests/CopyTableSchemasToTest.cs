@@ -134,8 +134,8 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 Assert.AreEqual(Database.TargetName, person.Target.Database, StringComparer.Ordinal);
                 Assert.AreEqual(nameof(ClickHouseConnection), person.Source.DatabaseType, StringComparer.Ordinal);
                 Assert.AreEqual(nameof(ClickHouseConnection), person.Target.DatabaseType, StringComparer.Ordinal);
-                Assert.AreEqual(CopyTableSchemaExistsBehavior.Skip, person.Action);
-                Assert.AreEqual(CopyTableSchemaOutcome.Created, person.Outcome);
+                Assert.AreEqual(TableExistsBehavior.Skip, person.Action);
+                Assert.AreEqual(TableOutcome.Created, person.Outcome);
                 StringAssert.Contains(person.Script, "CREATE TABLE `Person`", StringComparison.Ordinal);
                 Assert.IsTrue(run.EndTime >= run.StartTime);
                 StringAssert.Contains(results.Single(r => r.Target.Table.Table.Name == "Country").Script, "CREATE TABLE `Country`", StringComparison.Ordinal);
@@ -179,7 +179,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.Target.Table.Table.Name).ToArray());
                 var person = results[1];
                 Assert.IsNull(person.Source.Table.Table.Schema);
-                Assert.AreEqual(CopyTableSchemaOutcome.Created, person.Outcome);
+                Assert.AreEqual(TableOutcome.Created, person.Outcome);
                 Assert.AreEqual(7, person.ColumnCount);
                 Assert.AreEqual(1, person.IndexCount);
                 Assert.AreEqual(0, person.ForeignKeyCount);
@@ -340,10 +340,10 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
 
                 // Act
                 var results = new List<CopyTableSchemaResultItem>();
-                source.CopyTableSchemaTo(new[] { "NoKey" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop, createdCallback: results.Add);
+                source.CopyTableSchemaTo(new[] { "NoKey" }, target, tableExistenceBehavior: TableExistsBehavior.Drop, createdCallback: results.Add);
 
                 // Assert
-                Assert.AreEqual(CopyTableSchemaExistsBehavior.Drop, results.Single().Action);
+                Assert.AreEqual(TableExistsBehavior.Drop, results.Single().Action);
             }
         }
 
@@ -415,7 +415,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 source.CopyTableSchemaTo(new[] { "NoKey" }, target);
 
                 // Act/Assert
-                Assert.Throws<InvalidOperationException>(() => source.CopyTableSchemaTo(new[] { "NoKey" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
+                Assert.Throws<InvalidOperationException>(() => source.CopyTableSchemaTo(new[] { "NoKey" }, target, tableExistenceBehavior: TableExistsBehavior.Throw));
             }
         }
 
@@ -527,11 +527,11 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
 
                 // Act
                 var results = new List<CopyTableSchemaResultItem>();
-                await source.CopyTableSchemaToAsync(new[] { "Person", "Country" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
+                await source.CopyTableSchemaToAsync(new[] { "Person", "Country" }, target, tableExistenceBehavior: TableExistsBehavior.Align, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(2, results.Count);
-                Assert.AreEqual(CopyTableSchemaExistsBehavior.Align, results[1].Action);
+                Assert.AreEqual(TableExistsBehavior.Align, results[1].Action);
                 Assert.AreEqual(Database.SourceName, results[1].Source.Database, StringComparer.Ordinal);
                 Assert.AreEqual(Database.TargetName, results[1].Target.Database, StringComparer.Ordinal);
                 Assert.AreEqual(7, results[1].ColumnCount);
@@ -568,7 +568,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 await source.CopyTableSchemaToAsync(new[] { "NoKey" }, target);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopyTableSchemaToAsync(new[] { "NoKey" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
+                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopyTableSchemaToAsync(new[] { "NoKey" }, target, tableExistenceBehavior: TableExistsBehavior.Throw));
             }
         }
 
@@ -634,7 +634,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 Assert.IsTrue(errors.Count >= tables.Count);
                 Assert.IsTrue(errors.All(e => e.Exception is ClickHouseServerException));
                 Assert.AreEqual(tables.Count, created.Count);
-                Assert.IsTrue(created.All(r => r.Errors.Count > 0 && r.Outcome == CopyTableSchemaOutcome.Failed));
+                Assert.IsTrue(created.All(r => r.Errors.Count > 0 && r.Outcome == TableOutcome.Failed));
                 Assert.AreEqual(errors.Count, created.Sum(r => r.Errors.Count));
                 CollectionAssert.AreEquivalent(tables, GetTargetTables());
                 foreach (var table in tables)

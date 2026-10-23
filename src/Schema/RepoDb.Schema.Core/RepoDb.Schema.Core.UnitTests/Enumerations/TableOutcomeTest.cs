@@ -13,7 +13,7 @@ using RepoDb.Schema.Enumerations;
 namespace RepoDb.Schema.Core.UnitTests.Enumerations
 {
     [TestClass]
-    public class CopyTableSchemaOutcomeTest
+    public class TableOutcomeTest
     {
         #region Methods
 
@@ -21,8 +21,8 @@ namespace RepoDb.Schema.Core.UnitTests.Enumerations
         public void TestCopyTableSchemaOutcomeDefaultValue()
         {
             // Act
-            var actual = default(CopyTableSchemaOutcome);
-            var expected = CopyTableSchemaOutcome.Created;
+            var actual = default(TableOutcome);
+            var expected = TableOutcome.Created;
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -32,7 +32,7 @@ namespace RepoDb.Schema.Core.UnitTests.Enumerations
         public void TestCopyTableSchemaOutcomeValues()
         {
             // Act
-            var actual = Enum.GetNames(typeof(CopyTableSchemaOutcome));
+            var actual = Enum.GetNames(typeof(TableOutcome));
             var expected = new[] { "Created", "Skipped", "Aligned", "Dropped", "Failed" };
 
             // Assert

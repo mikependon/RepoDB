@@ -85,8 +85,8 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 Assert.AreEqual(Database.TargetName, result.Target.Database, StringComparer.Ordinal);
                 Assert.AreEqual(nameof(ClickHouseConnection), result.Source.DatabaseType, StringComparer.Ordinal);
                 Assert.AreEqual(nameof(ClickHouseConnection), result.Target.DatabaseType, StringComparer.Ordinal);
-                Assert.AreEqual(CopyTableSchemaOutcome.Created, result.Outcome);
-                Assert.AreEqual(CopyTableSchemaExistsBehavior.Skip, result.Action);
+                Assert.AreEqual(TableOutcome.Created, result.Outcome);
+                Assert.AreEqual(TableExistsBehavior.Skip, result.Action);
                 Assert.AreEqual(7, result.ColumnCount);
                 Assert.AreEqual(1, result.IndexCount);
                 Assert.AreEqual(0, result.ForeignKeyCount);
@@ -145,10 +145,10 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var result = source.CopyTableSchemaTo("NoKey", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop).Items.Single();
+                var result = source.CopyTableSchemaTo("NoKey", target, tableExistenceBehavior: TableExistsBehavior.Drop).Items.Single();
 
                 // Assert
-                Assert.AreEqual(CopyTableSchemaExistsBehavior.Drop, result.Action);
+                Assert.AreEqual(TableExistsBehavior.Drop, result.Action);
             }
         }
 
@@ -182,7 +182,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 source.CopyTableSchemaTo("NoKey", target);
 
                 // Act/Assert
-                Assert.Throws<InvalidOperationException>(() => source.CopyTableSchemaTo("NoKey", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
+                Assert.Throws<InvalidOperationException>(() => source.CopyTableSchemaTo("NoKey", target, tableExistenceBehavior: TableExistsBehavior.Throw));
             }
         }
 
@@ -225,7 +225,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 // Assert
                 Helper.AssertSchemaEquality(Helper.GetSourceSchema("Person"), Helper.GetTargetSchema("Person"));
                 Assert.AreEqual(7, result.ColumnCount);
-                Assert.AreEqual(CopyTableSchemaOutcome.Created, result.Outcome);
+                Assert.AreEqual(TableOutcome.Created, result.Outcome);
             }
         }
 
@@ -257,7 +257,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 await source.CopyTableSchemaToAsync("NoKey", target);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopyTableSchemaToAsync("NoKey", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
+                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopyTableSchemaToAsync("NoKey", target, tableExistenceBehavior: TableExistsBehavior.Throw));
             }
         }
 

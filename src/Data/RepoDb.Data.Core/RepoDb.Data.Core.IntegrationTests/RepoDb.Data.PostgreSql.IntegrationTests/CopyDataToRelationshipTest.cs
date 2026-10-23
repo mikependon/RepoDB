@@ -294,7 +294,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
             {
                 // Setup
                 Helper.MapSchemaReader(source);
-                source.CopyDataTo("Country", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw);
+                source.CopyDataTo("Country", target, tableExistenceBehavior: TableExistsBehavior.Throw);
 
                 // Act
                 var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Children);
@@ -328,7 +328,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
             {
                 // Setup
                 Helper.MapSchemaReader(source);
-                source.CopyDataTo("Country", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw);
+                source.CopyDataTo("Country", target, tableExistenceBehavior: TableExistsBehavior.Throw);
 
                 // Act
                 source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Children);

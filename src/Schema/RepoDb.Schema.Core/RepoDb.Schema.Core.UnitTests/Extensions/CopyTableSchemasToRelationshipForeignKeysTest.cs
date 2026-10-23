@@ -60,13 +60,13 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             return schema;
         }
 
-        private static string[] GetRelated(CopyTableSchemaRelationshipBehavior behavior)
+        private static string[] GetRelated(RelatedTableBehavior behavior)
         {
             switch (behavior)
             {
-                case CopyTableSchemaRelationshipBehavior.Parents:
+                case RelatedTableBehavior.Parents:
                     return new[] { "Customers", "Orders" };
-                case CopyTableSchemaRelationshipBehavior.Children:
+                case RelatedTableBehavior.Children:
                     return new[] { "Orders", "Items" };
                 default:
                     return new[] { "Customers", "Orders", "Items" };
@@ -79,8 +79,8 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
                 names.Select(name => new RelationshipInfo { Schema = Schemas[name] }).ToList();
 
             var reader = new Mock<ISchemaReader>();
-            reader.Setup(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), It.IsAny<CopyTableSchemaRelationshipBehavior>())).Returns<IEnumerable<string>, CopyTableSchemaRelationshipBehavior>((_, behavior) => GetRelated(behavior));
-            reader.Setup(r => r.GetRelatedTablesAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<CopyTableSchemaRelationshipBehavior>(), It.IsAny<CancellationToken>())).Returns<IEnumerable<string>, CopyTableSchemaRelationshipBehavior, CancellationToken>((_, behavior, __) => Task.FromResult<IEnumerable<string>>(GetRelated(behavior)));
+            reader.Setup(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), It.IsAny<RelatedTableBehavior>())).Returns<IEnumerable<string>, RelatedTableBehavior>((_, behavior) => GetRelated(behavior));
+            reader.Setup(r => r.GetRelatedTablesAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<RelatedTableBehavior>(), It.IsAny<CancellationToken>())).Returns<IEnumerable<string>, RelatedTableBehavior, CancellationToken>((_, behavior, __) => Task.FromResult<IEnumerable<string>>(GetRelated(behavior)));
             reader.Setup(r => r.GetDependencyOrder(It.IsAny<IEnumerable<string>>())).Returns<IEnumerable<string>>(names => Relationships(names));
             reader.Setup(r => r.GetDependencyOrderAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<CancellationToken>())).Returns<IEnumerable<string>, CancellationToken>((names, _) => Task.FromResult<IEnumerable<RelationshipInfo>>(Relationships(names)));
             reader.Setup(r => r.GetTableSchema(It.IsAny<string>())).Returns<string>(name => Schemas[name]);
@@ -122,7 +122,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var results = new List<CopyTableSchemaResultItem>();
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, destination, relationshipBehavior: CopyTableSchemaRelationshipBehavior.TableOnly, createdCallback: results.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, destination, relationshipBehavior: RelatedTableBehavior.TableOnly, createdCallback: results.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "CREATE TABLE Orders;" }, destination.ExecutedCommands);
@@ -140,7 +140,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = new CustomDbConnection();
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, destination, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Parents);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, destination, relationshipBehavior: RelatedTableBehavior.Parents);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "CREATE TABLE Customers;", "CREATE TABLE Orders;", "ADD FK_Orders_Customers TO Orders;" }, destination.ExecutedCommands);
@@ -156,7 +156,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var results = new List<CopyTableSchemaResultItem>();
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, destination, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Children, createdCallback: results.Add);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, destination, relationshipBehavior: RelatedTableBehavior.Children, createdCallback: results.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "ADD FK_Items_Orders TO Items;" }, ForeignKeysOf(destination).ToList());
@@ -174,7 +174,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = new CustomDbConnection();
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, destination, relationshipBehavior: CopyTableSchemaRelationshipBehavior.ParentsAndChildren);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, destination, relationshipBehavior: RelatedTableBehavior.ParentsAndChildren);
 
             // Assert
             CollectionAssert.AreEquivalent(new[] { "ADD FK_Orders_Customers TO Orders;", "ADD FK_Items_Orders TO Items;" }, ForeignKeysOf(destination).ToList());
@@ -189,7 +189,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = new CustomDbConnection { ScalarResult = statement => statement == "TABLE_EXISTS Customers" ? 1 : 0 };
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, destination, relationshipBehavior: CopyTableSchemaRelationshipBehavior.TableOnly);
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, destination, relationshipBehavior: RelatedTableBehavior.TableOnly);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "ADD FK_Orders_Customers TO Orders;" }, ForeignKeysOf(destination).ToList());
@@ -208,7 +208,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = new CustomDbConnection();
 
             // Act
-            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Orders" }, destination, relationshipBehavior: CopyTableSchemaRelationshipBehavior.TableOnly);
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Orders" }, destination, relationshipBehavior: RelatedTableBehavior.TableOnly);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "CREATE TABLE Orders;" }, destination.ExecutedCommands);
@@ -223,7 +223,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = new CustomDbConnection();
 
             // Act
-            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Orders" }, destination, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Parents);
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Orders" }, destination, relationshipBehavior: RelatedTableBehavior.Parents);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "ADD FK_Orders_Customers TO Orders;" }, ForeignKeysOf(destination).ToList());
@@ -238,7 +238,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = new CustomDbConnection();
 
             // Act
-            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Orders" }, destination, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Children);
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Orders" }, destination, relationshipBehavior: RelatedTableBehavior.Children);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "ADD FK_Items_Orders TO Items;" }, ForeignKeysOf(destination).ToList());
@@ -253,7 +253,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = new CustomDbConnection();
 
             // Act
-            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Orders" }, destination, relationshipBehavior: CopyTableSchemaRelationshipBehavior.ParentsAndChildren);
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Orders" }, destination, relationshipBehavior: RelatedTableBehavior.ParentsAndChildren);
 
             // Assert
             CollectionAssert.AreEquivalent(new[] { "ADD FK_Orders_Customers TO Orders;", "ADD FK_Items_Orders TO Items;" }, ForeignKeysOf(destination).ToList());

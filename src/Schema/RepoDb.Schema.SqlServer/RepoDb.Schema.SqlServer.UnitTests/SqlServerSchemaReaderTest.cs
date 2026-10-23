@@ -75,7 +75,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             var reader = new SqlServerSchemaReader(new SqlConnection());
 
             // Act/Assert
-            Assert.Throws<ArgumentNullException>(() => reader.GetRelatedTables(null, CopyTableSchemaRelationshipBehavior.ParentsAndChildren));
+            Assert.Throws<ArgumentNullException>(() => reader.GetRelatedTables(null, RelatedTableBehavior.ParentsAndChildren));
         }
 
         [TestMethod]
@@ -85,7 +85,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
             var reader = new SqlServerSchemaReader(new SqlConnection());
 
             // Act/Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(() => reader.GetRelatedTablesAsync(null, CopyTableSchemaRelationshipBehavior.ParentsAndChildren));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => reader.GetRelatedTablesAsync(null, RelatedTableBehavior.ParentsAndChildren));
         }
 
         #endregion

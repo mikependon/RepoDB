@@ -261,7 +261,7 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
             StringAssert.StartsWith(results[1].Script, "CREATE TABLE [Person]", StringComparison.Ordinal);
             StringAssert.Contains(results[1].Script, "CONSTRAINT [FK_Person_Country] FOREIGN KEY ([CountryId]) REFERENCES [Country] ([Id])", StringComparison.Ordinal);
             Assert.AreEqual(1, results[1].ForeignKeyCount);
-            Assert.AreEqual(CopyTableSchemaOutcome.Created, results[0].Outcome);
+            Assert.AreEqual(TableOutcome.Created, results[0].Outcome);
         }
 
         [TestMethod]
@@ -371,9 +371,9 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
             // Assert
             CollectionAssert.AreEqual(new[] { "Country", "Person" }, created.Select(r => r.Target.Table.Table.Name).ToArray());
             Assert.AreEqual(0, created[0].Errors.Count);
-            Assert.AreEqual(CopyTableSchemaOutcome.Created, created[0].Outcome);
+            Assert.AreEqual(TableOutcome.Created, created[0].Outcome);
             Assert.AreEqual(1, created[1].Errors.Count);
-            Assert.AreEqual(CopyTableSchemaOutcome.Failed, created[1].Outcome);
+            Assert.AreEqual(TableOutcome.Failed, created[1].Outcome);
             StringAssert.StartsWith(created[1].Errors[0].Statement, "CREATE TABLE [Person]", StringComparison.Ordinal);
         }
 
@@ -465,11 +465,11 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests
             var results = new List<CopyTableSchemaResultItem>();
 
             // Act
-            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" }, new CustomDbConnection(), tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw, createdCallback: results.Add);
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" }, new CustomDbConnection(), tableExistenceBehavior: TableExistsBehavior.Throw, createdCallback: results.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.Target.Table.Table.Name).ToArray());
-            Assert.AreEqual(CopyTableSchemaExistsBehavior.Throw, results[1].Action);
+            Assert.AreEqual(TableExistsBehavior.Throw, results[1].Action);
             StringAssert.Contains(results[1].Script, "CREATE TABLE [Person]", StringComparison.Ordinal);
         }
 

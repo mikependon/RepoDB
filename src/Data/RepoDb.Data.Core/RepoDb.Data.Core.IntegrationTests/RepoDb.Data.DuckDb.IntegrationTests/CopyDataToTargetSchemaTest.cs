@@ -204,7 +204,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 source.CopyDataTo("Currency", "Sales.Currency", target);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "Sales.Currency", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
+                var actual = source.CopyDataTo("Currency", "Sales.Currency", target, tableExistenceBehavior: TableExistsBehavior.Drop);
 
                 // Assert
                 Assert.AreEqual(3, actual);

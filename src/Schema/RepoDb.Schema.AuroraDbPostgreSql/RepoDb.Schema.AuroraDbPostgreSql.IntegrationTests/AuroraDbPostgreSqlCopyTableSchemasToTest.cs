@@ -106,8 +106,8 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 Assert.AreEqual(2, results.Count);
                 var person = results.Single(r => r.Target.Table.Table.Name == "Person");
                 Assert.AreEqual("public", person.Source.Table.Table.Schema);
-                Assert.AreEqual(CopyTableSchemaOutcome.Created, person.Outcome);
-                Assert.AreEqual(CopyTableSchemaExistsBehavior.Skip, person.Action);
+                Assert.AreEqual(TableOutcome.Created, person.Outcome);
+                Assert.AreEqual(TableExistsBehavior.Skip, person.Action);
                 Assert.AreEqual(10, person.ColumnCount);
                 Assert.AreEqual(2, person.IndexCount);
                 Assert.AreEqual(1, person.ForeignKeyCount);
@@ -157,7 +157,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(tables.Count, results.Count);
-                Assert.IsTrue(results.All(r => r.Outcome == CopyTableSchemaOutcome.Created && r.Errors.Count == 0));
+                Assert.IsTrue(results.All(r => r.Outcome == TableOutcome.Created && r.Errors.Count == 0));
             }
         }
 
@@ -298,10 +298,10 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
-                source.CopyTableSchemaTo(new[] { "country" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop, createdCallback: results.Add);
+                source.CopyTableSchemaTo(new[] { "country" }, target, tableExistenceBehavior: TableExistsBehavior.Drop, createdCallback: results.Add);
 
                 // Assert
-                Assert.AreEqual(CopyTableSchemaExistsBehavior.Drop, results.Single().Action);
+                Assert.AreEqual(TableExistsBehavior.Drop, results.Single().Action);
             }
         }
 
@@ -451,7 +451,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 source.CopyTableSchemaTo(new[] { "country" }, target);
 
                 // Act/Assert
-                Assert.Throws<InvalidOperationException>(() => source.CopyTableSchemaTo(new[] { "country", "Person" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
+                Assert.Throws<InvalidOperationException>(() => source.CopyTableSchemaTo(new[] { "country", "Person" }, target, tableExistenceBehavior: TableExistsBehavior.Throw));
             }
         }
 
@@ -563,7 +563,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 Assert.AreEqual(2, person.Indexes.Count);
                 Assert.AreEqual(0, person.ForeignKeys.Count);
                 Assert.AreEqual(1, created.Single().Errors.Count);
-                Assert.AreEqual(CopyTableSchemaOutcome.Failed, created.Single().Outcome);
+                Assert.AreEqual(TableOutcome.Failed, created.Single().Outcome);
             }
         }
 
@@ -613,7 +613,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 Assert.IsTrue(errors.Count >= tables.Count);
                 Assert.IsTrue(errors.All(e => e.Exception is AuroraDbException));
                 Assert.AreEqual(tables.Count, created.Count);
-                Assert.IsTrue(created.All(r => r.Errors.Count > 0 && r.Outcome == CopyTableSchemaOutcome.Failed));
+                Assert.IsTrue(created.All(r => r.Errors.Count > 0 && r.Outcome == TableOutcome.Failed));
                 Assert.AreEqual(errors.Count, created.Sum(r => r.Errors.Count));
                 AssertTargetMatchesSource(tables.ToArray());
             }
@@ -785,7 +785,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.IntegrationTests
                 await source.CopyTableSchemaToAsync(new[] { "country" }, target);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopyTableSchemaToAsync(new[] { "country" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw));
+                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopyTableSchemaToAsync(new[] { "country" }, target, tableExistenceBehavior: TableExistsBehavior.Throw));
             }
         }
 

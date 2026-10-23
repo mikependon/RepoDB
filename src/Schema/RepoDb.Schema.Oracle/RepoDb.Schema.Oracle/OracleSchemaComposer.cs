@@ -444,12 +444,12 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="rule"></param>
         /// <returns></returns>
-        private static string Rule(CopyTableSchemaForeignKeyRule rule)
+        private static string Rule(ForeignKeyRule rule)
         {
             switch (rule)
             {
-                case CopyTableSchemaForeignKeyRule.Cascade: return "CASCADE";
-                case CopyTableSchemaForeignKeyRule.SetNull: return "SET NULL";
+                case ForeignKeyRule.Cascade: return "CASCADE";
+                case ForeignKeyRule.SetNull: return "SET NULL";
                 default: return null;
             }
         }
