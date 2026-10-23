@@ -298,7 +298,7 @@ namespace RepoDb.Data.Core.UnitTests.Fake.BulkOperations
             null;
 
         protected override DbCommand CreateDbCommand() =>
-            null;
+            new FakeBulkCommand { Connection = this };
     }
 
     /// <summary>
@@ -314,6 +314,11 @@ namespace RepoDb.Data.Core.UnitTests.Fake.BulkOperations
         public static FakeBulkCall[] Calls => _calls.ToArray();
 
         /// <summary>
+        /// Gets the statements that the fake commands of the bulk connections executed, in order.
+        /// </summary>
+        public static FakeBulkStatement[] Statements => FakeBulkCommand.Statements;
+
+        /// <summary>
         /// Removes the calls that were received.
         /// </summary>
         public static void Reset()
@@ -321,6 +326,7 @@ namespace RepoDb.Data.Core.UnitTests.Fake.BulkOperations
             while (_calls.TryDequeue(out _))
             {
             }
+            FakeBulkCommand.Reset();
         }
 
         private static int Read(IDataReader reader)

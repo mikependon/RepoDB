@@ -183,6 +183,7 @@ namespace RepoDb.Data.Helpers
             IDbTransaction transaction)
         {
             // The command is created here (instead of being executed by the library) as the library expands the parameters that are arrays (i.e.: the bytes of a binary column)
+            // The name of a parameter is set without the prefix "$" (the one of DuckDB), as the driver binds the values by the name that follows it (the statement keeps the prefix)
             var command = connection.EnsureOpen().CreateCommand();
             command.CommandText = commandText;
             command.Transaction = transaction;
@@ -193,7 +194,7 @@ namespace RepoDb.Data.Helpers
             foreach (var (_, parameterName) in columns)
             {
                 var parameter = command.CreateParameter();
-                parameter.ParameterName = parameterName;
+                parameter.ParameterName = parameterName.StartsWith("$", StringComparison.Ordinal) ? parameterName.Substring(1) : parameterName;
                 command.Parameters.Add(parameter);
             }
             return command;
