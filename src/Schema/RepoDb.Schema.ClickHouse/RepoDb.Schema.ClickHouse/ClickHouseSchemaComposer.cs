@@ -243,11 +243,11 @@ namespace RepoDb.Schema
         // Types
 
         /// <summary>
-        ///
+        /// Gets the name of the type, without the nullability, with the size, precision and scale of the field.
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="field"></param>
-        /// <returns></returns>
+        /// <param name="type">The name of the type.</param>
+        /// <param name="field">The field of the column.</param>
+        /// <returns>The name of the type.</returns>
         private static string ComposeBaseTypeName(string type,
             DbField field)
         {
@@ -269,9 +269,9 @@ namespace RepoDb.Schema
         /// <summary>
         /// Wraps the type in <c>Nullable</c> if the column is nullable. The types that can not be nullable (the collections) are not wrapped.
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="isNullable"></param>
-        /// <returns></returns>
+        /// <param name="type">The name of the type.</param>
+        /// <param name="isNullable">A value that indicates whether the column is nullable.</param>
+        /// <returns>The name of the type, wrapped if it is needed.</returns>
         private static string Nullable(string type,
             bool isNullable)
         {
@@ -292,36 +292,36 @@ namespace RepoDb.Schema
         // Names
 
         /// <summary>
-        ///
+        /// Quotes the name with the quotes of the destination database.
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="name">The name to be quoted.</param>
+        /// <returns>The quoted name.</returns>
         private static string Quote(string name) =>
             ClickHouseSchemaHelper.Quote(name);
 
         /// <summary>
-        ///
+        /// Quotes the name of a table, including its schema if it has one (i.e.: <c>schema.table</c>).
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="name">The name of the table, with or without its schema.</param>
+        /// <returns>The quoted name.</returns>
         private static string Name(string name) =>
             ClickHouseSchemaHelper.QuoteName(name);
 
         /// <summary>
-        ///
+        /// Escapes a value to be used as a text literal in a SQL statement.
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="value">The value to be escaped.</param>
+        /// <returns>The escaped value (without the surrounding quotes).</returns>
         private static string Literal(string value) =>
             value.Replace("\\", "\\\\").Replace("'", "''");
 
         /// <summary>
         /// Gets the filter of the table in the <c>system</c> tables: the schema (database) is the one of the name, or the current database.
         /// </summary>
-        /// <param name="tableName"></param>
-        /// <param name="schemaColumn"></param>
-        /// <param name="tableColumn"></param>
-        /// <returns></returns>
+        /// <param name="tableName">The name of the table, with or without its schema.</param>
+        /// <param name="schemaColumn">The column of the catalog that holds the schema.</param>
+        /// <param name="tableColumn">The column of the catalog that holds the table.</param>
+        /// <returns>The filter.</returns>
         private static string TableFilter(string tableName,
             string schemaColumn,
             string tableColumn)
@@ -332,28 +332,28 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
-        ///
+        /// Gets the quoted name of the table of the schema.
         /// </summary>
-        /// <param name="schema"></param>
-        /// <returns></returns>
+        /// <param name="schema">The schema of the table.</param>
+        /// <returns>The quoted name of the table, with its schema if it has one.</returns>
         private static string TableName(TableSchema schema) =>
             ClickHouseSchemaHelper.FormatTableName(schema.Table.Schema, schema.Table.Name);
 
         /// <summary>
-        ///
+        /// Gets the quoted names of the columns as a comma-separated list.
         /// </summary>
-        /// <param name="columns"></param>
-        /// <returns></returns>
+        /// <param name="columns">The names of the columns.</param>
+        /// <returns>The comma-separated quoted names of the columns.</returns>
         private static string Columns(IEnumerable<string> columns) =>
             string.Join(", ", columns.Select(Quote));
 
         // Columns
 
         /// <summary>
-        ///
+        /// Gets the definition of a column: its name, type, nullability and default value.
         /// </summary>
-        /// <param name="column"></param>
-        /// <returns></returns>
+        /// <param name="column">The column.</param>
+        /// <returns>The definition of the column.</returns>
         private string Column(ColumnInfo column)
         {
             var field = column.Field;

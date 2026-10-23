@@ -13,6 +13,8 @@ namespace RepoDb.Schema
     /// </summary>
     internal static class MySqlSchemaText
     {
+        #region Constants
+
         internal const string TableExistsSql = @"SELECT CASE WHEN EXISTS (SELECT 1
                 FROM information_schema.TABLES t
                 WHERE t.TABLE_SCHEMA = COALESCE(@Schema, DATABASE()) AND t.TABLE_NAME = @Table AND t.TABLE_TYPE = 'BASE TABLE') THEN 1 ELSE 0 END;";
@@ -102,5 +104,7 @@ namespace RepoDb.Schema
         /// Reads the schemas of the database (the system schemas are not included).
         /// </summary>
         internal const string SchemasSql = @"SELECT SCHEMA_NAME AS SchemaName FROM information_schema.SCHEMATA WHERE SCHEMA_NAME NOT IN ('information_schema', 'mysql', 'performance_schema', 'sys') ORDER BY SCHEMA_NAME";
+
+        #endregion
     }
 }

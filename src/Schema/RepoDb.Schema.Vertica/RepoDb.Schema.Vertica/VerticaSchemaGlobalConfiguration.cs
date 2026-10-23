@@ -15,6 +15,8 @@ namespace RepoDb.Schema.Vertica
     /// </summary>
     public static class VerticaSchemaGlobalConfiguration
     {
+        #region Methods
+
         /// <summary>
         /// Initializes the Vertica settings first (see <c>UseVertica</c>), then registers the <see cref="VerticaSchemaComposer"/> to the <see cref="SchemaComposerMapper"/> for the <see cref="VerticaConnection"/> type.
         /// A <see cref="VerticaSchemaReader"/> owns the connection that it reads, so it is created with its connection instead of being registered here.
@@ -28,5 +30,7 @@ namespace RepoDb.Schema.Vertica
             SchemaComposerMapper.Add<VerticaConnection>(new VerticaSchemaComposer(), force: true);
             return globalConfiguration;
         }
+
+        #endregion
     }
 }

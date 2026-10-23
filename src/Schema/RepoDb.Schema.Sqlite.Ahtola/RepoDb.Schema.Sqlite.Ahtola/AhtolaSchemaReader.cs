@@ -406,65 +406,66 @@ namespace RepoDb.Schema
         /// <summary>
         /// Gets the key of the table: the names of SQLite are case insensitive.
         /// </summary>
-        /// <param name="table"></param>
-        /// <returns></returns>
+        /// <param name="table">The table.</param>
+        /// <returns>The key of the table.</returns>
         private static string Key(TableInfo table) =>
             $"{table.Schema}\u0001{table.Name}".ToLowerInvariant();
 
         /// <summary>
         /// Gets the schema of a name: <c>null</c> for the main database.
         /// </summary>
-        /// <param name="schema"></param>
-        /// <returns></returns>
+        /// <param name="schema">The name of the schema.</param>
+        /// <returns>The name of the schema, or <c>null</c> for the main schema.</returns>
         private static string NormalizeSchema(string schema) =>
             string.IsNullOrWhiteSpace(schema) || string.Equals(schema, AhtolaSchemaHelper.MainSchema, StringComparison.OrdinalIgnoreCase) ? null : schema;
 
         /// <summary>
         /// Gets the quoted name of the schema, to be used in the SQL text.
         /// </summary>
-        /// <param name="schema"></param>
-        /// <returns></returns>
+        /// <param name="schema">The name of the schema, or <c>null</c> for the main schema.</param>
+        /// <returns>The quoted name of the schema.</returns>
         private static string Schema(string schema) =>
             AhtolaSchemaHelper.Quote(schema ?? AhtolaSchemaHelper.MainSchema);
 
         /// <summary>
-        ///
+        /// Resolves the schema and the name of the table: the schema is the one of the name, or the one that the table is found in.
         /// </summary>
-        /// <param name="tableName"></param>
-        /// <returns></returns>
+        /// <param name="tableName">The name of the table, with or without its schema.</param>
+        /// <returns>The schema and the name of the table.</returns>
         private static (string Schema, string Table) Resolve(string tableName) =>
             AhtolaSchemaHelper.ParseSchemaAndTable(tableName);
 
         // Parameters
 
         /// <summary>
-        ///
+        /// Creates a named parameter of a statement.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        private static KeyValuePair<string, object> Parameter(string name, object value) =>
+        /// <param name="name">The name of the parameter.</param>
+        /// <param name="value">The value of the parameter.</param>
+        /// <returns>The parameter.</returns>
+        private static KeyValuePair<string, object> Parameter(string name,
+            object value) =>
             new KeyValuePair<string, object>(name, value);
 
         // Execution
 
         /// <summary>
-        ///
+        /// Converts the parameters into the parameter object that is passed to the statement.
         /// </summary>
-        /// <param name="parameters"></param>
-        /// <returns></returns>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns>The parameter object.</returns>
         private static IDictionary<string, object> ToParameters(KeyValuePair<string, object>[] parameters) =>
             parameters.ToDictionary(p => p.Key, p => p.Value);
 
         /// <summary>
-        ///
+        /// Executes a statement and maps every record of its result.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="sql"></param>
-        /// <param name="traceKey"></param>
-        /// <param name="map"></param>
-        /// <param name="parameters"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The type of the result of the map function.</typeparam>
+        /// <param name="sql">The SQL statement.</param>
+        /// <param name="traceKey">The tracking key of the statement.</param>
+        /// <param name="map">The function that maps a record into the result.</param>
+        /// <param name="parameters">The parameters of the statement.</param>
+        /// <returns>The mapped records.</returns>
         [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "The parameter object passed to the RepoDB execute methods is either null or a Dictionary<string, object>, which is not reflected.")]
         private IList<T> Query<T>(string sql,
             string traceKey,
@@ -486,15 +487,15 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
-        ///
+        /// Executes a statement and maps every record of its result asynchronously.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="sql"></param>
-        /// <param name="traceKey"></param>
-        /// <param name="map"></param>
-        /// <param name="cancellationToken"></param>
-        /// <param name="parameters"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The type of the result of the map function.</typeparam>
+        /// <param name="sql">The SQL statement.</param>
+        /// <param name="traceKey">The tracking key of the statement.</param>
+        /// <param name="map">The function that maps a record into the result.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <param name="parameters">The parameters of the statement.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result is the mapped records.</returns>
         [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "The parameter object passed to the RepoDB execute methods is either null or a Dictionary<string, object>, which is not reflected.")]
         private async Task<IList<T>> QueryAsync<T>(string sql,
             string traceKey,
@@ -532,9 +533,9 @@ namespace RepoDb.Schema
         /// <summary>
         /// Reads everything that is needed to build the schema of the table (the sync version).
         /// </summary>
-        /// <param name="schema"></param>
-        /// <param name="table"></param>
-        /// <returns></returns>
+        /// <param name="schema">The name of the schema.</param>
+        /// <param name="table">The name of the table.</param>
+        /// <returns>The raw definition of the table.</returns>
         private RawTable ReadTable(string schema,
             string table)
         {
@@ -570,10 +571,10 @@ namespace RepoDb.Schema
         /// <summary>
         /// Reads everything that is needed to build the schema of the table (the async version).
         /// </summary>
-        /// <param name="schema"></param>
-        /// <param name="table"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
+        /// <param name="schema">The name of the schema.</param>
+        /// <param name="table">The name of the table.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result is the raw definition of the table.</returns>
         private async Task<RawTable> ReadTableAsync(string schema,
             string table,
             CancellationToken cancellationToken)
@@ -612,34 +613,36 @@ namespace RepoDb.Schema
         // Row mappers
 
         /// <summary>
-        ///
+        /// Reads a text value of the record.
         /// </summary>
-        /// <param name="r"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        private static string Text(IDataRecord r, string name)
+        /// <param name="r">The record.</param>
+        /// <param name="name">The name of the column.</param>
+        /// <returns>The value, or <c>null</c> if it is <c>DBNull</c>.</returns>
+        private static string Text(IDataRecord r,
+            string name)
         {
             var value = r[name];
             return value == DBNull.Value ? null : Convert.ToString(value);
         }
 
         /// <summary>
-        ///
+        /// Reads an integer value of the record.
         /// </summary>
-        /// <param name="r"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        private static int Int(IDataRecord r, string name)
+        /// <param name="r">The record.</param>
+        /// <param name="name">The name of the column.</param>
+        /// <returns>The value, or <c>0</c> if it is <c>DBNull</c>.</returns>
+        private static int Int(IDataRecord r,
+            string name)
         {
             var value = r[name];
             return value == DBNull.Value ? 0 : Convert.ToInt32(value);
         }
 
         /// <summary>
-        ///
+        /// Maps a record into a column of the table.
         /// </summary>
-        /// <param name="r"></param>
-        /// <returns></returns>
+        /// <param name="r">The record.</param>
+        /// <returns>The column.</returns>
         private static RawColumn MapColumn(IDataRecord r) =>
             new RawColumn
             {
@@ -652,10 +655,10 @@ namespace RepoDb.Schema
             };
 
         /// <summary>
-        ///
+        /// Maps a record into an index of the table.
         /// </summary>
-        /// <param name="r"></param>
-        /// <returns></returns>
+        /// <param name="r">The record.</param>
+        /// <returns>The index.</returns>
         private static RawIndex MapIndex(IDataRecord r) =>
             new RawIndex
             {
@@ -666,10 +669,10 @@ namespace RepoDb.Schema
             };
 
         /// <summary>
-        ///
+        /// Maps a record into the row of a column of an index.
         /// </summary>
-        /// <param name="r"></param>
-        /// <returns></returns>
+        /// <param name="r">The record.</param>
+        /// <returns>The row of the column of the index.</returns>
         private static RawIndexColumn MapIndexColumn(IDataRecord r) =>
             new RawIndexColumn
             {
@@ -679,10 +682,10 @@ namespace RepoDb.Schema
             };
 
         /// <summary>
-        ///
+        /// Maps a record into a column of a foreign key.
         /// </summary>
-        /// <param name="r"></param>
-        /// <returns></returns>
+        /// <param name="r">The record.</param>
+        /// <returns>The column of the foreign key.</returns>
         private static RawForeignKey MapForeignKey(IDataRecord r) =>
             new RawForeignKey
             {
@@ -699,8 +702,8 @@ namespace RepoDb.Schema
         /// <summary>
         /// Builds the schema of the table from what was read.
         /// </summary>
-        /// <param name="raw"></param>
-        /// <returns></returns>
+        /// <param name="raw">The raw definition of the table.</param>
+        /// <returns>The schema of the table.</returns>
         private TableSchema Build(RawTable raw)
         {
             var schema = new TableSchema(NewTable(raw.Table, raw.Schema));
@@ -722,12 +725,12 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
-        ///
+        /// Builds the columns of the table out of its raw definition and the parsed statement that creates it.
         /// </summary>
-        /// <param name="raw"></param>
-        /// <param name="definition"></param>
-        /// <param name="primaryColumns"></param>
-        /// <returns></returns>
+        /// <param name="raw">The raw definition of the table.</param>
+        /// <param name="definition">The parsed statement that creates the table.</param>
+        /// <param name="primaryColumns">The names of the columns of the primary key.</param>
+        /// <returns>The columns.</returns>
         private IList<ColumnInfo> BuildColumns(RawTable raw,
             AhtolaTableDefinition definition,
             IList<string> primaryColumns)
@@ -767,12 +770,12 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
-        ///
+        /// Builds the primary key of the table.
         /// </summary>
-        /// <param name="raw"></param>
-        /// <param name="definition"></param>
-        /// <param name="primaryColumns"></param>
-        /// <returns></returns>
+        /// <param name="raw">The raw definition of the table.</param>
+        /// <param name="definition">The parsed statement that creates the table.</param>
+        /// <param name="primaryColumns">The names of the columns of the primary key.</param>
+        /// <returns>The primary key, or <c>null</c> if the table has none.</returns>
         private static PrimaryKeyInfo BuildPrimaryKey(RawTable raw,
             AhtolaTableDefinition definition,
             IList<string> primaryColumns)
@@ -786,10 +789,10 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
-        ///
+        /// Builds the indexes of the table (the ones that were created explicitly).
         /// </summary>
-        /// <param name="raw"></param>
-        /// <returns></returns>
+        /// <param name="raw">The raw definition of the table.</param>
+        /// <returns>The indexes.</returns>
         private static IList<IndexInfo> BuildIndexes(RawTable raw) =>
             raw.Indexes
                 .Where(index => string.Equals(index.Origin, "c", StringComparison.Ordinal))
@@ -809,11 +812,11 @@ namespace RepoDb.Schema
                 .ToList();
 
         /// <summary>
-        ///
+        /// Builds the unique constraints of the table.
         /// </summary>
-        /// <param name="raw"></param>
-        /// <param name="definition"></param>
-        /// <returns></returns>
+        /// <param name="raw">The raw definition of the table.</param>
+        /// <param name="definition">The parsed statement that creates the table.</param>
+        /// <returns>The unique constraints.</returns>
         private static IList<UniqueConstraintInfo> BuildUniqueConstraints(RawTable raw,
             AhtolaTableDefinition definition) =>
             raw.Indexes
@@ -827,11 +830,11 @@ namespace RepoDb.Schema
                 .ToList();
 
         /// <summary>
-        ///
+        /// Builds the foreign keys of the table.
         /// </summary>
-        /// <param name="raw"></param>
-        /// <param name="definition"></param>
-        /// <returns></returns>
+        /// <param name="raw">The raw definition of the table.</param>
+        /// <param name="definition">The parsed statement that creates the table.</param>
+        /// <returns>The foreign keys.</returns>
         private IList<ForeignKeyInfo> BuildForeignKeys(RawTable raw,
             AhtolaTableDefinition definition) =>
             raw.ForeignKeys
@@ -856,11 +859,11 @@ namespace RepoDb.Schema
                 .ToList();
 
         /// <summary>
-        ///
+        /// Builds the check constraints of the table.
         /// </summary>
-        /// <param name="raw"></param>
-        /// <param name="definition"></param>
-        /// <returns></returns>
+        /// <param name="raw">The raw definition of the table.</param>
+        /// <param name="definition">The parsed statement that creates the table.</param>
+        /// <returns>The check constraints.</returns>
         private static IList<CheckConstraintInfo> BuildCheckConstraints(RawTable raw,
             AhtolaTableDefinition definition)
         {
@@ -873,16 +876,16 @@ namespace RepoDb.Schema
         /// <summary>
         /// Checks whether the arguments of the type are a precision and a scale (and not a size).
         /// </summary>
-        /// <param name="typeName"></param>
-        /// <returns></returns>
+        /// <param name="typeName">The name of the type.</param>
+        /// <returns><c>true</c> if the type is numeric; otherwise, <c>false</c>.</returns>
         private static bool IsNumeric(string typeName) =>
             typeName == "decimal" || typeName == "numeric" || typeName == "dec" || typeName == "float" || typeName == "double" || typeName == "real";
 
         /// <summary>
         /// Gets the client type of a declared type, with the rules of the type affinity of SQLite.
         /// </summary>
-        /// <param name="typeName"></param>
-        /// <returns></returns>
+        /// <param name="typeName">The declared type.</param>
+        /// <returns>The client type.</returns>
         private static Type ToClientType(string typeName)
         {
             if (typeName.Contains("int"))
@@ -905,10 +908,10 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
-        ///
+        /// Converts the action of the database into the rule of a foreign key.
         /// </summary>
-        /// <param name="action"></param>
-        /// <returns></returns>
+        /// <param name="action">The action that is read from the database.</param>
+        /// <returns>The rule of the foreign key.</returns>
         private static ForeignKeyRule ToRule(string action)
         {
             switch (action?.ToUpperInvariant())
@@ -940,6 +943,8 @@ namespace RepoDb.Schema
         /// </summary>
         private sealed class RawTable
         {
+            #region Properties
+
             public string Schema { get; set; }
 
             public string Table { get; set; }
@@ -955,10 +960,17 @@ namespace RepoDb.Schema
             public IList<RawForeignKey> ForeignKeys { get; set; } = new List<RawForeignKey>();
 
             public IDictionary<string, List<string>> ReferencedPrimaryKeys { get; } = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
+
+            #endregion
         }
 
+        /// <summary>
+        /// What was read from the database about a column of a table.
+        /// </summary>
         private sealed class RawColumn
         {
+            #region Properties
+
             public string Name { get; set; }
 
             public string DeclaredType { get; set; }
@@ -970,10 +982,17 @@ namespace RepoDb.Schema
             public int PrimaryKeyPosition { get; set; }
 
             public int Hidden { get; set; }
+
+            #endregion
         }
 
+        /// <summary>
+        /// What was read from the database about an index of a table.
+        /// </summary>
         private sealed class RawIndex
         {
+            #region Properties
+
             public string Name { get; set; }
 
             public bool IsUnique { get; set; }
@@ -985,19 +1004,33 @@ namespace RepoDb.Schema
             public string Definition { get; set; }
 
             public IList<RawIndexColumn> Columns { get; set; } = new List<RawIndexColumn>();
+
+            #endregion
         }
 
+        /// <summary>
+        /// What was read from the database about a column of an index.
+        /// </summary>
         private sealed class RawIndexColumn
         {
+            #region Properties
+
             public string Name { get; set; }
 
             public bool IsDescending { get; set; }
 
             public bool IsKey { get; set; }
+
+            #endregion
         }
 
+        /// <summary>
+        /// What was read from the database about a column of a foreign key (the columns of the same foreign key share its identifier).
+        /// </summary>
         private sealed class RawForeignKey
         {
+            #region Properties
+
             public int Id { get; set; }
 
             public string ReferencedTable { get; set; }
@@ -1009,6 +1042,8 @@ namespace RepoDb.Schema
             public string Update { get; set; }
 
             public string Delete { get; set; }
+
+            #endregion
         }
 
         #endregion

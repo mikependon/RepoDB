@@ -13,6 +13,8 @@ namespace RepoDb.Schema
     /// </summary>
     internal static class SqlServerSchemaText
     {
+        #region Constants
+
         internal const string ResolveSchemaSql = @"SELECT TOP 1 SCHEMA_NAME(t.schema_id)
             FROM sys.tables t
             WHERE t.name = @TableName
@@ -113,5 +115,7 @@ namespace RepoDb.Schema
         /// Reads the schemas of the database (the system schemas are not included).
         /// </summary>
         internal const string SchemasSql = @"SELECT s.name AS SchemaName FROM sys.schemas s WHERE s.name NOT IN ('sys', 'INFORMATION_SCHEMA', 'guest') AND s.schema_id < 16384 ORDER BY s.name";
+
+        #endregion
     }
 }

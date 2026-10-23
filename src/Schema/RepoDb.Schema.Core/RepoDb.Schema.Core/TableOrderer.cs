@@ -51,9 +51,9 @@ namespace RepoDb.Schema
         /// <summary>
         /// Creates one relationship per table (the first one wins if a table is given more than once).
         /// </summary>
-        /// <param name="schemas"></param>
-        /// <param name="tableKey"></param>
-        /// <returns></returns>
+        /// <param name="schemas">The schemas of the tables.</param>
+        /// <param name="tableKey">The function that gets the key of a table.</param>
+        /// <returns>The relationships, by the key of the table.</returns>
         private static Dictionary<string, RelationshipInfo> CreateRelationships(IEnumerable<TableSchema> schemas,
             Func<TableSchema, string> tableKey) =>
             schemas.GroupBy(tableKey).ToDictionary(g => g.Key, g => new RelationshipInfo { Schema = g.First() });
@@ -61,11 +61,11 @@ namespace RepoDb.Schema
         /// <summary>
         /// Gets the parents of each table: the (other) given tables that its foreign keys reference.
         /// </summary>
-        /// <param name="keys"></param>
-        /// <param name="relationships"></param>
-        /// <param name="position"></param>
-        /// <param name="referenceKey"></param>
-        /// <returns></returns>
+        /// <param name="keys">The keys of the tables.</param>
+        /// <param name="relationships">The relationships, by the key of the table.</param>
+        /// <param name="position">The position of each table in the given order.</param>
+        /// <param name="referenceKey">The function that gets the key of a referenced table.</param>
+        /// <returns>The keys of the parents, by the key of the table.</returns>
         private static Dictionary<string, List<string>> GetParentKeys(IEnumerable<string> keys,
             IDictionary<string, RelationshipInfo> relationships,
             IDictionary<string, int> position,
@@ -82,9 +82,9 @@ namespace RepoDb.Schema
         /// <summary>
         /// Links each relationship with its parents, and each parent with its children.
         /// </summary>
-        /// <param name="keys"></param>
-        /// <param name="parentKeys"></param>
-        /// <param name="relationships"></param>
+        /// <param name="keys">The keys of the tables.</param>
+        /// <param name="parentKeys">The parents of each table.</param>
+        /// <param name="relationships">The relationships, by the key of the table.</param>
         private static void Link(IList<string> keys,
             IDictionary<string, List<string>> parentKeys,
             IDictionary<string, RelationshipInfo> relationships)
@@ -110,10 +110,10 @@ namespace RepoDb.Schema
         /// <summary>
         /// Orders the keys so that the tables of a group always come after the tables of the groups that they reference.
         /// </summary>
-        /// <param name="keys"></param>
-        /// <param name="parentKeys"></param>
-        /// <param name="position"></param>
-        /// <returns></returns>
+        /// <param name="keys">The keys of the tables.</param>
+        /// <param name="parentKeys">The parents of each table.</param>
+        /// <param name="position">The position of each table in the given order.</param>
+        /// <returns>The keys of the tables, in the order.</returns>
         private static IList<string> OrderKeys(IList<string> keys,
             IDictionary<string, List<string>> parentKeys,
             IDictionary<string, int> position)
@@ -138,10 +138,10 @@ namespace RepoDb.Schema
         /// <summary>
         /// Gets the groups that each group is still waiting for (the groups of the parents of its tables).
         /// </summary>
-        /// <param name="groups"></param>
-        /// <param name="parentKeys"></param>
-        /// <param name="groupOf"></param>
-        /// <returns></returns>
+        /// <param name="groups">The tables of each group.</param>
+        /// <param name="parentKeys">The parents of each table.</param>
+        /// <param name="groupOf">The group of each table.</param>
+        /// <returns>The groups that each group waits for.</returns>
         private static Dictionary<int, HashSet<int>> GetPendingGroups(IDictionary<int, List<string>> groups,
             IDictionary<string, List<string>> parentKeys,
             IDictionary<string, int> groupOf) =>
@@ -155,10 +155,10 @@ namespace RepoDb.Schema
         /// <summary>
         /// Gets the next group to take: the one that is not waiting for any group, and that has the table that was given first.
         /// </summary>
-        /// <param name="pending"></param>
-        /// <param name="groups"></param>
-        /// <param name="position"></param>
-        /// <returns></returns>
+        /// <param name="pending">The groups that each group waits for.</param>
+        /// <param name="groups">The tables of each group.</param>
+        /// <param name="position">The position of each table in the given order.</param>
+        /// <returns>The number of the group.</returns>
         private static int NextGroup(IDictionary<int, HashSet<int>> pending,
             IDictionary<int, List<string>> groups,
             IDictionary<string, int> position) =>
@@ -171,9 +171,9 @@ namespace RepoDb.Schema
         /// <summary>
         /// Finds the groups of the tables that can reach each other.
         /// </summary>
-        /// <param name="keys"></param>
-        /// <param name="parentKeys"></param>
-        /// <returns></returns>
+        /// <param name="keys">The keys of the tables.</param>
+        /// <param name="parentKeys">The parents of each table.</param>
+        /// <returns>The number of the group, by the key of the table.</returns>
         private static Dictionary<string, int> FindGroups(IEnumerable<string> keys,
             IDictionary<string, List<string>> parentKeys) =>
             new TableGroupFinder(parentKeys).Find(keys);

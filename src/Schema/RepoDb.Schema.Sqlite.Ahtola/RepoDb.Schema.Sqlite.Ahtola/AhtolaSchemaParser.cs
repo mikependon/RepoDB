@@ -40,6 +40,8 @@ namespace RepoDb.Schema
         /// </summary>
         private sealed class Token
         {
+            #region Properties
+
             public TokenKind Kind { get; set; }
 
             public string Value { get; set; }
@@ -48,8 +50,19 @@ namespace RepoDb.Schema
 
             public int End { get; set; }
 
+            #endregion
+
+            #region Methods
+
+            /// <summary>
+            /// Checks whether the token is the word (without the case).
+            /// </summary>
+            /// <param name="word">The word.</param>
+            /// <returns><c>true</c> if the token is the word; otherwise, <c>false</c>.</returns>
             public bool Is(string word) =>
                 Kind == TokenKind.Word && string.Equals(Value, word, StringComparison.OrdinalIgnoreCase);
+
+            #endregion
         }
 
         #endregion
@@ -158,8 +171,8 @@ namespace RepoDb.Schema
         /// <summary>
         /// Splits the text into its tokens (the comments are ignored).
         /// </summary>
-        /// <param name="sql"></param>
-        /// <returns></returns>
+        /// <param name="sql">The SQL text.</param>
+        /// <returns>The tokens.</returns>
         private static List<Token> Tokenize(string sql)
         {
             var tokens = new List<Token>();
@@ -233,9 +246,9 @@ namespace RepoDb.Schema
         /// <summary>
         /// Finds the token that closes the group that is opened by the token.
         /// </summary>
-        /// <param name="tokens"></param>
-        /// <param name="open"></param>
-        /// <returns></returns>
+        /// <param name="tokens">The tokens.</param>
+        /// <param name="open">The position of the opening parenthesis.</param>
+        /// <returns>The position of the closing parenthesis.</returns>
         private static int FindClose(IList<Token> tokens,
             int open)
         {
@@ -257,10 +270,10 @@ namespace RepoDb.Schema
         /// <summary>
         /// Splits the tokens that are between the positions by the commas that are not inside a group.
         /// </summary>
-        /// <param name="tokens"></param>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <returns></returns>
+        /// <param name="tokens">The tokens.</param>
+        /// <param name="from">The position of the first token.</param>
+        /// <param name="to">The position after the last token.</param>
+        /// <returns>The start and the end position of each part.</returns>
         private static IEnumerable<(int Start, int End)> Split(IList<Token> tokens,
             int from,
             int to)
@@ -289,17 +302,17 @@ namespace RepoDb.Schema
         /// <summary>
         /// Checks whether the item that starts with the token is a constraint of the table (and not a column).
         /// </summary>
-        /// <param name="token"></param>
-        /// <returns></returns>
+        /// <param name="token">The token.</param>
+        /// <returns><c>true</c> if the token starts a constraint of the table; otherwise, <c>false</c>.</returns>
         private static bool IsTableConstraint(Token token) =>
             token.Is("CONSTRAINT") || token.Is("PRIMARY") || token.Is("UNIQUE") || token.Is("CHECK") || token.Is("FOREIGN");
 
         /// <summary>
         /// Gets the names of the columns that are listed between the parentheses that start at the position.
         /// </summary>
-        /// <param name="tokens"></param>
-        /// <param name="open"></param>
-        /// <returns></returns>
+        /// <param name="tokens">The tokens.</param>
+        /// <param name="open">The position of the opening parenthesis.</param>
+        /// <returns>The names of the columns.</returns>
         private static IList<string> GetColumns(IList<Token> tokens,
             int open)
         {
@@ -324,11 +337,11 @@ namespace RepoDb.Schema
         /// <summary>
         /// Reads a constraint of the table (<c>[CONSTRAINT name] PRIMARY KEY | UNIQUE | CHECK | FOREIGN KEY</c>).
         /// </summary>
-        /// <param name="sql"></param>
-        /// <param name="tokens"></param>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <param name="definition"></param>
+        /// <param name="sql">The SQL text.</param>
+        /// <param name="tokens">The tokens.</param>
+        /// <param name="start">The position of the first token of the constraint.</param>
+        /// <param name="end">The position after the last token of the constraint.</param>
+        /// <param name="definition">The definition of the table that the constraint is added to.</param>
         private static void ParseTableConstraint(string sql,
             IList<Token> tokens,
             int start,
@@ -382,11 +395,11 @@ namespace RepoDb.Schema
         /// <summary>
         /// Reads a column: its constraints, its generated expression, its collation and whether it is auto incremented.
         /// </summary>
-        /// <param name="sql"></param>
-        /// <param name="tokens"></param>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <param name="definition"></param>
+        /// <param name="sql">The SQL text.</param>
+        /// <param name="tokens">The tokens.</param>
+        /// <param name="start">The position of the first token of the column.</param>
+        /// <param name="end">The position after the last token of the column.</param>
+        /// <param name="definition">The definition of the table that the column is added to.</param>
         private static void ParseColumn(string sql,
             IList<Token> tokens,
             int start,
@@ -464,10 +477,10 @@ namespace RepoDb.Schema
         /// <summary>
         /// Gets the text that is between the parentheses that start at the position.
         /// </summary>
-        /// <param name="sql"></param>
-        /// <param name="tokens"></param>
-        /// <param name="open"></param>
-        /// <returns></returns>
+        /// <param name="sql">The SQL text.</param>
+        /// <param name="tokens">The tokens.</param>
+        /// <param name="open">The position of the opening parenthesis.</param>
+        /// <returns>The text between the parentheses.</returns>
         private static string GetExpression(string sql,
             IList<Token> tokens,
             int open)
@@ -495,6 +508,8 @@ namespace RepoDb.Schema
     /// </summary>
     internal sealed class AhtolaConstraintDefinition
     {
+        #region Properties
+
         public AhtolaConstraintKind Kind { get; set; }
 
         public string Name { get; set; }
@@ -503,6 +518,10 @@ namespace RepoDb.Schema
 
         public string Expression { get; set; }
 
+        #endregion
+
+        #region Methods
+
         /// <summary>
         /// Checks whether the constraint is defined on exactly the columns (case insensitive, in the same order).
         /// </summary>
@@ -510,6 +529,8 @@ namespace RepoDb.Schema
         /// <returns><c>true</c> if the constraint is on the columns; otherwise, <c>false</c>.</returns>
         public bool IsOn(IEnumerable<string> columns) =>
             Columns.SequenceEqual(columns, StringComparer.OrdinalIgnoreCase);
+
+        #endregion
     }
 
     /// <summary>
@@ -517,6 +538,8 @@ namespace RepoDb.Schema
     /// </summary>
     internal sealed class AhtolaColumnDefinition
     {
+        #region Properties
+
         public string Name { get; set; }
 
         public string GeneratedExpression { get; set; }
@@ -526,6 +549,8 @@ namespace RepoDb.Schema
         public bool IsAutoIncrement { get; set; }
 
         public string Collation { get; set; }
+
+        #endregion
     }
 
     /// <summary>
@@ -533,9 +558,15 @@ namespace RepoDb.Schema
     /// </summary>
     internal sealed class AhtolaTableDefinition
     {
+        #region Properties
+
         public IDictionary<string, AhtolaColumnDefinition> Columns { get; } = new Dictionary<string, AhtolaColumnDefinition>(StringComparer.OrdinalIgnoreCase);
 
         public IList<AhtolaConstraintDefinition> Constraints { get; } = new List<AhtolaConstraintDefinition>();
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Finds the constraint of the kind that is defined on the columns.
@@ -546,5 +577,7 @@ namespace RepoDb.Schema
         public AhtolaConstraintDefinition Find(AhtolaConstraintKind kind,
             IEnumerable<string> columns) =>
             Constraints.FirstOrDefault(c => c.Kind == kind && c.IsOn(columns));
+
+        #endregion
     }
 }

@@ -41,9 +41,9 @@ namespace RepoDb.Data.Helpers
         /// <summary>
         /// Checks whether the <c>BulkOperations</c> package of the provider of the connection is available for the reader.
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="reader"></param>
-        /// <param name="isAsync"></param>
+        /// <param name="connection">The connection of the destination database.</param>
+        /// <param name="reader">The reader of the rows to be inserted.</param>
+        /// <param name="isAsync">A value that indicates whether the asynchronous method is searched.</param>
         /// <returns><c>true</c> if the bulk insert is available; otherwise, <c>false</c>.</returns>
         internal static bool IsAvailable(IDbConnection connection,
             IDataReader reader,
@@ -53,15 +53,15 @@ namespace RepoDb.Data.Helpers
         /// <summary>
         /// Bulk inserts the rows of the reader into the table.
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="reader"></param>
-        /// <param name="batchSize"></param>
-        /// <param name="columnMappingsBehavior"></param>
-        /// <param name="commandTimeout"></param>
-        /// <param name="traceKey"></param>
-        /// <param name="trace"></param>
-        /// <param name="transaction"></param>
+        /// <param name="connection">The connection of the destination database.</param>
+        /// <param name="tableName">The name of the table.</param>
+        /// <param name="reader">The reader of the rows to be inserted.</param>
+        /// <param name="batchSize">The number of rows of a batch.</param>
+        /// <param name="columnMappingsBehavior">The behavior that defines how the columns of the reader are aligned with the columns of the table.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracking key to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows that were inserted.</returns>
         internal static int BulkInsert(IDbConnection connection,
             string tableName,
@@ -91,16 +91,16 @@ namespace RepoDb.Data.Helpers
         /// <summary>
         /// Bulk inserts the rows of the reader into the table in an asynchronous way.
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="reader"></param>
-        /// <param name="batchSize"></param>
-        /// <param name="columnMappingsBehavior"></param>
-        /// <param name="commandTimeout"></param>
-        /// <param name="traceKey"></param>
-        /// <param name="trace"></param>
-        /// <param name="transaction"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="connection">The connection of the destination database.</param>
+        /// <param name="tableName">The name of the table.</param>
+        /// <param name="reader">The reader of the rows to be inserted.</param>
+        /// <param name="batchSize">The number of rows of a batch.</param>
+        /// <param name="columnMappingsBehavior">The behavior that defines how the columns of the reader are aligned with the columns of the table.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracking key to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>The number of rows that were inserted.</returns>
         internal static async Task<int> BulkInsertAsync(IDbConnection connection,
             string tableName,
@@ -142,15 +142,26 @@ namespace RepoDb.Data.Helpers
         /// </summary>
         private sealed class ColumnMappingsScope : IDisposable
         {
+            #region Fields
+
             private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<object, SemaphoreSlim> _gates =
                 new System.Runtime.CompilerServices.ConditionalWeakTable<object, SemaphoreSlim>();
-
             private readonly object _setting;
             private readonly PropertyInfo _property;
             private readonly SemaphoreSlim _gate;
             private object _previous;
             private bool _applied;
 
+            #endregion
+
+            #region Constructors
+
+            /// <summary>
+            /// Creates a new instance of <see cref="ColumnMappingsScope"/> class.
+            /// </summary>
+            /// <param name="setting">The setting of the connection.</param>
+            /// <param name="property">The property of the setting that holds the behavior of the column mappings.</param>
+            /// <param name="gate">The lock that serializes the changes of the setting.</param>
             private ColumnMappingsScope(object setting,
                 PropertyInfo property,
                 SemaphoreSlim gate)
@@ -160,6 +171,16 @@ namespace RepoDb.Data.Helpers
                 _gate = gate;
             }
 
+            #endregion
+
+            #region Methods
+
+            /// <summary>
+            /// Applies the behavior of the column mappings to the setting of the connection, until the scope is disposed.
+            /// </summary>
+            /// <param name="connection">The connection of the destination database.</param>
+            /// <param name="behavior">The behavior of the column mappings.</param>
+            /// <returns>The scope to be disposed to restore the setting.</returns>
             internal static ColumnMappingsScope Enter(IDbConnection connection,
                 CopyColumnMappingsBehavior behavior)
             {
@@ -172,6 +193,13 @@ namespace RepoDb.Data.Helpers
                 return scope.Apply(behavior);
             }
 
+            /// <summary>
+            /// Applies the behavior of the column mappings to the setting of the connection asynchronously, until the scope is disposed.
+            /// </summary>
+            /// <param name="connection">The connection of the destination database.</param>
+            /// <param name="behavior">The behavior of the column mappings.</param>
+            /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+            /// <returns>A task that represents the asynchronous operation. The task result is the scope to be disposed to restore the setting.</returns>
             internal static async Task<ColumnMappingsScope> EnterAsync(IDbConnection connection,
                 CopyColumnMappingsBehavior behavior,
                 CancellationToken cancellationToken)
@@ -188,6 +216,9 @@ namespace RepoDb.Data.Helpers
             /// <summary>
             /// Finds the property of the setting of the connection that defines the behavior (<c>null</c> scope if the setting has none and the behavior is the default one).
             /// </summary>
+            /// <param name="connection">The connection of the destination database.</param>
+            /// <param name="behavior">The behavior of the column mappings.</param>
+            /// <returns>The scope.</returns>
             private static ColumnMappingsScope Create(IDbConnection connection,
                 CopyColumnMappingsBehavior behavior)
             {
@@ -209,6 +240,11 @@ namespace RepoDb.Data.Helpers
                 return new ColumnMappingsScope(setting, property, _gates.GetValue(setting, _ => new SemaphoreSlim(1, 1)));
             }
 
+            /// <summary>
+            /// Sets the behavior of the column mappings on the setting, keeping the previous one so it can be restored.
+            /// </summary>
+            /// <param name="behavior">The behavior of the column mappings.</param>
+            /// <returns>The scope itself.</returns>
             private ColumnMappingsScope Apply(CopyColumnMappingsBehavior behavior)
             {
                 try
@@ -225,6 +261,9 @@ namespace RepoDb.Data.Helpers
                 return this;
             }
 
+            /// <summary>
+            /// Restores the behavior of the column mappings that the setting had.
+            /// </summary>
             public void Dispose()
             {
                 if (_applied)
@@ -234,6 +273,8 @@ namespace RepoDb.Data.Helpers
                     _gate.Release();
                 }
             }
+
+            #endregion
         }
 
         #endregion
@@ -243,9 +284,9 @@ namespace RepoDb.Data.Helpers
         /// <summary>
         /// Finds the extension method that bulk inserts the rows of the reader into the connection (the result is cached).
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="reader"></param>
-        /// <param name="isAsync"></param>
+        /// <param name="connection">The connection of the destination database.</param>
+        /// <param name="reader">The reader of the rows to be inserted.</param>
+        /// <param name="isAsync">A value that indicates whether the asynchronous method is searched.</param>
         /// <returns>The method, or <c>null</c> if there is none.</returns>
         private static MethodInfo Find(IDbConnection connection,
             IDataReader reader,
@@ -262,10 +303,10 @@ namespace RepoDb.Data.Helpers
         /// <summary>
         /// Searches the <c>BulkOperations</c> assemblies for the method.
         /// </summary>
-        /// <param name="connectionType"></param>
-        /// <param name="readerType"></param>
-        /// <param name="isAsync"></param>
-        /// <returns></returns>
+        /// <param name="connectionType">The type of the connection of the destination database.</param>
+        /// <param name="readerType">The type of the reader of the rows to be inserted.</param>
+        /// <param name="isAsync">A value that indicates whether the asynchronous method is searched.</param>
+        /// <returns>The method, or <c>null</c> if there is none.</returns>
         private static MethodInfo Search(Type connectionType,
             Type readerType,
             bool isAsync)
@@ -292,7 +333,7 @@ namespace RepoDb.Data.Helpers
         /// <summary>
         /// Gets the types of the loaded <c>BulkOperations</c> assemblies (the ones that the application references are loaded).
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The types.</returns>
         private static Type[] GetBulkOperationsTypes()
         {
             var loaded = AppDomain.CurrentDomain.GetAssemblies().Where(assembly => !assembly.IsDynamic).ToList();
@@ -332,7 +373,7 @@ namespace RepoDb.Data.Helpers
         /// <summary>
         /// Gets the <c>BulkOperations</c> assemblies that are deployed with the application (a package that the code does not use directly is not referenced by the assembly of the application).
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The paths of the files.</returns>
         private static string[] GetBulkOperationsFiles()
         {
             try
@@ -346,10 +387,10 @@ namespace RepoDb.Data.Helpers
         }
 
         /// <summary>
-        ///
+        /// Gets the names of the assemblies that the assembly references.
         /// </summary>
-        /// <param name="assembly"></param>
-        /// <returns></returns>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns>The names of the referenced assemblies, or an empty array if they can not be read.</returns>
         private static AssemblyName[] GetReferencedNames(Assembly assembly)
         {
             try
@@ -363,10 +404,10 @@ namespace RepoDb.Data.Helpers
         }
 
         /// <summary>
-        ///
+        /// Gets the types that the assembly exports.
         /// </summary>
-        /// <param name="assembly"></param>
-        /// <returns></returns>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns>The exported types (the ones that could be loaded).</returns>
         private static Type[] GetExportedTypes(Assembly assembly)
         {
             try
@@ -382,17 +423,17 @@ namespace RepoDb.Data.Helpers
         /// <summary>
         /// Creates the arguments of the method: the optional arguments are given by their names, and the other ones keep their default values.
         /// </summary>
-        /// <param name="method"></param>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="reader"></param>
-        /// <param name="batchSize"></param>
-        /// <param name="commandTimeout"></param>
-        /// <param name="traceKey"></param>
-        /// <param name="trace"></param>
-        /// <param name="transaction"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
+        /// <param name="method">The <c>BulkInsert</c> method.</param>
+        /// <param name="connection">The connection of the destination database.</param>
+        /// <param name="tableName">The name of the table.</param>
+        /// <param name="reader">The reader of the rows to be inserted.</param>
+        /// <param name="batchSize">The number of rows of a batch.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracking key to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>The arguments.</returns>
         private static object[] CreateArguments(MethodInfo method,
             IDbConnection connection,
             string tableName,
@@ -452,8 +493,8 @@ namespace RepoDb.Data.Helpers
         /// Gets the value of the <c>options</c> argument: its default value with the <c>KeepIdentity</c> option when it has one (i.e.: <c>SqlBulkCopyOptions.KeepIdentity</c>),
         /// so the values of the identity columns are copied as they are instead of being generated again by the destination database (the rows of the related tables reference them).
         /// </summary>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
+        /// <param name="parameter">The parameter.</param>
+        /// <returns>The value of the parameter.</returns>
         private static object GetOptions(ParameterInfo parameter)
         {
             var type = Nullable.GetUnderlyingType(parameter.ParameterType) ?? parameter.ParameterType;
@@ -469,8 +510,8 @@ namespace RepoDb.Data.Helpers
         /// <summary>
         /// Gets the value of the <c>identityBehavior</c> argument: <c>KeepIdentity</c> when the enumeration has it, so the values of the identity columns are copied as they are.
         /// </summary>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
+        /// <param name="parameter">The parameter.</param>
+        /// <returns>The value of the parameter.</returns>
         private static object GetIdentityBehavior(ParameterInfo parameter)
         {
             var type = Nullable.GetUnderlyingType(parameter.ParameterType) ?? parameter.ParameterType;
@@ -482,8 +523,8 @@ namespace RepoDb.Data.Helpers
         /// <summary>
         /// Gets the default value of an optional parameter.
         /// </summary>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
+        /// <param name="parameter">The parameter.</param>
+        /// <returns>The default value of the parameter.</returns>
         private static object GetDefault(ParameterInfo parameter)
         {
             var value = parameter.HasDefaultValue ? parameter.DefaultValue : null;
@@ -497,10 +538,10 @@ namespace RepoDb.Data.Helpers
         }
 
         /// <summary>
-        ///
+        /// Creates the exception that is thrown when there is no <c>BulkInsert</c> method for the connection.
         /// </summary>
-        /// <param name="connection"></param>
-        /// <returns></returns>
+        /// <param name="connection">The connection of the destination database.</param>
+        /// <returns>The exception.</returns>
         private static InvalidOperationException CreateMissingException(IDbConnection connection) =>
             new InvalidOperationException($"There is no 'BulkInsert' extension method for the connection '{connection.GetType().FullName}'. Please install and reference the 'BulkOperations' package of the provider.");
 

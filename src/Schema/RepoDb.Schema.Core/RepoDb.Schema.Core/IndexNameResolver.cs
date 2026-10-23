@@ -78,6 +78,7 @@ namespace RepoDb.Schema
         /// <param name="composer">The composer of the destination database.</param>
         /// <param name="areIndexNamesUniquePerSchema">Whether the name of an index must be unique in the whole schema (or database) of the destination database (see <see cref="RepoDb.Interfaces.IDbSetting.AreIndexNamesUniquePerSchema"/>).</param>
         /// <param name="probe">Executes an existence statement (<c>null</c> if the statement is not composed, or its result is not known).</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         public static async Task ResolveAsync(IEnumerable<PlanTable> tables,
             TableExistsBehavior behavior,
             ISchemaComposer composer,
@@ -156,6 +157,7 @@ namespace RepoDb.Schema
         /// <param name="behavior">Defines what happens to the tables that already exist in the destination database.</param>
         /// <param name="composer">The composer of the destination database.</param>
         /// <param name="probe">Executes an existence statement (<c>null</c> if the statement is not composed, or its result is not known).</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         private static async Task RemoveRenamedIndexesAsync(PlanTable table,
             TableExistsBehavior behavior,
             ISchemaComposer composer,

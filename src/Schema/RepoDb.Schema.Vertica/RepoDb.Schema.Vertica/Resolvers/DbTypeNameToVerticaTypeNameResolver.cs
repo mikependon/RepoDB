@@ -17,6 +17,8 @@ namespace RepoDb.Resolvers
     /// </summary>
     public class DbTypeNameToVerticaTypeNameResolver : IResolver<string, string>
     {
+        #region Methods
+
         /// <summary>
         /// Resolves a database type name into the name of its equivalent Vertica type.
         /// </summary>
@@ -92,5 +94,7 @@ namespace RepoDb.Resolvers
                 default: return name;
             }
         }
+
+        #endregion
     }
 }

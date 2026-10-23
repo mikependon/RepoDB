@@ -475,6 +475,8 @@ namespace RepoDb.Schema
         /// </summary>
         internal sealed class Selection
         {
+            #region Constructors
+
             /// <summary>
             /// Creates a new instance of <see cref="Selection"/> class.
             /// </summary>
@@ -487,6 +489,10 @@ namespace RepoDb.Schema
                 Renamed = renamed;
             }
 
+            #endregion
+
+            #region Properties
+
             /// <summary>
             /// Gets the distinct names of the source columns to be created (<c>null</c> if all the columns are created).
             /// </summary>
@@ -496,6 +502,8 @@ namespace RepoDb.Schema
             /// Gets the new names of the columns by the source column name (<c>null</c> if no column is renamed).
             /// </summary>
             public IDictionary<string, string> Renamed { get; }
+
+            #endregion
         }
 
         #endregion

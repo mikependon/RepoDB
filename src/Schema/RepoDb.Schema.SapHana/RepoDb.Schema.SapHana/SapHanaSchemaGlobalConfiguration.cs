@@ -15,6 +15,8 @@ namespace RepoDb.Schema.SapHana
     /// </summary>
     public static class SapHanaSchemaGlobalConfiguration
     {
+        #region Methods
+
         /// <summary>
         /// Initializes the SapHana settings first (see <c>UseSapHana</c>), then registers the <see cref="SapHanaSchemaComposer"/> to the <see cref="SchemaComposerMapper"/> for the <see cref="HanaConnection"/> type.
         /// A <see cref="SapHanaSchemaReader"/> owns the connection that it reads, so it is created with its connection instead of being registered here.
@@ -28,5 +30,7 @@ namespace RepoDb.Schema.SapHana
             SchemaComposerMapper.Add<HanaConnection>(new SapHanaSchemaComposer(), force: true);
             return globalConfiguration;
         }
+
+        #endregion
     }
 }

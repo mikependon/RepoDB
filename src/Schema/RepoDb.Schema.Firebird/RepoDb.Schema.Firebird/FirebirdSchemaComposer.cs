@@ -322,14 +322,14 @@ namespace RepoDb.Schema
         // Types
 
         /// <summary>
-        ///
+        /// Gets the variable-length type with its size. A size that is above the limit is composed as the large type.
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="largeType"></param>
-        /// <param name="limit"></param>
-        /// <param name="size"></param>
-        /// <param name="isFirebird"></param>
-        /// <returns></returns>
+        /// <param name="type">The name of the variable-length type.</param>
+        /// <param name="largeType">The name of the type that is used when the size is above the limit.</param>
+        /// <param name="limit">The largest size of the variable-length type.</param>
+        /// <param name="size">The size of the column.</param>
+        /// <param name="isFirebird">A value that indicates whether the field was read from a Firebird database.</param>
+        /// <returns>The name of the type.</returns>
         private static string ComposeVariableType(string type,
             string largeType,
             int limit,
@@ -344,11 +344,11 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
-        ///
+        /// Gets the decimal type with the precision and the scale of the field.
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="field"></param>
-        /// <returns></returns>
+        /// <param name="type">The name of the type.</param>
+        /// <param name="field">The field of the column.</param>
+        /// <returns>The name of the type.</returns>
         private static string ComposeDecimalType(string type,
             DbField field)
         {
@@ -363,34 +363,34 @@ namespace RepoDb.Schema
         // Names
 
         /// <summary>
-        ///
+        /// Quotes the name with the quotes of the destination database.
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="name">The name to be quoted.</param>
+        /// <returns>The quoted name.</returns>
         private static string Quote(string name) =>
             FirebirdSchemaHelper.Quote(name);
 
         /// <summary>
-        ///
+        /// Quotes the name of a table, including its schema if it has one (i.e.: <c>schema.table</c>).
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="name">The name of the table, with or without its schema.</param>
+        /// <returns>The quoted name.</returns>
         private static string Name(string name) =>
             FirebirdSchemaHelper.Quote(ParseTable(name));
 
         /// <summary>
-        ///
+        /// Escapes a value to be used as a text literal in a SQL statement.
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="value">The value to be escaped.</param>
+        /// <returns>The escaped value (without the surrounding quotes).</returns>
         private static string Literal(string value) =>
             value.Replace("'", "''");
 
         /// <summary>
         /// Gets the name of the table, and ensures that it has no schema.
         /// </summary>
-        /// <param name="tableName"></param>
-        /// <returns></returns>
+        /// <param name="tableName">The name of the table.</param>
+        /// <returns>The name of the table.</returns>
         private static string ParseTable(string tableName)
         {
             var (schema, table) = FirebirdSchemaHelper.ParseSchemaAndTable(tableName);
@@ -399,42 +399,42 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
-        ///
+        /// Gets the quoted name of the table of the schema.
         /// </summary>
-        /// <param name="schema"></param>
-        /// <returns></returns>
+        /// <param name="schema">The schema of the table.</param>
+        /// <returns>The quoted name of the table, with its schema if it has one.</returns>
         private static string TableName(TableSchema schema) =>
             FirebirdSchemaHelper.FormatTableName(schema.Table.Schema, schema.Table.Name);
 
         /// <summary>
-        ///
+        /// Gets the quoted name of the table.
         /// </summary>
-        /// <param name="table"></param>
-        /// <returns></returns>
+        /// <param name="table">The table.</param>
+        /// <returns>The quoted name of the table, with its schema if it has one.</returns>
         private static string TableName(TableInfo table) =>
             FirebirdSchemaHelper.FormatTableName(table.Schema, table.Name);
 
         /// <summary>
-        ///
+        /// Gets the quoted names of the columns as a comma-separated list.
         /// </summary>
-        /// <param name="columns"></param>
-        /// <returns></returns>
+        /// <param name="columns">The names of the columns.</param>
+        /// <returns>The comma-separated quoted names of the columns.</returns>
         private static string Columns(IEnumerable<string> columns) =>
             string.Join(", ", columns.Select(Quote));
 
         /// <summary>
         /// The names that Firebird generates for the unnamed constraints (<c>INTEG_</c> followed by a number) are not given back, so the constraint is unnamed again.
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="name">The name of the constraint.</param>
+        /// <returns>The clause, followed by a space, or an empty text if the constraint has no name.</returns>
         private static string ConstraintName(string name) =>
             string.IsNullOrWhiteSpace(name) || System.Text.RegularExpressions.Regex.IsMatch(name, @"^INTEG_\d+$") ? string.Empty : $"CONSTRAINT {Quote(name)} ";
 
         /// <summary>
-        ///
+        /// Gets the text of the rule of a foreign key.
         /// </summary>
-        /// <param name="rule"></param>
-        /// <returns></returns>
+        /// <param name="rule">The rule of the foreign key.</param>
+        /// <returns>The text of the rule, or <c>null</c> if the rule is the default of the database (or is not supported).</returns>
         private static string Rule(ForeignKeyRule rule)
         {
             switch (rule)
@@ -449,10 +449,10 @@ namespace RepoDb.Schema
         // Columns
 
         /// <summary>
-        ///
+        /// Gets the definition of a column: its name, type, nullability and default value.
         /// </summary>
-        /// <param name="column"></param>
-        /// <returns></returns>
+        /// <param name="column">The column.</param>
+        /// <returns>The definition of the column.</returns>
         private string Column(ColumnInfo column)
         {
             var field = column.Field;

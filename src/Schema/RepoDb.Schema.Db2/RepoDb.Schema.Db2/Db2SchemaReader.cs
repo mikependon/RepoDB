@@ -384,47 +384,48 @@ namespace RepoDb.Schema
             new TableInfo(name, schema, _connection.Database, Provider);
 
         /// <summary>
-        /// 
+        /// Splits the name of a table into its schema and its name.
         /// </summary>
-        /// <param name="tableName"></param>
-        /// <returns></returns>
+        /// <param name="tableName">The name of the table, with or without its schema.</param>
+        /// <returns>The schema (<c>null</c> if the name has none) and the name of the table.</returns>
         /// <exception cref="ArgumentNullException"></exception>
         private static (string Schema, string Table) ParseTableName(string tableName) =>
             Db2SchemaHelper.ParseSchemaAndTable(tableName);
 
         /// <summary>
-        /// 
+        /// Gets the full name of the table out of its schema and its name, as it is passed to the statements.
         /// </summary>
-        /// <param name="schema"></param>
-        /// <param name="table"></param>
-        /// <returns></returns>
-        private static string FullName(string schema, string table) =>
+        /// <param name="schema">The schema of the table.</param>
+        /// <param name="table">The name of the table.</param>
+        /// <returns>The full name of the table.</returns>
+        private static string FullName(string schema,
+            string table) =>
             $"{schema}\u0001{table}";
 
         /// <summary>
-        /// 
+        /// Gets the key that identifies a table: its schema and its name.
         /// </summary>
-        /// <param name="tableName"></param>
-        /// <returns></returns>
+        /// <param name="table">The table.</param>
+        /// <returns>The key of the table.</returns>
         private static string Key(TableInfo table) =>
             $"{table.Schema}\u0001{table.Name}";
 
         /// <summary>
-        /// 
+        /// Resolves the schema and the name of the table: the schema is the one of the name, or the one that the table is found in.
         /// </summary>
-        /// <param name="tableName"></param>
-        /// <returns></returns>
+        /// <param name="tableName">The name of the table, with or without its schema.</param>
+        /// <returns>The schema and the name of the table.</returns>
         private (string Schema, string Table) Resolve(string tableName)
         {
             return ParseTableName(tableName);
         }
 
         /// <summary>
-        ///
+        /// Resolves the schema and the name of the table asynchronously: the schema is the one of the name, or the one that the table is found in.
         /// </summary>
-        /// <param name="tableName"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
+        /// <param name="tableName">The name of the table, with or without its schema.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result is the schema and the name of the table.</returns>
         private Task<(string Schema, string Table)> ResolveAsync(string tableName,
             CancellationToken cancellationToken) =>
             Task.FromResult(ParseTableName(tableName));
@@ -432,24 +433,24 @@ namespace RepoDb.Schema
         /// <summary>
         /// Gets the current schema of the connection.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The name of the current schema.</returns>
         private string CurrentSchema() =>
             Query(Db2SchemaText.CurrentSchemaSql, SchemaTraceKeys.ResolveSchemaName, r => Convert.ToString(r[0])).First();
 
         /// <summary>
         /// Gets the current schema of the connection.
         /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result is the name of the current schema.</returns>
         private async Task<string> CurrentSchemaAsync(CancellationToken cancellationToken) =>
             (await QueryAsync(Db2SchemaText.CurrentSchemaSql, SchemaTraceKeys.ResolveSchemaName, r => Convert.ToString(r[0]), cancellationToken).ConfigureAwait(false)).First();
 
         /// <summary>
-        /// 
+        /// Resolves the full name of the table asynchronously.
         /// </summary>
-        /// <param name="tableName"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
+        /// <param name="tableName">The name of the table, with or without its schema.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result is the full name of the table.</returns>
         private async Task<string> ResolveFullNameAsync(string tableName,
             CancellationToken cancellationToken)
         {
@@ -460,27 +461,28 @@ namespace RepoDb.Schema
         // Parameters
 
         /// <summary>
-        /// 
+        /// Creates a named parameter of a statement.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        private static KeyValuePair<string, object> Parameter(string name, object value) =>
+        /// <param name="name">The name of the parameter.</param>
+        /// <param name="value">The value of the parameter.</param>
+        /// <returns>The parameter.</returns>
+        private static KeyValuePair<string, object> Parameter(string name,
+            object value) =>
             new KeyValuePair<string, object>(name, value);
 
         /// <summary>
-        /// 
+        /// Creates the parameter that holds the full name of a table.
         /// </summary>
-        /// <param name="fullName"></param>
-        /// <returns></returns>
+        /// <param name="fullName">The full name of the table.</param>
+        /// <returns>The parameter.</returns>
         private static KeyValuePair<string, object> FullNameParameter(string fullName) =>
             Parameter("FullName", fullName);
 
         /// <summary>
-        /// 
+        /// Creates the parameter that holds the full name of a table.
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="name">The schema and the name of the table.</param>
+        /// <returns>The parameter.</returns>
         private static KeyValuePair<string, object> FullNameParameter((string Schema, string Table) name) =>
             FullNameParameter(FullName(name.Schema, name.Table));
 
@@ -489,18 +491,19 @@ namespace RepoDb.Schema
         /// <summary>
         /// Checks whether any of the parameters refers to the current schema of the connection (a table without a schema).
         /// </summary>
-        /// <param name="parameters"></param>
-        /// <returns></returns>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns><c>true</c> if a parameter refers to the current schema; otherwise, <c>false</c>.</returns>
         private static bool RefersToCurrentSchema(KeyValuePair<string, object>[] parameters) =>
             parameters.Any(parameter =>
                 (parameter.Key == "FullName" && string.IsNullOrEmpty(((string)parameter.Value).Split('\u0001')[0])) ||
                 (parameter.Key == "SchemaName" && parameter.Value == null));
 
         /// <summary>
-        ///
+        /// Converts the parameters into the parameter object that is passed to the statement. A parameter that refers to the current schema is replaced by its name.
         /// </summary>
-        /// <param name="parameters"></param>
-        /// <returns></returns>
+        /// <param name="parameters">The parameters.</param>
+        /// <param name="currentSchema">The current schema of the connection, or <c>null</c> if no parameter refers to it.</param>
+        /// <returns>The parameter object.</returns>
         private static IDictionary<string, object> ToParameters(KeyValuePair<string, object>[] parameters,
             string currentSchema)
         {
@@ -522,14 +525,14 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
-        ///
+        /// Executes a statement and maps every record of its result.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="sql"></param>
-        /// <param name="traceKey"></param>
-        /// <param name="map"></param>
-        /// <param name="parameters"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The type of the result of the map function.</typeparam>
+        /// <param name="sql">The SQL statement.</param>
+        /// <param name="traceKey">The tracking key of the statement.</param>
+        /// <param name="map">The function that maps a record into the result.</param>
+        /// <param name="parameters">The parameters of the statement.</param>
+        /// <returns>The mapped records.</returns>
         [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "The parameter object passed to the RepoDB execute methods is either null or a Dictionary<string, object>, which is not reflected.")]
         private IList<T> Query<T>(string sql,
             string traceKey,
@@ -552,15 +555,15 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
-        ///
+        /// Executes a statement and maps every record of its result asynchronously.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="sql"></param>
-        /// <param name="traceKey"></param>
-        /// <param name="map"></param>
-        /// <param name="cancellationToken"></param>
-        /// <param name="parameters"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The type of the result of the map function.</typeparam>
+        /// <param name="sql">The SQL statement.</param>
+        /// <param name="traceKey">The tracking key of the statement.</param>
+        /// <param name="map">The function that maps a record into the result.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <param name="parameters">The parameters of the statement.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result is the mapped records.</returns>
         [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "The parameter object passed to the RepoDB execute methods is either null or a Dictionary<string, object>, which is not reflected.")]
         private async Task<IList<T>> QueryAsync<T>(string sql,
             string traceKey,
@@ -597,58 +600,62 @@ namespace RepoDb.Schema
         // Row mappers
 
         /// <summary>
-        /// 
+        /// Reads a text value of the record.
         /// </summary>
-        /// <param name="r"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        private static string Text(IDataRecord r, string name)
+        /// <param name="r">The record.</param>
+        /// <param name="name">The name of the column.</param>
+        /// <returns>The value, or <c>null</c> if it is <c>DBNull</c>.</returns>
+        private static string Text(IDataRecord r,
+            string name)
         {
             var value = r[name];
             return value == DBNull.Value ? null : Convert.ToString(value);
         }
 
         /// <summary>
-        /// 
+        /// Reads an integer value of the record.
         /// </summary>
-        /// <param name="r"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        private static int Int(IDataRecord r, string name)
+        /// <param name="r">The record.</param>
+        /// <param name="name">The name of the column.</param>
+        /// <returns>The value, or <c>0</c> if it is <c>DBNull</c>.</returns>
+        private static int Int(IDataRecord r,
+            string name)
         {
             var value = r[name];
             return value == DBNull.Value ? 0 : Convert.ToInt32(value);
         }
 
         /// <summary>
-        /// 
+        /// Reads a nullable integer value of the record.
         /// </summary>
-        /// <param name="r"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        private static long? NullableLong(IDataRecord r, string name)
+        /// <param name="r">The record.</param>
+        /// <param name="name">The name of the column.</param>
+        /// <returns>The value, or <c>null</c> if it is <c>DBNull</c>.</returns>
+        private static long? NullableLong(IDataRecord r,
+            string name)
         {
             var value = r[name];
             return value == DBNull.Value ? (long?)null : Convert.ToInt64(value);
         }
 
         /// <summary>
-        /// 
+        /// Reads a boolean value of the record.
         /// </summary>
-        /// <param name="r"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        private static bool Flag(IDataRecord r, string name)
+        /// <param name="r">The record.</param>
+        /// <param name="name">The name of the column.</param>
+        /// <returns>The value, or <c>false</c> if it is <c>DBNull</c>.</returns>
+        private static bool Flag(IDataRecord r,
+            string name)
         {
             var value = r[name];
             return value != DBNull.Value && Convert.ToBoolean(value);
         }
 
         /// <summary>
-        /// 
+        /// Maps a record into a column of the table.
         /// </summary>
-        /// <param name="r"></param>
-        /// <returns></returns>
+        /// <param name="r">The record.</param>
+        /// <returns>The column.</returns>
         private ColumnInfo MapColumn(IDataRecord r)
         {
             var typeName = Text(r, "TypeName").Trim().ToLowerInvariant();
@@ -682,8 +689,8 @@ namespace RepoDb.Schema
         /// <summary>
         /// Gets the expression of a generated column out of its text (i.e.: <c>AS (UPPER(NAME))</c>).
         /// </summary>
-        /// <param name="text"></param>
-        /// <returns></returns>
+        /// <param name="text">The source of the computed column.</param>
+        /// <returns>The expression.</returns>
         private static string ToComputedExpression(string text)
         {
             var match = text == null ? null : System.Text.RegularExpressions.Regex.Match(text.Trim(), @"^AS\s*\((.*)\)$", System.Text.RegularExpressions.RegexOptions.Singleline);
@@ -693,8 +700,8 @@ namespace RepoDb.Schema
         /// <summary>
         /// Checks whether the type has a length (the other types have a fixed size, or a precision).
         /// </summary>
-        /// <param name="typeName"></param>
-        /// <returns></returns>
+        /// <param name="typeName">The name of the type.</param>
+        /// <returns><c>true</c> if the type has a length; otherwise, <c>false</c>.</returns>
         private static bool HasLength(string typeName) =>
             typeName == "varchar" || typeName == "character" || typeName == "char" || typeName == "binary" || typeName == "varbinary" ||
             typeName == "graphic" || typeName == "vargraphic";
@@ -702,32 +709,32 @@ namespace RepoDb.Schema
         /// <summary>
         /// Checks whether the type has a precision (the length of the decimal types is the number of digits).
         /// </summary>
-        /// <param name="typeName"></param>
-        /// <returns></returns>
+        /// <param name="typeName">The name of the type.</param>
+        /// <returns><c>true</c> if the type has a precision; otherwise, <c>false</c>.</returns>
         private static bool HasPrecision(string typeName) =>
             typeName == "decimal" || typeName == "numeric" || typeName == "decfloat";
 
         /// <summary>
         /// Checks whether the type has a scale (the scale of the timestamp is the precision of its fractional seconds).
         /// </summary>
-        /// <param name="typeName"></param>
-        /// <returns></returns>
+        /// <param name="typeName">The name of the type.</param>
+        /// <returns><c>true</c> if the type has a scale; otherwise, <c>false</c>.</returns>
         private static bool HasScale(string typeName) =>
             typeName == "decimal" || typeName == "numeric" || typeName == "timestamp";
 
         /// <summary>
-        /// 
+        /// Maps a record into the row of a column of a key.
         /// </summary>
-        /// <param name="r"></param>
-        /// <returns></returns>
+        /// <param name="r">The record.</param>
+        /// <returns>The row of the column of the key.</returns>
         private static (string Name, string Column, bool IsClustered) MapKeyColumn(IDataRecord r) =>
             (Text(r, "ConstraintName"), Text(r, "ColumnName"), Flag(r, "IsClustered"));
 
         /// <summary>
-        /// 
+        /// Maps the rows of the key columns into the primary key of the table.
         /// </summary>
-        /// <param name="rows"></param>
-        /// <returns></returns>
+        /// <param name="rows">The rows of the columns of the primary key.</param>
+        /// <returns>The primary key, or <c>null</c> if the table has none.</returns>
         private static PrimaryKeyInfo MapPrimaryKey(IEnumerable<(string Name, string Column, bool IsClustered)> rows)
         {
             var list = rows.ToList();
@@ -737,28 +744,28 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
-        /// 
+        /// Maps the rows of the key columns into the unique constraints of the table.
         /// </summary>
-        /// <param name="rows"></param>
-        /// <returns></returns>
+        /// <param name="rows">The rows of the columns of the unique constraints.</param>
+        /// <returns>The unique constraints.</returns>
         private static IList<UniqueConstraintInfo> MapUniqueConstraints(IEnumerable<(string Name, string Column, bool IsClustered)> rows) =>
             rows.GroupBy(x => x.Name)
                 .Select(g => new UniqueConstraintInfo(g.Key) { Columns = g.Select(x => x.Column).ToList() })
                 .ToList();
 
         /// <summary>
-        /// 
+        /// Maps a record into the row of a column of an index.
         /// </summary>
-        /// <param name="r"></param>
-        /// <returns></returns>
+        /// <param name="r">The record.</param>
+        /// <returns>The row of the column of the index.</returns>
         private static (string Name, bool IsUnique, bool IsClustered, string Filter, string Column, bool IsIncluded, bool IsDescending) MapIndexColumn(IDataRecord r) =>
             (Text(r, "IndexName"), Flag(r, "IsUnique"), Flag(r, "IsClustered"), Text(r, "FilterDefinition"), Text(r, "ColumnName"), Flag(r, "IsIncluded"), Flag(r, "IsDescending"));
 
         /// <summary>
-        /// 
+        /// Maps the rows of the index columns into the indexes of the table.
         /// </summary>
-        /// <param name="rows"></param>
-        /// <returns></returns>
+        /// <param name="rows">The rows of the columns of the indexes.</param>
+        /// <returns>The indexes.</returns>
         private static IList<IndexInfo> MapIndexes(IEnumerable<(string Name, bool IsUnique, bool IsClustered, string Filter, string Column, bool IsIncluded, bool IsDescending)> rows) =>
             rows.GroupBy(x => x.Name)
                 .Select(g => new IndexInfo(g.Key)
@@ -773,18 +780,18 @@ namespace RepoDb.Schema
                 .ToList();
 
         /// <summary>
-        /// 
+        /// Maps a record into the row of a column of a foreign key.
         /// </summary>
-        /// <param name="r"></param>
-        /// <returns></returns>
+        /// <param name="r">The record.</param>
+        /// <returns>The row of the column of the foreign key.</returns>
         private static (string Name, string Column, string RefSchema, string RefTable, string RefColumn, string Update, string Delete) MapForeignKeyColumn(IDataRecord r) =>
             (Text(r, "ForeignKeyName"), Text(r, "ColumnName"), Text(r, "ReferencedSchema"), Text(r, "ReferencedTable"), Text(r, "ReferencedColumn"), Text(r, "UpdateAction"), Text(r, "DeleteAction"));
 
         /// <summary>
-        /// 
+        /// Maps the rows of the foreign key columns into the foreign keys of the table.
         /// </summary>
-        /// <param name="rows"></param>
-        /// <returns></returns>
+        /// <param name="rows">The rows of the columns of the foreign keys.</param>
+        /// <returns>The foreign keys.</returns>
         private IList<ForeignKeyInfo> MapForeignKeys(IEnumerable<(string Name, string Column, string RefSchema, string RefTable, string RefColumn, string Update, string Delete)> rows) =>
             rows.GroupBy(x => x.Name)
                 .Select(g => new ForeignKeyInfo(g.Key)
@@ -798,10 +805,10 @@ namespace RepoDb.Schema
                 .ToList();
 
         /// <summary>
-        /// 
+        /// Converts the action of the database into the rule of a foreign key.
         /// </summary>
-        /// <param name="action"></param>
-        /// <returns></returns>
+        /// <param name="action">The action that is read from the database.</param>
+        /// <returns>The rule of the foreign key.</returns>
         private static ForeignKeyRule ToRule(string action)
         {
             switch (action)
@@ -815,18 +822,18 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
-        /// 
+        /// Maps a record into a check constraint of the table.
         /// </summary>
-        /// <param name="r"></param>
-        /// <returns></returns>
+        /// <param name="r">The record.</param>
+        /// <returns>The check constraint.</returns>
         private static CheckConstraintInfo MapCheckConstraint(IDataRecord r) =>
             new CheckConstraintInfo(Text(r, "ConstraintName")) { Expression = Text(r, "Definition") };
 
         /// <summary>
-        ///
+        /// Maps a record into a relationship of two tables: the child table and the parent table that it references.
         /// </summary>
-        /// <param name="r"></param>
-        /// <returns></returns>
+        /// <param name="r">The record.</param>
+        /// <returns>The child table and the parent table.</returns>
         private (TableInfo Child, TableInfo Parent) MapRelationship(IDataRecord r) =>
             (NewTable(Text(r, "ChildTable"), Text(r, "ChildSchema")), NewTable(Text(r, "ParentTable"), Text(r, "ParentSchema")));
 

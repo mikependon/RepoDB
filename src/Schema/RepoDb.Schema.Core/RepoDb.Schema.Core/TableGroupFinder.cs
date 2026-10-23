@@ -64,9 +64,9 @@ namespace RepoDb.Schema
         #region Helpers
 
         /// <summary>
-        ///
+        /// Visits the table that is identified by the key, and the tables that it references (the depth-first search of the algorithm).
         /// </summary>
-        /// <param name="key"></param>
+        /// <param name="key">The key of the table.</param>
         private void Visit(string key)
         {
             _indexes[key] = _lowLinks[key] = _counter++;
@@ -83,10 +83,10 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
-        ///
+        /// Visits a table that is referenced by another table, and updates the low link of the table that references it.
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="parent"></param>
+        /// <param name="key">The key of the table that references.</param>
+        /// <param name="parent">The key of the table that is referenced.</param>
         private void VisitParent(string key,
             string parent)
         {
@@ -102,9 +102,9 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
-        ///
+        /// Takes the tables of a group off the stack, up to the root of the group.
         /// </summary>
-        /// <param name="root"></param>
+        /// <param name="root">The key of the root table of the group.</param>
         private void TakeGroup(string root)
         {
             string member;

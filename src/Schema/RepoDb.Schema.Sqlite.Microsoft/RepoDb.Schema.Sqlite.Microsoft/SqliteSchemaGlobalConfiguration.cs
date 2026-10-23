@@ -15,6 +15,8 @@ namespace RepoDb.Schema.Sqlite.Microsoft
     /// </summary>
     public static class SqliteSchemaGlobalConfiguration
     {
+        #region Methods
+
         /// <summary>
         /// Initializes the SQLite settings first (see <c>UseSqlite</c>), then registers the <see cref="SqliteSchemaComposer"/> to the <see cref="SchemaComposerMapper"/> for the <see cref="SqliteConnection"/> type.
         /// A <see cref="SqliteSchemaReader"/> owns the connection that it reads, so it is created with its connection instead of being registered here.
@@ -28,5 +30,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft
             SchemaComposerMapper.Add<SqliteConnection>(new SqliteSchemaComposer(), force: true);
             return globalConfiguration;
         }
+
+        #endregion
     }
 }

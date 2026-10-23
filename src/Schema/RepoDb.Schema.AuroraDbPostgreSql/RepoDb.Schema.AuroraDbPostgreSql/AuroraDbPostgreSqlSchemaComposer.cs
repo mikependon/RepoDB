@@ -265,68 +265,69 @@ namespace RepoDb.Schema
         // Names
 
         /// <summary>
-        ///
+        /// Quotes the name with the quotes of the destination database.
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="name">The name to be quoted.</param>
+        /// <returns>The quoted name.</returns>
         private static string Quote(string name) =>
             AuroraDbPostgreSqlSchemaHelper.Quote(name);
 
         /// <summary>
-        ///
+        /// Quotes the name of a table, including its schema if it has one (i.e.: <c>schema.table</c>).
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="name">The name of the table, with or without its schema.</param>
+        /// <returns>The quoted name.</returns>
         private static string Name(string name) =>
             AuroraDbPostgreSqlSchemaHelper.QuoteName(name);
 
         /// <summary>
-        ///
+        /// Escapes a value to be used as a text literal in a SQL statement.
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="value">The value to be escaped.</param>
+        /// <returns>The escaped value (without the surrounding quotes).</returns>
         private static string Literal(string value) =>
             value.Replace("'", "''");
 
         /// <summary>
-        ///
+        /// Gets the quoted name of the table of the schema.
         /// </summary>
-        /// <param name="schema"></param>
-        /// <returns></returns>
+        /// <param name="schema">The schema of the table.</param>
+        /// <returns>The quoted name of the table, with its schema if it has one.</returns>
         private static string TableName(TableSchema schema) =>
             AuroraDbPostgreSqlSchemaHelper.FormatTableName(schema.Table.Schema, schema.Table.Name);
 
         /// <summary>
-        ///
+        /// Gets the quoted name of the table.
         /// </summary>
-        /// <param name="table"></param>
-        /// <returns></returns>
+        /// <param name="table">The table.</param>
+        /// <returns>The quoted name of the table, with its schema if it has one.</returns>
         private static string TableName(TableInfo table) =>
             AuroraDbPostgreSqlSchemaHelper.FormatTableName(table.Schema, table.Name);
 
         /// <summary>
-        ///
+        /// Gets the quoted names of the columns as a comma-separated list.
         /// </summary>
-        /// <param name="columns"></param>
-        /// <returns></returns>
+        /// <param name="columns">The names of the columns.</param>
+        /// <returns>The comma-separated quoted names of the columns.</returns>
         private static string Columns(IEnumerable<string> columns) =>
             string.Join(", ", columns.Select(Quote));
 
         /// <summary>
-        ///
+        /// Gets the <c>CONSTRAINT</c> clause that names a constraint.
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="name">The name of the constraint.</param>
+        /// <returns>The clause, followed by a space, or an empty text if the constraint has no name.</returns>
         private static string ConstraintName(string name) =>
             string.IsNullOrWhiteSpace(name) ? string.Empty : $"CONSTRAINT {Quote(name)} ";
 
         /// <summary>
-        ///
+        /// Gets the <c>ON ...</c> clause of the rule of a foreign key.
         /// </summary>
-        /// <param name="action"></param>
-        /// <param name="rule"></param>
-        /// <returns></returns>
-        private static string Rule(string action, ForeignKeyRule rule)
+        /// <param name="action">The action that the rule is applied to (<c>UPDATE</c> or <c>DELETE</c>).</param>
+        /// <param name="rule">The rule of the foreign key.</param>
+        /// <returns>The clause, or an empty text if the rule is the default of the database.</returns>
+        private static string Rule(string action,
+            ForeignKeyRule rule)
         {
             switch (rule)
             {
@@ -341,10 +342,10 @@ namespace RepoDb.Schema
         // Columns
 
         /// <summary>
-        ///
+        /// Gets the definition of a column: its name, type, nullability and default value.
         /// </summary>
-        /// <param name="column"></param>
-        /// <returns></returns>
+        /// <param name="column">The column.</param>
+        /// <returns>The definition of the column.</returns>
         private string Column(ColumnInfo column)
         {
             var field = column.Field;

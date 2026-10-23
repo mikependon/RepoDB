@@ -521,8 +521,21 @@ namespace RepoDb.Schema
         /// <summary>
         /// Copies the schema of the tables into the destination connection: the work of the overloads of the multiple tables, on the columns that are already validated.
         /// </summary>
+        /// <param name="connection">The source connection.</param>
+        /// <param name="tableNames">The names of the tables to be copied.</param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="targetSchema">The schema of the destination database that the tables are created in.</param>
         /// <param name="selectedColumns">The distinct names of the columns to be created (<c>null</c> if all the columns are created).</param>
         /// <param name="tableMappings">The columns to be created table by table (<c>null</c> if the columns are the same for every requested table).</param>
+        /// <param name="tableExistenceBehavior">Defines what happens when a table already exists in the destination database.</param>
+        /// <param name="relationshipBehavior">Defines which related tables are copied together with the given tables.</param>
+        /// <param name="createdCallback">The callback that receives the item of each table once its schema is created.</param>
+        /// <param name="errorCallback">The callback that receives an error when a statement fails.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracking key to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="transaction">The transaction to be used on the destination connection.</param>
+        /// <returns>The result of the schema copy operation.</returns>
         /// <remarks>See the overloads of <c>CopyTableSchemaTo</c> for the description of the other arguments.</remarks>
         [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static CopyTableSchemaResult CopyTableSchemasCore(IDbConnection connection,
@@ -615,8 +628,22 @@ namespace RepoDb.Schema
         /// <summary>
         /// Copies the schema of the tables into the destination connection: the work of the overloads of the multiple tables, on the columns that are already validated.
         /// </summary>
+        /// <param name="connection">The source connection.</param>
+        /// <param name="tableNames">The names of the tables to be copied.</param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="targetSchema">The schema of the destination database that the tables are created in.</param>
         /// <param name="selectedColumns">The distinct names of the columns to be created (<c>null</c> if all the columns are created).</param>
         /// <param name="tableMappings">The columns to be created table by table (<c>null</c> if the columns are the same for every requested table).</param>
+        /// <param name="tableExistenceBehavior">Defines what happens when a table already exists in the destination database.</param>
+        /// <param name="relationshipBehavior">Defines which related tables are copied together with the given tables.</param>
+        /// <param name="createdCallback">The callback that receives the item of each table once its schema is created.</param>
+        /// <param name="errorCallback">The callback that receives an error when a statement fails.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracking key to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="transaction">The transaction to be used on the destination connection.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result is the result of the schema copy operation.</returns>
         /// <remarks>See the overloads of <c>CopyTableSchemaTo</c> for the description of the other arguments.</remarks>
         [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static async Task<CopyTableSchemaResult> CopyTableSchemasCoreAsync(IDbConnection connection,

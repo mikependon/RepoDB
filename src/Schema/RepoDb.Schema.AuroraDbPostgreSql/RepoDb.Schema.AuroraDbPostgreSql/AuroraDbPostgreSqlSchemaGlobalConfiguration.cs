@@ -16,6 +16,8 @@ namespace RepoDb.Schema.AuroraDbPostgreSql
     /// </summary>
     public static class AuroraDbPostgreSqlSchemaGlobalConfiguration
     {
+        #region Methods
+
         /// <summary>
         /// Initializes the PostgreSQL settings first (see <c>UseAuroraDbPostgreSql</c>), then registers the <see cref="AuroraDbPostgreSqlSchemaComposer"/> to the <see cref="SchemaComposerMapper"/> for the <see cref="AuroraDbConnection"/> type.
         /// A <see cref="AuroraDbPostgreSqlSchemaReader"/> owns the connection that it reads, so it is created with its connection instead of being registered here.
@@ -29,5 +31,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql
             SchemaComposerMapper.Add<AuroraDbConnection>(new AuroraDbPostgreSqlSchemaComposer(), force: true);
             return globalConfiguration;
         }
+
+        #endregion
     }
 }

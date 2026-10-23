@@ -15,6 +15,8 @@ namespace RepoDb.Schema.PostgreSql
     /// </summary>
     public static class PostgreSqlSchemaGlobalConfiguration
     {
+        #region Methods
+
         /// <summary>
         /// Initializes the PostgreSQL settings first (see <c>UsePostgreSql</c>), then registers the <see cref="PostgreSqlSchemaComposer"/> to the <see cref="SchemaComposerMapper"/> for the <see cref="NpgsqlConnection"/> type.
         /// A <see cref="PostgreSqlSchemaReader"/> owns the connection that it reads, so it is created with its connection instead of being registered here.
@@ -28,5 +30,7 @@ namespace RepoDb.Schema.PostgreSql
             SchemaComposerMapper.Add<NpgsqlConnection>(new PostgreSqlSchemaComposer(), force: true);
             return globalConfiguration;
         }
+
+        #endregion
     }
 }

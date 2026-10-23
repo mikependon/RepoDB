@@ -13,6 +13,8 @@ namespace RepoDb.Schema
     /// </summary>
     internal static class PostgreSqlSchemaText
     {
+        #region Constants
+
         internal const string ResolveSchemaSql = @"SELECT n.nspname
             FROM pg_class c
             INNER JOIN pg_namespace n ON n.oid = c.relnamespace
@@ -115,5 +117,7 @@ namespace RepoDb.Schema
         /// Reads the schemas of the database (the system schemas are not included).
         /// </summary>
         internal const string SchemasSql = @"SELECT schema_name AS SchemaName FROM information_schema.schemata WHERE schema_name <> 'information_schema' AND schema_name NOT LIKE 'pg\_%' ORDER BY schema_name";
+
+        #endregion
     }
 }

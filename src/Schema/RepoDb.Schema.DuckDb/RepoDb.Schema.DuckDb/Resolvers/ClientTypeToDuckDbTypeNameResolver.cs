@@ -17,6 +17,8 @@ namespace RepoDb.Resolvers
     /// </summary>
     public class ClientTypeToDuckDbTypeNameResolver : IResolver<Type, string>
     {
+        #region Methods
+
         /// <summary>
         /// Resolves a .NET CLR Type into the name of its equivalent DuckDb type.
         /// </summary>
@@ -50,5 +52,7 @@ namespace RepoDb.Resolvers
             if (type == typeof(byte[])) return "blob";
             return "varchar";
         }
+
+        #endregion
     }
 }

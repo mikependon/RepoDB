@@ -13,6 +13,8 @@ namespace RepoDb.Data
     /// </summary>
     public static class DataTraceKeys
     {
+        #region Constants
+
         /// <summary>
         /// The trace key for the 'CopyDataTo' operation.
         /// </summary>
@@ -22,5 +24,7 @@ namespace RepoDb.Data
         /// The trace key for the 'MoveDataTo' operation.
         /// </summary>
         public const string MoveDataTo = "MoveDataTo";
+
+        #endregion
     }
 }

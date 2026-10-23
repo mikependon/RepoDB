@@ -16,6 +16,8 @@ namespace RepoDb.Schema.ClickHouse
     /// </summary>
     public static class ClickHouseSchemaGlobalConfiguration
     {
+        #region Methods
+
         /// <summary>
         /// Initializes the ClickHouse settings first (see <c>UseClickHouse</c>), then registers the <see cref="ClickHouseSchemaComposer"/> to the <see cref="SchemaComposerMapper"/> for the <see cref="ClickHouseConnection"/> type.
         /// A <see cref="ClickHouseSchemaReader"/> owns the connection that it reads, so it is created with its connection instead of being registered here.
@@ -29,5 +31,7 @@ namespace RepoDb.Schema.ClickHouse
             SchemaComposerMapper.Add<ClickHouseConnection>(new ClickHouseSchemaComposer(), force: true);
             return globalConfiguration;
         }
+
+        #endregion
     }
 }

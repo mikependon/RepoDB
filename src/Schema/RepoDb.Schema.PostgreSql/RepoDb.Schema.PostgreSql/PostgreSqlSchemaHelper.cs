@@ -151,7 +151,8 @@ namespace RepoDb.Schema
         /// <param name="schema">The schema of the table.</param>
         /// <param name="table">The name of the table.</param>
         /// <returns>The quoted name of the table.</returns>
-        public static string QuoteSchemaAndTable(string schema, string table) =>
+        public static string QuoteSchemaAndTable(string schema,
+            string table) =>
             string.Concat(Quote(schema), Separator, Quote(table));
 
         /// <summary>
@@ -161,7 +162,8 @@ namespace RepoDb.Schema
         /// <param name="schema">The schema of the table (can be <c>null</c>).</param>
         /// <param name="table">The name of the table.</param>
         /// <returns>The formatted name of the table.</returns>
-        public static string FormatTableName(string schema, string table)
+        public static string FormatTableName(string schema,
+            string table)
         {
             var formattedTable = IsPlain(table) ? table : Quote(table);
             return string.IsNullOrWhiteSpace(schema)
@@ -176,25 +178,25 @@ namespace RepoDb.Schema
         /// <summary>
         /// Checks whether the character opens a quoted part of a name: the opening quote of the setting.
         /// </summary>
-        /// <param name="c"></param>
-        /// <returns></returns>
+        /// <param name="c">The character.</param>
+        /// <returns><c>true</c> if the character opens a quoted part; otherwise, <c>false</c>.</returns>
         private static bool IsOpeningQuote(char c) =>
             c == OpeningQuote;
 
         /// <summary>
         /// Gets the character that closes the quoted part that is opened by the character.
         /// </summary>
-        /// <param name="opening"></param>
-        /// <returns></returns>
+        /// <param name="opening">The opening character.</param>
+        /// <returns>The closing character.</returns>
         private static char GetClosingQuote(char opening) =>
             opening == OpeningQuote ? ClosingQuote : opening;
 
         /// <summary>
         /// Reads a quoted part of a name (a closing quote that is doubled is a closing quote of the part) and appends the unquoted part to the buffer.
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">The name.</param>
         /// <param name="start">The position of the opening quote.</param>
-        /// <param name="current"></param>
+        /// <param name="current">The buffer of the part that is being read.</param>
         /// <returns>The position after the closing quote.</returns>
         private static int ReadQuoted(string name,
             int start,
@@ -221,22 +223,24 @@ namespace RepoDb.Schema
         /// <summary>
         /// Checks whether the closing quote at the position is doubled, which escapes it.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="position"></param>
-        /// <param name="close"></param>
-        /// <returns></returns>
+        /// <param name="name">The name.</param>
+        /// <param name="position">The position of the quote.</param>
+        /// <param name="close">The closing quote.</param>
+        /// <returns><c>true</c> if the quote is doubled; otherwise, <c>false</c>.</returns>
         private static bool IsEscapedQuote(string name,
             int position,
             char close) =>
             position + 1 < name.Length && name[position + 1] == close;
 
         /// <summary>
-        ///
+        /// Adds the part of the name that was read to the parts, and clears the buffer.
         /// </summary>
-        /// <param name="parts"></param>
-        /// <param name="current"></param>
-        /// <param name="quoted"></param>
-        private static void AddCurrentPart(List<string> parts, StringBuilder current, bool quoted)
+        /// <param name="parts">The parts of the name.</param>
+        /// <param name="current">The buffer of the part that was read.</param>
+        /// <param name="quoted">A value that indicates whether the part was quoted (a quoted part is kept as it is, otherwise it is trimmed).</param>
+        private static void AddCurrentPart(List<string> parts,
+            StringBuilder current,
+            bool quoted)
         {
             var part = quoted ? current.ToString() : current.ToString().Trim();
             current.Clear();
@@ -247,10 +251,10 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
-        ///
+        /// Checks whether the part of the name is a plain name: it starts with a letter and has letters, digits and underscores only.
         /// </summary>
-        /// <param name="part"></param>
-        /// <returns></returns>
+        /// <param name="part">The part of the name.</param>
+        /// <returns><c>true</c> if the part is a plain name; otherwise, <c>false</c>.</returns>
         private static bool IsPlain(string part) =>
             part.Length > 0 &&
             !char.IsDigit(part[0]) &&

@@ -15,6 +15,8 @@ namespace RepoDb.Schema.DuckDb
     /// </summary>
     public static class DuckDbSchemaGlobalConfiguration
     {
+        #region Methods
+
         /// <summary>
         /// Initializes the DuckDb settings first (see <c>UseDuckDb</c>), then registers the <see cref="DuckDbSchemaComposer"/> to the <see cref="SchemaComposerMapper"/> for the <see cref="DuckDBConnection"/> type.
         /// A <see cref="DuckDbSchemaReader"/> owns the connection that it reads, so it is created with its connection instead of being registered here.
@@ -28,5 +30,7 @@ namespace RepoDb.Schema.DuckDb
             SchemaComposerMapper.Add<DuckDBConnection>(new DuckDbSchemaComposer(), force: true);
             return globalConfiguration;
         }
+
+        #endregion
     }
 }

@@ -15,6 +15,8 @@ namespace RepoDb.Schema.Oracle
     /// </summary>
     public static class OracleSchemaGlobalConfiguration
     {
+        #region Methods
+
         /// <summary>
         /// Initializes the Oracle settings first (see <c>UseOracle</c>), then registers the <see cref="OracleSchemaComposer"/> to the <see cref="SchemaComposerMapper"/> for the <see cref="OracleConnection"/> type.
         /// A <see cref="OracleSchemaReader"/> owns the connection that it reads, so it is created with its connection instead of being registered here.
@@ -28,5 +30,7 @@ namespace RepoDb.Schema.Oracle
             SchemaComposerMapper.Add<OracleConnection>(new OracleSchemaComposer(), force: true);
             return globalConfiguration;
         }
+
+        #endregion
     }
 }

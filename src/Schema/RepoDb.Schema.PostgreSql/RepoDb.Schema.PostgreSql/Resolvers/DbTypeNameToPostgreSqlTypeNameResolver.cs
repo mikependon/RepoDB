@@ -15,6 +15,8 @@ namespace RepoDb.Resolvers
     /// </summary>
     public class DbTypeNameToPostgreSqlTypeNameResolver : IResolver<string, string>
     {
+        #region Methods
+
         /// <summary>
         /// Returns the equivalent PostgreSQL type name of the database type name.
         /// </summary>
@@ -67,5 +69,7 @@ namespace RepoDb.Resolvers
                 default: return name;
             }
         }
+
+        #endregion
     }
 }

@@ -57,10 +57,10 @@ namespace RepoDb.Schema
         /// Gets the neighbors of each table, by the key of the table: its parents and/or its children, depending on the behavior.
         /// A table that references itself is not a neighbor of itself.
         /// </summary>
-        /// <param name="foreignKeys"></param>
-        /// <param name="relationshipBehavior"></param>
-        /// <param name="tableKey"></param>
-        /// <returns></returns>
+        /// <param name="foreignKeys">The foreign keys, as the child table and the parent table.</param>
+        /// <param name="relationshipBehavior">The behavior that defines the direction to follow.</param>
+        /// <param name="tableKey">The function that gets the key of a table.</param>
+        /// <returns>The related tables, by the key of the table.</returns>
         private static Dictionary<string, List<TableInfo>> GetNeighbors(IEnumerable<(TableInfo Child, TableInfo Parent)> foreignKeys,
             RelatedTableBehavior relationshipBehavior,
             Func<TableInfo, string> tableKey)
@@ -84,10 +84,10 @@ namespace RepoDb.Schema
         /// Adds the neighbors of the tables that are already in the list, and then the neighbors of those, until no new table is found.
         /// It is breadth-first, so the nearest relatives come first and a cycle ends as soon as it comes back to a known table.
         /// </summary>
-        /// <param name="result"></param>
-        /// <param name="neighbors"></param>
-        /// <param name="tableKey"></param>
-        /// <returns></returns>
+        /// <param name="result">The tables found so far (it grows while it is walked).</param>
+        /// <param name="neighbors">The related tables, by the key of the table.</param>
+        /// <param name="tableKey">The function that gets the key of a table.</param>
+        /// <returns>The tables with all the tables that are related to them.</returns>
         private static IList<TableInfo> Walk(List<TableInfo> result,
             IDictionary<string, List<TableInfo>> neighbors,
             Func<TableInfo, string> tableKey)
@@ -104,8 +104,8 @@ namespace RepoDb.Schema
         /// <summary>
         /// Checks whether the behavior follows the parents of a table.
         /// </summary>
-        /// <param name="relationshipBehavior"></param>
-        /// <returns></returns>
+        /// <param name="relationshipBehavior">The behavior.</param>
+        /// <returns><c>true</c> if the behavior follows the parents; otherwise, <c>false</c>.</returns>
         private static bool FollowsParents(RelatedTableBehavior relationshipBehavior) =>
             relationshipBehavior == RelatedTableBehavior.Parents ||
             relationshipBehavior == RelatedTableBehavior.ParentsAndChildren;
@@ -113,18 +113,18 @@ namespace RepoDb.Schema
         /// <summary>
         /// Checks whether the behavior follows the children of a table.
         /// </summary>
-        /// <param name="relationshipBehavior"></param>
-        /// <returns></returns>
+        /// <param name="relationshipBehavior">The behavior.</param>
+        /// <returns><c>true</c> if the behavior follows the children; otherwise, <c>false</c>.</returns>
         private static bool FollowsChildren(RelatedTableBehavior relationshipBehavior) =>
             relationshipBehavior == RelatedTableBehavior.Children ||
             relationshipBehavior == RelatedTableBehavior.ParentsAndChildren;
 
         /// <summary>
-        ///
+        /// Adds the table to the neighbors of the key.
         /// </summary>
-        /// <param name="neighbors"></param>
-        /// <param name="key"></param>
-        /// <param name="table"></param>
+        /// <param name="neighbors">The neighbors, by the key of their table.</param>
+        /// <param name="key">The key of the table that the neighbor is related to.</param>
+        /// <param name="table">The neighbor.</param>
         private static void Add(IDictionary<string, List<TableInfo>> neighbors,
             string key,
             TableInfo table)

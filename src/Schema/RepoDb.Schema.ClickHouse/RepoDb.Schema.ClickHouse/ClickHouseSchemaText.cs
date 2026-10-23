@@ -15,6 +15,8 @@ namespace RepoDb.Schema
     /// </summary>
     internal static class ClickHouseSchemaText
     {
+        #region Constants
+
         private const string Database = "coalesce({Schema:Nullable(String)}, currentDatabase())";
 
         internal const string TableExistsSql = @"SELECT toUInt8(count() > 0) FROM system.tables t
@@ -78,5 +80,7 @@ namespace RepoDb.Schema
         /// Reads the schemas of the database (the system schemas are not included).
         /// </summary>
         internal const string SchemasSql = @"SELECT name AS SchemaName FROM system.databases WHERE name NOT IN ('system', 'information_schema', 'INFORMATION_SCHEMA') ORDER BY name";
+
+        #endregion
     }
 }

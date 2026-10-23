@@ -16,6 +16,8 @@ namespace RepoDb.Resolvers
     /// </summary>
     public class ClientTypeToCockroachDbTypeNameResolver : IResolver<Type, string>
     {
+        #region Methods
+
         /// <summary>
         /// Returns the equivalent CockroachDB type name of the .NET CLR type.
         /// </summary>
@@ -44,5 +46,7 @@ namespace RepoDb.Resolvers
             if (type == typeof(byte[])) return "bytea";
             return "text";
         }
+
+        #endregion
     }
 }

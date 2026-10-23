@@ -15,6 +15,8 @@ namespace RepoDb.Schema.Db2
     /// </summary>
     public static class Db2SchemaGlobalConfiguration
     {
+        #region Methods
+
         /// <summary>
         /// Initializes the Db2 settings first (see <c>UseDb2</c>), then registers the <see cref="Db2SchemaComposer"/> to the <see cref="SchemaComposerMapper"/> for the <see cref="DB2Connection"/> type.
         /// A <see cref="Db2SchemaReader"/> owns the connection that it reads, so it is created with its connection instead of being registered here.
@@ -28,5 +30,7 @@ namespace RepoDb.Schema.Db2
             SchemaComposerMapper.Add<DB2Connection>(new Db2SchemaComposer(), force: true);
             return globalConfiguration;
         }
+
+        #endregion
     }
 }

@@ -17,6 +17,8 @@ namespace RepoDb.Resolvers
     /// </summary>
     public class ClientTypeToSqliteTypeNameResolver : IResolver<Type, string>
     {
+        #region Methods
+
         /// <summary>
         /// Resolves a .NET CLR Type into the name of its equivalent SQLite type.
         /// </summary>
@@ -45,5 +47,7 @@ namespace RepoDb.Resolvers
             if (type == typeof(byte[])) return "blob";
             return "text";
         }
+
+        #endregion
     }
 }

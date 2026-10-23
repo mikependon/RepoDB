@@ -31,8 +31,8 @@ namespace RepoDb.Schema
         /// <summary>
         /// Gets the schema of the destination database that the tables are created in: the given one, or the default schema of the setting of the destination connection (see <see cref="IDbSetting.DefaultSchema"/>).
         /// </summary>
-        /// <param name="targetSchema"></param>
-        /// <param name="destinationConnection"></param>
+        /// <param name="targetSchema">The given schema, or <c>null</c>.</param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
         /// <returns>The schema (<c>null</c> if it is not given, and the setting has no default schema).</returns>
         internal static string GetTargetSchema(string targetSchema,
             IDbConnection destinationConnection)
@@ -47,13 +47,13 @@ namespace RepoDb.Schema
         /// Reads the state of the tables in the destination database: whether each one exists and, when the existing tables are aligned,
         /// the columns, the indexes and the foreign keys that they are missing. A statement that the composer does not compose leaves the state unknown.
         /// </summary>
-        /// <param name="tables"></param>
-        /// <param name="behavior"></param>
-        /// <param name="composer"></param>
-        /// <param name="destinationConnection"></param>
-        /// <param name="commandTimeout"></param>
-        /// <param name="trace"></param>
-        /// <param name="transaction"></param>
+        /// <param name="tables">The state of the tables.</param>
+        /// <param name="behavior">The behavior that is requested for the tables that already exist.</param>
+        /// <param name="composer">The composer of the destination database.</param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="transaction">The transaction to be used on the destination connection.</param>
         [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         internal static void ProbeTables(IEnumerable<PlanTable> tables,
             TableExistsBehavior behavior,
@@ -102,14 +102,15 @@ namespace RepoDb.Schema
         /// <summary>
         /// Reads the state of the tables in the destination database (see <see cref="ProbeTables"/>).
         /// </summary>
-        /// <param name="tables"></param>
-        /// <param name="behavior"></param>
-        /// <param name="composer"></param>
-        /// <param name="destinationConnection"></param>
-        /// <param name="commandTimeout"></param>
-        /// <param name="trace"></param>
-        /// <param name="transaction"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="tables">The state of the tables.</param>
+        /// <param name="behavior">The behavior that is requested for the tables that already exist.</param>
+        /// <param name="composer">The composer of the destination database.</param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="transaction">The transaction to be used on the destination connection.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         internal static async Task ProbeTablesAsync(IEnumerable<PlanTable> tables,
             TableExistsBehavior behavior,
@@ -243,18 +244,18 @@ namespace RepoDb.Schema
         /// <summary>
         /// Converts the result of an existence statement (<c>1</c> if it exists).
         /// </summary>
-        /// <param name="result"></param>
-        /// <returns></returns>
+        /// <param name="result">The result of the statement.</param>
+        /// <returns><c>true</c> if it exists; otherwise, <c>false</c>.</returns>
         internal static bool ToBoolean(object result) =>
             result != null && result != DBNull.Value && Convert.ToInt32(result) == 1;
 
         /// <summary>
         /// Creates the error of a statement that has failed.
         /// </summary>
-        /// <param name="exception"></param>
-        /// <param name="step"></param>
-        /// <param name="statementIndex"></param>
-        /// <returns></returns>
+        /// <param name="exception">The exception that was thrown.</param>
+        /// <param name="step">The step that has failed.</param>
+        /// <param name="statementIndex">The position of the statement in the plan.</param>
+        /// <returns>The error.</returns>
         internal static ExecutionError CreateError(Exception exception,
             PlanStep step,
             int statementIndex) =>
@@ -270,9 +271,9 @@ namespace RepoDb.Schema
         /// <summary>
         /// Gets the script that was (or is going to be) executed for the table.
         /// </summary>
-        /// <param name="table"></param>
-        /// <param name="schemaComposer"></param>
-        /// <returns></returns>
+        /// <param name="table">The state of the table.</param>
+        /// <param name="schemaComposer">The composer of the destination database.</param>
+        /// <returns>The statements of the script.</returns>
         internal static IEnumerable<string> GetScript(PlanTable table,
             ISchemaComposer schemaComposer)
         {
@@ -291,14 +292,14 @@ namespace RepoDb.Schema
         /// <summary>
         /// Adds the item of each table that is completed to the items, and calls the callback with it.
         /// </summary>
-        /// <param name="createdCallback"></param>
-        /// <param name="items"></param>
-        /// <param name="tables"></param>
-        /// <param name="errors"></param>
-        /// <param name="connection"></param>
-        /// <param name="destinationConnection"></param>
-        /// <param name="tableExistenceBehavior"></param>
-        /// <param name="schemaComposer"></param>
+        /// <param name="createdCallback">The callback that receives the item of each completed table, or <c>null</c>.</param>
+        /// <param name="items">The items of the tables that were completed.</param>
+        /// <param name="tables">The state of the tables that are completed.</param>
+        /// <param name="errors">The errors that were raised so far.</param>
+        /// <param name="connection">The connection of the source database.</param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="tableExistenceBehavior">The behavior that was requested for the tables that already exist.</param>
+        /// <param name="schemaComposer">The composer of the destination database.</param>
         internal static void Report(Action<CopyTableSchemaResultItem> createdCallback,
             IList<CopyTableSchemaResultItem> items,
             IEnumerable<PlanTable> tables,
@@ -357,10 +358,10 @@ namespace RepoDb.Schema
         /// <summary>
         /// Creates the result of the schema copy operation from the items of the tables that were copied.
         /// </summary>
-        /// <param name="startTime"></param>
-        /// <param name="items"></param>
-        /// <param name="errors"></param>
-        /// <returns></returns>
+        /// <param name="startTime">The time (in UTC) when the operation has started.</param>
+        /// <param name="items">The items of the tables that were copied.</param>
+        /// <param name="errors">The errors that were raised.</param>
+        /// <returns>The result.</returns>
         internal static CopyTableSchemaResult CreateResult(DateTime startTime,
             IList<CopyTableSchemaResultItem> items,
             IList<ExecutionError> errors) =>
@@ -374,11 +375,11 @@ namespace RepoDb.Schema
             };
 
         /// <summary>
-        /// 
+        /// Validates the arguments of the copy of a single table.
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="destinationConnection"></param>
+        /// <param name="connection">The source connection.</param>
+        /// <param name="tableName">The name of the table.</param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
         /// <exception cref="ArgumentNullException"></exception>
         internal static void Validate(IDbConnection connection,
             string tableName,
@@ -399,12 +400,12 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
-        ///
+        /// Validates the arguments of the copy of several tables.
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="tableNames"></param>
-        /// <param name="destinationConnection"></param>
-        /// <returns></returns>
+        /// <param name="connection">The source connection.</param>
+        /// <param name="tableNames">The names of the tables.</param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <returns>The names of the tables, as a list.</returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentException"></exception>
         internal static IList<string> Validate(IDbConnection connection,

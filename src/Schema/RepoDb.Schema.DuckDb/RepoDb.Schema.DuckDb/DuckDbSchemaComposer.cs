@@ -315,8 +315,8 @@ namespace RepoDb.Schema
         /// Sorts the tables so that a table comes after the tables that it references, as the foreign keys are created with the table (the given order is kept when it is already valid).
         /// The tables that reference each other (in a circular way) are kept in the given order, as DuckDB can not create them.
         /// </summary>
-        /// <param name="schemas"></param>
-        /// <returns></returns>
+        /// <param name="schemas">The schemas of the tables.</param>
+        /// <returns>The schemas, in the order.</returns>
         private static List<TableSchema> Sort(List<TableSchema> schemas)
         {
             var remaining = new List<TableSchema>(schemas);
@@ -334,11 +334,11 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
-        ///
+        /// Checks whether two tables have the same name and the same schema.
         /// </summary>
-        /// <param name="first"></param>
-        /// <param name="second"></param>
-        /// <returns></returns>
+        /// <param name="first">The first table.</param>
+        /// <param name="second">The second table.</param>
+        /// <returns><c>true</c> if the tables are the same; otherwise, <c>false</c>.</returns>
         private static bool IsSameTable(TableInfo first,
             TableInfo second) =>
             string.Equals(first.Name, second.Name, StringComparison.Ordinal) && string.Equals(first.Schema, second.Schema, StringComparison.Ordinal);
@@ -348,66 +348,66 @@ namespace RepoDb.Schema
         /// <summary>
         /// Checks whether the type is a simple one (its name has no other type or value in it).
         /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
+        /// <param name="type">The name of the type.</param>
+        /// <returns><c>true</c> if the type is simple; otherwise, <c>false</c>.</returns>
         private static bool IsSimple(string type) =>
             type.IndexOf('(') < 0 && type.IndexOf('[') < 0;
 
         // Names
 
         /// <summary>
-        ///
+        /// Quotes the name with the quotes of the destination database.
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="name">The name to be quoted.</param>
+        /// <returns>The quoted name.</returns>
         private static string Quote(string name) =>
             DuckDbSchemaHelper.Quote(name);
 
         /// <summary>
-        ///
+        /// Quotes the name of a table, including its schema if it has one (i.e.: <c>schema.table</c>).
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="name">The name of the table, with or without its schema.</param>
+        /// <returns>The quoted name.</returns>
         private static string Name(string name) =>
             DuckDbSchemaHelper.QuoteName(name);
 
         /// <summary>
-        ///
+        /// Escapes a value to be used as a text literal in a SQL statement.
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="value">The value to be escaped.</param>
+        /// <returns>The escaped value (without the surrounding quotes).</returns>
         private static string Literal(string value) =>
             value.Replace("'", "''");
 
         /// <summary>
         /// Gets the expression of the schema in the catalog: the schema, or the current schema of the connection.
         /// </summary>
-        /// <param name="schema"></param>
-        /// <returns></returns>
+        /// <param name="schema">The name of the schema, or <c>null</c> to use the current schema.</param>
+        /// <returns>The literal of the schema, or the expression of the current schema.</returns>
         private static string Owner(string schema) =>
             schema == null ? CurrentSchema : $"'{Literal(schema)}'";
 
         /// <summary>
-        ///
+        /// Gets the quoted name of the table of the schema.
         /// </summary>
-        /// <param name="schema"></param>
-        /// <returns></returns>
+        /// <param name="schema">The schema of the table.</param>
+        /// <returns>The quoted name of the table, with its schema if it has one.</returns>
         private static string TableName(TableSchema schema) =>
             DuckDbSchemaHelper.FormatTableName(schema.Table.Schema, schema.Table.Name);
 
         /// <summary>
-        ///
+        /// Gets the quoted name of the table.
         /// </summary>
-        /// <param name="table"></param>
-        /// <returns></returns>
+        /// <param name="table">The table.</param>
+        /// <returns>The quoted name of the table, with its schema if it has one.</returns>
         private static string TableName(TableInfo table) =>
             DuckDbSchemaHelper.FormatTableName(table.Schema, table.Name);
 
         /// <summary>
-        ///
+        /// Gets the quoted names of the columns as a comma-separated list.
         /// </summary>
-        /// <param name="columns"></param>
-        /// <returns></returns>
+        /// <param name="columns">The names of the columns.</param>
+        /// <returns>The comma-separated quoted names of the columns.</returns>
         private static string Columns(IEnumerable<string> columns) =>
             string.Join(", ", columns.Select(Quote));
 
@@ -416,9 +416,9 @@ namespace RepoDb.Schema
         /// <summary>
         /// Gets the name of the sequence of an identity column, in the schema of the table.
         /// </summary>
-        /// <param name="tableName"></param>
-        /// <param name="column"></param>
-        /// <returns></returns>
+        /// <param name="tableName">The name of the table that the column belongs to.</param>
+        /// <param name="column">The identity column.</param>
+        /// <returns>The quoted name of the sequence.</returns>
         private static string SequenceName(string tableName,
             ColumnInfo column)
         {
@@ -430,9 +430,9 @@ namespace RepoDb.Schema
         /// <summary>
         /// Composes the statement that creates the sequence of an identity column.
         /// </summary>
-        /// <param name="tableName"></param>
-        /// <param name="column"></param>
-        /// <returns></returns>
+        /// <param name="tableName">The name of the table that the column belongs to.</param>
+        /// <param name="column">The identity column.</param>
+        /// <returns>The SQL statement.</returns>
         private static string CreateSequence(string tableName,
             ColumnInfo column) =>
             $"CREATE OR REPLACE SEQUENCE {SequenceName(tableName, column)} START {column.IdentitySeed ?? 1} INCREMENT {column.IdentityIncrement ?? 1}";
@@ -440,10 +440,11 @@ namespace RepoDb.Schema
         // Columns
 
         /// <summary>
-        ///
+        /// Gets the definition of a column: its name, type, nullability and default value.
         /// </summary>
-        /// <param name="column"></param>
-        /// <returns></returns>
+        /// <param name="tableName">The name of the table that the column belongs to.</param>
+        /// <param name="column">The column.</param>
+        /// <returns>The definition of the column.</returns>
         private string Column(string tableName,
             ColumnInfo column)
         {

@@ -17,6 +17,11 @@ namespace RepoDb.Schema
     {
         #region Constructors
 
+        /// <summary>
+        /// Creates a new instance of <see cref="PlanStep"/> class.
+        /// </summary>
+        /// <param name="statement">The SQL statement.</param>
+        /// <param name="owner">The table that the statement belongs to.</param>
         public PlanStep(string statement,
             PlanTable owner)
         {

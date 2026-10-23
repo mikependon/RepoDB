@@ -17,6 +17,8 @@ namespace RepoDb.Resolvers
     /// </summary>
     public class ClientTypeToSqlServerTypeNameResolver : IResolver<Type, string>
     {
+        #region Methods
+
         /// <summary>
         /// Resolves a .NET CLR Type into the name of its equivalent SQL Server type.
         /// </summary>
@@ -46,5 +48,7 @@ namespace RepoDb.Resolvers
             if (type == typeof(byte[])) return "varbinary";
             return "sql_variant";
         }
+
+        #endregion
     }
 }

@@ -16,6 +16,11 @@ namespace RepoDb.Schema
     {
         #region Constants
 
+        /// <summary>
+        /// Gets the statement that reads the columns of the table.
+        /// </summary>
+        /// <param name="schema">The quoted name of the schema.</param>
+        /// <returns>The SQL statement.</returns>
         internal static string ColumnsSql(string schema) => $@"SELECT name AS Name,
                 type AS DeclaredType,
                 ""notnull"" AS IsNotNull,
@@ -26,6 +31,11 @@ namespace RepoDb.Schema
             WHERE hidden IN (0, 2, 3)
             ORDER BY cid;";
 
+        /// <summary>
+        /// Gets the statement that lists the indexes of the table.
+        /// </summary>
+        /// <param name="schema">The quoted name of the schema.</param>
+        /// <returns>The SQL statement.</returns>
         internal static string IndexListSql(string schema) => $@"SELECT name AS IndexName,
                 ""unique"" AS IsUnique,
                 origin AS Origin,
@@ -33,12 +43,22 @@ namespace RepoDb.Schema
             FROM pragma_index_list(@Table, {schema})
             ORDER BY name;";
 
+        /// <summary>
+        /// Gets the statement that reads the columns of an index.
+        /// </summary>
+        /// <param name="schema">The quoted name of the schema.</param>
+        /// <returns>The SQL statement.</returns>
         internal static string IndexColumnsSql(string schema) => $@"SELECT name AS ColumnName,
                 ""desc"" AS IsDescending,
                 ""key"" AS IsKey
             FROM pragma_index_xinfo(@Index, {schema})
             ORDER BY seqno;";
 
+        /// <summary>
+        /// Gets the statement that reads the foreign keys of the table.
+        /// </summary>
+        /// <param name="schema">The quoted name of the schema.</param>
+        /// <returns>The SQL statement.</returns>
         internal static string ForeignKeysSql(string schema) => $@"SELECT id AS Id,
                 ""table"" AS ReferencedTable,
                 ""from"" AS ColumnName,
@@ -48,6 +68,11 @@ namespace RepoDb.Schema
             FROM pragma_foreign_key_list(@Table, {schema})
             ORDER BY id, seq;";
 
+        /// <summary>
+        /// Gets the statement that reads the columns of the primary key of the table.
+        /// </summary>
+        /// <param name="schema">The quoted name of the schema.</param>
+        /// <returns>The SQL statement.</returns>
         internal static string PrimaryKeyColumnsSql(string schema) => $@"SELECT name AS ColumnName
             FROM pragma_table_xinfo(@Table, {schema})
             WHERE pk > 0
@@ -62,8 +87,8 @@ namespace RepoDb.Schema
         /// <summary>
         /// Gets the string literal of the schema. The engine ignores a parameter that is the schema argument of the <c>pragma</c> functions, so it is inlined.
         /// </summary>
-        /// <param name="schema"></param>
-        /// <returns></returns>
+        /// <param name="schema">The name of the schema.</param>
+        /// <returns>The text literal.</returns>
         internal static string Literal(string schema) =>
             "'" + schema.Replace("'", "''") + "'";
 
@@ -103,8 +128,10 @@ namespace RepoDb.Schema
         /// Gets the statement that reads the foreign keys of all the tables of the schema (a child table and its parent table).
         /// </summary>
         /// <param name="schema">The quoted name of the schema.</param>
+        /// <param name="schemaName">The name of the schema.</param>
         /// <returns>The SQL statement.</returns>
-        internal static string RelationshipsSql(string schema, string schemaName) =>
+        internal static string RelationshipsSql(string schema,
+            string schemaName) =>
             $"SELECT DISTINCT m.name AS ChildTable, f.\"table\" AS ParentTable FROM {schema}.sqlite_master m, pragma_foreign_key_list(m.name, {Literal(schemaName)}) f WHERE m.type = 'table';";
 
         #endregion

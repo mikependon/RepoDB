@@ -15,6 +15,8 @@ namespace RepoDb.Schema.Sqlite.Ahtola
     /// </summary>
     public static class AhtolaSchemaGlobalConfiguration
     {
+        #region Methods
+
         /// <summary>
         /// Initializes the Ahtola settings first (see <c>UseAhtola</c>), then registers the <see cref="AhtolaSchemaComposer"/> to the <see cref="SchemaComposerMapper"/> for the <see cref="SqliteConnection"/> type.
         /// A <see cref="AhtolaSchemaReader"/> owns the connection that it reads, so it is created with its connection instead of being registered here.
@@ -28,5 +30,7 @@ namespace RepoDb.Schema.Sqlite.Ahtola
             SchemaComposerMapper.Add<SqliteConnection>(new AhtolaSchemaComposer(), force: true);
             return globalConfiguration;
         }
+
+        #endregion
     }
 }

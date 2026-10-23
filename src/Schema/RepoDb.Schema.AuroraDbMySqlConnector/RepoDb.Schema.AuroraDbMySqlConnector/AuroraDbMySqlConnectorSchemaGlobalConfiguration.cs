@@ -16,6 +16,8 @@ namespace RepoDb.Schema.AuroraDbMySqlConnector
     /// </summary>
     public static class AuroraDbMySqlConnectorSchemaGlobalConfiguration
     {
+        #region Methods
+
         /// <summary>
         /// Initializes the MySQL settings first (see <c>UseAuroraDbMySqlConnector</c>), then registers the <see cref="AuroraDbMySqlConnectorSchemaComposer"/> to the <see cref="SchemaComposerMapper"/> for the <see cref="AuroraDbConnection"/> type.
         /// A <see cref="AuroraDbMySqlConnectorSchemaReader"/> owns the connection that it reads, so it is created with its connection instead of being registered here.
@@ -29,5 +31,7 @@ namespace RepoDb.Schema.AuroraDbMySqlConnector
             SchemaComposerMapper.Add<AuroraDbConnection>(new AuroraDbMySqlConnectorSchemaComposer(), force: true);
             return globalConfiguration;
         }
+
+        #endregion
     }
 }

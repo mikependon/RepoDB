@@ -17,6 +17,8 @@ namespace RepoDb.Resolvers
     /// </summary>
     public class DbTypeNameToDuckDbTypeNameResolver : IResolver<string, string>
     {
+        #region Methods
+
         /// <summary>
         /// Resolves a database type name into the name of its equivalent DuckDb type.
         /// </summary>
@@ -89,5 +91,7 @@ namespace RepoDb.Resolvers
                 default: return name;
             }
         }
+
+        #endregion
     }
 }

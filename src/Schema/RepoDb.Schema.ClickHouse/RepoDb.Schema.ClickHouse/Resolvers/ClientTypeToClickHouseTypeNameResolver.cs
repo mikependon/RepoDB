@@ -17,6 +17,8 @@ namespace RepoDb.Resolvers
     /// </summary>
     public class ClientTypeToClickHouseTypeNameResolver : IResolver<Type, string>
     {
+        #region Methods
+
         /// <summary>
         /// Resolves a .NET CLR Type into the name of its equivalent ClickHouse type.
         /// </summary>
@@ -49,5 +51,7 @@ namespace RepoDb.Resolvers
             if (type == typeof(byte[])) return "String";
             return "String";
         }
+
+        #endregion
     }
 }

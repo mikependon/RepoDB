@@ -17,6 +17,8 @@ namespace RepoDb.Resolvers
     /// </summary>
     public class DbTypeNameToMySqlTypeNameResolver : IResolver<string, string>
     {
+        #region Methods
+
         /// <summary>
         /// Resolves a database type name into the name of its equivalent MySQL type.
         /// </summary>
@@ -73,5 +75,7 @@ namespace RepoDb.Resolvers
                 default: return name;
             }
         }
+
+        #endregion
     }
 }

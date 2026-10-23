@@ -15,6 +15,8 @@ namespace RepoDb.Schema.Firebird
     /// </summary>
     public static class FirebirdSchemaGlobalConfiguration
     {
+        #region Methods
+
         /// <summary>
         /// Initializes the Firebird settings first (see <c>UseFirebird</c>), then registers the <see cref="FirebirdSchemaComposer"/> to the <see cref="SchemaComposerMapper"/> for the <see cref="FbConnection"/> type.
         /// A <see cref="FirebirdSchemaReader"/> owns the connection that it reads, so it is created with its connection instead of being registered here.
@@ -28,5 +30,7 @@ namespace RepoDb.Schema.Firebird
             SchemaComposerMapper.Add<FbConnection>(new FirebirdSchemaComposer(), force: true);
             return globalConfiguration;
         }
+
+        #endregion
     }
 }

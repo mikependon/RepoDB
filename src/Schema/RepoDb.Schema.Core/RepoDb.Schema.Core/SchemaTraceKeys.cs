@@ -13,6 +13,8 @@ namespace RepoDb.Schema
     /// </summary>
     internal static class SchemaTraceKeys
     {
+        #region Constants
+
         /// <summary>
         /// The trace key for the 'CopyTableSchemaTo' operation.
         /// </summary>
@@ -77,5 +79,7 @@ namespace RepoDb.Schema
         /// The trace key used when the existence of a table is being checked.
         /// </summary>
         public const string TableExists = "TableExists";
+
+        #endregion
     }
 }

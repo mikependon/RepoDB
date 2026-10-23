@@ -15,6 +15,8 @@ namespace RepoDb.Schema.MariaDb
     /// </summary>
     public static class MariaDbSchemaGlobalConfiguration
     {
+        #region Methods
+
         /// <summary>
         /// Initializes the MariaDB settings first (see <c>UseMariaDb</c>), then registers the <see cref="MariaDbSchemaComposer"/> to the <see cref="SchemaComposerMapper"/> for the <see cref="MariaDbConnection"/> type.
         /// A <see cref="MariaDbSchemaReader"/> owns the connection that it reads, so it is created with its connection instead of being registered here.
@@ -28,5 +30,7 @@ namespace RepoDb.Schema.MariaDb
             SchemaComposerMapper.Add<MariaDbConnection>(new MariaDbSchemaComposer(), force: true);
             return globalConfiguration;
         }
+
+        #endregion
     }
 }

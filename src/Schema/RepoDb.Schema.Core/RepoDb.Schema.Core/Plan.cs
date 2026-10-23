@@ -23,6 +23,12 @@ namespace RepoDb.Schema
     {
         #region Constructors
 
+        /// <summary>
+        /// Creates a new instance of <see cref="Plan"/> class.
+        /// </summary>
+        /// <param name="steps">The steps of the plan.</param>
+        /// <param name="completions">The tables that each step completes, by the position of the step.</param>
+        /// <param name="immediate">The tables that have nothing to execute.</param>
         private Plan(IList<PlanStep> steps,
             ILookup<int, PlanTable> completions,
             IList<PlanTable> immediate)
@@ -110,10 +116,10 @@ namespace RepoDb.Schema
         /// <summary>
         /// Creates the state of a table.
         /// </summary>
-        /// <param name="source"></param>
-        /// <param name="schema"></param>
-        /// <param name="composer"></param>
-        /// <returns></returns>
+        /// <param name="source">The schema of the table, as read from the source database.</param>
+        /// <param name="schema">The schema of the table that is created in the destination database.</param>
+        /// <param name="composer">The composer of the destination database.</param>
+        /// <returns>The state of the table.</returns>
         private static PlanTable CreateTable(TableSchema source,
             TableSchema schema,
             ISchemaComposer composer) =>
@@ -123,9 +129,9 @@ namespace RepoDb.Schema
         /// Gets the schema of the table as it is created in the target schema: its name, and the foreign keys that reference the other tables, are in that schema.
         /// The schema is the one of the source if there is no target schema, or if nothing has to be moved (the table, and the tables that it references, are already in it).
         /// </summary>
-        /// <param name="source"></param>
-        /// <param name="targetSchema"></param>
-        /// <returns></returns>
+        /// <param name="source">The schema of the table.</param>
+        /// <param name="targetSchema">The target schema.</param>
+        /// <returns>The schema of the table in the target schema.</returns>
         private static TableSchema MoveTo(TableSchema source,
             string targetSchema)
         {
@@ -148,9 +154,9 @@ namespace RepoDb.Schema
         /// <summary>
         /// Checks whether the table is in the schema.
         /// </summary>
-        /// <param name="table"></param>
-        /// <param name="schema"></param>
-        /// <returns></returns>
+        /// <param name="table">The table.</param>
+        /// <param name="schema">The name of the schema.</param>
+        /// <returns><c>true</c> if the table is in the schema; otherwise, <c>false</c>.</returns>
         private static bool IsIn(TableInfo table,
             string schema) =>
             string.Equals(table.Schema, schema, StringComparison.Ordinal);
@@ -158,9 +164,9 @@ namespace RepoDb.Schema
         /// <summary>
         /// Gets the foreign key that references the table in the target schema.
         /// </summary>
-        /// <param name="foreignKey"></param>
-        /// <param name="targetSchema"></param>
-        /// <returns></returns>
+        /// <param name="foreignKey">The foreign key.</param>
+        /// <param name="targetSchema">The target schema.</param>
+        /// <returns>The foreign key.</returns>
         private static ForeignKeyInfo MoveTo(ForeignKeyInfo foreignKey,
             string targetSchema) =>
             new ForeignKeyInfo(foreignKey.Name)
@@ -175,7 +181,7 @@ namespace RepoDb.Schema
         /// <summary>
         /// Throws if two of the tables would have the same name in the destination database (i.e.: the tables of different schemas that are copied into one schema).
         /// </summary>
-        /// <param name="tables"></param>
+        /// <param name="tables">The state of the tables.</param>
         private static void EnsureUniqueNames(IEnumerable<PlanTable> tables)
         {
             var duplicate = tables
@@ -191,8 +197,8 @@ namespace RepoDb.Schema
         /// <summary>
         /// Sets what is going to happen to each table, and throws if the behavior does not allow that a table already exists.
         /// </summary>
-        /// <param name="tables"></param>
-        /// <param name="behavior"></param>
+        /// <param name="tables">The state of the tables.</param>
+        /// <param name="behavior">The behavior that is requested for the tables that already exist.</param>
         private static void SetOutcomes(IEnumerable<PlanTable> tables,
             TableExistsBehavior behavior)
         {
@@ -218,9 +224,9 @@ namespace RepoDb.Schema
         /// <summary>
         /// Gets the steps that drop the tables, the referencing tables first.
         /// </summary>
-        /// <param name="tables"></param>
-        /// <param name="composer"></param>
-        /// <returns></returns>
+        /// <param name="tables">The state of the tables.</param>
+        /// <param name="composer">The composer of the destination database.</param>
+        /// <returns>The steps.</returns>
         private static IEnumerable<PlanStep> GetDropSteps(IEnumerable<PlanTable> tables,
             ISchemaComposer composer) =>
             tables
@@ -231,9 +237,9 @@ namespace RepoDb.Schema
         /// <summary>
         /// Gets the steps that add the missing columns and indexes to the tables.
         /// </summary>
-        /// <param name="tables"></param>
-        /// <param name="composer"></param>
-        /// <returns></returns>
+        /// <param name="tables">The state of the tables.</param>
+        /// <param name="composer">The composer of the destination database.</param>
+        /// <returns>The steps.</returns>
         private static IEnumerable<PlanStep> GetAlignSteps(IEnumerable<PlanTable> tables,
             ISchemaComposer composer)
         {
@@ -254,9 +260,9 @@ namespace RepoDb.Schema
         /// Gets the steps that add the missing foreign keys to the tables that are aligned. They are the last steps of the plan, so the tables that they reference
         /// (the tables that are created, and the columns that are added) exist when the foreign keys are added.
         /// </summary>
-        /// <param name="tables"></param>
-        /// <param name="composer"></param>
-        /// <returns></returns>
+        /// <param name="tables">The state of the tables.</param>
+        /// <param name="composer">The composer of the destination database.</param>
+        /// <returns>The steps.</returns>
         private static IEnumerable<PlanStep> GetAlignForeignKeySteps(IEnumerable<PlanTable> tables,
             ISchemaComposer composer)
         {
@@ -274,9 +280,9 @@ namespace RepoDb.Schema
         /// <summary>
         /// Gets the statements that create the tables (see <see cref="ISchemaComposer.ComposeSchemas"/>).
         /// </summary>
-        /// <param name="created"></param>
-        /// <param name="composer"></param>
-        /// <returns></returns>
+        /// <param name="created">The state of the tables that are created.</param>
+        /// <param name="composer">The composer of the destination database.</param>
+        /// <returns>The statements.</returns>
         private static IList<string> GetCreateSteps(IList<PlanTable> created,
             ISchemaComposer composer) =>
             created.Count == 0
@@ -287,9 +293,9 @@ namespace RepoDb.Schema
         /// Gets the table that completes at the last statement of an align step: the tables are aligned one after the other (the columns and the indexes), and then
         /// their foreign keys are added (they are the last steps of the plan). A table is completed by its last statement.
         /// </summary>
-        /// <param name="tables"></param>
+        /// <param name="tables">The state of the tables.</param>
         /// <param name="foreignKeyOffset">The index of the first step that adds a foreign key.</param>
-        /// <returns></returns>
+        /// <returns>The position of the statement that completes each table, with the table.</returns>
         private static IEnumerable<(int Key, PlanTable Table)> GetAlignCompletions(IList<PlanTable> tables,
             int foreignKeyOffset)
         {
@@ -317,10 +323,10 @@ namespace RepoDb.Schema
         /// and then one for each foreign key, so a table is completed by its last statement. If the script does not have the expected number
         /// of statements, the statements that complete the tables are not known, so all the tables are completed at the key <c>-1</c>.
         /// </summary>
-        /// <param name="created"></param>
-        /// <param name="statementCount"></param>
-        /// <param name="offset"></param>
-        /// <returns></returns>
+        /// <param name="created">The state of the tables that are created.</param>
+        /// <param name="statementCount">The number of the statements of the script.</param>
+        /// <param name="offset">The position of the first statement of the script in the plan.</param>
+        /// <returns>The position of the statement that completes each table, with the table.</returns>
         private static IEnumerable<(int Key, PlanTable Table)> GetCreateCompletions(IList<PlanTable> created,
             int statementCount,
             int offset)
@@ -342,9 +348,9 @@ namespace RepoDb.Schema
         /// <summary>
         /// Gets the table that each statement of the script that creates the tables belongs to (<c>null</c> if the script does not have the expected number of statements).
         /// </summary>
-        /// <param name="created"></param>
-        /// <param name="statementCount"></param>
-        /// <returns></returns>
+        /// <param name="created">The state of the tables that are created.</param>
+        /// <param name="statementCount">The number of the statements that were composed.</param>
+        /// <returns>The table of each statement.</returns>
         private static PlanTable[] GetCreateOwners(IList<PlanTable> created,
             int statementCount)
         {

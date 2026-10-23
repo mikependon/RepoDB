@@ -37,17 +37,17 @@ namespace RepoDb.Data
         /// Gets the tables whose rows are to be copied, in the order that they must be copied (a table comes after the tables that it references).
         /// If the schema is requested (see <see cref="IsSchemaRequested"/>), it is copied first, with <see cref="CopyTableSchemaToExtension.CopyTableSchemaTo(IDbConnection, IEnumerable{string}, IDbConnection, string, TableExistsBehavior, RelatedTableBehavior, Action{CopyTableSchemaResultItem}, Action{ExecutionError}, int?, string, ITrace, IDbTransaction)"/>.
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="destinationConnection"></param>
-        /// <param name="sourceTable"></param>
-        /// <param name="targetTable"></param>
-        /// <param name="targetSchema"></param>
-        /// <param name="where"></param>
-        /// <param name="relationshipBehavior"></param>
-        /// <param name="tableExistenceBehavior"></param>
-        /// <param name="commandTimeout"></param>
-        /// <param name="trace"></param>
-        /// <param name="transaction"></param>
+        /// <param name="connection">The source connection.</param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="sourceTable">The name of the source table.</param>
+        /// <param name="targetTable">The name of the target table.</param>
+        /// <param name="targetSchema">The schema of the target table, or <c>null</c>.</param>
+        /// <param name="where">The filter of the requested table, or <c>null</c>.</param>
+        /// <param name="relationshipBehavior">The behavior that defines which related tables are copied.</param>
+        /// <param name="tableExistenceBehavior">The behavior that defines what happens to the tables that already exist.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="transaction">The transaction to be used on the destination connection.</param>
         /// <param name="mappings">The column mappings of the requested table: only the mapped columns of the source table are created in the target table when the schema is copied.</param>
         /// <returns>The source table, the target table and the filter of each table.</returns>
         internal static IList<(string Source, string Target, QueryGroup Where)> GetTables(IDbConnection connection,
@@ -108,18 +108,18 @@ namespace RepoDb.Data
         /// <summary>
         /// Gets the tables whose rows are to be copied (see <see cref="GetTables"/>).
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="destinationConnection"></param>
-        /// <param name="sourceTable"></param>
-        /// <param name="targetTable"></param>
-        /// <param name="targetSchema"></param>
-        /// <param name="where"></param>
-        /// <param name="relationshipBehavior"></param>
-        /// <param name="tableExistenceBehavior"></param>
-        /// <param name="commandTimeout"></param>
-        /// <param name="trace"></param>
-        /// <param name="transaction"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="connection">The source connection.</param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="sourceTable">The name of the source table.</param>
+        /// <param name="targetTable">The name of the target table.</param>
+        /// <param name="targetSchema">The schema of the target table, or <c>null</c>.</param>
+        /// <param name="where">The filter of the requested table, or <c>null</c>.</param>
+        /// <param name="relationshipBehavior">The behavior that defines which related tables are copied.</param>
+        /// <param name="tableExistenceBehavior">The behavior that defines what happens to the tables that already exist.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="transaction">The transaction to be used on the destination connection.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <param name="mappings">The column mappings of the requested table: only the mapped columns of the source table are created in the target table when the schema is copied.</param>
         /// <returns>The source table, the target table and the filter of each table.</returns>
         internal static async Task<IList<(string Source, string Target, QueryGroup Where)>> GetTablesAsync(IDbConnection connection,
@@ -186,13 +186,13 @@ namespace RepoDb.Data
         /// Gets the tables to be copied from the relationships: the requested table keeps its source name and its filter, and the related tables are copied as a whole.
         /// The rows are copied into the schema that the table was created in (see <see cref="CopyTableSchemaResultItem.Target"/>).
         /// </summary>
-        /// <param name="relationships"></param>
-        /// <param name="requested"></param>
-        /// <param name="requestedTable"></param>
-        /// <param name="results"></param>
-        /// <param name="connection"></param>
-        /// <param name="destinationConnection"></param>
-        /// <returns></returns>
+        /// <param name="relationships">The relationships of the tables, in the order that they are copied.</param>
+        /// <param name="requested">The identity of the requested table.</param>
+        /// <param name="requestedTable">The source table, the target table and the filter of the requested table.</param>
+        /// <param name="results">The items of the tables that were created in the destination database.</param>
+        /// <param name="connection">The source connection.</param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <returns>The source table, the target table and the filter of each table.</returns>
         internal static IList<(string Source, string Target, QueryGroup Where)> ToTables(IEnumerable<RelationshipInfo> relationships,
             TableInfo requested,
             (string Source, string Target, QueryGroup Where) requestedTable,
@@ -213,9 +213,9 @@ namespace RepoDb.Data
         /// <summary>
         /// Gets the name of the table that was created in the destination database, quoted for the database of the connection.
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="result"></param>
-        /// <returns></returns>
+        /// <param name="connection">The connection of the destination database.</param>
+        /// <param name="result">The item of the table that was created.</param>
+        /// <returns>The quoted name of the table.</returns>
         internal static string GetName(IDbConnection connection,
             CopyTableSchemaResultItem result) =>
             GetName(connection, result.Target.Table.Table.Schema, result.Target.Table.Table.Name);
@@ -223,10 +223,10 @@ namespace RepoDb.Data
         /// <summary>
         /// Gets the name of the table, quoted for the database of the connection.
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="schema"></param>
-        /// <param name="table"></param>
-        /// <returns></returns>
+        /// <param name="connection">The connection.</param>
+        /// <param name="schema">The schema of the table, or <c>null</c>.</param>
+        /// <param name="table">The name of the table.</param>
+        /// <returns>The quoted name of the table.</returns>
         internal static string GetName(IDbConnection connection,
             string schema,
             string table)
@@ -239,8 +239,8 @@ namespace RepoDb.Data
         /// <summary>
         /// Gets the schema of the target table (i.e.: <c>Sales</c> of <c>Sales.Person</c>), without the quotes.
         /// </summary>
-        /// <param name="destinationConnection"></param>
-        /// <param name="targetTable"></param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="targetTable">The name of the target table.</param>
         /// <returns>The schema (<c>null</c> if the name of the table has no schema).</returns>
         internal static string GetTargetSchema(IDbConnection destinationConnection,
             string targetTable)
@@ -256,9 +256,9 @@ namespace RepoDb.Data
         /// <summary>
         /// Gets the name of the table without its schema and its quotes (i.e.: <c>Person</c> of <c>[Sales].[Person]</c>).
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="table"></param>
-        /// <returns></returns>
+        /// <param name="connection">The connection.</param>
+        /// <param name="table">The name of the table.</param>
+        /// <returns>The name of the table.</returns>
         internal static string GetTableName(IDbConnection connection,
             string table)
         {
@@ -270,10 +270,10 @@ namespace RepoDb.Data
         /// Checks whether the schema of the tables is to be copied before their rows: the default behaviors
         /// (<see cref="CopyRelationshipBehavior.TableOnly"/> and <see cref="TableExistsBehavior.Skip"/>) without a target schema do not copy it.
         /// </summary>
-        /// <param name="relationshipBehavior"></param>
-        /// <param name="tableExistenceBehavior"></param>
-        /// <param name="targetSchema"></param>
-        /// <returns></returns>
+        /// <param name="relationshipBehavior">The behavior that defines which related tables are copied.</param>
+        /// <param name="tableExistenceBehavior">The behavior that defines what happens to the tables that already exist.</param>
+        /// <param name="targetSchema">The schema of the target table, or <c>null</c>.</param>
+        /// <returns><c>true</c> if the schema has to be copied; otherwise, <c>false</c>.</returns>
         internal static bool IsSchemaRequested(CopyRelationshipBehavior relationshipBehavior,
             TableExistsBehavior tableExistenceBehavior,
             string targetSchema) =>
@@ -284,8 +284,8 @@ namespace RepoDb.Data
         /// <summary>
         /// Gets the relationship behavior of the schema copy that is equivalent to the one of the data copy.
         /// </summary>
-        /// <param name="relationshipBehavior"></param>
-        /// <returns></returns>
+        /// <param name="relationshipBehavior">The behavior of the copy of the data.</param>
+        /// <returns>The behavior of the copy of the schema.</returns>
         internal static RelatedTableBehavior ToSchemaBehavior(CopyRelationshipBehavior relationshipBehavior)
         {
             switch (relationshipBehavior)
@@ -307,20 +307,20 @@ namespace RepoDb.Data
         /// Copies the rows of the source table into the target table. The rows are read with a data reader that is fed to the bulk insert of the destination connection
         /// (the <c>BulkOperations</c> package of its provider). If the provider has no bulk insert, the rows of the reader are inserted in batches.
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="destinationConnection"></param>
-        /// <param name="sourceTable"></param>
-        /// <param name="targetTable"></param>
-        /// <param name="where"></param>
-        /// <param name="batchSize"></param>
-        /// <param name="columnMappingsBehavior"></param>
-        /// <param name="mappings"></param>
-        /// <param name="options"></param>
-        /// <param name="progressCallback"></param>
-        /// <param name="commandTimeout"></param>
-        /// <param name="traceKey"></param>
-        /// <param name="trace"></param>
-        /// <param name="transaction"></param>
+        /// <param name="connection">The source connection.</param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="sourceTable">The name of the source table.</param>
+        /// <param name="targetTable">The name of the target table.</param>
+        /// <param name="where">The filter of the rows to be copied, or <c>null</c> to copy all the rows.</param>
+        /// <param name="batchSize">The number of rows of a batch.</param>
+        /// <param name="columnMappingsBehavior">The behavior that defines how the columns of the source table are aligned with the columns of the target table.</param>
+        /// <param name="mappings">The column mappings, or <c>null</c> to copy the columns that exist on both tables.</param>
+        /// <param name="options">The progress of the copy.</param>
+        /// <param name="progressCallback">The callback that receives the progress after every batch, or <c>null</c>.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracking key to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="transaction">The transaction to be used on the destination connection.</param>
         internal static void CopyRows(IDbConnection connection,
             IDbConnection destinationConnection,
             string sourceTable,
@@ -371,21 +371,22 @@ namespace RepoDb.Data
         /// <summary>
         /// Copies the rows of the source table into the target table in an asynchronous way (see <see cref="CopyRows"/>).
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="destinationConnection"></param>
-        /// <param name="sourceTable"></param>
-        /// <param name="targetTable"></param>
-        /// <param name="where"></param>
-        /// <param name="batchSize"></param>
-        /// <param name="columnMappingsBehavior"></param>
-        /// <param name="mappings"></param>
-        /// <param name="options"></param>
-        /// <param name="progressCallback"></param>
-        /// <param name="commandTimeout"></param>
-        /// <param name="traceKey"></param>
-        /// <param name="trace"></param>
-        /// <param name="transaction"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="connection">The source connection.</param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="sourceTable">The name of the source table.</param>
+        /// <param name="targetTable">The name of the target table.</param>
+        /// <param name="where">The filter of the rows to be copied, or <c>null</c> to copy all the rows.</param>
+        /// <param name="batchSize">The number of rows of a batch.</param>
+        /// <param name="columnMappingsBehavior">The behavior that defines how the columns of the source table are aligned with the columns of the target table.</param>
+        /// <param name="mappings">The column mappings, or <c>null</c> to copy the columns that exist on both tables.</param>
+        /// <param name="options">The progress of the copy.</param>
+        /// <param name="progressCallback">The callback that receives the progress after every batch, or <c>null</c>.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracking key to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="transaction">The transaction to be used on the destination connection.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         internal static async Task CopyRowsAsync(IDbConnection connection,
             IDbConnection destinationConnection,
             string sourceTable,
@@ -438,7 +439,7 @@ namespace RepoDb.Data
         /// <summary>
         /// Gets the mappings of the columns for the schema copy, so the schema of the target table is created with only the mapped columns, by their destination names.
         /// </summary>
-        /// <param name="mappings"></param>
+        /// <param name="mappings">The column mappings of the copy of the data.</param>
         /// <returns>The mappings of the schema copy (<c>null</c> if there are no mappings, which creates all the columns). A source column that is mapped more than once is created with its first destination column.</returns>
         private static IList<ColumnMapping> ToSchemaMappings(IList<CopyColumnMapping> mappings)
         {
@@ -457,10 +458,10 @@ namespace RepoDb.Data
         /// Composes the <c>SELECT</c> statement of the source table with the statement builder of the connection, and the parameters of its filter.
         /// If there are column mappings, only the mapped columns are selected, each one aliased with the name of its destination column.
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="sourceTable"></param>
-        /// <param name="where"></param>
-        /// <param name="mappings"></param>
+        /// <param name="connection">The source connection.</param>
+        /// <param name="sourceTable">The name of the source table.</param>
+        /// <param name="where">The filter of the rows to be copied, or <c>null</c>.</param>
+        /// <param name="mappings">The column mappings, or <c>null</c> to read all the columns.</param>
         /// <returns>The statement and its parameters (<c>null</c> if there is no filter).</returns>
         private static (string CommandText, object Param) CreateSelect(IDbConnection connection,
             string sourceTable,
@@ -484,9 +485,9 @@ namespace RepoDb.Data
         /// <summary>
         /// Replaces the list of the columns of the <c>SELECT</c> statement with the mapped columns, each one aliased with the name of its destination column.
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="commandText"></param>
-        /// <param name="mappings"></param>
+        /// <param name="connection">The source connection.</param>
+        /// <param name="commandText">The <c>SELECT</c> statement.</param>
+        /// <param name="mappings">The column mappings.</param>
         /// <returns>The statement.</returns>
         private static string Alias(IDbConnection connection,
             string commandText,
@@ -508,11 +509,11 @@ namespace RepoDb.Data
         /// <summary>
         /// Ensures that the source columns of the mappings exist on the source table and that the destination columns exist on the target table.
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="destinationConnection"></param>
-        /// <param name="sourceTable"></param>
-        /// <param name="targetTable"></param>
-        /// <param name="mappings"></param>
+        /// <param name="connection">The source connection.</param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="sourceTable">The name of the source table.</param>
+        /// <param name="targetTable">The name of the target table.</param>
+        /// <param name="mappings">The column mappings.</param>
         /// <exception cref="ArgumentException"></exception>
         private static void ValidateMappings(IDbConnection connection,
             IDbConnection destinationConnection,
@@ -542,8 +543,8 @@ namespace RepoDb.Data
         /// <summary>
         /// Gets the parameters of the filter, by the names that the statement builder gives to them.
         /// </summary>
-        /// <param name="where"></param>
-        /// <returns></returns>
+        /// <param name="where">The filter.</param>
+        /// <returns>The parameters.</returns>
         private static IDictionary<string, object> ToParameters(QueryGroup where)
         {
             var parameters = new Dictionary<string, object>(StringComparer.Ordinal);
@@ -573,10 +574,10 @@ namespace RepoDb.Data
         }
 
         /// <summary>
-        ///
+        /// Converts the value into a list: a collection is converted to its items, any other value is the only item of the list.
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="value">The value.</param>
+        /// <returns>The list of the values.</returns>
         private static IList<object> ToList(object value) =>
             value is System.Collections.IEnumerable enumerable && !(value is string)
                 ? enumerable.Cast<object>().ToList()
@@ -585,8 +586,8 @@ namespace RepoDb.Data
         /// <summary>
         /// Converts the current row of the reader into an object, to be inserted.
         /// </summary>
-        /// <param name="record"></param>
-        /// <returns></returns>
+        /// <param name="record">The record.</param>
+        /// <returns>The row, as an object that has a property for each column.</returns>
         private static object ToRow(IDataRecord record)
         {
             var row = new System.Dynamic.ExpandoObject() as IDictionary<string, object>;
@@ -598,11 +599,11 @@ namespace RepoDb.Data
         }
 
         /// <summary>
-        ///
+        /// Reads the next row of the reader asynchronously, if the reader supports it.
         /// </summary>
-        /// <param name="reader"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
+        /// <param name="reader">The reader.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result is <c>true</c> if there is another row; otherwise, <c>false</c>.</returns>
         private static Task<bool> ReadAsync(IDataReader reader,
             CancellationToken cancellationToken)
         {
@@ -615,6 +616,11 @@ namespace RepoDb.Data
         /// <summary>
         /// Sets the details of the tables (and the databases) that are being copied into the progress.
         /// </summary>
+        /// <param name="options">The progress of the copy.</param>
+        /// <param name="connection">The source connection.</param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="sourceTable">The name of the source table.</param>
+        /// <param name="targetTable">The name of the target table.</param>
         private static void SetTables(CopyProgress options,
             IDbConnection connection,
             IDbConnection destinationConnection,
@@ -637,9 +643,9 @@ namespace RepoDb.Data
         /// <summary>
         /// Reports the progress of the copy: a batch of rows was copied.
         /// </summary>
-        /// <param name="options"></param>
-        /// <param name="inserted"></param>
-        /// <param name="progressCallback"></param>
+        /// <param name="options">The progress of the copy.</param>
+        /// <param name="inserted">The number of rows that were inserted by the batch.</param>
+        /// <param name="progressCallback">The callback that receives the progress, or <c>null</c>.</param>
         private static void Report(CopyProgress options,
             int inserted,
             Action<CopyProgress> progressCallback)
@@ -655,18 +661,18 @@ namespace RepoDb.Data
         }
 
         /// <summary>
-        /// 
+        /// Validates the arguments of the copy of the data.
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="sourceTable"></param>
-        /// <param name="targetTable"></param>
-        /// <param name="destinationConnection"></param>
-        /// <param name="targetSchema"></param>
-        /// <param name="batchSize"></param>
-        /// <param name="relationshipBehavior"></param>
-        /// <param name="tableExistenceBehavior"></param>
-        /// <param name="columnMappingsBehavior"></param>
-        /// <param name="mappings"></param>
+        /// <param name="connection">The source connection.</param>
+        /// <param name="sourceTable">The name of the source table.</param>
+        /// <param name="targetTable">The name of the target table.</param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="targetSchema">The schema of the target table, or <c>null</c>.</param>
+        /// <param name="batchSize">The number of rows of a batch.</param>
+        /// <param name="relationshipBehavior">The behavior that defines which related tables are copied.</param>
+        /// <param name="tableExistenceBehavior">The behavior that defines what happens to the tables that already exist.</param>
+        /// <param name="columnMappingsBehavior">The behavior that defines how the columns are aligned.</param>
+        /// <param name="mappings">The column mappings, or <c>null</c>.</param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         internal static void Validate(IDbConnection connection,

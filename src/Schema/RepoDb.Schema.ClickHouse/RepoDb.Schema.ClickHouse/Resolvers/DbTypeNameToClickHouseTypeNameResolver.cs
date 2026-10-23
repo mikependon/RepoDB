@@ -17,6 +17,8 @@ namespace RepoDb.Resolvers
     /// </summary>
     public class DbTypeNameToClickHouseTypeNameResolver : IResolver<string, string>
     {
+        #region Methods
+
         /// <summary>
         /// Resolves a database type name into the name of its equivalent ClickHouse type.
         /// </summary>
@@ -104,5 +106,7 @@ namespace RepoDb.Resolvers
                 default: return name;
             }
         }
+
+        #endregion
     }
 }

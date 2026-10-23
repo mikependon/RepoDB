@@ -15,6 +15,8 @@ namespace RepoDb.Schema.Sqlite.Turso
     /// </summary>
     public static class TursoSchemaGlobalConfiguration
     {
+        #region Methods
+
         /// <summary>
         /// Initializes the Turso settings first (see <c>UseTurso</c>), then registers the <see cref="TursoSchemaComposer"/> to the <see cref="SchemaComposerMapper"/> for the <see cref="SqliteConnection"/> type.
         /// A <see cref="TursoSchemaReader"/> owns the connection that it reads, so it is created with its connection instead of being registered here.
@@ -28,5 +30,7 @@ namespace RepoDb.Schema.Sqlite.Turso
             SchemaComposerMapper.Add<SqliteConnection>(new TursoSchemaComposer(), force: true);
             return globalConfiguration;
         }
+
+        #endregion
     }
 }

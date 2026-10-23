@@ -15,6 +15,8 @@ namespace RepoDb.Schema.CockroachDb
     /// </summary>
     public static class CockroachDbSchemaGlobalConfiguration
     {
+        #region Methods
+
         /// <summary>
         /// Initializes the CockroachDB settings first (see <c>UseCockroachDb</c>), then registers the <see cref="CockroachDbSchemaComposer"/> to the <see cref="SchemaComposerMapper"/> for the <see cref="CockroachDbConnection"/> type.
         /// A <see cref="CockroachDbSchemaReader"/> owns the connection that it reads, so it is created with its connection instead of being registered here.
@@ -28,5 +30,7 @@ namespace RepoDb.Schema.CockroachDb
             SchemaComposerMapper.Add<CockroachDbConnection>(new CockroachDbSchemaComposer(), force: true);
             return globalConfiguration;
         }
+
+        #endregion
     }
 }

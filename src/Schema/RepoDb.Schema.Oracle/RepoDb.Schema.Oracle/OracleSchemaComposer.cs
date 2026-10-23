@@ -320,12 +320,12 @@ namespace RepoDb.Schema
         // Types
 
         /// <summary>
-        ///
+        /// Gets the character type with its size. A type that is too large for a sized type is composed as the large one.
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="size"></param>
-        /// <param name="isOracle"></param>
-        /// <returns></returns>
+        /// <param name="type">The name of the type.</param>
+        /// <param name="size">The size of the column.</param>
+        /// <param name="isOracle">A value that indicates whether the destination database is Oracle.</param>
+        /// <returns>The name of the type.</returns>
         private static string ComposeCharacterType(string type,
             int? size,
             bool isOracle)
@@ -347,10 +347,10 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
-        ///
+        /// Gets the number type with the precision and the scale of the field.
         /// </summary>
-        /// <param name="field"></param>
-        /// <returns></returns>
+        /// <param name="field">The field of the column.</param>
+        /// <returns>The name of the type.</returns>
         private static string ComposeNumberType(DbField field)
         {
             if (field.Precision > 0)
@@ -361,11 +361,11 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
-        ///
+        /// Gets the timestamp type with the fractional seconds precision of the field.
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="field"></param>
-        /// <returns></returns>
+        /// <param name="type">The name of the type.</param>
+        /// <param name="field">The field of the column.</param>
+        /// <returns>The name of the type.</returns>
         private static string ComposeTimestampType(string type,
             DbField field)
         {
@@ -376,74 +376,74 @@ namespace RepoDb.Schema
         // Names
 
         /// <summary>
-        ///
+        /// Quotes the name with the quotes of the destination database.
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="name">The name to be quoted.</param>
+        /// <returns>The quoted name.</returns>
         private static string Quote(string name) =>
             OracleSchemaHelper.Quote(name);
 
         /// <summary>
-        ///
+        /// Quotes the name of a table, including its schema if it has one (i.e.: <c>schema.table</c>).
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="name">The name of the table, with or without its schema.</param>
+        /// <returns>The quoted name.</returns>
         private static string Name(string name) =>
             OracleSchemaHelper.QuoteName(name);
 
         /// <summary>
-        ///
+        /// Escapes a value to be used as a text literal in a SQL statement.
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="value">The value to be escaped.</param>
+        /// <returns>The escaped value (without the surrounding quotes).</returns>
         private static string Literal(string value) =>
             value.Replace("'", "''");
 
         /// <summary>
         /// Gets the expression of the owner in the data dictionary: the schema, or the current schema of the connection.
         /// </summary>
-        /// <param name="schema"></param>
-        /// <returns></returns>
+        /// <param name="schema">The name of the schema, or <c>null</c> to use the current schema.</param>
+        /// <returns>The literal of the schema, or the expression of the current schema.</returns>
         private static string Owner(string schema) =>
             schema == null ? CurrentSchema : $"'{Literal(schema)}'";
 
         /// <summary>
-        ///
+        /// Gets the quoted name of the table of the schema.
         /// </summary>
-        /// <param name="schema"></param>
-        /// <returns></returns>
+        /// <param name="schema">The schema of the table.</param>
+        /// <returns>The quoted name of the table, with its schema if it has one.</returns>
         private static string TableName(TableSchema schema) =>
             OracleSchemaHelper.FormatTableName(schema.Table.Schema, schema.Table.Name);
 
         /// <summary>
-        ///
+        /// Gets the quoted name of the table.
         /// </summary>
-        /// <param name="table"></param>
-        /// <returns></returns>
+        /// <param name="table">The table.</param>
+        /// <returns>The quoted name of the table, with its schema if it has one.</returns>
         private static string TableName(TableInfo table) =>
             OracleSchemaHelper.FormatTableName(table.Schema, table.Name);
 
         /// <summary>
-        ///
+        /// Gets the quoted names of the columns as a comma-separated list.
         /// </summary>
-        /// <param name="columns"></param>
-        /// <returns></returns>
+        /// <param name="columns">The names of the columns.</param>
+        /// <returns>The comma-separated quoted names of the columns.</returns>
         private static string Columns(IEnumerable<string> columns) =>
             string.Join(", ", columns.Select(Quote));
 
         /// <summary>
         /// The names that Oracle generates for the unnamed constraints are not given back, so the constraint is unnamed again.
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="name">The name of the constraint.</param>
+        /// <returns>The clause, followed by a space, or an empty text if the constraint has no name.</returns>
         private static string ConstraintName(string name) =>
             string.IsNullOrWhiteSpace(name) || name.StartsWith("SYS_C", StringComparison.Ordinal) ? string.Empty : $"CONSTRAINT {Quote(name)} ";
 
         /// <summary>
-        ///
+        /// Gets the text of the rule of a foreign key.
         /// </summary>
-        /// <param name="rule"></param>
-        /// <returns></returns>
+        /// <param name="rule">The rule of the foreign key.</param>
+        /// <returns>The text of the rule, or <c>null</c> if the rule is the default of the database (or is not supported).</returns>
         private static string Rule(ForeignKeyRule rule)
         {
             switch (rule)
@@ -457,10 +457,10 @@ namespace RepoDb.Schema
         // Columns
 
         /// <summary>
-        ///
+        /// Gets the definition of a column: its name, type, nullability and default value.
         /// </summary>
-        /// <param name="column"></param>
-        /// <returns></returns>
+        /// <param name="column">The column.</param>
+        /// <returns>The definition of the column.</returns>
         private string Column(ColumnInfo column)
         {
             var field = column.Field;

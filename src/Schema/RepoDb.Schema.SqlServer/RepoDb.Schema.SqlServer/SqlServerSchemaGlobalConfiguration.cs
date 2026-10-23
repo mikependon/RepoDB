@@ -15,6 +15,8 @@ namespace RepoDb.Schema.SqlServer
     /// </summary>
     public static class SqlServerSchemaGlobalConfiguration
     {
+        #region Methods
+
         /// <summary>
         /// Initializes the SQL Server settings first (see <c>UseSqlServer</c>), then registers the <see cref="SqlServerSchemaComposer"/> to the <see cref="SchemaComposerMapper"/> for the <see cref="SqlConnection"/> type.
         /// A <see cref="SqlServerSchemaReader"/> owns the connection that it reads, so it is created with its connection instead of being registered here.
@@ -28,5 +30,7 @@ namespace RepoDb.Schema.SqlServer
             SchemaComposerMapper.Add<SqlConnection>(new SqlServerSchemaComposer(), force: true);
             return globalConfiguration;
         }
+
+        #endregion
     }
 }

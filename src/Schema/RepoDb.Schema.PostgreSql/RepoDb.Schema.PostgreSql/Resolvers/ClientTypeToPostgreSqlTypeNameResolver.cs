@@ -16,6 +16,8 @@ namespace RepoDb.Resolvers
     /// </summary>
     public class ClientTypeToPostgreSqlTypeNameResolver : IResolver<Type, string>
     {
+        #region Methods
+
         /// <summary>
         /// Returns the equivalent PostgreSQL type name of the .NET CLR type.
         /// </summary>
@@ -44,5 +46,7 @@ namespace RepoDb.Resolvers
             if (type == typeof(byte[])) return "bytea";
             return "text";
         }
+
+        #endregion
     }
 }

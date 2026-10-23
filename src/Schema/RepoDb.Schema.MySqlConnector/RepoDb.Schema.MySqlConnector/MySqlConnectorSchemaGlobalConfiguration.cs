@@ -15,6 +15,8 @@ namespace RepoDb.Schema.MySqlConnector
     /// </summary>
     public static class MySqlConnectorSchemaGlobalConfiguration
     {
+        #region Methods
+
         /// <summary>
         /// Initializes the MySQL settings first (see <c>UseMySqlConnector</c>), then registers the <see cref="MySqlConnectorSchemaComposer"/> to the <see cref="SchemaComposerMapper"/> for the <see cref="MySqlConnection"/> type.
         /// A <see cref="MySqlConnectorSchemaReader"/> owns the connection that it reads, so it is created with its connection instead of being registered here.
@@ -28,5 +30,7 @@ namespace RepoDb.Schema.MySqlConnector
             SchemaComposerMapper.Add<MySqlConnection>(new MySqlConnectorSchemaComposer(), force: true);
             return globalConfiguration;
         }
+
+        #endregion
     }
 }

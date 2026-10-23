@@ -290,14 +290,14 @@ namespace RepoDb.Schema
         // Types
 
         /// <summary>
-        ///
+        /// Gets the variable-length type with its size. A size that is above the limit is composed as the large type.
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="largeType"></param>
-        /// <param name="limit"></param>
-        /// <param name="size"></param>
-        /// <param name="isVertica"></param>
-        /// <returns></returns>
+        /// <param name="type">The name of the variable-length type.</param>
+        /// <param name="largeType">The name of the type that is used when the size is above the limit.</param>
+        /// <param name="limit">The largest size of the variable-length type.</param>
+        /// <param name="size">The size of the column.</param>
+        /// <param name="isVertica">A value that indicates whether the field was read from a Vertica database.</param>
+        /// <returns>The name of the type.</returns>
         private static string ComposeVariableType(string type,
             string largeType,
             int limit,
@@ -312,11 +312,11 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
-        ///
+        /// Gets the date/time type with the fractional seconds precision of the field.
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="field"></param>
-        /// <returns></returns>
+        /// <param name="type">The name of the type.</param>
+        /// <param name="field">The field of the column.</param>
+        /// <returns>The name of the type.</returns>
         private static string ComposeTemporalType(string type,
             DbField field) =>
             field.Scale > 0 ? $"{type}({Math.Min((int)field.Scale.Value, 6)})" : type;
@@ -324,26 +324,26 @@ namespace RepoDb.Schema
         // Names
 
         /// <summary>
-        ///
+        /// Quotes the name with the quotes of the destination database.
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="name">The name to be quoted.</param>
+        /// <returns>The quoted name.</returns>
         private static string Quote(string name) =>
             VerticaSchemaHelper.Quote(name);
 
         /// <summary>
-        ///
+        /// Quotes the name of a table, including its schema if it has one (i.e.: <c>schema.table</c>).
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="name">The name of the table, with or without its schema.</param>
+        /// <returns>The quoted name.</returns>
         private static string Name(string name) =>
             VerticaSchemaHelper.QuoteName(name);
 
         /// <summary>
-        ///
+        /// Escapes a value to be used as a text literal in a SQL statement.
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="value">The value to be escaped.</param>
+        /// <returns>The escaped value (without the surrounding quotes).</returns>
         private static string Literal(string value) =>
             value.Replace("'", "''");
 
@@ -351,52 +351,52 @@ namespace RepoDb.Schema
         /// Gets the condition of the schema of the catalog. A table without a schema is in the schema of the user if it exists, or in the <c>public</c> schema otherwise
         /// (the default search path of Vertica is <c>"$user", public</c>), as the <c>CURRENT_SCHEMA()</c> meta-function of Vertica can not be used in a condition.
         /// </summary>
-        /// <param name="schema"></param>
-        /// <returns></returns>
+        /// <param name="schema">The name of the schema, or <c>null</c> to use the current schema.</param>
+        /// <returns>The filter.</returns>
         private static string SchemaPredicate(string schema) =>
             schema == null
                 ? "table_schema = (CASE WHEN EXISTS (SELECT 1 FROM v_catalog.schemata WHERE schema_name = SESSION_USER()) THEN SESSION_USER() ELSE 'public' END)"
                 : $"table_schema = '{Literal(schema)}'";
 
         /// <summary>
-        ///
+        /// Gets the quoted name of the table of the schema.
         /// </summary>
-        /// <param name="schema"></param>
-        /// <returns></returns>
+        /// <param name="schema">The schema of the table.</param>
+        /// <returns>The quoted name of the table, with its schema if it has one.</returns>
         private static string TableName(TableSchema schema) =>
             VerticaSchemaHelper.FormatTableName(schema.Table.Schema, schema.Table.Name);
 
         /// <summary>
-        ///
+        /// Gets the quoted name of the table.
         /// </summary>
-        /// <param name="table"></param>
-        /// <returns></returns>
+        /// <param name="table">The table.</param>
+        /// <returns>The quoted name of the table, with its schema if it has one.</returns>
         private static string TableName(TableInfo table) =>
             VerticaSchemaHelper.FormatTableName(table.Schema, table.Name);
 
         /// <summary>
-        ///
+        /// Gets the quoted names of the columns as a comma-separated list.
         /// </summary>
-        /// <param name="columns"></param>
-        /// <returns></returns>
+        /// <param name="columns">The names of the columns.</param>
+        /// <returns>The comma-separated quoted names of the columns.</returns>
         private static string Columns(IEnumerable<string> columns) =>
             string.Join(", ", columns.Select(Quote));
 
         /// <summary>
         /// The names that Vertica generates for the unnamed constraints (<c>C_PRIMARY</c>, <c>C_UNIQUE</c>, <c>C_FOREIGN</c> and <c>C_CHECK</c>) are not given back, so the constraint is unnamed again.
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="name">The name of the constraint.</param>
+        /// <returns>The clause, followed by a space, or an empty text if the constraint has no name.</returns>
         private static string ConstraintName(string name) =>
             string.IsNullOrWhiteSpace(name) || System.Text.RegularExpressions.Regex.IsMatch(name, @"^C_(PRIMARY|UNIQUE|FOREIGN|CHECK)$") ? string.Empty : $"CONSTRAINT {Quote(name)} ";
 
         // Columns
 
         /// <summary>
-        ///
+        /// Gets the definition of a column: its name, type, nullability and default value.
         /// </summary>
-        /// <param name="column"></param>
-        /// <returns></returns>
+        /// <param name="column">The column.</param>
+        /// <returns>The definition of the column.</returns>
         private string Column(ColumnInfo column)
         {
             var field = column.Field;
