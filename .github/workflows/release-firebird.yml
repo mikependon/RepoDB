@@ -12,8 +12,6 @@ on:
         required: false
         type: string
         default: ''
-  release:
-    types: [published]
 
 jobs:
   publish:
