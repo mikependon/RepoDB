@@ -11,7 +11,7 @@ namespace RepoDb.Data.Enumerations
     /// <summary>
     /// An enumeration that is used to define how the columns of the JSON file are aligned with the columns of the table when the rows are loaded with the bulk insert of the provider
     /// of the connection. It is passed on to the equivalent enumeration of the provider (i.e.: <c>SqlServerBulkColumnMappingsBehavior</c>), which has the same values. It is ignored
-    /// when the provider has no bulk insert (or when the file has fewer rows than the cutoff size), as the rows are then inserted in batches by the columns that both the file and the table have.
+    /// when the provider has no bulk insert, as the rows are then inserted in batches by the columns that both the file and the table have.
     /// </summary>
     public enum LoadColumnMappingBehavior : short
     {

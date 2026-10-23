@@ -262,7 +262,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         #region Batch And Bulk Operations
 
         [TestMethod]
-        public void TestLoadDataFromJsonBelowTheCutoffSizeInsertsTheRowsInBatches()
+        public void TestLoadDataFromJsonInsertsTheRowsInBatchesOfTheBatchSize()
         {
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
@@ -270,7 +270,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var path = Array(3000);
 
                 // Act
-                var actual = target.LoadDataFromJson("LoadItem", path, cutoffSize: 100000, batchBufferSize: 500);
+                var actual = target.LoadDataFromJson("LoadItem", path, batchSize: 500);
 
                 // Assert
                 Assert.AreEqual(3000L, actual.TotalRowCount);
@@ -281,7 +281,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonFromTheCutoffSizeLoadsAllTheRows()
+        public void TestLoadDataFromJsonLoadsAllTheRowsInBatchesOfTheBatchSize()
         {
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
@@ -289,7 +289,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var path = Array(3000);
 
                 // Act
-                var actual = target.LoadDataFromJson("LoadItem", path, cutoffSize: 1000, batchBufferSize: 50, bulkBufferSize: 1000);
+                var actual = target.LoadDataFromJson("LoadItem", path, batchSize: 1000);
 
                 // Assert
                 Assert.AreEqual(3000L, actual.LoadedRowCount);
@@ -312,7 +312,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var seen = new List<(int Batch, long Loaded, long Total)>();
 
                 // Act
-                var actual = target.LoadDataFromJson("LoadItem", path, cutoffSize: 100000, batchBufferSize: 500, progressCallback: p => seen.Add((p.BatchNumber, p.LoadedRowCount, p.TotalRowCount)));
+                var actual = target.LoadDataFromJson("LoadItem", path, batchSize: 500, progressCallback: p => seen.Add((p.BatchNumber, p.LoadedRowCount, p.TotalRowCount)));
 
                 // Assert
                 CollectionAssert.AreEqual(new[] { (0, 0L, 1200L), (1, 500L, 1200L), (2, 1000L, 1200L), (3, 1200L, 1200L), (3, 1200L, 1200L) }, seen);
@@ -330,7 +330,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 LoadProgress progress = null;
 
                 // Act/Assert
-                Assert.Throws<DuckDBException>(() => target.LoadDataFromJson("LoadItem", path, cutoffSize: 100000, batchBufferSize: 2, progressCallback: p => progress = p));
+                Assert.Throws<DuckDBException>(() => target.LoadDataFromJson("LoadItem", path, batchSize: 2, progressCallback: p => progress = p));
                 Assert.AreEqual(4, Helper.TargetCount("\"LoadItem\""));
                 Assert.AreEqual(2, progress.BatchNumber);
                 Assert.AreEqual(4L, progress.LoadedRowCount);
@@ -349,7 +349,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 // Act
                 using (var transaction = target.BeginTransaction())
                 {
-                    var actual = target.LoadDataFromJson("LoadItem", path, cutoffSize: 100000, batchBufferSize: 4, transaction: transaction);
+                    var actual = target.LoadDataFromJson("LoadItem", path, batchSize: 4, transaction: transaction);
                     transaction.Rollback();
 
                     // Assert
@@ -428,7 +428,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestLoadDataFromJsonAsyncFromTheCutoffSizeLoadsAllTheRows()
+        public async Task TestLoadDataFromJsonAsyncLoadsAllTheRowsInBatchesOfTheBatchSize()
         {
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
@@ -437,7 +437,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var last = 0L;
 
                 // Act
-                var actual = await target.LoadDataFromJsonAsync("LoadItem", path, cutoffSize: 1000, batchBufferSize: 50, bulkBufferSize: 1000, progressCallback: p => last = p.LoadedRowCount);
+                var actual = await target.LoadDataFromJsonAsync("LoadItem", path, batchSize: 1000, progressCallback: p => last = p.LoadedRowCount);
 
                 // Assert
                 Assert.AreEqual(3000L, actual.LoadedRowCount);
@@ -456,7 +456,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var path = Write(string.Join("\n", Enumerable.Range(1, 6).Select(Row)));
 
                 // Act
-                var actual = await target.LoadDataFromJsonAsync("LoadItem", path, batchBufferSize: 4);
+                var actual = await target.LoadDataFromJsonAsync("LoadItem", path, batchSize: 4);
 
                 // Assert
                 Assert.AreEqual(6L, actual.LoadedRowCount);
@@ -506,7 +506,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var path = Write("[" + string.Join(",", new[] { 10, 20, 30 }.Select(Row)) + "]");
 
                 // Act
-                target.LoadDataFromJson("LoadItem", path, cutoffSize: 1, identityBehavior: LoadIdentityBehavior.KeepIdentity);
+                target.LoadDataFromJson("LoadItem", path, identityBehavior: LoadIdentityBehavior.KeepIdentity);
 
                 // Assert
                 CollectionAssert.AreEqual(new long[] { 10, 20, 30 }, Rows().Select(r => Convert.ToInt64(r["Id"])).ToArray());
@@ -522,7 +522,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var path = Array(3);
 
                 // Act
-                var actual = target.LoadDataFromJson("LoadItem", path, cutoffSize: 1, columnMappingBehavior: LoadColumnMappingBehavior.StrictBypass);
+                var actual = target.LoadDataFromJson("LoadItem", path, columnMappingBehavior: LoadColumnMappingBehavior.StrictBypass);
 
                 // Assert
                 Assert.AreEqual(3L, actual.LoadedRowCount);
