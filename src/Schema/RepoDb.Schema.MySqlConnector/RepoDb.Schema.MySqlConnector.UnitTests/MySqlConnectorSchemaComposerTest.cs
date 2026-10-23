@@ -1148,7 +1148,7 @@ namespace RepoDb.Schema.MySqlConnector.UnitTests
         public void TestMySqlConnectorSchemaComposerComposeCreateTableKeepsTheCollationOfAColumnOfTheSameProvider()
         {
             // Act
-            var actual = ComposeCollatedSchema("MySqlConnector");
+            var actual = ComposeCollatedSchema("MYSQLC");
 
             // Assert
             StringAssert.Contains(actual, "COLLATE utf8mb4_general_ci", StringComparison.Ordinal);
@@ -1158,7 +1158,7 @@ namespace RepoDb.Schema.MySqlConnector.UnitTests
         public void TestMySqlConnectorSchemaComposerComposeCreateTableDoesNotComposeTheCollationOfAColumnOfAnotherProvider()
         {
             // Act
-            var actual = ComposeCollatedSchema("SqlServer");
+            var actual = ComposeCollatedSchema("MSSQL");
 
             // Assert
             Assert.IsFalse(actual.Contains("COLLATE", StringComparison.Ordinal));
@@ -1234,7 +1234,7 @@ namespace RepoDb.Schema.MySqlConnector.UnitTests
         public void TestMySqlConnectorSchemaComposerComposeAddColumnKeepsTheCollationOfAColumnOfTheSameProvider()
         {
             // Act
-            var actual = ComposeCollatedAddColumn("MySqlConnector");
+            var actual = ComposeCollatedAddColumn("MYSQLC");
 
             // Assert
             StringAssert.Contains(actual, "COLLATE utf8mb4_general_ci", StringComparison.Ordinal);
@@ -1244,7 +1244,7 @@ namespace RepoDb.Schema.MySqlConnector.UnitTests
         public void TestMySqlConnectorSchemaComposerComposeAddColumnDoesNotComposeTheCollationOfAColumnOfAnotherProvider()
         {
             // Act
-            var actual = ComposeCollatedAddColumn("SqlServer");
+            var actual = ComposeCollatedAddColumn("MSSQL");
 
             // Assert
             Assert.IsFalse(actual.Contains("COLLATE", StringComparison.Ordinal));
@@ -1259,7 +1259,7 @@ namespace RepoDb.Schema.MySqlConnector.UnitTests
             string databaseType,
             Type type,
             byte? scale = null,
-            string provider = "SqlServer") =>
+            string provider = "MSSQL") =>
             new ColumnInfo
             {
                 Ordinal = 1,
@@ -1351,7 +1351,7 @@ namespace RepoDb.Schema.MySqlConnector.UnitTests
         public void TestMySqlConnectorSchemaComposerComposeCreateTableComposesTheDefaultValueOfTheSameProviderAsItIs()
         {
             // Act
-            var actual = ComposeDefaultColumn(GetDefaultColumn(ColumnDefaultValue.CurrentTimestamp, "current_timestamp()", "datetime", typeof(DateTime), provider: "MySqlConnector"));
+            var actual = ComposeDefaultColumn(GetDefaultColumn(ColumnDefaultValue.CurrentTimestamp, "current_timestamp()", "datetime", typeof(DateTime), provider: "MYSQLC"));
 
             // Assert
             StringAssert.Contains(actual, "DEFAULT current_timestamp()", StringComparison.Ordinal);

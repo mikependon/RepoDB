@@ -1163,7 +1163,7 @@ namespace RepoDb.Schema.Sqlite.Turso.UnitTests
         public void TestTursoSchemaComposerComposeCreateTableKeepsTheCollationOfAColumnOfTheSameProvider()
         {
             // Act
-            var actual = ComposeCollatedSchema("SQLite");
+            var actual = ComposeCollatedSchema("TURSO");
 
             // Assert
             StringAssert.Contains(actual, "COLLATE NOCASE", StringComparison.Ordinal);
@@ -1173,7 +1173,7 @@ namespace RepoDb.Schema.Sqlite.Turso.UnitTests
         public void TestTursoSchemaComposerComposeCreateTableDoesNotComposeTheCollationOfAColumnOfAnotherProvider()
         {
             // Act
-            var actual = ComposeCollatedSchema("SqlServer");
+            var actual = ComposeCollatedSchema("MSSQL");
 
             // Assert
             Assert.IsFalse(actual.Contains("COLLATE", StringComparison.Ordinal));
@@ -1249,7 +1249,7 @@ namespace RepoDb.Schema.Sqlite.Turso.UnitTests
         public void TestTursoSchemaComposerComposeAddColumnKeepsTheCollationOfAColumnOfTheSameProvider()
         {
             // Act
-            var actual = ComposeCollatedAddColumn("SQLite");
+            var actual = ComposeCollatedAddColumn("TURSO");
 
             // Assert
             StringAssert.Contains(actual, "COLLATE NOCASE", StringComparison.Ordinal);
@@ -1259,7 +1259,7 @@ namespace RepoDb.Schema.Sqlite.Turso.UnitTests
         public void TestTursoSchemaComposerComposeAddColumnDoesNotComposeTheCollationOfAColumnOfAnotherProvider()
         {
             // Act
-            var actual = ComposeCollatedAddColumn("SqlServer");
+            var actual = ComposeCollatedAddColumn("MSSQL");
 
             // Assert
             Assert.IsFalse(actual.Contains("COLLATE", StringComparison.Ordinal));

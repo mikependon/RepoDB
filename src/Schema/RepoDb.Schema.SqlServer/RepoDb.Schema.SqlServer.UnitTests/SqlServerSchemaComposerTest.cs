@@ -1151,7 +1151,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         public void TestSqlServerSchemaComposerComposeCreateTableKeepsTheCollationOfAColumnOfTheSameProvider()
         {
             // Act
-            var actual = ComposeCollatedSchema("SqlServer");
+            var actual = ComposeCollatedSchema("MSSQL");
 
             // Assert
             StringAssert.Contains(actual, "COLLATE SQL_Latin1_General_CP1_CI_AS", StringComparison.Ordinal);
@@ -1161,7 +1161,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         public void TestSqlServerSchemaComposerComposeCreateTableDoesNotComposeTheCollationOfAColumnOfAnotherProvider()
         {
             // Act
-            var actual = ComposeCollatedSchema("MySql");
+            var actual = ComposeCollatedSchema("MYSQL");
 
             // Assert
             Assert.IsFalse(actual.Contains("COLLATE", StringComparison.Ordinal));
@@ -1184,7 +1184,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         public void TestSqlServerSchemaComposerComposeAddColumnKeepsTheCollationOfAColumnOfTheSameProvider()
         {
             // Act
-            var actual = ComposeCollatedAddColumn("SqlServer");
+            var actual = ComposeCollatedAddColumn("MSSQL");
 
             // Assert
             StringAssert.Contains(actual, "COLLATE SQL_Latin1_General_CP1_CI_AS", StringComparison.Ordinal);
@@ -1194,7 +1194,7 @@ namespace RepoDb.Schema.SqlServer.UnitTests
         public void TestSqlServerSchemaComposerComposeAddColumnDoesNotComposeTheCollationOfAColumnOfAnotherProvider()
         {
             // Act
-            var actual = ComposeCollatedAddColumn("MySql");
+            var actual = ComposeCollatedAddColumn("MYSQL");
 
             // Assert
             Assert.IsFalse(actual.Contains("COLLATE", StringComparison.Ordinal));

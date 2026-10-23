@@ -1163,7 +1163,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.UnitTests
         public void TestSqliteSchemaComposerComposeCreateTableKeepsTheCollationOfAColumnOfTheSameProvider()
         {
             // Act
-            var actual = ComposeCollatedSchema("SQLite");
+            var actual = ComposeCollatedSchema("MSSQLITE");
 
             // Assert
             StringAssert.Contains(actual, "COLLATE NOCASE", StringComparison.Ordinal);
@@ -1173,7 +1173,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.UnitTests
         public void TestSqliteSchemaComposerComposeCreateTableDoesNotComposeTheCollationOfAColumnOfAnotherProvider()
         {
             // Act
-            var actual = ComposeCollatedSchema("SqlServer");
+            var actual = ComposeCollatedSchema("MSSQL");
 
             // Assert
             Assert.IsFalse(actual.Contains("COLLATE", StringComparison.Ordinal));
@@ -1249,7 +1249,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.UnitTests
         public void TestSqliteSchemaComposerComposeAddColumnKeepsTheCollationOfAColumnOfTheSameProvider()
         {
             // Act
-            var actual = ComposeCollatedAddColumn("SQLite");
+            var actual = ComposeCollatedAddColumn("MSSQLITE");
 
             // Assert
             StringAssert.Contains(actual, "COLLATE NOCASE", StringComparison.Ordinal);
@@ -1259,7 +1259,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.UnitTests
         public void TestSqliteSchemaComposerComposeAddColumnDoesNotComposeTheCollationOfAColumnOfAnotherProvider()
         {
             // Act
-            var actual = ComposeCollatedAddColumn("SqlServer");
+            var actual = ComposeCollatedAddColumn("MSSQL");
 
             // Assert
             Assert.IsFalse(actual.Contains("COLLATE", StringComparison.Ordinal));

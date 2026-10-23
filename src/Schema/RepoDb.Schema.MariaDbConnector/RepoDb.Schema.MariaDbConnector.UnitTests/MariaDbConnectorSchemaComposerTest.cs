@@ -1148,7 +1148,7 @@ namespace RepoDb.Schema.MariaDbConnector.UnitTests
         public void TestMariaDbConnectorSchemaComposerComposeCreateTableKeepsTheCollationOfAColumnOfTheSameProvider()
         {
             // Act
-            var actual = ComposeCollatedSchema("MariaDbConnector");
+            var actual = ComposeCollatedSchema("MARIADB");
 
             // Assert
             StringAssert.Contains(actual, "COLLATE utf8mb4_general_ci", StringComparison.Ordinal);
@@ -1158,7 +1158,7 @@ namespace RepoDb.Schema.MariaDbConnector.UnitTests
         public void TestMariaDbConnectorSchemaComposerComposeCreateTableDoesNotComposeTheCollationOfAColumnOfAnotherProvider()
         {
             // Act
-            var actual = ComposeCollatedSchema("SqlServer");
+            var actual = ComposeCollatedSchema("MSSQL");
 
             // Assert
             Assert.IsFalse(actual.Contains("COLLATE", StringComparison.Ordinal));
@@ -1234,7 +1234,7 @@ namespace RepoDb.Schema.MariaDbConnector.UnitTests
         public void TestMariaDbConnectorSchemaComposerComposeAddColumnKeepsTheCollationOfAColumnOfTheSameProvider()
         {
             // Act
-            var actual = ComposeCollatedAddColumn("MariaDbConnector");
+            var actual = ComposeCollatedAddColumn("MARIADB");
 
             // Assert
             StringAssert.Contains(actual, "COLLATE utf8mb4_general_ci", StringComparison.Ordinal);
@@ -1244,7 +1244,7 @@ namespace RepoDb.Schema.MariaDbConnector.UnitTests
         public void TestMariaDbConnectorSchemaComposerComposeAddColumnDoesNotComposeTheCollationOfAColumnOfAnotherProvider()
         {
             // Act
-            var actual = ComposeCollatedAddColumn("SqlServer");
+            var actual = ComposeCollatedAddColumn("MSSQL");
 
             // Assert
             Assert.IsFalse(actual.Contains("COLLATE", StringComparison.Ordinal));
@@ -1259,7 +1259,7 @@ namespace RepoDb.Schema.MariaDbConnector.UnitTests
             string databaseType,
             Type type,
             byte? scale = null,
-            string provider = "SqlServer") =>
+            string provider = "MSSQL") =>
             new ColumnInfo
             {
                 Ordinal = 1,
@@ -1351,7 +1351,7 @@ namespace RepoDb.Schema.MariaDbConnector.UnitTests
         public void TestMariaDbConnectorSchemaComposerComposeCreateTableComposesTheDefaultValueOfTheSameProviderAsItIs()
         {
             // Act
-            var actual = ComposeDefaultColumn(GetDefaultColumn(ColumnDefaultValue.CurrentTimestamp, "current_timestamp()", "datetime", typeof(DateTime), provider: "MariaDbConnector"));
+            var actual = ComposeDefaultColumn(GetDefaultColumn(ColumnDefaultValue.CurrentTimestamp, "current_timestamp()", "datetime", typeof(DateTime), provider: "MARIADB"));
 
             // Assert
             StringAssert.Contains(actual, "DEFAULT current_timestamp()", StringComparison.Ordinal);

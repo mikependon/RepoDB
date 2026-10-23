@@ -1254,7 +1254,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
 
                 // Assert
                 Assert.AreEqual("Person", actual.Table.Name, StringComparer.Ordinal);
-                Assert.AreEqual("SQLite", actual.Table.Provider, StringComparer.Ordinal);
+                Assert.AreEqual("MSSQLITE", actual.Table.Provider, StringComparer.Ordinal);
                 Assert.IsNotNull(actual.Table.Database);
                 Assert.IsNull(actual.Table.Schema);
                 Assert.AreEqual(7, actual.Columns.Count);
@@ -1319,7 +1319,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
 
                 // Assert
                 Assert.AreEqual("Person", actual.Table.Name, StringComparer.Ordinal);
-                Assert.AreEqual("SQLite", actual.Table.Provider, StringComparer.Ordinal);
+                Assert.AreEqual("MSSQLITE", actual.Table.Provider, StringComparer.Ordinal);
                 Assert.IsNotNull(actual.Table.Database);
                 Assert.IsNull(actual.Table.Schema);
                 Assert.AreEqual(7, actual.Columns.Count);

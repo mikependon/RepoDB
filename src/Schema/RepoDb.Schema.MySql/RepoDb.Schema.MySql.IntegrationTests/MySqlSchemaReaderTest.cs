@@ -1255,7 +1255,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
 
                 // Assert
                 Assert.AreEqual("Person", actual.Table.Name, StringComparer.Ordinal);
-                Assert.AreEqual("MySql", actual.Table.Provider, StringComparer.Ordinal);
+                Assert.AreEqual("MYSQL", actual.Table.Provider, StringComparer.Ordinal);
                 Assert.IsNotNull(actual.Table.Database);
                 Assert.IsNull(actual.Table.Schema);
                 Assert.AreEqual(7, actual.Columns.Count);
@@ -1320,7 +1320,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
 
                 // Assert
                 Assert.AreEqual("Person", actual.Table.Name, StringComparer.Ordinal);
-                Assert.AreEqual("MySql", actual.Table.Provider, StringComparer.Ordinal);
+                Assert.AreEqual("MYSQL", actual.Table.Provider, StringComparer.Ordinal);
                 Assert.IsNotNull(actual.Table.Database);
                 Assert.IsNull(actual.Table.Schema);
                 Assert.AreEqual(7, actual.Columns.Count);

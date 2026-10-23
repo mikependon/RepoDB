@@ -1253,7 +1253,7 @@ namespace RepoDb.Schema.Oracle.IntegrationTests
 
                 // Assert
                 Assert.AreEqual("Person", actual.Table.Name, StringComparer.Ordinal);
-                Assert.AreEqual("Oracle", actual.Table.Provider, StringComparer.Ordinal);
+                Assert.AreEqual("ORACLE", actual.Table.Provider, StringComparer.Ordinal);
                 Assert.IsNotNull(actual.Table.Database);
                 Assert.IsNull(actual.Table.Schema);
                 Assert.AreEqual(7, actual.Columns.Count);
@@ -1318,7 +1318,7 @@ namespace RepoDb.Schema.Oracle.IntegrationTests
 
                 // Assert
                 Assert.AreEqual("Person", actual.Table.Name, StringComparer.Ordinal);
-                Assert.AreEqual("Oracle", actual.Table.Provider, StringComparer.Ordinal);
+                Assert.AreEqual("ORACLE", actual.Table.Provider, StringComparer.Ordinal);
                 Assert.IsNotNull(actual.Table.Database);
                 Assert.IsNull(actual.Table.Schema);
                 Assert.AreEqual(7, actual.Columns.Count);

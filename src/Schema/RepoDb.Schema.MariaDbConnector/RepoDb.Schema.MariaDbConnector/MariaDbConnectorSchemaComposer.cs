@@ -27,7 +27,7 @@ namespace RepoDb.Schema
         /// <summary>
         /// The providers whose default expressions are written in the language of MariaDB.
         /// </summary>
-        private static readonly string[] DefaultProviders = { "MariaDb", "MariaDbConnector" };
+        private static readonly string[] DefaultProviders = { "MARIADB" };
 
         private readonly DbTypeNameToMariaDbConnectorTypeNameResolver _typeNameResolver = new DbTypeNameToMariaDbConnectorTypeNameResolver();
         private readonly ClientTypeToMariaDbConnectorTypeNameResolver _clientTypeResolver = new ClientTypeToMariaDbConnectorTypeNameResolver();
@@ -422,7 +422,7 @@ namespace RepoDb.Schema
 
             var type = ComposeTypeName(column);
             definition.Append(type);
-            var collation = SchemaCollation.Resolve(column, "MariaDb", "MariaDbConnector");
+            var collation = SchemaCollation.Resolve(column, "MARIADB");
             if (collation != null && IsCharacterType(type))
             {
                 definition.Append(" COLLATE ").Append(collation);

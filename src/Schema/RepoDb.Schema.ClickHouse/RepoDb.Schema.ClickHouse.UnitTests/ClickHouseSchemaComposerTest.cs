@@ -439,7 +439,7 @@ namespace RepoDb.Schema.ClickHouse.UnitTests
             var column = new ColumnInfo
             {
                 Ordinal = 1,
-                Field = new DbField("Tags", false, false, true, typeof(string), 0, (byte)0, (byte)0, "LowCardinality(String)", false, "ClickHouse")
+                Field = new DbField("Tags", false, false, true, typeof(string), 0, (byte)0, (byte)0, "LowCardinality(String)", false, "CLICKHOUSE")
             };
 
             // Act

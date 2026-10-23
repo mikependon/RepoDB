@@ -1255,7 +1255,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
 
                 // Assert
                 Assert.AreEqual("Person", actual.Table.Name, StringComparer.Ordinal);
-                Assert.AreEqual("SqlServer", actual.Table.Provider, StringComparer.Ordinal);
+                Assert.AreEqual("MSSQL", actual.Table.Provider, StringComparer.Ordinal);
                 Assert.IsNotNull(actual.Table.Database);
                 Assert.AreEqual("dbo", actual.Table.Schema, StringComparer.Ordinal);
                 Assert.AreEqual(7, actual.Columns.Count);
@@ -1320,7 +1320,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
 
                 // Assert
                 Assert.AreEqual("Person", actual.Table.Name, StringComparer.Ordinal);
-                Assert.AreEqual("SqlServer", actual.Table.Provider, StringComparer.Ordinal);
+                Assert.AreEqual("MSSQL", actual.Table.Provider, StringComparer.Ordinal);
                 Assert.IsNotNull(actual.Table.Database);
                 Assert.AreEqual("dbo", actual.Table.Schema, StringComparer.Ordinal);
                 Assert.AreEqual(7, actual.Columns.Count);

@@ -27,7 +27,7 @@ namespace RepoDb.Schema
         /// <summary>
         /// The providers whose default expressions are written in the language of MySQL.
         /// </summary>
-        private static readonly string[] DefaultProviders = { "MySql", "MySqlConnector", "AuroraDbMySqlConnector" };
+        private static readonly string[] DefaultProviders = { "MYSQL", "MYSQLC", "AURORAMYSQL" };
 
         private readonly DbTypeNameToMySqlTypeNameResolver _typeNameResolver = new DbTypeNameToMySqlTypeNameResolver();
         private readonly ClientTypeToMySqlTypeNameResolver _clientTypeResolver = new ClientTypeToMySqlTypeNameResolver();
@@ -422,7 +422,7 @@ namespace RepoDb.Schema
 
             var type = ComposeTypeName(column);
             definition.Append(type);
-            var collation = SchemaCollation.Resolve(column, "MySql", "MySqlConnector", "AuroraDbMySqlConnector");
+            var collation = SchemaCollation.Resolve(column, "MYSQL", "MYSQLC", "AURORAMYSQL");
             if (collation != null && IsCharacterType(type))
             {
                 definition.Append(" COLLATE ").Append(collation);

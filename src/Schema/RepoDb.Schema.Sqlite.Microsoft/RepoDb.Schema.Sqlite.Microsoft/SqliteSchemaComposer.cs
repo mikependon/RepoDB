@@ -468,7 +468,7 @@ namespace RepoDb.Schema
             {
                 definition.Append(" DEFAULT ").Append(column.DefaultExpression);
             }
-            var collation = SchemaCollation.Resolve(column, "SQLite");
+            var collation = SchemaCollation.Resolve(column, "MSSQLITE", "AHTOLA", "TURSO");
             if (collation != null)
             {
                 definition.Append(" COLLATE ").Append(collation);

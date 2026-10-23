@@ -231,7 +231,7 @@ namespace RepoDb.Schema
             }
 
             var field = column.Field ?? throw new ArgumentException("The column has no field.", nameof(column));
-            var isClickHouse = string.Equals(field.Provider, "ClickHouse", StringComparison.Ordinal);
+            var isClickHouse = string.Equals(field.Provider, "CLICKHOUSE", StringComparison.Ordinal);
             var type = isClickHouse ? field.DatabaseType : _typeNameResolver.Resolve(field.DatabaseType) ?? _clientTypeResolver.Resolve(field.Type);
             return Nullable(ComposeBaseTypeName(type, field), field.IsNullable);
         }

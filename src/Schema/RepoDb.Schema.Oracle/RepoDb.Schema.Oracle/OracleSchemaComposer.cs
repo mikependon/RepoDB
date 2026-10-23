@@ -465,7 +465,7 @@ namespace RepoDb.Schema
         {
             var field = column.Field;
             var definition = new StringBuilder(Quote(field.Name)).Append(' ').Append(ComposeTypeName(column));
-            var collation = SchemaCollation.Resolve(column, "Oracle");
+            var collation = SchemaCollation.Resolve(column, "ORACLE");
             if (collation != null)
             {
                 definition.Append(" COLLATE ").Append(collation);

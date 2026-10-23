@@ -367,6 +367,13 @@ namespace RepoDb.Schema
         #region Helpers
 
         /// <summary>
+        /// Gets the provider of the setting of the connection (see <see cref="RepoDb.Interfaces.IDbSetting.Provider"/>): it is the provider of the tables and of the columns that are read.
+        /// It is <c>null</c> if the connection has no setting.
+        /// </summary>
+        private string Provider =>
+            DbSettingMapper.Get(_connection)?.Provider;
+
+        /// <summary>
         /// Creates the identity of a table that is read from the connection: its name, its schema, the database of the connection and the type of the provider.
         /// </summary>
         /// <param name="name">The name of the table.</param>
@@ -374,7 +381,7 @@ namespace RepoDb.Schema
         /// <returns>The identity of the table.</returns>
         private TableInfo NewTable(string name,
             string schema) =>
-            new TableInfo(name, schema, _connection.Database, "DuckDb");
+            new TableInfo(name, schema, _connection.Database, Provider);
 
         /// <summary>
         /// 
@@ -657,7 +664,7 @@ namespace RepoDb.Schema
                 (byte)(typeName == "decimal" ? Int(r, "ScaleValue") : 0),
                 typeName == "decimal" ? typeName : IsSimple(typeName) ? typeName : dataType,
                 !string.IsNullOrWhiteSpace(defaultDefinition),
-                "DuckDb");
+                Provider);
 
             return new ColumnInfo
             {

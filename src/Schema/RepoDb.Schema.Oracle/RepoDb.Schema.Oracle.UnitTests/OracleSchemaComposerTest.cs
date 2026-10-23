@@ -1155,7 +1155,7 @@ namespace RepoDb.Schema.Oracle.UnitTests
         public void TestOracleSchemaComposerComposeCreateTableKeepsTheCollationOfAColumnOfTheSameProvider()
         {
             // Act
-            var actual = ComposeCollatedSchema("Oracle");
+            var actual = ComposeCollatedSchema("ORACLE");
 
             // Assert
             StringAssert.Contains(actual, "COLLATE BINARY_CI", StringComparison.Ordinal);
@@ -1165,7 +1165,7 @@ namespace RepoDb.Schema.Oracle.UnitTests
         public void TestOracleSchemaComposerComposeCreateTableDoesNotComposeTheCollationOfAColumnOfAnotherProvider()
         {
             // Act
-            var actual = ComposeCollatedSchema("SqlServer");
+            var actual = ComposeCollatedSchema("MSSQL");
 
             // Assert
             Assert.IsFalse(actual.Contains("COLLATE", StringComparison.Ordinal));
@@ -1241,7 +1241,7 @@ namespace RepoDb.Schema.Oracle.UnitTests
         public void TestOracleSchemaComposerComposeAddColumnKeepsTheCollationOfAColumnOfTheSameProvider()
         {
             // Act
-            var actual = ComposeCollatedAddColumn("Oracle");
+            var actual = ComposeCollatedAddColumn("ORACLE");
 
             // Assert
             StringAssert.Contains(actual, "COLLATE BINARY_CI", StringComparison.Ordinal);
@@ -1251,7 +1251,7 @@ namespace RepoDb.Schema.Oracle.UnitTests
         public void TestOracleSchemaComposerComposeAddColumnDoesNotComposeTheCollationOfAColumnOfAnotherProvider()
         {
             // Act
-            var actual = ComposeCollatedAddColumn("SqlServer");
+            var actual = ComposeCollatedAddColumn("MSSQL");
 
             // Assert
             Assert.IsFalse(actual.Contains("COLLATE", StringComparison.Ordinal));
