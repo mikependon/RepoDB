@@ -14,17 +14,17 @@ namespace RepoDb.Schema.Models
     /// A class that represents a table whose schema is copied with only some of its columns, used by the <c>CopyTableSchemaTo</c> operations
     /// that copy several tables: it holds the name of the table and the mappings of its columns.
     /// </summary>
-    public class CopyTableSchemaTable
+    public class TableMapping
     {
         #region Constructors
 
         /// <summary>
-        /// Creates a new instance of <see cref="CopyTableSchemaTable"/> class.
+        /// Creates a new instance of <see cref="TableMapping"/> class.
         /// </summary>
         /// <param name="tableName">The name of the table of the source database, with or without its schema (i.e.: <c>Person</c> or <c>dbo.Person</c>).</param>
         /// <param name="columns">The mappings of the columns of the table that are created in the destination database.</param>
-        public CopyTableSchemaTable(string tableName,
-            IList<CopyTableSchemaColumnMapping> columns)
+        public TableMapping(string tableName,
+            IList<ColumnMapping> columns)
         {
             TableName = tableName;
             Columns = columns;
@@ -40,9 +40,9 @@ namespace RepoDb.Schema.Models
         public string TableName { get; }
 
         /// <summary>
-        /// Gets the mappings of the columns of the table that are created in the destination database (see <see cref="CopyTableSchemaColumnMapping"/>).
+        /// Gets the mappings of the columns of the table that are created in the destination database (see <see cref="ColumnMapping"/>).
         /// </summary>
-        public IList<CopyTableSchemaColumnMapping> Columns { get; }
+        public IList<ColumnMapping> Columns { get; }
 
         #endregion
     }

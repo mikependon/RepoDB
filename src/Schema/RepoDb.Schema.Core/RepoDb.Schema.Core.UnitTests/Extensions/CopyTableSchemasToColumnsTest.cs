@@ -127,8 +127,8 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             SchemaComposerMapper.Add<CustomDbConnection>(composer.Object, true);
         }
 
-        private static IList<CopyTableSchemaTable> Tables(params (string Name, string[] Columns)[] tables) =>
-            tables.Select(table => new CopyTableSchemaTable(table.Name, table.Columns.Select(column => new CopyTableSchemaColumnMapping(column)).ToList())).ToList();
+        private static IList<TableMapping> Tables(params (string Name, string[] Columns)[] tables) =>
+            tables.Select(table => new TableMapping(table.Name, table.Columns.Select(column => new ColumnMapping(column)).ToList())).ToList();
 
         private static CustomDbConnection GetDestination(params string[] existing) =>
             new CustomDbConnection { ScalarResult = statement => existing.Contains(statement) ? 1 : 0 };
@@ -299,7 +299,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            var result = new CustomDbConnection().CopyTableSchemaTo("Person", destination, columns: new[] { "Id", "Name" });
+            var result = new CustomDbConnection().CopyTableSchemaTo("Person", destination, columns: new[] { "Id", "Name" }).Items.Single();
 
             // Assert
             Assert.AreEqual(2, result.ColumnCount);

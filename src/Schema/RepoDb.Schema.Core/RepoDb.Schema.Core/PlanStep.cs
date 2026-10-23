@@ -6,17 +6,19 @@
 
 #endregion
 
+using RepoDb.Schema.Models;
+
 namespace RepoDb.Schema
 {
     /// <summary>
     /// A class that holds a statement of a schema copy and the table that it belongs to.
     /// </summary>
-    internal sealed class CopyTableSchemaStep
+    internal sealed class PlanStep
     {
         #region Constructors
 
-        public CopyTableSchemaStep(string statement,
-            CopyTableSchemaPlanTable owner)
+        public PlanStep(string statement,
+            PlanTable owner)
         {
             Statement = statement;
             Owner = owner;
@@ -34,7 +36,7 @@ namespace RepoDb.Schema
         /// <summary>
         /// Gets the table that the statement belongs to (<c>null</c> if it is not known).
         /// </summary>
-        public CopyTableSchemaPlanTable Owner { get; }
+        public PlanTable Owner { get; }
 
         #endregion
     }

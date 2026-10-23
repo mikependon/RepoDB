@@ -126,18 +126,18 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetCustomers(), GetOrders());
             MapComposer();
             var destination = GetDestination("TABLE_EXISTS Customers", "COLUMN_EXISTS Customers.Id", "TABLE_EXISTS Orders", "COLUMN_EXISTS Orders.Id", "COLUMN_EXISTS Orders.CustomerId", "INDEX_EXISTS Orders.IX_Orders_CustomerId");
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "ADD FK_Orders_Customers TO Orders;" }, destination.ExecutedCommands);
-            var orders = results.Single(r => r.TableName == "Orders");
+            var orders = results.Single(r => r.Target.Table.Table.Name == "Orders");
             Assert.AreEqual(CopyTableSchemaOutcome.Aligned, orders.Outcome);
             CollectionAssert.AreEqual(new[] { "FK_Orders_Customers" }, orders.AddedForeignKeys.ToList());
             StringAssert.Contains(orders.Script, "ADD FK_Orders_Customers TO Orders;");
-            Assert.AreEqual(0, results.Single(r => r.TableName == "Customers").AddedForeignKeys.Count);
+            Assert.AreEqual(0, results.Single(r => r.Target.Table.Table.Name == "Customers").AddedForeignKeys.Count);
         }
 
         [TestMethod]
@@ -147,14 +147,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetCustomers(), GetOrders());
             MapComposer();
             var destination = GetDestination("TABLE_EXISTS Customers", "COLUMN_EXISTS Customers.Id", "TABLE_EXISTS Orders", "COLUMN_EXISTS Orders.Id", "COLUMN_EXISTS Orders.CustomerId", "INDEX_EXISTS Orders.IX_Orders_CustomerId", "FK_EXISTS Orders.FK_Orders_Customers");
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
 
             // Assert
             Assert.AreEqual(0, destination.ExecutedCommands.Count);
-            Assert.AreEqual(0, results.Single(r => r.TableName == "Orders").AddedForeignKeys.Count);
+            Assert.AreEqual(0, results.Single(r => r.Target.Table.Table.Name == "Orders").AddedForeignKeys.Count);
         }
 
         [TestMethod]
@@ -273,7 +273,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align,
-                createdCallback: r => executedWhenReported.Add((r.TableName, destination.ExecutedCommands.Count)));
+                createdCallback: r => executedWhenReported.Add((r.Target.Table.Table.Name, destination.ExecutedCommands.Count)));
 
             // Assert
             Assert.AreEqual(("Customers", 0), executedWhenReported[0]);
@@ -287,14 +287,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetCustomers(), GetOrders());
             MapComposer();
             var destination = GetDestination("TABLE_EXISTS Customers", "COLUMN_EXISTS Customers.Id", "TABLE_EXISTS Orders", "COLUMN_EXISTS Orders.Id", "COLUMN_EXISTS Orders.CustomerId", "INDEX_EXISTS Orders.IX_Orders_CustomerId");
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Customers", "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "ADD FK_Orders_Customers TO Orders;" }, destination.ExecutedCommands);
-            CollectionAssert.AreEqual(new[] { "FK_Orders_Customers" }, results.Single(r => r.TableName == "Orders").AddedForeignKeys.ToList());
+            CollectionAssert.AreEqual(new[] { "FK_Orders_Customers" }, results.Single(r => r.Target.Table.Table.Name == "Orders").AddedForeignKeys.ToList());
         }
 
         [TestMethod]
@@ -374,7 +374,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetOrders());
             MapComposer();
             var destination = GetDestination();
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, destination, createdCallback: results.Add);
@@ -396,7 +396,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetOrders());
             MapComposer();
             var destination = GetDestination();
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Orders" }, destination, createdCallback: results.Add);
@@ -414,7 +414,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetCustomers(), GetOrders());
             MapComposer();
             var destination = GetDestination();
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Orders" }, destination, createdCallback: results.Add);
@@ -431,7 +431,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetOrders());
             MapComposer();
             var destination = GetDestination("TABLE_EXISTS Customers");
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, destination, createdCallback: results.Add);
@@ -449,7 +449,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetOrders());
             MapComposer();
             var destination = GetDestination("TABLE_EXISTS Orders");
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop, createdCallback: results.Add);
@@ -466,7 +466,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetOrders());
             MapComposer();
             var destination = GetDestination("TABLE_EXISTS Orders");
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, destination, createdCallback: results.Add);
@@ -497,7 +497,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup
             MapReader(GetPeople());
             MapComposer(unsupportedReason: check => check.Expression.Contains("now()", StringComparison.Ordinal) ? "its expression uses now(), which the destination does not allow in a CHECK constraint" : null);
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "People" }, GetDestination(), createdCallback: results.Add);
@@ -515,7 +515,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup
             MapReader(GetPeople());
             MapComposer(unsupportedReason: check => check.Expression.Contains("now()", StringComparison.Ordinal) ? "its expression uses now(), which the destination does not allow in a CHECK constraint" : null);
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "People" }, GetDestination(), createdCallback: results.Add);
@@ -531,7 +531,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup
             MapReader(GetPeople());
             MapComposer(unsupportedReason: check => null);
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "People" }, GetDestination(), createdCallback: results.Add);
@@ -547,7 +547,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup
             MapReader(GetPeople());
             MapComposer();
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "People" }, GetDestination(), createdCallback: results.Add);

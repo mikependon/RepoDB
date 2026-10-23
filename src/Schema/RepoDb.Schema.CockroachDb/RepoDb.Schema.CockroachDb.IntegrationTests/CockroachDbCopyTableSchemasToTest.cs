@@ -7,6 +7,7 @@
 #endregion
 
 using RepoDb.Schema;
+using RepoDb.Schema.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -95,26 +96,26 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
-                source.CopyTableSchemaTo(new[] { "Person", "country" }, target, createdCallback: results.Add);
+                var run = source.CopyTableSchemaTo(new[] { "Person", "country" }, target, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(2, results.Count);
-                var person = results.Single(r => r.TableName == "Person");
-                Assert.AreEqual("public", person.SourceSchema);
+                var person = results.Single(r => r.Target.Table.Table.Name == "Person");
+                Assert.AreEqual("public", person.Source.Table.Table.Schema);
                 Assert.AreEqual(CopyTableSchemaOutcome.Created, person.Outcome);
                 Assert.AreEqual(CopyTableSchemaExistsBehavior.Skip, person.Action);
                 Assert.AreEqual(10, person.ColumnCount);
                 Assert.AreEqual(2, person.IndexCount);
                 Assert.AreEqual(1, person.ForeignKeyCount);
                 Assert.AreEqual(1, person.CheckConstraintCount);
-                Assert.AreEqual("repodb_schema_source", person.SourceDatabase);
-                Assert.AreEqual("repodb_schema_target", person.DestinationDatabase);
-                Assert.AreEqual(nameof(CockroachDbConnection), person.SourceDatabaseType);
+                Assert.AreEqual("repodb_schema_source", person.Source.Database);
+                Assert.AreEqual("repodb_schema_target", person.Target.Database);
+                Assert.AreEqual(nameof(CockroachDbConnection), person.Source.DatabaseType);
                 StringAssert.StartsWith(person.Script, "CREATE TABLE ", StringComparison.Ordinal);
-                Assert.IsTrue(person.EndTime >= person.StartTime);
+                Assert.IsTrue(run.EndTime >= run.StartTime);
                 Assert.AreEqual(0, person.Errors.Count);
             }
         }
@@ -131,7 +132,7 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "country", "Person" }, target, createdCallback: result =>
-                    existing.Add(Helper.TargetTableExists(result.TableName) && Helper.GetTargetSchema(result.TableName).Indexes.Count == result.IndexCount));
+                    existing.Add(Helper.TargetTableExists(result.Target.Table.Table.Name) && Helper.GetTargetSchema(result.Target.Table.Table.Name).Indexes.Count == result.IndexCount));
 
                 // Assert
                 Assert.AreEqual(2, existing.Count);
@@ -148,7 +149,7 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var tables = Helper.GetSourceTables();
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 source.CopyTableSchemaTo(tables, target, createdCallback: results.Add);
@@ -274,7 +275,7 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "country", "public.country" }, target, createdCallback: results.Add);
@@ -293,7 +294,7 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "country" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop, createdCallback: results.Add);
@@ -311,7 +312,7 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 source.CopyTableSchemaTo(Enumerable.Empty<string>(), target, createdCallback: results.Add);
@@ -397,7 +398,7 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 source.CopyTableSchemaTo(new[] { "country" }, target);
-                var errors = new List<CopyTableSchemaError>();
+                var errors = new List<ExecutionError>();
 
                 // Act
                 using (var transaction = Helper.BeginDdlTransaction(target))
@@ -428,7 +429,7 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
                 source.CopyTableSchemaTo(new[] { "Person" }, target, createdCallback: results.Add);
 
                 // Assert
@@ -506,7 +507,7 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var errors = new List<CopyTableSchemaError>();
+                var errors = new List<ExecutionError>();
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "country", "Person" }, target, errorCallback: errors.Add);
@@ -527,7 +528,7 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 source.CopyTableSchemaTo(new[] { "country" }, target);
-                var errors = new List<CopyTableSchemaError>();
+                var errors = new List<ExecutionError>();
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "country" }, target, errorCallback: errors.Add);
@@ -550,7 +551,7 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var created = new List<CopyTableSchemaResult>();
+                var created = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "Person" }, target, createdCallback: created.Add, errorCallback: _ => { });
@@ -576,15 +577,15 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 source.CopyTableSchemaTo(new[] { "no_key" }, target);
-                var created = new List<CopyTableSchemaResult>();
+                var created = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "no_key", "chain_a", "chain_b" }, target, createdCallback: created.Add, errorCallback: _ => { });
 
                 // Assert
                 Assert.AreEqual(3, created.Count);
-                Assert.AreEqual(1, created.Single(r => r.TableName == "no_key").Errors.Count);
-                Assert.AreEqual(0, created.Where(r => r.TableName != "no_key").Sum(r => r.Errors.Count));
+                Assert.AreEqual(1, created.Single(r => r.Target.Table.Table.Name == "no_key").Errors.Count);
+                Assert.AreEqual(0, created.Where(r => r.Target.Table.Table.Name != "no_key").Sum(r => r.Errors.Count));
                 AssertTargetMatchesSource("no_key", "chain_a", "chain_b");
             }
         }
@@ -601,8 +602,8 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
                 MapSchemaReaderConnection(source);
                 var tables = Helper.GetSourceTables();
                 source.CopyTableSchemaTo(tables, target);
-                var errors = new List<CopyTableSchemaError>();
-                var created = new List<CopyTableSchemaResult>();
+                var errors = new List<ExecutionError>();
+                var created = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 source.CopyTableSchemaTo(tables, target, createdCallback: created.Add, errorCallback: errors.Add);
@@ -632,7 +633,7 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
 
                 // Act/Assert
                 Assert.Throws<NotSupportedException>(() =>
-                    source.CopyTableSchemaTo(new[] { "no_key", "chain_a" }, target, createdCallback: r => created.Add(r.TableName), errorCallback: _ => throw new NotSupportedException()));
+                    source.CopyTableSchemaTo(new[] { "no_key", "chain_a" }, target, createdCallback: r => created.Add(r.Target.Table.Table.Name), errorCallback: _ => throw new NotSupportedException()));
 
                 // Assert
                 Assert.AreEqual(0, created.Count);
@@ -651,7 +652,7 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 source.CopyTableSchemaTo(new[] { "no_key" }, target);
-                CopyTableSchemaError raised = null;
+                ExecutionError raised = null;
 
                 // Act
                 var exception = Assert.Throws<CockroachDbException>(() =>
@@ -673,7 +674,7 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             using (var target = new CockroachDbConnection(Database.ConnectionStringForTarget))
             {
                 // Act/Assert
-                var errors = new List<CopyTableSchemaError>();
+                var errors = new List<ExecutionError>();
                 Assert.Throws<MissingMappingException>(() => source.CopyTableSchemaTo(new[] { "country" }, target, errorCallback: errors.Add));
                 Assert.AreEqual(0, errors.Count);
             }
@@ -744,14 +745,14 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 await source.CopyTableSchemaToAsync(new[] { "Person", "country" }, target, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(2, results.Count);
-                Assert.AreEqual(10, results.Single(r => r.TableName == "Person").ColumnCount);
+                Assert.AreEqual(10, results.Single(r => r.Target.Table.Table.Name == "Person").ColumnCount);
             }
         }
 
@@ -809,7 +810,7 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 await source.CopyTableSchemaToAsync(new[] { "country" }, target);
-                var errors = new List<CopyTableSchemaError>();
+                var errors = new List<ExecutionError>();
 
                 // Act
                 await source.CopyTableSchemaToAsync(new[] { "country" }, target, errorCallback: errors.Add);
@@ -831,13 +832,13 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 await source.CopyTableSchemaToAsync(new[] { "no_key" }, target);
-                var created = new List<CopyTableSchemaResult>();
+                var created = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 await source.CopyTableSchemaToAsync(new[] { "no_key", "chain_a", "chain_b" }, target, createdCallback: created.Add, errorCallback: _ => { });
 
                 // Assert
-                Assert.AreEqual(1, created.Single(r => r.TableName == "no_key").Errors.Count);
+                Assert.AreEqual(1, created.Single(r => r.Target.Table.Table.Name == "no_key").Errors.Count);
                 AssertTargetMatchesSource("no_key", "chain_a", "chain_b");
             }
         }

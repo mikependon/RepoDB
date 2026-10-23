@@ -35,7 +35,7 @@ namespace RepoDb.Data
 
         /// <summary>
         /// Gets the tables whose rows are to be copied, in the order that they must be copied (a table comes after the tables that it references).
-        /// If the schema is requested (see <see cref="IsSchemaRequested"/>), it is copied first, with <see cref="CopyTableSchemaToExtension.CopyTableSchemaTo(IDbConnection, IEnumerable{string}, IDbConnection, string, CopyTableSchemaExistsBehavior, CopyTableSchemaRelationshipBehavior, Action{CopyTableSchemaResult}, Action{CopyTableSchemaError}, int?, string, ITrace, IDbTransaction)"/>.
+        /// If the schema is requested (see <see cref="IsSchemaRequested"/>), it is copied first, with <see cref="CopyTableSchemaToExtension.CopyTableSchemaTo(IDbConnection, IEnumerable{string}, IDbConnection, string, CopyTableSchemaExistsBehavior, CopyTableSchemaRelationshipBehavior, Action{CopyTableSchemaResultItem}, Action{ExecutionError}, int?, string, ITrace, IDbTransaction)"/>.
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="destinationConnection"></param>
@@ -68,7 +68,7 @@ namespace RepoDb.Data
             {
                 return requested;
             }
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
             var schemaBehavior = ToSchemaBehavior(relationshipBehavior);
             var schemaMappings = ToSchemaMappings(mappings);
             if (schemaMappings == null)
@@ -87,7 +87,7 @@ namespace RepoDb.Data
             {
                 connection.CopyTableSchemaTo(new[] { sourceTable },
                     destinationConnection,
-                    new[] { new CopyTableSchemaTable(sourceTable, schemaMappings) },
+                    new[] { new TableMapping(sourceTable, schemaMappings) },
                     targetSchema: targetSchema,
                     tableExistenceBehavior: tableExistenceBehavior,
                     relationshipBehavior: schemaBehavior,
@@ -141,7 +141,7 @@ namespace RepoDb.Data
             {
                 return requested;
             }
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
             var schemaBehavior = ToSchemaBehavior(relationshipBehavior);
             var schemaMappings = ToSchemaMappings(mappings);
             if (schemaMappings == null)
@@ -161,7 +161,7 @@ namespace RepoDb.Data
             {
                 await connection.CopyTableSchemaToAsync(new[] { sourceTable },
                     destinationConnection,
-                    new[] { new CopyTableSchemaTable(sourceTable, schemaMappings) },
+                    new[] { new TableMapping(sourceTable, schemaMappings) },
                     targetSchema: targetSchema,
                     tableExistenceBehavior: tableExistenceBehavior,
                     relationshipBehavior: schemaBehavior,
@@ -184,7 +184,7 @@ namespace RepoDb.Data
 
         /// <summary>
         /// Gets the tables to be copied from the relationships: the requested table keeps its source name and its filter, and the related tables are copied as a whole.
-        /// The rows are copied into the schema that the table was created in (see <see cref="CopyTableSchemaResult.DestinationSchema"/>).
+        /// The rows are copied into the schema that the table was created in (see <see cref="CopyTableSchemaResultItem.Target"/>).
         /// </summary>
         /// <param name="relationships"></param>
         /// <param name="requested"></param>
@@ -196,14 +196,14 @@ namespace RepoDb.Data
         internal static IList<(string Source, string Target, QueryGroup Where)> ToTables(IEnumerable<RelationshipInfo> relationships,
             TableInfo requested,
             (string Source, string Target, QueryGroup Where) requestedTable,
-            IEnumerable<CopyTableSchemaResult> results,
+            IEnumerable<CopyTableSchemaResultItem> results,
             IDbConnection connection,
             IDbConnection destinationConnection) =>
             relationships
                 .Select(relationship => relationship.Schema.Table)
                 .Select(table =>
                 {
-                    var target = GetName(destinationConnection, results.First(result => result.TableName == table.Name && result.SourceSchema == table.Schema));
+                    var target = GetName(destinationConnection, results.First(result => result.Source.Table.Table.Name == table.Name && result.Source.Table.Table.Schema == table.Schema));
                     return table.Equals(requested)
                         ? (requestedTable.Source, target, requestedTable.Where)
                         : (GetName(connection, table.Schema, table.Name), target, (QueryGroup)null);
@@ -217,8 +217,8 @@ namespace RepoDb.Data
         /// <param name="result"></param>
         /// <returns></returns>
         internal static string GetName(IDbConnection connection,
-            CopyTableSchemaResult result) =>
-            GetName(connection, result.DestinationSchema, result.TableName);
+            CopyTableSchemaResultItem result) =>
+            GetName(connection, result.Target.Table.Table.Schema, result.Target.Table.Table.Name);
 
         /// <summary>
         /// Gets the name of the table, quoted for the database of the connection.
@@ -440,7 +440,7 @@ namespace RepoDb.Data
         /// </summary>
         /// <param name="mappings"></param>
         /// <returns>The mappings of the schema copy (<c>null</c> if there are no mappings, which creates all the columns). A source column that is mapped more than once is created with its first destination column.</returns>
-        private static IList<CopyTableSchemaColumnMapping> ToSchemaMappings(IList<CopyDataColumnMapping> mappings)
+        private static IList<ColumnMapping> ToSchemaMappings(IList<CopyDataColumnMapping> mappings)
         {
             if (mappings == null || mappings.Count == 0)
             {
@@ -449,7 +449,7 @@ namespace RepoDb.Data
             var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             return mappings
                 .Where(mapping => seen.Add(mapping.SourceColumn))
-                .Select(mapping => new CopyTableSchemaColumnMapping(mapping.SourceColumn, mapping.DestinationColumn))
+                .Select(mapping => new ColumnMapping(mapping.SourceColumn, mapping.DestinationColumn))
                 .ToList();
         }
 

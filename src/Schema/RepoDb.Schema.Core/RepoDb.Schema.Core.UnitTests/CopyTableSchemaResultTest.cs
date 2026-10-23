@@ -9,7 +9,7 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Schema;
-using RepoDb.Schema.Enumerations;
+using RepoDb.Schema.Models;
 
 namespace RepoDb.Schema.Core.UnitTests
 {
@@ -19,11 +19,11 @@ namespace RepoDb.Schema.Core.UnitTests
         #region Methods
 
         [TestMethod]
-        public void TestCopyTableSchemaResultAddedColumnsPropertyDefaultValue()
+        public void TestCopyTableSchemaResultItemsPropertyDefaultValue()
         {
             // Act
             var result = new CopyTableSchemaResult();
-            var actual = result.AddedColumns;
+            var actual = result.Items;
 
             // Assert
             Assert.IsNotNull(actual);
@@ -31,15 +31,31 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopyTableSchemaResultAddedIndexesPropertyDefaultValue()
+        public void TestCopyTableSchemaResultItemsProperty()
         {
+            // Setup
+            var item = new CopyTableSchemaResultItem();
+
             // Act
             var result = new CopyTableSchemaResult();
-            var actual = result.AddedIndexes;
+            result.Items.Add(item);
+            var actual = result.Items;
 
             // Assert
-            Assert.IsNotNull(actual);
-            Assert.AreEqual(0, actual.Count);
+            Assert.AreEqual(1, actual.Count);
+            Assert.AreSame(item, actual[0]);
+        }
+
+        [TestMethod]
+        public void TestCopyTableSchemaResultItemsAreNotShared()
+        {
+            // Act
+            var first = new CopyTableSchemaResult();
+            var second = new CopyTableSchemaResult();
+            first.Items.Add(new CopyTableSchemaResultItem());
+
+            // Assert
+            Assert.AreEqual(0, second.Items.Count);
         }
 
         [TestMethod]
@@ -55,306 +71,28 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestCopyTableSchemaResultActionPropertyDefaultValue()
+        public void TestCopyTableSchemaResultWarningsProperty()
         {
             // Act
             var result = new CopyTableSchemaResult();
-            var actual = result.Action;
+            result.Warnings.Add("Skipped the check constraint 'CK_Person'.");
+            var actual = result.Warnings;
 
             // Assert
-            Assert.AreEqual(CopyTableSchemaExistsBehavior.Skip, actual);
+            Assert.AreEqual(1, actual.Count);
+            Assert.AreEqual("Skipped the check constraint 'CK_Person'.", actual[0], StringComparer.Ordinal);
         }
 
         [TestMethod]
-        public void TestCopyTableSchemaResultActionProperty()
+        public void TestCopyTableSchemaResultWarningsAreNotShared()
         {
             // Act
-            var result = new CopyTableSchemaResult
-            {
-                Action = CopyTableSchemaExistsBehavior.Drop
-            };
-            var actual = result.Action;
-            var expected = CopyTableSchemaExistsBehavior.Drop;
+            var first = new CopyTableSchemaResult();
+            var second = new CopyTableSchemaResult();
+            first.Warnings.Add("Warning");
 
             // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
-        public void TestCopyTableSchemaResultOutcomePropertyDefaultValue()
-        {
-            // Act
-            var result = new CopyTableSchemaResult();
-            var actual = result.Outcome;
-
-            // Assert
-            Assert.AreEqual(CopyTableSchemaOutcome.Created, actual);
-        }
-
-        [TestMethod]
-        public void TestCopyTableSchemaResultOutcomeProperty()
-        {
-            // Act
-            var result = new CopyTableSchemaResult
-            {
-                Outcome = CopyTableSchemaOutcome.Aligned
-            };
-            var actual = result.Outcome;
-            var expected = CopyTableSchemaOutcome.Aligned;
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
-        public void TestCopyTableSchemaResultTableNameProperty()
-        {
-            // Act
-            var result = new CopyTableSchemaResult
-            {
-                TableName = "Person"
-            };
-            var actual = result.TableName;
-            var expected = "Person";
-
-            // Assert
-            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
-        }
-
-        [TestMethod]
-        public void TestCopyTableSchemaResultScriptProperty()
-        {
-            // Act
-            var result = new CopyTableSchemaResult
-            {
-                Script = "CREATE TABLE [Person] ([Id] int);"
-            };
-            var actual = result.Script;
-            var expected = "CREATE TABLE [Person] ([Id] int);";
-
-            // Assert
-            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
-        }
-
-        [TestMethod]
-        public void TestCopyTableSchemaResultSourceDatabaseProperty()
-        {
-            // Act
-            var result = new CopyTableSchemaResult
-            {
-                SourceDatabase = "Source"
-            };
-            var actual = result.SourceDatabase;
-            var expected = "Source";
-
-            // Assert
-            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
-        }
-
-        [TestMethod]
-        public void TestCopyTableSchemaResultSourceDatabaseTypeProperty()
-        {
-            // Act
-            var result = new CopyTableSchemaResult
-            {
-                SourceDatabaseType = "SqlConnection"
-            };
-            var actual = result.SourceDatabaseType;
-            var expected = "SqlConnection";
-
-            // Assert
-            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
-        }
-
-        [TestMethod]
-        public void TestCopyTableSchemaResultSourceSchemaProperty()
-        {
-            // Act
-            var result = new CopyTableSchemaResult
-            {
-                SourceSchema = "dbo"
-            };
-            var actual = result.SourceSchema;
-            var expected = "dbo";
-
-            // Assert
-            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
-        }
-
-        [TestMethod]
-        public void TestCopyTableSchemaResultSourceServerProperty()
-        {
-            // Act
-            var result = new CopyTableSchemaResult
-            {
-                SourceServer = "SourceServer"
-            };
-            var actual = result.SourceServer;
-            var expected = "SourceServer";
-
-            // Assert
-            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
-        }
-
-        [TestMethod]
-        public void TestCopyTableSchemaResultDestinationDatabaseProperty()
-        {
-            // Act
-            var result = new CopyTableSchemaResult
-            {
-                DestinationDatabase = "Destination"
-            };
-            var actual = result.DestinationDatabase;
-            var expected = "Destination";
-
-            // Assert
-            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
-        }
-
-        [TestMethod]
-        public void TestCopyTableSchemaResultDestinationDatabaseTypeProperty()
-        {
-            // Act
-            var result = new CopyTableSchemaResult
-            {
-                DestinationDatabaseType = "NpgsqlConnection"
-            };
-            var actual = result.DestinationDatabaseType;
-            var expected = "NpgsqlConnection";
-
-            // Assert
-            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
-        }
-
-        [TestMethod]
-        public void TestCopyTableSchemaResultDestinationSchemaProperty()
-        {
-            // Act
-            var result = new CopyTableSchemaResult
-            {
-                DestinationSchema = "public"
-            };
-            var actual = result.DestinationSchema;
-            var expected = "public";
-
-            // Assert
-            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
-        }
-
-        [TestMethod]
-        public void TestCopyTableSchemaResultDestinationServerProperty()
-        {
-            // Act
-            var result = new CopyTableSchemaResult
-            {
-                DestinationServer = "DestinationServer"
-            };
-            var actual = result.DestinationServer;
-            var expected = "DestinationServer";
-
-            // Assert
-            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
-        }
-
-        [TestMethod]
-        public void TestCopyTableSchemaResultColumnCountProperty()
-        {
-            // Act
-            var result = new CopyTableSchemaResult
-            {
-                ColumnCount = 4
-            };
-            var actual = result.ColumnCount;
-            var expected = 4;
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
-        public void TestCopyTableSchemaResultIndexCountProperty()
-        {
-            // Act
-            var result = new CopyTableSchemaResult
-            {
-                IndexCount = 2
-            };
-            var actual = result.IndexCount;
-            var expected = 2;
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
-        public void TestCopyTableSchemaResultForeignKeyCountProperty()
-        {
-            // Act
-            var result = new CopyTableSchemaResult
-            {
-                ForeignKeyCount = 1
-            };
-            var actual = result.ForeignKeyCount;
-            var expected = 1;
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
-        public void TestCopyTableSchemaResultUniqueConstraintCountProperty()
-        {
-            // Act
-            var result = new CopyTableSchemaResult
-            {
-                UniqueConstraintCount = 3
-            };
-            var actual = result.UniqueConstraintCount;
-            var expected = 3;
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
-        public void TestCopyTableSchemaResultCheckConstraintCountProperty()
-        {
-            // Act
-            var result = new CopyTableSchemaResult
-            {
-                CheckConstraintCount = 5
-            };
-            var actual = result.CheckConstraintCount;
-            var expected = 5;
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
-        public void TestCopyTableSchemaResultTableExistedPropertyDefaultValue()
-        {
-            // Act
-            var result = new CopyTableSchemaResult();
-            var actual = result.TableExisted;
-
-            // Assert
-            Assert.IsNull(actual);
-        }
-
-        [TestMethod]
-        public void TestCopyTableSchemaResultTableExistedProperty()
-        {
-            // Act
-            var result = new CopyTableSchemaResult
-            {
-                TableExisted = true
-            };
-            var actual = result.TableExisted;
-            var expected = true;
-
-            // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(0, second.Warnings.Count);
         }
 
         [TestMethod]
@@ -430,7 +168,7 @@ namespace RepoDb.Schema.Core.UnitTests
         public void TestCopyTableSchemaResultErrorsProperty()
         {
             // Setup
-            var error = new CopyTableSchemaError { Statement = "CREATE TABLE [Person] ([Id] int);" };
+            var error = new ExecutionError { Statement = "CREATE TABLE [Person] ([Id] int);" };
 
             // Act
             var result = new CopyTableSchemaResult();
@@ -448,7 +186,7 @@ namespace RepoDb.Schema.Core.UnitTests
             // Act
             var first = new CopyTableSchemaResult();
             var second = new CopyTableSchemaResult();
-            first.Errors.Add(new CopyTableSchemaError());
+            first.Errors.Add(new ExecutionError());
 
             // Assert
             Assert.AreEqual(0, second.Errors.Count);

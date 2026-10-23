@@ -16,7 +16,7 @@ using RepoDb.Schema.Models;
 namespace RepoDb.Schema.Core.UnitTests
 {
     [TestClass]
-    public class CopyTableSchemaRelationshipExpanderTest
+    public class RelatedTableExpanderTest
     {
         #region Helpers
 
@@ -32,7 +32,7 @@ namespace RepoDb.Schema.Core.UnitTests
         private static string[] Expand(string[] tables,
             CopyTableSchemaRelationshipBehavior behavior,
             params (TableInfo Child, TableInfo Parent)[] foreignKeys) =>
-            CopyTableSchemaRelationshipExpander.Expand(tables.Select(t => T(t)), foreignKeys, behavior, Key).Select(t => t.Name).ToArray();
+            RelatedTableExpander.Expand(tables.Select(t => T(t)), foreignKeys, behavior, Key).Select(t => t.Name).ToArray();
 
         private static readonly (TableInfo Child, TableInfo Parent)[] Tree =
         {
@@ -313,7 +313,7 @@ namespace RepoDb.Schema.Core.UnitTests
             var foreignKeys = new[] { (T("ItemRef"), T("Item")) };
 
             // Act
-            var actual = CopyTableSchemaRelationshipExpander.Expand(new[] { T("Item", "sales") }, foreignKeys, CopyTableSchemaRelationshipBehavior.ParentsAndChildren, Key);
+            var actual = RelatedTableExpander.Expand(new[] { T("Item", "sales") }, foreignKeys, CopyTableSchemaRelationshipBehavior.ParentsAndChildren, Key);
 
             // Assert
             Assert.AreEqual(1, actual.Count);
@@ -327,7 +327,7 @@ namespace RepoDb.Schema.Core.UnitTests
             string CaseInsensitiveKey(TableInfo table) => Key(table).ToLowerInvariant();
 
             // Act
-            var actual = CopyTableSchemaRelationshipExpander.Expand(new[] { T("PERSON") }, new[] { (T("Person"), T("Country")), (T("Order"), T("PERSON")) },
+            var actual = RelatedTableExpander.Expand(new[] { T("PERSON") }, new[] { (T("Person"), T("Country")), (T("Order"), T("PERSON")) },
                 CopyTableSchemaRelationshipBehavior.ParentsAndChildren, CaseInsensitiveKey);
 
             // Assert
@@ -338,7 +338,7 @@ namespace RepoDb.Schema.Core.UnitTests
         public void TestRelationshipExpanderKeepsTheNameOfTheRelatedTablesAsRead()
         {
             // Act
-            var actual = CopyTableSchemaRelationshipExpander.Expand(new[] { T("Child") }, new[] { (T("Child"), T("Parent", "sales")) },
+            var actual = RelatedTableExpander.Expand(new[] { T("Child") }, new[] { (T("Child"), T("Parent", "sales")) },
                 CopyTableSchemaRelationshipBehavior.Parents, Key);
 
             // Assert

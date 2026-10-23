@@ -17,7 +17,7 @@ namespace RepoDb.Schema
     /// (i.e.: <c>SQL_Latin1_General_CP1_CI_AS</c> is a SQL Server collation that MySQL rejects as an unknown collation), so a collation is only kept when the column is read
     /// from a database of a provider that the destination understands; otherwise it is left out and the destination uses its default collation.
     /// </summary>
-    public static class SchemaCollation
+    internal static class SchemaCollation
     {
         #region Public Methods
 

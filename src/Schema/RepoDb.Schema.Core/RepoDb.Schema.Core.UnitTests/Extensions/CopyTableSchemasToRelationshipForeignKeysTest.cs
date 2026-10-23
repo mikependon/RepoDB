@@ -119,7 +119,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader();
             MapComposer();
             var destination = new CustomDbConnection();
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, destination, relationshipBehavior: CopyTableSchemaRelationshipBehavior.TableOnly, createdCallback: results.Add);
@@ -153,7 +153,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader();
             MapComposer();
             var destination = new CustomDbConnection();
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, destination, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Children, createdCallback: results.Add);
@@ -161,8 +161,8 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Assert
             CollectionAssert.AreEqual(new[] { "ADD FK_Items_Orders TO Items;" }, ForeignKeysOf(destination).ToList());
             Assert.AreEqual(2, results.Count);
-            Assert.IsTrue(results.Single(result => result.TableName == "Orders").Warnings.Single().Contains("FK_Orders_Customers", StringComparison.Ordinal));
-            Assert.IsTrue(results.Single(result => result.TableName == "Items").Warnings.Single().Contains("FK_Items_Products", StringComparison.Ordinal));
+            Assert.IsTrue(results.Single(result => result.Target.Table.Table.Name == "Orders").Warnings.Single().Contains("FK_Orders_Customers", StringComparison.Ordinal));
+            Assert.IsTrue(results.Single(result => result.Target.Table.Table.Name == "Items").Warnings.Single().Contains("FK_Items_Products", StringComparison.Ordinal));
         }
 
         [TestMethod]

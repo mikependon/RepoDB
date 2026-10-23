@@ -94,7 +94,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup
             MapReader(GetOrders());
             MapComposer(Refuse);
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, new CustomDbConnection(), createdCallback: results.Add);
@@ -113,7 +113,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup
             MapReader(GetOrders());
             MapComposer(Refuse);
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Orders" }, new CustomDbConnection(), createdCallback: results.Add);
@@ -129,7 +129,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup
             MapReader(GetOrders());
             MapComposer(column => column.DefaultValue == ColumnDefaultValue.None ? null : $"the destination refuses {column.DefaultValue}");
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, new CustomDbConnection(), createdCallback: results.Add);
@@ -146,7 +146,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup
             MapReader(GetOrders());
             MapComposer(column => null);
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, new CustomDbConnection(), createdCallback: results.Add);
@@ -161,7 +161,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup
             MapReader(GetOrders());
             MapComposer();
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, new CustomDbConnection(), createdCallback: results.Add);
@@ -177,7 +177,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetOrders());
             MapComposer(Refuse);
             var destination = new CustomDbConnection { ScalarResult = statement => statement == "TABLE_EXISTS Orders" ? 1 : 0 };
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, destination, createdCallback: results.Add);

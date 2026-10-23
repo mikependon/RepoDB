@@ -185,7 +185,7 @@ namespace RepoDb.Schema
             var foreignKeys = relationshipBehavior == CopyTableSchemaRelationshipBehavior.TableOnly
                 ? new List<(TableInfo Child, TableInfo Parent)>()
                 : Query(OracleSchemaText.ForeignKeyRelationshipsSql, SchemaTraceKeys.GetRelationships, MapRelationship);
-            return CopyTableSchemaRelationshipExpander.Expand(tables, foreignKeys, relationshipBehavior, Key)
+            return RelatedTableExpander.Expand(tables, foreignKeys, relationshipBehavior, Key)
                 .Select(table => OracleSchemaHelper.FormatTableName(table.Schema, table.Name))
                 .ToList();
         }
@@ -357,7 +357,7 @@ namespace RepoDb.Schema
             {
                 foreignKeys = await QueryAsync(OracleSchemaText.ForeignKeyRelationshipsSql, SchemaTraceKeys.GetRelationships, MapRelationship, cancellationToken).ConfigureAwait(false);
             }
-            return CopyTableSchemaRelationshipExpander.Expand(tables, foreignKeys, relationshipBehavior, Key)
+            return RelatedTableExpander.Expand(tables, foreignKeys, relationshipBehavior, Key)
                 .Select(table => OracleSchemaHelper.FormatTableName(table.Schema, table.Name))
                 .ToList();
         }
@@ -796,12 +796,12 @@ namespace RepoDb.Schema
         // Ordering
 
         /// <summary>
-        /// Orders the tables so that a table always comes after the tables that it references (see <see cref="CopyTableSchemaOrder"/>).
+        /// Orders the tables so that a table always comes after the tables that it references (see <see cref="TableOrderer"/>).
         /// </summary>
         /// <param name="schemas">The schemas of the tables.</param>
         /// <returns>The ordered relationships, one per table.</returns>
         internal static IList<RelationshipInfo> Order(IList<TableSchema> schemas) =>
-            CopyTableSchemaOrder.Order(schemas, schema => Key(schema.Table), Key);
+            TableOrderer.Order(schemas, schema => Key(schema.Table), Key);
 
         #endregion
     }

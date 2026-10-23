@@ -11,7 +11,7 @@ namespace RepoDb.Schema
     /// <summary>
     /// A class that holds the constant values of the schema operation tracking keys.
     /// </summary>
-    public static class SchemaTraceKeys
+    internal static class SchemaTraceKeys
     {
         /// <summary>
         /// The trace key for the 'CopyTableSchemaTo' operation.

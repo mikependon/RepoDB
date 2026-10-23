@@ -12,16 +12,16 @@ namespace RepoDb.Schema.Models
     /// A class that represents the mapping of a column of the source table to the column that is created in the destination table, used by the <c>CopyTableSchemaTo</c> operations
     /// that create the tables with only the mapped columns.
     /// </summary>
-    public class CopyTableSchemaColumnMapping
+    public class ColumnMapping
     {
         #region Constructors
 
         /// <summary>
-        /// Creates a new instance of <see cref="CopyTableSchemaColumnMapping"/> class.
+        /// Creates a new instance of <see cref="ColumnMapping"/> class.
         /// </summary>
         /// <param name="source">The name of the column of the source table.</param>
         /// <param name="target">The name of the column in the destination table. The default is <c>null</c>, which keeps the name of the source column.</param>
-        public CopyTableSchemaColumnMapping(string source,
+        public ColumnMapping(string source,
             string target = null)
         {
             Source = source;

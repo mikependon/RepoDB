@@ -79,6 +79,13 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             return reader;
         }
 
+        private static CopyTableSchemaResultItem CreateResult(string table, string sourceSchema, string targetSchema) =>
+            new CopyTableSchemaResultItem
+            {
+                Source = new Endpoint { Table = new TableSchema(table, sourceSchema) },
+                Target = new Endpoint { Table = new TableSchema(table, targetSchema) }
+            };
+
         private static TableSchema GetSchemaOfPerson()
         {
             var schema = new TableSchema("Person", "dbo");
@@ -208,10 +215,10 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestGetNameOfACopyTableSchemaResultUsesTheDestinationSchemaAndTheTableName()
+        public void TestGetNameOfACopyTableSchemaResultItemUsesTheTargetSchemaAndTheTableName()
         {
             // Setup
-            var result = new CopyTableSchemaResult { SourceSchema = "dbo", DestinationSchema = "Sales", TableName = "Person" };
+            var result = CreateResult("Person", "dbo", "Sales");
 
             // Act
             var actual = DataDbConnection.GetName(new FakeDbConnection(), result);
@@ -273,7 +280,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             // Setup
             var where = new QueryGroup(new QueryField("Id", 1));
             var relationships = new[] { CreateRelationship(GetSchema("Person")) };
-            var results = new[] { new CopyTableSchemaResult { TableName = "Person", SourceSchema = "dbo", DestinationSchema = "Sales" } };
+            var results = new[] { CreateResult("Person", "dbo", "Sales") };
 
             // Act
             var actual = DataDbConnection.ToTables(relationships, new TableInfo("Person", "dbo"), ("Person", "Customer", where), results, new FakeDbConnection(), new FakeDbConnection());
@@ -297,8 +304,8 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             };
             var results = new[]
             {
-                new CopyTableSchemaResult { TableName = "Country", SourceSchema = "dbo", DestinationSchema = "Sales" },
-                new CopyTableSchemaResult { TableName = "Person", SourceSchema = "dbo", DestinationSchema = "Sales" }
+                CreateResult("Country", "dbo", "Sales"),
+                CreateResult("Person", "dbo", "Sales")
             };
 
             // Act
@@ -325,8 +332,8 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             };
             var results = new[]
             {
-                new CopyTableSchemaResult { TableName = "Person", SourceSchema = "Sales", DestinationSchema = "Target1" },
-                new CopyTableSchemaResult { TableName = "Person", SourceSchema = "Hr", DestinationSchema = "Target2" }
+                CreateResult("Person", "Sales", "Target1"),
+                CreateResult("Person", "Hr", "Target2")
             };
 
             // Act

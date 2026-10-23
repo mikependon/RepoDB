@@ -190,7 +190,7 @@ namespace RepoDb.Schema
                     foreignKeys.AddRange(ReadRelationships(schema));
                 }
             }
-            return CopyTableSchemaRelationshipExpander.Expand(tables, foreignKeys, relationshipBehavior, Key)
+            return RelatedTableExpander.Expand(tables, foreignKeys, relationshipBehavior, Key)
                 .Select(table => TursoSchemaHelper.FormatTableName(table.Schema, table.Name))
                 .ToList();
         }
@@ -367,7 +367,7 @@ namespace RepoDb.Schema
                     foreignKeys.AddRange(await ReadRelationshipsAsync(schema, cancellationToken).ConfigureAwait(false));
                 }
             }
-            return CopyTableSchemaRelationshipExpander.Expand(tables, foreignKeys, relationshipBehavior, Key)
+            return RelatedTableExpander.Expand(tables, foreignKeys, relationshipBehavior, Key)
                 .Select(table => TursoSchemaHelper.FormatTableName(table.Schema, table.Name))
                 .ToList();
         }
@@ -985,12 +985,12 @@ namespace RepoDb.Schema
         // Ordering
 
         /// <summary>
-        /// Orders the tables so that a table always comes after the tables that it references (see <see cref="CopyTableSchemaOrder"/>).
+        /// Orders the tables so that a table always comes after the tables that it references (see <see cref="TableOrderer"/>).
         /// </summary>
         /// <param name="schemas">The schemas of the tables.</param>
         /// <returns>The ordered relationships, one per table.</returns>
         internal static IList<RelationshipInfo> Order(IList<TableSchema> schemas) =>
-            CopyTableSchemaOrder.Order(schemas, schema => Key(schema.Table), Key);
+            TableOrderer.Order(schemas, schema => Key(schema.Table), Key);
 
         #endregion
 

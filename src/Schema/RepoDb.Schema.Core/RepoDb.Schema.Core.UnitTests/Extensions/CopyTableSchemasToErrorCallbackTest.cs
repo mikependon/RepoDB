@@ -84,7 +84,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         {
             // Setup
             MapThreeTables();
-            var errors = new List<CopyTableSchemaError>();
+            var errors = new List<ExecutionError>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Country", "Person", "Solo" }, new CustomDbConnection(), errorCallback: errors.Add);
@@ -111,7 +111,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup
             MapThreeTables();
             var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("ALTER TABLE", StringComparison.Ordinal) };
-            var errors = new List<CopyTableSchemaError>();
+            var errors = new List<ExecutionError>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Country", "Person", "Solo" }, destination, errorCallback: errors.Add);
@@ -134,7 +134,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             {
                 FailWhen = c => c.Contains("Person", StringComparison.Ordinal)
             };
-            var errors = new List<CopyTableSchemaError>();
+            var errors = new List<ExecutionError>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Country", "Person", "Solo" }, destination, errorCallback: errors.Add);
@@ -151,7 +151,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup
             MapThreeTables();
             var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("CREATE INDEX", StringComparison.Ordinal) };
-            var created = new List<CopyTableSchemaResult>();
+            var created = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(
@@ -162,7 +162,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Assert
             Assert.AreEqual(5, destination.ExecutedCommands.Count);
-            CollectionAssert.AreEqual(new[] { "Country", "Solo", "Person" }, created.Select(r => r.TableName).ToArray());
+            CollectionAssert.AreEqual(new[] { "Country", "Solo", "Person" }, created.Select(r => r.Target.Table.Table.Name).ToArray());
             Assert.AreEqual(0, created[0].Errors.Count);
             Assert.AreEqual(0, created[1].Errors.Count);
             Assert.AreEqual(1, created[2].Errors.Count);
@@ -175,7 +175,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup
             MapThreeTables();
             var destination = new CustomDbConnection { FailWhen = c => c == "CREATE TABLE Country;" };
-            var created = new List<CopyTableSchemaResult>();
+            var created = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(
@@ -186,11 +186,11 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Assert
             Assert.AreEqual(3, created.Count);
-            var country = created.Single(r => r.TableName == "Country");
+            var country = created.Single(r => r.Target.Table.Table.Name == "Country");
             Assert.AreEqual(1, country.Errors.Count);
             Assert.AreEqual("CREATE TABLE Country;", country.Errors[0].Statement, StringComparer.Ordinal);
             Assert.AreEqual(CopyTableSchemaOutcome.Failed, country.Outcome);
-            Assert.IsTrue(created.Where(r => r.TableName != "Country").All(r => r.Errors.Count == 0 && r.Outcome == CopyTableSchemaOutcome.Created));
+            Assert.IsTrue(created.Where(r => r.Target.Table.Table.Name != "Country").All(r => r.Errors.Count == 0 && r.Outcome == CopyTableSchemaOutcome.Created));
         }
 
         [TestMethod]
@@ -199,7 +199,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup
             MapThreeTables();
             var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("CREATE TABLE", StringComparison.Ordinal) };
-            var errors = new List<CopyTableSchemaError>();
+            var errors = new List<ExecutionError>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Country", "Person", "Solo" }, destination, errorCallback: errors.Add);
@@ -214,7 +214,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup
             MapThreeTables();
             var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("ALTER TABLE", StringComparison.Ordinal) };
-            CopyTableSchemaError raised = null;
+            ExecutionError raised = null;
 
             // Act
             var exception = Assert.Throws<InvalidOperationException>(() =>
@@ -241,7 +241,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
                 new CustomDbConnection().CopyTableSchemaTo(
                     new[] { "Country", "Person", "Solo" },
                     destination,
-                    createdCallback: r => created.Add(r.TableName),
+                    createdCallback: r => created.Add(r.Target.Table.Table.Name),
                     errorCallback: _ => throw new NotSupportedException()));
 
             // Assert
@@ -262,7 +262,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
                 new CustomDbConnection().CopyTableSchemaTo(
                     new[] { "Country", "Person", "Solo" },
                     destination,
-                    createdCallback: r => created.Add(r.TableName),
+                    createdCallback: r => created.Add(r.Target.Table.Table.Name),
                     errorCallback: _ => throw new NotSupportedException()));
 
             // Assert
@@ -277,8 +277,8 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetSchema("Country"), GetSchema("Person", 1, 0, 1));
             MapComposer("CREATE TABLE Country;", "CREATE TABLE Person;");
             var destination = new CustomDbConnection { FailWhen = c => c == "CREATE TABLE Person;" };
-            var errors = new List<CopyTableSchemaError>();
-            var created = new List<CopyTableSchemaResult>();
+            var errors = new List<ExecutionError>();
+            var created = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(
@@ -301,8 +301,8 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup
             MapThreeTables();
             var destination = new CustomDbConnection { FailWhen = c => c.Contains("Person", StringComparison.Ordinal) };
-            var errors = new List<CopyTableSchemaError>();
-            var created = new List<CopyTableSchemaResult>();
+            var errors = new List<ExecutionError>();
+            var created = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(
@@ -312,7 +312,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
                 errorCallback: errors.Add);
 
             // Assert
-            var person = created.Single(r => r.TableName == "Person");
+            var person = created.Single(r => r.Target.Table.Table.Name == "Person");
             Assert.AreEqual(3, person.Errors.Count);
             Assert.IsTrue(person.Errors.SequenceEqual(errors));
             Assert.AreEqual(CopyTableSchemaOutcome.Failed, person.Outcome);
@@ -323,7 +323,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         {
             // Setup
             MapThreeTables();
-            var created = new List<CopyTableSchemaResult>();
+            var created = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(
@@ -371,7 +371,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         {
             // Setup
             MapThreeTables();
-            var errors = new List<CopyTableSchemaError>();
+            var errors = new List<ExecutionError>();
 
             // Act
             await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Country", "Person", "Solo" }, new CustomDbConnection(), errorCallback: errors.Add);
@@ -398,7 +398,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup
             MapThreeTables();
             var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("ALTER TABLE", StringComparison.Ordinal) };
-            var errors = new List<CopyTableSchemaError>();
+            var errors = new List<ExecutionError>();
 
             // Act
             await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Country", "Person", "Solo" }, destination, errorCallback: errors.Add);
@@ -417,7 +417,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup
             MapThreeTables();
             var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("CREATE INDEX", StringComparison.Ordinal) };
-            var created = new List<CopyTableSchemaResult>();
+            var created = new List<CopyTableSchemaResultItem>();
 
             // Act
             await new CustomDbConnection().CopyTableSchemaToAsync(
@@ -428,7 +428,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Assert
             Assert.AreEqual(5, destination.ExecutedCommands.Count);
-            CollectionAssert.AreEqual(new[] { "Country", "Solo", "Person" }, created.Select(r => r.TableName).ToArray());
+            CollectionAssert.AreEqual(new[] { "Country", "Solo", "Person" }, created.Select(r => r.Target.Table.Table.Name).ToArray());
             Assert.AreEqual(1, created[2].Errors.Count);
             Assert.AreEqual(CopyTableSchemaOutcome.Failed, created[2].Outcome);
         }
@@ -439,7 +439,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup
             MapThreeTables();
             var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("ALTER TABLE", StringComparison.Ordinal) };
-            CopyTableSchemaError raised = null;
+            ExecutionError raised = null;
 
             // Act
             var exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
@@ -466,7 +466,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
                 new CustomDbConnection().CopyTableSchemaToAsync(
                     new[] { "Country", "Person", "Solo" },
                     destination,
-                    createdCallback: r => created.Add(r.TableName),
+                    createdCallback: r => created.Add(r.Target.Table.Table.Name),
                     errorCallback: _ => throw new NotSupportedException()));
 
             // Assert

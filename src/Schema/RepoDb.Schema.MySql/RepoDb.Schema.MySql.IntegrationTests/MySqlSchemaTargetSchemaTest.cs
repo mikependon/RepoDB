@@ -68,7 +68,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "Country", "Person" }, target, Database.TargetSalesName, createdCallback: results.Add);
@@ -76,7 +76,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
                 // Assert
                 CollectionAssert.AreEquivalent(new[] { $"{Database.TargetSalesName}.Country", $"{Database.TargetSalesName}.Person" }, GetTargetTables(Database.TargetSalesName));
                 Assert.AreEqual(0, GetTargetTables().Count);
-                Assert.IsTrue(results.All(r => r.SourceSchema == null && r.DestinationSchema == Database.TargetSalesName));
+                Assert.IsTrue(results.All(r => r.Source.Table.Table.Schema == null && r.Target.Table.Table.Schema == Database.TargetSalesName));
                 var person = GetTargetSchema($"{Database.TargetSalesName}.Person");
                 Assert.AreEqual(new TableInfo("Country", Database.TargetSalesName), person.ForeignKeys.Single().ReferencedTable);
                 CollectionAssert.AreEqual(Helper.GetSourceSchema("Person").Columns.Select(c => c.Field.Name).ToArray(), person.Columns.Select(c => c.Field.Name).ToArray());
@@ -91,15 +91,15 @@ namespace RepoDb.Schema.MySql.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "Person", "Country", "OrderLine" }, target, createdCallback: results.Add);
 
                 // Assert
                 CollectionAssert.AreEquivalent(new[] { "Country", "OrderLine", "Person" }, GetTargetTables());
-                Assert.IsTrue(results.All(r => r.DestinationSchema == null));
-                Assert.IsTrue(results.All(r => r.SourceSchema == null));
+                Assert.IsTrue(results.All(r => r.Target.Table.Table.Schema == null));
+                Assert.IsTrue(results.All(r => r.Source.Table.Table.Schema == null));
                 Assert.AreEqual(new TableInfo("Country", null), GetTargetSchema("Person").ForeignKeys.Single().ReferencedTable);
             }
         }
@@ -114,11 +114,11 @@ namespace RepoDb.Schema.MySql.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var result = source.CopyTableSchemaTo("Country", target, Database.TargetSalesName);
+                var result = source.CopyTableSchemaTo("Country", target, Database.TargetSalesName).Items.Single();
 
                 // Assert
-                Assert.IsNull(result.SourceSchema);
-                Assert.AreEqual(Database.TargetSalesName, result.DestinationSchema);
+                Assert.IsNull(result.Source.Table.Table.Schema);
+                Assert.AreEqual(Database.TargetSalesName, result.Target.Table.Table.Schema);
                 CollectionAssert.AreEqual(new[] { $"{Database.TargetSalesName}.Country" }, GetTargetTables(Database.TargetSalesName));
             }
         }
@@ -132,7 +132,7 @@ namespace RepoDb.Schema.MySql.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 source.CopyTableSchemaTo(new[] { "Country" }, target, Database.TargetSalesName);
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "Country" }, target, Database.TargetSalesName, createdCallback: results.Add);
@@ -168,14 +168,14 @@ namespace RepoDb.Schema.MySql.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 await source.CopyTableSchemaToAsync(new[] { "Country", "Person" }, target, Database.TargetSalesName, createdCallback: results.Add);
 
                 // Assert
                 CollectionAssert.AreEquivalent(new[] { $"{Database.TargetSalesName}.Country", $"{Database.TargetSalesName}.Person" }, GetTargetTables(Database.TargetSalesName));
-                Assert.IsTrue(results.All(r => r.DestinationSchema == Database.TargetSalesName));
+                Assert.IsTrue(results.All(r => r.Target.Table.Table.Schema == Database.TargetSalesName));
             }
         }
 
@@ -189,11 +189,11 @@ namespace RepoDb.Schema.MySql.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var result = await source.CopyTableSchemaToAsync("Country", target);
+                var result = (await source.CopyTableSchemaToAsync("Country", target)).Items.Single();
 
                 // Assert
-                Assert.IsNull(result.SourceSchema);
-                Assert.IsNull(result.DestinationSchema);
+                Assert.IsNull(result.Source.Table.Table.Schema);
+                Assert.IsNull(result.Target.Table.Table.Schema);
                 CollectionAssert.AreEqual(new[] { "Country" }, GetTargetTables());
             }
         }

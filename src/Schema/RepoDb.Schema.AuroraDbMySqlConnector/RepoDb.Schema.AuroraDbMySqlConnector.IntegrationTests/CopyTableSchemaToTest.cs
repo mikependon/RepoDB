@@ -7,6 +7,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using MySqlConnector;
 using RepoDb.Connector.AuroraDb.MySqlConnector;
@@ -54,12 +55,12 @@ namespace RepoDb.Schema.AuroraDbMySqlConnector.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var result = source.CopyTableSchemaTo("Country", target);
+                var result = source.CopyTableSchemaTo("Country", target).Items.Single();
 
                 // Assert
                 Assert.IsTrue(Helper.TargetTableExists("Country"));
                 Helper.AssertSchemaEquality(Helper.GetSourceSchema("Country"), Helper.GetTargetSchema("Country"));
-                Assert.AreEqual("Country", result.TableName, StringComparer.Ordinal);
+                Assert.AreEqual("Country", result.Target.Table.Table.Name, StringComparer.Ordinal);
             }
         }
 
@@ -74,15 +75,16 @@ namespace RepoDb.Schema.AuroraDbMySqlConnector.IntegrationTests
                 source.CopyTableSchemaTo("Country", target);
 
                 // Act
-                var result = source.CopyTableSchemaTo("Person", target);
+                var run = source.CopyTableSchemaTo("Person", target);
+                var result = run.Items.Single();
 
                 // Assert
-                Assert.AreEqual("Person", result.TableName, StringComparer.Ordinal);
-                Assert.IsNull(result.SourceSchema);
-                Assert.AreEqual(Database.SourceName, result.SourceDatabase, StringComparer.Ordinal);
-                Assert.AreEqual(Database.TargetName, result.DestinationDatabase, StringComparer.Ordinal);
-                Assert.AreEqual(nameof(AuroraDbConnection), result.SourceDatabaseType, StringComparer.Ordinal);
-                Assert.AreEqual(nameof(AuroraDbConnection), result.DestinationDatabaseType, StringComparer.Ordinal);
+                Assert.AreEqual("Person", result.Target.Table.Table.Name, StringComparer.Ordinal);
+                Assert.IsNull(result.Source.Table.Table.Schema);
+                Assert.AreEqual(Database.SourceName, result.Source.Database, StringComparer.Ordinal);
+                Assert.AreEqual(Database.TargetName, result.Target.Database, StringComparer.Ordinal);
+                Assert.AreEqual(nameof(AuroraDbConnection), result.Source.DatabaseType, StringComparer.Ordinal);
+                Assert.AreEqual(nameof(AuroraDbConnection), result.Target.DatabaseType, StringComparer.Ordinal);
                 Assert.AreEqual(CopyTableSchemaOutcome.Created, result.Outcome);
                 Assert.AreEqual(CopyTableSchemaExistsBehavior.Skip, result.Action);
                 Assert.AreEqual(7, result.ColumnCount);
@@ -93,7 +95,7 @@ namespace RepoDb.Schema.AuroraDbMySqlConnector.IntegrationTests
                 StringAssert.Contains(result.Script, "CREATE TABLE `Person`", StringComparison.Ordinal);
                 StringAssert.Contains(result.Script, "CREATE INDEX `IX_Person_Name`", StringComparison.Ordinal);
                 StringAssert.Contains(result.Script, "FK_Person_Country", StringComparison.Ordinal);
-                Assert.IsTrue(result.EndTime >= result.StartTime);
+                Assert.IsTrue(run.EndTime >= run.StartTime);
             }
         }
 
@@ -125,11 +127,11 @@ namespace RepoDb.Schema.AuroraDbMySqlConnector.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var result = source.CopyTableSchemaTo($"{Database.SourceSalesName}.Invoice", target, Database.TargetSalesName);
+                var result = source.CopyTableSchemaTo($"{Database.SourceSalesName}.Invoice", target, Database.TargetSalesName).Items.Single();
 
                 // Assert
-                Assert.AreEqual(Database.SourceSalesName, result.SourceSchema, StringComparer.Ordinal);
-                Assert.AreEqual(Database.TargetSalesName, result.DestinationSchema, StringComparer.Ordinal);
+                Assert.AreEqual(Database.SourceSalesName, result.Source.Table.Table.Schema, StringComparer.Ordinal);
+                Assert.AreEqual(Database.TargetSalesName, result.Target.Table.Table.Schema, StringComparer.Ordinal);
                 Helper.AssertSchemaEquality(Helper.GetSourceSchema($"{Database.SourceSalesName}.Invoice"), Helper.GetTargetSchema($"{Database.SourceSalesName}.Invoice"));
             }
         }
@@ -144,7 +146,7 @@ namespace RepoDb.Schema.AuroraDbMySqlConnector.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var result = source.CopyTableSchemaTo("NoKey", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
+                var result = source.CopyTableSchemaTo("NoKey", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop).Items.Single();
 
                 // Assert
                 Assert.AreEqual(CopyTableSchemaExistsBehavior.Drop, result.Action);
@@ -220,12 +222,12 @@ namespace RepoDb.Schema.AuroraDbMySqlConnector.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var result = await source.CopyTableSchemaToAsync("Country", target);
+                var result = (await source.CopyTableSchemaToAsync("Country", target)).Items.Single();
 
                 // Assert
                 Assert.IsTrue(Helper.TargetTableExists("Country"));
                 Helper.AssertSchemaEquality(Helper.GetSourceSchema("Country"), Helper.GetTargetSchema("Country"));
-                Assert.AreEqual("Country", result.TableName, StringComparer.Ordinal);
+                Assert.AreEqual("Country", result.Target.Table.Table.Name, StringComparer.Ordinal);
             }
         }
 
@@ -240,7 +242,7 @@ namespace RepoDb.Schema.AuroraDbMySqlConnector.IntegrationTests
                 await source.CopyTableSchemaToAsync("Country", target);
 
                 // Act
-                var result = await source.CopyTableSchemaToAsync("Person", target);
+                var result = (await source.CopyTableSchemaToAsync("Person", target)).Items.Single();
 
                 // Assert
                 Helper.AssertSchemaEquality(Helper.GetSourceSchema("Person"), Helper.GetTargetSchema("Person"));

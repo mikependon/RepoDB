@@ -101,8 +101,8 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         private static CustomDbConnection GetDestination(params string[] existing) =>
             new CustomDbConnection { ScalarResult = statement => existing.Contains(statement) ? 1 : 0 };
 
-        private static CopyTableSchemaResult Get(IEnumerable<CopyTableSchemaResult> results, string tableName) =>
-            results.Single(r => r.TableName == tableName);
+        private static CopyTableSchemaResultItem Get(IEnumerable<CopyTableSchemaResultItem> results, string tableName) =>
+            results.Single(r => r.Target.Table.Table.Name == tableName);
 
         #endregion
 
@@ -115,7 +115,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetCountry(), GetPerson());
             MapComposer();
             var destination = GetDestination("TABLE_EXISTS Country");
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip, createdCallback: results.Add);
@@ -138,7 +138,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetCountry(), GetPerson());
             MapComposer();
             var destination = GetDestination("TABLE_EXISTS Country", "TABLE_EXISTS Person");
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination, createdCallback: results.Add);
@@ -160,7 +160,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination,
-                createdCallback: r => executedWhenReported.Add((r.TableName, destination.ExecutedCommands.Count)));
+                createdCallback: r => executedWhenReported.Add((r.Target.Table.Table.Name, destination.ExecutedCommands.Count)));
 
             // Assert
             Assert.AreEqual(("Country", 0), executedWhenReported[0]);
@@ -193,7 +193,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetCountry());
             MapComposer(compose: false);
             var destination = GetDestination("TABLE_EXISTS Country");
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Country" }, destination, createdCallback: results.Add);
@@ -250,7 +250,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetCountry(), GetPerson());
             MapComposer();
             var destination = GetDestination("TABLE_EXISTS Country", "TABLE_EXISTS Person");
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop, createdCallback: results.Add);
@@ -275,7 +275,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetCountry(), GetPerson());
             MapComposer();
             var destination = GetDestination("TABLE_EXISTS Country");
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop, createdCallback: results.Add);
@@ -299,7 +299,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetCountry());
             MapComposer();
             var destination = GetDestination("TABLE_EXISTS Country", "COLUMN_EXISTS Country.Id");
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Country" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
@@ -321,7 +321,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetCountry());
             MapComposer();
             var destination = GetDestination("TABLE_EXISTS Country", "COLUMN_EXISTS Country.Id", "COLUMN_EXISTS Country.Name", "INDEX_EXISTS Country.IX_Country_Name");
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Country" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
@@ -340,7 +340,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetCountry(), GetPerson());
             MapComposer();
             var destination = GetDestination("TABLE_EXISTS Country", "COLUMN_EXISTS Country.Id", "COLUMN_EXISTS Country.Name", "INDEX_EXISTS Country.IX_Country_Name");
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Country", "Person" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
@@ -393,8 +393,8 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapComposer();
             var destination = GetDestination("TABLE_EXISTS Country", "COLUMN_EXISTS Country.Id");
             destination.FailWhen = statement => statement.StartsWith("ADD COLUMN", StringComparison.Ordinal);
-            var results = new List<CopyTableSchemaResult>();
-            var errors = new List<CopyTableSchemaError>();
+            var results = new List<CopyTableSchemaResultItem>();
+            var errors = new List<ExecutionError>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Country" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add, errorCallback: errors.Add);
@@ -416,7 +416,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetCountry(), GetPerson());
             MapComposer();
             var destination = GetDestination("TABLE_EXISTS Country");
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip, createdCallback: results.Add);
@@ -448,7 +448,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetCountry(), GetPerson());
             MapComposer();
             var destination = GetDestination("TABLE_EXISTS Country", "TABLE_EXISTS Person");
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop, createdCallback: results.Add);
@@ -466,7 +466,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetCountry());
             MapComposer();
             var destination = GetDestination("TABLE_EXISTS Country", "COLUMN_EXISTS Country.Id");
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Country" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);

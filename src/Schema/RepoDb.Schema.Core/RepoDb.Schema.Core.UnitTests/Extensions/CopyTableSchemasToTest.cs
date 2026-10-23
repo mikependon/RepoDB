@@ -70,8 +70,8 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             return composer;
         }
 
-        private static Action<CopyTableSchemaResult> Collect(CustomDbConnection destination, List<(string Table, int Executed)> reported) =>
-            result => reported.Add((result.TableName, destination.ExecutedCommands.Count));
+        private static Action<CopyTableSchemaResultItem> Collect(CustomDbConnection destination, List<(string Table, int Executed)> reported) =>
+            result => reported.Add((result.Target.Table.Table.Name, destination.ExecutedCommands.Count));
 
         #endregion
 
@@ -332,24 +332,24 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup
             MapReader(GetRelationships(GetSchema("Country", 2), GetSchema("Person", 4, 1, 1)));
             MapComposer("CREATE TABLE Country;", "CREATE TABLE Person;", "CREATE INDEX IX_Person;", "ALTER TABLE Person ADD FK;");
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, new CustomDbConnection(), createdCallback: results.Add);
+            var run = new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, new CustomDbConnection(), createdCallback: results.Add);
 
             // Assert
-            var person = results.Single(r => r.TableName == "Person");
-            Assert.AreEqual("dbo", person.SourceSchema, StringComparer.Ordinal);
-            Assert.AreEqual(nameof(CustomDbConnection), person.SourceDatabaseType, StringComparer.Ordinal);
-            Assert.AreEqual(nameof(CustomDbConnection), person.DestinationDatabaseType, StringComparer.Ordinal);
+            var person = results.Single(r => r.Target.Table.Table.Name == "Person");
+            Assert.AreEqual("dbo", person.Source.Table.Table.Schema, StringComparer.Ordinal);
+            Assert.AreEqual(nameof(CustomDbConnection), person.Source.DatabaseType, StringComparer.Ordinal);
+            Assert.AreEqual(nameof(CustomDbConnection), person.Target.DatabaseType, StringComparer.Ordinal);
             Assert.AreEqual(CopyTableSchemaOutcome.Created, person.Outcome);
             Assert.AreEqual(CopyTableSchemaExistsBehavior.Skip, person.Action);
             Assert.AreEqual(4, person.ColumnCount);
             Assert.AreEqual(1, person.IndexCount);
             Assert.AreEqual(1, person.ForeignKeyCount);
             Assert.AreEqual("CREATE TABLE Person;", person.Script, StringComparer.Ordinal);
-            Assert.IsTrue(person.EndTime >= person.StartTime);
-            Assert.AreEqual(2, results.Single(r => r.TableName == "Country").ColumnCount);
+            Assert.IsTrue(run.EndTime >= run.StartTime);
+            Assert.AreEqual(2, results.Single(r => r.Target.Table.Table.Name == "Country").ColumnCount);
         }
 
         [TestMethod]
@@ -358,7 +358,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup
             MapReader(GetRelationships(GetSchema("Person")));
             MapComposer("CREATE TABLE Person;");
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Person" }, new CustomDbConnection(), tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop, createdCallback: results.Add);
@@ -373,7 +373,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup
             MapReader(GetRelationships(GetSchema("Person")));
             MapComposer("CREATE TABLE Person;");
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "dbo.Person" }, new CustomDbConnection(), createdCallback: results.Add);
@@ -542,19 +542,19 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup
             MapReader(GetRelationships(GetSchema("Country", 2), GetSchema("Person", 4, 1, 1)));
             MapComposer("CREATE TABLE Country;", "CREATE TABLE Person;", "CREATE INDEX IX_Person;", "ALTER TABLE Person ADD FK;");
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
-            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" }, new CustomDbConnection(), tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
+            var run = await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" }, new CustomDbConnection(), tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
 
             // Assert
             Assert.AreEqual(2, results.Count);
-            var person = results.Single(r => r.TableName == "Person");
+            var person = results.Single(r => r.Target.Table.Table.Name == "Person");
             Assert.AreEqual(CopyTableSchemaExistsBehavior.Align, person.Action);
             Assert.AreEqual(4, person.ColumnCount);
             Assert.AreEqual(1, person.ForeignKeyCount);
             Assert.AreEqual("CREATE TABLE Person;", person.Script, StringComparer.Ordinal);
-            Assert.IsTrue(person.EndTime >= person.StartTime);
+            Assert.IsTrue(run.EndTime >= run.StartTime);
         }
 
         #endregion

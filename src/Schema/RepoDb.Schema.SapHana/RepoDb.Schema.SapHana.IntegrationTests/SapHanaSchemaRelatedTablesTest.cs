@@ -524,7 +524,7 @@ namespace RepoDb.Schema.SapHana.IntegrationTests
                 // Act
                 source.CopyTableSchemaTo(new[] { "Child" }, target,
                     relationshipBehavior: CopyTableSchemaRelationshipBehavior.ParentsAndChildren,
-                    createdCallback: r => created.Add(r.TableName));
+                    createdCallback: r => created.Add(r.Target.Table.Table.Name));
 
                 // Assert
                 AssertSame(new[] { "Parent", "Child", "GrandChild" }, GetTargetTables().ToArray());
@@ -592,10 +592,10 @@ namespace RepoDb.Schema.SapHana.IntegrationTests
                 SchemaReaderMapper.Add<HanaConnection>(new SapHanaSchemaReader(source), true);
 
                 // Act
-                var result = source.CopyTableSchemaTo("GrandChild", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Parents);
+                var result = source.CopyTableSchemaTo("GrandChild", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Parents).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "GrandChild", StringComparison.OrdinalIgnoreCase));
 
                 // Assert
-                Assert.AreEqual("GrandChild", result.TableName);
+                Assert.AreEqual("GrandChild", result.Target.Table.Table.Name);
                 Assert.AreEqual(CopyTableSchemaOutcome.Created, result.Outcome);
                 AssertSame(new[] { "Parent", "Child", "GrandChild" }, GetTargetTables().ToArray());
             }
@@ -611,10 +611,10 @@ namespace RepoDb.Schema.SapHana.IntegrationTests
                 SchemaReaderMapper.Add<HanaConnection>(new SapHanaSchemaReader(source), true);
 
                 // Act
-                var result = await source.CopyTableSchemaToAsync("Child", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.ParentsAndChildren);
+                var result = (await source.CopyTableSchemaToAsync("Child", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.ParentsAndChildren)).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "Child", StringComparison.OrdinalIgnoreCase));
 
                 // Assert
-                Assert.AreEqual("Child", result.TableName);
+                Assert.AreEqual("Child", result.Target.Table.Table.Name);
                 AssertSame(new[] { "Parent", "Child", "GrandChild" }, GetTargetTables().ToArray());
             }
         }
@@ -629,10 +629,10 @@ namespace RepoDb.Schema.SapHana.IntegrationTests
                 SchemaReaderMapper.Add<HanaConnection>(new SapHanaSchemaReader(source), true);
 
                 // Act
-                var result = source.CopyTableSchemaTo("\"Odd.Name\"", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Children);
+                var result = source.CopyTableSchemaTo("\"Odd.Name\"", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Children).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "Odd.Name", StringComparison.OrdinalIgnoreCase));
 
                 // Assert
-                Assert.AreEqual("Odd.Name", result.TableName);
+                Assert.AreEqual("Odd.Name", result.Target.Table.Table.Name);
                 AssertSame(new[] { "\"Odd.Name\"", "\"Odd.Child\"" }, GetTargetTables().ToArray());
             }
         }
@@ -647,10 +647,10 @@ namespace RepoDb.Schema.SapHana.IntegrationTests
                 SchemaReaderMapper.Add<HanaConnection>(new SapHanaSchemaReader(source), true);
 
                 // Act
-                var result = source.CopyTableSchemaTo("Parent", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.TableOnly);
+                var result = source.CopyTableSchemaTo("Parent", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.TableOnly).Items.Single();
 
                 // Assert
-                Assert.AreEqual("Parent", result.TableName);
+                Assert.AreEqual("Parent", result.Target.Table.Table.Name);
                 AssertSame(new[] { "Parent" }, GetTargetTables().ToArray());
             }
         }

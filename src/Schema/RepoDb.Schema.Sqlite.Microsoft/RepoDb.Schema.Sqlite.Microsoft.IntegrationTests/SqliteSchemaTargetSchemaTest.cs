@@ -68,7 +68,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "Country", "Person" }, target, Database.SalesSchema, createdCallback: results.Add);
@@ -76,7 +76,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
                 // Assert
                 CollectionAssert.AreEquivalent(new[] { $"{Database.SalesSchema}.Country", $"{Database.SalesSchema}.Person" }, GetTargetTables(Database.SalesSchema));
                 Assert.AreEqual(0, GetTargetTables().Count);
-                Assert.IsTrue(results.All(r => r.SourceSchema == null && r.DestinationSchema == Database.SalesSchema));
+                Assert.IsTrue(results.All(r => r.Source.Table.Table.Schema == null && r.Target.Table.Table.Schema == Database.SalesSchema));
                 var person = GetTargetSchema($"{Database.SalesSchema}.Person");
                 Assert.AreEqual(new TableInfo("Country", Database.SalesSchema), person.ForeignKeys.Single().ReferencedTable);
                 CollectionAssert.AreEqual(Helper.GetSourceSchema("Person").Columns.Select(c => c.Field.Name).ToArray(), person.Columns.Select(c => c.Field.Name).ToArray());
@@ -91,15 +91,15 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "Person", "Country", "OrderLine" }, target, createdCallback: results.Add);
 
                 // Assert
                 CollectionAssert.AreEquivalent(new[] { "Country", "OrderLine", "Person" }, GetTargetTables());
-                Assert.IsTrue(results.All(r => r.DestinationSchema == null));
-                Assert.IsTrue(results.All(r => r.SourceSchema == null));
+                Assert.IsTrue(results.All(r => r.Target.Table.Table.Schema == null));
+                Assert.IsTrue(results.All(r => r.Source.Table.Table.Schema == null));
                 Assert.AreEqual(new TableInfo("Country", null), GetTargetSchema("Person").ForeignKeys.Single().ReferencedTable);
             }
         }
@@ -114,11 +114,11 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var result = source.CopyTableSchemaTo("Country", target, Database.SalesSchema);
+                var result = source.CopyTableSchemaTo("Country", target, Database.SalesSchema).Items.Single();
 
                 // Assert
-                Assert.IsNull(result.SourceSchema);
-                Assert.AreEqual(Database.SalesSchema, result.DestinationSchema);
+                Assert.IsNull(result.Source.Table.Table.Schema);
+                Assert.AreEqual(Database.SalesSchema, result.Target.Table.Table.Schema);
                 CollectionAssert.AreEqual(new[] { $"{Database.SalesSchema}.Country" }, GetTargetTables(Database.SalesSchema));
             }
         }
@@ -132,7 +132,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 source.CopyTableSchemaTo(new[] { "Country" }, target, Database.SalesSchema);
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "Country" }, target, Database.SalesSchema, createdCallback: results.Add);
@@ -168,14 +168,14 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 await source.CopyTableSchemaToAsync(new[] { "Country", "Person" }, target, Database.SalesSchema, createdCallback: results.Add);
 
                 // Assert
                 CollectionAssert.AreEquivalent(new[] { $"{Database.SalesSchema}.Country", $"{Database.SalesSchema}.Person" }, GetTargetTables(Database.SalesSchema));
-                Assert.IsTrue(results.All(r => r.DestinationSchema == Database.SalesSchema));
+                Assert.IsTrue(results.All(r => r.Target.Table.Table.Schema == Database.SalesSchema));
             }
         }
 
@@ -189,11 +189,11 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var result = await source.CopyTableSchemaToAsync("Country", target);
+                var result = (await source.CopyTableSchemaToAsync("Country", target)).Items.Single();
 
                 // Assert
-                Assert.IsNull(result.SourceSchema);
-                Assert.IsNull(result.DestinationSchema);
+                Assert.IsNull(result.Source.Table.Table.Schema);
+                Assert.IsNull(result.Target.Table.Table.Schema);
                 CollectionAssert.AreEqual(new[] { "Country" }, GetTargetTables());
             }
         }

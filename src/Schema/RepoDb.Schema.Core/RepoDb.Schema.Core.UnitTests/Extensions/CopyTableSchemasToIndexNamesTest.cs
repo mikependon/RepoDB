@@ -200,13 +200,13 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             employees.Indexes[0].IsUnique = true;
             MapReader(GetSchema("Customers", "PostalCode"), employees);
             MapComposer(true);
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Employees" }, GetDestination(), createdCallback: results.Add);
 
             // Assert
-            var result = results.Single(r => r.TableName == "Employees");
+            var result = results.Single(r => r.Target.Table.Table.Name == "Employees");
             Assert.AreEqual(1, result.IndexCount);
             StringAssert.Contains(result.Script, "CREATE INDEX Employees_PostalCode ON Employees;");
         }
@@ -258,7 +258,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetSchema("Employees", "PostalCode"));
             MapComposer(true);
             var destination = GetDestination("TABLE_EXISTS Employees", "INDEX_NAME_EXISTS PostalCode");
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Employees" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
@@ -290,7 +290,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetSchema("Employees", "PostalCode"));
             MapComposer(true);
             var destination = GetDestination("TABLE_EXISTS Employees", "INDEX_NAME_EXISTS PostalCode", "INDEX_NAME_EXISTS Employees_PostalCode", "INDEX_EXISTS Employees.Employees_PostalCode");
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Employees" }, destination, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);

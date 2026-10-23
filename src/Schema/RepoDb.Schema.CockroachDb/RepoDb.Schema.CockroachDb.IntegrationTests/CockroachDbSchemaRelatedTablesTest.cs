@@ -543,7 +543,7 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
                 // Act
                 source.CopyTableSchemaTo(new[] { "chain_b" }, target,
                     relationshipBehavior: CopyTableSchemaRelationshipBehavior.ParentsAndChildren,
-                    createdCallback: r => created.Add(r.TableName));
+                    createdCallback: r => created.Add(r.Target.Table.Table.Name));
 
                 // Assert
                 AssertSame(new[] { "public.chain_a", "public.chain_b", "public.chain_c" }, GetTargetTables());
@@ -611,10 +611,10 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
                 SchemaReaderMapper.Add<CockroachDbConnection>(new CockroachDbSchemaReader(source), true);
 
                 // Act
-                var result = source.CopyTableSchemaTo("chain_c", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Parents);
+                var result = source.CopyTableSchemaTo("chain_c", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Parents).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "chain_c", StringComparison.OrdinalIgnoreCase));
 
                 // Assert
-                Assert.AreEqual("chain_c", result.TableName);
+                Assert.AreEqual("chain_c", result.Target.Table.Table.Name);
                 Assert.AreEqual(CopyTableSchemaOutcome.Created, result.Outcome);
                 AssertSame(new[] { "public.chain_a", "public.chain_b", "public.chain_c" }, GetTargetTables().ToArray());
             }
@@ -630,10 +630,10 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
                 SchemaReaderMapper.Add<CockroachDbConnection>(new CockroachDbSchemaReader(source), true);
 
                 // Act
-                var result = await source.CopyTableSchemaToAsync("chain_b", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.ParentsAndChildren);
+                var result = (await source.CopyTableSchemaToAsync("chain_b", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.ParentsAndChildren)).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "chain_b", StringComparison.OrdinalIgnoreCase));
 
                 // Assert
-                Assert.AreEqual("chain_b", result.TableName);
+                Assert.AreEqual("chain_b", result.Target.Table.Table.Name);
                 AssertSame(new[] { "public.chain_a", "public.chain_b", "public.chain_c" }, GetTargetTables().ToArray());
             }
         }
@@ -648,10 +648,10 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
                 SchemaReaderMapper.Add<CockroachDbConnection>(new CockroachDbSchemaReader(source), true);
 
                 // Act
-                var result = source.CopyTableSchemaTo("public.\"odd.name\"", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Children);
+                var result = source.CopyTableSchemaTo("public.\"odd.name\"", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Children).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "Odd.Name", StringComparison.OrdinalIgnoreCase));
 
                 // Assert
-                Assert.AreEqual("odd.name", result.TableName);
+                Assert.AreEqual("odd.name", result.Target.Table.Table.Name);
                 AssertSame(new[] { "public.\"odd.name\"", "public.\"odd name\"" }, GetTargetTables().ToArray());
             }
         }
@@ -666,10 +666,10 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
                 SchemaReaderMapper.Add<CockroachDbConnection>(new CockroachDbSchemaReader(source), true);
 
                 // Act
-                var result = source.CopyTableSchemaTo("chain_a", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.TableOnly);
+                var result = source.CopyTableSchemaTo("chain_a", target, relationshipBehavior: CopyTableSchemaRelationshipBehavior.TableOnly).Items.Single();
 
                 // Assert
-                Assert.AreEqual("chain_a", result.TableName);
+                Assert.AreEqual("chain_a", result.Target.Table.Table.Name);
                 AssertSame(new[] { "public.chain_a" }, GetTargetTables().ToArray());
             }
         }

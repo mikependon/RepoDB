@@ -9,11 +9,12 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Schema;
+using RepoDb.Schema.Models;
 
 namespace RepoDb.Schema.Core.UnitTests
 {
     [TestClass]
-    public class CopyTableSchemaErrorTest
+    public class ExecutionErrorTest
     {
         #region Methods
 
@@ -21,7 +22,7 @@ namespace RepoDb.Schema.Core.UnitTests
         public void TestCopyTableSchemaErrorExceptionPropertyDefaultValue()
         {
             // Act
-            var error = new CopyTableSchemaError();
+            var error = new ExecutionError();
 
             // Assert
             Assert.IsNull(error.Exception);
@@ -34,7 +35,7 @@ namespace RepoDb.Schema.Core.UnitTests
             var exception = new InvalidOperationException();
 
             // Act
-            var error = new CopyTableSchemaError
+            var error = new ExecutionError
             {
                 Exception = exception
             };
@@ -47,7 +48,7 @@ namespace RepoDb.Schema.Core.UnitTests
         public void TestCopyTableSchemaErrorStringPropertiesDefaultValues()
         {
             // Act
-            var error = new CopyTableSchemaError();
+            var error = new ExecutionError();
 
             // Assert
             Assert.IsNull(error.Statement);
@@ -59,7 +60,7 @@ namespace RepoDb.Schema.Core.UnitTests
         public void TestCopyTableSchemaErrorStringProperties()
         {
             // Act
-            var error = new CopyTableSchemaError
+            var error = new ExecutionError
             {
                 Statement = "CREATE TABLE [Person] ([Id] int);",
                 TableName = "Person",
@@ -76,7 +77,7 @@ namespace RepoDb.Schema.Core.UnitTests
         public void TestCopyTableSchemaErrorStatementIndexPropertyDefaultValue()
         {
             // Act
-            var error = new CopyTableSchemaError();
+            var error = new ExecutionError();
 
             // Assert
             Assert.AreEqual(0, error.StatementIndex);
@@ -86,7 +87,7 @@ namespace RepoDb.Schema.Core.UnitTests
         public void TestCopyTableSchemaErrorStatementIndexProperty()
         {
             // Act
-            var error = new CopyTableSchemaError
+            var error = new ExecutionError
             {
                 StatementIndex = 7
             };

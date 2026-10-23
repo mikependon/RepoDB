@@ -17,7 +17,7 @@ namespace RepoDb.Schema
     /// A class that inspects the SQL expressions of the schema objects (i.e.: the expression of a check constraint), used by the composers to find what
     /// the destination database does not accept.
     /// </summary>
-    public static class SchemaExpression
+    internal static class SchemaExpression
     {
         #region Private Variables
 

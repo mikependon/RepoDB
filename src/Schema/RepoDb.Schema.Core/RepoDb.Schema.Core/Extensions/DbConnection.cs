@@ -29,17 +29,6 @@ namespace RepoDb.Schema
         #region Methods
 
         /// <summary>
-        /// Finds the result of the table that was requested among the results of the tables that were copied (the requested table and its related tables).
-        /// </summary>
-        /// <param name="results">The results of the copied tables.</param>
-        /// <param name="table">The identity of the table that was requested.</param>
-        /// <returns>The result of the requested table.</returns>
-        internal static CopyTableSchemaResult FindResult(IList<CopyTableSchemaResult> results,
-            TableInfo table) =>
-            results.FirstOrDefault(r => string.Equals(r.TableName, table.Name, StringComparison.Ordinal) &&
-                string.Equals(r.SourceSchema, table.Schema, StringComparison.Ordinal));
-
-        /// <summary>
         /// Gets the schema of the destination database that the tables are created in: the given one, or the default schema of the setting of the destination connection (see <see cref="IDbSetting.DefaultSchema"/>).
         /// </summary>
         /// <param name="targetSchema"></param>
@@ -66,7 +55,7 @@ namespace RepoDb.Schema
         /// <param name="trace"></param>
         /// <param name="transaction"></param>
         [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
-        internal static void ProbeTables(IEnumerable<CopyTableSchemaPlanTable> tables,
+        internal static void ProbeTables(IEnumerable<PlanTable> tables,
             CopyTableSchemaExistsBehavior behavior,
             ISchemaComposer composer,
             IDbConnection destinationConnection,
@@ -107,7 +96,7 @@ namespace RepoDb.Schema
             {
                 SkipUnsupported(table, table.Schema.ForeignKeys.Where(foreignKey => !CanBeReferenced(foreignKey)).ToList(), composer);
             }
-            CopyTableSchemaIndexNames.Resolve(tables, behavior, composer, destinationConnection.GetDbSetting()?.AreIndexNamesUniquePerSchema == true, Probe);
+            IndexNameResolver.Resolve(tables, behavior, composer, destinationConnection.GetDbSetting()?.AreIndexNamesUniquePerSchema == true, Probe);
         }
 
         /// <summary>
@@ -122,7 +111,7 @@ namespace RepoDb.Schema
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
-        internal static async Task ProbeTablesAsync(IEnumerable<CopyTableSchemaPlanTable> tables,
+        internal static async Task ProbeTablesAsync(IEnumerable<PlanTable> tables,
             CopyTableSchemaExistsBehavior behavior,
             ISchemaComposer composer,
             IDbConnection destinationConnection,
@@ -191,7 +180,7 @@ namespace RepoDb.Schema
                 }
                 SkipUnsupported(table, unreferenced, composer);
             }
-            await CopyTableSchemaIndexNames.ResolveAsync(tables, behavior, composer, destinationConnection.GetDbSetting()?.AreIndexNamesUniquePerSchema == true, Probe).ConfigureAwait(false);
+            await IndexNameResolver.ResolveAsync(tables, behavior, composer, destinationConnection.GetDbSetting()?.AreIndexNamesUniquePerSchema == true, Probe).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -202,7 +191,7 @@ namespace RepoDb.Schema
         /// <param name="table">The state of the table.</param>
         /// <param name="foreignKeys">The foreign keys of the table that reference a table that is not copied and does not exist in the destination.</param>
         /// <param name="composer">The composer of the destination database.</param>
-        internal static void SkipUnsupported(CopyTableSchemaPlanTable table,
+        internal static void SkipUnsupported(PlanTable table,
             IList<ForeignKeyInfo> foreignKeys,
             ISchemaComposer composer)
         {
@@ -266,10 +255,10 @@ namespace RepoDb.Schema
         /// <param name="step"></param>
         /// <param name="statementIndex"></param>
         /// <returns></returns>
-        internal static CopyTableSchemaError CreateError(Exception exception,
-            CopyTableSchemaStep step,
+        internal static ExecutionError CreateError(Exception exception,
+            PlanStep step,
             int statementIndex) =>
-            new CopyTableSchemaError
+            new ExecutionError
             {
                 Exception = exception,
                 Statement = step.Statement,
@@ -284,7 +273,7 @@ namespace RepoDb.Schema
         /// <param name="table"></param>
         /// <param name="schemaComposer"></param>
         /// <returns></returns>
-        internal static IEnumerable<string> GetScript(CopyTableSchemaPlanTable table,
+        internal static IEnumerable<string> GetScript(PlanTable table,
             ISchemaComposer schemaComposer)
         {
             switch (table.Outcome)
@@ -300,30 +289,25 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
-        /// Calls the callback with the result of each table that is completed.
+        /// Adds the item of each table that is completed to the items, and calls the callback with it.
         /// </summary>
         /// <param name="createdCallback"></param>
+        /// <param name="items"></param>
         /// <param name="tables"></param>
         /// <param name="errors"></param>
         /// <param name="connection"></param>
         /// <param name="destinationConnection"></param>
         /// <param name="tableExistenceBehavior"></param>
         /// <param name="schemaComposer"></param>
-        /// <param name="startTime"></param>
-        internal static void Report(Action<CopyTableSchemaResult> createdCallback,
-            IEnumerable<CopyTableSchemaPlanTable> tables,
-            IList<CopyTableSchemaError> errors,
+        internal static void Report(Action<CopyTableSchemaResultItem> createdCallback,
+            IList<CopyTableSchemaResultItem> items,
+            IEnumerable<PlanTable> tables,
+            IList<ExecutionError> errors,
             IDbConnection connection,
             IDbConnection destinationConnection,
             CopyTableSchemaExistsBehavior tableExistenceBehavior,
-            ISchemaComposer schemaComposer,
-            DateTime startTime)
+            ISchemaComposer schemaComposer)
         {
-            if (createdCallback == null)
-            {
-                return;
-            }
-
             foreach (var table in tables)
             {
                 var schema = table.Schema;
@@ -334,7 +318,7 @@ namespace RepoDb.Schema
                         string.Equals(error.SchemaName, schema.Table.Schema, StringComparison.Ordinal)))
                     .ToList();
 
-                createdCallback(new CopyTableSchemaResult
+                var item = new CopyTableSchemaResultItem
                 {
                     Action = tableExistenceBehavior,
                     Outcome = schemaErrors.Count > 0 ? CopyTableSchemaOutcome.Failed : table.Outcome,
@@ -344,26 +328,50 @@ namespace RepoDb.Schema
                     AddedForeignKeys = aligned ? table.MissingForeignKeys.Select(foreignKey => foreignKey.Name).ToList() : new List<string>(),
                     Errors = schemaErrors,
                     Warnings = table.Warnings.ToList(),
-                    TableName = schema.Table.Name,
-                    SourceSchema = table.Source.Table.Schema,
-                    DestinationSchema = schema.Table.Schema,
-                    SourceDatabase = connection.Database,
-                    SourceServer = (connection as System.Data.Common.DbConnection)?.DataSource,
-                    SourceDatabaseType = connection.GetType().Name,
-                    DestinationDatabase = destinationConnection.Database,
-                    DestinationServer = (destinationConnection as System.Data.Common.DbConnection)?.DataSource,
-                    DestinationDatabaseType = destinationConnection.GetType().Name,
-                    StartTime = startTime,
-                    EndTime = DateTime.UtcNow,
+                    Source = new Endpoint
+                    {
+                        Table = table.Original,
+                        Database = connection.Database,
+                        Server = (connection as System.Data.Common.DbConnection)?.DataSource,
+                        DatabaseType = connection.GetType().Name
+                    },
+                    Target = new Endpoint
+                    {
+                        Table = schema,
+                        Database = destinationConnection.Database,
+                        Server = (destinationConnection as System.Data.Common.DbConnection)?.DataSource,
+                        DatabaseType = destinationConnection.GetType().Name
+                    },
                     Script = string.Join(Environment.NewLine, GetScript(table, schemaComposer)),
                     ColumnCount = schema.Columns.Count,
                     IndexCount = schema.Indexes.Count,
                     ForeignKeyCount = schema.ForeignKeys.Count,
                     UniqueConstraintCount = schema.UniqueConstraints.Count,
                     CheckConstraintCount = schema.CheckConstraints.Count
-                });
+                };
+                items.Add(item);
+                createdCallback?.Invoke(item);
             }
         }
+
+        /// <summary>
+        /// Creates the result of the schema copy operation from the items of the tables that were copied.
+        /// </summary>
+        /// <param name="startTime"></param>
+        /// <param name="items"></param>
+        /// <param name="errors"></param>
+        /// <returns></returns>
+        internal static CopyTableSchemaResult CreateResult(DateTime startTime,
+            IList<CopyTableSchemaResultItem> items,
+            IList<ExecutionError> errors) =>
+            new CopyTableSchemaResult
+            {
+                StartTime = startTime,
+                EndTime = DateTime.UtcNow,
+                Items = items,
+                Errors = errors,
+                Warnings = items.SelectMany(item => item.Warnings).ToList()
+            };
 
         /// <summary>
         /// 

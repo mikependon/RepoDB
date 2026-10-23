@@ -91,12 +91,8 @@ namespace RepoDb.Schema
         {
             Validate(connection, tableName, destinationConnection);
 
-            // Copy the table as a set of one table, the callback receives the result of each table that is copied
-            var results = new List<CopyTableSchemaResult>();
-            CopyTableSchemasCore(connection, new[] { tableName }, destinationConnection, targetSchema, CopyTableSchemaColumns.Normalize(columns), null, tableExistenceBehavior, relationshipBehavior, results.Add, null, commandTimeout, traceKey, trace, transaction);
-            return results.Count <= 1
-                ? results.FirstOrDefault()
-                : FindResult(results, SchemaReaderMapper.Get(connection).GetTableSchema(tableName).Table);
+            // Copy the table as a set of one table
+            return CopyTableSchemasCore(connection, new[] { tableName }, destinationConnection, targetSchema, ColumnSelector.Normalize(columns), null, tableExistenceBehavior, relationshipBehavior, null, null, commandTimeout, traceKey, trace, transaction);
         }
 
         #endregion
@@ -115,27 +111,28 @@ namespace RepoDb.Schema
         /// <param name="targetSchema">The schema of the destination database that the tables are created in. The default is <c>null</c>, which uses the default schema of the destination database.</param>
         /// <param name="tableExistenceBehavior">Defines what happens when a table already exists in the destination database. The default is <see cref="CopyTableSchemaExistsBehavior.Skip"/>.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the given tables. The default is <see cref="CopyTableSchemaRelationshipBehavior.TableOnly"/>.</param>
-        /// <param name="createdCallback">The callback that receives the <see cref="CopyTableSchemaResult"/> of each table once its schema is created. The default is <c>null</c>.</param>
-        /// <param name="errorCallback">The callback that receives a <see cref="CopyTableSchemaError"/> when a statement fails, so the copy continues with the next statement (without it, the exception is thrown).</param>
+        /// <param name="createdCallback">The callback that receives the <see cref="CopyTableSchemaResultItem"/> of each table once its schema is created. The default is <c>null</c>.</param>
+        /// <param name="errorCallback">The callback that receives a <see cref="ExecutionError"/> when a statement fails, so the copy continues with the next statement (without it, the exception is thrown).</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopyTableSchemasTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
+        /// <returns>The <see cref="CopyTableSchemaResult"/> that describes the schema copy operation: the time that it took, the tables that were copied (see <see cref="CopyTableSchemaResult.Items"/>), and the errors and warnings.</returns>
         [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
-        public static void CopyTableSchemaTo(this IDbConnection connection,
+        public static CopyTableSchemaResult CopyTableSchemaTo(this IDbConnection connection,
             IEnumerable<string> tableNames,
             IDbConnection destinationConnection,
             string targetSchema = null,
             CopyTableSchemaExistsBehavior tableExistenceBehavior = CopyTableSchemaExistsBehavior.Skip,
             CopyTableSchemaRelationshipBehavior relationshipBehavior = CopyTableSchemaRelationshipBehavior.TableOnly,
-            Action<CopyTableSchemaResult> createdCallback = null,
-            Action<CopyTableSchemaError> errorCallback = null,
+            Action<CopyTableSchemaResultItem> createdCallback = null,
+            Action<ExecutionError> errorCallback = null,
             int? commandTimeout = null,
             string traceKey = SchemaTraceKeys.CopyTableSchemasTo,
             ITrace trace = null,
             IDbTransaction transaction = null)
         {
-            CopyTableSchemasCore(connection, tableNames, destinationConnection, targetSchema, null, null, tableExistenceBehavior, relationshipBehavior, createdCallback, errorCallback, commandTimeout, traceKey, trace, transaction);
+            return CopyTableSchemasCore(connection, tableNames, destinationConnection, targetSchema, null, null, tableExistenceBehavior, relationshipBehavior, createdCallback, errorCallback, commandTimeout, traceKey, trace, transaction);
         }
 
         #endregion
@@ -205,11 +202,7 @@ namespace RepoDb.Schema
             CancellationToken cancellationToken = default)
         {
             Validate(connection, tableName, destinationConnection);
-            var results = new List<CopyTableSchemaResult>();
-            await CopyTableSchemasCoreAsync(connection, new[] { tableName }, destinationConnection, targetSchema, CopyTableSchemaColumns.Normalize(columns), null, tableExistenceBehavior, relationshipBehavior, results.Add, null, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
-            return results.Count <= 1
-                ? results.FirstOrDefault()
-                : FindResult(results, (await SchemaReaderMapper.Get(connection).GetTableSchemaAsync(tableName, cancellationToken).ConfigureAwait(false)).Table);
+            return await CopyTableSchemasCoreAsync(connection, new[] { tableName }, destinationConnection, targetSchema, ColumnSelector.Normalize(columns), null, tableExistenceBehavior, relationshipBehavior, null, null, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
         }
 
         #endregion
@@ -228,30 +221,30 @@ namespace RepoDb.Schema
         /// <param name="targetSchema">The schema of the destination database that the tables are created in. The default is <c>null</c>, which uses the default schema of the destination database.</param>
         /// <param name="tableExistenceBehavior">Defines what happens when a table already exists in the destination database. The default is <see cref="CopyTableSchemaExistsBehavior.Skip"/>.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the given tables. The default is <see cref="CopyTableSchemaRelationshipBehavior.TableOnly"/>.</param>
-        /// <param name="createdCallback">The callback that receives the <see cref="CopyTableSchemaResult"/> of each table once its schema is created. The default is <c>null</c>.</param>
-        /// <param name="errorCallback">The callback that receives a <see cref="CopyTableSchemaError"/> when a statement fails, so the copy continues with the next statement (without it, the exception is thrown).</param>
+        /// <param name="createdCallback">The callback that receives the <see cref="CopyTableSchemaResultItem"/> of each table once its schema is created. The default is <c>null</c>.</param>
+        /// <param name="errorCallback">The callback that receives a <see cref="ExecutionError"/> when a statement fails, so the copy continues with the next statement (without it, the exception is thrown).</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopyTableSchemasTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopyTableSchemaResult"/> that describes the schema copy operation: the time that it took, the tables that were copied (see <see cref="CopyTableSchemaResult.Items"/>), and the errors and warnings.</returns>
         [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
-        public static async Task CopyTableSchemaToAsync(this IDbConnection connection,
+        public static async Task<CopyTableSchemaResult> CopyTableSchemaToAsync(this IDbConnection connection,
             IEnumerable<string> tableNames,
             IDbConnection destinationConnection,
             string targetSchema = null,
             CopyTableSchemaExistsBehavior tableExistenceBehavior = CopyTableSchemaExistsBehavior.Skip,
             CopyTableSchemaRelationshipBehavior relationshipBehavior = CopyTableSchemaRelationshipBehavior.TableOnly,
-            Action<CopyTableSchemaResult> createdCallback = null,
-            Action<CopyTableSchemaError> errorCallback = null,
+            Action<CopyTableSchemaResultItem> createdCallback = null,
+            Action<ExecutionError> errorCallback = null,
             int? commandTimeout = null,
             string traceKey = SchemaTraceKeys.CopyTableSchemasTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            await CopyTableSchemasCoreAsync(connection, tableNames, destinationConnection, targetSchema, null, null, tableExistenceBehavior, relationshipBehavior, createdCallback, errorCallback, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
+            return await CopyTableSchemasCoreAsync(connection, tableNames, destinationConnection, targetSchema, null, null, tableExistenceBehavior, relationshipBehavior, createdCallback, errorCallback, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
         }
 
         #endregion
@@ -266,7 +259,7 @@ namespace RepoDb.Schema
         /// <typeparam name="TEntity">The type of the data entity that is mapped to the table.</typeparam>
         /// <param name="connection">The source connection.</param>
         /// <param name="destinationConnection">The connection of the destination database.</param>
-        /// <param name="mappings">The columns of the source table to be copied, as <see cref="CopyTableSchemaColumnMapping"/> (the source column and its name in the destination table).</param>
+        /// <param name="mappings">The columns of the source table to be copied, as <see cref="ColumnMapping"/> (the source column and its name in the destination table).</param>
         /// <param name="targetSchema">The schema of the destination database that the tables are created in. The default is <c>null</c>, which uses the default schema of the destination database.</param>
         /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database. The default is <see cref="CopyTableSchemaExistsBehavior.Skip"/>.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table. The default is <see cref="CopyTableSchemaRelationshipBehavior.TableOnly"/>.</param>
@@ -277,7 +270,7 @@ namespace RepoDb.Schema
         /// <returns>The <see cref="CopyTableSchemaResult"/> that describes the schema copy operation.</returns>
         public static CopyTableSchemaResult CopyTableSchemaTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IDbConnection destinationConnection,
-            IList<CopyTableSchemaColumnMapping> mappings,
+            IList<ColumnMapping> mappings,
             string targetSchema = null,
             CopyTableSchemaExistsBehavior tableExistenceBehavior = CopyTableSchemaExistsBehavior.Skip,
             CopyTableSchemaRelationshipBehavior relationshipBehavior = CopyTableSchemaRelationshipBehavior.TableOnly,
@@ -295,7 +288,7 @@ namespace RepoDb.Schema
         /// <param name="connection">The source connection.</param>
         /// <param name="tableName">The name of the table to be copied.</param>
         /// <param name="destinationConnection">The connection of the destination database.</param>
-        /// <param name="mappings">The columns of the source table to be copied, as <see cref="CopyTableSchemaColumnMapping"/> (the source column and its name in the destination table).</param>
+        /// <param name="mappings">The columns of the source table to be copied, as <see cref="ColumnMapping"/> (the source column and its name in the destination table).</param>
         /// <param name="targetSchema">The schema of the destination database that the tables are created in. The default is <c>null</c>, which uses the default schema of the destination database.</param>
         /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database. The default is <see cref="CopyTableSchemaExistsBehavior.Skip"/>.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table. The default is <see cref="CopyTableSchemaRelationshipBehavior.TableOnly"/>.</param>
@@ -307,7 +300,7 @@ namespace RepoDb.Schema
         public static CopyTableSchemaResult CopyTableSchemaTo(this IDbConnection connection,
             string tableName,
             IDbConnection destinationConnection,
-            IList<CopyTableSchemaColumnMapping> mappings,
+            IList<ColumnMapping> mappings,
             string targetSchema = null,
             CopyTableSchemaExistsBehavior tableExistenceBehavior = CopyTableSchemaExistsBehavior.Skip,
             CopyTableSchemaRelationshipBehavior relationshipBehavior = CopyTableSchemaRelationshipBehavior.TableOnly,
@@ -317,24 +310,19 @@ namespace RepoDb.Schema
             IDbTransaction transaction = null)
         {
             Validate(connection, tableName, destinationConnection);
-            CopyTableSchemaColumns.Normalize(mappings, out _, out _);
+            ColumnSelector.Normalize(mappings, out _, out _);
 
-            // Copy the table as a set of one table, the callback receives the result of each table that is copied
-            var results = new List<CopyTableSchemaResult>();
-            connection.CopyTableSchemaTo(new[] { tableName },
+            // Copy the table as a set of one table
+            return connection.CopyTableSchemaTo(new[] { tableName },
                 destinationConnection,
-                new[] { new CopyTableSchemaTable(tableName, mappings) },
+                new[] { new TableMapping(tableName, mappings) },
                 targetSchema,
                 tableExistenceBehavior,
                 relationshipBehavior,
-                createdCallback: results.Add,
                 commandTimeout: commandTimeout,
                 traceKey: traceKey,
                 trace: trace,
                 transaction: transaction);
-            return results.Count <= 1
-                ? results.FirstOrDefault()
-                : FindResult(results, SchemaReaderMapper.Get(connection).GetTableSchema(tableName).Table);
         }
 
         #endregion
@@ -350,33 +338,34 @@ namespace RepoDb.Schema
         /// <param name="connection">The source connection.</param>
         /// <param name="tableNames">The names of the tables whose schema is to be copied.</param>
         /// <param name="destinationConnection">The connection of the destination database.</param>
-        /// <param name="mappings">The tables to be copied with only their mapped columns, as <see cref="CopyTableSchemaTable"/> (the tables that are not listed keep all their columns).</param>
+        /// <param name="mappings">The tables to be copied with only their mapped columns, as <see cref="TableMapping"/> (the tables that are not listed keep all their columns).</param>
         /// <param name="targetSchema">The schema of the destination database that the tables are created in. The default is <c>null</c>, which uses the default schema of the destination database.</param>
         /// <param name="tableExistenceBehavior">Defines what happens when a table already exists in the destination database. The default is <see cref="CopyTableSchemaExistsBehavior.Skip"/>.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the given tables. The default is <see cref="CopyTableSchemaRelationshipBehavior.TableOnly"/>.</param>
-        /// <param name="createdCallback">The callback that receives the <see cref="CopyTableSchemaResult"/> of each table once its schema is created. The default is <c>null</c>.</param>
-        /// <param name="errorCallback">The callback that receives a <see cref="CopyTableSchemaError"/> when a statement fails, so the copy continues with the next statement (without it, the exception is thrown).</param>
+        /// <param name="createdCallback">The callback that receives the <see cref="CopyTableSchemaResultItem"/> of each table once its schema is created. The default is <c>null</c>.</param>
+        /// <param name="errorCallback">The callback that receives a <see cref="ExecutionError"/> when a statement fails, so the copy continues with the next statement (without it, the exception is thrown).</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopyTableSchemasTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
+        /// <returns>The <see cref="CopyTableSchemaResult"/> that describes the schema copy operation: the time that it took, the tables that were copied (see <see cref="CopyTableSchemaResult.Items"/>), and the errors and warnings.</returns>
         [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
-        public static void CopyTableSchemaTo(this IDbConnection connection,
+        public static CopyTableSchemaResult CopyTableSchemaTo(this IDbConnection connection,
             IEnumerable<string> tableNames,
             IDbConnection destinationConnection,
-            IList<CopyTableSchemaTable> mappings,
+            IList<TableMapping> mappings,
             string targetSchema = null,
             CopyTableSchemaExistsBehavior tableExistenceBehavior = CopyTableSchemaExistsBehavior.Skip,
             CopyTableSchemaRelationshipBehavior relationshipBehavior = CopyTableSchemaRelationshipBehavior.TableOnly,
-            Action<CopyTableSchemaResult> createdCallback = null,
-            Action<CopyTableSchemaError> errorCallback = null,
+            Action<CopyTableSchemaResultItem> createdCallback = null,
+            Action<ExecutionError> errorCallback = null,
             int? commandTimeout = null,
             string traceKey = SchemaTraceKeys.CopyTableSchemasTo,
             ITrace trace = null,
             IDbTransaction transaction = null)
         {
-            CopyTableSchemaColumns.Normalize(mappings);
-            CopyTableSchemasCore(connection, tableNames, destinationConnection, targetSchema, null, mappings, tableExistenceBehavior, relationshipBehavior, createdCallback, errorCallback, commandTimeout, traceKey, trace, transaction);
+            ColumnSelector.Normalize(mappings);
+            return CopyTableSchemasCore(connection, tableNames, destinationConnection, targetSchema, null, mappings, tableExistenceBehavior, relationshipBehavior, createdCallback, errorCallback, commandTimeout, traceKey, trace, transaction);
         }
 
         #endregion
@@ -391,7 +380,7 @@ namespace RepoDb.Schema
         /// <typeparam name="TEntity">The type of the data entity that is mapped to the table.</typeparam>
         /// <param name="connection">The source connection.</param>
         /// <param name="destinationConnection">The connection of the destination database.</param>
-        /// <param name="mappings">The columns of the source table to be copied, as <see cref="CopyTableSchemaColumnMapping"/> (the source column and its name in the destination table).</param>
+        /// <param name="mappings">The columns of the source table to be copied, as <see cref="ColumnMapping"/> (the source column and its name in the destination table).</param>
         /// <param name="targetSchema">The schema of the destination database that the tables are created in. The default is <c>null</c>, which uses the default schema of the destination database.</param>
         /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database. The default is <see cref="CopyTableSchemaExistsBehavior.Skip"/>.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table. The default is <see cref="CopyTableSchemaRelationshipBehavior.TableOnly"/>.</param>
@@ -403,7 +392,7 @@ namespace RepoDb.Schema
         /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopyTableSchemaResult"/> that describes the schema copy operation.</returns>
         public static Task<CopyTableSchemaResult> CopyTableSchemaToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IDbConnection destinationConnection,
-            IList<CopyTableSchemaColumnMapping> mappings,
+            IList<ColumnMapping> mappings,
             string targetSchema = null,
             CopyTableSchemaExistsBehavior tableExistenceBehavior = CopyTableSchemaExistsBehavior.Skip,
             CopyTableSchemaRelationshipBehavior relationshipBehavior = CopyTableSchemaRelationshipBehavior.TableOnly,
@@ -422,7 +411,7 @@ namespace RepoDb.Schema
         /// <param name="connection">The source connection.</param>
         /// <param name="tableName">The name of the table to be copied.</param>
         /// <param name="destinationConnection">The connection of the destination database.</param>
-        /// <param name="mappings">The columns of the source table to be copied, as <see cref="CopyTableSchemaColumnMapping"/> (the source column and its name in the destination table).</param>
+        /// <param name="mappings">The columns of the source table to be copied, as <see cref="ColumnMapping"/> (the source column and its name in the destination table).</param>
         /// <param name="targetSchema">The schema of the destination database that the tables are created in. The default is <c>null</c>, which uses the default schema of the destination database.</param>
         /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database. The default is <see cref="CopyTableSchemaExistsBehavior.Skip"/>.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table. The default is <see cref="CopyTableSchemaRelationshipBehavior.TableOnly"/>.</param>
@@ -435,7 +424,7 @@ namespace RepoDb.Schema
         public static async Task<CopyTableSchemaResult> CopyTableSchemaToAsync(this IDbConnection connection,
             string tableName,
             IDbConnection destinationConnection,
-            IList<CopyTableSchemaColumnMapping> mappings,
+            IList<ColumnMapping> mappings,
             string targetSchema = null,
             CopyTableSchemaExistsBehavior tableExistenceBehavior = CopyTableSchemaExistsBehavior.Skip,
             CopyTableSchemaRelationshipBehavior relationshipBehavior = CopyTableSchemaRelationshipBehavior.TableOnly,
@@ -446,23 +435,18 @@ namespace RepoDb.Schema
             CancellationToken cancellationToken = default)
         {
             Validate(connection, tableName, destinationConnection);
-            CopyTableSchemaColumns.Normalize(mappings, out _, out _);
-            var results = new List<CopyTableSchemaResult>();
-            await connection.CopyTableSchemaToAsync(new[] { tableName },
+            ColumnSelector.Normalize(mappings, out _, out _);
+            return await connection.CopyTableSchemaToAsync(new[] { tableName },
                 destinationConnection,
-                new[] { new CopyTableSchemaTable(tableName, mappings) },
+                new[] { new TableMapping(tableName, mappings) },
                 targetSchema,
                 tableExistenceBehavior,
                 relationshipBehavior,
-                createdCallback: results.Add,
                 commandTimeout: commandTimeout,
                 traceKey: traceKey,
                 trace: trace,
                 transaction: transaction,
                 cancellationToken: cancellationToken).ConfigureAwait(false);
-            return results.Count <= 1
-                ? results.FirstOrDefault()
-                : FindResult(results, (await SchemaReaderMapper.Get(connection).GetTableSchemaAsync(tableName, cancellationToken).ConfigureAwait(false)).Table);
         }
 
         #endregion
@@ -478,36 +462,36 @@ namespace RepoDb.Schema
         /// <param name="connection">The source connection.</param>
         /// <param name="tableNames">The names of the tables whose schema is to be copied.</param>
         /// <param name="destinationConnection">The connection of the destination database.</param>
-        /// <param name="mappings">The tables to be copied with only their mapped columns, as <see cref="CopyTableSchemaTable"/> (the tables that are not listed keep all their columns).</param>
+        /// <param name="mappings">The tables to be copied with only their mapped columns, as <see cref="TableMapping"/> (the tables that are not listed keep all their columns).</param>
         /// <param name="targetSchema">The schema of the destination database that the tables are created in. The default is <c>null</c>, which uses the default schema of the destination database.</param>
         /// <param name="tableExistenceBehavior">Defines what happens when a table already exists in the destination database. The default is <see cref="CopyTableSchemaExistsBehavior.Skip"/>.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the given tables. The default is <see cref="CopyTableSchemaRelationshipBehavior.TableOnly"/>.</param>
-        /// <param name="createdCallback">The callback that receives the <see cref="CopyTableSchemaResult"/> of each table once its schema is created. The default is <c>null</c>.</param>
-        /// <param name="errorCallback">The callback that receives a <see cref="CopyTableSchemaError"/> when a statement fails, so the copy continues with the next statement (without it, the exception is thrown).</param>
+        /// <param name="createdCallback">The callback that receives the <see cref="CopyTableSchemaResultItem"/> of each table once its schema is created. The default is <c>null</c>.</param>
+        /// <param name="errorCallback">The callback that receives a <see cref="ExecutionError"/> when a statement fails, so the copy continues with the next statement (without it, the exception is thrown).</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopyTableSchemasTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopyTableSchemaResult"/> that describes the schema copy operation: the time that it took, the tables that were copied (see <see cref="CopyTableSchemaResult.Items"/>), and the errors and warnings.</returns>
         [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
-        public static async Task CopyTableSchemaToAsync(this IDbConnection connection,
+        public static async Task<CopyTableSchemaResult> CopyTableSchemaToAsync(this IDbConnection connection,
             IEnumerable<string> tableNames,
             IDbConnection destinationConnection,
-            IList<CopyTableSchemaTable> mappings,
+            IList<TableMapping> mappings,
             string targetSchema = null,
             CopyTableSchemaExistsBehavior tableExistenceBehavior = CopyTableSchemaExistsBehavior.Skip,
             CopyTableSchemaRelationshipBehavior relationshipBehavior = CopyTableSchemaRelationshipBehavior.TableOnly,
-            Action<CopyTableSchemaResult> createdCallback = null,
-            Action<CopyTableSchemaError> errorCallback = null,
+            Action<CopyTableSchemaResultItem> createdCallback = null,
+            Action<ExecutionError> errorCallback = null,
             int? commandTimeout = null,
             string traceKey = SchemaTraceKeys.CopyTableSchemasTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            CopyTableSchemaColumns.Normalize(mappings);
-            await CopyTableSchemasCoreAsync(connection, tableNames, destinationConnection, targetSchema, null, mappings, tableExistenceBehavior, relationshipBehavior, createdCallback, errorCallback, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
+            ColumnSelector.Normalize(mappings);
+            return await CopyTableSchemasCoreAsync(connection, tableNames, destinationConnection, targetSchema, null, mappings, tableExistenceBehavior, relationshipBehavior, createdCallback, errorCallback, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
         }
 
         #endregion
@@ -523,16 +507,16 @@ namespace RepoDb.Schema
         /// <param name="tableMappings">The columns to be created table by table (<c>null</c> if the columns are the same for every requested table).</param>
         /// <remarks>See the overloads of <c>CopyTableSchemaTo</c> for the description of the other arguments.</remarks>
         [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
-        private static void CopyTableSchemasCore(IDbConnection connection,
+        private static CopyTableSchemaResult CopyTableSchemasCore(IDbConnection connection,
             IEnumerable<string> tableNames,
             IDbConnection destinationConnection,
             string targetSchema,
             IList<string> selectedColumns,
-            IList<CopyTableSchemaTable> tableMappings,
+            IList<TableMapping> tableMappings,
             CopyTableSchemaExistsBehavior tableExistenceBehavior,
             CopyTableSchemaRelationshipBehavior relationshipBehavior,
-            Action<CopyTableSchemaResult> createdCallback,
-            Action<CopyTableSchemaError> errorCallback,
+            Action<CopyTableSchemaResultItem> createdCallback,
+            Action<ExecutionError> errorCallback,
             int? commandTimeout,
             string traceKey,
             ITrace trace,
@@ -541,13 +525,13 @@ namespace RepoDb.Schema
             // Validate
             var names = Validate(connection, tableNames, destinationConnection);
             var requestedNames = names;
+            var startTime = DateTime.UtcNow;
             if (names.Count == 0)
             {
-                return;
+                return CreateResult(startTime, new List<CopyTableSchemaResultItem>(), new List<ExecutionError>());
             }
 
             // Variables
-            var startTime = DateTime.UtcNow;
             var schemaReader = SchemaReaderMapper.Get(connection) ??
                 throw new MissingMappingException($"There is no schema reader mapping found for '{connection.GetType().FullName}'. Make sure to register one via the '{nameof(SchemaReaderMapper)}'.");
             var schemaComposer = SchemaComposerMapper.Get(destinationConnection) ??
@@ -557,22 +541,28 @@ namespace RepoDb.Schema
                 names = schemaReader.GetRelatedTables(names, relationshipBehavior).ToList();
             }
             var schemas = schemaReader.GetDependencyOrder(names).Select(r => r.Schema).ToList();
+            var originals = schemas;
             if (tableMappings != null)
             {
-                schemas = CopyTableSchemaColumns.Apply(schemas, CopyTableSchemaColumns.Resolve(tableMappings, schemas)).ToList();
+                schemas = ColumnSelector.Apply(schemas, ColumnSelector.Resolve(tableMappings, schemas)).ToList();
             }
             else if (selectedColumns != null)
             {
                 var requestedSchemas = requestedNames.Select(schemaReader.GetTableSchema).ToList();
-                schemas = CopyTableSchemaColumns.Apply(schemas, requestedSchemas, selectedColumns).ToList();
+                schemas = ColumnSelector.Apply(schemas, requestedSchemas, selectedColumns).ToList();
             }
-            var tables = CopyTableSchemaPlan.CreateTables(schemas, GetTargetSchema(targetSchema, destinationConnection), schemaComposer);
+            var tables = Plan.CreateTables(schemas, GetTargetSchema(targetSchema, destinationConnection), schemaComposer);
+            for (var i = 0; i < tables.Count; i++)
+            {
+                tables[i].Original = originals[i];
+            }
             ProbeTables(tables, tableExistenceBehavior, schemaComposer, destinationConnection, commandTimeout, trace, transaction);
-            var plan = CopyTableSchemaPlan.Create(tables, tableExistenceBehavior, schemaComposer);
-            var errors = new List<CopyTableSchemaError>();
+            var plan = Plan.Create(tables, tableExistenceBehavior, schemaComposer);
+            var errors = new List<ExecutionError>();
+            var items = new List<CopyTableSchemaResultItem>();
 
             // Report the tables that have nothing to execute
-            Report(createdCallback, plan.Immediate, errors, connection, destinationConnection, tableExistenceBehavior, schemaComposer, startTime);
+            Report(createdCallback, items, plan.Immediate, errors, connection, destinationConnection, tableExistenceBehavior, schemaComposer);
 
             // Iterate
             for (var i = 0; i < plan.Steps.Count; i++)
@@ -596,11 +586,12 @@ namespace RepoDb.Schema
                 }
 
                 // Report
-                Report(createdCallback, plan.Completions[i], errors, connection, destinationConnection, tableExistenceBehavior, schemaComposer, startTime);
+                Report(createdCallback, items, plan.Completions[i], errors, connection, destinationConnection, tableExistenceBehavior, schemaComposer);
             }
 
             // Report
-            Report(createdCallback, plan.Completions[-1], errors, connection, destinationConnection, tableExistenceBehavior, schemaComposer, startTime);
+            Report(createdCallback, items, plan.Completions[-1], errors, connection, destinationConnection, tableExistenceBehavior, schemaComposer);
+            return CreateResult(startTime, items, errors);
         }
 
         /// <summary>
@@ -610,16 +601,16 @@ namespace RepoDb.Schema
         /// <param name="tableMappings">The columns to be created table by table (<c>null</c> if the columns are the same for every requested table).</param>
         /// <remarks>See the overloads of <c>CopyTableSchemaTo</c> for the description of the other arguments.</remarks>
         [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
-        private static async Task CopyTableSchemasCoreAsync(IDbConnection connection,
+        private static async Task<CopyTableSchemaResult> CopyTableSchemasCoreAsync(IDbConnection connection,
             IEnumerable<string> tableNames,
             IDbConnection destinationConnection,
             string targetSchema,
             IList<string> selectedColumns,
-            IList<CopyTableSchemaTable> tableMappings,
+            IList<TableMapping> tableMappings,
             CopyTableSchemaExistsBehavior tableExistenceBehavior,
             CopyTableSchemaRelationshipBehavior relationshipBehavior,
-            Action<CopyTableSchemaResult> createdCallback,
-            Action<CopyTableSchemaError> errorCallback,
+            Action<CopyTableSchemaResultItem> createdCallback,
+            Action<ExecutionError> errorCallback,
             int? commandTimeout,
             string traceKey,
             ITrace trace,
@@ -629,13 +620,13 @@ namespace RepoDb.Schema
             // Validate
             var names = Validate(connection, tableNames, destinationConnection);
             var requestedNames = names;
+            var startTime = DateTime.UtcNow;
             if (names.Count == 0)
             {
-                return;
+                return CreateResult(startTime, new List<CopyTableSchemaResultItem>(), new List<ExecutionError>());
             }
 
             // Variables
-            var startTime = DateTime.UtcNow;
             var schemaReader = SchemaReaderMapper.Get(connection) ??
                 throw new MissingMappingException($"There is no schema reader mapping found for '{connection.GetType().FullName}'. Make sure to register one via the '{nameof(SchemaReaderMapper)}'.");
             var schemaComposer = SchemaComposerMapper.Get(destinationConnection) ??
@@ -646,9 +637,10 @@ namespace RepoDb.Schema
             }
             var relationships = await schemaReader.GetDependencyOrderAsync(names, cancellationToken).ConfigureAwait(false);
             var schemas = relationships.Select(r => r.Schema).ToList();
+            var originals = schemas;
             if (tableMappings != null)
             {
-                schemas = CopyTableSchemaColumns.Apply(schemas, CopyTableSchemaColumns.Resolve(tableMappings, schemas)).ToList();
+                schemas = ColumnSelector.Apply(schemas, ColumnSelector.Resolve(tableMappings, schemas)).ToList();
             }
             else if (selectedColumns != null)
             {
@@ -657,15 +649,20 @@ namespace RepoDb.Schema
                 {
                     requestedSchemas.Add(await schemaReader.GetTableSchemaAsync(name, cancellationToken).ConfigureAwait(false));
                 }
-                schemas = CopyTableSchemaColumns.Apply(schemas, requestedSchemas, selectedColumns).ToList();
+                schemas = ColumnSelector.Apply(schemas, requestedSchemas, selectedColumns).ToList();
             }
-            var tables = CopyTableSchemaPlan.CreateTables(schemas, GetTargetSchema(targetSchema, destinationConnection), schemaComposer);
+            var tables = Plan.CreateTables(schemas, GetTargetSchema(targetSchema, destinationConnection), schemaComposer);
+            for (var i = 0; i < tables.Count; i++)
+            {
+                tables[i].Original = originals[i];
+            }
             await ProbeTablesAsync(tables, tableExistenceBehavior, schemaComposer, destinationConnection, commandTimeout, trace, transaction, cancellationToken).ConfigureAwait(false);
-            var plan = CopyTableSchemaPlan.Create(tables, tableExistenceBehavior, schemaComposer);
-            var errors = new List<CopyTableSchemaError>();
+            var plan = Plan.Create(tables, tableExistenceBehavior, schemaComposer);
+            var errors = new List<ExecutionError>();
+            var items = new List<CopyTableSchemaResultItem>();
 
             // Report the tables that have nothing to execute
-            Report(createdCallback, plan.Immediate, errors, connection, destinationConnection, tableExistenceBehavior, schemaComposer, startTime);
+            Report(createdCallback, items, plan.Immediate, errors, connection, destinationConnection, tableExistenceBehavior, schemaComposer);
 
             // Iterate
             for (var i = 0; i < plan.Steps.Count; i++)
@@ -690,11 +687,12 @@ namespace RepoDb.Schema
                 }
 
                 // Report
-                Report(createdCallback, plan.Completions[i], errors, connection, destinationConnection, tableExistenceBehavior, schemaComposer, startTime);
+                Report(createdCallback, items, plan.Completions[i], errors, connection, destinationConnection, tableExistenceBehavior, schemaComposer);
             }
 
             // Report
-            Report(createdCallback, plan.Completions[-1], errors, connection, destinationConnection, tableExistenceBehavior, schemaComposer, startTime);
+            Report(createdCallback, items, plan.Completions[-1], errors, connection, destinationConnection, tableExistenceBehavior, schemaComposer);
+            return CreateResult(startTime, items, errors);
         }
 
         #endregion

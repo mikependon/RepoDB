@@ -188,13 +188,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapComposer("CREATE TABLE [Person] ([Id] int);", "CREATE INDEX [IX_Person] ON [Person] ([Id]);");
 
             // Act
-            var result = new CustomDbConnection().CopyTableSchemaTo("Person", new CustomDbConnection());
+            var run = new CustomDbConnection().CopyTableSchemaTo("Person", new CustomDbConnection());
+            var result = run.Items.Single();
 
             // Assert
-            Assert.AreEqual("Person", result.TableName, StringComparer.Ordinal);
-            Assert.AreEqual("dbo", result.SourceSchema, StringComparer.Ordinal);
-            Assert.AreEqual(nameof(CustomDbConnection), result.SourceDatabaseType, StringComparer.Ordinal);
-            Assert.AreEqual(nameof(CustomDbConnection), result.DestinationDatabaseType, StringComparer.Ordinal);
+            Assert.AreEqual("Person", result.Target.Table.Table.Name, StringComparer.Ordinal);
+            Assert.AreEqual("dbo", result.Source.Table.Table.Schema, StringComparer.Ordinal);
+            Assert.AreEqual(nameof(CustomDbConnection), result.Source.DatabaseType, StringComparer.Ordinal);
+            Assert.AreEqual(nameof(CustomDbConnection), result.Target.DatabaseType, StringComparer.Ordinal);
             Assert.AreEqual(CopyTableSchemaOutcome.Created, result.Outcome);
             Assert.AreEqual(3, result.ColumnCount);
             Assert.AreEqual(1, result.IndexCount);
@@ -205,7 +206,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
                 "CREATE TABLE [Person] ([Id] int);" + Environment.NewLine + "CREATE INDEX [IX_Person] ON [Person] ([Id]);",
                 result.Script,
                 StringComparer.Ordinal);
-            Assert.IsTrue(result.EndTime >= result.StartTime);
+            Assert.IsTrue(run.EndTime >= run.StartTime);
         }
 
         [TestMethod]
@@ -216,7 +217,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapComposer("CREATE TABLE [Person] ([Id] int);");
 
             // Act
-            var result = new CustomDbConnection().CopyTableSchemaTo("Person", new CustomDbConnection(), tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop);
+            var result = new CustomDbConnection().CopyTableSchemaTo("Person", new CustomDbConnection(), tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop).Items.Single();
 
             // Assert
             Assert.AreEqual(CopyTableSchemaExistsBehavior.Drop, result.Action);
@@ -230,7 +231,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapComposer("CREATE TABLE [Person] ([Id] int);");
 
             // Act
-            var result = new CustomDbConnection().CopyTableSchemaTo("Person", new CustomDbConnection());
+            var result = new CustomDbConnection().CopyTableSchemaTo("Person", new CustomDbConnection()).Items.Single();
 
             // Assert
             Assert.AreEqual(CopyTableSchemaExistsBehavior.Skip, result.Action);
@@ -342,11 +343,12 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapComposer("CREATE TABLE [Person] ([Id] int);");
 
             // Act
-            var result = await new CustomDbConnection().CopyTableSchemaToAsync("Person", new CustomDbConnection());
+            var run = await new CustomDbConnection().CopyTableSchemaToAsync("Person", new CustomDbConnection());
+            var result = run.Items.Single();
 
             // Assert
-            Assert.AreEqual("Person", result.TableName, StringComparer.Ordinal);
-            Assert.AreEqual("dbo", result.SourceSchema, StringComparer.Ordinal);
+            Assert.AreEqual("Person", result.Target.Table.Table.Name, StringComparer.Ordinal);
+            Assert.AreEqual("dbo", result.Source.Table.Table.Schema, StringComparer.Ordinal);
             Assert.AreEqual(CopyTableSchemaOutcome.Created, result.Outcome);
             Assert.AreEqual(3, result.ColumnCount);
             Assert.AreEqual(1, result.IndexCount);
@@ -354,7 +356,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             Assert.AreEqual(1, result.UniqueConstraintCount);
             Assert.AreEqual(1, result.CheckConstraintCount);
             Assert.AreEqual("CREATE TABLE [Person] ([Id] int);", result.Script, StringComparer.Ordinal);
-            Assert.IsTrue(result.EndTime >= result.StartTime);
+            Assert.IsTrue(run.EndTime >= run.StartTime);
         }
 
         [TestMethod]
@@ -365,7 +367,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapComposer("CREATE TABLE [Person] ([Id] int);");
 
             // Act
-            var result = await new CustomDbConnection().CopyTableSchemaToAsync("Person", new CustomDbConnection(), tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
+            var result = (await new CustomDbConnection().CopyTableSchemaToAsync("Person", new CustomDbConnection(), tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align)).Items.Single();
 
             // Assert
             Assert.AreEqual(CopyTableSchemaExistsBehavior.Align, result.Action);

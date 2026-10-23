@@ -8,29 +8,29 @@
 
 using System.Collections.Generic;
 using RepoDb.Schema.Enumerations;
-using RepoDb.Schema.Models;
 
-namespace RepoDb.Schema
+namespace RepoDb.Schema.Models
 {
     /// <summary>
     /// A class that holds the state of a table that is being copied: its schema, its name in the destination database,
     /// and what is known about the table that already exists in the destination database.
     /// </summary>
-    internal sealed class CopyTableSchemaPlanTable
+    internal sealed class PlanTable
     {
         #region Constructors
 
         /// <summary>
-        /// Creates a new instance of <see cref="CopyTableSchemaPlanTable"/> class.
+        /// Creates a new instance of <see cref="PlanTable"/> class.
         /// </summary>
         /// <param name="source">The schema of the table, as read from the source database.</param>
         /// <param name="schema">The schema of the table that is created in the destination database (the same as the source schema if the table is not moved to another schema).</param>
         /// <param name="name">The name of the table in the dialect of the destination database.</param>
-        public CopyTableSchemaPlanTable(TableSchema source,
+        public PlanTable(TableSchema source,
             TableSchema schema,
             string name)
         {
             Source = source;
+            Original = source;
             Schema = schema;
             Name = name;
         }
@@ -40,9 +40,14 @@ namespace RepoDb.Schema
         #region Properties
 
         /// <summary>
-        /// Gets the schema of the table, as read from the source database.
+        /// Gets the schema of the table, as read from the source database and then limited to the selected columns (see <see cref="ColumnSelector"/>).
         /// </summary>
         public TableSchema Source { get; }
+
+        /// <summary>
+        /// Gets or sets the schema of the table exactly as it was read from the source database: all of its columns, with their original names.
+        /// </summary>
+        public TableSchema Original { get; set; }
 
         /// <summary>
         /// Gets the schema of the table that is created in the destination database.

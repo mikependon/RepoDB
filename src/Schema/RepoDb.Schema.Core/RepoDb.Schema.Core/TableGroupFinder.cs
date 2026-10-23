@@ -15,7 +15,7 @@ namespace RepoDb.Schema
     /// <summary>
     /// A class that finds the groups of the tables that can reach each other, through their foreign keys (Tarjan's algorithm).
     /// </summary>
-    internal sealed class CopyTableSchemaGroupFinder
+    internal sealed class TableGroupFinder
     {
         #region Private Variables
 
@@ -33,10 +33,10 @@ namespace RepoDb.Schema
         #region Constructors
 
         /// <summary>
-        /// Creates a new instance of <see cref="CopyTableSchemaGroupFinder"/> class.
+        /// Creates a new instance of <see cref="TableGroupFinder"/> class.
         /// </summary>
         /// <param name="parentKeys">The keys of the parents of each table, by the key of the table.</param>
-        public CopyTableSchemaGroupFinder(IDictionary<string, List<string>> parentKeys)
+        public TableGroupFinder(IDictionary<string, List<string>> parentKeys)
         {
             _parentKeys = parentKeys;
         }

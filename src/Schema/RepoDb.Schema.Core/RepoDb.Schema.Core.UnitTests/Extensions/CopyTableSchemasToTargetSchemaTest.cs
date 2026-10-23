@@ -91,7 +91,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var composed = new List<TableSchema>();
             MapComposer(composed);
             var destination = GetDestination();
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Invoice", "Ledger" }, destination, "archive", createdCallback: results.Add);
@@ -100,9 +100,9 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             Assert.IsTrue(composed.All(s => s.Table.Schema == "archive"));
             Assert.AreEqual(new TableInfo("Invoice", "archive"), composed.Single(s => s.Table.Name == "Ledger").ForeignKeys.Single().ReferencedTable);
             CollectionAssert.AreEqual(new[] { "CREATE TABLE archive.Invoice;", "CREATE TABLE archive.Ledger;" }, destination.ExecutedCommands);
-            Assert.IsTrue(results.All(r => r.DestinationSchema == "archive"));
-            Assert.AreEqual("Sales", results.Single(r => r.TableName == "Invoice").SourceSchema);
-            Assert.AreEqual("dbo", results.Single(r => r.TableName == "Ledger").SourceSchema);
+            Assert.IsTrue(results.All(r => r.Target.Table.Table.Schema == "archive"));
+            Assert.AreEqual("Sales", results.Single(r => r.Target.Table.Table.Name == "Invoice").Source.Table.Table.Schema);
+            Assert.AreEqual("dbo", results.Single(r => r.Target.Table.Table.Name == "Ledger").Source.Table.Table.Schema);
         }
 
         [TestMethod]
@@ -128,13 +128,13 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             CustomDbSetting.Map("dbo");
             MapReader(GetInvoice());
             MapComposer();
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Invoice" }, GetDestination(), "archive", createdCallback: results.Add);
 
             // Assert
-            Assert.AreEqual("archive", results.Single().DestinationSchema);
+            Assert.AreEqual("archive", results.Single().Target.Table.Table.Schema);
         }
 
         [TestMethod]
@@ -200,7 +200,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetInvoice(), GetLedger());
             var composed = new List<TableSchema>();
             MapComposer(composed);
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Invoice", "Ledger" }, GetDestination(), createdCallback: results.Add);
@@ -208,8 +208,8 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Assert
             Assert.IsTrue(composed.All(s => s.Table.Schema == "dbo"));
             Assert.AreEqual(new TableInfo("Invoice", "dbo"), composed.Single(s => s.Table.Name == "Ledger").ForeignKeys.Single().ReferencedTable);
-            Assert.IsTrue(results.All(r => r.DestinationSchema == "dbo"));
-            Assert.AreEqual("Sales", results.Single(r => r.TableName == "Invoice").SourceSchema);
+            Assert.IsTrue(results.All(r => r.Target.Table.Table.Schema == "dbo"));
+            Assert.AreEqual("Sales", results.Single(r => r.Target.Table.Table.Name == "Invoice").Source.Table.Table.Schema);
         }
 
         [TestMethod]
@@ -220,15 +220,15 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetInvoice(), GetLedger());
             var composed = new List<TableSchema>();
             MapComposer(composed);
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Invoice", "Ledger" }, GetDestination(), createdCallback: results.Add);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Sales", "dbo" }, composed.Select(s => s.Table.Schema).ToArray());
-            Assert.AreEqual("Sales", results.Single(r => r.TableName == "Invoice").DestinationSchema);
-            Assert.AreEqual("dbo", results.Single(r => r.TableName == "Ledger").DestinationSchema);
+            Assert.AreEqual("Sales", results.Single(r => r.Target.Table.Table.Name == "Invoice").Target.Table.Table.Schema);
+            Assert.AreEqual("dbo", results.Single(r => r.Target.Table.Table.Name == "Ledger").Target.Table.Table.Schema);
         }
 
         [TestMethod]
@@ -238,13 +238,13 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             CustomDbSetting.Map(string.Empty);
             MapReader(GetInvoice());
             MapComposer();
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Invoice" }, GetDestination(), createdCallback: results.Add);
 
             // Assert
-            Assert.AreEqual("Sales", results.Single().DestinationSchema);
+            Assert.AreEqual("Sales", results.Single().Target.Table.Table.Schema);
         }
 
         [TestMethod]
@@ -254,13 +254,13 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             CustomDbSetting.Map("dbo");
             MapReader(GetInvoice());
             MapComposer();
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Invoice" }, GetDestination(), " ", createdCallback: results.Add);
 
             // Assert
-            Assert.AreEqual("dbo", results.Single().DestinationSchema);
+            Assert.AreEqual("dbo", results.Single().Target.Table.Table.Schema);
         }
 
         #endregion
@@ -315,11 +315,11 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            var result = new CustomDbConnection().CopyTableSchemaTo("Invoice", destination, "archive");
+            var result = new CustomDbConnection().CopyTableSchemaTo("Invoice", destination, "archive").Items.Single();
 
             // Assert
-            Assert.AreEqual("archive", result.DestinationSchema);
-            Assert.AreEqual("Sales", result.SourceSchema);
+            Assert.AreEqual("archive", result.Target.Table.Table.Schema);
+            Assert.AreEqual("Sales", result.Source.Table.Table.Schema);
             CollectionAssert.AreEqual(new[] { "CREATE TABLE archive.Invoice;" }, destination.ExecutedCommands);
         }
 
@@ -334,7 +334,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetInvoice(), GetLedger());
             var composed = new List<TableSchema>();
             MapComposer(composed);
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Invoice", "Ledger" }, GetDestination(), "archive", createdCallback: results.Add);
@@ -342,7 +342,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Assert
             Assert.IsTrue(composed.All(s => s.Table.Schema == "archive"));
             Assert.AreEqual(new TableInfo("Invoice", "archive"), composed.Single(s => s.Table.Name == "Ledger").ForeignKeys.Single().ReferencedTable);
-            Assert.IsTrue(results.All(r => r.DestinationSchema == "archive"));
+            Assert.IsTrue(results.All(r => r.Target.Table.Table.Schema == "archive"));
         }
 
         [TestMethod]
@@ -353,14 +353,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetInvoice(), GetLedger());
             var composed = new List<TableSchema>();
             MapComposer(composed);
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Invoice", "Ledger" }, GetDestination(), createdCallback: results.Add);
 
             // Assert
             Assert.IsTrue(composed.All(s => s.Table.Schema == "dbo"));
-            Assert.IsTrue(results.All(r => r.DestinationSchema == "dbo"));
+            Assert.IsTrue(results.All(r => r.Target.Table.Table.Schema == "dbo"));
         }
 
         [TestMethod]
@@ -388,10 +388,10 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapComposer();
 
             // Act
-            var result = await new CustomDbConnection().CopyTableSchemaToAsync("Invoice", GetDestination(), "archive");
+            var result = (await new CustomDbConnection().CopyTableSchemaToAsync("Invoice", GetDestination(), "archive")).Items.Single();
 
             // Assert
-            Assert.AreEqual("archive", result.DestinationSchema);
+            Assert.AreEqual("archive", result.Target.Table.Table.Schema);
         }
 
         #endregion

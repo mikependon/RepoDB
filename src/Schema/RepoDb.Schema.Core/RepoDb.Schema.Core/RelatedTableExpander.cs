@@ -18,7 +18,7 @@ namespace RepoDb.Schema
     /// A class that expands a set of tables with the tables that are related to them, as defined by the foreign keys.
     /// It is shared by the schema readers, as only the way that a table is identified is different between the databases.
     /// </summary>
-    internal static class CopyTableSchemaRelationshipExpander
+    internal static class RelatedTableExpander
     {
         #region Public Methods
 

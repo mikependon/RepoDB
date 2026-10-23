@@ -17,7 +17,7 @@ namespace RepoDb.Schema
     /// A class that classifies the default expression of a column (see <see cref="ColumnDefaultValue"/>) in the languages of the databases, so the composer of another
     /// database can create the equivalent default value, and that cleans the text of the literals.
     /// </summary>
-    public static class SchemaDefaultValue
+    internal static class SchemaDefaultValue
     {
         #region Private Variables
 

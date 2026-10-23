@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Turso.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Exceptions;
+using RepoDb.Schema.Models;
 using RepoDb.Schema.Enumerations;
 using RepoDb.Schema.Sqlite.Turso.IntegrationTests.Setup;
 
@@ -121,22 +122,22 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopyTableSchemaResult>();
-                source.CopyTableSchemaTo(new[] { "Person", "Country" }, target, createdCallback: results.Add);
+                var results = new List<CopyTableSchemaResultItem>();
+                var run = source.CopyTableSchemaTo(new[] { "Person", "Country" }, target, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(2, results.Count);
-                var person = results.Single(r => r.TableName == "Person");
-                Assert.AreEqual("main", person.SourceDatabase, StringComparer.Ordinal);
-                Assert.AreEqual("main", person.DestinationDatabase, StringComparer.Ordinal);
-                Assert.AreEqual(nameof(SqliteConnection), person.SourceDatabaseType, StringComparer.Ordinal);
-                Assert.AreEqual(nameof(SqliteConnection), person.DestinationDatabaseType, StringComparer.Ordinal);
+                var person = results.Single(r => r.Target.Table.Table.Name == "Person");
+                Assert.AreEqual("main", person.Source.Database, StringComparer.Ordinal);
+                Assert.AreEqual("main", person.Target.Database, StringComparer.Ordinal);
+                Assert.AreEqual(nameof(SqliteConnection), person.Source.DatabaseType, StringComparer.Ordinal);
+                Assert.AreEqual(nameof(SqliteConnection), person.Target.DatabaseType, StringComparer.Ordinal);
                 Assert.AreEqual(CopyTableSchemaExistsBehavior.Skip, person.Action);
                 Assert.AreEqual(CopyTableSchemaOutcome.Created, person.Outcome);
                 StringAssert.Contains(person.Script, "CREATE TABLE [Person]", StringComparison.Ordinal);
                 StringAssert.Contains(person.Script, "FK_Person_Country", StringComparison.Ordinal);
-                Assert.IsTrue(person.EndTime >= person.StartTime);
-                StringAssert.Contains(results.Single(r => r.TableName == "Country").Script, "CREATE TABLE [Country]", StringComparison.Ordinal);
+                Assert.IsTrue(run.EndTime >= run.StartTime);
+                StringAssert.Contains(results.Single(r => r.Target.Table.Table.Name == "Country").Script, "CREATE TABLE [Country]", StringComparison.Ordinal);
             }
         }
 
@@ -154,7 +155,7 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 source.CopyTableSchemaTo(
                     new[] { "Person", "Country", "NoKey" },
                     target,
-                    createdCallback: r => reported.Add((r.TableName, GetTargetTables())));
+                    createdCallback: r => reported.Add((r.Target.Table.Table.Name, GetTargetTables())));
 
                 // Assert
                 Assert.AreEqual(3, reported.Count);
@@ -175,12 +176,12 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 var tables = GetSourceTables();
 
                 // Act
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
                 source.CopyTableSchemaTo(tables, target, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(tables.Count, results.Count);
-                Assert.AreEqual(tables.Count, results.Select(r => Helper.FormatName(r.SourceSchema, r.TableName)).Distinct(StringComparer.OrdinalIgnoreCase).Count());
+                Assert.AreEqual(tables.Count, results.Select(r => Helper.FormatName(r.Source.Table.Table.Schema, r.Target.Table.Table.Name)).Distinct(StringComparer.OrdinalIgnoreCase).Count());
             }
         }
 
@@ -194,13 +195,13 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
                 source.CopyTableSchemaTo(new[] { "Person", "Country" }, target, createdCallback: results.Add);
 
                 // Assert
-                CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.TableName).ToArray());
+                CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.Target.Table.Table.Name).ToArray());
                 var person = results[1];
-                Assert.IsNull(person.SourceSchema);
+                Assert.IsNull(person.Source.Table.Table.Schema);
                 Assert.AreEqual(CopyTableSchemaOutcome.Created, person.Outcome);
                 Assert.AreEqual(6, person.ColumnCount);
                 Assert.AreEqual(1, person.IndexCount);
@@ -222,11 +223,11 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
                 source.CopyTableSchemaTo(new[] { "GrandChild", "Parent", "Child" }, target, createdCallback: results.Add);
 
                 // Assert
-                CollectionAssert.AreEqual(new[] { "Parent", "Child", "GrandChild" }, results.Select(t => t.TableName).ToArray());
+                CollectionAssert.AreEqual(new[] { "Parent", "Child", "GrandChild" }, results.Select(t => t.Target.Table.Table.Name).ToArray());
                 AssertTargetMatchesSource("Parent", "Child", "GrandChild");
             }
         }
@@ -241,12 +242,12 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
                 source.CopyTableSchemaTo(new[] { "DiamondD", "DiamondC", "DiamondB", "DiamondA" }, target, createdCallback: results.Add);
 
                 // Assert
-                Assert.AreEqual("DiamondA", results[0].TableName, StringComparer.Ordinal);
-                Assert.AreEqual("DiamondD", results[3].TableName, StringComparer.Ordinal);
+                Assert.AreEqual("DiamondA", results[0].Target.Table.Table.Name, StringComparer.Ordinal);
+                Assert.AreEqual("DiamondD", results[3].Target.Table.Table.Name, StringComparer.Ordinal);
                 AssertTargetMatchesSource("DiamondA", "DiamondB", "DiamondC", "DiamondD");
             }
         }
@@ -295,11 +296,11 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
                 source.CopyTableSchemaTo(new[] { "LoopLeaf", "LoopB", "LoopA", "LoopRoot" }, target, createdCallback: results.Add);
 
                 // Assert
-                CollectionAssert.AreEqual(new[] { "LoopRoot", "LoopB", "LoopA", "LoopLeaf" }, results.Select(t => t.TableName).ToArray());
+                CollectionAssert.AreEqual(new[] { "LoopRoot", "LoopB", "LoopA", "LoopLeaf" }, results.Select(t => t.Target.Table.Table.Name).ToArray());
                 AssertTargetMatchesSource("LoopRoot", "LoopA", "LoopB", "LoopLeaf");
             }
         }
@@ -332,7 +333,7 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 var tables = GetSourceTables();
 
                 // Act
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
                 source.CopyTableSchemaTo(tables, target, createdCallback: results.Add);
 
                 // Assert
@@ -379,7 +380,7 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 var schemas = Helper.GetSourceSchemas(tables);
 
                 // Act
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
                 source.CopyTableSchemaTo(tables, target, createdCallback: results.Add);
 
                 // Assert
@@ -401,7 +402,7 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
                 source.CopyTableSchemaTo(new[] { "Country", "Country", "[Country]" }, target, createdCallback: results.Add);
 
                 // Assert
@@ -420,7 +421,7 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
                 source.CopyTableSchemaTo(new[] { "NoKey" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop, createdCallback: results.Add);
 
                 // Assert
@@ -438,7 +439,7 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
                 source.CopyTableSchemaTo(Enumerable.Empty<string>(), target, createdCallback: results.Add);
 
                 // Assert
@@ -603,11 +604,11 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
                 await source.CopyTableSchemaToAsync(new[] { "Person", "Country" }, target, createdCallback: results.Add);
 
                 // Assert
-                CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.TableName).ToArray());
+                CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.Target.Table.Table.Name).ToArray());
                 AssertTargetMatchesSource("Country", "Person");
             }
         }
@@ -640,7 +641,7 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 var tables = GetSourceTables();
 
                 // Act
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
                 await source.CopyTableSchemaToAsync(tables, target, createdCallback: results.Add);
 
                 // Assert
@@ -663,14 +664,14 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
                 await source.CopyTableSchemaToAsync(new[] { "Person", "Country" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
 
                 // Assert
                 Assert.AreEqual(2, results.Count);
                 Assert.AreEqual(CopyTableSchemaExistsBehavior.Align, results[1].Action);
-                Assert.AreEqual("main", results[1].SourceDatabase, StringComparer.Ordinal);
-                Assert.AreEqual("main", results[1].DestinationDatabase, StringComparer.Ordinal);
+                Assert.AreEqual("main", results[1].Source.Database, StringComparer.Ordinal);
+                Assert.AreEqual("main", results[1].Target.Database, StringComparer.Ordinal);
                 Assert.AreEqual(6, results[1].ColumnCount);
                 StringAssert.Contains(results[1].Script, "CREATE TABLE [Person]", StringComparison.Ordinal);
             }
@@ -686,7 +687,7 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
                 await source.CopyTableSchemaToAsync(Enumerable.Empty<string>(), target, createdCallback: results.Add);
 
                 // Assert
@@ -734,7 +735,7 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var errors = new List<CopyTableSchemaError>();
+                var errors = new List<ExecutionError>();
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "Country", "Person" }, target, errorCallback: errors.Add);
@@ -754,7 +755,7 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 Helper.BlockIndexName("IX_Person_Name");
-                var errors = new List<CopyTableSchemaError>();
+                var errors = new List<ExecutionError>();
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "Person" }, target, errorCallback: errors.Add);
@@ -778,7 +779,7 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 Helper.BlockIndexName("IX_Person_Name");
-                var created = new List<CopyTableSchemaResult>();
+                var created = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 source.CopyTableSchemaTo(
@@ -810,8 +811,8 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 source.CopyTableSchemaTo(new[] { "NoKey" }, target);
-                var created = new List<CopyTableSchemaResult>();
-                var errors = new List<CopyTableSchemaError>();
+                var created = new List<CopyTableSchemaResultItem>();
+                var errors = new List<ExecutionError>();
 
                 // Act
                 source.CopyTableSchemaTo(
@@ -824,10 +825,10 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 Assert.AreEqual(1, errors.Count);
                 Assert.AreEqual("NoKey", errors[0].TableName, StringComparer.Ordinal);
                 StringAssert.StartsWith(errors[0].Statement, "CREATE TABLE [NoKey]", StringComparison.Ordinal);
-                CollectionAssert.AreEquivalent(new[] { "NoKey", "Parent", "Child" }, created.Select(r => r.TableName).ToArray());
-                Assert.AreSame(errors[0], created.Single(r => r.TableName == "NoKey").Errors.Single());
-                Assert.AreEqual(CopyTableSchemaOutcome.Failed, created.Single(r => r.TableName == "NoKey").Outcome);
-                Assert.AreEqual(0, created.Where(r => r.TableName != "NoKey").Sum(r => r.Errors.Count));
+                CollectionAssert.AreEquivalent(new[] { "NoKey", "Parent", "Child" }, created.Select(r => r.Target.Table.Table.Name).ToArray());
+                Assert.AreSame(errors[0], created.Single(r => r.Target.Table.Table.Name == "NoKey").Errors.Single());
+                Assert.AreEqual(CopyTableSchemaOutcome.Failed, created.Single(r => r.Target.Table.Table.Name == "NoKey").Outcome);
+                Assert.AreEqual(0, created.Where(r => r.Target.Table.Table.Name != "NoKey").Sum(r => r.Errors.Count));
                 AssertTargetMatchesSource("NoKey", "Parent", "Child");
             }
         }
@@ -844,8 +845,8 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 MapSchemaReaderConnection(source);
                 var tables = GetSourceTables();
                 source.CopyTableSchemaTo(tables, target);
-                var errors = new List<CopyTableSchemaError>();
-                var created = new List<CopyTableSchemaResult>();
+                var errors = new List<ExecutionError>();
+                var created = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 source.CopyTableSchemaTo(
@@ -886,7 +887,7 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                     source.CopyTableSchemaTo(
                         new[] { "NoKey", "Parent", "Child" },
                         target,
-                        createdCallback: r => created.Add(r.TableName),
+                        createdCallback: r => created.Add(r.Target.Table.Table.Name),
                         errorCallback: _ => throw new NotSupportedException()));
 
                 // Assert
@@ -906,7 +907,7 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 source.CopyTableSchemaTo(new[] { "NoKey" }, target);
-                CopyTableSchemaError raised = null;
+                ExecutionError raised = null;
 
                 // Act
                 var exception = Assert.Throws<SqliteException>(() =>
@@ -996,7 +997,7 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 Helper.BlockIndexName("IX_Person_Name");
-                var errors = new List<CopyTableSchemaError>();
+                var errors = new List<ExecutionError>();
 
                 // Act
                 await source.CopyTableSchemaToAsync(new[] { "Person" }, target, errorCallback: errors.Add);
@@ -1020,7 +1021,7 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 await source.CopyTableSchemaToAsync(new[] { "NoKey" }, target);
-                var created = new List<CopyTableSchemaResult>();
+                var created = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 await source.CopyTableSchemaToAsync(
@@ -1030,9 +1031,9 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                     errorCallback: _ => { });
 
                 // Assert
-                CollectionAssert.AreEquivalent(new[] { "NoKey", "Parent", "Child" }, created.Select(r => r.TableName).ToArray());
-                Assert.AreEqual(1, created.Single(r => r.TableName == "NoKey").Errors.Count);
-                Assert.AreEqual(0, created.Where(r => r.TableName != "NoKey").Sum(r => r.Errors.Count));
+                CollectionAssert.AreEquivalent(new[] { "NoKey", "Parent", "Child" }, created.Select(r => r.Target.Table.Table.Name).ToArray());
+                Assert.AreEqual(1, created.Single(r => r.Target.Table.Table.Name == "NoKey").Errors.Count);
+                Assert.AreEqual(0, created.Where(r => r.Target.Table.Table.Name != "NoKey").Sum(r => r.Errors.Count));
                 AssertTargetMatchesSource("NoKey", "Parent", "Child");
             }
         }
@@ -1072,7 +1073,7 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 await source.CopyTableSchemaToAsync(new[] { "NoKey" }, target);
-                CopyTableSchemaError raised = null;
+                ExecutionError raised = null;
 
                 // Act
                 var exception = await Assert.ThrowsAsync<SqliteException>(() =>

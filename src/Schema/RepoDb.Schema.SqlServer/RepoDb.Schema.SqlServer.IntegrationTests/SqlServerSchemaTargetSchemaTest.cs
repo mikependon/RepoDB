@@ -68,14 +68,14 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "Country", "Person" }, target, "Sales", createdCallback: results.Add);
 
                 // Assert
                 CollectionAssert.AreEquivalent(new[] { "Sales.Country", "Sales.Person" }, GetTargetTables());
-                Assert.IsTrue(results.All(r => r.SourceSchema == "dbo" && r.DestinationSchema == "Sales"));
+                Assert.IsTrue(results.All(r => r.Source.Table.Table.Schema == "dbo" && r.Target.Table.Table.Schema == "Sales"));
                 var person = GetTargetSchema("Sales.Person");
                 Assert.AreEqual(new TableInfo("Country", "Sales"), person.ForeignKeys.Single().ReferencedTable);
                 CollectionAssert.AreEqual(Helper.GetSourceSchema("Person").Columns.Select(c => c.Field.Name).ToArray(), person.Columns.Select(c => c.Field.Name).ToArray());
@@ -90,15 +90,15 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "Sales.InvoiceLine", "Sales.Invoice", "dbo.Ledger" }, target, createdCallback: results.Add);
 
                 // Assert
                 CollectionAssert.AreEquivalent(new[] { "dbo.Invoice", "dbo.InvoiceLine", "dbo.Ledger" }, GetTargetTables());
-                Assert.IsTrue(results.All(r => r.DestinationSchema == "dbo"));
-                Assert.AreEqual("Sales", results.Single(r => r.TableName == "Invoice").SourceSchema);
+                Assert.IsTrue(results.All(r => r.Target.Table.Table.Schema == "dbo"));
+                Assert.AreEqual("Sales", results.Single(r => r.Target.Table.Table.Name == "Invoice").Source.Table.Table.Schema);
                 Assert.AreEqual(new TableInfo("Invoice", "dbo"), GetTargetSchema("dbo.Ledger").ForeignKeys.Single().ReferencedTable);
             }
         }
@@ -113,11 +113,11 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var result = source.CopyTableSchemaTo("Country", target, "Sales");
+                var result = source.CopyTableSchemaTo("Country", target, "Sales").Items.Single();
 
                 // Assert
-                Assert.AreEqual("dbo", result.SourceSchema);
-                Assert.AreEqual("Sales", result.DestinationSchema);
+                Assert.AreEqual("dbo", result.Source.Table.Table.Schema);
+                Assert.AreEqual("Sales", result.Target.Table.Table.Schema);
                 CollectionAssert.AreEqual(new[] { "Sales.Country" }, GetTargetTables());
             }
         }
@@ -131,7 +131,7 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 source.CopyTableSchemaTo(new[] { "Country" }, target, "Sales");
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "Country" }, target, "Sales", createdCallback: results.Add);
@@ -166,14 +166,14 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 await source.CopyTableSchemaToAsync(new[] { "Country", "Person" }, target, "Sales", createdCallback: results.Add);
 
                 // Assert
                 CollectionAssert.AreEquivalent(new[] { "Sales.Country", "Sales.Person" }, GetTargetTables());
-                Assert.IsTrue(results.All(r => r.DestinationSchema == "Sales"));
+                Assert.IsTrue(results.All(r => r.Target.Table.Table.Schema == "Sales"));
             }
         }
 
@@ -187,11 +187,11 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var result = await source.CopyTableSchemaToAsync("Sales.Invoice", target);
+                var result = (await source.CopyTableSchemaToAsync("Sales.Invoice", target)).Items.Single();
 
                 // Assert
-                Assert.AreEqual("Sales", result.SourceSchema);
-                Assert.AreEqual("dbo", result.DestinationSchema);
+                Assert.AreEqual("Sales", result.Source.Table.Table.Schema);
+                Assert.AreEqual("dbo", result.Target.Table.Table.Schema);
                 CollectionAssert.AreEqual(new[] { "dbo.Invoice" }, GetTargetTables());
             }
         }

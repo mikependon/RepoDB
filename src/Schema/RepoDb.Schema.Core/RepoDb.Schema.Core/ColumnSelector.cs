@@ -21,7 +21,7 @@ namespace RepoDb.Schema
     /// The columns of the requested tables can also be renamed: the primary key, the indexes, the unique constraints, the check constraints and the foreign keys (including the ones of
     /// the other tables that reference the renamed columns) follow the new names. The columns can be selected for every requested table the same way, or table by table.
     /// </summary>
-    internal static class CopyTableSchemaColumns
+    internal static class ColumnSelector
     {
         #region Public Methods
 
@@ -59,7 +59,7 @@ namespace RepoDb.Schema
         /// <param name="renamed">The target names by the source column name (not case sensitive), for the columns whose target name is not the source name (<c>null</c> if no column is renamed).</param>
         /// <exception cref="ArgumentNullException">The mappings are <c>null</c>.</exception>
         /// <exception cref="ArgumentException">The list is empty, an item is <c>null</c>, a source column is <c>null</c> or white space, or a source column is mapped more than once.</exception>
-        public static void Normalize(IList<CopyTableSchemaColumnMapping> mappings,
+        public static void Normalize(IList<ColumnMapping> mappings,
             out IList<string> columns,
             out IDictionary<string, string> renamed)
         {
@@ -104,8 +104,8 @@ namespace RepoDb.Schema
         /// <param name="tables">The tables and the mappings of their columns.</param>
         /// <returns>The tables.</returns>
         /// <exception cref="ArgumentNullException">The list is <c>null</c>.</exception>
-        /// <exception cref="ArgumentException">The list is empty, an item is <c>null</c>, a table name is <c>null</c> or white space, a table is given more than once, or the mappings of a table are not valid (see <see cref="Normalize(IList{CopyTableSchemaColumnMapping}, out IList{string}, out IDictionary{string, string})"/>).</exception>
-        public static IList<CopyTableSchemaTable> Normalize(IList<CopyTableSchemaTable> tables)
+        /// <exception cref="ArgumentException">The list is empty, an item is <c>null</c>, a table name is <c>null</c> or white space, a table is given more than once, or the mappings of a table are not valid (see <see cref="Normalize(IList{ColumnMapping}, out IList{string}, out IDictionary{string, string})"/>).</exception>
+        public static IList<TableMapping> Normalize(IList<TableMapping> tables)
         {
             if (tables == null)
             {
@@ -142,11 +142,11 @@ namespace RepoDb.Schema
         /// <summary>
         /// Finds the table that each mapped table is and gets the columns of each one.
         /// </summary>
-        /// <param name="tables">The tables and the mappings of their columns (see <see cref="Normalize(IList{CopyTableSchemaTable})"/>).</param>
+        /// <param name="tables">The tables and the mappings of their columns (see <see cref="Normalize(IList{TableMapping})"/>).</param>
         /// <param name="schemas">The schemas of all the tables that are copied (the requested tables and their related tables).</param>
         /// <returns>The columns to be created, by the table that they are created in.</returns>
         /// <exception cref="ArgumentException">A mapped table is not one of the tables that are copied, or it can be more than one of them.</exception>
-        public static IDictionary<TableInfo, Selection> Resolve(IList<CopyTableSchemaTable> tables,
+        public static IDictionary<TableInfo, Selection> Resolve(IList<TableMapping> tables,
             IList<TableSchema> schemas)
         {
             var selections = new Dictionary<TableInfo, Selection>();

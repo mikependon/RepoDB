@@ -6,6 +6,8 @@
 
 #endregion
 
+using RepoDb.Schema.Models;
+
 namespace RepoDb.Schema.Enumerations
 {
     /// <summary>

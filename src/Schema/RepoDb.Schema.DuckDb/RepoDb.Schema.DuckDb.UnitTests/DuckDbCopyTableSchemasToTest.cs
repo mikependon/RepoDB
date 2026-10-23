@@ -159,11 +159,11 @@ namespace RepoDb.Schema.DuckDb.UnitTests
             var destination = new CustomDbConnection();
 
             // Act
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
             new CustomDbConnection().CopyTableSchemaTo(new[] { "A", "B", "C" }, destination, createdCallback: results.Add);
 
             // Assert
-            CollectionAssert.AreEqual(new[] { "A", "B", "C" }, results.Select(t => t.TableName).ToArray());
+            CollectionAssert.AreEqual(new[] { "A", "B", "C" }, results.Select(t => t.Target.Table.Table.Name).ToArray());
             Assert.AreEqual(3, Tables(destination).Length);
             Assert.AreEqual(3, ForeignKeys(destination).Length);
             Assert.AreEqual(3, destination.ExecutedCommands.Count);
@@ -178,11 +178,11 @@ namespace RepoDb.Schema.DuckDb.UnitTests
             var destination = new CustomDbConnection();
 
             // Act
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
             new CustomDbConnection().CopyTableSchemaTo(new[] { "D", "C", "B", "A" }, destination, createdCallback: results.Add);
 
             // Assert
-            var names = results.Select(t => t.TableName).ToList();
+            var names = results.Select(t => t.Target.Table.Table.Name).ToList();
             Assert.AreEqual("A", names[0]);
             Assert.AreEqual("D", names[3]);
             Assert.AreEqual(4, ForeignKeys(destination).Length);
@@ -250,13 +250,13 @@ namespace RepoDb.Schema.DuckDb.UnitTests
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
             MapComposer();
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, new CustomDbConnection(), createdCallback: results.Add);
 
             // Assert
-            CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.TableName).ToArray());
+            CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.Target.Table.Table.Name).ToArray());
             StringAssert.StartsWith(results[0].Script, "CREATE TABLE \"main\".\"Country\"", StringComparison.Ordinal);
             StringAssert.StartsWith(results[1].Script, "CREATE TABLE \"main\".\"Person\"", StringComparison.Ordinal);
             StringAssert.Contains(results[1].Script, "FOREIGN KEY (\"CountryId\") REFERENCES \"main\".\"Country\" (\"Id\")", StringComparison.Ordinal);
@@ -277,7 +277,7 @@ namespace RepoDb.Schema.DuckDb.UnitTests
             new CustomDbConnection().CopyTableSchemaTo(
                 new[] { "Person", "Country", "Solo" },
                 destination,
-                createdCallback: r => reported.Add((r.TableName, destination.ExecutedCommands.Count)));
+                createdCallback: r => reported.Add((r.Target.Table.Table.Name, destination.ExecutedCommands.Count)));
 
             // Assert
             Assert.AreEqual(3, reported.Count);
@@ -301,7 +301,7 @@ namespace RepoDb.Schema.DuckDb.UnitTests
             new CustomDbConnection().CopyTableSchemaTo(
                 new[] { "Product", "Category" },
                 destination,
-                createdCallback: r => reported.Add((r.TableName, destination.ExecutedCommands.Count)));
+                createdCallback: r => reported.Add((r.Target.Table.Table.Name, destination.ExecutedCommands.Count)));
 
             // Assert
             Assert.AreEqual(("Category", 1), reported[0]);
@@ -319,7 +319,7 @@ namespace RepoDb.Schema.DuckDb.UnitTests
             MapReader(Table("Person", "Country"), Table("Country"));
             MapComposer();
             var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("CREATE TABLE \"main\".\"Person\"", StringComparison.Ordinal) };
-            var errors = new List<CopyTableSchemaError>();
+            var errors = new List<ExecutionError>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination, errorCallback: errors.Add);
@@ -341,7 +341,7 @@ namespace RepoDb.Schema.DuckDb.UnitTests
             MapReader(product, Table("Category"));
             MapComposer();
             var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("CREATE INDEX", StringComparison.Ordinal) };
-            var errors = new List<CopyTableSchemaError>();
+            var errors = new List<ExecutionError>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(new[] { "Product", "Category" }, destination, errorCallback: errors.Add);
@@ -359,7 +359,7 @@ namespace RepoDb.Schema.DuckDb.UnitTests
             MapReader(Table("Person", "Country"), Table("Country"));
             MapComposer();
             var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("CREATE TABLE \"main\".\"Person\"", StringComparison.Ordinal) };
-            var created = new List<CopyTableSchemaResult>();
+            var created = new List<CopyTableSchemaResultItem>();
 
             // Act
             new CustomDbConnection().CopyTableSchemaTo(
@@ -369,7 +369,7 @@ namespace RepoDb.Schema.DuckDb.UnitTests
                 errorCallback: _ => { });
 
             // Assert
-            CollectionAssert.AreEqual(new[] { "Country", "Person" }, created.Select(r => r.TableName).ToArray());
+            CollectionAssert.AreEqual(new[] { "Country", "Person" }, created.Select(r => r.Target.Table.Table.Name).ToArray());
             Assert.AreEqual(0, created[0].Errors.Count);
             Assert.AreEqual(CopyTableSchemaOutcome.Created, created[0].Outcome);
             Assert.AreEqual(1, created[1].Errors.Count);
@@ -403,7 +403,7 @@ namespace RepoDb.Schema.DuckDb.UnitTests
             MapReader(Table("Person", "Country"), Table("Country"));
             MapComposer();
             var destination = new CustomDbConnection { FailWhen = c => c.StartsWith("CREATE TABLE \"main\".\"Person\"", StringComparison.Ordinal) };
-            CopyTableSchemaError raised = null;
+            ExecutionError raised = null;
 
             // Act
             var exception = Assert.Throws<InvalidOperationException>(() =>
@@ -447,7 +447,7 @@ namespace RepoDb.Schema.DuckDb.UnitTests
             var destination = new CustomDbConnection();
 
             // Act
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
             await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "A", "B" }, destination, createdCallback: results.Add);
 
             // Assert
@@ -462,13 +462,13 @@ namespace RepoDb.Schema.DuckDb.UnitTests
             // Setup
             MapReader(Table("Person", "Country"), Table("Country"));
             MapComposer();
-            var results = new List<CopyTableSchemaResult>();
+            var results = new List<CopyTableSchemaResultItem>();
 
             // Act
             await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" }, new CustomDbConnection(), tableExistenceBehavior: CopyTableSchemaExistsBehavior.Throw, createdCallback: results.Add);
 
             // Assert
-            CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.TableName).ToArray());
+            CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.Target.Table.Table.Name).ToArray());
             Assert.AreEqual(CopyTableSchemaExistsBehavior.Throw, results[1].Action);
             StringAssert.Contains(results[1].Script, "CREATE TABLE \"main\".\"Person\"", StringComparison.Ordinal);
         }

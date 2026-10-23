@@ -68,15 +68,15 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "Person", "Country", "OrderLine" }, target, createdCallback: results.Add);
 
                 // Assert
                 CollectionAssert.AreEquivalent(new[] { "Country", "OrderLine", "Person" }, GetTargetTables());
-                Assert.IsTrue(results.All(r => r.DestinationSchema == null));
-                Assert.IsTrue(results.All(r => r.SourceSchema == null));
+                Assert.IsTrue(results.All(r => r.Target.Table.Table.Schema == null));
+                Assert.IsTrue(results.All(r => r.Source.Table.Table.Schema == null));
                 Assert.AreEqual(new TableInfo("Country", null), GetTargetSchema("Person").ForeignKeys.Single().ReferencedTable);
             }
         }
@@ -105,11 +105,11 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var result = await source.CopyTableSchemaToAsync("Country", target);
+                var result = (await source.CopyTableSchemaToAsync("Country", target)).Items.Single();
 
                 // Assert
-                Assert.IsNull(result.SourceSchema);
-                Assert.IsNull(result.DestinationSchema);
+                Assert.IsNull(result.Source.Table.Table.Schema);
+                Assert.IsNull(result.Target.Table.Table.Schema);
                 CollectionAssert.AreEqual(new[] { "Country" }, GetTargetTables());
             }
         }

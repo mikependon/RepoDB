@@ -68,14 +68,14 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "country", "Person" }, target, "sales", createdCallback: results.Add);
 
                 // Assert
                 CollectionAssert.AreEquivalent(new[] { "sales.country", "sales.\"Person\"" }, GetTargetTables());
-                Assert.IsTrue(results.All(r => r.SourceSchema == "public" && r.DestinationSchema == "sales"));
+                Assert.IsTrue(results.All(r => r.Source.Table.Table.Schema == "public" && r.Target.Table.Table.Schema == "sales"));
                 var person = GetTargetSchema("sales.\"Person\"");
                 Assert.AreEqual(new TableInfo("country", "sales"), person.ForeignKeys.Single().ReferencedTable);
                 CollectionAssert.AreEqual(Helper.GetSourceSchema("Person").Columns.Select(c => c.Field.Name).ToArray(), person.Columns.Select(c => c.Field.Name).ToArray());
@@ -90,15 +90,15 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "sales.order_line", "Person", "country" }, target, createdCallback: results.Add);
 
                 // Assert
                 CollectionAssert.AreEquivalent(new[] { "public.order_line", "public.\"Person\"", "public.country" }, GetTargetTables());
-                Assert.IsTrue(results.All(r => r.DestinationSchema == "public"));
-                Assert.AreEqual("sales", results.Single(r => r.TableName == "order_line").SourceSchema);
+                Assert.IsTrue(results.All(r => r.Target.Table.Table.Schema == "public"));
+                Assert.AreEqual("sales", results.Single(r => r.Target.Table.Table.Name == "order_line").Source.Table.Table.Schema);
                 Assert.AreEqual(new TableInfo("Person", "public"), GetTargetSchema("public.order_line").ForeignKeys.Single().ReferencedTable);
             }
         }
@@ -113,11 +113,11 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
                 MapSchemaReaderConnection(source);
 
                 // Act
-                var result = source.CopyTableSchemaTo("country", target, "sales");
+                var result = source.CopyTableSchemaTo("country", target, "sales").Items.Single();
 
                 // Assert
-                Assert.AreEqual("public", result.SourceSchema);
-                Assert.AreEqual("sales", result.DestinationSchema);
+                Assert.AreEqual("public", result.Source.Table.Table.Schema);
+                Assert.AreEqual("sales", result.Target.Table.Table.Schema);
                 CollectionAssert.AreEqual(new[] { "sales.country" }, GetTargetTables());
             }
         }
@@ -131,7 +131,7 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 source.CopyTableSchemaTo(new[] { "country" }, target, "sales");
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "country" }, target, "sales", createdCallback: results.Add);
@@ -166,14 +166,14 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 await source.CopyTableSchemaToAsync(new[] { "country", "Person" }, target, "sales", createdCallback: results.Add);
 
                 // Assert
                 CollectionAssert.AreEquivalent(new[] { "sales.country", "sales.\"Person\"" }, GetTargetTables());
-                Assert.IsTrue(results.All(r => r.DestinationSchema == "sales"));
+                Assert.IsTrue(results.All(r => r.Target.Table.Table.Schema == "sales"));
             }
         }
 
@@ -188,11 +188,11 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
                 source.CopyTableSchemaTo(new[] { "country", "Person" }, target);
 
                 // Act
-                var result = await source.CopyTableSchemaToAsync("sales.order_line", target);
+                var result = (await source.CopyTableSchemaToAsync("sales.order_line", target)).Items.Single();
 
                 // Assert
-                Assert.AreEqual("sales", result.SourceSchema);
-                Assert.AreEqual("public", result.DestinationSchema);
+                Assert.AreEqual("sales", result.Source.Table.Table.Schema);
+                Assert.AreEqual("public", result.Target.Table.Table.Schema);
                 Assert.IsTrue(GetTargetTables().Contains("public.order_line"));
             }
         }

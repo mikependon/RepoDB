@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using ClickHouse.Driver;
 using ClickHouse.Driver.ADO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Schema.Models;
 using RepoDb.Schema.Enumerations;
 using RepoDb.Schema.ClickHouse.IntegrationTests.Setup;
 
@@ -63,16 +64,16 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 MapSchemaReaderConnection(source);
                 Helper.CopyToTarget("Country");
                 InsertCountry(target);
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "Country", "Person" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip, createdCallback: results.Add);
 
                 // Assert
-                Assert.AreEqual(CopyTableSchemaOutcome.Skipped, results.Single(r => r.TableName == "Country").Outcome);
-                Assert.AreEqual(true, results.Single(r => r.TableName == "Country").TableExisted);
-                Assert.AreEqual(CopyTableSchemaOutcome.Created, results.Single(r => r.TableName == "Person").Outcome);
-                Assert.AreEqual(false, results.Single(r => r.TableName == "Person").TableExisted);
+                Assert.AreEqual(CopyTableSchemaOutcome.Skipped, results.Single(r => r.Target.Table.Table.Name == "Country").Outcome);
+                Assert.AreEqual(true, results.Single(r => r.Target.Table.Table.Name == "Country").TableExisted);
+                Assert.AreEqual(CopyTableSchemaOutcome.Created, results.Single(r => r.Target.Table.Table.Name == "Person").Outcome);
+                Assert.AreEqual(false, results.Single(r => r.Target.Table.Table.Name == "Person").TableExisted);
                 Assert.AreEqual(1, CountCountries(target));
                 Helper.AssertTargetMatchesSource("Person");
             }
@@ -87,7 +88,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 source.CopyTableSchemaTo(new[] { "Country", "Person" }, target);
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "Country", "Person" }, target, createdCallback: results.Add);
@@ -109,7 +110,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 Helper.CopyToTarget("Country");
 
                 // Act
-                var result = source.CopyTableSchemaTo("Country", target);
+                var result = source.CopyTableSchemaTo("Country", target).Items.Single();
 
                 // Assert
                 Assert.AreEqual(CopyTableSchemaOutcome.Skipped, result.Outcome);
@@ -126,14 +127,14 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 MapSchemaReaderConnection(source);
                 Helper.CopyToTarget("Country");
                 InsertCountry(target);
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 await source.CopyTableSchemaToAsync(new[] { "Country", "Person" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip, createdCallback: results.Add);
 
                 // Assert
-                Assert.AreEqual(CopyTableSchemaOutcome.Skipped, results.Single(r => r.TableName == "Country").Outcome);
-                Assert.AreEqual(CopyTableSchemaOutcome.Created, results.Single(r => r.TableName == "Person").Outcome);
+                Assert.AreEqual(CopyTableSchemaOutcome.Skipped, results.Single(r => r.Target.Table.Table.Name == "Country").Outcome);
+                Assert.AreEqual(CopyTableSchemaOutcome.Created, results.Single(r => r.Target.Table.Table.Name == "Person").Outcome);
                 Assert.AreEqual(1, CountCountries(target));
             }
         }
@@ -210,7 +211,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 MapSchemaReaderConnection(source);
                 Helper.CopyAllToTarget("Country", "Person");
                 InsertCountry(target);
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "Country", "Person" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop, createdCallback: results.Add);
@@ -218,7 +219,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 // Assert
                 Assert.IsTrue(results.All(r => r.Outcome == CopyTableSchemaOutcome.Dropped));
                 Assert.IsTrue(results.All(r => r.TableExisted == true));
-                StringAssert.StartsWith(results.Single(r => r.TableName == "Person").Script, "DROP TABLE IF EXISTS `Person` SYNC", StringComparison.Ordinal);
+                StringAssert.StartsWith(results.Single(r => r.Target.Table.Table.Name == "Person").Script, "DROP TABLE IF EXISTS `Person` SYNC", StringComparison.Ordinal);
                 Assert.AreEqual(0, CountCountries(target));
                 Helper.AssertTargetMatchesSource("Country");
                 Helper.AssertTargetMatchesSource("Person");
@@ -234,14 +235,14 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 Helper.CopyToTarget("Country");
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "Country", "Person" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Drop, createdCallback: results.Add);
 
                 // Assert
-                Assert.AreEqual(CopyTableSchemaOutcome.Dropped, results.Single(r => r.TableName == "Country").Outcome);
-                Assert.AreEqual(CopyTableSchemaOutcome.Created, results.Single(r => r.TableName == "Person").Outcome);
+                Assert.AreEqual(CopyTableSchemaOutcome.Dropped, results.Single(r => r.Target.Table.Table.Name == "Country").Outcome);
+                Assert.AreEqual(CopyTableSchemaOutcome.Created, results.Single(r => r.Target.Table.Table.Name == "Person").Outcome);
                 Helper.AssertTargetMatchesSource("Person");
             }
         }
@@ -280,7 +281,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 CreateSmallPerson(target);
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "Person" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
@@ -307,7 +308,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 MapSchemaReaderConnection(source);
                 CreateSmallPerson(target);
                 source.CopyTableSchemaTo(new[] { "Person" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align);
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "Person" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
@@ -328,14 +329,14 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 Helper.CopyToTarget("Country");
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 source.CopyTableSchemaTo(new[] { "Country", "Person" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
 
                 // Assert
-                Assert.AreEqual(CopyTableSchemaOutcome.Aligned, results.Single(r => r.TableName == "Country").Outcome);
-                Assert.AreEqual(CopyTableSchemaOutcome.Created, results.Single(r => r.TableName == "Person").Outcome);
+                Assert.AreEqual(CopyTableSchemaOutcome.Aligned, results.Single(r => r.Target.Table.Table.Name == "Country").Outcome);
+                Assert.AreEqual(CopyTableSchemaOutcome.Created, results.Single(r => r.Target.Table.Table.Name == "Person").Outcome);
                 Helper.AssertTargetMatchesSource("Person");
             }
         }
@@ -349,7 +350,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 CreateSmallPerson(target);
-                var results = new List<CopyTableSchemaResult>();
+                var results = new List<CopyTableSchemaResultItem>();
 
                 // Act
                 await source.CopyTableSchemaToAsync(new[] { "Person" }, target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Align, createdCallback: results.Add);
@@ -376,7 +377,7 @@ namespace RepoDb.Schema.ClickHouse.IntegrationTests
                 InsertCountry(target);
 
                 // Act
-                var result = source.CopyTableSchemaTo("Person", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Parents);
+                var result = source.CopyTableSchemaTo("Person", target, tableExistenceBehavior: CopyTableSchemaExistsBehavior.Skip, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Parents).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "Person", StringComparison.OrdinalIgnoreCase));
 
                 // Assert
                 Assert.AreEqual(CopyTableSchemaOutcome.Created, result.Outcome);

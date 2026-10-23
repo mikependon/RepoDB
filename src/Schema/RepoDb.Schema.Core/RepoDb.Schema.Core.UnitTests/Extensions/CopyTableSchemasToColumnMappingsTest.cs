@@ -134,20 +134,20 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
         #region Mappings
 
-        private static CopyTableSchemaColumnMapping Map(string source, string target = null) =>
-            new CopyTableSchemaColumnMapping(source, target);
+        private static ColumnMapping Map(string source, string target = null) =>
+            new ColumnMapping(source, target);
 
-        private static IList<CopyTableSchemaColumnMapping> All(params CopyTableSchemaColumnMapping[] mappings) =>
+        private static IList<ColumnMapping> All(params ColumnMapping[] mappings) =>
             mappings;
 
-        private static IList<CopyTableSchemaColumnMapping> AllColumns() =>
+        private static IList<ColumnMapping> AllColumns() =>
             All(Map("Id", "PersonId"), Map("Name", "FullName"), Map("Age", "Years"), Map("CountryId", "Country_Id"));
 
         [TestMethod]
         public void TestCopyTableSchemaColumnMappingConstructorSetsTheSourceAndTheTarget()
         {
             // Act
-            var actual = new CopyTableSchemaColumnMapping("Name", "FullName");
+            var actual = new ColumnMapping("Name", "FullName");
 
             // Assert
             Assert.AreEqual("Name", actual.Source);
@@ -158,7 +158,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         public void TestCopyTableSchemaColumnMappingConstructorKeepsTheTargetNullByDefault()
         {
             // Act
-            var actual = new CopyTableSchemaColumnMapping("Name");
+            var actual = new ColumnMapping("Name");
 
             // Assert
             Assert.AreEqual("Name", actual.Source);
@@ -462,7 +462,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         {
             // Act/Assert
             Assert.Throws<ArgumentNullException>(() =>
-                new CustomDbConnection().CopyTableSchemaTo("Person", GetDestination(), (IList<CopyTableSchemaColumnMapping>)null));
+                new CustomDbConnection().CopyTableSchemaTo("Person", GetDestination(), (IList<ColumnMapping>)null));
         }
 
         [TestMethod]
@@ -470,7 +470,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         {
             // Act/Assert
             Assert.Throws<ArgumentException>(() =>
-                new CustomDbConnection().CopyTableSchemaTo("Person", GetDestination(), new List<CopyTableSchemaColumnMapping>()));
+                new CustomDbConnection().CopyTableSchemaTo("Person", GetDestination(), new List<ColumnMapping>()));
         }
 
         [TestMethod]
@@ -555,17 +555,17 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         {
             // Act/Assert
             await Assert.ThrowsAsync<ArgumentException>(() =>
-                new CustomDbConnection().CopyTableSchemaToAsync("Person", GetDestination(), new List<CopyTableSchemaColumnMapping>()));
+                new CustomDbConnection().CopyTableSchemaToAsync("Person", GetDestination(), new List<ColumnMapping>()));
         }
 
         #endregion
 
         #region Table Mappings
 
-        private static CopyTableSchemaTable Table(string name, params CopyTableSchemaColumnMapping[] columns) =>
-            new CopyTableSchemaTable(name, columns);
+        private static TableMapping Table(string name, params ColumnMapping[] columns) =>
+            new TableMapping(name, columns);
 
-        private static IList<CopyTableSchemaTable> Tables(params CopyTableSchemaTable[] tables) =>
+        private static IList<TableMapping> Tables(params TableMapping[] tables) =>
             tables;
 
         [TestMethod]
@@ -575,7 +575,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var columns = new[] { Map("Id"), Map("Name", "FullName") };
 
             // Act
-            var actual = new CopyTableSchemaTable("Person", columns);
+            var actual = new TableMapping("Person", columns);
 
             // Assert
             Assert.AreEqual("Person", actual.TableName);
@@ -742,7 +742,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         {
             // Act/Assert
             Assert.Throws<ArgumentNullException>(() =>
-                new CustomDbConnection().CopyTableSchemaTo(new[] { "Person" }, GetDestination(), (IList<CopyTableSchemaTable>)null));
+                new CustomDbConnection().CopyTableSchemaTo(new[] { "Person" }, GetDestination(), (IList<TableMapping>)null));
         }
 
         [TestMethod]
@@ -750,7 +750,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         {
             // Act/Assert
             Assert.Throws<ArgumentException>(() =>
-                new CustomDbConnection().CopyTableSchemaTo(new[] { "Person" }, GetDestination(), new List<CopyTableSchemaTable>()));
+                new CustomDbConnection().CopyTableSchemaTo(new[] { "Person" }, GetDestination(), new List<TableMapping>()));
         }
 
         [TestMethod]
@@ -776,7 +776,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         {
             // Act/Assert
             Assert.Throws<ArgumentException>(() =>
-                new CustomDbConnection().CopyTableSchemaTo(new[] { "Person" }, GetDestination(), Tables(new CopyTableSchemaTable("Person", null))));
+                new CustomDbConnection().CopyTableSchemaTo(new[] { "Person" }, GetDestination(), Tables(new TableMapping("Person", null))));
             Assert.Throws<ArgumentException>(() =>
                 new CustomDbConnection().CopyTableSchemaTo(new[] { "Person" }, GetDestination(), Tables(Table("Person"))));
         }
@@ -853,7 +853,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         {
             // Act/Assert
             await Assert.ThrowsAsync<ArgumentException>(() =>
-                new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person" }, GetDestination(), new List<CopyTableSchemaTable>()));
+                new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person" }, GetDestination(), new List<TableMapping>()));
         }
 
         #endregion
