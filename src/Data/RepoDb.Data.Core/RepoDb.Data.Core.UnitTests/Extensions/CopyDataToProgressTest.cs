@@ -100,20 +100,64 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopyDataToItemHasTheRowsAndTheBatchesOfTheBulkInsertAsOneBatch()
+        public void TestCopyDataToItemHasTheRowsAndTheBatchesOfTheBulkInsertPerBatchSize()
         {
             // Setup
-            var source = new FakeDbConnection { Data = FakeDbConnection.CreatePersons(3) };
+            var source = new FakeDbConnection { Data = FakeDbConnection.CreatePersons(5) };
 
             // Act
             var item = source.CopyDataTo("Person", "Customer", new FakeBulkDbConnection(), batchSize: 2).Items.Single();
 
             // Assert
-            Assert.AreEqual(3, item.RowCount);
-            Assert.AreEqual(3L, item.Source.RowCount);
+            Assert.AreEqual(5, item.RowCount);
+            Assert.AreEqual(5L, item.Source.RowCount);
+            CollectionAssert.AreEqual(new[] { 1, 2, 3 }, item.Batches.Select(b => b.Number).ToArray());
+            CollectionAssert.AreEqual(new[] { 2, 2, 1 }, item.Batches.Select(b => b.RowCount).ToArray());
+            CollectionAssert.AreEqual(new[] { 2, 2, 1 }, FakeBulkOperations.Calls.Select(c => c.RowCount).ToArray());
+        }
+
+        [TestMethod]
+        public void TestCopyDataToCallsTheProgressCallbackRightAfterEveryBatchOfTheBulkInsert()
+        {
+            // Setup
+            var source = new FakeDbConnection { Data = FakeDbConnection.CreatePersons(5) };
+            var seen = new List<(long Rows, int Calls)>();
+
+            // Act
+            source.CopyDataTo("Person", "Customer", new FakeBulkDbConnection(), batchSize: 2, progressCallback: p => seen.Add((p.RowCount, FakeBulkOperations.Calls.Length)));
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { (2L, 1), (4L, 2), (5L, 3) }, seen);
+        }
+
+        [TestMethod]
+        public async Task TestCopyDataToAsyncCallsTheProgressCallbackRightAfterEveryBatchOfTheBulkInsert()
+        {
+            // Setup
+            var source = new FakeDbConnection { Data = FakeDbConnection.CreatePersons(5) };
+            var seen = new List<(long Rows, int Calls)>();
+
+            // Act
+            await source.CopyDataToAsync("Person", "Customer", new FakeBulkDbConnection(), batchSize: 2, progressCallback: p => seen.Add((p.RowCount, FakeBulkOperations.Calls.Length)));
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { (2L, 1), (4L, 2), (5L, 3) }, seen);
+        }
+
+        [TestMethod]
+        public void TestCopyDataToReportsOneBatchWithNoRowForATableWithoutRows()
+        {
+            // Setup
+            var source = new FakeDbConnection { Data = FakeDbConnection.CreatePersons(0) };
+
+            // Act
+            var item = source.CopyDataTo("Person", "Customer", new FakeBulkDbConnection(), batchSize: 2).Items.Single();
+
+            // Assert
+            Assert.AreEqual(0, item.RowCount);
             Assert.AreEqual(1, item.Batches.Count);
-            Assert.AreEqual(1, item.Batches[0].Number);
-            Assert.AreEqual(3, item.Batches[0].RowCount);
+            Assert.AreEqual(0, item.Batches[0].RowCount);
+            Assert.AreEqual(0, FakeBulkOperations.Calls.Length);
         }
 
         [TestMethod]
@@ -212,54 +256,40 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestCopyDataToCallsTheCompletedCallbackWhenTheTableHasEndedAfterAllItsBatches()
+        public void TestCopyDataToMarksTheEndOfTheTableAfterAllItsBatches()
         {
             // Setup
             var source = new FakeDbConnection { Data = FakeDbConnection.CreatePersons(5) };
-            var events = new List<string>();
-            var completed = new List<CopyProgressItem>();
 
             // Act
-            var actual = source.CopyDataTo("Person", "Customer", new FakeDbConnection(), batchSize: 2,
-                progressCallback: _ => events.Add("batch"),
-                completedCallback: item =>
-                {
-                    events.Add("table");
-                    completed.Add(item);
-                });
+            var actual = source.CopyDataTo("Person", "Customer", new FakeDbConnection(), batchSize: 2);
 
             // Assert
-            CollectionAssert.AreEqual(new[] { "batch", "batch", "batch", "table" }, events);
-            Assert.AreEqual(1, completed.Count);
-            Assert.AreSame(actual.Items[0], completed[0]);
-            Assert.IsTrue(completed[0].EndTime >= completed[0].Batches.Last().EndTime);
+            Assert.AreEqual(1, actual.CompletedTableCount);
+            Assert.IsTrue(actual.Items[0].EndTime >= actual.Items[0].Batches.Last().EndTime);
         }
 
         [TestMethod]
-        public async Task TestCopyDataToAsyncCallsTheCompletedCallbackWhenTheTableHasEnded()
+        public async Task TestCopyDataToAsyncMarksTheEndOfTheTable()
         {
             // Setup
             var source = new FakeDbConnection { Data = FakeDbConnection.CreatePersons(5) };
-            var events = new List<string>();
 
             // Act
-            var actual = await source.CopyDataToAsync("Person", "Customer", new FakeDbConnection(), batchSize: 2,
-                progressCallback: _ => events.Add("batch"),
-                completedCallback: _ => events.Add("table"));
+            var actual = await source.CopyDataToAsync("Person", "Customer", new FakeDbConnection(), batchSize: 2);
 
             // Assert
-            CollectionAssert.AreEqual(new[] { "batch", "batch", "batch", "table" }, events);
             Assert.AreEqual(1, actual.CompletedTableCount);
         }
 
         [TestMethod]
-        public void TestCopyDataToWithoutCallbacksStillRecordsTheItems()
+        public void TestCopyDataToWithoutTheCallbackStillRecordsTheItems()
         {
             // Setup
             var source = new FakeDbConnection { Data = FakeDbConnection.CreatePersons(3) };
 
             // Act
-            var actual = source.CopyDataTo("Person", "Customer", new FakeBulkDbConnection(), progressCallback: null, completedCallback: null);
+            var actual = source.CopyDataTo("Person", "Customer", new FakeBulkDbConnection(), progressCallback: null);
 
             // Assert
             Assert.AreEqual(1, actual.Items.Count);
@@ -302,11 +332,10 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var source = new FakeDbConnection { Data = FakeDbConnection.CreatePersons(3) };
             var destination = new FakeBulkDbConnection();
             var options = new CopyProgress { StartTime = DateTime.UtcNow };
-            var completed = new List<CopyProgressItem>();
 
             // Act
-            DataDbConnection.CopyRows(source, destination, "Person", "Customer", null, 1000, CopyColumnMappingsBehavior.Automatic, null, options, null, completed.Add, null, null, null, null);
-            DataDbConnection.CopyRows(source, destination, "Pet", "Animal", null, 1000, CopyColumnMappingsBehavior.Automatic, null, options, null, completed.Add, null, null, null, null);
+            DataDbConnection.CopyRows(source, destination, "Person", "Customer", null, 1000, CopyColumnMappingsBehavior.Automatic, CopyIdentityBehavior.KeepIdentity, null, options, null, null, null, null, null);
+            DataDbConnection.CopyRows(source, destination, "Pet", "Animal", null, 1000, CopyColumnMappingsBehavior.Automatic, CopyIdentityBehavior.KeepIdentity, null, options, null, null, null, null, null);
 
             // Assert
             Assert.AreEqual(2, options.Items.Count);
@@ -318,9 +347,6 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             CollectionAssert.AreEqual(new[] { "Customer", "Animal" }, options.Items.Select(i => i.Target.Table.Name).ToArray());
             CollectionAssert.AreEqual(new[] { 3, 3 }, options.Items.Select(i => i.RowCount).ToArray());
             Assert.IsTrue(options.Items.All(i => i.Batches.Single().Number == 1));
-            Assert.AreEqual(2, completed.Count);
-            Assert.AreSame(options.Items[0], completed[0]);
-            Assert.AreSame(options.Items[1], completed[1]);
         }
 
         [TestMethod]
@@ -332,8 +358,8 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var options = new CopyProgress { StartTime = DateTime.UtcNow };
 
             // Act
-            DataDbConnection.CopyRows(source, destination, "Person", "Customer", null, 1000, CopyColumnMappingsBehavior.Automatic, null, options, null, null, null, null, null, null);
-            DataDbConnection.CopyRows(source, destination, "Pet", "Animal", null, 1000, CopyColumnMappingsBehavior.Automatic, null, options, null, null, null, null, null, null);
+            DataDbConnection.CopyRows(source, destination, "Person", "Customer", null, 1000, CopyColumnMappingsBehavior.Automatic, CopyIdentityBehavior.KeepIdentity, null, options, null, null, null, null, null);
+            DataDbConnection.CopyRows(source, destination, "Pet", "Animal", null, 1000, CopyColumnMappingsBehavior.Automatic, CopyIdentityBehavior.KeepIdentity, null, options, null, null, null, null, null);
 
             // Assert
             Assert.IsTrue(options.Items[0].Logs.All(l => l.Text.Contains("Customer")));
@@ -350,8 +376,8 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var options = new CopyProgress { StartTime = DateTime.UtcNow };
 
             // Act
-            await DataDbConnection.CopyRowsAsync(source, destination, "Person", "Customer", null, 1000, CopyColumnMappingsBehavior.Automatic, null, options, null, null, null, null, null, null, CancellationToken.None);
-            await DataDbConnection.CopyRowsAsync(source, destination, "Pet", "Animal", null, 1000, CopyColumnMappingsBehavior.Automatic, null, options, null, null, null, null, null, null, CancellationToken.None);
+            await DataDbConnection.CopyRowsAsync(source, destination, "Person", "Customer", null, 1000, CopyColumnMappingsBehavior.Automatic, CopyIdentityBehavior.KeepIdentity, null, options, null, null, null, null, null, CancellationToken.None);
+            await DataDbConnection.CopyRowsAsync(source, destination, "Pet", "Animal", null, 1000, CopyColumnMappingsBehavior.Automatic, CopyIdentityBehavior.KeepIdentity, null, options, null, null, null, null, null, CancellationToken.None);
 
             // Assert
             Assert.AreEqual(2, options.Items.Count);

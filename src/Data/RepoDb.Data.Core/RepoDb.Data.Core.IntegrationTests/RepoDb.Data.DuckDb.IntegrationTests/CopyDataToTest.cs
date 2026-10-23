@@ -6,6 +6,7 @@
 
 #endregion
 
+using RepoDb.Data.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -89,6 +90,60 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Assert.AreEqual(expected, actual);
                 Assert.AreEqual(expected, Helper.TargetCount(quotedName));
                 Helper.AssertRowsEqual(Helper.SourceRows(quotedName, orderBy), Helper.TargetRows(quotedName, orderBy));
+            }
+        }
+
+        [TestMethod]
+        public void TestCopyDataToGeneratesTheIdentityValuesIfItIsNotToKeepThem()
+        {
+            using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
+            using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.CreateTargetTables("Country");
+                Helper.ExecuteOnTarget("INSERT INTO \"Country\" (\"Name\") VALUES ('Other')");
+
+                // Act
+                var actual = source.CopyDataTo("Country", target, identityBehavior: CopyIdentityBehavior.ReturnIdentity);
+
+                // Assert
+                Assert.AreEqual(3, actual.RowCount);
+                var rows = Helper.TargetRows("\"Country\"", "\"Id\"");
+                var ids = rows.Select(r => Convert.ToInt64(r["Id"])).ToArray();
+                CollectionAssert.AreEqual(new[] { "Other", "Philippines", "Japan", "Germany" }, rows.Select(r => (string)r["Name"]).ToArray());
+                Assert.AreEqual(4, ids.Distinct().Count());
+                Assert.IsTrue(ids[0] < ids[1] && ids[1] < ids[2] && ids[2] < ids[3]);
+                Assert.AreNotEqual(1L, ids[1]);
+            }
+        }
+
+        [TestMethod]
+        public void TestCopyDataToKeepsTheIdentityValuesOfTheSource()
+        {
+            using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
+            using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.CreateTargetTables("Country");
+
+                // Act
+                source.CopyDataTo("Country", target, identityBehavior: CopyIdentityBehavior.KeepIdentity);
+
+                // Assert
+                var rows = Helper.TargetRows("\"Country\"", "\"Id\"");
+                CollectionAssert.AreEqual(new[] { "Philippines", "Japan", "Germany" }, rows.Select(r => (string)r["Name"]).ToArray());
+                CollectionAssert.AreEqual(new long[] { 1, 2, 3 }, rows.Select(r => Convert.ToInt64(r["Id"])).ToArray());
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnCopyDataToIfTheIdentityValuesAreGeneratedWithTheRelatedTables()
+        {
+            using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
+            using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
+            {
+                // Act/Assert
+                Assert.Throws<ArgumentException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, identityBehavior: CopyIdentityBehavior.ReturnIdentity));
             }
         }
 

@@ -825,16 +825,13 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 // Setup
                 Helper.MapSchemaReader(source);
                 var batches = new List<string>();
-                var completed = new List<string>();
 
                 // Act
                 var actual = source.CopyDataTo("Person", target,
                     relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren,
-                    progressCallback: p => batches.Add(p.Current.Source.Table.Name),
-                    completedCallback: item => completed.Add(item.Source.Table.Name));
+                    progressCallback: p => batches.Add(p.Current.Source.Table.Name));
 
                 // Assert
-                CollectionAssert.AreEqual(new[] { "Country", "Person", "Pet", "Toy" }, completed);
                 CollectionAssert.AreEqual(new[] { "Country", "Person", "Pet", "Toy" }, batches.Distinct().ToArray());
                 Assert.AreEqual(actual.BatchCount, batches.Count);
             }
@@ -848,19 +845,16 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
             {
                 // Setup
                 Helper.MapSchemaReader(source);
-                var completed = new List<string>();
 
                 // Act
                 var actual = await source.CopyDataToAsync("Person", target,
-                    relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren,
-                    completedCallback: item => completed.Add(item.Source.Table.Name));
+                    relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren);
 
                 // Assert
                 Assert.AreEqual(4, actual.TableCount);
                 Assert.AreEqual(4, actual.CompletedTableCount);
                 CollectionAssert.AreEqual(new[] { "Country", "Person", "Pet", "Toy" }, actual.Items.Select(i => i.Source.Table.Name).ToArray());
                 CollectionAssert.AreEqual(new[] { 3, 6, 5, 5 }, actual.Items.Select(i => i.RowCount).ToArray());
-                CollectionAssert.AreEqual(new[] { "Country", "Person", "Pet", "Toy" }, completed);
                 AssertTree();
             }
         }

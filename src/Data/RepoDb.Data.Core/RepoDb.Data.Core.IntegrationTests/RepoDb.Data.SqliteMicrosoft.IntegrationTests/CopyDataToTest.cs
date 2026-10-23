@@ -6,6 +6,7 @@
 
 #endregion
 
+using RepoDb.Data.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,6 +60,57 @@ namespace RepoDb.Data.SqliteMicrosoft.IntegrationTests
                 // Assert
                 Assert.AreEqual(3, actual);
                 Helper.AssertRowsEqual(Helper.SourceRows("\"Country\"", "\"Id\""), Helper.TargetRows("\"Country\"", "\"Id\""));
+            }
+        }
+
+        [TestMethod]
+        public void TestCopyDataToGeneratesTheIdentityValuesIfItIsNotToKeepThem()
+        {
+            using (var source = new SqliteConnection(Database.ConnectionStringForSource))
+            using (var target = new SqliteConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.CreateTargetTables("Country");
+                Helper.ExecuteOnTarget("INSERT INTO \"Country\" (\"Name\") VALUES ('Other')");
+
+                // Act
+                var actual = source.CopyDataTo("Country", target, identityBehavior: CopyIdentityBehavior.ReturnIdentity);
+
+                // Assert
+                Assert.AreEqual(3, actual.RowCount);
+                var rows = Helper.TargetRows("\"Country\"", "\"Id\"");
+                CollectionAssert.AreEqual(new long[] { 1, 2, 3, 4 }, rows.Select(r => Convert.ToInt64(r["Id"])).ToArray());
+                CollectionAssert.AreEqual(new[] { "Other", "Philippines", "Japan", "Germany" }, rows.Select(r => (string)r["Name"]).ToArray());
+            }
+        }
+
+        [TestMethod]
+        public void TestCopyDataToKeepsTheIdentityValuesOfTheSource()
+        {
+            using (var source = new SqliteConnection(Database.ConnectionStringForSource))
+            using (var target = new SqliteConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.CreateTargetTables("Country");
+
+                // Act
+                source.CopyDataTo("Country", target, identityBehavior: CopyIdentityBehavior.KeepIdentity);
+
+                // Assert
+                var rows = Helper.TargetRows("\"Country\"", "\"Id\"");
+                CollectionAssert.AreEqual(new[] { "Philippines", "Japan", "Germany" }, rows.Select(r => (string)r["Name"]).ToArray());
+                CollectionAssert.AreEqual(new long[] { 1, 2, 3 }, rows.Select(r => Convert.ToInt64(r["Id"])).ToArray());
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnCopyDataToIfTheIdentityValuesAreGeneratedWithTheRelatedTables()
+        {
+            using (var source = new SqliteConnection(Database.ConnectionStringForSource))
+            using (var target = new SqliteConnection(Database.ConnectionStringForTarget))
+            {
+                // Act/Assert
+                Assert.Throws<ArgumentException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, identityBehavior: CopyIdentityBehavior.ReturnIdentity));
             }
         }
 
