@@ -11,7 +11,8 @@ using System;
 namespace RepoDb.Schema.Models
 {
     /// <summary>
-    /// A class that holds the identity of a table: its name and the name of the schema that owns it.
+    /// A class that holds the identity of a table: its name and the name of the schema that owns it, and where it is read from: its database and the provider
+    /// of the database. The database and the provider type do not take part in the equality (two tables are the same if they have the same name and the same schema).
     /// </summary>
     public class TableInfo : IEquatable<TableInfo>
     {
@@ -22,11 +23,17 @@ namespace RepoDb.Schema.Models
         /// </summary>
         /// <param name="name">The name of the table.</param>
         /// <param name="schema">The name of the schema that owns the table.</param>
+        /// <param name="database">The name of the database that the table belongs to. The default is <c>null</c>.</param>
+        /// <param name="provider">The name of the provider of the database that the table belongs to (i.e.: <c>SqlServer</c>, <c>MySql</c>, the same as <see cref="RepoDb.DbField.Provider"/>). The default is <c>null</c>.</param>
         public TableInfo(string name,
-            string schema)
+            string schema,
+            string database = null,
+            string provider = null)
         {
             Name = name;
             Schema = schema;
+            Database = database;
+            Provider = provider;
         }
 
         #endregion
@@ -42,6 +49,17 @@ namespace RepoDb.Schema.Models
         /// Gets or sets the name of the schema that owns the table.
         /// </summary>
         public string Schema { get; internal set; }
+
+        /// <summary>
+        /// Gets or sets the name of the database that the table belongs to (<c>null</c> if it is not known).
+        /// </summary>
+        public string Database { get; internal set; }
+
+        /// <summary>
+        /// Gets or sets the name of the provider of the database that the table belongs to (i.e.: <c>SqlServer</c>, <c>MySql</c>, <c>PostgreSql</c>, <c>SQLite</c>; the same as
+        /// <see cref="RepoDb.DbField.Provider"/>), or <c>null</c> if it is not known.
+        /// </summary>
+        public string Provider { get; internal set; }
 
         #endregion
 

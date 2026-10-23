@@ -1229,6 +1229,8 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
 
                 // Assert
                 Assert.AreEqual("Person", actual.Table.Name, StringComparer.Ordinal);
+                Assert.AreEqual("Vertica", actual.Table.Provider, StringComparer.Ordinal);
+                Assert.IsNotNull(actual.Table.Database);
                 Assert.IsNull(actual.Table.Schema);
                 Assert.AreEqual(6, actual.Columns.Count);
                 Assert.IsNotNull(actual.PrimaryKey);
@@ -1292,6 +1294,8 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
 
                 // Assert
                 Assert.AreEqual("Person", actual.Table.Name, StringComparer.Ordinal);
+                Assert.AreEqual("Vertica", actual.Table.Provider, StringComparer.Ordinal);
+                Assert.IsNotNull(actual.Table.Database);
                 Assert.IsNull(actual.Table.Schema);
                 Assert.AreEqual(6, actual.Columns.Count);
                 Assert.IsNotNull(actual.PrimaryKey);

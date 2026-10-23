@@ -346,6 +346,8 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
                 Collation = "Latin1",
                 Comment = "The name"
             };
+            person.Table.Database = "Northwind";
+            person.Table.Provider = "SqlServer";
             MapReader(person, GetCountry());
             var composed = new List<TableSchema>();
             var composer = new Mock<ISchemaComposer>();
@@ -370,6 +372,8 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             Assert.IsFalse(column.Field.IsNullable);
             Assert.IsTrue(column.Field.HasDefaultValue);
             Assert.AreEqual("Test", column.Field.Provider);
+            Assert.AreEqual("Northwind", composed.First().Table.Database);
+            Assert.AreEqual("SqlServer", composed.First().Table.Provider);
         }
 
         [TestMethod]

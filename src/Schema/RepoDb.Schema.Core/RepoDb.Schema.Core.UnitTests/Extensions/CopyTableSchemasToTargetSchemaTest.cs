@@ -395,5 +395,49 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         #endregion
+
+        [TestMethod]
+        public void TestCopyTableSchemasToWithTargetSchemaKeepsTheDatabaseAndTheProviderOfTheTables()
+        {
+            // Setup
+            var invoice = GetInvoice();
+            invoice.Table.Database = "Billing";
+            invoice.Table.Provider = "SqlServer";
+            MapReader(invoice);
+            var composed = new List<TableSchema>();
+            MapComposer(composed);
+
+            // Act
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Invoice" }, GetDestination(), "archive");
+
+            // Assert
+            Assert.AreEqual("archive", composed.Single().Table.Schema);
+            Assert.AreEqual("Billing", composed.Single().Table.Database);
+            Assert.AreEqual("SqlServer", composed.Single().Table.Provider);
+        }
+
+        [TestMethod]
+        public void TestCopyTableSchemasToWithTargetSchemaKeepsTheDatabaseAndTheProviderOfTheReferencedTables()
+        {
+            // Setup
+            var ledger = GetLedger();
+            var referenced = ledger.ForeignKeys.Single().ReferencedTable;
+            referenced.Database = "Billing";
+            referenced.Provider = "SqlServer";
+            MapReader(ledger);
+            var composed = new List<TableSchema>();
+            var composer = MapComposer(composed);
+            composer.Setup(c => c.ComposeTableExists("dbo.Invoice")).Returns("INVOICE_EXISTS");
+            var destination = new CustomDbConnection { ScalarResult = statement => statement == "INVOICE_EXISTS" ? 1 : 0 };
+
+            // Act
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Ledger" }, destination, "dbo");
+
+            // Assert
+            var actual = composed.Single().ForeignKeys.Single().ReferencedTable;
+            Assert.AreEqual("dbo", actual.Schema);
+            Assert.AreEqual("Billing", actual.Database);
+            Assert.AreEqual("SqlServer", actual.Provider);
+        }
     }
 }

@@ -7,6 +7,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Schema.Models;
 
@@ -175,6 +176,76 @@ namespace RepoDb.Schema.Core.UnitTests.Models
 
         private static TableInfo Create() =>
             new TableInfo("Person", "dbo");
+
+        #endregion
+
+        #region Database And Provider Type
+
+        [TestMethod]
+        public void TestTableInfoConstructorWithTheDatabaseAndTheProvider()
+        {
+            // Act
+            var actual = new TableInfo("Person", "dbo", "Northwind", "SqlServer");
+
+            // Assert
+            Assert.AreEqual("Person", actual.Name, StringComparer.Ordinal);
+            Assert.AreEqual("dbo", actual.Schema, StringComparer.Ordinal);
+            Assert.AreEqual("Northwind", actual.Database, StringComparer.Ordinal);
+            Assert.AreEqual("SqlServer", actual.Provider, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestTableInfoDatabaseAndProviderPropertiesDefaultValue()
+        {
+            // Act
+            var actual = new TableInfo("Person", "dbo");
+
+            // Assert
+            Assert.IsNull(actual.Database);
+            Assert.IsNull(actual.Provider);
+        }
+
+        [TestMethod]
+        public void TestTableInfoDatabaseAndProviderProperties()
+        {
+            // Act
+            var actual = new TableInfo("Person", "dbo")
+            {
+                Database = "Northwind",
+                Provider = "MySql"
+            };
+
+            // Assert
+            Assert.AreEqual("Northwind", actual.Database, StringComparer.Ordinal);
+            Assert.AreEqual("MySql", actual.Provider, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestTableInfoEqualsIgnoresTheDatabaseAndTheProvider()
+        {
+            // Act
+            var a = new TableInfo("Person", "dbo", "Northwind", "SqlServer");
+            var b = new TableInfo("Person", "dbo", "Other", "MySql");
+            var c = new TableInfo("Person", "dbo");
+
+            // Assert
+            Assert.IsTrue(a.Equals(b));
+            Assert.IsTrue(a == c);
+            Assert.IsFalse(a != b);
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+            Assert.AreEqual(a.GetHashCode(), c.GetHashCode());
+        }
+
+        [TestMethod]
+        public void TestTableInfoCanBeAKeyWhateverItsDatabaseAndProvider()
+        {
+            // Act
+            var dictionary = new Dictionary<TableInfo, int> { [new TableInfo("Person", "dbo", "Northwind", "SqlServer")] = 1 };
+
+            // Assert
+            Assert.IsTrue(dictionary.ContainsKey(new TableInfo("Person", "dbo")));
+            Assert.IsFalse(dictionary.ContainsKey(new TableInfo("Person", "sales", "Northwind", "SqlServer")));
+        }
 
         #endregion
     }

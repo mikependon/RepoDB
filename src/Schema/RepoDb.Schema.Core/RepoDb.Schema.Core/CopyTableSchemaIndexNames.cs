@@ -287,7 +287,7 @@ namespace RepoDb.Schema
             if (ReferenceEquals(table.Schema, table.Source))
             {
                 // The schema of the source is not moved to another schema, so it is copied before the indexes are replaced
-                table.Schema = new TableSchema(table.Source.Table.Name, table.Source.Table.Schema)
+                table.Schema = new TableSchema(table.Source.Table)
                 {
                     CheckConstraints = table.Source.CheckConstraints,
                     Columns = table.Source.Columns,

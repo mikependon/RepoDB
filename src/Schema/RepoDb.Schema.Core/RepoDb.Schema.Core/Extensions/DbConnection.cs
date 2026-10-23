@@ -232,7 +232,7 @@ namespace RepoDb.Schema
             }
 
             var schema = table.Schema;
-            table.Schema = new TableSchema(schema.Table.Name, schema.Table.Schema)
+            table.Schema = new TableSchema(schema.Table)
             {
                 Columns = schema.Columns,
                 PrimaryKey = schema.PrimaryKey,

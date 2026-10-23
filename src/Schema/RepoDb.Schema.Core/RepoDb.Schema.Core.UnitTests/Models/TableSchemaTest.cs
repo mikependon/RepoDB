@@ -365,5 +365,44 @@ namespace RepoDb.Schema.Core.UnitTests.Models
             new TableSchema("Person", "dbo") { PrimaryKey = new PrimaryKeyInfo("PK_Person") { Columns = new List<string> { "Id" } }, Columns = new List<ColumnInfo> { new ColumnInfo { Ordinal = 1 } }, Indexes = new List<IndexInfo> { new IndexInfo("IX") }, ForeignKeys = new List<ForeignKeyInfo> { new ForeignKeyInfo("FK") }, UniqueConstraints = new List<UniqueConstraintInfo> { new UniqueConstraintInfo("UQ") }, CheckConstraints = new List<CheckConstraintInfo> { new CheckConstraintInfo("CK") } };
 
         #endregion
+
+        #region Constructors
+
+        [TestMethod]
+        public void TestTableSchemaConstructorWithTheTableInfoKeepsItsDatabaseAndProvider()
+        {
+            // Setup
+            var table = new TableInfo("Person", "dbo", "Northwind", "SqlServer");
+
+            // Act
+            var actual = new TableSchema(table);
+
+            // Assert
+            Assert.AreSame(table, actual.Table);
+            Assert.AreEqual("Northwind", actual.Table.Database);
+            Assert.AreEqual("SqlServer", actual.Table.Provider);
+        }
+
+        [TestMethod]
+        public void TestTableSchemaConstructorWithTheNameAndTheSchemaHasNoDatabaseAndProvider()
+        {
+            // Act
+            var actual = new TableSchema("Person", "dbo");
+
+            // Assert
+            Assert.AreEqual("Person", actual.Table.Name);
+            Assert.AreEqual("dbo", actual.Table.Schema);
+            Assert.IsNull(actual.Table.Database);
+            Assert.IsNull(actual.Table.Provider);
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnTableSchemaConstructorIfTheTableInfoIsNull()
+        {
+            // Act/Assert
+            Assert.Throws<System.ArgumentNullException>(() => new TableSchema((TableInfo)null));
+        }
+
+        #endregion
     }
 }

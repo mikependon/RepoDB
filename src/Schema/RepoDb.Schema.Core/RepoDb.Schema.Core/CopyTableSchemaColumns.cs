@@ -270,7 +270,7 @@ namespace RepoDb.Schema
                 return source;
             }
 
-            return new TableSchema(source.Table.Name, source.Table.Schema)
+            return new TableSchema(source.Table)
             {
                 Columns = source.Columns.Where(column => kept.Contains(column.Field.Name)).ToList(),
                 PrimaryKey = source.PrimaryKey != null && source.PrimaryKey.Columns.All(kept.Contains) ? source.PrimaryKey : null,
@@ -298,7 +298,7 @@ namespace RepoDb.Schema
                 return schema;
             }
 
-            return new TableSchema(schema.Table.Name, schema.Table.Schema)
+            return new TableSchema(schema.Table)
             {
                 CheckConstraints = schema.CheckConstraints,
                 Columns = schema.Columns,
@@ -342,7 +342,7 @@ namespace RepoDb.Schema
                 }
             }
 
-            return new TableSchema(source.Table.Name, source.Table.Schema)
+            return new TableSchema(source.Table)
             {
                 Columns = columns,
                 PrimaryKey = source.PrimaryKey == null || !hasOwn ? source.PrimaryKey : new PrimaryKeyInfo(source.PrimaryKey.Name) { Columns = Names(source.PrimaryKey.Columns), IsClustered = source.PrimaryKey.IsClustered },

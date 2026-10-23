@@ -179,7 +179,7 @@ namespace RepoDb.Schema
                 .Select(name =>
                 {
                     var (schema, table) = Resolve(name);
-                    return new TableInfo(table, schema);
+                    return NewTable(table, schema);
                 })
                 .ToList();
             var foreignKeys = new List<(TableInfo Child, TableInfo Parent)>();
@@ -189,7 +189,7 @@ namespace RepoDb.Schema
                 {
                     foreignKeys.AddRange(Query(SqliteSchemaText.RelationshipsSql(Schema(schema)),
                         SchemaTraceKeys.GetRelationships,
-                        r => (new TableInfo(Text(r, "ChildTable"), schema), new TableInfo(Text(r, "ParentTable"), schema)),
+                        r => (NewTable(Text(r, "ChildTable"), schema), NewTable(Text(r, "ParentTable"), schema)),
                         Parameter("Schema", schema ?? SqliteSchemaHelper.MainSchema)));
                 }
             }
@@ -358,7 +358,7 @@ namespace RepoDb.Schema
                 .Select(name =>
                 {
                     var (schema, table) = Resolve(name);
-                    return new TableInfo(table, schema);
+                    return NewTable(table, schema);
                 })
                 .ToList();
             var foreignKeys = new List<(TableInfo Child, TableInfo Parent)>();
@@ -369,7 +369,7 @@ namespace RepoDb.Schema
                 {
                     var rows = await QueryAsync(SqliteSchemaText.RelationshipsSql(Schema(schema)),
                         SchemaTraceKeys.GetRelationships,
-                        r => (new TableInfo(Text(r, "ChildTable"), schema), new TableInfo(Text(r, "ParentTable"), schema)),
+                        r => (NewTable(Text(r, "ChildTable"), schema), NewTable(Text(r, "ParentTable"), schema)),
                         cancellationToken,
                         Parameter("Schema", schema ?? SqliteSchemaHelper.MainSchema)).ConfigureAwait(false);
                     foreignKeys.AddRange(rows);
@@ -385,6 +385,16 @@ namespace RepoDb.Schema
         #endregion
 
         #region Helpers
+
+        /// <summary>
+        /// Creates the identity of a table that is read from the connection: its name, its schema, the database of the connection and the type of the provider.
+        /// </summary>
+        /// <param name="name">The name of the table.</param>
+        /// <param name="schema">The name of the schema that owns the table.</param>
+        /// <returns>The identity of the table.</returns>
+        private TableInfo NewTable(string name,
+            string schema) =>
+            new TableInfo(name, schema, _connection.Database, "SQLite");
 
         // Names
 
@@ -686,7 +696,7 @@ namespace RepoDb.Schema
         /// <returns></returns>
         private TableSchema Build(RawTable raw)
         {
-            var schema = new TableSchema(raw.Table, raw.Schema);
+            var schema = new TableSchema(NewTable(raw.Table, raw.Schema));
             if (!raw.Exists)
             {
                 return schema;
@@ -815,7 +825,7 @@ namespace RepoDb.Schema
         /// <param name="raw"></param>
         /// <param name="definition"></param>
         /// <returns></returns>
-        private static IList<ForeignKeyInfo> BuildForeignKeys(RawTable raw,
+        private IList<ForeignKeyInfo> BuildForeignKeys(RawTable raw,
             SqliteTableDefinition definition) =>
             raw.ForeignKeys
                 .GroupBy(f => f.Id)
@@ -829,7 +839,7 @@ namespace RepoDb.Schema
                     return new ForeignKeyInfo(definition.Find(SqliteConstraintKind.ForeignKey, columns)?.Name ?? $"FK_{raw.Table}_{string.Join("_", columns)}")
                     {
                         Columns = columns,
-                        ReferencedTable = new TableInfo(first.ReferencedTable, raw.Schema),
+                        ReferencedTable = NewTable(first.ReferencedTable, raw.Schema),
                         ReferencedColumns = referencedColumns,
                         UpdateRule = ToRule(first.Update),
                         DeleteRule = ToRule(first.Delete)

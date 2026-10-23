@@ -1088,6 +1088,8 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
 
                 // Assert
                 Assert.AreEqual("Person", actual.Table.Name, StringComparer.Ordinal);
+                Assert.AreEqual("SQLite", actual.Table.Provider, StringComparer.Ordinal);
+                Assert.IsNotNull(actual.Table.Database);
                 Assert.IsNull(actual.Table.Schema);
                 Assert.AreEqual(6, actual.Columns.Count);
                 Assert.IsNotNull(actual.PrimaryKey);
@@ -1133,6 +1135,8 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
 
                 // Assert
                 Assert.AreEqual("Person", actual.Table.Name, StringComparer.Ordinal);
+                Assert.AreEqual("SQLite", actual.Table.Provider, StringComparer.Ordinal);
+                Assert.IsNotNull(actual.Table.Database);
                 Assert.IsNull(actual.Table.Schema);
                 Assert.AreEqual(6, actual.Columns.Count);
                 Assert.IsNotNull(actual.PrimaryKey);

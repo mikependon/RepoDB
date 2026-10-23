@@ -1255,6 +1255,8 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual("Person", actual.Table.Name, StringComparer.Ordinal);
+                Assert.AreEqual("MariaDb", actual.Table.Provider, StringComparer.Ordinal);
+                Assert.IsNotNull(actual.Table.Database);
                 Assert.IsNull(actual.Table.Schema);
                 Assert.AreEqual(7, actual.Columns.Count);
                 Assert.IsNotNull(actual.PrimaryKey);
@@ -1318,6 +1320,8 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual("Person", actual.Table.Name, StringComparer.Ordinal);
+                Assert.AreEqual("MariaDb", actual.Table.Provider, StringComparer.Ordinal);
+                Assert.IsNotNull(actual.Table.Database);
                 Assert.IsNull(actual.Table.Schema);
                 Assert.AreEqual(7, actual.Columns.Count);
                 Assert.IsNotNull(actual.PrimaryKey);

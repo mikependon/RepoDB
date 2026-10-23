@@ -30,6 +30,15 @@ namespace RepoDb.Schema.Models
             Table = new TableInfo(name, schema);
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="TableSchema"/> class.
+        /// </summary>
+        /// <param name="table">The identity of the table: its name, its schema, its database and its provider.</param>
+        public TableSchema(TableInfo table)
+        {
+            Table = table ?? throw new ArgumentNullException(nameof(table));
+        }
+
         #endregion
 
         #region Properties

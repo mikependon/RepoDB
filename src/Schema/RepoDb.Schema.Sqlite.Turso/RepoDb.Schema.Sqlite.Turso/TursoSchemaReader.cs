@@ -179,7 +179,7 @@ namespace RepoDb.Schema
                 .Select(name =>
                 {
                     var (schema, table) = Resolve(name);
-                    return new TableInfo(table, schema);
+                    return NewTable(table, schema);
                 })
                 .ToList();
             var foreignKeys = new List<(TableInfo Child, TableInfo Parent)>();
@@ -355,7 +355,7 @@ namespace RepoDb.Schema
                 .Select(name =>
                 {
                     var (schema, table) = Resolve(name);
-                    return new TableInfo(table, schema);
+                    return NewTable(table, schema);
                 })
                 .ToList();
             var foreignKeys = new List<(TableInfo Child, TableInfo Parent)>();
@@ -378,6 +378,16 @@ namespace RepoDb.Schema
 
         #region Helpers
 
+        /// <summary>
+        /// Creates the identity of a table that is read from the connection: its name, its schema, the database of the connection and the type of the provider.
+        /// </summary>
+        /// <param name="name">The name of the table.</param>
+        /// <param name="schema">The name of the schema that owns the table.</param>
+        /// <returns>The identity of the table.</returns>
+        private TableInfo NewTable(string name,
+            string schema) =>
+            new TableInfo(name, schema, _connection.Database, "SQLite");
+
         // Relationships
 
         /// <summary>
@@ -395,7 +405,7 @@ namespace RepoDb.Schema
             {
                 foreach (var parent in Query(TursoSchemaText.ForeignKeyTablesSql, SchemaTraceKeys.GetRelationships, r => Text(r, "ParentTable"), Parameter("Table", table.Name)))
                 {
-                    relationships.Add((new TableInfo(names[table.Name], schema), new TableInfo(names.TryGetValue(parent, out var name) ? name : parent, schema)));
+                    relationships.Add((NewTable(names[table.Name], schema), NewTable(names.TryGetValue(parent, out var name) ? name : parent, schema)));
                 }
             }
             return relationships;
@@ -418,7 +428,7 @@ namespace RepoDb.Schema
                 var parents = await QueryAsync(TursoSchemaText.ForeignKeyTablesSql, SchemaTraceKeys.GetRelationships, r => Text(r, "ParentTable"), cancellationToken, Parameter("Table", table.Name)).ConfigureAwait(false);
                 foreach (var parent in parents)
                 {
-                    relationships.Add((new TableInfo(names[table.Name], schema), new TableInfo(names.TryGetValue(parent, out var name) ? name : parent, schema)));
+                    relationships.Add((NewTable(names[table.Name], schema), NewTable(names.TryGetValue(parent, out var name) ? name : parent, schema)));
                 }
             }
             return relationships;
@@ -746,7 +756,7 @@ namespace RepoDb.Schema
         /// <returns></returns>
         private TableSchema Build(RawTable raw)
         {
-            var schema = new TableSchema(raw.Table, raw.Schema);
+            var schema = new TableSchema(NewTable(raw.Table, raw.Schema));
             if (!raw.Exists)
             {
                 return schema;
@@ -875,7 +885,7 @@ namespace RepoDb.Schema
         /// <param name="raw"></param>
         /// <param name="definition"></param>
         /// <returns></returns>
-        private static IList<ForeignKeyInfo> BuildForeignKeys(RawTable raw,
+        private IList<ForeignKeyInfo> BuildForeignKeys(RawTable raw,
             TursoTableDefinition definition) =>
             raw.ForeignKeys
                 .GroupBy(f => f.Id)
@@ -890,7 +900,7 @@ namespace RepoDb.Schema
                     return new ForeignKeyInfo(definition.Find(TursoConstraintKind.ForeignKey, columns)?.Name ?? $"FK_{raw.Table}_{string.Join("_", columns)}")
                     {
                         Columns = columns,
-                        ReferencedTable = new TableInfo(referencedTable.Name, raw.Schema),
+                        ReferencedTable = NewTable(referencedTable.Name, raw.Schema),
                         ReferencedColumns = referencedColumns,
                         UpdateRule = ToRule(first.Update),
                         DeleteRule = ToRule(first.Delete)

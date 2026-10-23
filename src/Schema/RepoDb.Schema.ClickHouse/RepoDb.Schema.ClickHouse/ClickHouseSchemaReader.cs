@@ -64,7 +64,7 @@ namespace RepoDb.Schema
             var (schema, table) = Resolve(tableName);
             var fullName = FullName(schema, table);
 
-            return new TableSchema(table, schema)
+            return new TableSchema(NewTable(table, schema))
             {
                 Columns = Query(ClickHouseSchemaText.ColumnsSql, SchemaTraceKeys.GetColumns, MapColumn, FullNameParameter(fullName)),
                 PrimaryKey = MapPrimaryKey(Query(ClickHouseSchemaText.KeyConstraintSql, SchemaTraceKeys.GetPrimaryKey, MapKeyColumn, FullNameParameter(fullName), Parameter("Type", "PK"))),
@@ -179,7 +179,7 @@ namespace RepoDb.Schema
                 .Select(name =>
                 {
                     var (schema, table) = Resolve(name);
-                    return new TableInfo(table, schema);
+                    return NewTable(table, schema);
                 })
                 .ToList();
             var foreignKeys = relationshipBehavior == CopyTableSchemaRelationshipBehavior.TableOnly
@@ -206,7 +206,7 @@ namespace RepoDb.Schema
             var (schema, table) = await ResolveAsync(tableName, cancellationToken).ConfigureAwait(false);
             var fullName = FullName(schema, table);
 
-            return new TableSchema(table, schema)
+            return new TableSchema(NewTable(table, schema))
             {
                 Columns = await QueryAsync(ClickHouseSchemaText.ColumnsSql, SchemaTraceKeys.GetColumns, MapColumn, cancellationToken, FullNameParameter(fullName)).ConfigureAwait(false),
                 PrimaryKey = MapPrimaryKey(await QueryAsync(ClickHouseSchemaText.KeyConstraintSql, SchemaTraceKeys.GetPrimaryKey, MapKeyColumn, cancellationToken, FullNameParameter(fullName), Parameter("Type", "PK")).ConfigureAwait(false)),
@@ -350,7 +350,7 @@ namespace RepoDb.Schema
             foreach (var name in names)
             {
                 var (schema, table) = await ResolveAsync(name, cancellationToken).ConfigureAwait(false);
-                tables.Add(new TableInfo(table, schema));
+                tables.Add(NewTable(table, schema));
             }
             IEnumerable<(TableInfo Child, TableInfo Parent)> foreignKeys = new List<(TableInfo Child, TableInfo Parent)>();
             if (relationshipBehavior != CopyTableSchemaRelationshipBehavior.TableOnly)
@@ -367,6 +367,16 @@ namespace RepoDb.Schema
         #endregion
 
         #region Helpers
+
+        /// <summary>
+        /// Creates the identity of a table that is read from the connection: its name, its schema, the database of the connection and the type of the provider.
+        /// </summary>
+        /// <param name="name">The name of the table.</param>
+        /// <param name="schema">The name of the schema that owns the table.</param>
+        /// <returns>The identity of the table.</returns>
+        private TableInfo NewTable(string name,
+            string schema) =>
+            new TableInfo(name, schema, _connection.Database, "ClickHouse");
 
         /// <summary>
         /// 
@@ -808,12 +818,12 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="rows"></param>
         /// <returns></returns>
-        private static IList<ForeignKeyInfo> MapForeignKeys(IEnumerable<(string Name, string Column, string RefSchema, string RefTable, string RefColumn, string Update, string Delete)> rows) =>
+        private IList<ForeignKeyInfo> MapForeignKeys(IEnumerable<(string Name, string Column, string RefSchema, string RefTable, string RefColumn, string Update, string Delete)> rows) =>
             rows.GroupBy(x => x.Name)
                 .Select(g => new ForeignKeyInfo(g.Key)
                 {
                     Columns = g.Select(x => x.Column).ToList(),
-                    ReferencedTable = new TableInfo(g.First().RefTable, g.First().RefSchema),
+                    ReferencedTable = NewTable(g.First().RefTable, g.First().RefSchema),
                     ReferencedColumns = g.Select(x => x.RefColumn).ToList(),
                     UpdateRule = ToRule(g.First().Update),
                     DeleteRule = ToRule(g.First().Delete)
@@ -850,8 +860,8 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="r"></param>
         /// <returns></returns>
-        private static (TableInfo Child, TableInfo Parent) MapRelationship(IDataRecord r) =>
-            (new TableInfo(Text(r, "ChildTable"), Text(r, "ChildSchema")), new TableInfo(Text(r, "ParentTable"), Text(r, "ParentSchema")));
+        private (TableInfo Child, TableInfo Parent) MapRelationship(IDataRecord r) =>
+            (NewTable(Text(r, "ChildTable"), Text(r, "ChildSchema")), NewTable(Text(r, "ParentTable"), Text(r, "ParentSchema")));
 
         // Ordering
 

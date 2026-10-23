@@ -134,7 +134,7 @@ namespace RepoDb.Schema
                 return source;
             }
 
-            return new TableSchema(source.Table.Name, targetSchema)
+            return new TableSchema(new TableInfo(source.Table.Name, targetSchema, source.Table.Database, source.Table.Provider))
             {
                 CheckConstraints = source.CheckConstraints,
                 Columns = source.Columns,
@@ -166,7 +166,7 @@ namespace RepoDb.Schema
             new ForeignKeyInfo(foreignKey.Name)
             {
                 Columns = foreignKey.Columns,
-                ReferencedTable = new TableInfo(foreignKey.ReferencedTable.Name, targetSchema),
+                ReferencedTable = new TableInfo(foreignKey.ReferencedTable.Name, targetSchema, foreignKey.ReferencedTable.Database, foreignKey.ReferencedTable.Provider),
                 ReferencedColumns = foreignKey.ReferencedColumns,
                 UpdateRule = foreignKey.UpdateRule,
                 DeleteRule = foreignKey.DeleteRule
