@@ -1,3 +1,15 @@
+<div align="center">
+    <a href="https://repodb.net/tutorial/"><image src="RepoDbTelemetry.png" style="width:256px;" /></a>
+    <br/>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/"><strong>RepoDb.Telemetry.Core</strong></a></span>
+    <br/>
+    <span style="font-size:16px;">Core building blocks for capturing and publishing RepoDB telemetry.</span>
+</div>
+
+-----
+
+<br/>
+
 # RepoDb.Telemetry.Core
 
 Core building blocks for capturing operation-level telemetry (Insert, Query, Update, Delete, etc.) from RepoDB and publishing it to an insights collector.

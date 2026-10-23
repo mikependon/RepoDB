@@ -1,3 +1,15 @@
+<div align="center">
+    <a href="https://repodb.net/tutorial/"><image src="RepoDbTelemetry.png" style="width:256px;" /></a>
+    <br/>
+    <span style="font-size:28px;font-weight:bold;"><a href="https://repodb.net/tutorial/"><strong>RepoDb.Telemetry.Default</strong></a></span>
+    <br/>
+    <span style="font-size:16px;">Drop-in telemetry for RepoDB.</span>
+</div>
+
+-----
+
+<br/>
+
 # RepoDb.Telemetry.Default
 
 Drop-in telemetry for RepoDB. Wires up a default `ITrace` that captures every operation (Insert, Query, Update, Delete, etc.) and publishes it to an insights collector — no custom `ITrace` implementation required.

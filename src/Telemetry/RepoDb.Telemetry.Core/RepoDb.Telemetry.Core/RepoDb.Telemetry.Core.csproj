@@ -12,7 +12,7 @@
     <PackageReleaseNotes>http://repodb.net/release/telemetrycore</PackageReleaseNotes>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>
-    <PackageIcon>icon.png</PackageIcon>
+    <PackageIcon>RepoDbTelemetry.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <!--
@@ -36,7 +36,7 @@
   <ItemGroup>
     <None Include="..\..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />
     <None Include="..\README.md" Pack="True" PackagePath="\" />
-    <None Include="..\..\..\..\icon.png" Pack="True" PackagePath="\" />
+    <None Include="..\RepoDbTelemetry.png" Pack="True" PackagePath="\" />
   </ItemGroup>
 
 </Project>
