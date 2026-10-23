@@ -24,11 +24,6 @@ namespace RepoDb.Schema
     {
         #region Private Variables
 
-        /// <summary>
-        /// The providers whose default expressions are written in the language of MySQL.
-        /// </summary>
-        private static readonly string[] DefaultProviders = { "MYSQL", "MYSQLC", "AURORAMYSQL" };
-
         private readonly DbTypeNameToMySqlConnectorTypeNameResolver _typeNameResolver = new DbTypeNameToMySqlConnectorTypeNameResolver();
         private readonly ClientTypeToMySqlConnectorTypeNameResolver _clientTypeResolver = new ClientTypeToMySqlConnectorTypeNameResolver();
 
@@ -43,7 +38,7 @@ namespace RepoDb.Schema
         /// <returns>The reason, or <c>null</c> if the column has no default value or it is created.</returns>
         public string GetUnsupportedDefaultReason(ColumnInfo column)
         {
-            MySqlDefaultValueComposer.Compose(column, ComposeTypeName(column), "MySQL", DefaultProviders, out var reason);
+            MySqlConnectorDefaultValueComposer.Compose(column, ComposeTypeName(column), out var reason);
             return reason;
         }
 
@@ -440,7 +435,7 @@ namespace RepoDb.Schema
             }
             else if (string.IsNullOrWhiteSpace(column.ComputedExpression))
             {
-                var defaultValue = MySqlDefaultValueComposer.Compose(column, type, "MySQL", DefaultProviders, out _);
+                var defaultValue = MySqlConnectorDefaultValueComposer.Compose(column, type, out _);
                 if (defaultValue != null)
                 {
                     definition.Append(" DEFAULT ").Append(defaultValue);

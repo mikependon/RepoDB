@@ -10,18 +10,16 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Schema.Enumerations;
 using RepoDb.Schema.Models;
 
-namespace RepoDb.Schema.Core.UnitTests
+namespace RepoDb.Schema.AuroraDbMySqlConnector.UnitTests
 {
     [TestClass]
-    public class MySqlDefaultValueComposerTest
+    public class AuroraDbMySqlConnectorDefaultValueComposerTest
     {
         #region Helpers
 
-        private static readonly string[] Providers = { "MySql", "MySqlConnector" };
-
         private static ColumnInfo GetColumn(ColumnDefaultValue kind,
             string expression,
-            string provider = "SqlServer") =>
+            string provider = "MSSQL") =>
             new ColumnInfo
             {
                 DefaultValue = kind,
@@ -32,15 +30,15 @@ namespace RepoDb.Schema.Core.UnitTests
         private static string Compose(ColumnDefaultValue kind,
             string expression,
             string type = "datetime",
-            string provider = "SqlServer") =>
-            MySqlDefaultValueComposer.Compose(GetColumn(kind, expression, provider), type, "MySQL", Providers, out _);
+            string provider = "MSSQL") =>
+            AuroraDbMySqlConnectorDefaultValueComposer.Compose(GetColumn(kind, expression, provider), type, out _);
 
         private static string Reason(ColumnDefaultValue kind,
             string expression,
             string type = "varchar(36)",
-            string provider = "SqlServer")
+            string provider = "MSSQL")
         {
-            MySqlDefaultValueComposer.Compose(GetColumn(kind, expression, provider), type, "MySQL", Providers, out var reason);
+            AuroraDbMySqlConnectorDefaultValueComposer.Compose(GetColumn(kind, expression, provider), type, out var reason);
             return reason;
         }
 
@@ -49,14 +47,14 @@ namespace RepoDb.Schema.Core.UnitTests
         #region No Default
 
         [TestMethod]
-        public void TestMySqlDefaultValueComposerComposeReturnsNullIfTheColumnHasNoDefaultValue()
+        public void TestAuroraDbMySqlConnectorDefaultValueComposerComposeReturnsNullIfTheColumnHasNoDefaultValue()
         {
             // Act/Assert
             Assert.IsNull(Compose(ColumnDefaultValue.None, null));
             Assert.IsNull(Compose(ColumnDefaultValue.None, "getdate()"));
             Assert.IsNull(Compose(ColumnDefaultValue.Unclassified, null));
             Assert.IsNull(Compose(ColumnDefaultValue.Unclassified, " "));
-            Assert.IsNull(MySqlDefaultValueComposer.Compose(null, "int", "MySQL", Providers, out var reason));
+            Assert.IsNull(AuroraDbMySqlConnectorDefaultValueComposer.Compose(null, "int", out var reason));
             Assert.IsNull(reason);
         }
 
@@ -65,7 +63,7 @@ namespace RepoDb.Schema.Core.UnitTests
         #region As It Is
 
         [TestMethod]
-        public void TestMySqlDefaultValueComposerComposeUsesTheExpressionAsItIsIfTheDefaultIsNotClassified()
+        public void TestAuroraDbMySqlConnectorDefaultValueComposerComposeUsesTheExpressionAsItIsIfTheDefaultIsNotClassified()
         {
             // Act/Assert
             Assert.AreEqual("getdate()", Compose(ColumnDefaultValue.Unclassified, "getdate()"));
@@ -73,12 +71,12 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestMySqlDefaultValueComposerComposeUsesTheExpressionAsItIsIfTheProviderIsCompatible()
+        public void TestAuroraDbMySqlConnectorDefaultValueComposerComposeUsesTheExpressionAsItIsIfTheProviderIsCompatible()
         {
             // Act/Assert
-            Assert.AreEqual("current_timestamp()", Compose(ColumnDefaultValue.CurrentTimestamp, "current_timestamp()", provider: "MySql"));
-            Assert.AreEqual("'it\\'s'", Compose(ColumnDefaultValue.Literal, "'it\\'s'", provider: "MySqlConnector"));
-            Assert.AreEqual("lower('X')", Compose(ColumnDefaultValue.Unsupported, "lower('X')", provider: "mysql"));
+            Assert.AreEqual("current_timestamp()", Compose(ColumnDefaultValue.CurrentTimestamp, "current_timestamp()", provider: "AURORAMYSQL"));
+            Assert.AreEqual("'it\\'s'", Compose(ColumnDefaultValue.Literal, "'it\\'s'", provider: "MYSQLC"));
+            Assert.AreEqual("lower('X')", Compose(ColumnDefaultValue.Unsupported, "lower('X')", provider: "auroramysql"));
         }
 
         #endregion
@@ -86,21 +84,21 @@ namespace RepoDb.Schema.Core.UnitTests
         #region Literals
 
         [TestMethod]
-        public void TestMySqlDefaultValueComposerComposeComposesTheLiterals()
+        public void TestAuroraDbMySqlConnectorDefaultValueComposerComposeComposesTheLiterals()
         {
             // Act/Assert
             Assert.AreEqual("0", Compose(ColumnDefaultValue.Literal, "((0))", "int"));
             Assert.AreEqual("'N/A'", Compose(ColumnDefaultValue.Literal, "(N'N/A')", "varchar(10)"));
-            Assert.AreEqual("'abc'", Compose(ColumnDefaultValue.Literal, "'abc'::character varying", "varchar(10)", "PostgreSql"));
+            Assert.AreEqual("'abc'", Compose(ColumnDefaultValue.Literal, "'abc'::character varying", "varchar(10)", "PGSQL"));
         }
 
         [TestMethod]
-        public void TestMySqlDefaultValueComposerComposeComposesNullAndTheBooleans()
+        public void TestAuroraDbMySqlConnectorDefaultValueComposerComposeComposesNullAndTheBooleans()
         {
             // Act/Assert
             Assert.AreEqual("NULL", Compose(ColumnDefaultValue.Null, "NULL", "int"));
-            Assert.AreEqual("1", Compose(ColumnDefaultValue.BooleanTrue, "true", "tinyint(1)", "PostgreSql"));
-            Assert.AreEqual("0", Compose(ColumnDefaultValue.BooleanFalse, "false", "tinyint(1)", "PostgreSql"));
+            Assert.AreEqual("1", Compose(ColumnDefaultValue.BooleanTrue, "true", "tinyint(1)", "PGSQL"));
+            Assert.AreEqual("0", Compose(ColumnDefaultValue.BooleanFalse, "false", "tinyint(1)", "PGSQL"));
         }
 
         #endregion
@@ -108,7 +106,7 @@ namespace RepoDb.Schema.Core.UnitTests
         #region Date And Time
 
         [TestMethod]
-        public void TestMySqlDefaultValueComposerComposeComposesTheCurrentTimestampOfADateAndTimeColumn()
+        public void TestAuroraDbMySqlConnectorDefaultValueComposerComposeComposesTheCurrentTimestampOfADateAndTimeColumn()
         {
             // Act/Assert
             Assert.AreEqual("CURRENT_TIMESTAMP", Compose(ColumnDefaultValue.CurrentTimestamp, "(getdate())", "datetime"));
@@ -117,15 +115,15 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestMySqlDefaultValueComposerComposeGivesTheCurrentTimestampTheDigitsOfTheFractionalSecondsOfTheColumn()
+        public void TestAuroraDbMySqlConnectorDefaultValueComposerComposeGivesTheCurrentTimestampTheDigitsOfTheFractionalSecondsOfTheColumn()
         {
             // Act/Assert
             Assert.AreEqual("CURRENT_TIMESTAMP(6)", Compose(ColumnDefaultValue.CurrentTimestamp, "(sysdatetime())", "datetime(6)"));
-            Assert.AreEqual("CURRENT_TIMESTAMP(3)", Compose(ColumnDefaultValue.CurrentTimestamp, "now()", "timestamp(3)", "PostgreSql"));
+            Assert.AreEqual("CURRENT_TIMESTAMP(3)", Compose(ColumnDefaultValue.CurrentTimestamp, "now()", "timestamp(3)", "PGSQL"));
         }
 
         [TestMethod]
-        public void TestMySqlDefaultValueComposerComposeComposesTheCurrentTimestampInUtcAsAnExpression()
+        public void TestAuroraDbMySqlConnectorDefaultValueComposerComposeComposesTheCurrentTimestampInUtcAsAnExpression()
         {
             // Act/Assert
             Assert.AreEqual("(UTC_TIMESTAMP)", Compose(ColumnDefaultValue.CurrentTimestampUtc, "(getutcdate())", "datetime"));
@@ -134,12 +132,12 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestMySqlDefaultValueComposerComposeComposesTheCurrentDateAndTimeByTheTypeOfTheColumn()
+        public void TestAuroraDbMySqlConnectorDefaultValueComposerComposeComposesTheCurrentDateAndTimeByTheTypeOfTheColumn()
         {
             // Act/Assert
             Assert.AreEqual("(CURRENT_DATE)", Compose(ColumnDefaultValue.CurrentDate, "(CONVERT([date],getdate()))", "date"));
             Assert.AreEqual("(CURRENT_TIME)", Compose(ColumnDefaultValue.CurrentTime, "current_time", "time"));
-            Assert.AreEqual("(CURRENT_TIME(3))", Compose(ColumnDefaultValue.CurrentTime, "current_time", "time(3)", "PostgreSql"));
+            Assert.AreEqual("(CURRENT_TIME(3))", Compose(ColumnDefaultValue.CurrentTime, "current_time", "time(3)", "PGSQL"));
             Assert.AreEqual("(CURRENT_DATE)", Compose(ColumnDefaultValue.CurrentTimestamp, "getdate()", "date"));
             Assert.AreEqual("(CURRENT_TIME)", Compose(ColumnDefaultValue.CurrentTimestamp, "getdate()", "time"));
             Assert.AreEqual("(UTC_DATE())", Compose(ColumnDefaultValue.CurrentTimestampUtc, "getutcdate()", "date"));
@@ -147,7 +145,7 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestMySqlDefaultValueComposerComposeComposesTheCurrentTimestampOfAColumnThatIsNotADateAndTimeAsAnExpression()
+        public void TestAuroraDbMySqlConnectorDefaultValueComposerComposeComposesTheCurrentTimestampOfAColumnThatIsNotADateAndTimeAsAnExpression()
         {
             // Act/Assert
             Assert.AreEqual("(NOW())", Compose(ColumnDefaultValue.CurrentTimestamp, "getdate()", "varchar(30)"));
@@ -159,7 +157,7 @@ namespace RepoDb.Schema.Core.UnitTests
         #region Guids
 
         [TestMethod]
-        public void TestMySqlDefaultValueComposerComposeComposesTheNewGuidOfATextColumn()
+        public void TestAuroraDbMySqlConnectorDefaultValueComposerComposeComposesTheNewGuidOfATextColumn()
         {
             // Act/Assert
             Assert.AreEqual("(UUID())", Compose(ColumnDefaultValue.NewGuid, "(newid())", "char(36)"));
@@ -168,7 +166,7 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestMySqlDefaultValueComposerComposeComposesTheNewGuidOfABinaryColumnAsItsBytes()
+        public void TestAuroraDbMySqlConnectorDefaultValueComposerComposeComposesTheNewGuidOfABinaryColumnAsItsBytes()
         {
             // Act/Assert
             Assert.AreEqual("(UNHEX(REPLACE(UUID(), '-', '')))", Compose(ColumnDefaultValue.NewGuid, "(newid())", "binary(16)"));
@@ -176,7 +174,7 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestMySqlDefaultValueComposerComposeDoesNotComposeTheNewGuidOfAColumnThatCanNotHoldIt()
+        public void TestAuroraDbMySqlConnectorDefaultValueComposerComposeDoesNotComposeTheNewGuidOfAColumnThatCanNotHoldIt()
         {
             // Act
             var actual = Compose(ColumnDefaultValue.NewGuid, "(newid())", "int");
@@ -192,7 +190,7 @@ namespace RepoDb.Schema.Core.UnitTests
         #region Others
 
         [TestMethod]
-        public void TestMySqlDefaultValueComposerComposeComposesTheRandomNumberTheUserAndTheDatabase()
+        public void TestAuroraDbMySqlConnectorDefaultValueComposerComposeComposesTheRandomNumberTheUserAndTheDatabase()
         {
             // Act/Assert
             Assert.AreEqual("(RAND())", Compose(ColumnDefaultValue.RandomNumber, "rand()", "double"));
@@ -201,7 +199,7 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestMySqlDefaultValueComposerComposeDoesNotComposeTheUserAndTheDatabaseOfAColumnThatIsNotAText()
+        public void TestAuroraDbMySqlConnectorDefaultValueComposerComposeDoesNotComposeTheUserAndTheDatabaseOfAColumnThatIsNotAText()
         {
             // Act/Assert
             Assert.IsNull(Compose(ColumnDefaultValue.CurrentUser, "(suser_sname())", "int"));
@@ -210,7 +208,7 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestMySqlDefaultValueComposerComposeDoesNotComposeTheNextValueOfASequence()
+        public void TestAuroraDbMySqlConnectorDefaultValueComposerComposeDoesNotComposeTheNextValueOfASequence()
         {
             // Act
             var actual = Compose(ColumnDefaultValue.SequenceNextValue, "(NEXT VALUE FOR [dbo].[OrderSeq])", "bigint");
@@ -223,7 +221,7 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestMySqlDefaultValueComposerComposeDoesNotComposeTheDefaultThatIsNotKnownOfAnotherProvider()
+        public void TestAuroraDbMySqlConnectorDefaultValueComposerComposeDoesNotComposeTheDefaultThatIsNotKnownOfAnotherProvider()
         {
             // Act
             var unsupported = Compose(ColumnDefaultValue.Unsupported, "LAST_INSERT_ID()", "bigint");
@@ -234,11 +232,11 @@ namespace RepoDb.Schema.Core.UnitTests
             Assert.IsNull(unsupported);
             Assert.IsNull(expression);
             StringAssert.Contains(reason, "LAST_INSERT_ID()", System.StringComparison.Ordinal);
-            StringAssert.Contains(reason, "SqlServer", System.StringComparison.Ordinal);
+            StringAssert.Contains(reason, "MSSQL", System.StringComparison.Ordinal);
         }
 
         [TestMethod]
-        public void TestMySqlDefaultValueComposerComposeNamesAnotherDatabaseIfTheProviderIsUnknown()
+        public void TestAuroraDbMySqlConnectorDefaultValueComposerComposeNamesAnotherDatabaseIfTheProviderIsUnknown()
         {
             // Act
             var reason = Reason(ColumnDefaultValue.Unsupported, "LAST_INSERT_ID()", "bigint", provider: null);
@@ -248,7 +246,7 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestMySqlDefaultValueComposerComposeHasNoReasonIfTheDefaultIsComposed()
+        public void TestAuroraDbMySqlConnectorDefaultValueComposerComposeHasNoReasonIfTheDefaultIsComposed()
         {
             // Act/Assert
             Assert.IsNull(Reason(ColumnDefaultValue.CurrentTimestamp, "getdate()", "datetime"));

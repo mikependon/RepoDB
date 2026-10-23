@@ -24,11 +24,6 @@ namespace RepoDb.Schema
     {
         #region Private Variables
 
-        /// <summary>
-        /// The providers whose default expressions are written in the language of MariaDB.
-        /// </summary>
-        private static readonly string[] DefaultProviders = { "MARIADB" };
-
         private readonly DbTypeNameToMariaDbConnectorTypeNameResolver _typeNameResolver = new DbTypeNameToMariaDbConnectorTypeNameResolver();
         private readonly ClientTypeToMariaDbConnectorTypeNameResolver _clientTypeResolver = new ClientTypeToMariaDbConnectorTypeNameResolver();
 
@@ -43,7 +38,7 @@ namespace RepoDb.Schema
         /// <returns>The reason, or <c>null</c> if the column has no default value or it is created.</returns>
         public string GetUnsupportedDefaultReason(ColumnInfo column)
         {
-            MySqlDefaultValueComposer.Compose(column, ComposeTypeName(column), "MariaDB", DefaultProviders, out var reason);
+            MariaDbConnectorDefaultValueComposer.Compose(column, ComposeTypeName(column), out var reason);
             return reason;
         }
 
@@ -443,7 +438,7 @@ namespace RepoDb.Schema
             }
             else if (string.IsNullOrWhiteSpace(column.ComputedExpression))
             {
-                var defaultValue = MySqlDefaultValueComposer.Compose(column, type, "MariaDB", DefaultProviders, out _);
+                var defaultValue = MariaDbConnectorDefaultValueComposer.Compose(column, type, out _);
                 if (defaultValue != null)
                 {
                     definition.Append(" DEFAULT ").Append(defaultValue);

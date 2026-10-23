@@ -15,13 +15,23 @@ using RepoDb.Schema.Models;
 namespace RepoDb.Schema
 {
     /// <summary>
-    /// A class that composes the default value of a column in the language of MySQL and MariaDB (the composers of both are the same), from the kind of the default value
+    /// A class that composes the default value of a column in the language of MariaDB, from the kind of the default value
     /// that the schema reader sets (see <see cref="ColumnDefaultValue"/>). The default value that is an expression (everything but <c>CURRENT_TIMESTAMP</c> in a date and time column)
-    /// is written between parentheses, which MySQL 8.0.13 and MariaDB 10.2.1 and above accept.
+    /// is written between parentheses, which MariaDB 10.2.1 and above accept.
     /// </summary>
-    public static class MySqlDefaultValueComposer
+    internal static class MariaDbConnectorDefaultValueComposer
     {
         #region Private Variables
+
+        /// <summary>
+        /// The name of the destination database, as it is said in the reason why a default value is not created.
+        /// </summary>
+        private const string Dialect = "MariaDB";
+
+        /// <summary>
+        /// The providers (see <see cref="RepoDb.DbField.Provider"/>) whose default expressions the destination understands, including its own.
+        /// </summary>
+        private static readonly string[] Providers = { "MARIADB" };
 
         private const RegexOptions Options = RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled;
 
@@ -43,15 +53,11 @@ namespace RepoDb.Schema
         /// Composes the default value of the column.
         /// </summary>
         /// <param name="column">The column, as it is read from the source database.</param>
-        /// <param name="columnType">The type of the column in MySQL (i.e.: <c>datetime(6)</c>), as the composer writes it.</param>
-        /// <param name="dialect">The name of the destination database, as it is said in the reason (<c>MySQL</c> or <c>MariaDB</c>).</param>
-        /// <param name="compatibleProviders">The names of the providers (see <see cref="RepoDb.DbField.Provider"/>) whose default expressions the destination understands, including its own.</param>
+        /// <param name="columnType">The type of the column in MariaDB (i.e.: <c>datetime(6)</c>), as the composer writes it.</param>
         /// <param name="reason">The reason why the default value is not created, when this method returns <c>null</c> for a column that has one.</param>
         /// <returns>The text that follows <c>DEFAULT</c>, or <c>null</c> if the column has no default value or it can not be created (see <paramref name="reason"/>).</returns>
         public static string Compose(ColumnInfo column,
             string columnType,
-            string dialect,
-            string[] compatibleProviders,
             out string reason)
         {
             reason = null;
@@ -64,7 +70,7 @@ namespace RepoDb.Schema
 
             // The default that is not classified is used as it is, and so is the default of a database of the same provider (it is already written in the language of the destination)
             var provider = column.Field?.Provider;
-            var isCompatible = !string.IsNullOrWhiteSpace(provider) && compatibleProviders != null && compatibleProviders.Contains(provider, StringComparer.OrdinalIgnoreCase);
+            var isCompatible = !string.IsNullOrWhiteSpace(provider) && Providers.Contains(provider, StringComparer.OrdinalIgnoreCase);
             if (kind == ColumnDefaultValue.Unclassified || isCompatible)
             {
                 return expression;
@@ -100,9 +106,9 @@ namespace RepoDb.Schema
                 case ColumnDefaultValue.CurrentDatabase:
                     return IsText(type) ? "(DATABASE())" : Refuse("its column is not a text", out reason);
                 case ColumnDefaultValue.SequenceNextValue:
-                    return Refuse($"its value comes from a sequence, which {dialect} can not use as a default value", out reason);
+                    return Refuse($"its value comes from a sequence, which {Dialect} can not use as a default value", out reason);
                 default:
-                    return Refuse($"its expression '{expression}' is written in the language of {(string.IsNullOrWhiteSpace(provider) ? "another database" : provider)}, which {dialect} does not understand", out reason);
+                    return Refuse($"its expression '{expression}' is written in the language of {(string.IsNullOrWhiteSpace(provider) ? "another database" : provider)}, which {Dialect} does not understand", out reason);
             }
         }
 
