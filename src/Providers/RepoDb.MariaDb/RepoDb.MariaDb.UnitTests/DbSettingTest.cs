@@ -104,6 +104,16 @@ namespace RepoDb.MariaDb.UnitTests
         }
 
         [TestMethod]
+        public void TestMariaDbDbSettingProviderProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<MariaDbConnection>();
+
+            // Assert
+            Assert.AreEqual("MariaDb", setting.Provider);
+        }
+
+        [TestMethod]
         public void TestMariaDbDbSettingIsUseUpsertProperty()
         {
             // Setup

@@ -106,6 +106,16 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
         }
 
         [TestMethod]
+        public void TestMdsSqLiteDbSettingProviderProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<SqliteConnection>();
+
+            // Assert
+            Assert.AreEqual("SQLite", setting.Provider);
+        }
+
+        [TestMethod]
         public void TestMdsSqLiteDbSettingIsUseUpsertProperty()
         {
             // Setup

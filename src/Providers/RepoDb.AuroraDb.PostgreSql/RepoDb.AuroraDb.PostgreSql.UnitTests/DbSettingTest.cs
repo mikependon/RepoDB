@@ -104,6 +104,16 @@ namespace RepoDb.AuroraDb.PostgreSql.UnitTests
         }
 
         [TestMethod]
+        public void TestAuroraDbDbSettingProviderProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<AuroraDbConnection>();
+
+            // Assert
+            Assert.AreEqual("AuroraDbPostgreSql", setting.Provider);
+        }
+
+        [TestMethod]
         public void TestAuroraDbDbSettingIsUseUpsertProperty()
         {
             // Setup

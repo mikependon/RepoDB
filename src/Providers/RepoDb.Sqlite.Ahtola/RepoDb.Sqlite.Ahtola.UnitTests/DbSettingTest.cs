@@ -107,6 +107,16 @@ namespace RepoDb.Ahtola.UnitTests
         }
 
         [TestMethod]
+        public void TestMdsAhtolaDbSettingProviderProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<SqliteConnection>();
+
+            // Assert
+            Assert.AreEqual("SQLite", setting.Provider);
+        }
+
+        [TestMethod]
         public void TestMdsAhtolaDbSettingIsUseUpsertProperty()
         {
             // Setup

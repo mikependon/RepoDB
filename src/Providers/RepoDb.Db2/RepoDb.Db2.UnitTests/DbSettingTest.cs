@@ -126,6 +126,16 @@ namespace RepoDb.Db2.UnitTests
         }
 
         [TestMethod]
+        public void TestDb2DbSettingProviderProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<DB2Connection>();
+
+            // Assert
+            Assert.AreEqual("Db2", setting.Provider);
+        }
+
+        [TestMethod]
         public void TestDb2DbSettingIsUseUpsertProperty()
         {
             // Setup

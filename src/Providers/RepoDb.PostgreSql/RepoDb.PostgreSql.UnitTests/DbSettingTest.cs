@@ -104,6 +104,16 @@ namespace RepoDb.PostgreSql.UnitTests
         }
 
         [TestMethod]
+        public void TestPostgreSqlDbSettingProviderProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<NpgsqlConnection>();
+
+            // Assert
+            Assert.AreEqual("PostgreSql", setting.Provider);
+        }
+
+        [TestMethod]
         public void TestPostgreSqlDbSettingIsUseUpsertProperty()
         {
             // Setup

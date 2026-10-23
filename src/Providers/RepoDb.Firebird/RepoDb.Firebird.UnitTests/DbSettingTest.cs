@@ -105,6 +105,16 @@ namespace RepoDb.Firebird.UnitTests
         }
 
         [TestMethod]
+        public void TestFirebirdDbSettingProviderProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<FbConnection>();
+
+            // Assert
+            Assert.AreEqual("Firebird", setting.Provider);
+        }
+
+        [TestMethod]
         public void TestFirebirdDbSettingIsUseUpsertProperty()
         {
             // Setup

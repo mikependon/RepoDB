@@ -40,6 +40,7 @@ namespace RepoDb.DbSettings
             MultiStatementSeparator = ";";
             OpeningQuote = "`";
             ParameterPrefix = "@";
+            Provider = "MySqlConnector";
             SqlTextParameterPrefix = "@";
         }
     }

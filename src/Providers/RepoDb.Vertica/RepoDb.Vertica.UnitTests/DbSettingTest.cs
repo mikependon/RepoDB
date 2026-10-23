@@ -113,6 +113,16 @@ namespace RepoDb.Vertica.UnitTests
         }
 
         [TestMethod]
+        public void TestVerticaDbSettingProviderProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<VerticaConnection>();
+
+            // Assert
+            Assert.AreEqual("Vertica", setting.Provider);
+        }
+
+        [TestMethod]
         public void TestVerticaDbSettingIsUseUpsertProperty()
         {
             // Setup

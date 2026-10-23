@@ -103,6 +103,16 @@ namespace RepoDb.SqlServer.UnitTests
         }
 
         [TestMethod]
+        public void TestSqlServerDbSettingProviderProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<SqlConnection>();
+
+            // Assert
+            Assert.AreEqual("SqlServer", setting.Provider);
+        }
+
+        [TestMethod]
         public void TestSqlServerDbSettingIsUseUpsertProperty()
         {
             // Setup

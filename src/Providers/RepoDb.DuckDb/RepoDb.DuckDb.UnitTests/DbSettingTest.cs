@@ -104,6 +104,16 @@ namespace RepoDb.DuckDb.UnitTests
         }
 
         [TestMethod]
+        public void TestDuckDbDbSettingProviderProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<DuckDBConnection>();
+
+            // Assert
+            Assert.AreEqual("DuckDb", setting.Provider);
+        }
+
+        [TestMethod]
         public void TestDuckDbDbSettingIsUseUpsertProperty()
         {
             // Setup

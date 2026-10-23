@@ -103,6 +103,16 @@ namespace RepoDb.SapHana.UnitTests
         }
 
         [TestMethod]
+        public void TestSapHanaDbSettingProviderProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<HanaConnection>();
+
+            // Assert
+            Assert.AreEqual("SapHana", setting.Provider);
+        }
+
+        [TestMethod]
         public void TestSapHanaDbSettingIsUseUpsertProperty()
         {
             // Setup

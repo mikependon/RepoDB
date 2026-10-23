@@ -163,6 +163,12 @@ namespace RepoDb.DbSettings
         public string ParameterPrefix { get; protected set; }
 
         /// <summary>
+        /// Gets the name of the DB Provider that the setting is for (i.e.: <c>SqlServer</c>, <c>PostgreSql</c>, <c>MySql</c>, <c>SQLite</c>). See <see cref="RepoDb.Interfaces.IDbSetting.Provider"/>
+        /// for details. The derived setting sets it; it is <c>null</c> by default.
+        /// </summary>
+        public string Provider { get; protected set; }
+
+        /// <summary>
         /// Gets the character (or string) used to prefix a parameter placeholder token embedded directly into the
         /// generated SQL command text. See <see cref="RepoDb.Interfaces.IDbSetting.SqlTextParameterPrefix"/> for details.
         /// </summary>
@@ -253,6 +259,12 @@ namespace RepoDb.DbSettings
             if (!string.IsNullOrWhiteSpace(ParameterPrefix))
             {
                 hashCode = HashCode.Combine(hashCode, ParameterPrefix);
+            }
+
+            // Provider
+            if (!string.IsNullOrWhiteSpace(Provider))
+            {
+                hashCode = HashCode.Combine(hashCode, Provider);
             }
 
             // SqlTextParameterPrefix

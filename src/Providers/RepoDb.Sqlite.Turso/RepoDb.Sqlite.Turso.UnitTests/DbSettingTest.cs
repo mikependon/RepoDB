@@ -107,6 +107,16 @@ namespace RepoDb.Turso.UnitTests
         }
 
         [TestMethod]
+        public void TestMdsTursoDbSettingProviderProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<SqliteConnection>();
+
+            // Assert
+            Assert.AreEqual("SQLite", setting.Provider);
+        }
+
+        [TestMethod]
         public void TestMdsTursoDbSettingIsUseUpsertProperty()
         {
             // Setup

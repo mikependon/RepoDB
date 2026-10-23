@@ -37,6 +37,7 @@ namespace RepoDb.DbSettings
             MultiStatementSeparator = ";";
             OpeningQuote = "\"";
             ParameterPrefix = ":";
+            Provider = "Db2";
             SqlTextParameterPrefix = ":";
         }
     }

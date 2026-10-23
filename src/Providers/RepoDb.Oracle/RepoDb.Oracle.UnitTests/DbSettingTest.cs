@@ -104,6 +104,16 @@ namespace RepoDb.Oracle.UnitTests
         }
 
         [TestMethod]
+        public void TestOracleDbSettingProviderProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<OracleConnection>();
+
+            // Assert
+            Assert.AreEqual("Oracle", setting.Provider);
+        }
+
+        [TestMethod]
         public void TestOracleDbSettingIsUseUpsertProperty()
         {
             // Setup

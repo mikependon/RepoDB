@@ -34,6 +34,7 @@ namespace RepoDb.DbSettings
             IsUseUpsert = false;
             OpeningQuote = "\"";
             ParameterPrefix = "@";
+            Provider = "EnterpriseDb";
             SqlTextParameterPrefix = "@";
         }
     }

@@ -104,6 +104,16 @@ namespace RepoDb.AuroraDb.MySqlConnector.UnitTests
         }
 
         [TestMethod]
+        public void TestAuroraDbDbSettingProviderProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<AuroraDbConnection>();
+
+            // Assert
+            Assert.AreEqual("AuroraDbMySqlConnector", setting.Provider);
+        }
+
+        [TestMethod]
         public void TestAuroraDbDbSettingIsUseUpsertProperty()
         {
             // Setup

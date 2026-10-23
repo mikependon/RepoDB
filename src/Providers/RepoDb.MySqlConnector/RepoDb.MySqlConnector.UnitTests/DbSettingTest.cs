@@ -105,6 +105,16 @@ namespace RepoDb.MySqlConnector.UnitTests
         }
 
         [TestMethod]
+        public void TestMySqlDbSettingProviderProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<MySqlConnection>();
+
+            // Assert
+            Assert.AreEqual("MySqlConnector", setting.Provider);
+        }
+
+        [TestMethod]
         public void TestMySqlDbSettingIsUseUpsertProperty()
         {
             // Setup

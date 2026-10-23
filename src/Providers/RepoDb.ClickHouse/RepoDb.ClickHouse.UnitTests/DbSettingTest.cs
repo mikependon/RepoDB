@@ -105,6 +105,16 @@ namespace RepoDb.ClickHouse.UnitTests
         }
 
         [TestMethod]
+        public void TestClickHouseDbSettingProviderProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<ClickHouseConnection>();
+
+            // Assert
+            Assert.AreEqual("ClickHouse", setting.Provider);
+        }
+
+        [TestMethod]
         public void TestClickHouseDbSettingIsUseUpsertProperty()
         {
             // Setup

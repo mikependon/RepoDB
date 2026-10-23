@@ -104,6 +104,16 @@ namespace RepoDb.CockroachDb.UnitTests
         }
 
         [TestMethod]
+        public void TestCockroachDbDbSettingProviderProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<CockroachDbConnection>();
+
+            // Assert
+            Assert.AreEqual("CockroachDb", setting.Provider);
+        }
+
+        [TestMethod]
         public void TestCockroachDbDbSettingIsUseUpsertProperty()
         {
             // Setup

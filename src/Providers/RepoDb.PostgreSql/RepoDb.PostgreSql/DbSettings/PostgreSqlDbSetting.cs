@@ -40,6 +40,7 @@ namespace RepoDb.DbSettings
             MaxParameterCount = 2100 - 2;
             OpeningQuote = "\"";
             ParameterPrefix = "@";
+            Provider = "PostgreSql";
             SqlTextParameterPrefix = "@";
         }
     }

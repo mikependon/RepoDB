@@ -131,6 +131,12 @@ namespace RepoDb.Interfaces
         string ParameterPrefix { get; }
 
         /// <summary>
+        /// Gets the name of the DB Provider that the setting is for (i.e.: <c>SqlServer</c>, <c>PostgreSql</c>, <c>MySql</c>, <c>SQLite</c>). It is the same name that the schema readers
+        /// give to the tables and to the columns that they read, so the objects of a database can tell which provider they are from. It is <c>null</c> if the setting does not say it.
+        /// </summary>
+        string Provider { get; }
+
+        /// <summary>
         /// Gets the character (or string) used to prefix a parameter placeholder token embedded directly into the
         /// generated SQL command text (e.g. the "@Name" in <c>INSERT INTO Table (Name) VALUES (@Name)</c>).
         /// </summary>

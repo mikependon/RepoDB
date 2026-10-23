@@ -39,6 +39,7 @@ namespace RepoDb.DbSettings
             MultiStatementSeparator = ";";
             OpeningQuote = "`";
             ParameterPrefix = string.Empty;
+            Provider = "ClickHouse";
             SqlTextParameterPrefix = "@";
         }
     }

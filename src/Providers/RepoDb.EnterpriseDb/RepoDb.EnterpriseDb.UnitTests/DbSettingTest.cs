@@ -104,6 +104,16 @@ namespace RepoDb.EnterpriseDb.UnitTests
         }
 
         [TestMethod]
+        public void TestEnterpriseDbDbSettingProviderProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<EDBConnection>();
+
+            // Assert
+            Assert.AreEqual("EnterpriseDb", setting.Provider);
+        }
+
+        [TestMethod]
         public void TestEnterpriseDbDbSettingIsUseUpsertProperty()
         {
             // Setup
