@@ -78,7 +78,7 @@ namespace RepoDb.Data.SqliteMicrosoft.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE \"Money\" (\"Code\" CHAR(3) NOT NULL, \"Name\" VARCHAR(50) NOT NULL, CONSTRAINT \"PK_Money\" PRIMARY KEY (\"Code\"))");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "Money", target);
+                var actual = source.CopyDataTo("Currency", "Money", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -116,7 +116,7 @@ namespace RepoDb.Data.SqliteMicrosoft.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE \"Money\" (\"Code\" CHAR(3) NOT NULL, \"Name\" VARCHAR(50) NOT NULL, CONSTRAINT \"PK_Money\" PRIMARY KEY (\"Code\"))");
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", "Money", target);
+                var actual = (await source.CopyDataToAsync("Currency", "Money", target)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);

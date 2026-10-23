@@ -317,6 +317,7 @@ namespace RepoDb.Data
         /// <param name="mappings">The column mappings, or <c>null</c> to copy the columns that exist on both tables.</param>
         /// <param name="options">The progress of the copy.</param>
         /// <param name="progressCallback">The callback that receives the progress after every batch, or <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the item of the table once its copy has ended, or <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="traceKey">The tracking key to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -331,12 +332,13 @@ namespace RepoDb.Data
             IList<CopyColumnMapping> mappings,
             CopyProgress options,
             Action<CopyProgress> progressCallback,
+            Action<CopyProgressItem> completedCallback,
             int? commandTimeout,
             string traceKey,
             ITrace trace,
             IDbTransaction transaction)
         {
-            SetTables(options, connection, destinationConnection, sourceTable, targetTable);
+            var item = Begin(options, connection, destinationConnection, sourceTable, targetTable);
             ValidateMappings(connection, destinationConnection, sourceTable, targetTable, mappings);
             var (commandText, param) = CreateSelect(connection, sourceTable, where, mappings);
             using (var reader = connection.ExecuteReader(commandText, param, commandTimeout: commandTimeout, traceKey: traceKey ?? TraceKeys.ExecuteReader, trace: trace))
@@ -345,27 +347,31 @@ namespace RepoDb.Data
                 {
                     var before = CopyDataLogger.Count(destinationConnection, targetTable, transaction);
                     var inserted = BulkInsertInvoker.BulkInsert(destinationConnection, targetTable, reader, batchSize, columnMappingsBehavior, commandTimeout, null, trace, transaction);
-                    CopyDataLogger.LogBulkInsert(options, destinationConnection, targetTable, inserted, before, CopyDataLogger.Count(destinationConnection, targetTable, transaction));
+                    var after = CopyDataLogger.Count(destinationConnection, targetTable, transaction);
+                    Record(item, CopyDataLogger.LogBulkInsert(options, destinationConnection, targetTable, inserted, before, after), after);
                     Report(options, inserted, progressCallback);
-                    return;
                 }
-                var action = new Action<IList<object>>((IList<object> b) =>
-                    Report(options, RowInserter.Insert(destinationConnection, targetTable, b, commandTimeout, traceKey, trace, transaction), progressCallback));
-                var batch = new List<object>(batchSize);
-                while (reader.Read())
+                else
                 {
-                    batch.Add(ToRow(reader));
-                    if (batch.Count == batchSize)
+                    var action = new Action<IList<object>>((IList<object> b) =>
+                        Report(options, RowInserter.Insert(destinationConnection, targetTable, b, commandTimeout, traceKey, trace, transaction), progressCallback));
+                    var batch = new List<object>(batchSize);
+                    while (reader.Read())
+                    {
+                        batch.Add(ToRow(reader));
+                        if (batch.Count == batchSize)
+                        {
+                            action(batch);
+                            batch.Clear();
+                        }
+                    }
+                    if (batch.Count > 0)
                     {
                         action(batch);
-                        batch.Clear();
                     }
                 }
-                if (batch.Count > 0)
-                {
-                    action(batch);
-                }
             }
+            Complete(options, item, completedCallback);
         }
 
         /// <summary>
@@ -381,6 +387,7 @@ namespace RepoDb.Data
         /// <param name="mappings">The column mappings, or <c>null</c> to copy the columns that exist on both tables.</param>
         /// <param name="options">The progress of the copy.</param>
         /// <param name="progressCallback">The callback that receives the progress after every batch, or <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the item of the table once its copy has ended, or <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="traceKey">The tracking key to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -397,13 +404,14 @@ namespace RepoDb.Data
             IList<CopyColumnMapping> mappings,
             CopyProgress options,
             Action<CopyProgress> progressCallback,
+            Action<CopyProgressItem> completedCallback,
             int? commandTimeout,
             string traceKey,
             ITrace trace,
             IDbTransaction transaction,
             CancellationToken cancellationToken)
         {
-            SetTables(options, connection, destinationConnection, sourceTable, targetTable);
+            var item = Begin(options, connection, destinationConnection, sourceTable, targetTable);
             ValidateMappings(connection, destinationConnection, sourceTable, targetTable, mappings);
             var (commandText, param) = CreateSelect(connection, sourceTable, where, mappings);
             using (var reader = await connection.ExecuteReaderAsync(commandText, param, commandTimeout: commandTimeout, traceKey: traceKey ?? TraceKeys.ExecuteReader, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false))
@@ -413,27 +421,30 @@ namespace RepoDb.Data
                     var before = await CopyDataLogger.CountAsync(destinationConnection, targetTable, transaction, cancellationToken).ConfigureAwait(false);
                     var inserted = await BulkInsertInvoker.BulkInsertAsync(destinationConnection, targetTable, reader, batchSize, columnMappingsBehavior, commandTimeout, null, trace, transaction, cancellationToken).ConfigureAwait(false);
                     var after = await CopyDataLogger.CountAsync(destinationConnection, targetTable, transaction, cancellationToken).ConfigureAwait(false);
-                    CopyDataLogger.LogBulkInsert(options, destinationConnection, targetTable, inserted, before, after);
+                    Record(item, CopyDataLogger.LogBulkInsert(options, destinationConnection, targetTable, inserted, before, after), after);
                     Report(options, inserted, progressCallback);
-                    return;
                 }
-                var action = new Func<IList<object>, Task>(async (IList<object> b) =>
-                    Report(options, await RowInserter.InsertAsync(destinationConnection, targetTable, b, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false), progressCallback));
-                var batch = new List<object>(batchSize);
-                while (await ReadAsync(reader, cancellationToken).ConfigureAwait(false))
+                else
                 {
-                    batch.Add(ToRow(reader));
-                    if (batch.Count == batchSize)
+                    var action = new Func<IList<object>, Task>(async (IList<object> b) =>
+                        Report(options, await RowInserter.InsertAsync(destinationConnection, targetTable, b, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false), progressCallback));
+                    var batch = new List<object>(batchSize);
+                    while (await ReadAsync(reader, cancellationToken).ConfigureAwait(false))
+                    {
+                        batch.Add(ToRow(reader));
+                        if (batch.Count == batchSize)
+                        {
+                            await action(batch).ConfigureAwait(false);
+                            batch.Clear();
+                        }
+                    }
+                    if (batch.Count > 0)
                     {
                         await action(batch).ConfigureAwait(false);
-                        batch.Clear();
                     }
                 }
-                if (batch.Count > 0)
-                {
-                    await action(batch).ConfigureAwait(false);
-                }
             }
+            Complete(options, item, completedCallback);
         }
 
         /// <summary>
@@ -614,14 +625,15 @@ namespace RepoDb.Data
         }
 
         /// <summary>
-        /// Sets the details of the tables (and the databases) that are being copied into the progress.
+        /// Starts the copy of a table: adds the item of the table (its source and target tables) to the progress, and makes it the current one.
         /// </summary>
         /// <param name="options">The progress of the copy.</param>
         /// <param name="connection">The source connection.</param>
         /// <param name="destinationConnection">The connection of the destination database.</param>
         /// <param name="sourceTable">The name of the source table.</param>
         /// <param name="targetTable">The name of the target table.</param>
-        private static void SetTables(CopyProgress options,
+        /// <returns>The item of the table, or <c>null</c> if there is no progress.</returns>
+        private static CopyProgressItem Begin(CopyProgress options,
             IDbConnection connection,
             IDbConnection destinationConnection,
             string sourceTable,
@@ -629,15 +641,56 @@ namespace RepoDb.Data
         {
             if (options == null)
             {
+                return null;
+            }
+            var now = DateTime.UtcNow;
+            var item = new CopyProgressItem
+            {
+                StartTime = now,
+                EndTime = now,
+                NextBatchStart = now,
+                Source = CreateEndpoint(connection, sourceTable),
+                Target = CreateEndpoint(destinationConnection, targetTable)
+            };
+            item.Source.RowCount = 0;
+            options.Items.Add(item);
+            options.Current = item;
+            options.EndTime = now;
+            return item;
+        }
+
+        /// <summary>
+        /// Creates the details of a table of a connection.
+        /// </summary>
+        /// <param name="connection">The connection of the database that the table belongs to.</param>
+        /// <param name="table">The name of the table.</param>
+        /// <returns>The details of the table.</returns>
+        private static CopyEndpoint CreateEndpoint(IDbConnection connection,
+            string table) =>
+            new CopyEndpoint
+            {
+                Server = (connection as System.Data.Common.DbConnection)?.DataSource,
+                Database = connection.Database,
+                DatabaseType = connection.GetType().Name,
+                Table = new TableInfo(GetTableName(connection, table), GetTargetSchema(connection, table), connection.Database)
+            };
+
+        /// <summary>
+        /// Records what is known about the rows of the target table after the bulk insert of the table.
+        /// </summary>
+        /// <param name="item">The item of the table.</param>
+        /// <param name="skipped">The number of rows that the provider did not load, or <c>null</c> if it is not known.</param>
+        /// <param name="rowCount">The number of rows of the target table after the bulk insert, or <c>null</c> if it is not known.</param>
+        private static void Record(CopyProgressItem item,
+            long? skipped,
+            long? rowCount)
+        {
+            if (item == null)
+            {
                 return;
             }
-            options.SourceServer = (connection as System.Data.Common.DbConnection)?.DataSource;
-            options.SourceDatabase = connection.Database;
-            options.SourceTable = sourceTable;
-            options.TargetServer = (destinationConnection as System.Data.Common.DbConnection)?.DataSource;
-            options.TargetDatabase = destinationConnection.Database;
-            options.TargetTable = targetTable;
-            options.BatchStartTime = DateTime.UtcNow;
+            item.SkippedRowCount = skipped;
+            item.Target.RowCount = rowCount;
         }
 
         /// <summary>
@@ -650,14 +703,44 @@ namespace RepoDb.Data
             int inserted,
             Action<CopyProgress> progressCallback)
         {
-            options.BatchNumber++;
-            options.RowCount = inserted;
-            options.BatchCopiedRowCount = inserted;
-            options.TotalCopiedRowCount += inserted;
-            options.BatchEndTime = DateTime.UtcNow;
-            options.EndTime = options.BatchEndTime;
+            var item = options.Current;
+            var now = DateTime.UtcNow;
+            item.Batches.Add(new CopyBatch
+            {
+                Number = item.Batches.Count + 1,
+                RowCount = inserted,
+                StartTime = item.NextBatchStart,
+                EndTime = now
+            });
+            item.RowCount += inserted;
+            item.Source.RowCount = (item.Source.RowCount ?? 0) + inserted;
+            item.EndTime = now;
+            options.BatchCount++;
+            options.RowCount += inserted;
+            options.EndTime = now;
             progressCallback?.Invoke(options);
-            options.BatchStartTime = DateTime.UtcNow;
+            item.NextBatchStart = DateTime.UtcNow;
+        }
+
+        /// <summary>
+        /// Completes the copy of a table: marks its end, and calls the callback with its item.
+        /// </summary>
+        /// <param name="options">The progress of the copy.</param>
+        /// <param name="item">The item of the table.</param>
+        /// <param name="completedCallback">The callback that receives the item, or <c>null</c>.</param>
+        private static void Complete(CopyProgress options,
+            CopyProgressItem item,
+            Action<CopyProgressItem> completedCallback)
+        {
+            if (item == null)
+            {
+                return;
+            }
+            var now = DateTime.UtcNow;
+            item.EndTime = now;
+            options.EndTime = now;
+            options.CompletedTableCount++;
+            completedCallback?.Invoke(item);
         }
 
         /// <summary>

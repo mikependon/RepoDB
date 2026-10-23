@@ -7,6 +7,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DuckDB.NET.Data;
@@ -86,7 +87,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 source.CopyDataTo("Country", target);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.TableOnly);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.TableOnly).RowCount;
 
                 // Assert
                 Assert.AreEqual(6, actual);
@@ -128,7 +129,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -146,7 +147,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Toy", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Toy", target, relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -164,7 +165,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Country", target, relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -215,7 +216,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Sales.Ledger", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Sales.Ledger", target, relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(2 + 2, actual);
@@ -235,7 +236,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Sales.InvoiceLine", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Sales.InvoiceLine", target, relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(2 + 3, actual);
@@ -259,7 +260,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, relationshipBehavior: CopyRelationshipBehavior.Children);
+                var actual = source.CopyDataTo("Country", target, relationshipBehavior: CopyRelationshipBehavior.Children).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -278,7 +279,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 source.CopyDataTo("Country", target, tableExistenceBehavior: TableExistsBehavior.Throw);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Children);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Children).RowCount;
 
                 // Assert
                 Assert.AreEqual(6 + 5 + 5, actual);
@@ -344,7 +345,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Sales.Invoice", target, relationshipBehavior: CopyRelationshipBehavior.Children);
+                var actual = source.CopyDataTo("Sales.Invoice", target, relationshipBehavior: CopyRelationshipBehavior.Children).RowCount;
 
                 // Assert
                 Assert.AreEqual(2 + 3 + 2, actual);
@@ -373,7 +374,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo(tableName, target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren);
+                var actual = source.CopyDataTo(tableName, target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -424,7 +425,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Sales.InvoiceLine", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren);
+                var actual = source.CopyDataTo("Sales.InvoiceLine", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren).RowCount;
 
                 // Assert
                 Assert.AreEqual(2 + 3 + 2, actual);
@@ -446,7 +447,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 2, actual);
@@ -494,7 +495,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 1000)), relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 1000)), relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -513,7 +514,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo<Entities.Person>(target, p => p.CountryId == 2, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo<Entities.Person>(target, p => p.CountryId == 2, relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 2, actual);
@@ -554,7 +555,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.ExecuteOnTarget("INSERT INTO \"Country\" (\"Id\", \"Name\") VALUES (100, 'Atlantis');");
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -612,7 +613,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Toy", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = (await source.CopyDataToAsync("Toy", target, relationshipBehavior: CopyRelationshipBehavior.Parents)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -630,7 +631,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Country", target, relationshipBehavior: CopyRelationshipBehavior.Children);
+                var actual = (await source.CopyDataToAsync("Country", target, relationshipBehavior: CopyRelationshipBehavior.Children)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -648,7 +649,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Pet", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren);
+                var actual = (await source.CopyDataToAsync("Pet", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -666,7 +667,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = (await source.CopyDataToAsync("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyRelationshipBehavior.Parents)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 2, actual);
@@ -684,7 +685,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Sales.Invoice", target, relationshipBehavior: CopyRelationshipBehavior.Children);
+                var actual = (await source.CopyDataToAsync("Sales.Invoice", target, relationshipBehavior: CopyRelationshipBehavior.Children)).RowCount;
 
                 // Assert
                 Assert.AreEqual(2 + 3 + 2, actual);
@@ -717,6 +718,150 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
 
                 // Act/Assert
                 await Assert.ThrowsAsync<ArgumentException>(() => source.CopyDataToAsync("Pet", "PetCopy", target, relationshipBehavior: CopyRelationshipBehavior.Parents));
+            }
+        }
+
+        #endregion
+
+        #region Items Of The Progress
+
+        [TestMethod]
+        public void TestCopyDataToWithParentsAndChildrenReturnsAnItemForEachTableOfTheTree()
+        {
+            using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
+            using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.MapSchemaReader(source);
+
+                // Act
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren);
+
+                // Assert
+                Assert.AreEqual(4, actual.TableCount);
+                Assert.AreEqual(4, actual.CompletedTableCount);
+                Assert.AreEqual(3 + 6 + 5 + 5, actual.RowCount);
+                Assert.AreEqual(4, actual.Items.Count);
+                Assert.AreSame(actual.Items.Last(), actual.Current);
+                CollectionAssert.AreEqual(new[] { "Country", "Person", "Pet", "Toy" }, actual.Items.Select(i => i.Source.Table.Name).ToArray());
+                CollectionAssert.AreEqual(new[] { "Country", "Person", "Pet", "Toy" }, actual.Items.Select(i => i.Target.Table.Name).ToArray());
+                CollectionAssert.AreEqual(new[] { 3, 6, 5, 5 }, actual.Items.Select(i => i.RowCount).ToArray());
+                CollectionAssert.AreEqual(new long?[] { 3, 6, 5, 5 }, actual.Items.Select(i => i.Source.RowCount).ToArray());
+                Assert.IsTrue(actual.Items.All(i => i.Batches.Count >= 1 && i.Batches.Sum(b => b.RowCount) == i.RowCount));
+                Assert.AreEqual(actual.Items.Sum(i => i.Batches.Count), actual.BatchCount);
+                Assert.IsTrue(actual.Items.All(i => i.Source.Database == source.Database && i.Target.Database == target.Database));
+                Assert.IsTrue(actual.Items.All(i => i.EndTime >= i.StartTime && i.StartTime >= actual.StartTime && i.EndTime <= actual.EndTime));
+                AssertTree();
+            }
+        }
+
+        [TestMethod]
+        public void TestCopyDataToWithParentsReturnsAnItemForTheTableAndForItsParents()
+        {
+            using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
+            using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.MapSchemaReader(source);
+
+                // Act
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
+
+                // Assert
+                Assert.AreEqual(2, actual.TableCount);
+                CollectionAssert.AreEqual(new[] { "Country", "Person" }, actual.Items.Select(i => i.Source.Table.Name).ToArray());
+                CollectionAssert.AreEqual(new[] { 3, 6 }, actual.Items.Select(i => i.RowCount).ToArray());
+                Assert.AreEqual(3 + 6, actual.RowCount);
+            }
+        }
+
+        [TestMethod]
+        public void TestCopyDataToWithChildrenReturnsAnItemForTheTableAndForItsChildren()
+        {
+            using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
+            using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.MapSchemaReader(source);
+
+                // Act
+                var actual = source.CopyDataTo("Country", target, relationshipBehavior: CopyRelationshipBehavior.Children);
+
+                // Assert
+                Assert.AreEqual(4, actual.TableCount);
+                CollectionAssert.AreEqual(new[] { "Country", "Person", "Pet", "Toy" }, actual.Items.Select(i => i.Source.Table.Name).ToArray());
+                CollectionAssert.AreEqual(new[] { 3, 6, 5, 5 }, actual.Items.Select(i => i.RowCount).ToArray());
+            }
+        }
+
+        [TestMethod]
+        public void TestCopyDataToWithTableOnlyReturnsOneItem()
+        {
+            using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
+            using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.MapSchemaReader(source);
+
+                // Act
+                var actual = source.CopyDataTo("Country", target, tableExistenceBehavior: TableExistsBehavior.Throw);
+
+                // Assert
+                Assert.AreEqual(1, actual.TableCount);
+                Assert.AreEqual(1, actual.Items.Count);
+                Assert.AreEqual("Country", actual.Items[0].Source.Table.Name);
+                Assert.AreEqual("Country", actual.Items[0].Target.Table.Name);
+                Assert.AreEqual(3, actual.Items[0].RowCount);
+                Assert.AreEqual(3, Helper.TargetCount("\"Country\""));
+            }
+        }
+
+        [TestMethod]
+        public void TestCopyDataToCallsTheCallbacksTableByTableInTheOrderOfTheTree()
+        {
+            using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
+            using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.MapSchemaReader(source);
+                var batches = new List<string>();
+                var completed = new List<string>();
+
+                // Act
+                var actual = source.CopyDataTo("Person", target,
+                    relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren,
+                    progressCallback: p => batches.Add(p.Current.Source.Table.Name),
+                    completedCallback: item => completed.Add(item.Source.Table.Name));
+
+                // Assert
+                CollectionAssert.AreEqual(new[] { "Country", "Person", "Pet", "Toy" }, completed);
+                CollectionAssert.AreEqual(new[] { "Country", "Person", "Pet", "Toy" }, batches.Distinct().ToArray());
+                Assert.AreEqual(actual.BatchCount, batches.Count);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestCopyDataToAsyncWithParentsAndChildrenReturnsAnItemForEachTableOfTheTree()
+        {
+            using (var source = new DuckDBConnection(Database.ConnectionStringForSource))
+            using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.MapSchemaReader(source);
+                var completed = new List<string>();
+
+                // Act
+                var actual = await source.CopyDataToAsync("Person", target,
+                    relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren,
+                    completedCallback: item => completed.Add(item.Source.Table.Name));
+
+                // Assert
+                Assert.AreEqual(4, actual.TableCount);
+                Assert.AreEqual(4, actual.CompletedTableCount);
+                CollectionAssert.AreEqual(new[] { "Country", "Person", "Pet", "Toy" }, actual.Items.Select(i => i.Source.Table.Name).ToArray());
+                CollectionAssert.AreEqual(new[] { 3, 6, 5, 5 }, actual.Items.Select(i => i.RowCount).ToArray());
+                CollectionAssert.AreEqual(new[] { "Country", "Person", "Pet", "Toy" }, completed);
+                AssertTree();
             }
         }
 

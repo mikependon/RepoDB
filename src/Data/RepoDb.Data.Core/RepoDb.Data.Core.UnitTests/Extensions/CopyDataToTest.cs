@@ -238,7 +238,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var name = Register(new FakeBulkDbConnection());
 
             // Act
-            var actual = new FakeDbConnection().CopyDataTo<Person>(name);
+            var actual = new FakeDbConnection().CopyDataTo<Person>(name).RowCount;
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -269,7 +269,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var name = Register(new FakeBulkDbConnection());
 
             // Act
-            var actual = new FakeDbConnection().CopyDataTo<Person>("Customer", name);
+            var actual = new FakeDbConnection().CopyDataTo<Person>("Customer", name).RowCount;
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -283,7 +283,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var name = Register(new FakeBulkDbConnection());
 
             // Act
-            var actual = new FakeDbConnection().CopyDataTo("Person", name);
+            var actual = new FakeDbConnection().CopyDataTo("Person", name).RowCount;
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -312,7 +312,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var source = new FakeDbConnection();
 
             // Act
-            var actual = source.CopyDataTo("Person", "Customer", name);
+            var actual = source.CopyDataTo("Person", "Customer", name).RowCount;
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -338,7 +338,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         public void TestCopyDataToOfAnEntityCopiesTheTableOfTheEntity()
         {
             // Act
-            var actual = new FakeDbConnection().CopyDataTo<Person>(new FakeBulkDbConnection());
+            var actual = new FakeDbConnection().CopyDataTo<Person>(new FakeBulkDbConnection()).RowCount;
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -362,7 +362,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         public void TestCopyDataToOfAnEntityWithATargetTableCopiesIntoTheTargetTable()
         {
             // Act
-            var actual = new FakeDbConnection().CopyDataTo<Person>("Customer", new FakeBulkDbConnection());
+            var actual = new FakeDbConnection().CopyDataTo<Person>("Customer", new FakeBulkDbConnection()).RowCount;
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -386,7 +386,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         public void TestCopyDataToOfATableCopiesIntoTheSameTable()
         {
             // Act
-            var actual = new FakeDbConnection().CopyDataTo("Person", new FakeBulkDbConnection());
+            var actual = new FakeDbConnection().CopyDataTo("Person", new FakeBulkDbConnection()).RowCount;
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -419,7 +419,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
 
             // Act
             var actual = new FakeDbConnection().CopyDataTo("Person", "Customer", new FakeBulkDbConnection(),
-                progressCallback: p => progress.Add((p.BatchNumber, p.RowCount, p.TotalCopiedRowCount, p.StartTime, p.EndTime)));
+                progressCallback: p => progress.Add((p.BatchCount, p.CurrentBatch.RowCount, p.RowCount, p.StartTime, p.EndTime))).RowCount;
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -441,13 +441,13 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             source.CopyDataTo("Person", "Customer", destination, progressCallback: p => progress = p);
 
             // Assert
-            Assert.AreEqual(3, progress.BatchCopiedRowCount);
-            Assert.AreEqual("FakeDataSource", progress.SourceServer);
-            Assert.AreEqual("FakeDatabase", progress.SourceDatabase);
-            Assert.AreEqual("Person", progress.SourceTable);
-            Assert.AreEqual("FakeDataSource", progress.TargetServer);
-            Assert.AreEqual("FakeDatabase", progress.TargetDatabase);
-            Assert.AreEqual("Customer", progress.TargetTable);
+            Assert.AreEqual(3, progress.CurrentBatch.RowCount);
+            Assert.AreEqual("FakeDataSource", progress.Current.Source.Server);
+            Assert.AreEqual("FakeDatabase", progress.Current.Source.Database);
+            Assert.AreEqual("Person", progress.Current.Source.Table.Name);
+            Assert.AreEqual("FakeDataSource", progress.Current.Target.Server);
+            Assert.AreEqual("FakeDatabase", progress.Current.Target.Database);
+            Assert.AreEqual("Customer", progress.Current.Target.Table.Name);
         }
 
         [TestMethod]
@@ -459,7 +459,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var times = new List<(DateTime Start, DateTime End, DateTime OperationStart, DateTime OperationEnd)>();
 
             // Act
-            source.CopyDataTo("Person", "Customer", destination, batchSize: 2, progressCallback: p => times.Add((p.BatchStartTime, p.BatchEndTime, p.StartTime, p.EndTime)));
+            source.CopyDataTo("Person", "Customer", destination, batchSize: 2, progressCallback: p => times.Add((p.CurrentBatch.StartTime, p.CurrentBatch.EndTime, p.StartTime, p.EndTime)));
 
             // Assert
             Assert.AreEqual(2, times.Count);
@@ -477,7 +477,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var batches = new List<int>();
 
             // Act
-            var actual = source.CopyDataTo("Person", "Customer", destination, batchSize: 2, progressCallback: p => batches.Add(p.RowCount));
+            var actual = source.CopyDataTo("Person", "Customer", destination, batchSize: 2, progressCallback: p => batches.Add(p.CurrentBatch.RowCount)).RowCount;
 
             // Assert
             Assert.AreEqual(5, actual);
@@ -522,7 +522,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var destination = new FakeDbConnection();
 
             // Act
-            var actual = new FakeDbConnection().CopyDataTo("Person", "Customer", destination, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
+            var actual = new FakeDbConnection().CopyDataTo("Person", "Customer", destination, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -559,7 +559,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var destination = new FakeDbConnection();
 
             // Act
-            var actual = new FakeDbConnection().CopyDataTo("Person", "Sales.Person", destination);
+            var actual = new FakeDbConnection().CopyDataTo("Person", "Sales.Person", destination).RowCount;
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -588,7 +588,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var destination = new FakeDbConnection();
 
             // Act
-            var actual = new FakeDbConnection().CopyDataTo("Person", "Person", destination, relationshipBehavior: CopyRelationshipBehavior.Parents);
+            var actual = new FakeDbConnection().CopyDataTo("Person", "Person", destination, relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
 
             // Assert
             Assert.AreEqual(6, actual);
@@ -646,7 +646,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var name = Register(new FakeBulkDbConnection());
 
             // Act
-            var actual = await new FakeDbConnection().CopyDataToAsync<Person>(name);
+            var actual = (await new FakeDbConnection().CopyDataToAsync<Person>(name)).RowCount;
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -660,7 +660,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var name = Register(new FakeBulkDbConnection());
 
             // Act
-            var actual = await new FakeDbConnection().CopyDataToAsync<Person>("Customer", name);
+            var actual = (await new FakeDbConnection().CopyDataToAsync<Person>("Customer", name)).RowCount;
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -674,7 +674,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var name = Register(new FakeBulkDbConnection());
 
             // Act
-            var actual = await new FakeDbConnection().CopyDataToAsync("Person", name);
+            var actual = (await new FakeDbConnection().CopyDataToAsync("Person", name)).RowCount;
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -688,7 +688,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var name = Register(new FakeBulkDbConnection());
 
             // Act
-            var actual = await new FakeDbConnection().CopyDataToAsync("Person", "Customer", name);
+            var actual = (await new FakeDbConnection().CopyDataToAsync("Person", "Customer", name)).RowCount;
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -713,7 +713,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         public async Task TestCopyDataToAsyncOfAnEntityCopiesTheTableOfTheEntity()
         {
             // Act
-            var actual = await new FakeDbConnection().CopyDataToAsync<Person>(new FakeBulkDbConnection());
+            var actual = (await new FakeDbConnection().CopyDataToAsync<Person>(new FakeBulkDbConnection())).RowCount;
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -737,7 +737,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         public async Task TestCopyDataToAsyncOfAnEntityWithATargetTableCopiesIntoTheTargetTable()
         {
             // Act
-            var actual = await new FakeDbConnection().CopyDataToAsync<Person>("Customer", new FakeBulkDbConnection());
+            var actual = (await new FakeDbConnection().CopyDataToAsync<Person>("Customer", new FakeBulkDbConnection())).RowCount;
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -761,7 +761,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         public async Task TestCopyDataToAsyncOfATableCopiesIntoTheSameTable()
         {
             // Act
-            var actual = await new FakeDbConnection().CopyDataToAsync("Person", new FakeBulkDbConnection());
+            var actual = (await new FakeDbConnection().CopyDataToAsync("Person", new FakeBulkDbConnection())).RowCount;
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -808,8 +808,8 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var progress = new List<(int Batch, int Rows, int Total)>();
 
             // Act
-            var actual = await new FakeDbConnection().CopyDataToAsync("Person", "Customer", new FakeBulkDbConnection(),
-                progressCallback: p => progress.Add((p.BatchNumber, p.RowCount, p.TotalCopiedRowCount)));
+            var actual = (await new FakeDbConnection().CopyDataToAsync("Person", "Customer", new FakeBulkDbConnection(),
+                progressCallback: p => progress.Add((p.BatchCount, p.CurrentBatch.RowCount, p.RowCount)))).RowCount;
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -824,7 +824,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var batches = new List<int>();
 
             // Act
-            var actual = await source.CopyDataToAsync("Person", "Customer", new FakeDbConnection(), batchSize: 2, progressCallback: p => batches.Add(p.RowCount));
+            var actual = (await source.CopyDataToAsync("Person", "Customer", new FakeDbConnection(), batchSize: 2, progressCallback: p => batches.Add(p.CurrentBatch.RowCount))).RowCount;
 
             // Assert
             Assert.AreEqual(5, actual);
@@ -853,7 +853,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var destination = new FakeDbConnection();
 
             // Act
-            var actual = await new FakeDbConnection().CopyDataToAsync("Person", "Person", destination, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren);
+            var actual = (await new FakeDbConnection().CopyDataToAsync("Person", "Person", destination, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren)).RowCount;
 
             // Assert
             Assert.AreEqual(6, actual);
@@ -985,7 +985,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var name = Register(new FakeDbConnection());
 
             // Act
-            var actual = source.CopyDataTo<Person>("Customer", name, new[] { new CopyColumnMapping("Name", "Birthday") });
+            var actual = source.CopyDataTo<Person>("Customer", name, new[] { new CopyColumnMapping("Name", "Birthday") }).RowCount;
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -999,7 +999,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var source = new FakeDbConnection();
 
             // Act
-            var actual = source.CopyDataTo<Person>(new FakeDbConnection(), new[] { new CopyColumnMapping("Name", "Birthday") });
+            var actual = source.CopyDataTo<Person>(new FakeDbConnection(), new[] { new CopyColumnMapping("Name", "Birthday") }).RowCount;
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -1042,7 +1042,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var name = Register(new FakeDbConnection());
 
             // Act
-            var actual = await source.CopyDataToAsync<Person>("Customer", name, new[] { new CopyColumnMapping("Name", "Birthday") });
+            var actual = (await source.CopyDataToAsync<Person>("Customer", name, new[] { new CopyColumnMapping("Name", "Birthday") })).RowCount;
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -1056,7 +1056,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var source = new FakeDbConnection();
 
             // Act
-            var actual = await source.CopyDataToAsync<Person>(new FakeDbConnection(), new[] { new CopyColumnMapping("Name", "Birthday") });
+            var actual = (await source.CopyDataToAsync<Person>(new FakeDbConnection(), new[] { new CopyColumnMapping("Name", "Birthday") })).RowCount;
 
             // Assert
             Assert.AreEqual(3, actual);

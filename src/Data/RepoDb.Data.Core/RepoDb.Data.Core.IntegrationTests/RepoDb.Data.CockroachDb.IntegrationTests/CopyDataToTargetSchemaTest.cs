@@ -81,7 +81,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "public.Currency", target);
+                var actual = source.CopyDataTo("Currency", "public.Currency", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -99,7 +99,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Sales.Invoice", "public.Invoice", target);
+                var actual = source.CopyDataTo("Sales.Invoice", "public.Invoice", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(2, actual);

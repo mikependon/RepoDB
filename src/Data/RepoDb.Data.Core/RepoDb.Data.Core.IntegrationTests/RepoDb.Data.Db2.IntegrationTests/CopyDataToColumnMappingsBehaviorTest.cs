@@ -93,7 +93,7 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -111,7 +111,7 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target);
+                var actual = source.CopyDataTo("Currency", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -129,7 +129,7 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -147,7 +147,7 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.ExecuteOnTarget(ExtraColumn);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -165,7 +165,7 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.ExecuteOnTarget(ReorderedColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -187,7 +187,7 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic);
+                var actual = (await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -213,7 +213,7 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -322,7 +322,7 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.CreateTargetTables("Country");
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo("Country", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -339,7 +339,7 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.CreateTargetTables("Country");
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, where: new QueryGroup(new QueryField("Id", Operation.GreaterThan, 1)), columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo("Country", target, where: new QueryGroup(new QueryField("Id", Operation.GreaterThan, 1)), columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(2, actual);
@@ -357,7 +357,7 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -376,7 +376,7 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Pet", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo("Pet", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -410,7 +410,7 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "REPODB_DATA_TGT_SALES.Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo("Currency", "REPODB_DATA_TGT_SALES.Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -428,7 +428,7 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, where: new QueryGroup(new QueryField("Code", "EUR")), columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo("Currency", target, where: new QueryGroup(new QueryField("Code", "EUR")), columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(1, actual);
@@ -446,7 +446,7 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo<Currency>(target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo<Currency>(target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -484,7 +484,7 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
+                var actual = (await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -533,7 +533,7 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Country", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
+                var actual = (await source.CopyDataToAsync("Country", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -558,7 +558,7 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -576,7 +576,7 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.ExecuteOnTarget(ReorderedColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -594,7 +594,7 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.ExecuteOnTarget(ExtraColumn);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -612,7 +612,7 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.ExecuteOnTarget(ExtraColumnWithDefault);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -666,7 +666,7 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, relationshipBehavior: CopyRelationshipBehavior.Children, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass);
+                var actual = source.CopyDataTo("Country", target, relationshipBehavior: CopyRelationshipBehavior.Children, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -684,7 +684,7 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE \"Country\" (\"Id\" INTEGER NOT NULL, \"Name\" VARCHAR(100) NOT NULL, \"Extra\" INTEGER NULL, CONSTRAINT \"PK_Country\" PRIMARY KEY (\"Id\"));");
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -706,7 +706,7 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.ExecuteOnTarget(ExtraColumnWithDefault);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass);
+                var actual = (await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -739,7 +739,7 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.ExecuteOnTarget(ReorderedColumns);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass);
+                var actual = (await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -809,7 +809,7 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -827,7 +827,7 @@ namespace RepoDb.Data.Db2.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);

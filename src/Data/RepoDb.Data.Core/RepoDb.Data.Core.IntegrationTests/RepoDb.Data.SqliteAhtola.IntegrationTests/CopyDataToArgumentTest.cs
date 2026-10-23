@@ -233,7 +233,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE \"Currency\" (\"Code\" CHAR(3) NOT NULL, CONSTRAINT \"PK_Currency\" PRIMARY KEY (\"Code\"));");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target);
+                var actual = source.CopyDataTo("Currency", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -266,7 +266,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE \"Currency\" (\"Code\" CHAR(3) NOT NULL, \"Name\" VARCHAR(50) NOT NULL, \"Extra\" INTEGER DEFAULT 7, CONSTRAINT \"PK_Currency\" PRIMARY KEY (\"Code\"));");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target);
+                var actual = source.CopyDataTo("Currency", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -300,7 +300,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE \"Currency\" (\"Code\" CHAR(3) NOT NULL, \"Name\" VARCHAR(5) NOT NULL, CONSTRAINT \"PK_Currency\" PRIMARY KEY (\"Code\"));");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target);
+                var actual = source.CopyDataTo("Currency", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -402,7 +402,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 target.Open();
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target);
+                var actual = source.CopyDataTo("Currency", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -421,8 +421,8 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.CreateTargetTables("Currency", "Country");
 
                 // Act
-                var first = source.CopyDataTo("Currency", target);
-                var second = source.CopyDataTo("Country", target);
+                var first = source.CopyDataTo("Currency", target).RowCount;
+                var second = source.CopyDataTo("Country", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, first);

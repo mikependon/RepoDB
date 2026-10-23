@@ -49,7 +49,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.CreateTargetTables("Currency");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target);
+                var actual = source.CopyDataTo("Currency", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -67,7 +67,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE \"Currency\" (\"Code\" CHAR(3) NOT NULL, CONSTRAINT \"PK_Currency\" PRIMARY KEY (\"Code\"))");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -85,7 +85,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.CreateTargetTables("Currency");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -103,7 +103,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.CreateTargetTables("Currency");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -125,7 +125,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE \"Currency\" (\"Code\" CHAR(3) NOT NULL, CONSTRAINT \"PK_Currency\" PRIMARY KEY (\"Code\"))");
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic);
+                var actual = (await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -143,7 +143,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.CreateTargetTables("Currency");
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
+                var actual = (await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);

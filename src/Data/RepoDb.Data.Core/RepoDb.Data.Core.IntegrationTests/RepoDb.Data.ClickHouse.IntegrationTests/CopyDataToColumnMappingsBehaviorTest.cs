@@ -94,7 +94,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -112,7 +112,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target);
+                var actual = source.CopyDataTo("Currency", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -130,7 +130,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -148,7 +148,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget(ExtraColumn);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -166,7 +166,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget(ReorderedColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -188,7 +188,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic);
+                var actual = (await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -214,7 +214,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -323,7 +323,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.CreateTargetTables("Country");
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo("Country", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -340,7 +340,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.CreateTargetTables("Country");
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, where: new QueryGroup(new QueryField("Id", Operation.GreaterThan, 1)), columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo("Country", target, where: new QueryGroup(new QueryField("Id", Operation.GreaterThan, 1)), columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(2, actual);
@@ -358,7 +358,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "repodb_data_target_sales.Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo("Currency", "repodb_data_target_sales.Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -376,7 +376,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, where: new QueryGroup(new QueryField("Code", "EUR")), columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo("Currency", target, where: new QueryGroup(new QueryField("Code", "EUR")), columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(1, actual);
@@ -394,7 +394,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo<Currency>(target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
+                var actual = source.CopyDataTo<Currency>(target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -432,7 +432,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
+                var actual = (await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -489,7 +489,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -507,7 +507,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget(ReorderedColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -525,7 +525,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget(ExtraColumn);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -543,7 +543,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget(ExtraColumnWithDefault);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -601,7 +601,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget(ExtraColumnWithDefault);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass);
+                var actual = (await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -634,7 +634,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget(ReorderedColumns);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass);
+                var actual = (await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -704,7 +704,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -722,7 +722,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic);
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);

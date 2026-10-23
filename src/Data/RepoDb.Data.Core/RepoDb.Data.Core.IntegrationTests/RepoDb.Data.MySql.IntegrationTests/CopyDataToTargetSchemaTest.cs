@@ -52,7 +52,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "repodb_data_target_sales.Currency", target);
+                var actual = source.CopyDataTo("Currency", "repodb_data_target_sales.Currency", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -71,7 +71,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "`repodb_data_target_sales`.`Currency`", target);
+                var actual = source.CopyDataTo("Currency", "`repodb_data_target_sales`.`Currency`", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -89,7 +89,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "repodb_data_target.Currency", target);
+                var actual = source.CopyDataTo("Currency", "repodb_data_target.Currency", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -107,7 +107,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("repodb_data_source_sales.Invoice", "repodb_data_target.Invoice", target);
+                var actual = source.CopyDataTo("repodb_data_source_sales.Invoice", "repodb_data_target.Invoice", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(2, actual);
@@ -126,7 +126,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE `Sales`.`Currency` (`Code` CHAR(3) NOT NULL, `Name` VARCHAR(50) NOT NULL, CONSTRAINT `PK_Currency` PRIMARY KEY (`Code`)); INSERT INTO `Sales`.`Currency` (`Code`, `Name`) VALUES ('USD', 'US Dollar');");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "repodb_data_target_sales.Currency", target);
+                var actual = source.CopyDataTo("Currency", "repodb_data_target_sales.Currency", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -144,7 +144,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", "repodb_data_target_sales.Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Person", "repodb_data_target_sales.Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -165,7 +165,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Country", "repodb_data_target_sales.Country", target, relationshipBehavior: CopyRelationshipBehavior.Children);
+                var actual = source.CopyDataTo("Country", "repodb_data_target_sales.Country", target, relationshipBehavior: CopyRelationshipBehavior.Children).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -184,7 +184,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", "repodb_data_target_sales.Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Person", "repodb_data_target_sales.Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 2, actual);
@@ -204,7 +204,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 source.CopyDataTo("Currency", "repodb_data_target_sales.Currency", target);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "repodb_data_target_sales.Currency", target, tableExistenceBehavior: TableExistsBehavior.Drop);
+                var actual = source.CopyDataTo("Currency", "repodb_data_target_sales.Currency", target, tableExistenceBehavior: TableExistsBehavior.Drop).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -289,7 +289,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", "repodb_data_target_sales.Currency", target);
+                var actual = (await source.CopyDataToAsync("Currency", "repodb_data_target_sales.Currency", target)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -307,7 +307,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Person", "repodb_data_target_sales.Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = (await source.CopyDataToAsync("Person", "repodb_data_target_sales.Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);

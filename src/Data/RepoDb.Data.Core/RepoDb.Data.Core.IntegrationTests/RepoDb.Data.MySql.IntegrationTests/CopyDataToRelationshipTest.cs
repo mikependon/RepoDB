@@ -86,7 +86,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 source.CopyDataTo("Country", target);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.TableOnly);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.TableOnly).RowCount;
 
                 // Assert
                 Assert.AreEqual(6, actual);
@@ -128,7 +128,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -146,7 +146,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Toy", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Toy", target, relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -164,7 +164,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Country", target, relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -201,7 +201,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Employee", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Employee", target, relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -220,7 +220,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("CycleA", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("CycleA", target, relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
 
                 // (the bulk load of MySQL is a LOAD DATA LOCAL, that skips the rows that reference rows that are not copied yet)
                 // Assert
@@ -240,7 +240,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Ledger", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Ledger", target, relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(2 + 2, actual);
@@ -260,7 +260,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("repodb_data_source_sales.InvoiceLine", "repodb_data_target_sales.InvoiceLine", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("repodb_data_source_sales.InvoiceLine", "repodb_data_target_sales.InvoiceLine", target, relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(2 + 3, actual);
@@ -284,7 +284,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, relationshipBehavior: CopyRelationshipBehavior.Children);
+                var actual = source.CopyDataTo("Country", target, relationshipBehavior: CopyRelationshipBehavior.Children).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -303,7 +303,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 source.CopyDataTo("Country", target, tableExistenceBehavior: TableExistsBehavior.Throw);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Children);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Children).RowCount;
 
                 // Assert
                 Assert.AreEqual(6 + 5 + 5, actual);
@@ -355,7 +355,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Employee", target, relationshipBehavior: CopyRelationshipBehavior.Children);
+                var actual = source.CopyDataTo("Employee", target, relationshipBehavior: CopyRelationshipBehavior.Children).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -373,7 +373,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("repodb_data_source_sales.Invoice", "repodb_data_target_sales.Invoice", target, relationshipBehavior: CopyRelationshipBehavior.Children);
+                var actual = source.CopyDataTo("repodb_data_source_sales.Invoice", "repodb_data_target_sales.Invoice", target, relationshipBehavior: CopyRelationshipBehavior.Children).RowCount;
 
                 // Assert
                 Assert.AreEqual(2 + 3 + 2, actual);
@@ -402,7 +402,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo(tableName, target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren);
+                var actual = source.CopyDataTo(tableName, target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -439,7 +439,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Employee", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren);
+                var actual = source.CopyDataTo("Employee", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -458,7 +458,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("CycleB", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren);
+                var actual = source.CopyDataTo("CycleB", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren).RowCount;
 
                 // (the bulk load of MySQL is a LOAD DATA LOCAL, that skips the rows that reference rows that are not copied yet)
                 // Assert
@@ -478,7 +478,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("repodb_data_source_sales.InvoiceLine", "repodb_data_target_sales.InvoiceLine", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren);
+                var actual = source.CopyDataTo("repodb_data_source_sales.InvoiceLine", "repodb_data_target_sales.InvoiceLine", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren).RowCount;
 
                 // Assert
                 Assert.AreEqual(2 + 3 + 2, actual);
@@ -500,7 +500,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 2, actual);
@@ -520,7 +520,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, where: new QueryGroup(new QueryField("Name", "Japan")), relationshipBehavior: CopyRelationshipBehavior.Children);
+                var actual = source.CopyDataTo("Country", target, where: new QueryGroup(new QueryField("Name", "Japan")), relationshipBehavior: CopyRelationshipBehavior.Children).RowCount;
 
                 // (the bulk load of MySQL is a LOAD DATA LOCAL, that skips the rows of the children that reference the parents that are not copied)
                 // Assert
@@ -542,7 +542,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren);
+                var actual = source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren).RowCount;
 
                 // (the bulk load of MySQL is a LOAD DATA LOCAL, that skips the rows of the children that reference the parents that are not copied)
                 // Assert
@@ -564,7 +564,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 1000)), relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 1000)), relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -583,7 +583,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo<Entities.Person>(target, p => p.CountryId == 2, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo<Entities.Person>(target, p => p.CountryId == 2, relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 2, actual);
@@ -626,7 +626,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.ExecuteOnTarget("INSERT INTO `Country` (`Id`, `Name`) VALUES (100, 'Atlantis');");
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -684,7 +684,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Toy", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = (await source.CopyDataToAsync("Toy", target, relationshipBehavior: CopyRelationshipBehavior.Parents)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -702,7 +702,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Country", target, relationshipBehavior: CopyRelationshipBehavior.Children);
+                var actual = (await source.CopyDataToAsync("Country", target, relationshipBehavior: CopyRelationshipBehavior.Children)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -720,7 +720,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Pet", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren);
+                var actual = (await source.CopyDataToAsync("Pet", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -738,7 +738,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = (await source.CopyDataToAsync("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyRelationshipBehavior.Parents)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 2, actual);
@@ -756,7 +756,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("repodb_data_source_sales.Invoice", "repodb_data_target_sales.Invoice", target, relationshipBehavior: CopyRelationshipBehavior.Children);
+                var actual = (await source.CopyDataToAsync("repodb_data_source_sales.Invoice", "repodb_data_target_sales.Invoice", target, relationshipBehavior: CopyRelationshipBehavior.Children)).RowCount;
 
                 // Assert
                 Assert.AreEqual(2 + 3 + 2, actual);

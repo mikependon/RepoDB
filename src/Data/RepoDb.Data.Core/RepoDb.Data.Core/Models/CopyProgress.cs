@@ -8,90 +8,79 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RepoDb.Data.Models
 {
     /// <summary>
-    /// A class that holds the details of a copy operation.
+    /// A class that holds the details of a copy operation: when it ran, how much it has copied so far, and the tables that it copied
+    /// (each one with its source and its target table, its batches and its logs). The same instance is passed to the progress callback after every batch,
+    /// so read what is needed inside the callback.
     /// </summary>
     public class CopyProgress
     {
         #region Properties
 
         /// <summary>
-        /// Gets the number of rows that were copied in the current batch.
+        /// Gets the number of batches that were copied so far, for all the tables.
         /// </summary>
-        public int BatchCopiedRowCount { get; internal set; }
+        public int BatchCount { get; internal set; }
 
         /// <summary>
-        /// Gets the time (in UTC) when the current batch has ended.
+        /// Gets the number of tables whose copy has ended.
         /// </summary>
-        public DateTime BatchEndTime { get; internal set; }
+        public int CompletedTableCount { get; internal set; }
 
         /// <summary>
-        /// Gets the batch number of the copy operation.
+        /// Gets the table that is being copied (or the last one that was copied, once the operation has ended).
         /// </summary>
-        public int BatchNumber { get; internal set; }
+        public CopyProgressItem Current { get; internal set; }
 
         /// <summary>
-        /// Gets the time (in UTC) when the current batch has started.
+        /// Gets the last batch that was copied for the <see cref="Current"/> table, or <c>null</c> if there is none yet.
         /// </summary>
-        public DateTime BatchStartTime { get; internal set; }
+        public CopyBatch CurrentBatch => Current?.Batches.LastOrDefault();
 
         /// <summary>
-        /// Gets the time (in UTC) when the copy operation has ended (the end of the last batch that is copied so far).
+        /// Gets the time that the operation took (or has taken so far, if it has not ended).
+        /// </summary>
+        public TimeSpan Elapsed => EndTime - StartTime;
+
+        /// <summary>
+        /// Gets the time (in UTC) when the operation has ended (or when its last batch has ended, if it has not ended).
         /// </summary>
         public DateTime EndTime { get; internal set; }
 
         /// <summary>
-        /// Gets the logs (information and warnings) of the copy operation, i.e.: the rows that were skipped by the database provider.
+        /// Gets the tables that were copied (see <see cref="CopyProgressItem"/>), in the order that they were copied: each one has its source table and the target table
+        /// that it was copied into. A table is added when its copy starts.
         /// </summary>
-        public List<CopyLog> Logs { get; internal set; } = new List<CopyLog>();
+        public IList<CopyProgressItem> Items { get; internal set; } = new List<CopyProgressItem>();
 
         /// <summary>
-        /// Gets the current number of rows that were copied.
+        /// Gets the logs of the operation (see <see cref="CopyLog"/>), for all the tables.
+        /// </summary>
+        public IList<CopyLog> Logs { get; internal set; } = new List<CopyLog>();
+
+        /// <summary>
+        /// Gets the number of rows that were copied so far, for all the tables.
         /// </summary>
         public int RowCount { get; internal set; }
 
         /// <summary>
-        /// Gets the name of the source database.
+        /// Gets the number of rows that were copied per second so far, or <c>0</c> if no time has passed.
         /// </summary>
-        public string SourceDatabase { get; internal set; }
+        public double RowsPerSecond => Elapsed.TotalSeconds > 0 ? RowCount / Elapsed.TotalSeconds : 0;
 
         /// <summary>
-        /// Gets the name of the source server (the data source of the source connection).
-        /// </summary>
-        public string SourceServer { get; internal set; }
-
-        /// <summary>
-        /// Gets the name of the source table that is being copied.
-        /// </summary>
-        public string SourceTable { get; internal set; }
-
-        /// <summary>
-        /// Gets the time (in UTC) when the copy operation has started.
+        /// Gets the time (in UTC) when the operation has started.
         /// </summary>
         public DateTime StartTime { get; internal set; }
 
         /// <summary>
-        /// Gets the name of the target database.
+        /// Gets the number of tables that are to be copied (the requested table and, depending on the relationship behavior, its related tables).
         /// </summary>
-        public string TargetDatabase { get; internal set; }
-
-        /// <summary>
-        /// Gets the name of the target server (the data source of the destination connection).
-        /// </summary>
-        public string TargetServer { get; internal set; }
-
-        /// <summary>
-        /// Gets the name of the target table that is being copied into.
-        /// </summary>
-        public string TargetTable { get; internal set; }
-
-        /// <summary>
-        /// Gets the total number of rows that were copied.
-        /// </summary>
-        public int TotalCopiedRowCount { get; internal set; }
+        public int TableCount { get; internal set; }
 
         #endregion
     }

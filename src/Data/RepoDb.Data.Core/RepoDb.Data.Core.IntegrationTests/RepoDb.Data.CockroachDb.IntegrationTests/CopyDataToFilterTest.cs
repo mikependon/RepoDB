@@ -87,7 +87,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.CreateTargetTables("Number");
 
                 // Act
-                var actual = source.CopyDataTo("Number", target, where: new QueryGroup(new QueryField("Value", 7)));
+                var actual = source.CopyDataTo("Number", target, where: new QueryGroup(new QueryField("Value", 7))).RowCount;
 
                 // Assert
                 AssertNumbers("\"Value\" = 7", actual);
@@ -105,7 +105,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.CreateTargetTables("Number");
 
                 // Act
-                var actual = source.CopyDataTo("Number", target, where: new QueryGroup(new QueryField("Value", Operation.NotEqual, 7)));
+                var actual = source.CopyDataTo("Number", target, where: new QueryGroup(new QueryField("Value", Operation.NotEqual, 7))).RowCount;
 
                 // Assert
                 AssertNumbers("\"Value\" <> 7", actual);
@@ -123,7 +123,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.CreateTargetTables("Number");
 
                 // Act
-                var actual = source.CopyDataTo("Number", target, where: new QueryGroup(new QueryField("Value", Operation.GreaterThan, 2490)));
+                var actual = source.CopyDataTo("Number", target, where: new QueryGroup(new QueryField("Value", Operation.GreaterThan, 2490))).RowCount;
 
                 // Assert
                 AssertNumbers("\"Value\" > 2490", actual);
@@ -141,7 +141,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.CreateTargetTables("Number");
 
                 // Act
-                var actual = source.CopyDataTo("Number", target, where: new QueryGroup(new QueryField("Value", Operation.GreaterThanOrEqual, 2490)));
+                var actual = source.CopyDataTo("Number", target, where: new QueryGroup(new QueryField("Value", Operation.GreaterThanOrEqual, 2490))).RowCount;
 
                 // Assert
                 AssertNumbers("\"Value\" >= 2490", actual);
@@ -159,7 +159,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.CreateTargetTables("Number");
 
                 // Act
-                var actual = source.CopyDataTo("Number", target, where: new QueryGroup(new QueryField("Value", Operation.LessThan, 5)));
+                var actual = source.CopyDataTo("Number", target, where: new QueryGroup(new QueryField("Value", Operation.LessThan, 5))).RowCount;
 
                 // Assert
                 AssertNumbers("\"Value\" < 5", actual);
@@ -177,7 +177,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.CreateTargetTables("Number");
 
                 // Act
-                var actual = source.CopyDataTo("Number", target, where: new QueryGroup(new QueryField("Value", Operation.LessThanOrEqual, 5)));
+                var actual = source.CopyDataTo("Number", target, where: new QueryGroup(new QueryField("Value", Operation.LessThanOrEqual, 5))).RowCount;
 
                 // Assert
                 AssertNumbers("\"Value\" <= 5", actual);
@@ -195,7 +195,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.CreateTargetTables("Number");
 
                 // Act
-                var actual = source.CopyDataTo("Number", target, where: new QueryGroup(new QueryField("Value", Operation.Between, new[] { 10, 20 })));
+                var actual = source.CopyDataTo("Number", target, where: new QueryGroup(new QueryField("Value", Operation.Between, new[] { 10, 20 }))).RowCount;
 
                 // Assert
                 AssertNumbers("\"Value\" BETWEEN 10 AND 20", actual);
@@ -213,7 +213,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.CreateTargetTables("Number");
 
                 // Act
-                var actual = source.CopyDataTo("Number", target, where: new QueryGroup(new QueryField("Value", Operation.NotBetween, new[] { 10, 2490 })));
+                var actual = source.CopyDataTo("Number", target, where: new QueryGroup(new QueryField("Value", Operation.NotBetween, new[] { 10, 2490 }))).RowCount;
 
                 // Assert
                 AssertNumbers("\"Value\" NOT BETWEEN 10 AND 2490", actual);
@@ -231,7 +231,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.CreateTargetTables("Number");
 
                 // Act
-                var actual = source.CopyDataTo("Number", target, where: new QueryGroup(new QueryField("Value", Operation.In, new[] { 1, 5, 9, 99999 })));
+                var actual = source.CopyDataTo("Number", target, where: new QueryGroup(new QueryField("Value", Operation.In, new[] { 1, 5, 9, 99999 }))).RowCount;
 
                 // Assert
                 AssertNumbers("\"Value\" IN (1, 5, 9, 99999)", actual);
@@ -249,7 +249,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.CreateTargetTables("Number");
 
                 // Act
-                var actual = source.CopyDataTo("Number", target, where: new QueryGroup(new QueryField("Value", Operation.NotIn, new[] { 1, 5, 9 })));
+                var actual = source.CopyDataTo("Number", target, where: new QueryGroup(new QueryField("Value", Operation.NotIn, new[] { 1, 5, 9 }))).RowCount;
 
                 // Assert
                 AssertNumbers("\"Value\" NOT IN (1, 5, 9)", actual);
@@ -267,7 +267,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.CreateTargetTables("Number");
 
                 // Act
-                var actual = source.CopyDataTo("Number", target, where: new QueryGroup(new QueryField("Label", Operation.Like, "Number 12%")));
+                var actual = source.CopyDataTo("Number", target, where: new QueryGroup(new QueryField("Label", Operation.Like, "Number 12%"))).RowCount;
 
                 // Assert
                 AssertNumbers("\"Label\" LIKE 'Number 12%'", actual);
@@ -285,7 +285,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.CreateTargetTables("Number");
 
                 // Act
-                var actual = source.CopyDataTo("Number", target, where: new QueryGroup(new QueryField("Label", Operation.NotLike, "Number 1%")));
+                var actual = source.CopyDataTo("Number", target, where: new QueryGroup(new QueryField("Label", Operation.NotLike, "Number 1%"))).RowCount;
 
                 // Assert
                 AssertNumbers("\"Label\" NOT LIKE 'Number 1%'", actual);
@@ -303,7 +303,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 CreatePersonTableWithoutKeys();
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Age", null)));
+                var actual = source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Age", null))).RowCount;
 
                 // Assert
                 AssertPersons("\"Age\" IS NULL", actual);
@@ -322,7 +322,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 CreatePersonTableWithoutKeys();
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Age", Operation.NotEqual, null)));
+                var actual = source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Age", Operation.NotEqual, null))).RowCount;
 
                 // Assert
                 AssertPersons("\"Age\" IS NOT NULL", actual);
@@ -345,7 +345,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 });
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, where: where);
+                var actual = source.CopyDataTo("Person", target, where: where).RowCount;
 
                 // Assert
                 AssertPersons("\"Age\" > 30 AND \"IsActive\" = true", actual);
@@ -368,7 +368,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 }, Conjunction.Or);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, where: where);
+                var actual = source.CopyDataTo("Person", target, where: where).RowCount;
 
                 // Assert
                 AssertPersons("\"Name\" = 'Alice' OR \"Age\" > 50", actual);
@@ -388,7 +388,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                     new[] { new QueryGroup(new[] { new QueryField("Age", Operation.LessThan, 25), new QueryField("Age", Operation.GreaterThan, 50) }, Conjunction.Or) });
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, where: where);
+                var actual = source.CopyDataTo("Person", target, where: where).RowCount;
 
                 // Assert
                 AssertPersons("\"IsActive\" = true AND (\"Age\" < 25 OR \"Age\" > 50)", actual);
@@ -406,7 +406,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.CreateTargetTables("Currency");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, where: new QueryGroup(new QueryField("Code", "EUR")));
+                var actual = source.CopyDataTo("Currency", target, where: new QueryGroup(new QueryField("Code", "EUR"))).RowCount;
 
                 // Assert
                 Assert.AreEqual(1, actual);
@@ -424,7 +424,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 CreatePersonTableWithoutKeys();
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Birthday", Operation.GreaterThanOrEqual, new DateTime(1990, 1, 15))));
+                var actual = source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Birthday", Operation.GreaterThanOrEqual, new DateTime(1990, 1, 15)))).RowCount;
 
                 // Assert
                 AssertPersons("\"Birthday\" >= '1990-01-15'", actual);
@@ -442,7 +442,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 CreatePersonTableWithoutKeys();
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Salary", Operation.GreaterThan, 1000.50m)));
+                var actual = source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Salary", Operation.GreaterThan, 1000.50m))).RowCount;
 
                 // Assert
                 AssertPersons("\"Salary\" > 1000.50", actual);
@@ -460,7 +460,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.CreateTargetTables("Number");
 
                 // Act
-                var actual = source.CopyDataTo("Number", target, where: new QueryGroup(new QueryField("Value", Operation.GreaterThan, 0)));
+                var actual = source.CopyDataTo("Number", target, where: new QueryGroup(new QueryField("Value", Operation.GreaterThan, 0))).RowCount;
 
                 // Assert
                 Assert.AreEqual(2500, actual);
@@ -478,7 +478,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.CreateTargetTables("Number");
 
                 // Act
-                var actual = source.CopyDataTo("Number", target, where: new QueryGroup(new QueryField("Value", Operation.GreaterThan, 99999)));
+                var actual = source.CopyDataTo("Number", target, where: new QueryGroup(new QueryField("Value", Operation.GreaterThan, 99999))).RowCount;
 
                 // Assert
                 Assert.AreEqual(0, actual);
@@ -496,7 +496,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.CreateTargetTables("Currency");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, where: new QueryGroup(new QueryField("Code", "x'; DROP TABLE \"public\".\"Currency\"; --")));
+                var actual = source.CopyDataTo("Currency", target, where: new QueryGroup(new QueryField("Code", "x'; DROP TABLE \"public\".\"Currency\"; --"))).RowCount;
 
                 // Assert
                 Assert.AreEqual(0, actual);
@@ -548,7 +548,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.CreateTargetTables("Number");
 
                 // Act
-                var actual = await source.CopyDataToAsync("Number", target, where: new QueryGroup(new QueryField("Value", Operation.Between, new[] { 10, 20 })));
+                var actual = (await source.CopyDataToAsync("Number", target, where: new QueryGroup(new QueryField("Value", Operation.Between, new[] { 10, 20 })))).RowCount;
 
                 // Assert
                 AssertNumbers("\"Value\" BETWEEN 10 AND 20", actual);
@@ -566,7 +566,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.CreateTargetTables("Number");
 
                 // Act
-                var actual = await source.CopyDataToAsync("Number", target, where: new QueryGroup(new QueryField("Value", Operation.In, new[] { 1, 5, 9 })));
+                var actual = (await source.CopyDataToAsync("Number", target, where: new QueryGroup(new QueryField("Value", Operation.In, new[] { 1, 5, 9 })))).RowCount;
 
                 // Assert
                 AssertNumbers("\"Value\" IN (1, 5, 9)", actual);
@@ -584,7 +584,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 CreatePersonTableWithoutKeys();
 
                 // Act
-                var actual = await source.CopyDataToAsync("Person", target, where: new QueryGroup(new QueryField("Age", null)));
+                var actual = (await source.CopyDataToAsync("Person", target, where: new QueryGroup(new QueryField("Age", null)))).RowCount;
 
                 // Assert
                 AssertPersons("\"Age\" IS NULL", actual);
@@ -607,7 +607,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 }, Conjunction.Or);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Person", target, where: where);
+                var actual = (await source.CopyDataToAsync("Person", target, where: where)).RowCount;
 
                 // Assert
                 AssertPersons("\"Name\" = 'Alice' OR \"Age\" > 50", actual);
@@ -625,7 +625,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.CreateTargetTables("Number");
 
                 // Act
-                var actual = await source.CopyDataToAsync("Number", target, where: new QueryGroup(new QueryField("Value", Operation.GreaterThan, 99999)));
+                var actual = (await source.CopyDataToAsync("Number", target, where: new QueryGroup(new QueryField("Value", Operation.GreaterThan, 99999)))).RowCount;
 
                 // Assert
                 Assert.AreEqual(0, actual);
@@ -665,7 +665,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 CreatePersonTableWithoutKeys();
 
                 // Act
-                var actual = source.CopyDataTo<Person>(target, p => p.Age > 30);
+                var actual = source.CopyDataTo<Person>(target, p => p.Age > 30).RowCount;
 
                 // Assert
                 AssertPersons("\"Age\" > 30", actual);
@@ -683,7 +683,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 CreatePersonTableWithoutKeys();
 
                 // Act
-                var actual = source.CopyDataTo<Person>(target, p => p.Age > 30 && p.IsActive == true);
+                var actual = source.CopyDataTo<Person>(target, p => p.Age > 30 && p.IsActive == true).RowCount;
 
                 // Assert
                 AssertPersons("\"Age\" > 30 AND \"IsActive\" = true", actual);
@@ -701,7 +701,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 CreatePersonTableWithoutKeys();
 
                 // Act
-                var actual = source.CopyDataTo<Person>(target, p => p.Name == "Alice" || p.Name == "Eve");
+                var actual = source.CopyDataTo<Person>(target, p => p.Name == "Alice" || p.Name == "Eve").RowCount;
 
                 // Assert
                 AssertPersons("\"Name\" IN ('Alice', 'Eve')", actual);
@@ -719,7 +719,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 CreatePersonTableWithoutKeys();
 
                 // Act
-                var actual = source.CopyDataTo<Person>(target, p => p.Salary == null);
+                var actual = source.CopyDataTo<Person>(target, p => p.Salary == null).RowCount;
 
                 // Assert
                 AssertPersons("\"Salary\" IS NULL", actual);
@@ -738,7 +738,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 var ids = new[] { 1, 3, 5 };
 
                 // Act
-                var actual = source.CopyDataTo<Person>(target, p => ids.Contains(p.Id));
+                var actual = source.CopyDataTo<Person>(target, p => ids.Contains(p.Id)).RowCount;
 
                 // Assert
                 AssertPersons("\"Id\" IN (1, 3, 5)", actual);
@@ -757,7 +757,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 var minimumAge = 40;
 
                 // Act
-                var actual = source.CopyDataTo<Person>(target, p => p.Age >= minimumAge);
+                var actual = source.CopyDataTo<Person>(target, p => p.Age >= minimumAge).RowCount;
 
                 // Assert
                 AssertPersons("\"Age\" >= 40", actual);
@@ -775,7 +775,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 CreatePersonTableWithoutKeys();
 
                 // Act
-                var actual = source.CopyDataTo<Person>(target, p => p.Age > 1000);
+                var actual = source.CopyDataTo<Person>(target, p => p.Age > 1000).RowCount;
 
                 // Assert
                 Assert.AreEqual(0, actual);
@@ -797,7 +797,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 CreatePersonTableWithoutKeys();
 
                 // Act
-                var actual = await source.CopyDataToAsync<Person>(target, p => p.Age > 30 && p.IsActive == true);
+                var actual = (await source.CopyDataToAsync<Person>(target, p => p.Age > 30 && p.IsActive == true)).RowCount;
 
                 // Assert
                 AssertPersons("\"Age\" > 30 AND \"IsActive\" = true", actual);
@@ -816,7 +816,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 var ids = new[] { 2, 4 };
 
                 // Act
-                var actual = await source.CopyDataToAsync<Person>(target, p => ids.Contains(p.Id));
+                var actual = (await source.CopyDataToAsync<Person>(target, p => ids.Contains(p.Id))).RowCount;
 
                 // Assert
                 AssertPersons("\"Id\" IN (2, 4)", actual);

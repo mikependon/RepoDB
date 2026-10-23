@@ -69,7 +69,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE `Currency` (`Code` String, `Name` String, `Extra` Nullable(Int32)) ENGINE = MergeTree ORDER BY (`Code`)");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Skip);
+                var actual = source.CopyDataTo("Currency", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Skip).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -89,7 +89,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE `Currency` (`Code` String) ENGINE = MergeTree ORDER BY (`Code`)");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Skip);
+                var actual = source.CopyDataTo("Currency", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Skip).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -142,7 +142,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Throw);
+                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Throw).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -200,7 +200,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", target, tableExistenceBehavior: TableExistsBehavior.Throw);
+                var actual = (await source.CopyDataToAsync("Currency", target, tableExistenceBehavior: TableExistsBehavior.Throw)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -242,7 +242,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Drop);
+                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Drop).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -262,7 +262,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget("INSERT INTO `Currency` (`Code`, `Name`) VALUES ('USD', 'US Dollar');");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Drop);
+                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Drop).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -282,7 +282,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE `Currency` (`Code` Int32, `Foo` Nullable(String)) ENGINE = MergeTree ORDER BY tuple()");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Drop);
+                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Drop).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -302,7 +302,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Drop);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Drop);
+                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Drop).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -326,7 +326,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget("INSERT INTO `Currency` (`Code`, `Name`) VALUES ('USD', 'US Dollar');");
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", target, tableExistenceBehavior: TableExistsBehavior.Drop);
+                var actual = (await source.CopyDataToAsync("Currency", target, tableExistenceBehavior: TableExistsBehavior.Drop)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -352,7 +352,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Align);
+                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Align).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -371,7 +371,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE `Currency` (`Code` String) ENGINE = MergeTree ORDER BY (`Code`)");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Align);
+                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Align).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -393,7 +393,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Assert.IsFalse(TargetIndexExists("`Person`", "IX_Person_Name"));
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, tableExistenceBehavior: TableExistsBehavior.Align);
+                var actual = source.CopyDataTo("Person", target, tableExistenceBehavior: TableExistsBehavior.Align).RowCount;
 
                 // Assert
                 Assert.AreEqual(6, actual);
@@ -412,7 +412,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE `Currency` (`Code` String, `Name` String, `Extra` Nullable(Int32)) ENGINE = MergeTree ORDER BY (`Code`)");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Align);
+                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Align).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -431,7 +431,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.CreateTargetTables("Currency");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Align);
+                var actual = source.CopyDataTo("Currency", target, tableExistenceBehavior: TableExistsBehavior.Align).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -454,7 +454,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE `Currency` (`Code` String) ENGINE = MergeTree ORDER BY (`Code`)");
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", target, tableExistenceBehavior: TableExistsBehavior.Align);
+                var actual = (await source.CopyDataToAsync("Currency", target, tableExistenceBehavior: TableExistsBehavior.Align)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);

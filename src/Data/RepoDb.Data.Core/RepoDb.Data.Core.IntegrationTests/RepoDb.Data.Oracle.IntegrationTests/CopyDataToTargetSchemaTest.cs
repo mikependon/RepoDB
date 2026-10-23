@@ -52,7 +52,7 @@ namespace RepoDb.Data.Oracle.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "REPODB_DATA_TGT_SALES.Currency", target);
+                var actual = source.CopyDataTo("Currency", "REPODB_DATA_TGT_SALES.Currency", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -71,7 +71,7 @@ namespace RepoDb.Data.Oracle.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "\"REPODB_DATA_TGT_SALES\".\"Currency\"", target);
+                var actual = source.CopyDataTo("Currency", "\"REPODB_DATA_TGT_SALES\".\"Currency\"", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -89,7 +89,7 @@ namespace RepoDb.Data.Oracle.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "REPODB_DATA_TGT.Currency", target);
+                var actual = source.CopyDataTo("Currency", "REPODB_DATA_TGT.Currency", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -107,7 +107,7 @@ namespace RepoDb.Data.Oracle.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("REPODB_DATA_SRC_SALES.Invoice", "REPODB_DATA_TGT.Invoice", target);
+                var actual = source.CopyDataTo("REPODB_DATA_SRC_SALES.Invoice", "REPODB_DATA_TGT.Invoice", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(2, actual);
@@ -127,7 +127,7 @@ namespace RepoDb.Data.Oracle.IntegrationTests
                 Helper.ExecuteOnTarget("INSERT INTO \"Sales\".\"Currency\" (\"Code\", \"Name\") VALUES ('USD', 'US Dollar')");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "REPODB_DATA_TGT_SALES.Currency", target);
+                var actual = source.CopyDataTo("Currency", "REPODB_DATA_TGT_SALES.Currency", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -145,7 +145,7 @@ namespace RepoDb.Data.Oracle.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", "REPODB_DATA_TGT_SALES.Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Person", "REPODB_DATA_TGT_SALES.Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -166,7 +166,7 @@ namespace RepoDb.Data.Oracle.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Country", "REPODB_DATA_TGT_SALES.Country", target, relationshipBehavior: CopyRelationshipBehavior.Children);
+                var actual = source.CopyDataTo("Country", "REPODB_DATA_TGT_SALES.Country", target, relationshipBehavior: CopyRelationshipBehavior.Children).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -185,7 +185,7 @@ namespace RepoDb.Data.Oracle.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", "REPODB_DATA_TGT_SALES.Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Person", "REPODB_DATA_TGT_SALES.Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 2, actual);
@@ -205,7 +205,7 @@ namespace RepoDb.Data.Oracle.IntegrationTests
                 source.CopyDataTo("Currency", "REPODB_DATA_TGT_SALES.Currency", target);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "REPODB_DATA_TGT_SALES.Currency", target, tableExistenceBehavior: TableExistsBehavior.Drop);
+                var actual = source.CopyDataTo("Currency", "REPODB_DATA_TGT_SALES.Currency", target, tableExistenceBehavior: TableExistsBehavior.Drop).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -288,7 +288,7 @@ namespace RepoDb.Data.Oracle.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", "REPODB_DATA_TGT_SALES.Currency", target);
+                var actual = (await source.CopyDataToAsync("Currency", "REPODB_DATA_TGT_SALES.Currency", target)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -306,7 +306,7 @@ namespace RepoDb.Data.Oracle.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Person", "REPODB_DATA_TGT_SALES.Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = (await source.CopyDataToAsync("Person", "REPODB_DATA_TGT_SALES.Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);

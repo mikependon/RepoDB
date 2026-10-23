@@ -49,13 +49,14 @@ namespace RepoDb.Data
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the columns of the source table are aligned with the columns of the target table by the bulk insert of the provider of the destination connection (the equivalent enumeration of the provider is used, i.e.: <c>SqlServerBulkColumnMappingsBehavior</c>): <see cref="CopyColumnMappingsBehavior.Automatic"/> copies the columns that exist on both tables, <see cref="CopyColumnMappingsBehavior.Strict"/> requires the same columns in the same order and <see cref="CopyColumnMappingsBehavior.StrictBypass"/> requires every column of the source table to exist on the target table, in any order. It is ignored when the provider has no bulk insert (the rows are inserted in batches). The behavior is applied through the setting of the destination connection, so it requires the setting of the bulk operations package of the provider (i.e.: <c>SqlServerBulkOperationsDbSetting</c>) when it is not <see cref="CopyColumnMappingsBehavior.Automatic"/>. The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
-        /// <returns>The number of rows inserted into the destination table.</returns>
-        public static int CopyDataTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
+        /// <returns>The <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static CopyProgress CopyDataTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
             int batchSize = 1000,
@@ -64,12 +65,13 @@ namespace RepoDb.Data
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.CopyDataTo(ConnectionManager.Get(destinationConnection), where, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(ConnectionManager.Get(destinationConnection), where, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, dataInterceptors, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction);
 
         /// <summary>
         /// Copies all the rows of the table mapped to the <typeparamref name="TEntity"/> type of the current connection
@@ -87,13 +89,14 @@ namespace RepoDb.Data
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the columns of the source table are aligned with the columns of the target table by the bulk insert of the provider of the destination connection (the equivalent enumeration of the provider is used, i.e.: <c>SqlServerBulkColumnMappingsBehavior</c>): <see cref="CopyColumnMappingsBehavior.Automatic"/> copies the columns that exist on both tables, <see cref="CopyColumnMappingsBehavior.Strict"/> requires the same columns in the same order and <see cref="CopyColumnMappingsBehavior.StrictBypass"/> requires every column of the source table to exist on the target table, in any order. It is ignored when the provider has no bulk insert (the rows are inserted in batches). The behavior is applied through the setting of the destination connection, so it requires the setting of the bulk operations package of the provider (i.e.: <c>SqlServerBulkOperationsDbSetting</c>) when it is not <see cref="CopyColumnMappingsBehavior.Automatic"/>. The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
-        /// <returns>The number of rows inserted into the target table.</returns>
-        public static int CopyDataTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
+        /// <returns>The <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static CopyProgress CopyDataTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string targetTable,
             string destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
@@ -103,12 +106,13 @@ namespace RepoDb.Data
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.CopyDataTo(targetTable, ConnectionManager.Get(destinationConnection), where, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(targetTable, ConnectionManager.Get(destinationConnection), where, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, dataInterceptors, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction);
 
         /// <summary>
         /// Copies all the rows of the source table of the current connection into the same-named table of the destination connection
@@ -124,13 +128,14 @@ namespace RepoDb.Data
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the columns of the source table are aligned with the columns of the target table by the bulk insert of the provider of the destination connection (the equivalent enumeration of the provider is used, i.e.: <c>SqlServerBulkColumnMappingsBehavior</c>): <see cref="CopyColumnMappingsBehavior.Automatic"/> copies the columns that exist on both tables, <see cref="CopyColumnMappingsBehavior.Strict"/> requires the same columns in the same order and <see cref="CopyColumnMappingsBehavior.StrictBypass"/> requires every column of the source table to exist on the target table, in any order. It is ignored when the provider has no bulk insert (the rows are inserted in batches). The behavior is applied through the setting of the destination connection, so it requires the setting of the bulk operations package of the provider (i.e.: <c>SqlServerBulkOperationsDbSetting</c>) when it is not <see cref="CopyColumnMappingsBehavior.Automatic"/>. The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
-        /// <returns>The number of rows inserted into the destination table.</returns>
-        public static int CopyDataTo(this IDbConnection connection,
+        /// <returns>The <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static CopyProgress CopyDataTo(this IDbConnection connection,
             string tableName,
             string destinationConnection,
             QueryGroup where = null,
@@ -140,11 +145,12 @@ namespace RepoDb.Data
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null) =>
-            connection.CopyDataTo(tableName, ConnectionManager.Get(destinationConnection), where, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(tableName, ConnectionManager.Get(destinationConnection), where, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, dataInterceptors, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction);
 
         /// <summary>
         /// Copies all the rows of the source table of the current connection into the target table of the destination connection
@@ -162,13 +168,14 @@ namespace RepoDb.Data
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the columns of the source table are aligned with the columns of the target table by the bulk insert of the provider of the destination connection (the equivalent enumeration of the provider is used, i.e.: <c>SqlServerBulkColumnMappingsBehavior</c>): <see cref="CopyColumnMappingsBehavior.Automatic"/> copies the columns that exist on both tables, <see cref="CopyColumnMappingsBehavior.Strict"/> requires the same columns in the same order and <see cref="CopyColumnMappingsBehavior.StrictBypass"/> requires every column of the source table to exist on the target table, in any order. It is ignored when the provider has no bulk insert (the rows are inserted in batches). The behavior is applied through the setting of the destination connection, so it requires the setting of the bulk operations package of the provider (i.e.: <c>SqlServerBulkOperationsDbSetting</c>) when it is not <see cref="CopyColumnMappingsBehavior.Automatic"/>. The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
-        /// <returns>The number of rows inserted into the target table.</returns>
-        public static int CopyDataTo(this IDbConnection connection,
+        /// <returns>The <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static CopyProgress CopyDataTo(this IDbConnection connection,
             string sourceTable,
             string targetTable,
             string destinationConnection,
@@ -179,11 +186,12 @@ namespace RepoDb.Data
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null) =>
-            connection.CopyDataTo(sourceTable, targetTable, ConnectionManager.Get(destinationConnection), where, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(sourceTable, targetTable, ConnectionManager.Get(destinationConnection), where, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, dataInterceptors, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction);
 
         #endregion
 
@@ -203,13 +211,14 @@ namespace RepoDb.Data
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the columns of the source table are aligned with the columns of the target table by the bulk insert of the provider of the destination connection (the equivalent enumeration of the provider is used, i.e.: <c>SqlServerBulkColumnMappingsBehavior</c>): <see cref="CopyColumnMappingsBehavior.Automatic"/> copies the columns that exist on both tables, <see cref="CopyColumnMappingsBehavior.Strict"/> requires the same columns in the same order and <see cref="CopyColumnMappingsBehavior.StrictBypass"/> requires every column of the source table to exist on the target table, in any order. It is ignored when the provider has no bulk insert (the rows are inserted in batches). The behavior is applied through the setting of the destination connection, so it requires the setting of the bulk operations package of the provider (i.e.: <c>SqlServerBulkOperationsDbSetting</c>) when it is not <see cref="CopyColumnMappingsBehavior.Automatic"/>. The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
-        /// <returns>The number of rows inserted into the destination table.</returns>
-        public static int CopyDataTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
+        /// <returns>The <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static CopyProgress CopyDataTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IDbConnection destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
             int batchSize = 1000,
@@ -218,12 +227,13 @@ namespace RepoDb.Data
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.CopyDataTo(ClassMappedNameCache.Get<TEntity>(), destinationConnection, where == null ? null : QueryGroup.Parse(where), batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(ClassMappedNameCache.Get<TEntity>(), destinationConnection, where == null ? null : QueryGroup.Parse(where), batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, dataInterceptors, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction);
 
         /// <summary>
         /// Copies all the rows of the table mapped to the <typeparamref name="TEntity"/> type of the current connection
@@ -241,13 +251,14 @@ namespace RepoDb.Data
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the columns of the source table are aligned with the columns of the target table by the bulk insert of the provider of the destination connection (the equivalent enumeration of the provider is used, i.e.: <c>SqlServerBulkColumnMappingsBehavior</c>): <see cref="CopyColumnMappingsBehavior.Automatic"/> copies the columns that exist on both tables, <see cref="CopyColumnMappingsBehavior.Strict"/> requires the same columns in the same order and <see cref="CopyColumnMappingsBehavior.StrictBypass"/> requires every column of the source table to exist on the target table, in any order. It is ignored when the provider has no bulk insert (the rows are inserted in batches). The behavior is applied through the setting of the destination connection, so it requires the setting of the bulk operations package of the provider (i.e.: <c>SqlServerBulkOperationsDbSetting</c>) when it is not <see cref="CopyColumnMappingsBehavior.Automatic"/>. The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
-        /// <returns>The number of rows inserted into the target table.</returns>
-        public static int CopyDataTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
+        /// <returns>The <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static CopyProgress CopyDataTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string targetTable,
             IDbConnection destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
@@ -257,12 +268,13 @@ namespace RepoDb.Data
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.CopyDataTo(ClassMappedNameCache.Get<TEntity>(), targetTable, destinationConnection, where == null ? null : QueryGroup.Parse(where), batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(ClassMappedNameCache.Get<TEntity>(), targetTable, destinationConnection, where == null ? null : QueryGroup.Parse(where), batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, dataInterceptors, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction);
 
         /// <summary>
         /// Copies all the rows of the source table of the current connection into the same-named table of the destination connection.
@@ -277,13 +289,14 @@ namespace RepoDb.Data
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the columns of the source table are aligned with the columns of the target table by the bulk insert of the provider of the destination connection (the equivalent enumeration of the provider is used, i.e.: <c>SqlServerBulkColumnMappingsBehavior</c>): <see cref="CopyColumnMappingsBehavior.Automatic"/> copies the columns that exist on both tables, <see cref="CopyColumnMappingsBehavior.Strict"/> requires the same columns in the same order and <see cref="CopyColumnMappingsBehavior.StrictBypass"/> requires every column of the source table to exist on the target table, in any order. It is ignored when the provider has no bulk insert (the rows are inserted in batches). The behavior is applied through the setting of the destination connection, so it requires the setting of the bulk operations package of the provider (i.e.: <c>SqlServerBulkOperationsDbSetting</c>) when it is not <see cref="CopyColumnMappingsBehavior.Automatic"/>. The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
-        /// <returns>The number of rows inserted into the destination table.</returns>
-        public static int CopyDataTo(this IDbConnection connection,
+        /// <returns>The <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static CopyProgress CopyDataTo(this IDbConnection connection,
             string tableName,
             IDbConnection destinationConnection,
             QueryGroup where = null,
@@ -293,11 +306,12 @@ namespace RepoDb.Data
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null) =>
-            connection.CopyDataTo(tableName, tableName, destinationConnection, where, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(tableName, tableName, destinationConnection, where, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, dataInterceptors, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction);
 
         /// <summary>
         /// Copies all the rows of the source table of the current connection into the target table of the destination connection.
@@ -314,13 +328,14 @@ namespace RepoDb.Data
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the columns of the source table are aligned with the columns of the target table by the bulk insert of the provider of the destination connection (the equivalent enumeration of the provider is used, i.e.: <c>SqlServerBulkColumnMappingsBehavior</c>): <see cref="CopyColumnMappingsBehavior.Automatic"/> copies the columns that exist on both tables, <see cref="CopyColumnMappingsBehavior.Strict"/> requires the same columns in the same order and <see cref="CopyColumnMappingsBehavior.StrictBypass"/> requires every column of the source table to exist on the target table, in any order. It is ignored when the provider has no bulk insert (the rows are inserted in batches). The behavior is applied through the setting of the destination connection, so it requires the setting of the bulk operations package of the provider (i.e.: <c>SqlServerBulkOperationsDbSetting</c>) when it is not <see cref="CopyColumnMappingsBehavior.Automatic"/>. The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
-        /// <returns>The number of rows inserted into the target table.</returns>
-        public static int CopyDataTo(this IDbConnection connection,
+        /// <returns>The <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static CopyProgress CopyDataTo(this IDbConnection connection,
             string sourceTable,
             string targetTable,
             IDbConnection destinationConnection,
@@ -331,6 +346,7 @@ namespace RepoDb.Data
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
@@ -339,11 +355,14 @@ namespace RepoDb.Data
             var targetSchema = GetTargetSchema(destinationConnection, targetTable);
             Validate(connection, sourceTable, targetTable, destinationConnection, targetSchema, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, null);
             var options = new CopyProgress { StartTime = DateTime.UtcNow };
-            foreach (var (source, target, filter) in GetTables(connection, destinationConnection, sourceTable, targetTable, targetSchema, where, relationshipBehavior, tableExistenceBehavior, commandTimeout, trace, transaction))
+            var tables = GetTables(connection, destinationConnection, sourceTable, targetTable, targetSchema, where, relationshipBehavior, tableExistenceBehavior, commandTimeout, trace, transaction);
+            options.TableCount = tables.Count;
+            foreach (var (source, target, filter) in tables)
             {
-                CopyRows(connection, destinationConnection, source, target, filter, batchSize, columnMappingsBehavior, null, options, progressCallback, commandTimeout, traceKey, trace, transaction);
+                CopyRows(connection, destinationConnection, source, target, filter, batchSize, columnMappingsBehavior, null, options, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction);
             }
-            return options.TotalCopiedRowCount;
+            options.EndTime = DateTime.UtcNow;
+            return options;
         }
 
         #endregion
@@ -364,14 +383,15 @@ namespace RepoDb.Data
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the columns of the source table are aligned with the columns of the target table by the bulk insert of the provider of the destination connection (the equivalent enumeration of the provider is used, i.e.: <c>SqlServerBulkColumnMappingsBehavior</c>): <see cref="CopyColumnMappingsBehavior.Automatic"/> copies the columns that exist on both tables, <see cref="CopyColumnMappingsBehavior.Strict"/> requires the same columns in the same order and <see cref="CopyColumnMappingsBehavior.StrictBypass"/> requires every column of the source table to exist on the target table, in any order. It is ignored when the provider has no bulk insert (the rows are inserted in batches). The behavior is applied through the setting of the destination connection, so it requires the setting of the bulk operations package of the provider (i.e.: <c>SqlServerBulkOperationsDbSetting</c>) when it is not <see cref="CopyColumnMappingsBehavior.Automatic"/>. The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the number of rows inserted into the destination table.</returns>
-        public static Task<int> CopyDataToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
+        /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static Task<CopyProgress> CopyDataToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
             int batchSize = 1000,
@@ -380,13 +400,14 @@ namespace RepoDb.Data
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.CopyDataToAsync(ConnectionManager.Get(destinationConnection), where, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(ConnectionManager.Get(destinationConnection), where, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, dataInterceptors, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Copies all the rows of the table mapped to the <typeparamref name="TEntity"/> type of the current connection
@@ -404,14 +425,15 @@ namespace RepoDb.Data
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the columns of the source table are aligned with the columns of the target table by the bulk insert of the provider of the destination connection (the equivalent enumeration of the provider is used, i.e.: <c>SqlServerBulkColumnMappingsBehavior</c>): <see cref="CopyColumnMappingsBehavior.Automatic"/> copies the columns that exist on both tables, <see cref="CopyColumnMappingsBehavior.Strict"/> requires the same columns in the same order and <see cref="CopyColumnMappingsBehavior.StrictBypass"/> requires every column of the source table to exist on the target table, in any order. It is ignored when the provider has no bulk insert (the rows are inserted in batches). The behavior is applied through the setting of the destination connection, so it requires the setting of the bulk operations package of the provider (i.e.: <c>SqlServerBulkOperationsDbSetting</c>) when it is not <see cref="CopyColumnMappingsBehavior.Automatic"/>. The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the number of rows inserted into the target table.</returns>
-        public static Task<int> CopyDataToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
+        /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static Task<CopyProgress> CopyDataToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string targetTable,
             string destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
@@ -421,13 +443,14 @@ namespace RepoDb.Data
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.CopyDataToAsync(targetTable, ConnectionManager.Get(destinationConnection), where, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(targetTable, ConnectionManager.Get(destinationConnection), where, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, dataInterceptors, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Copies all the rows of the source table of the current connection into the same-named table of the destination connection
@@ -443,14 +466,15 @@ namespace RepoDb.Data
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the columns of the source table are aligned with the columns of the target table by the bulk insert of the provider of the destination connection (the equivalent enumeration of the provider is used, i.e.: <c>SqlServerBulkColumnMappingsBehavior</c>): <see cref="CopyColumnMappingsBehavior.Automatic"/> copies the columns that exist on both tables, <see cref="CopyColumnMappingsBehavior.Strict"/> requires the same columns in the same order and <see cref="CopyColumnMappingsBehavior.StrictBypass"/> requires every column of the source table to exist on the target table, in any order. It is ignored when the provider has no bulk insert (the rows are inserted in batches). The behavior is applied through the setting of the destination connection, so it requires the setting of the bulk operations package of the provider (i.e.: <c>SqlServerBulkOperationsDbSetting</c>) when it is not <see cref="CopyColumnMappingsBehavior.Automatic"/>. The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the number of rows inserted into the destination table.</returns>
-        public static Task<int> CopyDataToAsync(this IDbConnection connection,
+        /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static Task<CopyProgress> CopyDataToAsync(this IDbConnection connection,
             string tableName,
             string destinationConnection,
             QueryGroup where = null,
@@ -460,12 +484,13 @@ namespace RepoDb.Data
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            connection.CopyDataToAsync(tableName, ConnectionManager.Get(destinationConnection), where, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(tableName, ConnectionManager.Get(destinationConnection), where, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, dataInterceptors, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Copies all the rows of the source table of the current connection into the target table of the destination connection
@@ -483,14 +508,15 @@ namespace RepoDb.Data
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the columns of the source table are aligned with the columns of the target table by the bulk insert of the provider of the destination connection (the equivalent enumeration of the provider is used, i.e.: <c>SqlServerBulkColumnMappingsBehavior</c>): <see cref="CopyColumnMappingsBehavior.Automatic"/> copies the columns that exist on both tables, <see cref="CopyColumnMappingsBehavior.Strict"/> requires the same columns in the same order and <see cref="CopyColumnMappingsBehavior.StrictBypass"/> requires every column of the source table to exist on the target table, in any order. It is ignored when the provider has no bulk insert (the rows are inserted in batches). The behavior is applied through the setting of the destination connection, so it requires the setting of the bulk operations package of the provider (i.e.: <c>SqlServerBulkOperationsDbSetting</c>) when it is not <see cref="CopyColumnMappingsBehavior.Automatic"/>. The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the number of rows inserted into the target table.</returns>
-        public static Task<int> CopyDataToAsync(this IDbConnection connection,
+        /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static Task<CopyProgress> CopyDataToAsync(this IDbConnection connection,
             string sourceTable,
             string targetTable,
             string destinationConnection,
@@ -501,12 +527,13 @@ namespace RepoDb.Data
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            connection.CopyDataToAsync(sourceTable, targetTable, ConnectionManager.Get(destinationConnection), where, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(sourceTable, targetTable, ConnectionManager.Get(destinationConnection), where, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, dataInterceptors, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         #endregion
 
@@ -526,14 +553,15 @@ namespace RepoDb.Data
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the columns of the source table are aligned with the columns of the target table by the bulk insert of the provider of the destination connection (the equivalent enumeration of the provider is used, i.e.: <c>SqlServerBulkColumnMappingsBehavior</c>): <see cref="CopyColumnMappingsBehavior.Automatic"/> copies the columns that exist on both tables, <see cref="CopyColumnMappingsBehavior.Strict"/> requires the same columns in the same order and <see cref="CopyColumnMappingsBehavior.StrictBypass"/> requires every column of the source table to exist on the target table, in any order. It is ignored when the provider has no bulk insert (the rows are inserted in batches). The behavior is applied through the setting of the destination connection, so it requires the setting of the bulk operations package of the provider (i.e.: <c>SqlServerBulkOperationsDbSetting</c>) when it is not <see cref="CopyColumnMappingsBehavior.Automatic"/>. The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the number of rows inserted into the destination table.</returns>
-        public static Task<int> CopyDataToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
+        /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static Task<CopyProgress> CopyDataToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IDbConnection destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
             int batchSize = 1000,
@@ -542,13 +570,14 @@ namespace RepoDb.Data
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.CopyDataToAsync(ClassMappedNameCache.Get<TEntity>(), destinationConnection, where == null ? null : QueryGroup.Parse(where), batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(ClassMappedNameCache.Get<TEntity>(), destinationConnection, where == null ? null : QueryGroup.Parse(where), batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, dataInterceptors, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Copies all the rows of the table mapped to the <typeparamref name="TEntity"/> type of the current connection
@@ -566,14 +595,15 @@ namespace RepoDb.Data
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the columns of the source table are aligned with the columns of the target table by the bulk insert of the provider of the destination connection (the equivalent enumeration of the provider is used, i.e.: <c>SqlServerBulkColumnMappingsBehavior</c>): <see cref="CopyColumnMappingsBehavior.Automatic"/> copies the columns that exist on both tables, <see cref="CopyColumnMappingsBehavior.Strict"/> requires the same columns in the same order and <see cref="CopyColumnMappingsBehavior.StrictBypass"/> requires every column of the source table to exist on the target table, in any order. It is ignored when the provider has no bulk insert (the rows are inserted in batches). The behavior is applied through the setting of the destination connection, so it requires the setting of the bulk operations package of the provider (i.e.: <c>SqlServerBulkOperationsDbSetting</c>) when it is not <see cref="CopyColumnMappingsBehavior.Automatic"/>. The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the number of rows inserted into the target table.</returns>
-        public static Task<int> CopyDataToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
+        /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static Task<CopyProgress> CopyDataToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string targetTable,
             IDbConnection destinationConnection,
             Expression<Func<TEntity, bool>> where = null,
@@ -583,13 +613,14 @@ namespace RepoDb.Data
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.CopyDataToAsync(ClassMappedNameCache.Get<TEntity>(), targetTable, destinationConnection, where == null ? null : QueryGroup.Parse(where), batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(ClassMappedNameCache.Get<TEntity>(), targetTable, destinationConnection, where == null ? null : QueryGroup.Parse(where), batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, dataInterceptors, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Copies all the rows of the source table of the current connection into the same-named table of the destination connection.
@@ -604,14 +635,15 @@ namespace RepoDb.Data
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the columns of the source table are aligned with the columns of the target table by the bulk insert of the provider of the destination connection (the equivalent enumeration of the provider is used, i.e.: <c>SqlServerBulkColumnMappingsBehavior</c>): <see cref="CopyColumnMappingsBehavior.Automatic"/> copies the columns that exist on both tables, <see cref="CopyColumnMappingsBehavior.Strict"/> requires the same columns in the same order and <see cref="CopyColumnMappingsBehavior.StrictBypass"/> requires every column of the source table to exist on the target table, in any order. It is ignored when the provider has no bulk insert (the rows are inserted in batches). The behavior is applied through the setting of the destination connection, so it requires the setting of the bulk operations package of the provider (i.e.: <c>SqlServerBulkOperationsDbSetting</c>) when it is not <see cref="CopyColumnMappingsBehavior.Automatic"/>. The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the number of rows inserted into the destination table.</returns>
-        public static Task<int> CopyDataToAsync(this IDbConnection connection,
+        /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static Task<CopyProgress> CopyDataToAsync(this IDbConnection connection,
             string tableName,
             IDbConnection destinationConnection,
             QueryGroup where = null,
@@ -621,12 +653,13 @@ namespace RepoDb.Data
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            connection.CopyDataToAsync(tableName, tableName, destinationConnection, where, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(tableName, tableName, destinationConnection, where, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, dataInterceptors, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Copies all the rows of the source table of the current connection into the target table of the destination connection.
@@ -643,14 +676,15 @@ namespace RepoDb.Data
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="columnMappingsBehavior">Defines how the columns of the source table are aligned with the columns of the target table by the bulk insert of the provider of the destination connection (the equivalent enumeration of the provider is used, i.e.: <c>SqlServerBulkColumnMappingsBehavior</c>): <see cref="CopyColumnMappingsBehavior.Automatic"/> copies the columns that exist on both tables, <see cref="CopyColumnMappingsBehavior.Strict"/> requires the same columns in the same order and <see cref="CopyColumnMappingsBehavior.StrictBypass"/> requires every column of the source table to exist on the target table, in any order. It is ignored when the provider has no bulk insert (the rows are inserted in batches). The behavior is applied through the setting of the destination connection, so it requires the setting of the bulk operations package of the provider (i.e.: <c>SqlServerBulkOperationsDbSetting</c>) when it is not <see cref="CopyColumnMappingsBehavior.Automatic"/>. The default is <see cref="CopyColumnMappingsBehavior.Automatic"/>.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the number of rows inserted into the target table.</returns>
-        public static async Task<int> CopyDataToAsync(this IDbConnection connection,
+        /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static async Task<CopyProgress> CopyDataToAsync(this IDbConnection connection,
             string sourceTable,
             string targetTable,
             IDbConnection destinationConnection,
@@ -661,6 +695,7 @@ namespace RepoDb.Data
             CopyColumnMappingsBehavior columnMappingsBehavior = CopyColumnMappingsBehavior.Automatic,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
@@ -671,11 +706,13 @@ namespace RepoDb.Data
             Validate(connection, sourceTable, targetTable, destinationConnection, targetSchema, batchSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, null);
             var options = new CopyProgress { StartTime = DateTime.UtcNow };
             var tables = await GetTablesAsync(connection, destinationConnection, sourceTable, targetTable, targetSchema, where, relationshipBehavior, tableExistenceBehavior, commandTimeout, trace, transaction, cancellationToken).ConfigureAwait(false);
+            options.TableCount = tables.Count;
             foreach (var (source, target, filter) in tables)
             {
-                await CopyRowsAsync(connection, destinationConnection, source, target, filter, batchSize, columnMappingsBehavior, null, options, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
+                await CopyRowsAsync(connection, destinationConnection, source, target, filter, batchSize, columnMappingsBehavior, null, options, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
             }
-            return options.TotalCopiedRowCount;
+            options.EndTime = DateTime.UtcNow;
+            return options;
         }
 
         #endregion
@@ -696,13 +733,14 @@ namespace RepoDb.Data
         /// <param name="relationshipBehavior">Defines which of the tables that are related to the table (through the foreign keys) have their data copied together with it. The schema of the related tables is copied first (see <see cref="CopyTableSchemaTo"/>), then their rows are copied in the order that a table comes after the tables that it references. The <paramref name="where"/> filter applies to the requested table only, all the rows of the related tables are copied. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name (the schema of the target table can be different).</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
-        /// <returns>The number of rows inserted into the destination table.</returns>
-        public static int CopyDataTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
+        /// <returns>The <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static CopyProgress CopyDataTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string destinationConnection,
             IList<CopyColumnMapping> mappings,
             Expression<Func<TEntity, bool>> where = null,
@@ -711,12 +749,13 @@ namespace RepoDb.Data
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.CopyDataTo(ConnectionManager.Get(destinationConnection), mappings, where, batchSize, relationshipBehavior, tableExistenceBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(ConnectionManager.Get(destinationConnection), mappings, where, batchSize, relationshipBehavior, tableExistenceBehavior, dataInterceptors, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction);
 
         /// <summary>
         /// Copies all the rows of the table mapped to the <typeparamref name="TEntity"/> type of the current connection
@@ -734,13 +773,14 @@ namespace RepoDb.Data
         /// <param name="relationshipBehavior">Defines which of the tables that are related to the table (through the foreign keys) have their data copied together with it. The schema of the related tables is copied first (see <see cref="CopyTableSchemaTo"/>), then their rows are copied in the order that a table comes after the tables that it references. The <paramref name="where"/> filter applies to the requested table only, all the rows of the related tables are copied. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name (the schema of the target table can be different).</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
-        /// <returns>The number of rows inserted into the target table.</returns>
-        public static int CopyDataTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
+        /// <returns>The <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static CopyProgress CopyDataTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string targetTable,
             string destinationConnection,
             IList<CopyColumnMapping> mappings,
@@ -750,12 +790,13 @@ namespace RepoDb.Data
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.CopyDataTo(targetTable, ConnectionManager.Get(destinationConnection), mappings, where, batchSize, relationshipBehavior, tableExistenceBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(targetTable, ConnectionManager.Get(destinationConnection), mappings, where, batchSize, relationshipBehavior, tableExistenceBehavior, dataInterceptors, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction);
 
         /// <summary>
         /// Copies all the rows of the source table of the current connection into the same-named table of the destination connection
@@ -771,13 +812,14 @@ namespace RepoDb.Data
         /// <param name="relationshipBehavior">Defines which of the tables that are related to the table (through the foreign keys) have their data copied together with it. The schema of the related tables is copied first (see <see cref="CopyTableSchemaTo"/>), then their rows are copied in the order that a table comes after the tables that it references. The <paramref name="where"/> filter applies to the requested table only, all the rows of the related tables are copied. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name (the schema of the target table can be different).</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
-        /// <returns>The number of rows inserted into the destination table.</returns>
-        public static int CopyDataTo(this IDbConnection connection,
+        /// <returns>The <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static CopyProgress CopyDataTo(this IDbConnection connection,
             string tableName,
             string destinationConnection,
             IList<CopyColumnMapping> mappings,
@@ -787,11 +829,12 @@ namespace RepoDb.Data
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null) =>
-            connection.CopyDataTo(tableName, ConnectionManager.Get(destinationConnection), mappings, where, batchSize, relationshipBehavior, tableExistenceBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(tableName, ConnectionManager.Get(destinationConnection), mappings, where, batchSize, relationshipBehavior, tableExistenceBehavior, dataInterceptors, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction);
 
         /// <summary>
         /// Copies all the rows of the source table of the current connection into the target table of the destination connection
@@ -809,13 +852,14 @@ namespace RepoDb.Data
         /// <param name="relationshipBehavior">Defines which of the tables that are related to the table (through the foreign keys) have their data copied together with it. The schema of the related tables is copied first (see <see cref="CopyTableSchemaTo"/>), then their rows are copied in the order that a table comes after the tables that it references. The <paramref name="where"/> filter applies to the requested table only, all the rows of the related tables are copied. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name (the schema of the target table can be different).</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
-        /// <returns>The number of rows inserted into the target table.</returns>
-        public static int CopyDataTo(this IDbConnection connection,
+        /// <returns>The <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static CopyProgress CopyDataTo(this IDbConnection connection,
             string sourceTable,
             string targetTable,
             string destinationConnection,
@@ -826,11 +870,12 @@ namespace RepoDb.Data
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null) =>
-            connection.CopyDataTo(sourceTable, targetTable, ConnectionManager.Get(destinationConnection), mappings, where, batchSize, relationshipBehavior, tableExistenceBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(sourceTable, targetTable, ConnectionManager.Get(destinationConnection), mappings, where, batchSize, relationshipBehavior, tableExistenceBehavior, dataInterceptors, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction);
 
         #endregion
 
@@ -850,13 +895,14 @@ namespace RepoDb.Data
         /// <param name="relationshipBehavior">Defines which of the tables that are related to the table (through the foreign keys) have their data copied together with it. The schema of the related tables is copied first (see <see cref="CopyTableSchemaTo"/>), then their rows are copied in the order that a table comes after the tables that it references. The <paramref name="where"/> filter applies to the requested table only, all the rows of the related tables are copied. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name (the schema of the target table can be different).</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
-        /// <returns>The number of rows inserted into the destination table.</returns>
-        public static int CopyDataTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
+        /// <returns>The <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static CopyProgress CopyDataTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IDbConnection destinationConnection,
             IList<CopyColumnMapping> mappings,
             Expression<Func<TEntity, bool>> where = null,
@@ -865,12 +911,13 @@ namespace RepoDb.Data
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.CopyDataTo(ClassMappedNameCache.Get<TEntity>(), destinationConnection, mappings, where == null ? null : QueryGroup.Parse(where), batchSize, relationshipBehavior, tableExistenceBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(ClassMappedNameCache.Get<TEntity>(), destinationConnection, mappings, where == null ? null : QueryGroup.Parse(where), batchSize, relationshipBehavior, tableExistenceBehavior, dataInterceptors, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction);
 
         /// <summary>
         /// Copies all the rows of the table mapped to the <typeparamref name="TEntity"/> type of the current connection
@@ -888,13 +935,14 @@ namespace RepoDb.Data
         /// <param name="relationshipBehavior">Defines which of the tables that are related to the table (through the foreign keys) have their data copied together with it. The schema of the related tables is copied first (see <see cref="CopyTableSchemaTo"/>), then their rows are copied in the order that a table comes after the tables that it references. The <paramref name="where"/> filter applies to the requested table only, all the rows of the related tables are copied. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name (the schema of the target table can be different).</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
-        /// <returns>The number of rows inserted into the target table.</returns>
-        public static int CopyDataTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
+        /// <returns>The <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static CopyProgress CopyDataTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string targetTable,
             IDbConnection destinationConnection,
             IList<CopyColumnMapping> mappings,
@@ -904,12 +952,13 @@ namespace RepoDb.Data
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.CopyDataTo(ClassMappedNameCache.Get<TEntity>(), targetTable, destinationConnection, mappings, where == null ? null : QueryGroup.Parse(where), batchSize, relationshipBehavior, tableExistenceBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(ClassMappedNameCache.Get<TEntity>(), targetTable, destinationConnection, mappings, where == null ? null : QueryGroup.Parse(where), batchSize, relationshipBehavior, tableExistenceBehavior, dataInterceptors, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction);
 
         /// <summary>
         /// Copies all the rows of the source table of the current connection into the same-named table of the destination connection.
@@ -924,13 +973,14 @@ namespace RepoDb.Data
         /// <param name="relationshipBehavior">Defines which of the tables that are related to the table (through the foreign keys) have their data copied together with it. The schema of the related tables is copied first (see <see cref="CopyTableSchemaTo"/>), then their rows are copied in the order that a table comes after the tables that it references. The <paramref name="where"/> filter applies to the requested table only, all the rows of the related tables are copied. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name (the schema of the target table can be different).</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
-        /// <returns>The number of rows inserted into the destination table.</returns>
-        public static int CopyDataTo(this IDbConnection connection,
+        /// <returns>The <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static CopyProgress CopyDataTo(this IDbConnection connection,
             string tableName,
             IDbConnection destinationConnection,
             IList<CopyColumnMapping> mappings,
@@ -940,11 +990,12 @@ namespace RepoDb.Data
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null) =>
-            connection.CopyDataTo(tableName, tableName, destinationConnection, mappings, where, batchSize, relationshipBehavior, tableExistenceBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(tableName, tableName, destinationConnection, mappings, where, batchSize, relationshipBehavior, tableExistenceBehavior, dataInterceptors, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction);
 
         /// <summary>
         /// Copies all the rows of the source table of the current connection into the target table of the destination connection.
@@ -961,13 +1012,14 @@ namespace RepoDb.Data
         /// <param name="relationshipBehavior">Defines which of the tables that are related to the table (through the foreign keys) have their data copied together with it. The schema of the related tables is copied first (see <see cref="CopyTableSchemaTo"/>), then their rows are copied in the order that a table comes after the tables that it references. The <paramref name="where"/> filter applies to the requested table only, all the rows of the related tables are copied. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name (the schema of the target table can be different).</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
-        /// <returns>The number of rows inserted into the target table.</returns>
-        public static int CopyDataTo(this IDbConnection connection,
+        /// <returns>The <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static CopyProgress CopyDataTo(this IDbConnection connection,
             string sourceTable,
             string targetTable,
             IDbConnection destinationConnection,
@@ -978,6 +1030,7 @@ namespace RepoDb.Data
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
@@ -986,11 +1039,14 @@ namespace RepoDb.Data
             var targetSchema = GetTargetSchema(destinationConnection, targetTable);
             Validate(connection, sourceTable, targetTable, destinationConnection, targetSchema, batchSize, relationshipBehavior, tableExistenceBehavior, CopyColumnMappingsBehavior.Automatic, mappings);
             var options = new CopyProgress { StartTime = DateTime.UtcNow };
-            foreach (var (source, target, filter) in GetTables(connection, destinationConnection, sourceTable, targetTable, targetSchema, where, relationshipBehavior, tableExistenceBehavior, commandTimeout, trace, transaction, mappings))
+            var tables = GetTables(connection, destinationConnection, sourceTable, targetTable, targetSchema, where, relationshipBehavior, tableExistenceBehavior, commandTimeout, trace, transaction, mappings);
+            options.TableCount = tables.Count;
+            foreach (var (source, target, filter) in tables)
             {
-                CopyRows(connection, destinationConnection, source, target, filter, batchSize, CopyColumnMappingsBehavior.Automatic, string.Equals(source, sourceTable, StringComparison.Ordinal) ? mappings : null, options, progressCallback, commandTimeout, traceKey, trace, transaction);
+                CopyRows(connection, destinationConnection, source, target, filter, batchSize, CopyColumnMappingsBehavior.Automatic, string.Equals(source, sourceTable, StringComparison.Ordinal) ? mappings : null, options, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction);
             }
-            return options.TotalCopiedRowCount;
+            options.EndTime = DateTime.UtcNow;
+            return options;
         }
 
         #endregion
@@ -1011,14 +1067,15 @@ namespace RepoDb.Data
         /// <param name="relationshipBehavior">Defines which of the tables that are related to the table (through the foreign keys) have their data copied together with it. The schema of the related tables is copied first (see <see cref="CopyTableSchemaTo"/>), then their rows are copied in the order that a table comes after the tables that it references. The <paramref name="where"/> filter applies to the requested table only, all the rows of the related tables are copied. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name (the schema of the target table can be different).</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the number of rows inserted into the destination table.</returns>
-        public static Task<int> CopyDataToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
+        /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static Task<CopyProgress> CopyDataToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string destinationConnection,
             IList<CopyColumnMapping> mappings,
             Expression<Func<TEntity, bool>> where = null,
@@ -1027,13 +1084,14 @@ namespace RepoDb.Data
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.CopyDataToAsync(ConnectionManager.Get(destinationConnection), mappings, where, batchSize, relationshipBehavior, tableExistenceBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(ConnectionManager.Get(destinationConnection), mappings, where, batchSize, relationshipBehavior, tableExistenceBehavior, dataInterceptors, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Copies all the rows of the table mapped to the <typeparamref name="TEntity"/> type of the current connection
@@ -1051,14 +1109,15 @@ namespace RepoDb.Data
         /// <param name="relationshipBehavior">Defines which of the tables that are related to the table (through the foreign keys) have their data copied together with it. The schema of the related tables is copied first (see <see cref="CopyTableSchemaTo"/>), then their rows are copied in the order that a table comes after the tables that it references. The <paramref name="where"/> filter applies to the requested table only, all the rows of the related tables are copied. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name (the schema of the target table can be different).</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the number of rows inserted into the target table.</returns>
-        public static Task<int> CopyDataToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
+        /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static Task<CopyProgress> CopyDataToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string targetTable,
             string destinationConnection,
             IList<CopyColumnMapping> mappings,
@@ -1068,13 +1127,14 @@ namespace RepoDb.Data
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.CopyDataToAsync(targetTable, ConnectionManager.Get(destinationConnection), mappings, where, batchSize, relationshipBehavior, tableExistenceBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(targetTable, ConnectionManager.Get(destinationConnection), mappings, where, batchSize, relationshipBehavior, tableExistenceBehavior, dataInterceptors, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Copies all the rows of the source table of the current connection into the same-named table of the destination connection
@@ -1090,14 +1150,15 @@ namespace RepoDb.Data
         /// <param name="relationshipBehavior">Defines which of the tables that are related to the table (through the foreign keys) have their data copied together with it. The schema of the related tables is copied first (see <see cref="CopyTableSchemaTo"/>), then their rows are copied in the order that a table comes after the tables that it references. The <paramref name="where"/> filter applies to the requested table only, all the rows of the related tables are copied. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name (the schema of the target table can be different).</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the number of rows inserted into the destination table.</returns>
-        public static Task<int> CopyDataToAsync(this IDbConnection connection,
+        /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static Task<CopyProgress> CopyDataToAsync(this IDbConnection connection,
             string tableName,
             string destinationConnection,
             IList<CopyColumnMapping> mappings,
@@ -1107,12 +1168,13 @@ namespace RepoDb.Data
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            connection.CopyDataToAsync(tableName, ConnectionManager.Get(destinationConnection), mappings, where, batchSize, relationshipBehavior, tableExistenceBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(tableName, ConnectionManager.Get(destinationConnection), mappings, where, batchSize, relationshipBehavior, tableExistenceBehavior, dataInterceptors, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Copies all the rows of the source table of the current connection into the target table of the destination connection
@@ -1130,14 +1192,15 @@ namespace RepoDb.Data
         /// <param name="relationshipBehavior">Defines which of the tables that are related to the table (through the foreign keys) have their data copied together with it. The schema of the related tables is copied first (see <see cref="CopyTableSchemaTo"/>), then their rows are copied in the order that a table comes after the tables that it references. The <paramref name="where"/> filter applies to the requested table only, all the rows of the related tables are copied. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name (the schema of the target table can be different).</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the number of rows inserted into the target table.</returns>
-        public static Task<int> CopyDataToAsync(this IDbConnection connection,
+        /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static Task<CopyProgress> CopyDataToAsync(this IDbConnection connection,
             string sourceTable,
             string targetTable,
             string destinationConnection,
@@ -1148,12 +1211,13 @@ namespace RepoDb.Data
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            connection.CopyDataToAsync(sourceTable, targetTable, ConnectionManager.Get(destinationConnection), mappings, where, batchSize, relationshipBehavior, tableExistenceBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(sourceTable, targetTable, ConnectionManager.Get(destinationConnection), mappings, where, batchSize, relationshipBehavior, tableExistenceBehavior, dataInterceptors, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         #endregion
 
@@ -1173,14 +1237,15 @@ namespace RepoDb.Data
         /// <param name="relationshipBehavior">Defines which of the tables that are related to the table (through the foreign keys) have their data copied together with it. The schema of the related tables is copied first (see <see cref="CopyTableSchemaTo"/>), then their rows are copied in the order that a table comes after the tables that it references. The <paramref name="where"/> filter applies to the requested table only, all the rows of the related tables are copied. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name (the schema of the target table can be different).</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the number of rows inserted into the destination table.</returns>
-        public static Task<int> CopyDataToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
+        /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static Task<CopyProgress> CopyDataToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IDbConnection destinationConnection,
             IList<CopyColumnMapping> mappings,
             Expression<Func<TEntity, bool>> where = null,
@@ -1189,13 +1254,14 @@ namespace RepoDb.Data
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.CopyDataToAsync(ClassMappedNameCache.Get<TEntity>(), destinationConnection, mappings, where == null ? null : QueryGroup.Parse(where), batchSize, relationshipBehavior, tableExistenceBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(ClassMappedNameCache.Get<TEntity>(), destinationConnection, mappings, where == null ? null : QueryGroup.Parse(where), batchSize, relationshipBehavior, tableExistenceBehavior, dataInterceptors, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Copies all the rows of the table mapped to the <typeparamref name="TEntity"/> type of the current connection
@@ -1213,14 +1279,15 @@ namespace RepoDb.Data
         /// <param name="relationshipBehavior">Defines which of the tables that are related to the table (through the foreign keys) have their data copied together with it. The schema of the related tables is copied first (see <see cref="CopyTableSchemaTo"/>), then their rows are copied in the order that a table comes after the tables that it references. The <paramref name="where"/> filter applies to the requested table only, all the rows of the related tables are copied. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name (the schema of the target table can be different).</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the number of rows inserted into the target table.</returns>
-        public static Task<int> CopyDataToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
+        /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static Task<CopyProgress> CopyDataToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string targetTable,
             IDbConnection destinationConnection,
             IList<CopyColumnMapping> mappings,
@@ -1230,13 +1297,14 @@ namespace RepoDb.Data
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.CopyDataToAsync(ClassMappedNameCache.Get<TEntity>(), targetTable, destinationConnection, mappings, where == null ? null : QueryGroup.Parse(where), batchSize, relationshipBehavior, tableExistenceBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(ClassMappedNameCache.Get<TEntity>(), targetTable, destinationConnection, mappings, where == null ? null : QueryGroup.Parse(where), batchSize, relationshipBehavior, tableExistenceBehavior, dataInterceptors, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Copies all the rows of the source table of the current connection into the same-named table of the destination connection.
@@ -1251,14 +1319,15 @@ namespace RepoDb.Data
         /// <param name="relationshipBehavior">Defines which of the tables that are related to the table (through the foreign keys) have their data copied together with it. The schema of the related tables is copied first (see <see cref="CopyTableSchemaTo"/>), then their rows are copied in the order that a table comes after the tables that it references. The <paramref name="where"/> filter applies to the requested table only, all the rows of the related tables are copied. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name (the schema of the target table can be different).</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the number of rows inserted into the destination table.</returns>
-        public static Task<int> CopyDataToAsync(this IDbConnection connection,
+        /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static Task<CopyProgress> CopyDataToAsync(this IDbConnection connection,
             string tableName,
             IDbConnection destinationConnection,
             IList<CopyColumnMapping> mappings,
@@ -1268,12 +1337,13 @@ namespace RepoDb.Data
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            connection.CopyDataToAsync(tableName, tableName, destinationConnection, mappings, where, batchSize, relationshipBehavior, tableExistenceBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(tableName, tableName, destinationConnection, mappings, where, batchSize, relationshipBehavior, tableExistenceBehavior, dataInterceptors, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Copies all the rows of the source table of the current connection into the target table of the destination connection.
@@ -1290,14 +1360,15 @@ namespace RepoDb.Data
         /// <param name="relationshipBehavior">Defines which of the tables that are related to the table (through the foreign keys) have their data copied together with it. The schema of the related tables is copied first (see <see cref="CopyTableSchemaTo"/>), then their rows are copied in the order that a table comes after the tables that it references. The <paramref name="where"/> filter applies to the requested table only, all the rows of the related tables are copied. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name (the schema of the target table can be different).</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the table (and to its related tables) in the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>: <see cref="TableExistsBehavior.Skip"/> creates the missing tables and leaves the existing ones as they are, <see cref="TableExistsBehavior.Align"/> also adds the missing columns and indexes of the existing tables, <see cref="TableExistsBehavior.Throw"/> throws if a table exists and <see cref="TableExistsBehavior.Drop"/> drops the existing tables and creates them again. The default is <see cref="TableExistsBehavior.Skip"/>, which together with <see cref="CopyRelationshipBehavior.TableOnly"/> does not copy any schema, so the table must already exist. Anything else requires the source and the target tables to have the same name (the schema of the target table can be different). <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
         /// <param name="dataInterceptors">The data interceptors to be used, in order. The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> (batch number, rows in the batch, total rows copied so far, start and end time) after every batch is inserted. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted: the totals so far (<see cref="CopyProgress.RowCount"/>, <see cref="CopyProgress.BatchCount"/>, <see cref="CopyProgress.Elapsed"/>, <see cref="CopyProgress.RowsPerSecond"/>), the table that is being copied (<see cref="CopyProgress.Current"/>) and its last batch (<see cref="CopyProgress.CurrentBatch"/>). The same instance is passed every time, so read what is needed inside the callback. A provider that has a bulk insert receives all the rows of a table in one go, so such a table is reported as one batch. The default is <c>null</c>.</param>
+        /// <param name="completedCallback">The callback that receives the <see cref="CopyProgressItem"/> of a table (its source and target tables, its batches and its logs) once the copy of that table has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the number of rows inserted into the target table.</returns>
-        public static async Task<int> CopyDataToAsync(this IDbConnection connection,
+        /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
+        public static async Task<CopyProgress> CopyDataToAsync(this IDbConnection connection,
             string sourceTable,
             string targetTable,
             IDbConnection destinationConnection,
@@ -1308,6 +1379,7 @@ namespace RepoDb.Data
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             IList<ICopyDataInterceptor> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
+            Action<CopyProgressItem> completedCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
@@ -1318,11 +1390,13 @@ namespace RepoDb.Data
             Validate(connection, sourceTable, targetTable, destinationConnection, targetSchema, batchSize, relationshipBehavior, tableExistenceBehavior, CopyColumnMappingsBehavior.Automatic, mappings);
             var options = new CopyProgress { StartTime = DateTime.UtcNow };
             var tables = await GetTablesAsync(connection, destinationConnection, sourceTable, targetTable, targetSchema, where, relationshipBehavior, tableExistenceBehavior, commandTimeout, trace, transaction, cancellationToken, mappings).ConfigureAwait(false);
+            options.TableCount = tables.Count;
             foreach (var (source, target, filter) in tables)
             {
-                await CopyRowsAsync(connection, destinationConnection, source, target, filter, batchSize, CopyColumnMappingsBehavior.Automatic, string.Equals(source, sourceTable, StringComparison.Ordinal) ? mappings : null, options, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
+                await CopyRowsAsync(connection, destinationConnection, source, target, filter, batchSize, CopyColumnMappingsBehavior.Automatic, string.Equals(source, sourceTable, StringComparison.Ordinal) ? mappings : null, options, progressCallback, completedCallback, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
             }
-            return options.TotalCopiedRowCount;
+            options.EndTime = DateTime.UtcNow;
+            return options;
         }
 
         #endregion

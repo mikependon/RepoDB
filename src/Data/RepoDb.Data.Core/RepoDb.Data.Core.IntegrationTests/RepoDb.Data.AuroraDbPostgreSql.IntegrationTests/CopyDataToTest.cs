@@ -55,7 +55,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.CreateTargetTables("Country");
 
                 // Act
-                var actual = source.CopyDataTo("Country", target);
+                var actual = source.CopyDataTo("Country", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -84,7 +84,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.CreateTargetTables(tableName);
 
                 // Act
-                var actual = source.CopyDataTo(tableName, target);
+                var actual = source.CopyDataTo(tableName, target).RowCount;
 
                 // Assert
                 Assert.AreEqual(expected, actual);
@@ -169,7 +169,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.CreateTargetTables("Empty");
 
                 // Act
-                var actual = source.CopyDataTo("Empty", target);
+                var actual = source.CopyDataTo("Empty", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(0, actual);
@@ -187,7 +187,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE \"public\".\"CurrencyCopy\" (\"Code\" CHAR(3) NOT NULL, \"Name\" varchar(50) NOT NULL, CONSTRAINT \"PK_CurrencyCopy\" PRIMARY KEY (\"Code\"));");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "CurrencyCopy", target);
+                var actual = source.CopyDataTo("Currency", "CurrencyCopy", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -206,7 +206,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget("INSERT INTO \"public\".\"Currency\" (\"Code\", \"Name\") VALUES ('USD', 'US Dollar');");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target);
+                var actual = source.CopyDataTo("Currency", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -225,7 +225,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.CreateTargetTables("Number");
 
                 // Act
-                var actual = source.CopyDataTo("Number", target, batchSize: 100, commandTimeout: 60);
+                var actual = source.CopyDataTo("Number", target, batchSize: 100, commandTimeout: 60).RowCount;
 
                 // Assert
                 Assert.AreEqual(2500, actual);
@@ -244,7 +244,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 var progress = new List<(int Batch, int Rows, int Total, DateTime Start, DateTime End)>();
 
                 // Act
-                var actual = source.CopyDataTo("Number", target, batchSize: 500, progressCallback: p => progress.Add((p.BatchNumber, p.RowCount, p.TotalCopiedRowCount, p.StartTime, p.EndTime)));
+                var actual = source.CopyDataTo("Number", target, batchSize: 500, progressCallback: p => progress.Add((p.BatchCount, p.CurrentBatch.RowCount, p.RowCount, p.StartTime, p.EndTime))).RowCount;
 
                 // Assert
                 Assert.AreEqual(2500, actual);
@@ -326,7 +326,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 using (var transaction = target.BeginTransaction())
                 {
                     // Act
-                    var actual = source.CopyDataTo("Country", target, transaction: transaction);
+                    var actual = source.CopyDataTo("Country", target, transaction: transaction).RowCount;
                     transaction.Rollback();
 
                     // Assert
@@ -352,7 +352,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 ConnectionManager.Register(name, target);
 
                 // Act
-                var actual = source.CopyDataTo("Country", name);
+                var actual = source.CopyDataTo("Country", name).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -372,7 +372,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 ConnectionManager.Register(name, target);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "CurrencyCopy", name);
+                var actual = source.CopyDataTo("Currency", "CurrencyCopy", name).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -390,7 +390,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.CreateTargetTables("Currency");
 
                 // Act
-                var actual = source.CopyDataTo<Currency>(target);
+                var actual = source.CopyDataTo<Currency>(target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -408,7 +408,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.CreateTargetTables("Number");
 
                 // Act
-                var actual = source.CopyDataTo<Number>(target, n => n.Value <= 10);
+                var actual = source.CopyDataTo<Number>(target, n => n.Value <= 10).RowCount;
 
                 // Assert
                 Assert.AreEqual(10, actual);
@@ -426,7 +426,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE \"public\".\"CurrencyCopy\" (\"Code\" CHAR(3) NOT NULL, \"Name\" varchar(50) NOT NULL, CONSTRAINT \"PK_CurrencyCopy\" PRIMARY KEY (\"Code\"));");
 
                 // Act
-                var actual = source.CopyDataTo<Currency>("CurrencyCopy", target, c => c.Code != "JPY");
+                var actual = source.CopyDataTo<Currency>("CurrencyCopy", target, c => c.Code != "JPY").RowCount;
 
                 // Assert
                 Assert.AreEqual(2, actual);
@@ -446,7 +446,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 ConnectionManager.Register(name, target);
 
                 // Act
-                var actual = source.CopyDataTo<Currency>(name, c => c.Code == "EUR");
+                var actual = source.CopyDataTo<Currency>(name, c => c.Code == "EUR").RowCount;
 
                 // Assert
                 Assert.AreEqual(1, actual);
@@ -472,7 +472,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.CreateTargetTables("Country");
 
                 // Act
-                var actual = await source.CopyDataToAsync("Country", target);
+                var actual = (await source.CopyDataToAsync("Country", target)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -501,7 +501,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.CreateTargetTables(tableName);
 
                 // Act
-                var actual = await source.CopyDataToAsync(tableName, target);
+                var actual = (await source.CopyDataToAsync(tableName, target)).RowCount;
 
                 // Assert
                 Assert.AreEqual(expected, actual);
@@ -537,7 +537,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE \"public\".\"CurrencyCopy\" (\"Code\" CHAR(3) NOT NULL, \"Name\" varchar(50) NOT NULL, CONSTRAINT \"PK_CurrencyCopy\" PRIMARY KEY (\"Code\"));");
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", "CurrencyCopy", target);
+                var actual = (await source.CopyDataToAsync("Currency", "CurrencyCopy", target)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -556,7 +556,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 var progress = new List<(int Rows, int Total)>();
 
                 // Act
-                var actual = await source.CopyDataToAsync("Number", target, batchSize: 500, progressCallback: p => progress.Add((p.RowCount, p.TotalCopiedRowCount)));
+                var actual = (await source.CopyDataToAsync("Number", target, batchSize: 500, progressCallback: p => progress.Add((p.CurrentBatch.RowCount, p.RowCount)))).RowCount;
 
                 // Assert
                 Assert.AreEqual(2500, actual);
@@ -577,7 +577,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 using (var transaction = target.BeginTransaction())
                 {
                     // Act
-                    var actual = await source.CopyDataToAsync("Country", target, transaction: transaction);
+                    var actual = (await source.CopyDataToAsync("Country", target, transaction: transaction)).RowCount;
                     transaction.Rollback();
 
                     // Assert
@@ -599,7 +599,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 ConnectionManager.Register(name, target);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Country", name);
+                var actual = (await source.CopyDataToAsync("Country", name)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -617,7 +617,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.CreateTargetTables("Number");
 
                 // Act
-                var actual = await source.CopyDataToAsync<Number>(target, n => n.Value > 2490);
+                var actual = (await source.CopyDataToAsync<Number>(target, n => n.Value > 2490)).RowCount;
 
                 // Assert
                 Assert.AreEqual(10, actual);
@@ -637,7 +637,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 ConnectionManager.Register(name, target);
 
                 // Act
-                var actual = await source.CopyDataToAsync<Currency>("CurrencyCopy", name, c => c.Code == "PHP");
+                var actual = (await source.CopyDataToAsync<Currency>("CurrencyCopy", name, c => c.Code == "PHP")).RowCount;
 
                 // Assert
                 Assert.AreEqual(1, actual);

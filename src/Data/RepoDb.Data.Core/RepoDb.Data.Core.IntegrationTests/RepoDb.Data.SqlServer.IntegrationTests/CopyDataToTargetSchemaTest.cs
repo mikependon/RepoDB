@@ -52,7 +52,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "Sales.Currency", target);
+                var actual = source.CopyDataTo("Currency", "Sales.Currency", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -71,7 +71,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "[Sales].[Currency]", target);
+                var actual = source.CopyDataTo("Currency", "[Sales].[Currency]", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -89,7 +89,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "dbo.Currency", target);
+                var actual = source.CopyDataTo("Currency", "dbo.Currency", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -107,7 +107,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Sales.Invoice", "dbo.Invoice", target);
+                var actual = source.CopyDataTo("Sales.Invoice", "dbo.Invoice", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(2, actual);
@@ -126,7 +126,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE [Sales].[Currency] ([Code] CHAR(3) NOT NULL, [Name] NVARCHAR(50) NOT NULL, CONSTRAINT [PK_Currency] PRIMARY KEY ([Code])); INSERT INTO [Sales].[Currency] ([Code], [Name]) VALUES ('USD', N'US Dollar');");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "Sales.Currency", target);
+                var actual = source.CopyDataTo("Currency", "Sales.Currency", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -144,7 +144,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", "Sales.Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Person", "Sales.Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -165,7 +165,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Country", "Sales.Country", target, relationshipBehavior: CopyRelationshipBehavior.Children);
+                var actual = source.CopyDataTo("Country", "Sales.Country", target, relationshipBehavior: CopyRelationshipBehavior.Children).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -184,7 +184,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", "Sales.Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Person", "Sales.Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 2, actual);
@@ -204,7 +204,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 source.CopyDataTo("Currency", "Sales.Currency", target);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "Sales.Currency", target, tableExistenceBehavior: TableExistsBehavior.Drop);
+                var actual = source.CopyDataTo("Currency", "Sales.Currency", target, tableExistenceBehavior: TableExistsBehavior.Drop).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -287,7 +287,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", "Sales.Currency", target);
+                var actual = (await source.CopyDataToAsync("Currency", "Sales.Currency", target)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -305,7 +305,7 @@ namespace RepoDb.Data.SqlServer.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Person", "Sales.Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = (await source.CopyDataToAsync("Person", "Sales.Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);

@@ -234,7 +234,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE `Currency` (`Code` String) ENGINE = MergeTree ORDER BY (`Code`)");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target);
+                var actual = source.CopyDataTo("Currency", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -252,7 +252,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE `Currency` (`Code` String, `Name` String, `Required` Int32) ENGINE = MergeTree ORDER BY (`Code`)");
 
                 // Act (ClickHouse fills the missing columns with their implicit default)
-                var actual = source.CopyDataTo("Currency", target);
+                var actual = source.CopyDataTo("Currency", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -270,7 +270,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE `Currency` (`Code` String, `Name` String, `Extra` Nullable(Int32) DEFAULT 7) ENGINE = MergeTree ORDER BY (`Code`)");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target);
+                var actual = source.CopyDataTo("Currency", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -393,7 +393,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 target.Open();
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target);
+                var actual = source.CopyDataTo("Currency", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -412,8 +412,8 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.CreateTargetTables("Currency", "Country");
 
                 // Act
-                var first = source.CopyDataTo("Currency", target);
-                var second = source.CopyDataTo("Country", target);
+                var first = source.CopyDataTo("Currency", target).RowCount;
+                var second = source.CopyDataTo("Country", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, first);

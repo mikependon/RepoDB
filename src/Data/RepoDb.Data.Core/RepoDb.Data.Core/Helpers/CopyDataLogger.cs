@@ -24,7 +24,7 @@ namespace RepoDb.Data.Helpers
         #region Public Methods
 
         /// <summary>
-        /// Adds a log to the progress.
+        /// Adds a log to the progress, and to the table that is being copied.
         /// </summary>
         /// <param name="progress">The progress that holds the logs (nothing is added if it is <c>null</c>).</param>
         /// <param name="destinationConnection">The destination connection, where the activity has happened.</param>
@@ -33,14 +33,22 @@ namespace RepoDb.Data.Helpers
         public static void Add(CopyProgress progress,
             IDbConnection destinationConnection,
             CopyLogLevel level,
-            string text) =>
-            progress?.Logs.Add(new CopyLog
+            string text)
+        {
+            if (progress == null)
+            {
+                return;
+            }
+            var log = new CopyLog
             {
                 DatabaseType = destinationConnection.GetType(),
                 Level = level,
                 Text = text,
                 Timestamp = DateTime.UtcNow
-            });
+            };
+            progress.Logs.Add(log);
+            progress.Current?.Logs.Add(log);
+        }
 
         /// <summary>
         /// Counts the rows of the table (<c>null</c> if the count is not possible).
@@ -95,7 +103,8 @@ namespace RepoDb.Data.Helpers
         /// <param name="inserted">The number of rows that the bulk insert has reported.</param>
         /// <param name="before">The number of rows of the target table before the bulk insert.</param>
         /// <param name="after">The number of rows of the target table after the bulk insert.</param>
-        public static void LogBulkInsert(CopyProgress progress,
+        /// <returns>The number of rows that the provider did not load, or <c>null</c> if the rows of the target table could not be counted.</returns>
+        public static long? LogBulkInsert(CopyProgress progress,
             IDbConnection destinationConnection,
             string table,
             int inserted,
@@ -103,15 +112,18 @@ namespace RepoDb.Data.Helpers
             long? after)
         {
             Add(progress, destinationConnection, CopyLogLevel.Info, $"{inserted} row(s) were sent to the table '{table}' by the bulk insert.");
-            if (before.HasValue && after.HasValue)
+            if (!before.HasValue || !after.HasValue)
             {
-                var loaded = after.Value - before.Value;
-                if (loaded < inserted)
-                {
-                    Add(progress, destinationConnection, CopyLogLevel.Warning,
-                        $"{inserted - loaded} of {inserted} row(s) were skipped by the database provider in the table '{table}' (a key, a unique or a foreign key constraint was violated). The rows that reference the skipped rows are skipped too.");
-                }
+                return null;
             }
+            var loaded = after.Value - before.Value;
+            if (loaded >= inserted)
+            {
+                return 0;
+            }
+            Add(progress, destinationConnection, CopyLogLevel.Warning,
+                $"{inserted - loaded} of {inserted} row(s) were skipped by the database provider in the table '{table}' (a key, a unique or a foreign key constraint was violated). The rows that reference the skipped rows are skipped too.");
+            return inserted - loaded;
         }
 
         #endregion

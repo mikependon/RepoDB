@@ -53,7 +53,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "repodb_data_target_sales.Currency", target);
+                var actual = source.CopyDataTo("Currency", "repodb_data_target_sales.Currency", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -72,7 +72,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "`repodb_data_target_sales`.`Currency`", target);
+                var actual = source.CopyDataTo("Currency", "`repodb_data_target_sales`.`Currency`", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -90,7 +90,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "repodb_data_target.Currency", target);
+                var actual = source.CopyDataTo("Currency", "repodb_data_target.Currency", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -108,7 +108,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("repodb_data_source_sales.Invoice", "repodb_data_target.Invoice", target);
+                var actual = source.CopyDataTo("repodb_data_source_sales.Invoice", "repodb_data_target.Invoice", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(2, actual);
@@ -128,7 +128,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget("INSERT INTO `Sales`.`Currency` (`Code`, `Name`) VALUES ('USD', 'US Dollar')");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "repodb_data_target_sales.Currency", target);
+                var actual = source.CopyDataTo("Currency", "repodb_data_target_sales.Currency", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -147,7 +147,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 source.CopyDataTo("Currency", "repodb_data_target_sales.Currency", target);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "repodb_data_target_sales.Currency", target, tableExistenceBehavior: TableExistsBehavior.Drop);
+                var actual = source.CopyDataTo("Currency", "repodb_data_target_sales.Currency", target, tableExistenceBehavior: TableExistsBehavior.Drop).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -199,7 +199,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = await source.CopyDataToAsync("Currency", "repodb_data_target_sales.Currency", target);
+                var actual = (await source.CopyDataToAsync("Currency", "repodb_data_target_sales.Currency", target)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
