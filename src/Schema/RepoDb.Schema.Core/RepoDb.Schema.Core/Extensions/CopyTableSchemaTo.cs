@@ -43,6 +43,7 @@ namespace RepoDb.Schema
         /// <param name="columns">The names of the columns of the source table to be copied. The default is <c>null</c>, which copies all the columns.</param>
         /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database. The default is <see cref="CopyTableSchemaExistsBehavior.Skip"/>.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table. The default is <see cref="CopyTableSchemaRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="createdCallback">The callback that receives the <see cref="CopyTableSchemaResultItem"/> of each table once its schema is created (the requested table and, depending on the <paramref name="relationshipBehavior"/>, its related tables), so a caller can report the progress while the copy is still running. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopyTableSchemaTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
@@ -54,12 +55,13 @@ namespace RepoDb.Schema
             string[] columns = null,
             CopyTableSchemaExistsBehavior tableExistenceBehavior = CopyTableSchemaExistsBehavior.Skip,
             CopyTableSchemaRelationshipBehavior relationshipBehavior = CopyTableSchemaRelationshipBehavior.TableOnly,
+            Action<CopyTableSchemaResultItem> createdCallback = null,
             int? commandTimeout = null,
             string traceKey = SchemaTraceKeys.CopyTableSchemaTo,
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.CopyTableSchemaTo(ClassMappedNameCache.Get<TEntity>(), destinationConnection, targetSchema, columns, tableExistenceBehavior, relationshipBehavior, commandTimeout, traceKey, trace, transaction);
+            connection.CopyTableSchemaTo(ClassMappedNameCache.Get<TEntity>(), destinationConnection, targetSchema, columns, tableExistenceBehavior, relationshipBehavior, createdCallback, commandTimeout, traceKey, trace, transaction);
 
         /// <summary>
         /// Copies the schema of the source table of the current connection into the same-named table of the destination connection.
@@ -72,6 +74,7 @@ namespace RepoDb.Schema
         /// <param name="columns">The names of the columns of the source table to be copied. The default is <c>null</c>, which copies all the columns.</param>
         /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database. The default is <see cref="CopyTableSchemaExistsBehavior.Skip"/>.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table. The default is <see cref="CopyTableSchemaRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="createdCallback">The callback that receives the <see cref="CopyTableSchemaResultItem"/> of each table once its schema is created (the requested table and, depending on the <paramref name="relationshipBehavior"/>, its related tables), so a caller can report the progress while the copy is still running. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopyTableSchemaTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
@@ -84,6 +87,7 @@ namespace RepoDb.Schema
             string[] columns = null,
             CopyTableSchemaExistsBehavior tableExistenceBehavior = CopyTableSchemaExistsBehavior.Skip,
             CopyTableSchemaRelationshipBehavior relationshipBehavior = CopyTableSchemaRelationshipBehavior.TableOnly,
+            Action<CopyTableSchemaResultItem> createdCallback = null,
             int? commandTimeout = null,
             string traceKey = SchemaTraceKeys.CopyTableSchemaTo,
             ITrace trace = null,
@@ -92,7 +96,7 @@ namespace RepoDb.Schema
             Validate(connection, tableName, destinationConnection);
 
             // Copy the table as a set of one table
-            return CopyTableSchemasCore(connection, new[] { tableName }, destinationConnection, targetSchema, ColumnSelector.Normalize(columns), null, tableExistenceBehavior, relationshipBehavior, null, null, commandTimeout, traceKey, trace, transaction);
+            return CopyTableSchemasCore(connection, new[] { tableName }, destinationConnection, targetSchema, ColumnSelector.Normalize(columns), null, tableExistenceBehavior, relationshipBehavior, createdCallback, null, commandTimeout, traceKey, trace, transaction);
         }
 
         #endregion
@@ -151,6 +155,7 @@ namespace RepoDb.Schema
         /// <param name="columns">The names of the columns of the source table to be copied. The default is <c>null</c>, which copies all the columns.</param>
         /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database. The default is <see cref="CopyTableSchemaExistsBehavior.Skip"/>.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table. The default is <see cref="CopyTableSchemaRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="createdCallback">The callback that receives the <see cref="CopyTableSchemaResultItem"/> of each table once its schema is created (the requested table and, depending on the <paramref name="relationshipBehavior"/>, its related tables), so a caller can report the progress while the copy is still running. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopyTableSchemaTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
@@ -163,13 +168,14 @@ namespace RepoDb.Schema
             string[] columns = null,
             CopyTableSchemaExistsBehavior tableExistenceBehavior = CopyTableSchemaExistsBehavior.Skip,
             CopyTableSchemaRelationshipBehavior relationshipBehavior = CopyTableSchemaRelationshipBehavior.TableOnly,
+            Action<CopyTableSchemaResultItem> createdCallback = null,
             int? commandTimeout = null,
             string traceKey = SchemaTraceKeys.CopyTableSchemaTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.CopyTableSchemaToAsync(ClassMappedNameCache.Get<TEntity>(), destinationConnection, targetSchema, columns, tableExistenceBehavior, relationshipBehavior, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyTableSchemaToAsync(ClassMappedNameCache.Get<TEntity>(), destinationConnection, targetSchema, columns, tableExistenceBehavior, relationshipBehavior, createdCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Copies the schema of the source table of the current connection into the same-named table of the destination connection.
@@ -182,6 +188,7 @@ namespace RepoDb.Schema
         /// <param name="columns">The names of the columns of the source table to be copied. The default is <c>null</c>, which copies all the columns.</param>
         /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database. The default is <see cref="CopyTableSchemaExistsBehavior.Skip"/>.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table. The default is <see cref="CopyTableSchemaRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="createdCallback">The callback that receives the <see cref="CopyTableSchemaResultItem"/> of each table once its schema is created (the requested table and, depending on the <paramref name="relationshipBehavior"/>, its related tables), so a caller can report the progress while the copy is still running. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopyTableSchemaTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
@@ -195,6 +202,7 @@ namespace RepoDb.Schema
             string[] columns = null,
             CopyTableSchemaExistsBehavior tableExistenceBehavior = CopyTableSchemaExistsBehavior.Skip,
             CopyTableSchemaRelationshipBehavior relationshipBehavior = CopyTableSchemaRelationshipBehavior.TableOnly,
+            Action<CopyTableSchemaResultItem> createdCallback = null,
             int? commandTimeout = null,
             string traceKey = SchemaTraceKeys.CopyTableSchemaTo,
             ITrace trace = null,
@@ -202,7 +210,7 @@ namespace RepoDb.Schema
             CancellationToken cancellationToken = default)
         {
             Validate(connection, tableName, destinationConnection);
-            return await CopyTableSchemasCoreAsync(connection, new[] { tableName }, destinationConnection, targetSchema, ColumnSelector.Normalize(columns), null, tableExistenceBehavior, relationshipBehavior, null, null, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
+            return await CopyTableSchemasCoreAsync(connection, new[] { tableName }, destinationConnection, targetSchema, ColumnSelector.Normalize(columns), null, tableExistenceBehavior, relationshipBehavior, createdCallback, null, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
         }
 
         #endregion
@@ -263,6 +271,7 @@ namespace RepoDb.Schema
         /// <param name="targetSchema">The schema of the destination database that the tables are created in. The default is <c>null</c>, which uses the default schema of the destination database.</param>
         /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database. The default is <see cref="CopyTableSchemaExistsBehavior.Skip"/>.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table. The default is <see cref="CopyTableSchemaRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="createdCallback">The callback that receives the <see cref="CopyTableSchemaResultItem"/> of each table once its schema is created (the requested table and, depending on the <paramref name="relationshipBehavior"/>, its related tables), so a caller can report the progress while the copy is still running. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopyTableSchemaTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
@@ -274,12 +283,13 @@ namespace RepoDb.Schema
             string targetSchema = null,
             CopyTableSchemaExistsBehavior tableExistenceBehavior = CopyTableSchemaExistsBehavior.Skip,
             CopyTableSchemaRelationshipBehavior relationshipBehavior = CopyTableSchemaRelationshipBehavior.TableOnly,
+            Action<CopyTableSchemaResultItem> createdCallback = null,
             int? commandTimeout = null,
             string traceKey = SchemaTraceKeys.CopyTableSchemaTo,
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.CopyTableSchemaTo(ClassMappedNameCache.Get<TEntity>(), destinationConnection, mappings, targetSchema, tableExistenceBehavior, relationshipBehavior, commandTimeout, traceKey, trace, transaction);
+            connection.CopyTableSchemaTo(ClassMappedNameCache.Get<TEntity>(), destinationConnection, mappings, targetSchema, tableExistenceBehavior, relationshipBehavior, createdCallback, commandTimeout, traceKey, trace, transaction);
 
         /// <summary>
         /// Copies the schema of the source table of the current connection into the same-named table of the destination connection.
@@ -292,6 +302,7 @@ namespace RepoDb.Schema
         /// <param name="targetSchema">The schema of the destination database that the tables are created in. The default is <c>null</c>, which uses the default schema of the destination database.</param>
         /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database. The default is <see cref="CopyTableSchemaExistsBehavior.Skip"/>.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table. The default is <see cref="CopyTableSchemaRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="createdCallback">The callback that receives the <see cref="CopyTableSchemaResultItem"/> of each table once its schema is created (the requested table and, depending on the <paramref name="relationshipBehavior"/>, its related tables), so a caller can report the progress while the copy is still running. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopyTableSchemaTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
@@ -304,6 +315,7 @@ namespace RepoDb.Schema
             string targetSchema = null,
             CopyTableSchemaExistsBehavior tableExistenceBehavior = CopyTableSchemaExistsBehavior.Skip,
             CopyTableSchemaRelationshipBehavior relationshipBehavior = CopyTableSchemaRelationshipBehavior.TableOnly,
+            Action<CopyTableSchemaResultItem> createdCallback = null,
             int? commandTimeout = null,
             string traceKey = SchemaTraceKeys.CopyTableSchemaTo,
             ITrace trace = null,
@@ -319,6 +331,7 @@ namespace RepoDb.Schema
                 targetSchema,
                 tableExistenceBehavior,
                 relationshipBehavior,
+                createdCallback: createdCallback,
                 commandTimeout: commandTimeout,
                 traceKey: traceKey,
                 trace: trace,
@@ -384,6 +397,7 @@ namespace RepoDb.Schema
         /// <param name="targetSchema">The schema of the destination database that the tables are created in. The default is <c>null</c>, which uses the default schema of the destination database.</param>
         /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database. The default is <see cref="CopyTableSchemaExistsBehavior.Skip"/>.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table. The default is <see cref="CopyTableSchemaRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="createdCallback">The callback that receives the <see cref="CopyTableSchemaResultItem"/> of each table once its schema is created (the requested table and, depending on the <paramref name="relationshipBehavior"/>, its related tables), so a caller can report the progress while the copy is still running. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopyTableSchemaTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
@@ -396,13 +410,14 @@ namespace RepoDb.Schema
             string targetSchema = null,
             CopyTableSchemaExistsBehavior tableExistenceBehavior = CopyTableSchemaExistsBehavior.Skip,
             CopyTableSchemaRelationshipBehavior relationshipBehavior = CopyTableSchemaRelationshipBehavior.TableOnly,
+            Action<CopyTableSchemaResultItem> createdCallback = null,
             int? commandTimeout = null,
             string traceKey = SchemaTraceKeys.CopyTableSchemaTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.CopyTableSchemaToAsync(ClassMappedNameCache.Get<TEntity>(), destinationConnection, mappings, targetSchema, tableExistenceBehavior, relationshipBehavior, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyTableSchemaToAsync(ClassMappedNameCache.Get<TEntity>(), destinationConnection, mappings, targetSchema, tableExistenceBehavior, relationshipBehavior, createdCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Copies the schema of the source table of the current connection into the same-named table of the destination connection.
@@ -415,6 +430,7 @@ namespace RepoDb.Schema
         /// <param name="targetSchema">The schema of the destination database that the tables are created in. The default is <c>null</c>, which uses the default schema of the destination database.</param>
         /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database. The default is <see cref="CopyTableSchemaExistsBehavior.Skip"/>.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table. The default is <see cref="CopyTableSchemaRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="createdCallback">The callback that receives the <see cref="CopyTableSchemaResultItem"/> of each table once its schema is created (the requested table and, depending on the <paramref name="relationshipBehavior"/>, its related tables), so a caller can report the progress while the copy is still running. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopyTableSchemaTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
@@ -428,6 +444,7 @@ namespace RepoDb.Schema
             string targetSchema = null,
             CopyTableSchemaExistsBehavior tableExistenceBehavior = CopyTableSchemaExistsBehavior.Skip,
             CopyTableSchemaRelationshipBehavior relationshipBehavior = CopyTableSchemaRelationshipBehavior.TableOnly,
+            Action<CopyTableSchemaResultItem> createdCallback = null,
             int? commandTimeout = null,
             string traceKey = SchemaTraceKeys.CopyTableSchemaTo,
             ITrace trace = null,
@@ -442,6 +459,7 @@ namespace RepoDb.Schema
                 targetSchema,
                 tableExistenceBehavior,
                 relationshipBehavior,
+                createdCallback: createdCallback,
                 commandTimeout: commandTimeout,
                 traceKey: traceKey,
                 trace: trace,

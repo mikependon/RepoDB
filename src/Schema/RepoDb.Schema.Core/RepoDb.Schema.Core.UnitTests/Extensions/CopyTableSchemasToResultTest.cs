@@ -652,6 +652,56 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
+        public void TestCopyTableSchemaToOfASingleTableWithColumnMappingsCallsTheCreatedCallback()
+        {
+            // Setup
+            MapReader(GetNamedSchema("Person", "Id", "Name"));
+            MapComposer("CREATE TABLE Person;");
+            var created = new List<CopyTableSchemaResultItem>();
+            var mappings = new List<ColumnMapping> { new ColumnMapping("Id") };
+
+            // Act
+            var result = new CustomDbConnection().CopyTableSchemaTo("Person", new CustomDbConnection(), mappings, createdCallback: created.Add);
+
+            // Assert
+            Assert.AreEqual(1, created.Count);
+            Assert.AreSame(created[0], result.Items.Single());
+        }
+
+        [TestMethod]
+        public async Task TestCopyTableSchemaToAsyncOfASingleTableWithColumnMappingsCallsTheCreatedCallback()
+        {
+            // Setup
+            MapReader(GetNamedSchema("Person", "Id", "Name"));
+            MapComposer("CREATE TABLE Person;");
+            var created = new List<CopyTableSchemaResultItem>();
+            var mappings = new List<ColumnMapping> { new ColumnMapping("Id") };
+
+            // Act
+            var result = await new CustomDbConnection().CopyTableSchemaToAsync("Person", new CustomDbConnection(), mappings, createdCallback: created.Add);
+
+            // Assert
+            Assert.AreEqual(1, created.Count);
+            Assert.AreSame(created[0], result.Items.Single());
+        }
+
+        [TestMethod]
+        public void TestCopyTableSchemaToOfASingleTableWithSelectedColumnsCallsTheCreatedCallback()
+        {
+            // Setup
+            MapReader(GetNamedSchema("Person", "Id", "Name"));
+            MapComposer("CREATE TABLE Person;");
+            var created = new List<CopyTableSchemaResultItem>();
+
+            // Act
+            var result = new CustomDbConnection().CopyTableSchemaTo("Person", new CustomDbConnection(), columns: new[] { "Id" }, createdCallback: created.Add);
+
+            // Assert
+            Assert.AreEqual(1, created.Count);
+            Assert.AreSame(created[0], result.Items.Single());
+        }
+
+        [TestMethod]
         public void TestCopyTableSchemaToOfASingleTableReturnsTheErrorsInTheResultAndInTheItem()
         {
             // Setup

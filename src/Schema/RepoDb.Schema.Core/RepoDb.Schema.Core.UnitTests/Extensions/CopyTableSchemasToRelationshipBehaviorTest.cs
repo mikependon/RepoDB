@@ -369,6 +369,80 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             Assert.AreEqual(1, result.Items.Count(i => i.Target.Table.Table.Name == nameof(RelationshipTestEntity)));
         }
 
+        [TestMethod]
+        public void TestCopyTableSchemaToOfASingleTableCallsTheCreatedCallbackOfEachTableWhileTheCopyIsRunning()
+        {
+            // Setup
+            MapReader(new[] { "Person", "Country" }, "Country", "Person");
+            MapComposer("CREATE TABLE Country;", "CREATE TABLE Person;");
+            var destination = new CustomDbConnection();
+            var reported = new List<(string Table, int Executed)>();
+
+            // Act
+            var result = new CustomDbConnection().CopyTableSchemaTo("Country", destination, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Children, createdCallback: item => reported.Add((item.Target.Table.Table.Name, destination.ExecutedCommands.Count)));
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { "Country", "Person" }, reported.Select(r => r.Table).ToArray());
+            Assert.IsTrue(reported[0].Executed < destination.ExecutedCommands.Count);
+            Assert.AreEqual(destination.ExecutedCommands.Count, reported[1].Executed);
+            Assert.AreEqual(2, result.Items.Count);
+        }
+
+        [TestMethod]
+        public async Task TestCopyTableSchemaToAsyncOfASingleTableCallsTheCreatedCallbackOfEachTableWhileTheCopyIsRunning()
+        {
+            // Setup
+            MapReader(new[] { "Person", "Country" }, "Country", "Person");
+            MapComposer("CREATE TABLE Country;", "CREATE TABLE Person;");
+            var destination = new CustomDbConnection();
+            var reported = new List<(string Table, int Executed)>();
+
+            // Act
+            var result = await new CustomDbConnection().CopyTableSchemaToAsync("Country", destination, relationshipBehavior: CopyTableSchemaRelationshipBehavior.Children, createdCallback: item => reported.Add((item.Target.Table.Table.Name, destination.ExecutedCommands.Count)));
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { "Country", "Person" }, reported.Select(r => r.Table).ToArray());
+            Assert.IsTrue(reported[0].Executed < destination.ExecutedCommands.Count);
+            Assert.AreEqual(destination.ExecutedCommands.Count, reported[1].Executed);
+            Assert.AreEqual(2, result.Items.Count);
+        }
+
+        [TestMethod]
+        public void TestCopyTableSchemaToOfASingleTableCreatedCallbackReceivesTheItemsOfTheResult()
+        {
+            // Setup
+            MapReader(new[] { "Person", "Country" }, "Country", "Person");
+            MapComposer("CREATE TABLE Country;", "CREATE TABLE Person;");
+            var created = new List<CopyTableSchemaResultItem>();
+
+            // Act
+            var result = new CustomDbConnection().CopyTableSchemaTo("Country", new CustomDbConnection(), relationshipBehavior: CopyTableSchemaRelationshipBehavior.Children, createdCallback: created.Add);
+
+            // Assert
+            Assert.AreEqual(2, created.Count);
+            Assert.AreEqual(created.Count, result.Items.Count);
+            for (var i = 0; i < created.Count; i++)
+            {
+                Assert.AreSame(created[i], result.Items[i]);
+            }
+        }
+
+        [TestMethod]
+        public void TestCopyTableSchemaToOfASingleTableWithoutRelatedTablesCallsTheCreatedCallbackOnce()
+        {
+            // Setup
+            MapReader(new[] { "Person" }, "Person");
+            MapComposer("CREATE TABLE Person;");
+            var created = new List<CopyTableSchemaResultItem>();
+
+            // Act
+            new CustomDbConnection().CopyTableSchemaTo("Person", new CustomDbConnection(), createdCallback: created.Add);
+
+            // Assert
+            Assert.AreEqual(1, created.Count);
+            Assert.AreEqual("Person", created[0].Target.Table.Table.Name);
+        }
+
         #endregion
     }
 }
