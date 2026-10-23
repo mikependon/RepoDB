@@ -65,6 +65,8 @@ namespace RepoDb.Data
         /// <param name="cutoffSize">The number of rows of the file from which the bulk insert is used. The default is 1000.</param>
         /// <param name="batchBufferSize">The number of rows that are buffered and inserted at once when the batch insert is used. The default is 50.</param>
         /// <param name="bulkBufferSize">The number of rows that are buffered in memory and inserted at once when the bulk insert is used. The default is 10000.</param>
+        /// <param name="columnMappingBehavior">Defines how the columns of the file are aligned with the columns of the table by the bulk insert of the provider. The default is <see cref="LoadColumnMappingBehavior.Automatic"/>.</param>
+        /// <param name="identityBehavior">Defines whether the values of the identity columns of the file are kept, or generated again by the database. The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="LoadProgress"/> right after the rows of the file are counted, right after every batch (or bulk) operation has succeeded, and when the load has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.LoadDataFromJson"/>.</param>
@@ -82,14 +84,16 @@ namespace RepoDb.Data
             int cutoffSize = 1000,
             int batchBufferSize = 50,
             int bulkBufferSize = 10000,
+            LoadColumnMappingBehavior columnMappingBehavior = LoadColumnMappingBehavior.Automatic,
+            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
             Action<LoadProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.LoadDataFromJson,
             ITrace trace = null,
             IDbTransaction transaction = null)
         {
-            Validate(connection, tableName, filename, cutoffSize, batchBufferSize, bulkBufferSize);
-            var map = CreateMap(connection, tableName, transaction, JsonHelper.ReadColumns(filename));
+            Validate(connection, tableName, filename, cutoffSize, batchBufferSize, bulkBufferSize, columnMappingBehavior, identityBehavior);
+            var map = CreateMap(connection, tableName, transaction, identityBehavior, JsonHelper.ReadColumns(filename));
             var progress = new LoadProgress
             {
                 Start = DateTime.UtcNow,
@@ -114,13 +118,13 @@ namespace RepoDb.Data
                     }
                     if (buffer.Count == size)
                     {
-                        Flush(connection, tableName, map, buffer, bulk, size, commandTimeout, traceKey, trace, transaction, progress, progressCallback);
+                        Flush(connection, tableName, map, buffer, bulk, size, columnMappingBehavior, identityBehavior, commandTimeout, traceKey, trace, transaction, progress, progressCallback);
                     }
                 }
             }
             if (buffer.Count > 0)
             {
-                Flush(connection, tableName, map, buffer, bulk, size, commandTimeout, traceKey, trace, transaction, progress, progressCallback);
+                Flush(connection, tableName, map, buffer, bulk, size, columnMappingBehavior, identityBehavior, commandTimeout, traceKey, trace, transaction, progress, progressCallback);
             }
             progressCallback?.Invoke(progress);
             return progress;
@@ -139,6 +143,8 @@ namespace RepoDb.Data
         /// <param name="cutoffSize">The number of rows of the file from which the bulk insert is used. The default is 1000.</param>
         /// <param name="batchBufferSize">The number of rows that are buffered and inserted at once when the batch insert is used. The default is 50.</param>
         /// <param name="bulkBufferSize">The number of rows that are buffered in memory and inserted at once when the bulk insert is used. The default is 10000.</param>
+        /// <param name="columnMappingBehavior">Defines how the columns of the file are aligned with the columns of the table by the bulk insert of the provider. The default is <see cref="LoadColumnMappingBehavior.Automatic"/>.</param>
+        /// <param name="identityBehavior">Defines whether the values of the identity columns of the file are kept, or generated again by the database. The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="LoadProgress"/> right after the rows of the file are counted, right after every batch (or bulk) operation has succeeded, and when the load has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.LoadDataFromJson"/>.</param>
@@ -157,6 +163,8 @@ namespace RepoDb.Data
             int cutoffSize = 1000,
             int batchBufferSize = 50,
             int bulkBufferSize = 10000,
+            LoadColumnMappingBehavior columnMappingBehavior = LoadColumnMappingBehavior.Automatic,
+            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
             Action<LoadProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.LoadDataFromJson,
@@ -164,8 +172,8 @@ namespace RepoDb.Data
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            Validate(connection, tableName, filename, cutoffSize, batchBufferSize, bulkBufferSize);
-            var map = CreateMap(connection, tableName, transaction, await JsonHelper.ReadColumnsAsync(filename, cancellationToken).ConfigureAwait(false));
+            Validate(connection, tableName, filename, cutoffSize, batchBufferSize, bulkBufferSize, columnMappingBehavior, identityBehavior);
+            var map = CreateMap(connection, tableName, transaction, identityBehavior, await JsonHelper.ReadColumnsAsync(filename, cancellationToken).ConfigureAwait(false));
             var progress = new LoadProgress
             {
                 Start = DateTime.UtcNow,
@@ -190,13 +198,13 @@ namespace RepoDb.Data
                     }
                     if (buffer.Count == size)
                     {
-                        await FlushAsync(connection, tableName, map, buffer, bulk, size, commandTimeout, traceKey, trace, transaction, progress, progressCallback, cancellationToken).ConfigureAwait(false);
+                        await FlushAsync(connection, tableName, map, buffer, bulk, size, columnMappingBehavior, identityBehavior, commandTimeout, traceKey, trace, transaction, progress, progressCallback, cancellationToken).ConfigureAwait(false);
                     }
                 }
             }
             if (buffer.Count > 0)
             {
-                await FlushAsync(connection, tableName, map, buffer, bulk, size, commandTimeout, traceKey, trace, transaction, progress, progressCallback, cancellationToken).ConfigureAwait(false);
+                await FlushAsync(connection, tableName, map, buffer, bulk, size, columnMappingBehavior, identityBehavior, commandTimeout, traceKey, trace, transaction, progress, progressCallback, cancellationToken).ConfigureAwait(false);
             }
             progressCallback?.Invoke(progress);
             return progress;
@@ -217,15 +225,20 @@ namespace RepoDb.Data
         /// <param name="cutoffSize">The number of rows of the file from which the bulk insert is used.</param>
         /// <param name="batchBufferSize">The number of rows that are buffered and inserted at once when the batch insert is used.</param>
         /// <param name="bulkBufferSize">The number of rows that are buffered and inserted at once when the bulk insert is used.</param>
+        /// <param name="columnMappingBehavior">Defines how the columns of the file are aligned with the columns of the table.</param>
+        /// <param name="identityBehavior">Defines whether the values of the identity columns of the file are kept.</param>
         /// <exception cref="ArgumentNullException">The connection, the table name or the file name is <c>null</c> (or white space).</exception>
         /// <exception cref="ArgumentOutOfRangeException">The cutoff size is negative, or a buffer size is less than 1.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The column mapping behavior or the identity behavior is not defined.</exception>
         /// <exception cref="FileNotFoundException">The file does not exist.</exception>
         private static void Validate(IDbConnection connection,
             string tableName,
             string filename,
             int cutoffSize,
             int batchBufferSize,
-            int bulkBufferSize)
+            int bulkBufferSize,
+            LoadColumnMappingBehavior columnMappingBehavior,
+            LoadIdentityBehavior identityBehavior)
         {
             if (connection == null)
             {
@@ -247,6 +260,14 @@ namespace RepoDb.Data
             {
                 throw new ArgumentOutOfRangeException(nameof(batchBufferSize), "The batch buffer size must be at least 1.");
             }
+            if (!Enum.IsDefined(typeof(LoadColumnMappingBehavior), columnMappingBehavior))
+            {
+                throw new ArgumentOutOfRangeException(nameof(columnMappingBehavior), "The column mapping behavior is not defined.");
+            }
+            if (!Enum.IsDefined(typeof(LoadIdentityBehavior), identityBehavior))
+            {
+                throw new ArgumentOutOfRangeException(nameof(identityBehavior), "The identity behavior is not defined.");
+            }
             if (bulkBufferSize < 1)
             {
                 throw new ArgumentOutOfRangeException(nameof(bulkBufferSize), "The bulk buffer size must be at least 1.");
@@ -263,12 +284,14 @@ namespace RepoDb.Data
         /// <param name="connection">The connection of the database that has the table.</param>
         /// <param name="tableName">The name of the table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="identityBehavior">Defines whether the identity columns are mapped (kept) or left to the database.</param>
         /// <param name="columns">The names of the columns of the file.</param>
         /// <returns>The map of the columns.</returns>
         /// <exception cref="InvalidOperationException">The file has columns, and no column of the file matches a column of the table.</exception>
         private static ColumnMap CreateMap(IDbConnection connection,
             string tableName,
             IDbTransaction transaction,
+            LoadIdentityBehavior identityBehavior,
             IList<string> columns)
         {
             var dbSetting = connection.GetDbSetting();
@@ -277,7 +300,9 @@ namespace RepoDb.Data
             foreach (var column in columns)
             {
                 var field = dbFields.GetByUnquotedName(column.AsUnquoted(true, dbSetting));
-                if (field == null || map.Index.ContainsKey(column))
+                if (field == null ||
+                    map.Index.ContainsKey(column) ||
+                    (identityBehavior == LoadIdentityBehavior.ReturnIdentity && field.IsIdentity))
                 {
                     continue;
                 }
@@ -412,6 +437,8 @@ namespace RepoDb.Data
         /// <param name="buffer">The buffered rows (cleared when they are inserted).</param>
         /// <param name="bulk">A value that indicates whether the rows are inserted with the bulk insert.</param>
         /// <param name="size">The number of rows of the buffer.</param>
+        /// <param name="columnMappingBehavior">Defines how the columns of the file are aligned with the columns of the table by the bulk insert.</param>
+        /// <param name="identityBehavior">Defines whether the values of the identity columns are kept by the bulk insert.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="traceKey">The tracking key to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -424,6 +451,8 @@ namespace RepoDb.Data
             IList<object[]> buffer,
             bool bulk,
             int size,
+            LoadColumnMappingBehavior columnMappingBehavior,
+            LoadIdentityBehavior identityBehavior,
             int? commandTimeout,
             string traceKey,
             ITrace trace,
@@ -437,7 +466,7 @@ namespace RepoDb.Data
                 using (var table = ToTable(map, buffer))
                 using (var reader = table.CreateDataReader())
                 {
-                    inserted = BulkInsertInvoker.BulkInsert(connection, tableName, reader, size, CopyColumnMappingsBehavior.Automatic, commandTimeout, traceKey, trace, transaction);
+                    inserted = BulkInsertInvoker.BulkInsert(connection, tableName, reader, size, columnMappingBehavior, identityBehavior == LoadIdentityBehavior.KeepIdentity, commandTimeout, traceKey, trace, transaction);
                 }
             }
             else
@@ -456,6 +485,8 @@ namespace RepoDb.Data
         /// <param name="buffer">The buffered rows (cleared when they are inserted).</param>
         /// <param name="bulk">A value that indicates whether the rows are inserted with the bulk insert.</param>
         /// <param name="size">The number of rows of the buffer.</param>
+        /// <param name="columnMappingBehavior">Defines how the columns of the file are aligned with the columns of the table by the bulk insert.</param>
+        /// <param name="identityBehavior">Defines whether the values of the identity columns are kept by the bulk insert.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="traceKey">The tracking key to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -470,6 +501,8 @@ namespace RepoDb.Data
             IList<object[]> buffer,
             bool bulk,
             int size,
+            LoadColumnMappingBehavior columnMappingBehavior,
+            LoadIdentityBehavior identityBehavior,
             int? commandTimeout,
             string traceKey,
             ITrace trace,
@@ -484,7 +517,7 @@ namespace RepoDb.Data
                 using (var table = ToTable(map, buffer))
                 using (var reader = table.CreateDataReader())
                 {
-                    inserted = await BulkInsertInvoker.BulkInsertAsync(connection, tableName, reader, size, CopyColumnMappingsBehavior.Automatic, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
+                    inserted = await BulkInsertInvoker.BulkInsertAsync(connection, tableName, reader, size, columnMappingBehavior, identityBehavior == LoadIdentityBehavior.KeepIdentity, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
                 }
             }
             else

@@ -346,7 +346,7 @@ namespace RepoDb.Data
                 if (BulkInsertInvoker.IsAvailable(destinationConnection, reader, false))
                 {
                     var before = CopyDataLogger.Count(destinationConnection, targetTable, transaction);
-                    var inserted = BulkInsertInvoker.BulkInsert(destinationConnection, targetTable, reader, batchSize, columnMappingsBehavior, commandTimeout, null, trace, transaction);
+                    var inserted = BulkInsertInvoker.BulkInsert(destinationConnection, targetTable, reader, batchSize, columnMappingsBehavior, true, commandTimeout, null, trace, transaction);
                     var after = CopyDataLogger.Count(destinationConnection, targetTable, transaction);
                     Record(item, CopyDataLogger.LogBulkInsert(options, destinationConnection, targetTable, inserted, before, after), after);
                     Report(options, inserted, progressCallback);
@@ -419,7 +419,7 @@ namespace RepoDb.Data
                 if (BulkInsertInvoker.IsAvailable(destinationConnection, reader, true))
                 {
                     var before = await CopyDataLogger.CountAsync(destinationConnection, targetTable, transaction, cancellationToken).ConfigureAwait(false);
-                    var inserted = await BulkInsertInvoker.BulkInsertAsync(destinationConnection, targetTable, reader, batchSize, columnMappingsBehavior, commandTimeout, null, trace, transaction, cancellationToken).ConfigureAwait(false);
+                    var inserted = await BulkInsertInvoker.BulkInsertAsync(destinationConnection, targetTable, reader, batchSize, columnMappingsBehavior, true, commandTimeout, null, trace, transaction, cancellationToken).ConfigureAwait(false);
                     var after = await CopyDataLogger.CountAsync(destinationConnection, targetTable, transaction, cancellationToken).ConfigureAwait(false);
                     Record(item, CopyDataLogger.LogBulkInsert(options, destinationConnection, targetTable, inserted, before, after), after);
                     Report(options, inserted, progressCallback);

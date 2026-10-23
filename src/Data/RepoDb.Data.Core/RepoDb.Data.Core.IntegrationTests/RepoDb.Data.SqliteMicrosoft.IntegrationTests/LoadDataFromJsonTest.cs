@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Data.Enumerations;
 using RepoDb.Data.Models;
 using RepoDb.Data.SqliteMicrosoft.IntegrationTests.Setup;
 using RepoDb.Schema;
@@ -473,6 +474,77 @@ namespace RepoDb.Data.SqliteMicrosoft.IntegrationTests
 
                 // Act/Assert
                 await Assert.ThrowsAsync<FormatException>(() => target.LoadDataFromJsonAsync("LoadItem", path));
+            }
+        }
+
+        #endregion
+
+        #region Identity And Column Mapping Behaviors
+
+        [TestMethod]
+        public void TestLoadDataFromJsonKeepsTheIdentityValuesOfTheFileByDefault()
+        {
+            using (var target = new SqliteConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                var path = Write("[" + string.Join(",", new[] { 10, 20, 30 }.Select(Row)) + "]");
+
+                // Act
+                target.LoadDataFromJson("LoadItem", path);
+
+                // Assert
+                CollectionAssert.AreEqual(new long[] { 10, 20, 30 }, Rows().Select(r => Convert.ToInt64(r["Id"])).ToArray());
+            }
+        }
+
+        [TestMethod]
+        public void TestLoadDataFromJsonKeepsTheIdentityValuesOfTheFileWithTheBulkInsert()
+        {
+            using (var target = new SqliteConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                var path = Write("[" + string.Join(",", new[] { 10, 20, 30 }.Select(Row)) + "]");
+
+                // Act
+                target.LoadDataFromJson("LoadItem", path, cutoffSize: 1, identityBehavior: LoadIdentityBehavior.KeepIdentity);
+
+                // Assert
+                CollectionAssert.AreEqual(new long[] { 10, 20, 30 }, Rows().Select(r => Convert.ToInt64(r["Id"])).ToArray());
+            }
+        }
+
+        [TestMethod]
+        public void TestLoadDataFromJsonWithTheStrictBypassColumnMappingBehavior()
+        {
+            using (var target = new SqliteConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                var path = Array(3);
+
+                // Act
+                var actual = target.LoadDataFromJson("LoadItem", path, cutoffSize: 1, columnMappingBehavior: LoadColumnMappingBehavior.StrictBypass);
+
+                // Assert
+                Assert.AreEqual(3L, actual.LoadedRowCount);
+                Assert.AreEqual(3, Helper.TargetCount("\"LoadItem\""));
+            }
+        }
+
+        [TestMethod]
+        public void TestLoadDataFromJsonLeavesTheIdentityValuesToTheDatabaseIfItIsNotToKeepThem()
+        {
+            using (var target = new SqliteConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                var path = Write("[" + string.Join(",", new[] { 10, 20, 30 }.Select(Row)) + "]");
+
+                // Act
+                var actual = target.LoadDataFromJson("LoadItem", path, identityBehavior: LoadIdentityBehavior.ReturnIdentity);
+
+                // Assert
+                Assert.AreEqual(3L, actual.LoadedRowCount);
+                CollectionAssert.AreEqual(new long[] { 1, 2, 3 }, Rows().Select(r => Convert.ToInt64(r["Id"])).ToArray());
+                CollectionAssert.AreEqual(new[] { "Name 10", "Name 20", "Name 30" }, Rows().Select(r => (string)r["Name"]).ToArray());
             }
         }
 

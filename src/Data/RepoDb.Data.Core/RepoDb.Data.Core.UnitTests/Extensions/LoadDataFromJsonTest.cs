@@ -18,6 +18,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using RepoDb.Data.Core.UnitTests.CustomObjects;
 using RepoDb.Data.Core.UnitTests.Fake.BulkOperations;
+using RepoDb.Data.Enumerations;
 using RepoDb.Data.Models;
 using RepoDb.DbSettings;
 
@@ -49,6 +50,12 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             DbSettingMapper.Add<FakeBulkDbConnection>(new FakeDbSetting(), true);
             DbHelperMapper.Add<FakeBulkDbConnection>(new FakeDbHelper(), true);
+            DbSettingMapper.Add<FakeBulkOptionsDbConnection>(new FakeDbSetting(), true);
+            DbHelperMapper.Add<FakeBulkOptionsDbConnection>(new FakeDbHelper(), true);
+            DbSettingMapper.Add<FakeBulkIdentityBehaviorDbConnection>(new FakeDbSetting(), true);
+            DbHelperMapper.Add<FakeBulkIdentityBehaviorDbConnection>(new FakeDbHelper(), true);
+            DbSettingMapper.Add<FakeBulkSettingDbConnection>(new FakeBulkDbSetting(), true);
+            DbHelperMapper.Add<FakeBulkSettingDbConnection>(new FakeDbHelper(), true);
             FakeBulkOperations.Reset();
         }
 
@@ -654,6 +661,207 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
                 // Act/Assert
                 await Assert.ThrowsAsync<OperationCanceledException>(() => new FakeDbConnection().LoadDataFromJsonAsync("Customer", path, cancellationToken: source.Token));
             }
+        }
+
+        #endregion
+
+        #region Identity And Column Mapping Behaviors
+
+        [TestMethod]
+        public void ThrowExceptionOnLoadDataFromJsonIfTheColumnMappingBehaviorIsNotDefined()
+        {
+            // Setup
+            var path = Write("[]");
+
+            // Act/Assert
+            Assert.Throws<ArgumentOutOfRangeException>(() => new FakeDbConnection().LoadDataFromJson("Customer", path, columnMappingBehavior: (LoadColumnMappingBehavior)99));
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnLoadDataFromJsonIfTheIdentityBehaviorIsNotDefined()
+        {
+            // Setup
+            var path = Write("[]");
+
+            // Act/Assert
+            Assert.Throws<ArgumentOutOfRangeException>(() => new FakeDbConnection().LoadDataFromJson("Customer", path, identityBehavior: (LoadIdentityBehavior)99));
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnLoadDataFromJsonAsyncIfTheIdentityBehaviorIsNotDefined()
+        {
+            // Setup
+            var path = Write("[]");
+
+            // Act/Assert
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => new FakeDbConnection().LoadDataFromJsonAsync("Customer", path, identityBehavior: (LoadIdentityBehavior)99));
+        }
+
+        [TestMethod]
+        public void TestLoadDataFromJsonKeepsTheIdentityColumnByDefaultInTheBatchInsert()
+        {
+            // Setup
+            var path = Write(Rows(1));
+            var destination = new FakeDbConnection();
+
+            // Act
+            destination.LoadDataFromJson("Customer", path);
+
+            // Assert
+            var execution = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal));
+            Assert.IsTrue(System.Text.RegularExpressions.Regex.IsMatch(execution.CommandText, @"\bId\b"));
+            Assert.AreEqual(3, execution.Parameters.Count);
+        }
+
+        [TestMethod]
+        public void TestLoadDataFromJsonLeavesTheIdentityColumnToTheDatabaseInTheBatchInsertIfItIsNotToKeepIt()
+        {
+            // Setup
+            var path = Write(Rows(1));
+            var destination = new FakeDbConnection();
+
+            // Act
+            destination.LoadDataFromJson("Customer", path, identityBehavior: LoadIdentityBehavior.ReturnIdentity);
+
+            // Assert
+            var execution = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal));
+            Assert.IsFalse(System.Text.RegularExpressions.Regex.IsMatch(execution.CommandText, @"\bId\b"));
+            Assert.AreEqual(2, execution.Parameters.Count);
+        }
+
+        [TestMethod]
+        public async Task TestLoadDataFromJsonAsyncLeavesTheIdentityColumnToTheDatabaseInTheBatchInsertIfItIsNotToKeepIt()
+        {
+            // Setup
+            var path = Write(Rows(1));
+            var destination = new FakeDbConnection();
+
+            // Act
+            await destination.LoadDataFromJsonAsync("Customer", path, identityBehavior: LoadIdentityBehavior.ReturnIdentity);
+
+            // Assert
+            var execution = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal));
+            Assert.IsFalse(System.Text.RegularExpressions.Regex.IsMatch(execution.CommandText, @"\bId\b"));
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnLoadDataFromJsonIfTheIdentityColumnIsTheOnlyColumnAndItIsNotToBeKept()
+        {
+            // Setup
+            var path = Write("[{\"Id\":1}]");
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => new FakeDbConnection().LoadDataFromJson("Customer", path, identityBehavior: LoadIdentityBehavior.ReturnIdentity));
+        }
+
+        [TestMethod]
+        public void TestLoadDataFromJsonPassesTheKeepIdentityOptionToTheBulkInsertByDefault()
+        {
+            // Setup
+            var path = Write(Rows(3));
+
+            // Act
+            new FakeBulkOptionsDbConnection().LoadDataFromJson("Customer", path, cutoffSize: 1);
+
+            // Assert
+            Assert.AreEqual(FakeBulkCopyOptions.KeepIdentity, FakeBulkOperations.Calls.Single().Options);
+        }
+
+        [TestMethod]
+        public void TestLoadDataFromJsonDoesNotPassTheKeepIdentityOptionToTheBulkInsertIfItIsNotToKeepIt()
+        {
+            // Setup
+            var path = Write(Rows(3));
+
+            // Act
+            new FakeBulkOptionsDbConnection().LoadDataFromJson("Customer", path, cutoffSize: 1, identityBehavior: LoadIdentityBehavior.ReturnIdentity);
+
+            // Assert
+            Assert.AreEqual(FakeBulkCopyOptions.Default, FakeBulkOperations.Calls.Single().Options);
+        }
+
+        [TestMethod]
+        public async Task TestLoadDataFromJsonAsyncPassesTheIdentityBehaviorToTheBulkInsert()
+        {
+            // Setup
+            var path = Write(Rows(3));
+
+            // Act
+            await new FakeBulkIdentityBehaviorDbConnection().LoadDataFromJsonAsync("Customer", path, cutoffSize: 1);
+
+            // Assert
+            Assert.AreEqual(FakeBulkImportIdentityBehavior.KeepIdentity, FakeBulkOperations.Calls.Single().IdentityBehavior);
+        }
+
+        [TestMethod]
+        public void TestLoadDataFromJsonDoesNotSendTheIdentityColumnToTheBulkInsertIfItIsNotToKeepIt()
+        {
+            // Setup
+            var path = Write(Rows(3));
+
+            // Act
+            new FakeBulkIdentityBehaviorDbConnection().LoadDataFromJson("Customer", path, cutoffSize: 1, identityBehavior: LoadIdentityBehavior.ReturnIdentity);
+
+            // Assert
+            Assert.IsNull(FakeBulkOperations.Calls.Single().IdentityBehavior);
+            CollectionAssert.AreEqual(new[] { "Name", "Birthday" }, FakeBulkOperations.LastColumns);
+        }
+
+        [TestMethod]
+        public void TestLoadDataFromJsonSendsTheIdentityColumnToTheBulkInsertIfItIsToKeepIt()
+        {
+            // Setup
+            var path = Write(Rows(3));
+
+            // Act
+            new FakeBulkIdentityBehaviorDbConnection().LoadDataFromJson("Customer", path, cutoffSize: 1);
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { "Id", "Name", "Birthday" }, FakeBulkOperations.LastColumns);
+        }
+
+        [DataTestMethod]
+        [DataRow(LoadColumnMappingBehavior.Automatic, "Automatic")]
+        [DataRow(LoadColumnMappingBehavior.Strict, "Strict")]
+        [DataRow(LoadColumnMappingBehavior.StrictBypass, "StrictBypass")]
+        public void TestLoadDataFromJsonPassesTheColumnMappingBehaviorToTheBulkInsert(LoadColumnMappingBehavior behavior,
+            string expected)
+        {
+            // Setup
+            var path = Write(Rows(3));
+
+            // Act
+            new FakeBulkSettingDbConnection().LoadDataFromJson("Customer", path, cutoffSize: 1, columnMappingBehavior: behavior);
+
+            // Assert
+            Assert.AreEqual(expected, FakeBulkOperations.Calls.Single().ColumnMappingsBehavior);
+        }
+
+        [TestMethod]
+        public async Task TestLoadDataFromJsonAsyncPassesTheColumnMappingBehaviorToTheBulkInsert()
+        {
+            // Setup
+            var path = Write(Rows(3));
+
+            // Act
+            await new FakeBulkSettingDbConnection().LoadDataFromJsonAsync("Customer", path, cutoffSize: 1, columnMappingBehavior: LoadColumnMappingBehavior.StrictBypass);
+
+            // Assert
+            Assert.AreEqual("StrictBypass", FakeBulkOperations.Calls.Single().ColumnMappingsBehavior);
+        }
+
+        [TestMethod]
+        public void TestLoadDataFromJsonIgnoresTheColumnMappingBehaviorInTheBatchInsert()
+        {
+            // Setup
+            var path = Write(Rows(2));
+            var destination = new FakeDbConnection();
+
+            // Act
+            var actual = destination.LoadDataFromJson("Customer", path, columnMappingBehavior: LoadColumnMappingBehavior.Strict);
+
+            // Assert
+            Assert.AreEqual(2L, actual.LoadedRowCount);
         }
 
         #endregion

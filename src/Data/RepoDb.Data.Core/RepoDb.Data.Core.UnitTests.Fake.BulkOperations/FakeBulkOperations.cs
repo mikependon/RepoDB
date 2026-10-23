@@ -10,6 +10,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Data;
 using System.Data.Common;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -329,8 +330,14 @@ namespace RepoDb.Data.Core.UnitTests.Fake.BulkOperations
             FakeBulkCommand.Reset();
         }
 
+        /// <summary>
+        /// Gets the names of the columns of the reader that was read by the last bulk insert.
+        /// </summary>
+        public static string[] LastColumns { get; private set; } = new string[0];
+
         private static int Read(IDataReader reader)
         {
+            LastColumns = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToArray();
             var count = 0;
             while (reader.Read())
             {

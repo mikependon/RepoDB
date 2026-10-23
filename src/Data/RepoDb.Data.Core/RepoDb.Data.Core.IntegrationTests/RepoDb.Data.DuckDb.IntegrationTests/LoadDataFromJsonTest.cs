@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DuckDB.NET.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Data.Enumerations;
 using RepoDb.Data.Models;
 using RepoDb.Data.DuckDb.IntegrationTests.Setup;
 using RepoDb.Schema;
@@ -473,6 +474,59 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
 
                 // Act/Assert
                 await Assert.ThrowsAsync<FormatException>(() => target.LoadDataFromJsonAsync("LoadItem", path));
+            }
+        }
+
+        #endregion
+
+        #region Identity And Column Mapping Behaviors
+
+        [TestMethod]
+        public void TestLoadDataFromJsonKeepsTheIdentityValuesOfTheFileByDefault()
+        {
+            using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                var path = Write("[" + string.Join(",", new[] { 10, 20, 30 }.Select(Row)) + "]");
+
+                // Act
+                target.LoadDataFromJson("LoadItem", path);
+
+                // Assert
+                CollectionAssert.AreEqual(new long[] { 10, 20, 30 }, Rows().Select(r => Convert.ToInt64(r["Id"])).ToArray());
+            }
+        }
+
+        [TestMethod]
+        public void TestLoadDataFromJsonKeepsTheIdentityValuesOfTheFileWithTheBulkInsert()
+        {
+            using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                var path = Write("[" + string.Join(",", new[] { 10, 20, 30 }.Select(Row)) + "]");
+
+                // Act
+                target.LoadDataFromJson("LoadItem", path, cutoffSize: 1, identityBehavior: LoadIdentityBehavior.KeepIdentity);
+
+                // Assert
+                CollectionAssert.AreEqual(new long[] { 10, 20, 30 }, Rows().Select(r => Convert.ToInt64(r["Id"])).ToArray());
+            }
+        }
+
+        [TestMethod]
+        public void TestLoadDataFromJsonWithTheStrictBypassColumnMappingBehavior()
+        {
+            using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                var path = Array(3);
+
+                // Act
+                var actual = target.LoadDataFromJson("LoadItem", path, cutoffSize: 1, columnMappingBehavior: LoadColumnMappingBehavior.StrictBypass);
+
+                // Assert
+                Assert.AreEqual(3L, actual.LoadedRowCount);
+                Assert.AreEqual(3, Helper.TargetCount("\"LoadItem\""));
             }
         }
 
