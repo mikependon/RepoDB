@@ -113,7 +113,7 @@ namespace RepoDb.Ahtola.UnitTests
             var setting = DbSettingMapper.Get<SqliteConnection>();
 
             // Assert
-            Assert.AreEqual("SQLite", setting.Provider);
+            Assert.AreEqual("AHTOLA", setting.Provider);
         }
 
         [TestMethod]

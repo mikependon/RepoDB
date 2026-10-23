@@ -111,7 +111,7 @@ namespace RepoDb.MySqlConnector.UnitTests
             var setting = DbSettingMapper.Get<MySqlConnection>();
 
             // Assert
-            Assert.AreEqual("MySqlConnector", setting.Provider);
+            Assert.AreEqual("MYSQLC", setting.Provider);
         }
 
         [TestMethod]

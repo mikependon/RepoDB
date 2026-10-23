@@ -124,7 +124,7 @@ namespace RepoDb.DbHelpers
                 reader.IsDBNull(7) ? null : byte.Parse(reader.GetInt32(7).ToString(System.Globalization.CultureInfo.InvariantCulture)),
                 reader.GetString(8),
                 reader.GetBoolean(9),
-                "MARIADB");
+                m_dbSetting.Provider);
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace RepoDb.DbHelpers
                 await reader.IsDBNullAsync(7, cancellationToken).ConfigureAwait(false) ? (byte?)null : byte.Parse((await reader.GetFieldValueAsync<ulong>(7, cancellationToken).ConfigureAwait(false)).ToString()),
                 await reader.GetFieldValueAsync<string>(8, cancellationToken).ConfigureAwait(false),
                 Convert.ToBoolean(await reader.GetFieldValueAsync<int>(1, cancellationToken).ConfigureAwait(false)),
-                "MARIADB");
+                m_dbSetting.Provider);
         }
 
         #endregion

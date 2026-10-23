@@ -39,7 +39,7 @@ namespace RepoDb.DbSettings
             MultiStatementSeparator = ";";
             OpeningQuote = "`";
             ParameterPrefix = "@";
-            Provider = "MySql";
+            Provider = "MYSQL";
             SqlTextParameterPrefix = "@";
         }
     }

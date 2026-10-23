@@ -110,7 +110,7 @@ namespace RepoDb.AuroraDb.PostgreSql.UnitTests
             var setting = DbSettingMapper.Get<AuroraDbConnection>();
 
             // Assert
-            Assert.AreEqual("AuroraDbPostgreSql", setting.Provider);
+            Assert.AreEqual("PGSQL", setting.Provider);
         }
 
         [TestMethod]

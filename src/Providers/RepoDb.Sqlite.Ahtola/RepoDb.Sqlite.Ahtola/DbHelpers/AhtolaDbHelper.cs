@@ -83,7 +83,7 @@ namespace RepoDb.DbHelpers
                 null,
                 null,
                 !reader.IsDBNull(4),
-                "AHTOLA");
+                DbSetting.Provider);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace RepoDb.DbHelpers
                 null,
                 null,
                 !await reader.IsDBNullAsync(4, cancellationToken).ConfigureAwait(false),
-                "AHTOLA");
+                DbSetting.Provider);
         }
 
         /// <summary>

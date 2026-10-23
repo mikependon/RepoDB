@@ -83,7 +83,7 @@ namespace RepoDb.DbHelpers
                 null,
                 null,
                 !reader.IsDBNull(4),
-                "TURSO");
+                DbSetting.Provider);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace RepoDb.DbHelpers
                 null,
                 null,
                 !await reader.IsDBNullAsync(4, cancellationToken).ConfigureAwait(false),
-                "TURSO");
+                DbSetting.Provider);
         }
 
         /// <summary>

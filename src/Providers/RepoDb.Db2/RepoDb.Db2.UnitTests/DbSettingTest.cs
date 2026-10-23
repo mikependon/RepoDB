@@ -132,7 +132,7 @@ namespace RepoDb.Db2.UnitTests
             var setting = DbSettingMapper.Get<DB2Connection>();
 
             // Assert
-            Assert.AreEqual("Db2", setting.Provider);
+            Assert.AreEqual("DB2", setting.Provider);
         }
 
         [TestMethod]

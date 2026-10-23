@@ -110,7 +110,7 @@ namespace RepoDb.MySql.UnitTests
             var setting = DbSettingMapper.Get<MySqlConnection>();
 
             // Assert
-            Assert.AreEqual("MySql", setting.Provider);
+            Assert.AreEqual("MYSQL", setting.Provider);
         }
 
         [TestMethod]

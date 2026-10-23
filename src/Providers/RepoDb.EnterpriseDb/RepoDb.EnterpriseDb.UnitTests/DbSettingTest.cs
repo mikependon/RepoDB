@@ -110,7 +110,7 @@ namespace RepoDb.EnterpriseDb.UnitTests
             var setting = DbSettingMapper.Get<EDBConnection>();
 
             // Assert
-            Assert.AreEqual("EnterpriseDb", setting.Provider);
+            Assert.AreEqual("PGSQL", setting.Provider);
         }
 
         [TestMethod]

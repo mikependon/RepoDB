@@ -110,7 +110,7 @@ namespace RepoDb.CockroachDb.UnitTests
             var setting = DbSettingMapper.Get<CockroachDbConnection>();
 
             // Assert
-            Assert.AreEqual("CockroachDb", setting.Provider);
+            Assert.AreEqual("PGSQL", setting.Provider);
         }
 
         [TestMethod]

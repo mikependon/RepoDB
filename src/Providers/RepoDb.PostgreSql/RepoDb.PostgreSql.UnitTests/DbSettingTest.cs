@@ -110,7 +110,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var setting = DbSettingMapper.Get<NpgsqlConnection>();
 
             // Assert
-            Assert.AreEqual("PostgreSql", setting.Provider);
+            Assert.AreEqual("PGSQL", setting.Provider);
         }
 
         [TestMethod]

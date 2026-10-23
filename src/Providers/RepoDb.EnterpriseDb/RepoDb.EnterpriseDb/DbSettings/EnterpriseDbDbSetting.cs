@@ -34,7 +34,7 @@ namespace RepoDb.DbSettings
             IsUseUpsert = false;
             OpeningQuote = "\"";
             ParameterPrefix = "@";
-            Provider = "EnterpriseDb";
+            Provider = "PGSQL";
             SqlTextParameterPrefix = "@";
         }
     }

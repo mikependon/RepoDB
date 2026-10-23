@@ -110,7 +110,7 @@ namespace RepoDb.MariaDb.UnitTests
             var setting = DbSettingMapper.Get<MariaDbConnection>();
 
             // Assert
-            Assert.AreEqual("MariaDb", setting.Provider);
+            Assert.AreEqual("MARIADB", setting.Provider);
         }
 
         [TestMethod]

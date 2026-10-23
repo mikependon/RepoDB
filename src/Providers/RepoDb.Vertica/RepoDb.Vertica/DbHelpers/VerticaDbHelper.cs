@@ -114,7 +114,8 @@ namespace RepoDb.DbHelpers
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        private DbField ReaderToDbField(DbDataReader reader)
+        private DbField ReaderToDbField(DbDataReader reader,
+            string provider)
         {
             var columnType = ResolveColumnTypeName(reader.GetString(4));
 
@@ -128,7 +129,7 @@ namespace RepoDb.DbHelpers
                 reader.IsDBNull(7) ? (byte?)null : (byte)reader.GetInt32(7),
                 columnType,
                 reader.GetBoolean(8),
-                "VERTICA");
+                provider);
         }
 
         /// <summary>
@@ -138,6 +139,7 @@ namespace RepoDb.DbHelpers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         private async Task<DbField> ReaderToDbFieldAsync(DbDataReader reader,
+            string provider,
             CancellationToken cancellationToken = default)
         {
             var columnType = ResolveColumnTypeName(await reader.GetFieldValueAsync<string>(4, cancellationToken).ConfigureAwait(false));
@@ -152,7 +154,7 @@ namespace RepoDb.DbHelpers
                 await reader.IsDBNullAsync(7, cancellationToken).ConfigureAwait(false) ? null : (byte)(await reader.GetFieldValueAsync<long>(7, cancellationToken).ConfigureAwait(false)),
                 columnType,
                 await reader.GetFieldValueAsync<bool>(8, cancellationToken).ConfigureAwait(false),
-                "VERTICA");
+                provider);
         }
 
         #endregion
@@ -206,7 +208,7 @@ namespace RepoDb.DbHelpers
             var dbFields = new List<DbField>();
             while (reader.Read())
             {
-                dbFields.Add(ReaderToDbField(reader));
+                dbFields.Add(ReaderToDbField(reader, setting.Provider));
             }
             return dbFields;
         }
@@ -262,7 +264,7 @@ namespace RepoDb.DbHelpers
             var dbFields = new List<DbField>();
             while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
-                dbFields.Add(await ReaderToDbFieldAsync(reader, cancellationToken).ConfigureAwait(false));
+                dbFields.Add(await ReaderToDbFieldAsync(reader, setting.Provider, cancellationToken).ConfigureAwait(false));
             }
             return dbFields;
         }

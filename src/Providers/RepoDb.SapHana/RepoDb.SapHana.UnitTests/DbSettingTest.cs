@@ -109,7 +109,7 @@ namespace RepoDb.SapHana.UnitTests
             var setting = DbSettingMapper.Get<HanaConnection>();
 
             // Assert
-            Assert.AreEqual("SapHana", setting.Provider);
+            Assert.AreEqual("HANA", setting.Provider);
         }
 
         [TestMethod]

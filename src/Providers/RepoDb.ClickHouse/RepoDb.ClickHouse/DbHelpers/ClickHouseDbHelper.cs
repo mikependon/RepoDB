@@ -167,7 +167,7 @@ namespace RepoDb.DbHelpers
                 ResolveScale(columnName, columnType, numericScale),
                 reader.GetString(7),
                 reader.GetBoolean(8),
-                "CLICKHOUSE");
+                m_dbSetting.Provider);
         }
 
         /// <summary>
@@ -194,7 +194,7 @@ namespace RepoDb.DbHelpers
                 ResolveScale(columnName, columnType, numericScale),
                 await reader.GetFieldValueAsync<string>(7, cancellationToken).ConfigureAwait(false),
                 Convert.ToBoolean(await reader.GetFieldValueAsync<object>(8, cancellationToken).ConfigureAwait(false)),
-                "CLICKHOUSE");
+                m_dbSetting.Provider);
         }
 
         #endregion

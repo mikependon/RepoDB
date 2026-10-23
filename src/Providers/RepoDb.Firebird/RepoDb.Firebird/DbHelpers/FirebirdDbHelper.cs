@@ -149,7 +149,8 @@ namespace RepoDb.DbHelpers
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        private DbField ReaderToDbField(DbDataReader reader)
+        private DbField ReaderToDbField(DbDataReader reader,
+            string provider)
         {
             var fieldType = reader.GetInt16(4);
             var subType = reader.IsDBNull(5) ? (short?)null : reader.GetInt16(5);
@@ -166,7 +167,7 @@ namespace RepoDb.DbHelpers
                 reader.IsDBNull(9) ? (byte?)null : byte.Parse(reader.GetInt16(9).ToString(System.Globalization.CultureInfo.InvariantCulture)),
                 columnType,
                 reader.GetBoolean(10),
-                "FIREBIRD");
+                provider);
         }
 
         /// <summary>
@@ -176,6 +177,7 @@ namespace RepoDb.DbHelpers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         private async Task<DbField> ReaderToDbFieldAsync(DbDataReader reader,
+            string provider,
             CancellationToken cancellationToken = default)
         {
             var fieldType = await reader.GetFieldValueAsync<short>(4, cancellationToken).ConfigureAwait(false);
@@ -195,7 +197,7 @@ namespace RepoDb.DbHelpers
                 await reader.IsDBNullAsync(9, cancellationToken).ConfigureAwait(false) ? null : byte.Parse((await reader.GetFieldValueAsync<short>(9, cancellationToken).ConfigureAwait(false)).ToString(System.Globalization.CultureInfo.InvariantCulture)),
                 columnType,
                 await reader.GetFieldValueAsync<bool>(10, cancellationToken).ConfigureAwait(false),
-                "FIREBIRD");
+                provider);
         }
 
         #endregion
@@ -232,7 +234,7 @@ namespace RepoDb.DbHelpers
             // Iterate the list of the fields
             while (reader.Read())
             {
-                dbFields.Add(ReaderToDbField(reader));
+                dbFields.Add(ReaderToDbField(reader, setting.Provider));
             }
 
             // Return the list of fields
@@ -272,7 +274,7 @@ namespace RepoDb.DbHelpers
             // Iterate the list of the fields
             while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
-                dbFields.Add(await ReaderToDbFieldAsync(reader, cancellationToken).ConfigureAwait(false));
+                dbFields.Add(await ReaderToDbFieldAsync(reader, setting.Provider, cancellationToken).ConfigureAwait(false));
             }
 
             // Return the list of fields

@@ -112,7 +112,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             var setting = DbSettingMapper.Get<SqliteConnection>();
 
             // Assert
-            Assert.AreEqual("SQLite", setting.Provider);
+            Assert.AreEqual("MSSQLITE", setting.Provider);
         }
 
         [TestMethod]

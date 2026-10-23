@@ -109,7 +109,7 @@ namespace RepoDb.SqlServer.UnitTests
             var setting = DbSettingMapper.Get<SqlConnection>();
 
             // Assert
-            Assert.AreEqual("SqlServer", setting.Provider);
+            Assert.AreEqual("MSSQL", setting.Provider);
         }
 
         [TestMethod]

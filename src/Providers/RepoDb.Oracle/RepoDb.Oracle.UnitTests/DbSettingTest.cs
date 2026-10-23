@@ -110,7 +110,7 @@ namespace RepoDb.Oracle.UnitTests
             var setting = DbSettingMapper.Get<OracleConnection>();
 
             // Assert
-            Assert.AreEqual("Oracle", setting.Provider);
+            Assert.AreEqual("ORACLE", setting.Provider);
         }
 
         [TestMethod]

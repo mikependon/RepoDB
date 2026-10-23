@@ -95,7 +95,8 @@ namespace RepoDb.DbHelpers
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        private DbField ReaderToDbField(DbDataReader reader)
+        private DbField ReaderToDbField(DbDataReader reader,
+            string provider)
         {
             return new DbField(reader.GetString(0),
                 !reader.IsDBNull(1) && reader.GetInt32(1) == 1,
@@ -107,7 +108,7 @@ namespace RepoDb.DbHelpers
                 reader.IsDBNull(7) ? (byte?)0 : Convert.ToByte(reader.GetDecimal(7)),
                 reader.IsDBNull(4) ? "varchar2" : reader.GetString(4),
                 !reader.IsDBNull(8) && reader.GetInt32(8) == 1,
-                "ORACLE");
+                provider);
         }
 
         /// <summary>
@@ -117,6 +118,7 @@ namespace RepoDb.DbHelpers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         private async Task<DbField> ReaderToDbFieldAsync(DbDataReader reader,
+            string provider,
             CancellationToken cancellationToken = default)
         {
             return new DbField(await reader.GetFieldValueAsync<string>(0, cancellationToken).ConfigureAwait(false),
@@ -129,7 +131,7 @@ namespace RepoDb.DbHelpers
                 await reader.IsDBNullAsync(7, cancellationToken).ConfigureAwait(false) ? (byte?)0 : Convert.ToByte(await reader.GetFieldValueAsync<decimal>(7, cancellationToken).ConfigureAwait(false)),
                 await reader.IsDBNullAsync(4, cancellationToken).ConfigureAwait(false) ? "varchar2" : await reader.GetFieldValueAsync<string>(4, cancellationToken).ConfigureAwait(false),
                 !await reader.IsDBNullAsync(8, cancellationToken).ConfigureAwait(false) && Convert.ToInt32(await reader.GetFieldValueAsync<decimal>(8, cancellationToken).ConfigureAwait(false)) == 1,
-                "ORACLE");
+                provider);
         }
 
         #endregion
@@ -167,7 +169,7 @@ namespace RepoDb.DbHelpers
             // Iterate the list of the fields
             while (reader.Read())
             {
-                dbFields.Add(ReaderToDbField(reader));
+                dbFields.Add(ReaderToDbField(reader, setting.Provider));
             }
 
             // Return the list of fields
@@ -206,7 +208,7 @@ namespace RepoDb.DbHelpers
             // Iterate the list of the fields
             while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
-                dbFields.Add(await ReaderToDbFieldAsync(reader, cancellationToken).ConfigureAwait(false));
+                dbFields.Add(await ReaderToDbFieldAsync(reader, setting.Provider, cancellationToken).ConfigureAwait(false));
             }
 
             // Return the list of fields

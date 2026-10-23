@@ -45,7 +45,7 @@ namespace RepoDb.DbSettings
             MultiStatementSeparator = ";";
             OpeningQuote = "[";
             ParameterPrefix = "@";
-            Provider = "SQLite";
+            Provider = "TURSO";
             SqlTextParameterPrefix = "@";
         }
     }

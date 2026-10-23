@@ -110,7 +110,7 @@ namespace RepoDb.DuckDb.UnitTests
             var setting = DbSettingMapper.Get<DuckDBConnection>();
 
             // Assert
-            Assert.AreEqual("DuckDb", setting.Provider);
+            Assert.AreEqual("DUCKDB", setting.Provider);
         }
 
         [TestMethod]

@@ -163,7 +163,7 @@ namespace RepoDb.DbSettings
         public string ParameterPrefix { get; protected set; }
 
         /// <summary>
-        /// Gets the name of the DB Provider that the setting is for (i.e.: <c>SqlServer</c>, <c>PostgreSql</c>, <c>MySql</c>, <c>SQLite</c>). See <see cref="RepoDb.Interfaces.IDbSetting.Provider"/>
+        /// Gets the name of the DB Provider that the setting is for (i.e.: <c>MSSQL</c>, <c>PGSQL</c>, <c>MYSQL</c>, <c>MSSQLITE</c>). See <see cref="RepoDb.Interfaces.IDbSetting.Provider"/>
         /// for details. The derived setting sets it; it is <c>null</c> by default.
         /// </summary>
         public string Provider { get; protected set; }

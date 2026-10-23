@@ -110,7 +110,7 @@ namespace RepoDb.AuroraDb.MySqlConnector.UnitTests
             var setting = DbSettingMapper.Get<AuroraDbConnection>();
 
             // Assert
-            Assert.AreEqual("AuroraDbMySqlConnector", setting.Provider);
+            Assert.AreEqual("AURORAMYSQL", setting.Provider);
         }
 
         [TestMethod]

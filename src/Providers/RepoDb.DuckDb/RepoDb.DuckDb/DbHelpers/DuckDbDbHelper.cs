@@ -117,7 +117,7 @@ namespace RepoDb.DbHelpers
                 reader.IsDBNull(7) ? (byte?)null : Convert.ToByte(reader.GetValue(7), CultureInfo.InvariantCulture),
                 reader.GetString(8),
                 reader.GetBoolean(9),
-                "DUCKDB");
+                m_dbSetting.Provider);
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace RepoDb.DbHelpers
                     Convert.ToByte(reader.GetValue(7), CultureInfo.InvariantCulture),
                 await reader.GetFieldValueAsync<string>(8, cancellationToken).ConfigureAwait(false),
                 await reader.GetFieldValueAsync<bool>(9, cancellationToken).ConfigureAwait(false),
-                "DUCKDB");
+                m_dbSetting.Provider);
         }
 
         #endregion

@@ -111,7 +111,7 @@ namespace RepoDb.ClickHouse.UnitTests
             var setting = DbSettingMapper.Get<ClickHouseConnection>();
 
             // Assert
-            Assert.AreEqual("ClickHouse", setting.Provider);
+            Assert.AreEqual("CLICKHOUSE", setting.Provider);
         }
 
         [TestMethod]

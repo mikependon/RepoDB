@@ -125,7 +125,7 @@ namespace RepoDb.DbHelpers
                 reader.IsDBNull(7) ? (byte?)null : byte.Parse(reader.GetInt32(7).ToString(System.Globalization.CultureInfo.InvariantCulture)),
                 reader.GetString(8),
                 reader.GetBoolean(9),
-                "MYSQLC");
+                m_dbSetting.Provider);
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace RepoDb.DbHelpers
                 await reader.IsDBNullAsync(7, cancellationToken).ConfigureAwait(false) ? null : byte.Parse((await reader.GetFieldValueAsync<int>(7, cancellationToken).ConfigureAwait(false)).ToString(System.Globalization.CultureInfo.InvariantCulture)),
                 await reader.GetFieldValueAsync<string>(8, cancellationToken).ConfigureAwait(false),
                 await reader.GetFieldValueAsync<bool>(9, cancellationToken).ConfigureAwait(false),
-                "MYSQLC");
+                m_dbSetting.Provider);
         }
 
         #endregion

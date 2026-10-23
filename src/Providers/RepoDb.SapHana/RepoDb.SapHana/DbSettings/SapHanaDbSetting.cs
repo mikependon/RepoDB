@@ -38,7 +38,7 @@ namespace RepoDb.DbSettings
             MultiStatementSeparator = ";";
             OpeningQuote = "\"";
             ParameterPrefix = ":";
-            Provider = "SapHana";
+            Provider = "HANA";
             SqlTextParameterPrefix = ":";
         }
     }
