@@ -13,7 +13,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="MSTest" Version="4.5.1" />
-    <PackageReference Include="MySql.Data" Version="26.7.0" />
+    <PackageReference Include="MySql.Data" Version="26.10.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />

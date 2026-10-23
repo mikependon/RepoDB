@@ -10,7 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="MSTest" Version="4.5.1" />
-    <PackageReference Include="DuckDB.NET.Data.Full" Version="1.5.6" />
+    <PackageReference Include="DuckDB.NET.Data.Full" Version="1.5.6.1" />
     <PackageReference Include="coverlet.collector" Version="10.1.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
